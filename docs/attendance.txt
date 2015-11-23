@@ -1,0 +1,75 @@
+Have started thinking about attendance system:
+First read this:
+http://www.ijcte.org/papers/832-S2004.pdf
+http://en.wikipedia.org/wiki/Geo-fence
+http://www.quora.com/Geo-fencing
+
+An app similar to ours (on Web, Mobile, Tablet):
+https://www.simpleinout.com/
+
+Lets first figure out what will be the functionality for marking it manually. Later we will do it with geo fencing and iBeacon or may be other technologies.
+
+First we will see what type of event is it?
+Is it a recurring event or one time only?
+
+One Time Event e.g. office meeting
+If it is a one time event what is the title and description of the event.
+What is the event date? What event time?
+
+Images of attendance system:
+view pictures http://www.brothersoft.com/attendance-management-system-296033.html
+
+
+If the type is daily attendance e.g. office attendence, the images are as follows:
+http://www.tcubesys.com/CMS/index.php?option=com_content&view=article&id=6:attendance-system&catid=3:products&Itemid=8
+
+http://www.securitynewsdesk.com/new-access-control-time-attendance-system-available-from-security-technologies-group/
+
+http://biotimesoft.com/employees-time-and-attendance/benefits/timetable/index.htm
+
+http://www.shiftplanning.com/timeclock/
+
+It can also be not daily but may be once, twice, or thrice a wk e.g class attendance
+
+Tablet based software:
+http://easyclocking.com/
+
+Cloud based:
+http://timeclock.somroli.com/
+
+
+iOS API:
+https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/LocationAwarenessPG/CoreLocation/CoreLocation.html
+
+http://hayageek.com/ios-geofencing-api/
+
+http://stackoverflow.com/questions/17174042/ios-corelocation-and-geofencing-while-app-is-closed
+
+PhoneGap:
+https://github.com/radshag/PhoneGap-Geofencing
+http://devgirl.org/2012/12/11/geo-based-push-notifications-with-phonegap-and-pushwoosh/
+http://stackoverflow.com/questions/23602989/cordova-phonegap-html5-geofence
+
+Ionic Geo Fencing Example App:
+http://tsubik.com/blog/ionic-geofence-example-application/
+https://github.com/cowbell/ionic-geofence
+
+
+Geo location in browser:
+http://html5demos.com/geo
+http://www.w3schools.com/htmL/html5_geolocation.asp
+http://caniuse.com/#feat=geolocation
+http://stackoverflow.com/questions/3633879/how-does-web-browser-geolocation-work
+https://github.com/VoltDB/app-geofence
+
+Geo fencing in browser:
+https://code.google.com/p/chromium/issues/detail?id=383125
+
+
+Android:
+http://forum.micasaverde.com/index.php?topic=29675.0
+
+
+
+
+

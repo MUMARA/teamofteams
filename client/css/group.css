@@ -1,0 +1,160 @@
+s.noPaddingleft{
+    padding-left:0px;
+
+}
+.md-sidenav-backdrop .md-opaque .ng-enter{
+    display: none;
+}
+
+.userSetting_toolbar{
+    font-size: 20px !important;
+}
+
+
+a.md-button.md-default-theme.md-hue-1.md-accent.md-raised, a.md-button.md-default-theme.md-hue-1.md-accent.md-fab, .md-button.md-default-theme.md-hue-1.md-accent.md-raised, .md-button.md-default-theme.md-hue-1.md-accent.md-fab{
+    background-color: #60b089;
+}a.md-button.md-default-theme.md-hue-1.md-accent.md-raised:not([disabled]):hover, a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover, .md-button.md-default-theme.md-hue-1.md-accent.md-raised:not([disabled]):hover, .md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover{
+     background-color: #60b089;
+ }
+.cropper-main-image{
+    width: 114px;
+}
+.md-sidenav-backdrop.md-opaque.ng-enter.ng-scope.md-default-theme{
+    background-color: transparent;
+}
+/**/
+.userCardImg {
+    max-width: 55px;
+    /*max-height: 55px;*/
+    box-sizing: border-box;
+    border: 3px solid #8BC53F;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+.userCardImg1{
+    max-width: 55px;
+    /*max-height: 55px;*/
+    box-sizing: border-box;
+    border: 3px solid #dcdadd;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+/*.allMember{
+width:350px;
+}
+.Invitations{
+width:350px;
+}
+.Blocked{
+width:350px;
+}*/
+
+
+/*Yeh bhannd ha jo sahe karna ha*/
+
+/*.allMember{*/
+    /*font-size: 20px !important;*/
+    /*padding: 12px 104px !important;*/
+/*}*/
+.listCardHeading {
+    /*text-align: center;*/
+    /*vertical-align: baseline;*/
+    color: rgb(96, 176, 137);
+    font-size: 15px;
+    margin: 19px 18px 0px 100px;
+    /*display:inline-block;*/
+    /*position:absolute;*/
+}
+
+.listCardHeading2 {
+    /*text-align: center;*/
+    /*vertical-align: baseline;*/
+    color: rgb(96, 176, 137);
+    font-size: 15px;
+    margin: 19px 18px 0px 100px;
+    /*display:inline-block;*/
+    /*position:absolute;*/
+}
+
+.listCardHeading, .listCardHeading2 {
+    margin-left: auto;
+    margin-right: auto;
+}
+.grayScroller{
+    /*visibility: hidden;*/
+}
+.tabsdemoDynamicTabs md-content {
+    background-color: transparent !important; }
+.tabsdemoDynamicTabs md-content md-tabs {
+    border: 1px solid #e1e1e1; }
+.tabsdemoDynamicTabs md-content md-tabs .md-tab-content {
+    background: #f6f6f6; }
+.tabsdemoDynamicTabs md-content md-tabs .md-tabs-canvas {
+    background: white; }
+.tabsdemoDynamicTabs md-content h1:first-child {
+    margin-top: 0; }
+.tabsdemoDynamicTabs md-input-container {
+    padding-bottom: 0; }
+.tabsdemoDynamicTabs .remove-tab {
+    margin-bottom: 40px; }
+.tabsdemoDynamicTabs .demo-tab > div > div {
+    padding: 25px;
+    box-sizing: border-box; }
+.tabsdemoDynamicTabs .edit-form input {
+    width: 100%; }
+.tabsdemoDynamicTabs md-tabs {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
+.tabsdemoDynamicTabs md-tab[disabled] {
+    opacity: 0.5; }
+.tabsdemoDynamicTabs label {
+    text-align: left; }
+.tabsdemoDynamicTabs .long > input {
+    width: 264px; }
+.tabsdemoDynamicTabs .md-button.add-tab {
+    transform: translateY(5px); }
+.md-toolbar.md-default-theme{
+    background-color: white;
+    font-size:30px;
+}
+.customTool > md-tabs.md-default-theme .md-tabs-wrapper{
+    background-color: #f0f0f0;
+    font-size: 30px;
+}
+.customTool > md-tabs.md-default-theme .md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-default-theme md-tab-item:not([disabled]).md-focused{
+    color: rgb(96, 176, 137);
+    font-size:30px;
+}
+.customTool > md-tabs.md-default-theme md-tabs-wrapper{
+    background-color: #e8e8e8;
+    padding: 0px;
+    font-size: 30px;
+}
+.customTool > md-tabs.md-default-theme md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-default-theme md-tab-item:not([disabled]).md-focused{
+    color: rgb(96, 176, 137);
+    font-size: 30px;
+}
+.customTool > md-tabs.md-default-theme md-ink-bar{
+    color: rgb(96, 176, 137);
+    background-color: rgb(96, 176, 137);
+    font-size:30px;
+}
+.customTool  > md-tabs.md-default-theme md-tab-item:not([disabled]){
+    color: #9A9494;
+    padding: 12px 88px !important;
+    font-size: 16px !important;
+}
+.allMember[label] {
+    font-size: 20px;
+}
+.customTool > md-tab-item > span{
+    font-size: 30px;
+}
+
+md-tabs-content-wrapper{
+    top: 69px;
+}
+.md-autocomplete-suggestions.md-default-theme{
+    background-color: white;
+}

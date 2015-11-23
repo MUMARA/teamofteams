@@ -1,0 +1,86 @@
+<form  style="background-color: #005DE9;bottom: 0px;top: 53px;width: 1300px; height: 100vh" name="groupForm"  novalidate="" >
+    <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="createChannels.hide()"></ng-md-icon>
+
+
+    <md-content class="grayScroller" style="max-width:83%;margin: 0px auto">
+        <div layout="row">
+            <div flex>
+                <md-card style=" margin: 0px auto;border-radius:5px;">
+                    <md-card-content style="padding: 0px;">
+
+                        <h1 style="color: #d3d3d3;">Create Channel</h1>
+                        <br/>
+
+                        <div layout="row" style="border-top:solid 1px #d3d3d3; ">
+
+                            <div flex style="margin-left: 5px;padding: 20px">
+                                <h2>Channel ID <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
+                                <div layout="row">
+                                    <div flex="20" style="padding-top: 1.0%;">
+                                        <span>Channels ID</span>
+                                    </div>
+                                    <div flex="30">
+                                        <md-input-container md-no-float>
+                                            <input name="groupId" ng-model="createChannels.channel.channelID" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus check-group-existance="" required placeholder="Channel ID"> <!-- check-user-id is a directive-->
+                                            <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
+                                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                                <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
+                                                <div layout="row" class="invalid_color id_Error" ng-message="checkGroupExistance">This name is not available.</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+
+                                <md-input-container>
+                                    <label>Channel Name</label>
+                                    <input name="groupTitle" ng-model="createChannels.channel.title" minlength="3" maxlength="40" required>
+                                    <div ng-show="groupForm.$submitted || groupForm.groupTitle.$touched" ng-messages="groupForm.groupTitle.$error">
+                                        <div class="invalid_color" ng-message="required">This is required.</div>
+                                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                                    </div>
+                                </md-input-container>
+                              <!--  <md-input-container>
+                                    <label>Description</label>
+                                    <textarea minlength="5" maxlength="40" name="groupDesc"  ng-model="" cols="25" rows="1"></textarea>
+                                    <div ng-show="groupForm.$submitted || groupForm.groupDesc.$touched" ng-messages="groupForm.groupDesc.$error">
+                                        <div class="invalid_color" ng-message="required">This is required.</div>
+                                        <div class="invalid_color" ng-message="minlength">Required minimum length 5</div>
+                                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                                    </div>
+                                </md-input-container>-->
+
+
+
+
+
+                                <div layout="row">
+                                    <div flex='20'offset="50">
+                                        <md-progress-circular ng-show="createChannels.abc " md-mode="indeterminate"></md-progress-circular>
+                                    </div>
+                                    <div flex >
+                                        <!--<md-button class="md-raised md-primary">Submit</md-button>-->
+                                        <md-button  class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2"  ng-disabled="groupForm.$invalid" ng-click="createChannels.createChannel( groupForm )"><span style="color: white;">+ Create Channels</span></md-button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+                    </md-card-content>
+                </md-card>
+            </div>
+
+        </div>
+
+
+
+    </md-content>
+
+</form>

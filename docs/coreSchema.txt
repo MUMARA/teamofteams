@@ -1,0 +1,817 @@
+//Panacloud Check-In System
+
+//Streamline your check-in process, track attendance automatically from mobile using geo-fencing or iBeacon or manually using web. View the current check-in status of your company employees, university or school students without wasting time in the attendance taking process and queues.   
+
+//Firebase Core Schema with Security Rules Version 2.0 Draft
+
+// for making documentation easy to read I have define here rule @variables (there is no such thing in Firebase), they should all evaluate to boolean i.e. true or false 
+// for rules read https://www.firebase.com/docs/security/guide/securing-data.html
+
+rules-variables: {
+	@any-auth-user:  “(auth != null)”,
+	@current-auth-user-himself : “(auth != null && auth.uid == $userid)”
+	@current-user-is-group-owner: “(root.child('user-group-memberships').child(auth.uid).child($groupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1)”,
+	@current-user-is-group-admin: “(root.child('user-group-memberships').child(auth.uid).child($groupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2)”,
+	@current-user-is-group-member: “(root.child('user-group-memberships').child(auth.uid).child($groupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 3)”,
+	@current-user-is-any-type-group-member: “(root.child('user-group-memberships').child(auth.uid).child($groupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0)”,
+
+	@current-user-is-group-owner-2: “(root.child('group-members').child($groupid).child(auth.uid).exists() && root.child(
+					'group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1)”,
+
+	@current-user-is-group-admin-2: “(root.child('group-members').child($groupid).child(auth.uid).exists() && root.child(
+					'group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)”,
+
+	@current-user-is-group-member-2: “(root.child('group-members').child($groupid).child(auth.uid).exists() && root.child(
+					'group-members').child($groupid).child(auth.uid).child('membership-type').val() == 3)”,
+
+	@current-user-is-any—type-group-member-2: “(root.child('group-members').child($groupid).child(auth.uid).exists() && root.child(
+					'group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0)”,
+
+	@current-user-is-subgroup-owner: “(root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child($subgroupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child($subgroupid).child('membership-type').val() == 1)”,
+	@current-user-is-subgroup-admin: “(root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child($subgroupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child($subgroupid).child('membership-type').val() == 2)”,
+	@current-user-is-subgroup-member: “(root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child($subgroupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child($subgroupid).child('membership-type').val() == 3)”,
+	@current-user-is-any-type-subgroup-member: “(root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child($subgroupid).exists() && root.child(
+					'user-group-memberships').child(auth.uid).child($groupid).child($subgroupid).child('membership-type').val() > 0)”,
+
+
+	@current-user-is-subgroup-owner-2: “(root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).exists() && root.child(
+					'subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1)”,
+	@current-user-is-subgroup-admin-2: “(root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).exists() && root.child(
+					'subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)”,
+	@current-user-is-subgroup-member-2: “(root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).exists() && root.child(
+					'subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 3)”,
+	@current-user-is-any-type-subgroup-member-2: “(root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).exists() && root.child(
+					'subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0)”,
+
+
+	@only-add-or-delete-write: (!data.exists() || !newData.exists()), // we can write as long as old data or new data does not exist, in other words, if this is a delete or a create, but not an update
+	@only-add-write: (!data.exists()),
+	@valid-user-exists: (root.child(‘users/‘ + $userid).exists()),
+        @valid-group-exists: (root.child(‘groups-names/‘ + $groupid).exists()),
+
+	@valid-email-address: “(newData.isString() && newData.val().matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) )”, // source: http://jsbin.com/ozeyag/19/edit?html,js,output
+
+	@valid-id: “(newData.isString() && newData.val().length >= 3 && newData.val().matches(^[a-z0-9]+$))”,
+	@valid-timestamp: “newData.isNumber() && newData.val() <= now”,//must not be a future timestamp
+	@valid-name: “newData.isString() && newData.val().length > 3”,
+	@valid-user-status: “newData.isNumber() && newData.val() == -1 && newData.val() == 0 && newData.val() == 1”,
+	@valid-membership-type: “newData.isNumber() && newData.val() == -1 && newData.val() == 0 && newData.val() == 1 && newData.val() == 2 && newData.val() == 3”,
+	@valid-title: “newData.isString() && newData.val().length > 3 && newData.val().length < 40”,
+	@valid-desc: “newData.isString() && newData.val().length > 3 && newData.val().length < 100”,
+	@valid-count: "newData.isNumber() && newData.val() >= 0"
+
+
+
+}
+
+
+users: {
+	userID1 : { //user ID will be selected by the user himself and will be unique
+		email: ziaukhan@hotmail.com, //email address should be created as a priority so that we may also search on the basis of email address
+		mobile: +923008263374,//optional field, if signup on mobile this field may be automatically filled, we will store them as is
+					//http://stackoverflow.com/questions/314686/how-do-you-store-cell-phone-numbers-in-a-database
+					//http://stackoverflow.com/questions/290597/phone-number-columns-in-a-database
+					//http://stackoverflow.com/questions/41925/is-there-a-standard-for-storing-normalized-phone-numbers-in-a-database
+		first-name: Zia,
+		last-name: Khan,
+		timestamp: timestamp,
+		status: 0 //0 = pending, 1 = verified, -1 = suspended 
+		profile-image: {//if email address does not have a gavatar
+     			 url: "http://www.google.com/gc/profileBucket/image123.jpg",
+			 id: image123.jpg 
+			 bucket-name : profileBucket
+     			 source: 1,// 1 = google cloud storage 
+     			 mediaType: image/jpeg
+   		},
+		cover-image: {
+     			 url: "http://www.google.com/gc/coverUserBucket/image123.jpg",
+			 id: image123.jpg 
+			 bucket-name : profileBucket
+     			 source: 1,// 1 = google cloud storage 
+     			 mediaType: image/jpeg
+   		}
+ 	}
+}
+
+"rules": {
+      "users": {
+	“.validate”: “@only-add-write”,
+        "$userid": {
+            ".read": “@any-auth-user", //anyone can read who is a registered user, the variable is defined above for documentation only, this is not firebase syntax
+            ".write": “@only-add-or-delete-write && @current-auth-user-himself" //only the user himself can write, the @variable is defined above for documentation only, this is not firebase syntax
+	    ".validate": "@valid-id && newData.hasChildren(['email', ‘first-name’, ‘last-name’, ‘date-created’, ’status’ ])”,
+	    “email”: {
+		“.validate”: "@valid-email-address”
+
+	    },
+	    “first-name”: {
+		“.validate”: “@valid-name”
+
+	    },
+	    “last-name”: {
+		“.validate”: “@valid-name”
+
+	    },
+	    “date-created”: {
+		“.validate”: “@valid-timestamp”
+
+	    },
+	    “status”: {
+		“.validate”: “@valid-user-status”
+
+	    },
+
+        }    
+      },
+}
+
+
+
+user-group-memberships : {
+	userID1 : {
+		groupID1: {
+				membership-type: 1, // I.  -1 = suspended, O = membership pending, 1 = owner/creator, 2 = admin, 3 = member ( implied -100 == not a member )   
+			   			// II. Only Owners/creators have the right to delete an organisation, the org owner is also the admin of this org and all the subgroups and microgroups
+				timestamp: timestamp
+			},
+		groupID2 : { membership-type: 2, timestamp: timestamp },
+		groupID3 :  { membership-type: 3, timestamp: timestamp }
+	},
+	userID2 : {
+		groupID1:  { membership-type: 0, timestamp: timestamp },
+		groupID5 :  { membership-type: 2, timestamp: timestamp },
+		groupID9 :  { membership-type: 3, timestamp: timestamp }
+	}
+
+}
+
+
+"rules": {
+      "user-group-memberships" : {
+	 “.validate”: “@only-add-write”,
+        "$userid": {
+            ".read": “@current-auth-user-himself”,
+            ".write": "@current-auth-user-himself",
+	     ".validate": "@only-add-or-delete-write && @valid-user-exists”,
+            "$groupid" : {
+                ".read":  "@current-user-is-group-owner || @current-user-is-group-admin",
+                ".write": "@current-user-is-group-owner || @current-user-is-group-admin”,
+		".validate": "@valid-id && newData.hasChildren(['membership-type', ‘timestamp’])”,
+		“membership-type”: {
+			“.validate”: “@valid-membership-type”
+
+	    	},
+		“timestamp”: {
+			“.validate”: “@valid-timestamp”
+
+	    	},
+            }
+        }   
+      },
+}
+
+
+
+
+user-subgroup-memberships : {
+	userID1 : {
+		groupID1: {
+			subgroup1: {
+				membership-type: 1, // I.  -1 = suspended, O = membership pending, 1 = owner/creator, 2 = admin, 3 = member ( implied -100 == not a member )   
+			   			// II. Only Owners/creators have the right to delete an organisation, the org owner is also the admin of this org and all the subgroups and microgroups
+				timestamp: timestamp
+			},
+			subgroup3 : { membership-type: 2, timestamp: timestamp }
+		}
+		
+	},
+
+}
+
+
+"rules": {
+      "user-subgroup-memberships" : {
+	 “.validate”: “@only-add-write”,
+        "$userid": {
+            ".read": “@current-auth-user-himself”,
+            ".write": "@current-auth-user-himself",
+	     ".validate": "@only-add-or-delete-write && @valid-user-exists”,
+            "$groupid" : {
+                ".read":  "@current-user-is-group-owner || @current-user-is-group-admin",
+                ".write": "@current-user-is-group-owner || @current-user-is-group-admin”,
+		".validate": "@valid-id”,
+		“$subgroupid”: {
+			".read":  "@current-user-is-subgroup-owner || @current-user-is-subgroup-admin",
+                	".write": "@current-user-is-subgroup-owner || @current-user-is-subgroup-admin”,
+			".validate": "@valid-id && newData.hasChildren(['membership-type', ‘timestamp’])”,
+			“membership-type”: {
+				“.validate”: “@valid-membership-type”
+
+	    		},
+			“timestamp”: {
+				“.validate”: “@valid-timestamp”
+
+	    		},
+		}
+		
+            }
+        }   
+      },
+}
+
+
+
+user-microgroup-memberships : {
+	userID1 : {
+			groupID1: {
+		   		subgroup1 : {
+					microgroup1: {
+						membership-type: 1, // I.  -1 = suspended, O = membership pending, 1 = owner/creator, 2 = admin, 3 = member ( implied -100 == not a member )   
+			   			// II. Only Owners/creators have the right to delete an organisation, the org owner is also the admin of this org and all the subgroups and microgroups
+						timestamp: timestamp
+					}
+				},
+					
+			}
+		}
+
+}
+
+"rules": {
+      "user-microgroup-memberships" : {
+	 “.validate”: “@only-add-write”,
+        "$userid": {
+            ".read": “@current-auth-user-himself”,
+            ".write": "@current-auth-user-himself",
+	     ".validate": "@only-add-or-delete-write && @valid-user-exists”,
+            "$groupid" : {
+                ".read":  "@current-user-is-group-owner || @current-user-is-group-admin",
+                ".write": "@current-user-is-group-owner || @current-user-is-group-admin”,
+		".validate": "@valid-id”,
+		“$subgroupid”: {
+			".read":  "@current-user-is-subgroup-owner || @current-user-is-subgroup-admin",
+                	".write": "@current-user-is-subgroup-owner || @current-user-is-subgroup-admin”,
+			“$microgroupid” : {
+				".read":  "@current-user-is-microgroup-owner || @current-user-is-microgroup-admin",
+                		".write": "@current-user-is-microgroup-owner || @current-user-is-microgroup-admin”,
+				".validate": "@valid-id && newData.hasChildren(['membership-type', ‘timestamp’])”,
+				“membership-type”: {
+					“.validate”: “@valid-membership-type”
+	    			},
+				“timestamp”: {
+					“.validate”: “@valid-timestamp”
+
+	    			},
+			}
+		}
+		
+            }
+        }   
+      }
+}
+
+
+
+
+groups : {
+	groupID1 : { //group ID will be selected by the creating user i.e. owner, and will be unique
+		title: Panacloud (Pvt.) Ltd.,
+		desc: A software and people development company,
+		timestamp: timestamp,
+		email-domain-restriction: panacloud.com,
+		cover-image: {
+     			 url: "http://www.google.com/gc/orgBucket/orgID1.jpg",
+			 id: orgID1.jpg, 
+			 bucket-name : orgBucket,
+     			 source: 1,// 1 = google cloud storage, 
+     			 mediaType: image/jpeg
+   		},
+		logo-image: {
+     			 url: "http://www.google.com/gc/logoBucket/orgID1.jpg",
+			 id: orgID1.jpg, 
+			 bucket-name : orgBucket,
+     			 source: 1,// 1 = google cloud storage, 
+     			 mediaType: image/jpeg
+   		}
+		members-count : 22, // including owner, admins, and members, 
+				    // for coding read http://stackoverflow.com/questions/15148803/in-firebase-is-there-a-way-to-get-the-number-of-children-of-a-node-without-load
+
+		
+		subgroups-count : 5,
+		microgroups-count : 3,
+
+		members-checked-in: {
+			count: 22,
+			checked-in : {// on check-in added and on check out removed and the above count adjusted, 
+				      // only one entry per member: if he is already checked into a org he will not be added again if he checks into a subgroup or sub subgroup only one entry per member
+				      // does not matter if he is member of how many subgroups and microgroups there will be only one entry if he has checkin into a org, subgroup or microgroup 
+				userID1: firstName,
+				userID2: firstName,
+			}
+		},
+	}
+
+}
+
+"rules": {
+      “groups”: {
+	“.validate”: “@only-add-write”,
+        "$groupid": {
+            ".read": “@any-auth-user && @current-user-is-any—type-group-member-2",             
+            ".write": “@only-add-or-delete-write && (@current-user-is-group-owner || @current-user-is-group-admin)" 
+	    ".validate": "@valid-id && newData.hasChildren([‘title’, ‘desc’, ‘timestamp’, ‘members-count’, ‘subgroup-count’, ’microgroups-count’, ‘members-checked-in’ ])”,
+	    “title”: {
+		“.validate”: "@valid-title”
+
+	    },
+	    “desc”: {
+		“.validate”: “@valid-desc”
+
+	    },
+	    “timestamp”: {
+		“.validate”: “@valid-timestamp”
+
+	    },
+	    “members-count”: {
+		“.validate”: “@valid-count”
+		".write": "@current-user-is-group-member"
+
+	    },
+	    “subgroup-count”: {
+		“.validate”: “@valid-count”
+
+	    },
+	     “microgroup-count”: {
+		“.validate”: “@valid-count”
+
+	    },
+	    "members-checked-in : {
+			".validate": "newData.hasChildren([‘count’])”,
+			".write": "@current-user-is-group-member"
+			"count": {
+				".validate": "@valid-count",
+			}
+			"checked-in" : {
+				"$userid": {
+					".write": "@current-auth-user-himself",
+					".validate": "@valid-user-exists"
+				}
+			}
+	     }
+
+        }    
+      },
+}
+
+
+groups-names : {
+	groupID1: group1 Title,
+	groupID2: group2 Title
+}
+
+"rules": {
+      “groups-names”: {
+	“.validate”: “@only-add-write”,
+        "$groupid": {
+            ".read": “@any-auth-user", //anyone can read who is a registered user, the variable is defined above for documentation only, this is not firebase syntax
+            ".write": “@only-add-or-delete-write && @current-auth-user-himself" //only the user himself can write, the @variable is defined above for documentation only, this is not firebase syntax
+	    ".validate": "@valid-id”,
+	    
+        }    
+      },
+}
+
+
+
+subgroups : {
+	groupID1 : { //group ID will be selected by the creating user i.e. owner, and will be unique
+		   		
+		
+			subgroupID1 : {//subgroup ID will only be unique within the group
+				title: Panaswift subgroup,
+				desc: A iOS Apps using Swift,
+				timestamp: timestamp,
+				cover-image: {
+     			 		url: "http://www.google.com/gc/orgBucket/orgID1>subgroup1.jpg",
+			 		id: orgID1>subgroup1.jpg, 
+					bucket-name : orgBucket,
+     			 		source: 1, // 1 = google cloud storage ,
+     			 		mediaType: image/jpeg
+				}
+				members-count : 22, // including owner, admins, and members, 
+				    // for coding read http://stackoverflow.com/questions/15148803/in-firebase-is-there-a-way-to-get-the-number-of-children-of-a-node-without-load
+
+		
+				microgroups-count : 3,
+
+				members-checked-in: {
+					count: 22,
+					checked-in : {// on check-in added and on check out removed and the above count adjusted, 
+				      // only one entry per member: if he is already checked into a org he will not be added again if he checks into a subgroup or sub subgroup only one entry per member
+				      // does not matter if he is member of how many subgroups and microgroups there will be only one entry if he has checkin into a org, subgroup or microgroup 
+					userID1: firstName,
+					userID2: firstName,
+				}
+		},
+   		
+	}
+
+}
+
+"rules": {
+      “subgroups”: {
+	“.validate”: “@only-add-write”,
+        "$groupid": {
+            ".read": “@any-auth-user && (@current-user-is-group-owner-2 || @current-user-is-group-admin-2)", 
+            ".write": “@only-add-or-delete-write && @current-auth-user-himself && (@current-user-is-group-owner-2 || @current-user-is-group-admin-2)" 
+	    ".validate": "@valid-id && @valid-group-exists”,
+	    "$subgroupid" : {
+		".read": “@any-auth-user && @current-user-is-any-type-subgroup-member-2", 
+            	".write": “@only-add-or-delete-write && @current-auth-user-himself && (@current-user-is-subgroup-owner-2 || @current-user-is-subgroup-admin-2)" 
+	    	".validate": "@valid-id && newData.hasChildren([‘title’, ‘desc’, ‘timestamp’, ‘members-count’, ’microgroups-count’, ‘members-checked-in’ ])”,
+	    “title”: {
+		“.validate”: "@valid-title”
+
+	    },
+	    “desc”: {
+		“.validate”: “@valid-desc”
+
+	    },
+	    “timestamp”: {
+		“.validate”: “@valid-timestamp”
+
+	    },
+	    “members-count”: {
+		“.validate”: “@valid-count”
+
+	    },
+	     “microgroup-count”: {
+		“.validate”: “@valid-count”
+
+	    },
+	    "members-checked-in : {
+			".validate": "newData.hasChildren([‘count’])”,
+			".write": "@current-user-is-subgroup-member"
+			"count": {
+				".validate": "@valid-count",
+			}
+			"checked-in" : {
+				"$userid": {
+					".write": "@current-auth-user-himself",
+					".validate": "@valid-user-exists"
+				}
+			}
+	     }
+                  },
+}
+
+
+subgroups-names : {
+	groupID1: {
+			subgroupID1: subgroup 1 Title,
+			subgroupID2: subgroup 2 Title
+		}
+	
+}
+
+"rules": {
+      “subgroups-names”: {
+	“.validate”: “@only-add-write”,
+        "$groupid": {
+            ".read": “@any-auth-user && @current-user-is-any—type-group-member-2", 
+            ".write": “@only-add-or-delete-write && @current-auth-user-himself && (@current-user-is-group-owner-2 || @current-user-is-group-admin-2)" 
+	    ".validate": "@valid-id”,
+	    “$subgroupid”: {
+	    	".validate": "@valid-id”,
+
+	    } 
+        }    
+      },
+}
+
+
+
+microgroups: {
+	groupID1 : { //group ID will be selected by the creating user i.e. owner, and will be unique
+		subgroupID1 : {//subgroup ID will only be unique within the group
+			microgroupID1 : { microgroup ID will only be unique within the subgroup
+				uid: groupID1>subgroupID1>microgroupID1
+				title: Mall App subgroup,
+				desc: The subgroup that is developing the Mall App,
+				timestamp: timestamp,
+				cover-image: {
+     			 		url: "http://www.google.com/gc/orgBucket/orgID1>subgroup1>microgroup1.jpg",
+			 		id: orgID1>subgroup1>microgroup1.jpg, 
+					bucket-name : orgBucket,
+     			 		source: 1, // 1 = google cloud storage ,
+     			 		mediaType: image/jpeg
+				}
+				members-count : 22, // including owner, admins, and members, 
+				    // for coding read http://stackoverflow.com/questions/15148803/in-firebase-is-there-a-way-to-get-the-number-of-children-of-a-node-without-load
+
+		
+		
+			members-checked-in: {
+				count: 22,
+				checked-in : {// on check-in added and on check out removed and the above count adjusted, 
+				      // only one entry per member: if he is already checked into a org he will not be added again if he checks into a subgroup or sub subgroup only one entry per member
+				      // does not matter if he is member of how many subgroups and microgroups there will be only one entry if he has checkin into a org, subgroup or microgroup 
+				userID1: firstName,
+				userID2: firstName,
+			}
+			},
+		}
+	}
+					
+			
+
+}
+
+microgroups-names : {
+	groupID1: {
+			subgroupID1: {
+				microgroupID2: subgroup 2 Title
+			}
+		}
+	
+}
+
+
+groups-user-invites : {
+	ziaukhan@hotmail.com: {
+		groupID1: { //this will be deleted after the signup and the org membership is given
+			date-created: timestamp,
+			invited-by: userID //owner or by admin only
+		},
+		groupID2: { 
+			date-created: timestamp,
+			invited-by: userID
+		}
+	},
+	923008263374: {//invitation sent by mobile sms
+		groupID1: { 
+			date-created: timestamp,
+			invited-by: userID //owner or by admin only
+		},
+		groupID2: { 
+			date-created: timestamp,
+			invited-by: userID
+		}
+	}
+}
+
+group—membership-requests : {// the members makes the membership request for an group, this list contains pending request not yet approved, to find by group
+	groupID1 : {
+		useID1 : {message: “message to the moderator”, timestamp: timestamp}, // once approved it will be deleted from here, and his user-memberships will be changed from 0 to 3
+		useID2 : {message: “message to the moderator”, timestamp: timestamp},
+	}
+
+}
+
+subgroup—membership-requests : {// the members makes the membership request for an group, this list contains pending request not yet approved, to find by group
+	groupID1 : {
+		subgroupID1 : {
+			useID1 : {message: “message to the moderator”, timestamp: timestamp}, // once approved it will be deleted from here, and his user-memberships will be changed from 0 to 3
+			useID2 : {message: “message to the moderator”, timestamp: timestamp},
+		}
+	}
+
+}
+
+microgroup—membership-requests : {// the members makes the membership request for an group, this list contains pending request not yet approved, to find by group
+	groupID1 : {
+		subgroupID1 : {
+			microgroupID1 : {
+				useID1 : {message: “message to the moderator”, timestamp: timestamp}, // once approved it will be deleted from here, and his user-memberships will be changed from 0 to 3
+				useID2 : {message: “message to the moderator”, timestamp: timestamp},
+			}
+		}
+	}
+
+}
+
+
+group-members : {
+	groupID1 : {
+		userID1: {membership-type: 1, // 1 = owner/creator, 2 = admin, 3 = member
+			  timestamp: timestamp}		
+		userID3: {membership-type: 2,timestamp: timestamp},
+		userID7: {membership-type: 3,timestamp: timestamp},
+		userID9: {membership-type: 2,timestamp: timestamp}
+	},
+}
+
+"rules": {
+      “group-members”: {
+	“.validate”: “@only-add-write”,
+        "$groupid": {
+            ".read": “@any-auth-user && @current-user-is-any—type-group-member-2",             
+            ".write": “@only-add-or-delete-write && (@current-user-is-group-owner || @current-user-is-group-admin)" 
+	    ".validate": "@valid-id”,
+	    "$userid" : {
+		".validate": "@valid-user-exists"
+	    }
+        }    
+      },
+}
+
+
+subgroup-members : {
+	groupID1: {subgroupID1 : {
+		userID3 : {membership-type: 1,timestamp: timestamp}, //  I. a parent org member can only become the member of the subgroup 
+			     // II. an org admin can become the owner/creator of a subgroup as in this example i.e. there will two owners in this case the org owner and the subgroup owner both have delete rights
+		userID7 : {membership-type: 3,timestamp: timestamp},
+		userID9: {membership-type: 2,timestamp: timestamp}   // a member who is not the admin of the org can become admin of the subgroup i.e. it will have a right to create microgroups 
+	},
+	}
+}
+
+microgroup-members : {
+	groupID1: { subgroupID2: {microgroupID3 : { //I. a parent subgroup member can only become the member of the microgroup 
+		userID9: {membership-type: 1,timestamp: timestamp}, // A subgroup admin created this microgroup, i.e. this microgroup owner, and the subgroup owner, the subgroup admin, and org owner can delete this microgroup
+		userID3: {membership-type: 2,timestamp: timestamp}// the admin of the parent subgroup is by definition the admin of the microgroup  		
+	}
+	}}
+}
+
+
+
+group-activity-streams : { //http://ui-patterns.com/patterns/ActivityStream
+	groupID1 : {
+		autoGeneratedTimestampBasedID : { // using the standard http://www.w3.org/TR/activitystreams-core/ , http://www.w3.org/TR/2014/WD-activitystreams-vocabulary-20141023/ 
+						  // http://activitystrea.ms/specs/json/1.0/
+			{//also set priority with -Timestamp
+      				"language": "en",
+      				"verb": "subgroup-creation”, //an index should be set on this
+      				"published": timestamp,
+      				"displayName": “Zia Khan created a Panaswift subgroup”,
+      				"actor": {
+        				"type": “user”,
+        				"id": “zia”, //this is the userID, and an index should be set on this
+       					"displayName": “Zia Khan”,
+					“email”: “ziaukhan@hotmail.com”,
+					"image": {
+     						"id": "http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+     						"type": "http://activitystrea.ms/2.0/Link",
+     						"mediaType": "image/jpeg"
+   					}
+        			}      								
+				"object" : {
+   					"type": "subgroup”,
+   					"id": “groupID>subgroupID1”, //an index should be set on this
+   					"url": “groupID/subgroupID1”,
+   					"displayName": “The subgroup Title”
+					"image": {
+     						"id": "http://www.google.com/gc/orgBucket/orgID1>subgroupID1.jpg",
+     						"type": "http://activitystrea.ms/2.0/Link",
+     						"mediaType": "image/jpeg"
+   					}
+  				},
+      				"target": {
+        				"type": “group”,
+        				"id": “groupID”, //an index should be set on this
+        				"displayName": “The Org’s Title”
+        					        				
+      				}
+    				
+			}
+		}
+
+	}
+
+}
+
+"rules": {
+      “group-activity-streams”: {
+	“.validate”: “@only-add-write”,
+        "$groupid": {
+            ".read": “@any-auth-user && @current-user-is-any—type-group-member-2",             
+            ".write": “@only-add-or-delete-write && @current-user-is-any—type-group-member-2" 
+	    ".validate": "@valid-group-exists”
+        }    
+      },
+}
+
+
+subgroup-activity-streams : { //http://ui-patterns.com/patterns/ActivityStream
+	groupID1 : { subgroupID1: {
+		autoGeneratedTimestampBasedID : { // using the standard http://www.w3.org/TR/activitystreams-core/ , http://www.w3.org/TR/2014/WD-activitystreams-vocabulary-20141023/ 
+						  // http://activitystrea.ms/specs/json/1.0/
+			{//also set priority with -Timestamp
+      				"language": "en",
+      				"verb": "subgroup-creation”, //an index should be set on this
+      				"published": timestamp,
+      				"displayName": “Zia Khan created a Panaswift subgroup”,
+      				"actor": {
+        				"type": “user”,
+        				"id": “zia”, //this is the userID, and an index should be set on this
+       					"displayName": “Zia Khan”,
+					“email”: “ziaukhan@hotmail.com”,
+					"image": {
+     						"id": "http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+     						"type": "http://activitystrea.ms/2.0/Link",
+     						"mediaType": "image/jpeg"
+   					}
+        			}      								
+				"object" : {
+   					"type": "subgroup”,
+   					"id": “groupID>subgroupID1”, //an index should be set on this
+   					"url": “groupID/subgroupID1”,
+   					"displayName": “The subgroup Title”
+					"image": {
+     						"id": "http://www.google.com/gc/orgBucket/orgID1>subgroupID1.jpg",
+     						"type": "http://activitystrea.ms/2.0/Link",
+     						"mediaType": "image/jpeg"
+   					}
+  				},
+      				"target": {
+        				"type": “group”,
+        				"id": “groupID”, //an index should be set on this
+        				"displayName": “The Org’s Title”
+        					        				
+      				}
+    				
+			}
+		}
+		}
+	}
+
+}
+
+"rules": {
+      “group-activity-streams”: {
+	“.validate”: “@only-add-write”,
+        "$groupid": {
+            ".read": “@any-auth-user && (@current-user-is-group-owner-2 || @current-user-is-group-admin-2)",             
+            ".write": “@only-add-or-delete-write" 
+	    ".validate": "@valid-group-exists”
+	    "$subgroupid" : {
+		".read": “@any-auth-user && @current-user-is-any—type-subgroup-member-2",             
+            	".write": “@only-add-or-delete-write && @current-user-is-any—type-subgroup-member-2" 
+	    	".validate": "@valid-subgroup-exists”
+
+	    }
+        }    
+      },
+}
+
+microgroup-activity-streams : { //http://ui-patterns.com/patterns/ActivityStream
+	groupID1 : { subgroupID1: {microgroupID1 : {
+		autoGeneratedTimestampBasedID : { // using the standard http://www.w3.org/TR/activitystreams-core/ , http://www.w3.org/TR/2014/WD-activitystreams-vocabulary-20141023/ 
+						  // http://activitystrea.ms/specs/json/1.0/
+			{//also set priority with -Timestamp
+      				"language": "en",
+      				"verb": "subgroup-creation”, //an index should be set on this
+      				"published": timestamp,
+      				"displayName": “Zia Khan created a Panaswift subgroup”,
+      				"actor": {
+        				"type": “user”,
+        				"id": “zia”, //this is the userID, and an index should be set on this
+       					"displayName": “Zia Khan”,
+					“email”: “ziaukhan@hotmail.com”,
+					"image": {
+     						"id": "http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+     						"type": "http://activitystrea.ms/2.0/Link",
+     						"mediaType": "image/jpeg"
+   					}
+        			}      								
+				"object" : {
+   					"type": "subgroup”,
+   					"id": “groupID>subgroupID1”, //an index should be set on this
+   					"url": “groupID/subgroupID1”,
+   					"displayName": “The subgroup Title”
+					"image": {
+     						"id": "http://www.google.com/gc/orgBucket/orgID1>subgroupID1.jpg",
+     						"type": "http://activitystrea.ms/2.0/Link",
+     						"mediaType": "image/jpeg"
+   					}
+  				},
+      				"target": {
+        				"type": “group”,
+        				"id": “groupID”, //an index should be set on this
+        				"displayName": “The Org’s Title”
+        					        				
+      				}
+    				
+			}
+		}
+		}
+	}
+	}
+
+}
+
+
+
+
+
+
+
+

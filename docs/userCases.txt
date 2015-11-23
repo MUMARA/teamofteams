@@ -1,0 +1,100 @@
+Panacloud Wow Use Cases
+
+Signup Scenario I: Independent Signup
+1. User goes to Website or downloads the app on iPhone or Android
+2. User signups by giving email, first name, last name, password, and selects a unique user ID. Optionally he can also enter his mobile phone number.
+3. User receives a email to verify his/her email account.
+4. If the user does not verify his/her email address in 7 days the account is suspended and another email sent as a reminder to verify. 
+
+Signup Scenario II: Invited Signup by email
+1. A current user who is an admin/owner of an org sends a invite to a email address with a particular message for a particular org. The invited is stored in firebase with email address as key. The email contains link to the web signup page and app. When the user sign’s up and enters his email address during signup we know by checking the invites in the firebase that he is the same person and at the end of signup automatically make him member of the org.  
+2. The user signup’s the normal way except at the completion of signup he/she automatically becomes a member of the invited org.
+
+Signup Scenario III: Invited Signup by SMS
+1. A current user who is an admin/owner of an org from him mobile app sends a invite by sms to a mobile number by selecting from him contact list with a particular message for a particular org. The invited is stored in firebase with mobile number as key. The sms contains link to the mobile app. When the user sign’s up and enters his mobile number (we can automatically get it) during signup we know by checking the invites in the firebase that he is the same person and at the end of signup automatically make him member of the org.  
+2. The user signup’s the normal way except at the completion of signup he/she automatically becomes a member of the invited org.
+
+Membership Scenario IV Added by Admin: Org Membership for a user who has signed up already and has a user ID and owner/admin adds him
+From the org page the owner/admin adds the user as a member by giving his user ID.
+
+Membership Request Scenario V: Org Membership for User who has signed up and has a user ID makes a request for membership to the owner/admins
+A user searches for an org and goes to the org page and makes a request to join an organisation, the request contains a default/editable message. The owner/admins of an org after looking at the request either accept or reject his request.  
+
+Sign in Scenario:
+1. User using email/user ID and password sign in into the website or mobile app.
+
+User Home Page (/user/userID1):
+There are two views in which the page can be shown: I. owner view II. profile view to everyone else i.e. who have signed up  
+As soon as the user sign-in’s he/she is shown the user home page/screen in the owner view.
+On the user home page the following will be shown directly or indirectly:
+1. A manual check in box if he is a member of at least one org. If he is a member of no org’s he will not be shown the check-in box. If he is a member of more then one org/teams/subteams he will be shown the option to which org/team/subteam he can checking in (multiple selection allowed in a org and its teams).
+2. List of activities (activity stream) for the user depending on his memberships in orgs/teams/subteams and if he is a owner/admin or just a member.
+3. A list of the org’s that user is a member of. He can be just a member, or a admin or a owner. All types of org’s will be shown in a single list. Each org entry will also show number of members, teams, and subteams. It will also show number of members currently checked in each org (clicking on it the user will go to the org check in detailed report). A summary of other services like messages, etc. may also be given. His own current check in status for every org will also be provided i.e. checked in or out. 
+4. There may be a button to create a new org that will be owned by the user. 
+5. Search org field/button so that he can do a search on all orgs he is interested in. Once he gets the list he can make a request to join by going to the org page.  
+6. By clicking on the org item in the list or the org search results he can go to the org page.
+
+
+Org Home Page (/orgID1):
+There are four views in which the page can be shown: I. owner view II. admin view III. member view IV. non-member view  
+On the org page, we will show the following directly or indirectly.
+1. Basic org info. (all four views).
+2. Button to request membership (IV only)
+3. Complete activity stream of the org. (I, II, and III)
+4. Complete org details, the number of members, teams and subteams. (I, II, and III)
+5. Complete list of members (I, II, and III)
+6a. A way to add members. (I and II only)
+6b. A way to make members into admins from member list (I only)
+7. List of pending membership requests and a way to approve them (I and II only)
+8. List of teams, on click it will take to the team home page (I, II and III)
+9. Button to create teams (I and II only)
+10. Current checkin report which will show all the checkins of the org, its teams and subteams. On click it will show details. (I, II and III)  
+11. Checkin Detailed History Report which will show all the checkins of the org, its teams and subteams by date and time by member. (I and II only)  
+12. Checkin Summary will also show totals for the weeks and months of the org, its teams and subteams by date and time by member. (I and II only)
+13. Add a location or beacon definition for the org (I and II only)
+14. Delete org button (I only)   
+
+
+
+Team Home Page (/orgID1/teamID1):
+There are five views in which the page can be shown: I. owner view II. org admin view III. team admin view IV. team member view V. org member view  
+On the team page, we will show the following directly or indirectly.
+1. Basic team info. (all five views).
+2. Button to request membership (V only)
+3. Complete activity stream of the team. (I, II, III, and IV)
+4. Complete team details, the number of members, and subteams. (I, II, III and IV)
+5. Complete list of members (I, II, III, and IV)
+6a. A way to add members, only parent org members can become team members (I, II, and III only)
+6b. A way to make members into admins from the member list (I and II only)
+7. List of pending membership requests and a way to approve them (I, II, and III)
+8. List of subteams, on click it will take to the subteam home page (I, II III, and IV)
+9. Button to create sub-teams (I, II, and III only)
+10. Current checkin report which will show all the checkins of the teams and its subteams. On click it will show details. (I, II, III and IV)  
+11. Checkin Detailed History Report which will show all the checkins of team and its subteams by date and time by member. (I, II, and III only)  
+12. Checkin Summary will also show totals for the weeks and months of the team and its subteams by date and time by member. (I, II, and III only)
+13. Add a location or beacon definition for the team (I, II, and III only)
+14. Delete team button (I and II only)   
+
+
+
+
+Subteam Home Page (/orgID1/teamID1/subteamID1):
+There are six views in which the page can be shown: I. owner view II. org admin view III. parent team admin view IV. subteam Admin View V. subteam member view VI. parent team member view  
+On the subteams page, we will show the following directly or indirectly.
+1. Basic subteam info. (all six views).
+2. Button to request membership (VI only)
+3. Complete activity stream of the subteam. (I, II, III, IV and V)
+4. Complete team details and the number of members. (I, II, III, IV and V)
+5. Complete list of members (I, II, III, IV and V)
+6a. A way to add members, only parent team members can become subteam members (I, II, III, and IV only)
+6b. A way to make members into admins from the member list (I, II, and III only)
+7. List of pending membership requests and a way to approve them (I, II, III and IV)
+8. Current checkin report which will show all the checkins of the subteam. On click it will show details. (I, II, III, IV and V)  
+9. Checkin Detailed History Report which will show all the checkins of the subteam by date and time by member. (I, II, III, and IV only)  
+10. Checkin Summary will also show totals for the weeks and months of the subteam by date and time by member. (I, II, III, and IV only)
+11. Add a location or beacon definition for the subteam (I, II, III, and IV only)
+12. Delete subteam button (I, II and III only)   
+
+
+
+    

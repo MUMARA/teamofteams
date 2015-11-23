@@ -1,0 +1,57 @@
+<div style="box-shadow: 0px 2px 0px -1px rgba(0, 0, 0, 0.2), 1px 0px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+
+    position: fixed;
+    background-color: rgb(130, 210, 227);
+    height: 288px;
+    min-height: 288px;
+    /*top: -40px;*/
+    min-width: 100%;
+    margin: 0 auto;
+    left: 0px;
+    top: 0px !important;">
+    <ng-md-icon icon="close" size="30" style="outline: none; margin-top: 53px; position: relative; top: 20%"
+                ng-click="quizAddTopic.back()"></ng-md-icon>
+</div>
+
+
+<div id="creatGroup" style="width: 1360px">
+
+    <form style="background-color: #efefef;"name="titleForm"  novalidate="">
+        <md-content class="grayScroller" style="height: calc(102.6vh - 88px);max-width:70%;margin: 0 auto">
+            <md-card style="">
+                <md-card-content style="padding: 50px; box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.25);
+-moz-box-shadow: 0px 0px 10px 4px rgba(255  , 255, 255, 0.25);
+-webkit-box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.25)">
+                    <h1 style="color: rgb(110,100,110);font-weight: 500; text-align: center"><u>Add Topics</u></h1>
+
+                    <h2 style="font-weight: 500;">Topic Title <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
+                    <md-input-container>
+                        <label><!--Title-->Topic Title</label>
+                        <input name="topicTitle" ng-model="quizAddTopic.Title" minlength="3" maxlength="30"  required> <!--check-topic-existance=""-->
+                        <div ng-show="titleForm.$submitted || titleForm.topicTitle.$touched" ng-messages="titleForm.topicTitle.$error">
+                            <div class="invalid_color" ng-message="required">This is required.</div>
+                            <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                            <div class="invalid_color" ng-message="maxlength">Required maximum length 30</div>
+                            <!--<div class="invalid_color id_Error" ng-message="checkTopicExistance">This name is not available.</div>-->
+                        </div>
+                    </md-input-container>
+                    <h2 style="font-weight: 500;">Topic Description</h2>
+                    <md-input-container>
+                        <label><!--Title-->Topic Description</label>
+                        <textarea name="topicDescription" ng-model="quizAddTopic.Description" minlength="3" maxlength="200" required></textarea>
+                        <div ng-show="titleForm.$submitted || titleForm.topicDescription.$touched" ng-messages="titleForm.topicDescription.$error">
+                            <div class="invalid_color" ng-message="required">This is required.</div>
+                            <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                            <div class="invalid_color" ng-message="maxlength">Required maximum length 200</div>
+                        </div>
+                    </md-input-container>
+                    <div flex offset="10">
+                        <md-button ng-disabled="titleForm.$invalid" class="md-primary" style="margin-left: 80%;" ng-click="quizAddTopic.addTopics()">Create</md-button>
+                    </div>
+                </md-card-content>
+            </md-card>
+        </md-content>
+    </form>
+</div>
+
+</div>

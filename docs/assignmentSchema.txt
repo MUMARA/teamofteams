@@ -1,0 +1,153 @@
+{
+
+   assignments: {//show to all the members, created by owner or admin, members cannot write only read
+	“groupid1”: {
+           “subgroupid1: {
+		“open-assignments”: {
+			“assignmentid1”: {
+				title: “The title of the task”
+				text: “The task detailed description”,
+				timestamp: 23456754
+				attachments: {
+					autoid1: {
+						title: The file title
+						url: “www.dropbox.com/filename”
+					}
+				},
+				created-by: userid5,
+				due-timestamp: 6575343746
+
+			}
+		},
+		“closed-assignments”: {
+
+		}
+
+	    }
+	}
+
+   }
+
+   user-assignment-in-progress : {//only show to the individual member, created by members and they can read and write
+       “groupid1”: {
+           “subgroupid1: {
+               “userid1 : {
+			“assignmentid1”: {
+				title: “The title of submission”
+				text: “The response to the assignment”,
+				timestamp: 23456754
+				attachments: {
+					autoid1: {
+						title: The file title
+						url: “www.dropbox.com/filename”
+					}
+				},
+				
+
+			}
+		}
+	    }
+	}
+
+   }
+
+   user-assignment-submits : {//only show to the individual member, created by members and no write access
+       “groupid1”: {
+           “subgroupid1: {
+               “userid1 : {
+			“assignmentid1”: {
+				title: “The title of submission”
+				timestamp: 23456754				
+
+			}
+		}
+	    }
+	}
+
+   }
+
+
+
+   assignment-submits : {//in review, member can only transfer it here, after that cannot read or write, admins can read and grade 
+       “groupid1”: {
+           “subgroupid1: {
+               “assignmentid1” : {
+			“userid1”: {
+				title: “The title of submission”
+				text: “The response to the assignment”,
+				timestamp: 23456754
+				attachments: {
+					autoid1: {
+						title: The file title
+						url: “www.dropbox.com/filename”
+					}
+				},
+				grade-percent: 75,//in percentage
+                                review-remarks: The detailed remarks,
+				review-timestamp: 345678,
+				review-by: userid3
+
+			}
+		}
+	    }
+	}
+
+   }
+
+   assignment-grades : {//only admins have access
+       “groupid1”: {
+           “subgroupid1: {
+               “assignmentid1” : {
+			“userid1”: {
+				title: “The title of submission”
+				text: “The response to the assignment”,
+				timestamp: 23456754
+				attachments: {
+					autoid1: {
+						title: The file title
+						url: “www.dropbox.com/filename”
+					}
+				},
+				grade-percent: 75,//in percentage
+                                review-remarks: The detailed remarks,
+				review-timestamp: 345678,
+				review-by: userid3
+
+			}
+		}
+	    }
+	}
+
+   }
+
+   user-assignment-grades : {//only member have read access
+       “groupid1”: {
+           “subgroupid1: {
+               “userid1” : {
+			“assignmentid1”: {
+				title: “The title of submission”
+				text: “The response to the assignment”,
+				timestamp: 23456754
+				attachments: {
+					autoid1: {
+						title: The file title
+						url: “www.dropbox.com/filename”
+					}
+				},
+				grade-percent: 75,//in percentage
+                                review-remarks: The detailed remarks,
+				review-timestamp: 345678,
+				review-by: userid3
+
+			}
+		}
+	    }
+	}
+
+   }
+
+
+
+   
+
+}

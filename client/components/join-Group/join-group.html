@@ -1,0 +1,133 @@
+<style xmlns:>
+    md-autocomplete.md-default-theme {
+        box-shadow: none;
+        font-size: large;
+        width: 985px;
+        margin-left: 3px;
+        margin-right: 35px;
+    }
+
+    a.md-button.md-default-theme.md-hue-1.md-accent.md-raised,
+    a.md-button.md-default-theme.md-hue-1.md-accent.md-fab,
+    .md-button.md-default-theme.md-hue-1.md-accent.md-raised,
+    .md-button.md-default-theme.md-hue-1.md-accent.md-fab {
+        background-color: #60b089;
+        height: 24px;
+        margin-top: 15px;
+        ;
+    }
+
+    .userCardImg {
+        max-width: 55px;
+        /*max-height: 55px;*/
+        box-sizing: border-box;
+        border: 3px solid #8BC53F;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+    .listCardHeading {
+        /*text-align: center;*/
+        /*vertical-align: baseline;*/
+        color: #7dd9e8;
+        font-size: 15px;
+        margin: 19px 18px 0px 100px;
+        /*display:inline-block;*/
+        /*position:absolute;*/
+    }
+
+    .listCardHeading2 {
+        /*text-align: center;*/
+        /*vertical-align: baseline;*/
+        color: #7dd9e8;
+        font-size: 15px;
+        margin: 19px 18px 0px 100px;
+        /*display:inline-block;*/
+        /*position:absolute;*/
+    }
+
+    .listCardHeading,
+    .listCardHeading2 {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    body > md-content > div > div.marginContainer > div > div > div > md-content {
+        overflow: hidden
+    }
+</style>
+<div>
+    <div style="margin:0 auto !important; background-color: #F05A29;height: 100vh; bottom: 0px top: 53px; width: 1200px" name="joinGroupForm  novalidate=">
+        <a>
+            <ng-md-icon icon="close" size="50" style="outline: none" layout-padding ng-click="joinGroup.hide()"></ng-md-icon>
+        </a>
+        <md-content style="text-align: center; height: 100vh;max-width:80%;margin: 0px auto">
+            <div laout="column">
+                <form name="joinGroupForm" layout="column" layout-padding="" style="height: 250px;">
+                    <!--<div>-->
+                    <!--<md-autocomplete-->
+                    <!--md-delay="500"-->
+                    <!--md-autofocus="true"-->
+                    <!--md-selected-item="joinGroup.selectedItem"-->
+                    <!--md-search-text="joinGroup.searchText"-->
+                    <!--md-items="group in joinGroup.queryGroups(joinGroup.searchText)"-->
+                    <!--md-item-text="group['.value']"-->
+                    <!--placeholder="Search">-->
+                    <!--&lt;!&ndash;<span md-highlight-text="joinGroup.searchText">{{group['.value'] }}</span>&ndash;&gt;-->
+                    <!--</md-autocomplete>-->
+                    <!--</div>-->
+                    <md-input-container>
+                        <label>Search</label>
+                        <input type="text" ng-model="joinGroup.search" ng-change="joinGroup.queryGroups()">
+                    </md-input-container>
+                </form>
+                <div layout="row" flex="80">
+                    <md-content class="grayScroller" style="text-align: center; margin-top: -150px;">
+                        <md-content style="height:100vh; overflow-x: hidden;margin-top: 5px;z-index: 1; ">
+                            <!--<div layout="column" style="width: 220px">-->
+                            <!-- <div  style="width: 240px;height:285px;color: #676767;display:inline-block !important"
+                                     ng-repeat="(key,prop) in  joinGroup.listgroup track by key">-->
+                            <div style="width: 240px;height:285px;color: #676767;display:inline-block !important" ng-repeat="key in joinGroup.filteredGroups">
+                                <!--ng-repeat='(key,prop) in user.userObj track by key'>-->
+                                <md-card style="margin: 3px;">
+                                    <md-card-content style="padding: 0px !important;">
+                                        <div layout="row" layout-align="center center" style="margin-top:5%">
+                                            <div flex="75">
+                                                <a ng-href="/user/group/{{key.$id}}"><img src="{{key.groupImg||'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" alt="Washedcd c Out" style="width: 188px;height:80px"></a>
+                                            </div>
+                                        </div>
+                                        <div layout="column" layout-align="start center" style="margin-top:8%;position: relative;">
+                                            <span class="md-headline">{{key.$id || key.title}}</span>
+                                            <md-icon md-svg-src="img/location.svg" class="user-locations"></md-icon>
+                                            <span class="md-subhead">Panacloud</span>
+                                        </div>
+                                        <div layout="row" layout-align="start start" style="border-top: 2px solid #dddddd;position: relative;margin-top:15%">
+                                            <md-button class="md-fab cards-button" aria-label="Eat cake" style="background-color: #31B4CB;">
+                                                <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>
+                                            </md-button>
+                                            <div>
+                                                <md-list>
+                                                    <md-list-item class="md-3-line" style="border-right: 2px solid #dddddd">
+                                                        <img ng-src="{{key.ownerImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="" />
+                                                    </md-list-item>
+                                                </md-list>
+                                            </div>
+                                            <div>
+                                                <md-list>
+                                                    <md-list-item class="md-3-line">
+                                                        <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="joinGroup.answer( key.$id )"><span style="color: white;"> REQUEST</span>
+                                                        </md-button>
+                                                    </md-list-item>
+                                                </md-list>
+                                            </div>
+                                        </div>
+                                    </md-card-content>
+                                </md-card>
+                            </div>
+                        </md-content>
+                </div>
+            </div>
+            </md-content>
+    </div>
+</div>

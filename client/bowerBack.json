@@ -1,0 +1,27 @@
+{
+  "name": "Panacloud",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ziaukhan/panacloud-wow",
+  "authors": [
+    "Zia Khan <ziaukhan@hotmail.com>"
+  ],
+  "description": "A attendance app",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.4",
+    "angular-mocks": "1.4",
+    "angular-material": "~0.9.0",
+    "angular-aria": "1.4"
+  },
+  "resolutions": {
+    "angular-aria": "1.4",
+    "angular-animate": "1.4"
+  }
+}

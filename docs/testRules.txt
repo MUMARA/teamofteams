@@ -1,0 +1,150 @@
+//Rules API https://www.firebase.com/docs/security/api/: 
+//overview: https://www.firebase.com/docs/security/guide/securing-data.html
+
+//========================= Wow Data and Rules ==============================================
+
+
+space-meta-data : {
+	spaceID1 : {
+		title: Panacloud (Pvt.) Ltd.,
+		desc: A software and people development company,
+		cover-image: {
+     			 url: "http://www.google.com/gc/orgBucket/orgID1.jpg",
+			 id: orgID1.jpg, 
+			 bucket-name : orgBucket,
+     			 source: 1,// 1 = google cloud storage, 
+     			 mediaType: image/jpeg
+   		},
+		logo-image: {
+     			 url: "http://www.google.com/gc/logoBucket/orgID1.jpg",
+			 id: orgID1.jpg, 
+			 bucket-name : orgBucket,
+     			 source: 1,// 1 = google cloud storage, 
+     			 mediaType: image/jpeg
+   		},
+		members-count : 22, // including owner, admins, and members, 
+				    // for coding read http://stackoverflow.com/questions/15148803/in-firebase-is-there-a-way-to-get-the-number-of-children-of-a-node-without-load
+
+		
+		teams-count : 5,
+		subteams-count : 3,
+
+		members-checked-in: {
+			count: 22,
+			checked-in : {// on check-in added and on check out removed and the above count adjusted, 
+				      // only one entry per member: if he is already checked into a org he will not be added again if he checks into a team or sub team only one entry per member
+				      // does not matter if he is member of how many teams and subteams there will be only one entry if he has checkin into a org, team or subteam 
+				userID1: firstName,
+				userID2: firstName,
+			}
+		},
+		
+
+	}
+
+}
+
+space-members : {
+	spaceID1 : {
+		userID1: {membership-type: 1, // 1 = owner/creator, 2 = admin, 3 = member
+			  timestamp: timestamp}		
+		userID3: {membership-type: 2,timestamp: timestamp},
+		userID7: {membership-type: 3,timestamp: timestamp},
+		userID9: {membership-type: 2,timestamp: timestamp}
+	},
+	spaceID1>teamID1 : {
+		userID3 : {membership-type: 1,timestamp: timestamp}, //  I. a parent org member can only become the member of the team 
+			     // II. an org admin can become the owner/creator of a team as in this example i.e. there will two owners in this case the org owner and the team owner both have delete rights
+		userID7 : {membership-type: 3,timestamp: timestamp},
+		userID9: {membership-type: 2,timestamp: timestamp}   // a member who is not the admin of the org can become admin of the team i.e. it will have a right to create subteams 
+	},
+	spaceID1>teamID2>subteamID3 : { //I. a parent team member can only become the member of the subteam 
+		userID9: {membership-type: 1,timestamp: timestamp}, // A team admin created this subteam, i.e. this subteam owner, and the team owner, the team admin, and org owner can delete this subteam
+		userID3: {membership-type: 2,timestamp: timestamp}// the admin of the parent team is by definition the admin of the subteam  		
+	}
+
+}
+
+//Sample 1: Not tried in simulator
+{
+  "rules": {
+    "space-meta-data": {//A rule that only allows space-members to have read write access over this data
+      "$spaceid”: {
+        ".read":  "root.child('space-members').child(data.val()).hasChild(auth.uid)”,
+        ".write": "root.child('space-members').child(data.val()).hasChild(auth.uid)"
+      }
+    }
+  }
+}
+
+//Sample 2: Not working in simulator because child requires a string and data.val() does not return a string in this case
+{
+  "rules": {
+    "space-meta-data": {//A rule that only allows space-members with values 1, 2 and 3 i.e. greater then 0, to have read write access over this data
+      "$spaceid”: {
+        ".read":  "root.child('space-members').child(data.val()).child(auth.uid).child('membership-type’).val() > 0”,
+        ".write": "root.child('space-members').child(data.val()).child(auth.uid).child('membership-type’).val() > 0”
+      }
+    }
+  }
+}
+
+//Sample 3: Working in simulator, but still a issue because if not a member it does not allow to read or write but throws an error
+{
+  "rules": {
+    "space-meta-data": {//A rule that only allows space-members with values 1, 2 and 3 i.e. greater then 0, to have read write access over this data
+      "$spaceid”: {
+        ".read":  "root.child('space-members').child($spaceid).child(auth.uid).child('membership-type’).val() > 0",
+        ".write": "root.child('space-members').child($spaceid).child(auth.uid).child('membership-type’).val() > 0”
+      }
+    }
+  }
+}
+
+On Simulator:
+{ provider: 'custom', uid: 'zia1' }
+
+
+
+//========================= Sample Group Data and Rules  ==============================================
+//source : http://stackoverflow.com/questions/14491496/granting-access-to-firebase-locations-to-a-group-of-users/14492117#14492117
+
+{
+  "groups": {
+    "alpha": {
+      "joe": true,
+      "sally": true,
+    },
+    "beta": {
+      "joe": true,
+      "fred": true
+    }
+  },
+  "data": {
+    "thing1": {
+      "group": "alpha"
+      /* data accessible only by the "alpha" group */
+    },
+    "thing2": {
+      "group": "beta"
+      /* data accessible only by the "beta" group */
+    },
+    "thing3": {
+      "group: "alpha"
+      /* more data accessible by the "alpha" group */
+    }
+  }
+}
+
+
+
+{
+  "rules": {
+    "data": {
+      "$thing": {
+        ".read":  "root.child('groups').child(data.child('group').val()).hasChild(auth.id)",
+        ".write": "root.child('groups').child(data.child('group').val()).hasChild(auth.id)"
+      }
+    }
+  }
+}

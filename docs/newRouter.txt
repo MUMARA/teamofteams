@@ -1,0 +1,10 @@
+Please read the following to understand new router for Angular 1.4:
+http://toddmotto.com/digging-into-angulars-controller-as-syntax/
+
+https://angular.github.io/router/getting-started
+http://chariotsolutions.com/blog/post/new-angular-router-simple-example/
+http://www.codeproject.com/Articles/891436/Introduction-to-Basics-of-Angular-newRouter
+http://www.sitepoint.com/introduction-futuristic-new-router-angularjs/
+
+https://angular.github.io/router/
+https://github.com/angular/router/tree/master/examples/angular-1

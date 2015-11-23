@@ -1,0 +1,7 @@
+We will use Google's Material Design for this Website/Web App.
+
+Resources to get started:
+http://designmodo.com/material-design-resources/
+
+http://www.google.com/design/spec/resources/layout-templates.html
+

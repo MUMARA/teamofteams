@@ -1,0 +1,47 @@
+<md-dialog>
+    <md-subheader class="md-sticky-no-effect" style="background-color: #dcedc8; margin:0;">Define a new location</md-subheader>
+    <md-content class="mapModel">
+        <form name="locationForm" novalidate ng-submit="addLocation()">
+            <md-input-container style="width: 50%;">
+                <label>Title</label>
+                <input name="locationTitle" ng-model="markers.current.message" type="text" required="" minlength="3">
+                <div ng-hide="locationForm.locationTitle.$pristine" ng-messages="locationForm.locationTitle.$error" ng-messages-multiple>
+                    <div class="invalid_color" ng-message="required">This is required.</div>
+                    <div class="invalid_color" ng-message="minlength">Minimum length should be 3.</div>
+                </div>
+            </md-input-container>
+            <div layout="">
+                <md-input-container style="width: 80%">
+                    <label>Latitude</label>
+                    <input name="lat" ng-model="markers.current.lat" type="number" required="" style="padding-left: 5px;">
+                    <div ng-hide="locationForm.lat.$pristine" ng-messages="locationForm.lat.$error" ng-messages-multiple>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container style="width: 80%">
+                    <label>Longitude</label>
+                    <input name="lng" ng-model="markers.current.lng" type="number" required="" style="padding-left: 5px;"/>
+                    <div ng-hide="locationForm.lng.$pristine" ng-messages="locationForm.lng.$error" ng-messages-multiple>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container style="width: 80%">
+                    <label>Radius ( meters )</label>
+                    <input name="radius" ng-model="location.radius" type="number" required="" style="padding-left: 5px;">
+                    <div ng-hide="locationForm.radius.$pristine" ng-messages="locationForm.radius.$error" ng-messages-multiple>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+            </div>
+            <div layout="column" layout-align="center center" style="width: 100%">
+                <leaflet center="center" markers="markers" paths="paths" height="300px" width="555px"></leaflet>
+            </div>
+            <md-divider style="padding: 3px 0;"></md-divider>
+            <div style="height: 30px !important;" class="md-actions">
+                <md-button type="button" ng-click="hide()" class="md-primary">Cancel</md-button>
+                <!--<md-button class="md-raised md-primary" ng-disabled="locationForm.$invalid || submitting">Add Location</md-button>-->
+                <md-button class="md-raised md-primary" ng-disabled="locationForm.$invalid || submitting"><span ng-bind="getBtnStatus()"></span></md-button>
+            </div>
+        </form>
+    </md-content>
+</md-dialog>

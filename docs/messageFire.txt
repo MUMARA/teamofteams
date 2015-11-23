@@ -1,0 +1,98 @@
+Firebase Messages Schema:
+
+Used this table to find team name separator http://www.asciitable.com/
+Firebase doc: A child node's key cannot be longer than 768 bytes, nor deeper than 32 levels. It can include any unicode characters except for . $ # [ ] / and ASCII control characters 0-31 and 127.
+
+users-online {
+	userID1 : {mobile: true, web: true},
+	userID2 : {mobile: true, web: false},	
+
+}
+
+communications-metadate {
+	org1: {
+		channels : {
+			channelID: {
+				name: My talking channel,
+				createdBy: userID,
+				createdAt: timestamp,
+				notSeenMessages: 10
+			}
+		}
+		individual-messages : {
+		AUserID>BUserID : {// the question is which name should come first http://stackoverflow.com/questions/51165/how-do-you-do-string-comparison-in-javascript
+					//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare
+			notSeenMessages: 2
+		}
+	}
+
+}
+
+communications: {
+	org1: {
+	   channels : {
+		channelName1: { 
+			messages: { //this will be an $angularFireArray not the array I have created with custom keys
+			
+				autoTimestampBasedKey1: { from: userID1, name: userName, timestamp: timestamp1, message: messageText1, attachments: {fileKey1: fileDropboxURL1, fileKey2: fileDropboxURL2}, 
+								seenBy: { userID2: timestamp, userID2: timestamp } },
+				autoTimestampBasedKey2: { from: userID2, name: userName, timestamp: timestamp1, message: messageText1, attachments: {fileKey3: fileDropboxURL3, fileKey4: fileDropboxURL4}, 
+								seenBy: { userID1: timestamp, userID4: timestamp } },
+			
+			},
+			files: {
+	
+				fileKey1: { from: userID1, name: userName, timestamp: timestamp1, dropboxURL: fileDropboxURL1, sourceMessage: messages/org1/channels/channel1/autoTimestampBasedKey1 }
+	
+			}
+		}
+	   },
+	   individual-messages : {
+		AUserID>BUserID : {// the question is which name should come first http://stackoverflow.com/questions/51165/how-do-you-do-string-comparison-in-javascript
+					//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare
+			messages: { //this will be an $angularFireArray not the array I have created with custom keys
+			
+				autoTimestampBasedKey1: { from: userID1, name: userName, timestamp: timestamp1, message: messageText1, attachments: {fileKey1: fileDropboxURL1, fileKey2: fileDropboxURL2}, 
+								seen: timestamp },
+				autoTimestampBasedKey2: { from: userID2, name: userName, timestamp: timestamp1, message: messageText1, attachments: {fileKey3: fileDropboxURL3, fileKey4: fileDropboxURL4}, 
+								seen: timestamp  },
+			
+			},
+			files: {
+	
+				fileKey1: { from: userID1, name: userName, timestamp: timestamp1, dropboxURL: fileDropboxURL1, sourceMessage: messages/org1/channels/channel1/autoTimestampBasedKey1 }
+	
+			}
+		}
+
+	   }
+
+	},
+	org1>team1>subteam: {
+		channels : {
+		   channelName1: { 
+			messages: {
+			
+				autoTimestampBasedKey1: { from: userID1, timestamp: timestamp1, message: messageText1, attachments: {fileKey1: fileDropboxURL1, fileKey2: fileDropboxURL2}, 
+								seenBy: { userID2: timestamp, userID2: timestamp } },
+				autoTimestampBasedKey2: { from: userID2, timestamp: timestamp1, message: messageText1, attachments: {fileKey3: fileDropboxURL3, fileKey4: fileDropboxURL4}, 
+								seenBy: { userID1: timestamp, userID4: timestamp } },
+			
+			},
+			files: {
+	
+				fileKey1: { from: userID1, timestamp: timestamp1, dropboxURL: fileDropboxURL1, sourceMessage: messages/org1/channels/channel1/autoTimestampBasedKey1 }
+	
+			}
+		   }
+	   }
+	// all the individual messages will be stored in the org above but will also be shown in teams and sub-teams 
+
+	}
+
+}
+
+
+
+
+

@@ -1,0 +1,67 @@
+{
+    "rules": {
+      "users": {
+        "$userid": {
+            ".read": "auth != null",
+            ".write": "auth != null && auth.uid == $userid"
+        }    
+      },
+      "user-memberships" : {
+        "$userid": {
+          "$spaceid" : {
+            ".read": "(auth != null && auth.uid == $userid) || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() > 0",
+            ".write": "(auth != null && auth.uid == $userid) || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 1 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 2"
+          }
+          
+        }
+      },
+      "spaces" : {
+        "$spaceid": {
+          ".read":  "root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() > 0",
+          ".write": "root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() > 0",
+          "teams" : {
+            "$teamid": {
+              ".read":  "root.child('space-members').child($spaceid + '>' + $teamid).child(auth.id).child('membership-type').val() > 0 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 1 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 2",
+              ".write": "root.child('space-members').child($spaceid + '>' + $teamid).child(auth.id).child('membership-type').val() > 0 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 1 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 2",
+              "subteams" : {
+                "$subteamid" : {
+                   ".read":  "root.child('space-members').child($spaceid + '>' + $teamid + '>' + $subteamid).child(auth.id).child('membership-type').val() > 0 || root.child('space-members').child($spaceid + '>' + $teamid).child(auth.id).child('membership-type').val() == 1 || root.child('space-members').child($spaceid + '>' + $teamid).child(auth.id).child('membership-type').val() == 2 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 1 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 2",
+                   ".write": "root.child('space-members').child($spaceid + '>' + $teamid + '>' + $subteamid).child(auth.id).child('membership-type').val() > 0 || root.child('space-members').child($spaceid + '>' + $teamid).child(auth.id).child('membership-type').val() == 1 || root.child('space-members').child($spaceid + '>' + $teamid).child(auth.id).child('membership-type').val() == 2 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 1 || root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() == 2"
+                }
+              }
+            }
+          }
+        }
+      },
+      "space-meta-data" : {
+        "$spaceid": {
+          ".read":  "root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() > 0",
+          ".write": "root.child('space-members').child($spaceid).child(auth.id).child('membership-type').val() > 0"
+        }
+      },
+      "space-membership-requests" : {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "space-members" : {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "space-activity-streams" : {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "locations-defined" : {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "check-in-records" : {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "check-in-current" : {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Panacloud",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ziaukhan/panacloud-wow",
+  "authors": [
+    "Zia Khan <ziaukhan@hotmail.com>"
+  ],
+  "description": "A attendance app",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.4.1",
+    "angular-mocks": "1.4.1",
+    "angular-material": "~0.10.0",
+    "angular-aria": "1.4.1",
+    "ng-mfb": "~0.5.1",
+    "angular-messages": "~1.3.15",
+    "firebase": "~2.2.7",
+    "angularfire": "~1.0.0",
+    "ngstorage": "~0.3.0",
+    "angularGeoFire": "~3.0.0",
+    "ngGeolocation": "~0.0.7",
+    "moment": "~2.9.0",
+    "angular-moment": "~0.10.1",
+    "angular-audio": "~1.4.1",
+    "select2": "~3.4.5",
+    "angular-ui-select": "~0.11.2",
+    "angular-hero": "~0.0.5",
+    "angular-sanitize": "~1.3.15",
+    "angular-ui-select2": "~0.0.5",
+    "cropper": "~0.9.3",
+    "angular-ui-router": "~0.2.15"
+  },
+  "resolutions": {
+    "angular-animate": "1.4.0-rc.0",
+    "angular": "1.4.1"
+  }
+}

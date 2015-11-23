@@ -1,0 +1,36 @@
+//Read: https://github.com/firebase/bolt/blob/master/docs/guide.md
+
+type CurrentTimestamp extends Number {
+  validate() = this == now;
+}
+
+type InitialTimestamp extends Number {
+  validate() = initial(this, now);
+}
+
+// Returns true if the value is intialized to init, or if it retains it's prior
+// value, otherwise.
+initial(value, init) = value == (prior(value) == null ? init : prior(value));
+
+
+type User {
+  validate() = this.dateCreated == now;
+
+  email: String,
+  firstName: String,
+  lastName: String,
+  'date-updated': InitialTimestamp,
+  status: Number
+}
+
+isAnyAuthUser() = auth != null;
+
+isAuthUser(userID) = auth.uid == userID;
+
+path /users {
+  read() = isAnyAuthUser();
+}
+
+path /users/$user is User {
+  write() = isAuthUser($user);
+}

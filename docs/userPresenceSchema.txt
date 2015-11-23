@@ -1,0 +1,22 @@
+{
+ "users-presence" : {
+  "user1": {
+    "defined-status" : 3,
+    "last-modified" : 431793523128
+  },
+  "user2": {
+    "defined-status" : 1,  // 1 = online, 2 = away, 3 = busy. if no connection that means it's offline
+    "last-modified" : 431793523128,
+    "connections": {
+      "-asd212as564d56a4sd" : {
+       "type": 3,               // 1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
+       "started": "1431793742026"
+       },
+       "-asd212as564d56a4sd" : {
+       "type": 1,
+       "started": "1431793742900"
+       }
+    }
+  }
+ }
+}

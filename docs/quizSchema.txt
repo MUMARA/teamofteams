@@ -1,0 +1,441 @@
+Firebase Question Bank and Quiz Schema
+
+
+user-question-banks : {
+	userid1 : {
+		questionBankUniqueID : {
+			membership-type: 1//1=owner, 2 == member
+		}
+	}
+
+}
+
+question-bank-memberships : {
+	questionBankUniqueID : {
+		userID : {
+			membership-type: 1//1=owner, 2 == member
+		}
+	}
+
+
+}
+
+question-bank {
+	questionBankUniqueID : {
+		timestamp: timestamp,
+		title: The MEAN Stack Question Bank
+		desc: The detailed description
+	}
+
+}
+
+question-bank-topics {
+	questionBankUniqueID : {
+		autotopicid1: {
+			timestamp: timestamp,
+			title: AngularJS
+			desc: The detailed description
+			subtopics: {
+				autosubtopicid1 : {
+					timestamp: timestamp,
+					title: AngularJS
+					desc: The detailed description
+					questions: {
+						questionID1: true,
+						questionID2: true
+					}
+				}
+				
+			}
+			questions: {
+				questionID3: true,
+				questionID4: true
+			}
+		}
+	}
+
+}
+
+questions {
+	questionBankUniqueID : {
+					questionID1: {
+						title: question title
+						type: 1, //1 mean single choice mcq (radio-buttons), 2 means multiple choice mcqs (check-boxes), 3 means question set
+						desc: The text question in html
+						discussion-html: The discussion about the question and the right solution
+						options : {
+							optionID1: {
+								text: The option text in html,
+								correct: true,//in type 1 only one can be true, in type two more then one can be true,
+								discussion: The discussion about the option and why it is correct
+							},
+							optionID2: {
+								text: The option text in html,
+								correct: false,
+								discussion: The discussion about the option and why it is wrong
+
+							}
+
+						}
+					},
+					questionID2: {
+						title: question title
+						type: 3, //3 means question set
+						desc: The text question in html
+						discussion: The discussion about the  solution
+						question1IDinSet: {
+							title: the question title,
+							type: 1, //can only be type 1 or 2
+							desc: The text question in html
+							discussion: The discussion about the  solution to this question
+							options : {
+								optionID1: {
+									text: The option text in html,
+									correct: true,//in type 1 only one can be true, in type two more then one can be true,
+									discussion: The discussion about the option and why it is correct
+								},
+								optionID2: {
+									text: The option text in html,
+									correct: false,
+									discussion: The discussion about the option and why it is wrong
+
+								}
+
+							}
+						},
+						question1IDinSet: {
+							title: the question title,
+							type: 1, //can only be type 1 or 2
+							desc: The text question in html
+							discussion: The discussion about the  solution to this question
+							options : {
+								optionID1: {
+									text: The option text in html,
+									correct: true,//in type 1 only one can be true, in type two more then one can be true,
+									discussion: The discussion about the option and why it is correct
+								},
+								optionID2: {
+									text: The option text in html,
+									correct: false,
+									discussion: The discussion about the option and why it is wrong
+
+								}
+
+							}
+						}
+						
+					}
+	}
+
+}
+
+question-bank-quizes : {
+	questionBankID: {
+		quizID : true
+
+	}
+
+}
+
+group-quizes : {
+	groupID : {
+		quizID : true
+	}
+
+}
+
+quizes : {
+	quizID : {
+		title: The Title of the quiz,
+		desc: The description,
+		duration: 50, //mins
+		num-questions: 25,
+		
+	}
+
+
+}
+
+quiz-topics : {
+	quizID :
+		autotopicid1: {
+			timestamp: timestamp,
+			title: AngularJS
+			desc: The detailed description
+			subtopics: {
+				autosubtopicid1 : {
+					timestamp: timestamp,
+					title: AngularJS
+					desc: The detailed description
+					questions: {
+					   						
+					}
+				}
+				
+			}
+			
+		   }
+	}
+
+}
+
+quiz-questions: {
+	quizID: {
+					questionID1: {
+						title: question title
+						type: 1, //1 mean single choice mcq (radio-buttons), 2 means multiple choice mcqs (check-boxes), 3 means question set
+						desc: The text question in html
+						options : {
+							optionID1: {
+								text: The option text in html,
+								
+								
+							},
+							optionID2: {
+								text: The option text in html,
+
+							}
+
+						}
+					   },
+					questionID2: {
+						title: question title
+						type: 1, //1 mean single choice mcq (radio-buttons), 2 means multiple choice mcqs (check-boxes), 3 means question set
+						desc: The text question in html
+						options : {
+							optionID1: {
+								text: The option text in html,
+								
+								
+							},
+							optionID2: {
+								text: The option text in html,
+
+							}
+
+						}
+					   },
+
+
+	}
+
+}
+
+quiz-answers: {
+	quizID: {
+					questionID1: {
+						title: question title
+						type: 1, //1 mean single choice mcq (radio-buttons), 2 means multiple choice mcqs (check-boxes), 3 means question set
+						desc-html: The text question in html
+						discussion-html: The discussion about the question and the right solution
+						options : {
+							optionID1: {
+								html: The option text in html,
+								correct: true,//in type 1 only one can be true, in type two more then one can be true,
+								discussion-html: The discussion about the option and why it is correct
+							},
+							optionID2: {
+								html: The option text in html,
+								correct: false,
+								discussion-html: The discussion about the option and why it is wrong
+
+							}
+
+						}
+					   },
+					questionID2: {
+						title: question title
+						type: 1, //1 mean single choice mcq (radio-buttons), 2 means multiple choice mcqs (check-boxes), 3 means question set
+						desc-html: The text question in html
+						discussion-html: The discussion about the question and the right solution
+						options : {
+							optionID1: {
+								html: The option text in html,
+								correct: true,//in type 1 only one can be true, in type two more then one can be true,
+								discussion-html: The discussion about the option and why it is correct
+							},
+							optionID2: {
+								html: The option text in html,
+								correct: false,
+								discussion-html: The discussion about the option and why it is wrong
+
+							}
+
+						}
+					   },
+
+	}
+
+
+}
+
+quiz-answer-sheet : {
+    groupid: {
+	quizid : {
+	   userid: {
+		questionID : {
+			optionID1: true,
+			correct: true
+
+		}
+
+
+	   }
+
+	}
+   }
+
+}
+
+
+
+
+//old
+question-banks-metadata {
+	questionBankUniqueID : {
+		owner: userID,
+		createdAt: timestamp,
+		title: The MEAN Stack
+		admins : {
+			userID1: true
+		}
+	}
+
+}
+
+question-banks {
+	questionBankUniqueID : {
+		chapters : {
+			chapterID1: {
+				title: Node.js,
+				desc: Questions about Node.js for the MEAN Book 
+				questions : {
+					questionID1: {
+						title: question title
+						type: 1, //1 mean single choice mcq (radio-buttons), 2 means multiple choice mcqs (check-boxes), 3 means question set
+						desc-html: The text question in html
+						discussion-html: The discussion about the question and the right solution
+						options : {
+							optionID1: {
+								html: The option text in html,
+								correct: true,//in type 1 only one can be true, in type two more then one can be true,
+								discussion-html: The discussion about the option and why it is correct
+							},
+							optionID2: {
+								html: The option text in html,
+								correct: false,
+								discussion-html: The discussion about the option and why it is wrong
+
+							}
+
+						}
+					},
+					questionID2: {
+						title: question title
+						type: 3, //3 means question set
+						desc-html: The text question in html
+						discussion-html: The discussion about the  solution
+						question1IDinSet: {
+							title: the question title,
+							type: 1, //can only be type 1 or 2
+							desc-html: The text question in html
+							discussion-html: The discussion about the  solution to this question
+							options : {
+								optionID1: {
+									html: The option text in html,
+									correct: true,//in type 1 only one can be true, in type two more then one can be true,
+									discussion-html: The discussion about the option and why it is correct
+								},
+								optionID2: {
+									html: The option text in html,
+									correct: false,
+									discussion-html: The discussion about the option and why it is wrong
+
+								}
+
+							}
+						},
+						question1IDinSet: {
+							title: the question title,
+							type: 1, //can only be type 1 or 2
+							desc-html: The text question in html
+							discussion-html: The discussion about the  solution to this question
+							options : {
+								optionID1: {
+									html: The option text in html,
+									correct: true,//in type 1 only one can be true, in type two more then one can be true,
+									discussion-html: The discussion about the option and why it is correct
+								},
+								optionID2: {
+									html: The option text in html,
+									correct: false,
+									discussion-html: The discussion about the option and why it is wrong
+
+								}
+
+							}
+						}
+						
+					}
+				}
+				topics : {
+					topicID1: {
+						title: Express
+						desc: Questions about the express framework
+						questions : {
+
+						}
+						sub-topics : {
+							subTopicID : {
+								title: Express Rounting
+								desc: Questions about the express routing framework
+								questions : {
+
+								}
+							}
+
+						}
+					}
+				}
+	
+			}
+		}
+		
+	}
+
+}
+
+
+users: {
+	userID : {
+		question-banks:{
+			questionBankUniqueID : 1,//1 means owned and 2 means only admin
+		} 
+	}
+
+}
+
+
+quizes-metadata {
+	quizID : {
+		title: The Title of the quiz,
+		desc-html: The description in html,
+		duration: 50, //mins
+		num-questions: 25
+	}
+
+}
+
+orgs : {
+	orgID : {
+		scheduled-quizes : {//this field can also be in team or sub-team
+			quizID : {
+				start-time: timestamp,//http://stackoverflow.com/questions/20883240/firebase-trigger-on-current-time
+				end-time: timestamp,
+			}
+		} 
+	}
+
+}
+
+

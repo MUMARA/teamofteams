@@ -1,0 +1,49 @@
+<div flex="40" style="margin: 16px;">
+    <div layout="row">
+        <div>
+            <!--<md-icon icon="images/icons/ic_account_circle_48px.svg" style="width: 48px; height: 48px; margin-top: 25px"></md-icon>-->
+            <img class="userProfileImg" get-gravatar="{{user.email}}" watch="user.email" alt="ProfileImg"/>
+        </div>
+        <div class="md-tile-content">
+            <h3>@{{userID}}</h3>
+            <h3>{{user.firstName}} {{user.lastName}}</h3>
+            <h3>{{user.email}}</h3>
+
+        </div>
+    </div >
+    <div layout="column" style="margin: 5px">
+        <div style="margin-top: 5px" ng-repeat="groupObj in subscribedGroups | array | filter : filterCheckin ">
+            <div>
+                <span>{{ groupObj.checkin.message }} to <a href="#!/{{ groupObj.groupInfo.$id }}">{{
+                    groupObj.groupInfo.title }}</a> at "{{ groupObj.checkin | getLocationNameByID : groupObj.locations }}" location,</span>
+                <span am-time-ago="groupObj.checkin.timestamp/1000" am-preprocess="unix"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div  ng-show="showLocationTab" flex layout="row" layout-align="space-around center" ng-show="isOwner">-->
+<div flex layout="row" layout-align="space-around center" ng-show="isOwner">
+    <div flex="15"><img src="images/icons/checkin1.png" style="width: 70px; height: 70px; margin-left: 0;margin-top: 0;" /></div>
+    <div flex="85" >
+        <form style="padding: 0px 4px 10px 10px;">
+            <div layout="column" layout-align="space-around start" >
+                <md-input-container style="width: 80%">
+                    <label>Status message (optional)</label>
+                    <input ng-model="newStatus.message" type="text" class="input-full">
+                </md-input-container>
+                <md-radio-group ng-model="newStatus.type" layout="row">
+                    <md-radio-button value="1" aria-label="1" ng-disabled="newStatus.type == 2 || !selectedGroup" style="margin-left: 2px;"> in </md-radio-button>
+                    <md-radio-button value="2" aria-label="2" ng-disabled="newStatus.type == 1 || !selectedGroup"> out </md-radio-button>
+                </md-radio-group>
+                <md-checkbox ng-model="selectLocation" style="margin-left: 4px;" ng-show="geoLocationSupport">
+                    <!--<md-icon icon="images/icons/ic_room_48px.svg" style="margin-top: -5px;"></md-icon>-->
+                    Add Location
+                </md-checkbox>
+                <select ng-change="setSelectedGroup(selectedGroup)" ng-model="selectedGroup" ng-options="groupID as groupObj.groupInfo.title for (groupID, groupObj) in subscribedGroups">
+                    <option value="">Select Group</option>
+                </select>
+                <md-button class="md-raised md-primary" style="margin-top: 20px;" ng-click="updateStatus()" ng-disabled="checkinSending">Update Status</md-button>
+            </div>
+        </form>
+    </div>
+</div>

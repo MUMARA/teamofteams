@@ -1,0 +1,22 @@
+.cropperWindow{
+    width: 800px;
+    height: 400px;
+}
+.cropperWindowButtons{
+    position: absolute;
+    bottom: 5px;
+    left: 40%;
+    z-index: 5;
+}
+
+.cropper-main-button{
+    width: 150px;
+    height: 90px;
+    padding: 0px !important;
+
+}
+
+.cropper-main-image{
+    width: 150px;
+    /*height: auto;*/
+}

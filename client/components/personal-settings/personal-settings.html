@@ -1,0 +1,154 @@
+<!--<div ng-controller="personalSettingsController as psc">-->
+<div id="personalSettingPage">
+    <form style="background-color: #005DE9;" name="personalSettingForm" novalidate="">
+        <!--<ng-md-icon icon="close" size="50" layout-padding ng-click="psc.hide()"></ng-md-icon>-->
+        <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="$root.newImg = null ;personalSettings.hide()"></ng-md-icon>
+        <md-content class="grayScroller" style="height: 88vh;max-width:70%;margin: 0px auto">
+            <md-card style="margin: 0px auto">
+                <md-card-content style="padding: 50px;">
+                    <h1 style="color: #d3d3d3">Personal Settings</h1>
+
+                    <hr/>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>User ID</label>
+                            <input name="userName"  ng-model="personalSettings.userData.$id" minlength="3" maxlength="40" disabled>
+                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.userName.$touched" ng-messages="personalSettingForm.userName.$error">
+                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <h3 style="color: #5D5D5D">General Information</h3>
+
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>Fitrst Name</label>
+                            <input name="firstName" ng-model="personalSettings.userData.firstName" minlength="3" maxlength="40" required>
+                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.firstName.$touched" ng-messages="personalSettingForm.firstName.$error">
+                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>Last Name</label>
+                            <input name="lastName" ng-model="personalSettings.userData.lastName" minlength="3" maxlength="40" required>
+                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.lastName.$touched" ng-messages="personalSettingForm.lastName.$error">
+                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>Old Password</label>
+                            <input name="oldPassword" type="password" ng-model="personalSettings.userData.oldPassword" check-user-password="" minlength="3" maxlength="40" >
+                            <!--<input name="oldPassword" type="password" ng-model="personalSettings.userData.oldPassword"  minlength="3" maxlength="40" >-->
+                            <div ng-show="personalSettingForm.oldPassword.$touched" ng-messages="personalSettingForm.oldPassword.$error">
+                                <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                                <div class="invalid_color" ng-message="_oldPassword">Incorrect password</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>New Password</label>
+                            <input name="newPassword" type="password" ng-model="personalSettings.userData.newPassword" compare-against="personalSettings.userData.oldPassword" minlength="3" maxlength="40">
+                            <div ng-show="personalSettingForm.newPassword.$touched" ng-messages="personalSettingForm.newPassword.$error">
+                                <div class="invalid_color" ng-message="compareAgainst">Same Password</div>
+                                <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>Email Address</label>
+                            <input name="email" type="email" ng-model="personalSettings.userData.email" disabled>
+                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.email.$touched" ng-messages="personalSettingForm.email.$error">
+                                <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>Contact Number</label>
+                            <input name="contactNumber" type="number" ng-model="personalSettings.userData.contactNumber" minlength="11" maxlength="40" required>
+                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.contactNumber.$touched" ng-messages="personalSettingForm.contactNumber.$error">
+                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 11</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>Profession</label>
+                            <input name="profession" type="text" ng-model="personalSettings.userData.profession" minlength="3" maxlength="40" required>
+                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.profession.$touched" ng-messages="personalSettingForm.profession.$error">
+                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>About Your Self</label>
+                            <input name="description" type="text" ng-model="personalSettings.userData.desc" required>
+                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.description.$touched" ng-messages="personalSettingForm.description.$error">
+                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <!--<div>
+                        <span layout="row" style="color: #5D5D5D">See Your Photo</span>
+                        <img src="../../img/sampleUserImg.svg" layout="row" class="sampleUserImg">
+                    </div>-->
+                    <div>
+                        <span layout="row" style="color: #5D5D5D">See Your Photo</span>
+                        <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
+                            <img style="outline: none;" ng-src="{{personalSettings.userData['profile-image'] ||'../../img/sampleUserImg.svg'}}" alt="../../img/sampleUserImg.svg" class="cropper-main-image sampleUserImg" ng-click="personalSettings.showAdvanced($event)"/>
+                            <!--<md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100">
+                                <md-icon md-svg-src="img/image.svg" class="cropper-main-image" ></md-icon>
+                            </md-button>-->
+                        </div>
+                        <div>
+                            <img style="outline: none;" ng-src="{{$root.newImg}}" alt="" class="userCropper-main-button sampleUserImg" ng-hide="!$root.newImg" ng-click="cgc.showAdvanced($event)" />
+                        </div>
+
+                        <!--<image-cropper></image-cropper>-->
+                        <!--<input ng-model="as3" style="display:none" type="file" id="fileUploadEl"  onchange="angular.element(this).scope().cgc.postPicture(this)"/>
+                        <div class="imgFormat image" onclick="$('#fileUploadEl')[0].click();" >
+                            <img src="img/image.png" alt=""/>
+                        </div>-->
+                    </div>
+
+                </md-card-content>
+                <div layout="row">
+                    <div flex="20" offset="50">
+                        <md-progress-circular class="" ng-show="personalSettingForm.$submitted"
+                                              md-mode="indeterminate"></md-progress-circular>
+                    </div>
+                    <div flex offset="10">
+
+                        <!--<md-button ng-disabled="personalSettingForm.$invalid" class="md-raised" style="background-color: #61B188; color: white;" ng-click="personalSettings.answer( personalSettingForm )">SEND</md-button>-->
+                        <md-button  class="md-raised"  style="background-color: #61B188; color: white;" ng-click="personalSettings.answer( personalSettingForm )">Save</md-button>
+                    </div>
+                </div>
+            </md-card>
+
+        </md-content>
+
+    </form>
+
+</div>
+<!--waste-->
