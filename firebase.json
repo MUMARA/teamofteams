@@ -1,0 +1,9 @@
+{
+  "firebase": "panacloud",
+  "public": "client",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

@@ -21,9 +21,9 @@ var mainApplicationModule = angular.module(mainApplicationModuleName, [
     // authService.resolveUserPage();
 }]);
 mainApplicationModule.value('appConfig', {
-    'apiBaseUrl': 'https://teamofteams.herokuapp.com',
+    'apiBaseUrl': 'https://panacloudapi.herokuapp.com',
     //'apiBaseUrl': 'http://localhost:3000',
-    'myFirebase': 'https://panacloud.firebaseio.com',
+    'myFirebase': 'https://luminous-torch-4640.firebaseio.com',
     'firebaseAuth': false,
     'serverPostApi':{
         userProfilePictureUpload:'api/groupProfilepicture',
