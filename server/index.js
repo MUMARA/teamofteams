@@ -50,6 +50,9 @@ app.get('/', function(req, res) {
 amazonServiceRoutes.setupRoutes(app);
 profilePictureManager.init();
 
+app.get('/api/env', function(req, res){
+   res.send(process.env.NODE_ENV); 
+});
 app.get('/api/verifyemail/:uuid', verifyEmailCtrl.verifyEmail);
 app.get('/api/checkuserid/:userID', usersCtrl.checkAvailability);
 

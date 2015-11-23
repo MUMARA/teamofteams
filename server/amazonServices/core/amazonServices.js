@@ -74,7 +74,7 @@ function bucketName(bucketType){
         case 'user': return config.userBucketName;break;
         case 'group':return config.groupBucketName;break;
         case 'subgroup':return config.subgroupBucketName;break
-        case 'quizbank':return config.subgroupBucketName;break
+        case 'quizbank':return config.quizbankBucketName;break
     }
 }
 function getS3SignedUrl(s3_params,bucketType,filename,res){

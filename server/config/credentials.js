@@ -5,7 +5,7 @@
 'use strict';
 
 /*credentials used on server application*/
-var credentialsObj = {
+var development = {
 
     /*product application*/
     product: {
@@ -40,4 +40,46 @@ var credentialsObj = {
 
 };
 
-module.exports = credentialsObj;
+var production = {
+
+    /*product application*/
+    product: {
+        BASEURL: 'https://teamofteams.herokuapp.com/',
+        TITLE: 'Automated Attendance System',
+        SUPPORT: 'support@aasystem.com'
+    },
+    /*firebase credentials*/
+    firebase: {
+        SECRET: '',
+        BASEURL: 'https://panacloud.firebaseio.com/'
+    },
+
+    /*sendgrid credentials*/
+    sendgrid: {
+        USERNAME : 'cqo6ndln7007',
+        PASSWORD : 'app44150687@heroku.com'
+    },
+
+    /*mongoDB ( mongoLab ) credentials*/
+    mongoDB: {
+        URI : 'mongodb://heroku_z1gg2qp7:kf4cemovh3t2vrgco5qpruogrn@ds057214.mongolab.com:57214/heroku_z1gg2qp7'
+    },
+
+    /*push notification services credential e.g. GCM, APN*/
+    pushNotifications: {
+        gcm: {
+            SERVER_KEY : 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+        }
+    }
+
+};
+
+ var credentialsObj = {};
+ 
+if(process.env.NODE_ENV == 'development') {
+    credentialsObj = development
+} else if(process.env.NODE_ENV == 'production') {
+    credentialsObj = production
+}
+    
+module.exports = credentialsObj

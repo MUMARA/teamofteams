@@ -1,7 +1,33 @@
 'use strict';
 
+ var BASEURL = '';
+ 
+if (process.env.NODE_ENV == 'development') {
+    BASEURL =  'https://panacloudapi.herokuapp.com/';
+} else if(process.env.NODE_ENV == 'production') {
+    BASEURL = 'https://teamofteams.herokuapp.com/';
+}
+
+var AWS = {};
+
+if (process.env.NODE_ENV == 'development') {
+    AWS = {
+        'userBucketName':'pwowuserimg',
+        'groupBucketName':'pwowgroupimg',
+        'subgroupBucketName':'pwowsubgroupimg',
+        'quizbankBucketName':'pwowquizbankimg'
+    }
+} else if(process.env.NODE_ENV == 'production') {
+    AWS = {
+        'userBucketName':'totsuserimg',
+        'groupBucketName':'totsgroupimg',
+        'subgroupBucketName':'totssubgroupimg',
+        'quizbankBucketName':'totsquizbankimg'
+    } 
+}
+
 var config = {
-    "BASEURL": 'https://panacloudapi.herokuapp.com/',  // our domain
+    "BASEURL": BASEURL,  // our domain
     /*"amazon":{
         "accessKeyId": "AKIAJIQLONGMPUZUD7YA",
         "secretAccessKey": "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",
@@ -15,10 +41,10 @@ var config = {
     "amazon":{
         "accessKeyId": "AKIAJIQLONGMPUZUD7YA",
         "secretAccessKey": "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",
-        'userBucketName':'pwowuserimg',
-        'groupBucketName':'pwowgroupimg',
-        'subgroupBucketName':'pwowsubgroupimg',
-        'quizbankBucketName':'pwowquizbankimg',
+        'userBucketName': AWS.userBucketName,
+        'groupBucketName': AWS.groupBucketName,
+        'subgroupBucketName': AWS.subgroupBucketName,
+        'quizbankBucketName': AWS.quizbankBucketName,
         's3BaseUrl':'https://s3.amazonaws.com'
     }
 };

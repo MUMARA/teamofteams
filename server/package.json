@@ -16,7 +16,7 @@
     "firebase": "^2.0.6",
     "firebase-token-generator": "^2.0.0",
     "formidable": "^1.0.15",
-    "mongoose": "^3.8.21",
+    "mongoose": "^4.1.9",
     "morgan": "^1.5.0",
     "multipart": "^0.1.5",
     "node-gcm": "^0.9.15",
