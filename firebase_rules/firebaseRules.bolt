@@ -75,12 +75,8 @@ path /User_group_memberships/$userid {
 }
 
 path /user_group_memberships/$userid/$groupid is User_group_memberships {
-  read() = (root['user_group_memberships'][auth.uid][$groupid] != null && (root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 1 || root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 2));
-  
-  //validate() = this.$userid.$groupid != null;
-  //validate() = prior(root['user_group_memberships'][auth.uid]) != null; 
-
-  write() = ( prior(this) == null && isUser($userid) && (this.membership_type == 1 || this.membership_type == 0)) || (prior(root['user_group_memberships'][auth.uid][$groupid]) != null && prior(root['user_group_memberships'][auth.uid][$groupid]['membership_type']) > 0) ;
+  read() = (isUserGroupMemberShipExists() && (isUserGroupMemberShipEquals(1) || isUserGroupMemberShipEquals(2)));
+  write() = ( prior(this) == null && isUser($userid) && (this.membership_type == 1 || this.membership_type == 0)) || (prior(isUserGroupMemberShipExists()) && prior(isUserGroupMemberShipGreaterZero())) ;
 }
 
 
@@ -94,7 +90,7 @@ type Members_checked_Obj {
 }
 
 type Logo_image_Obj {
-validate() = this.hasChildren(['url', 'id', 'bucket-name', 'source', 'mediaType']);
+validate() = this.hasChildren(['url', 'id', 'bucket_name', 'source', 'mediaType']);
 }
 
 type Privacy_Obj {
@@ -145,8 +141,8 @@ type Group{
 }
 
 path /groups/$groupid is Group {
-  read() = root['user_group_memberships'][auth.uid][$groupid] != null && root['user_group_memberships'][auth.uid][$groupid]['membership_type'] > 0;
-  write() = isGroupMemberinGroupIDwithAuthIdExists() && isGroupMemberGroupIDAuthIdMemberShipGreaterZero();
+  read() = isUserGroupMemberShipExists() && isUserGroupMemberShipGreaterZero();
+  write() = prior(isGroupMemberinGroupIDwithAuthIdExists()) && prior(isGroupMemberGroupIDAuthIdMemberShipGreaterZero());
 }
  
 path /groups/$groupid/members_checked_in/count {
@@ -370,14 +366,6 @@ type ActorType {
 
 type SubGroupActivityID {
 validate() = this.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb']) && this.child['actor']['id'] === auth.uid;
-/*
-'actor': ActorType, 
-'displayName': String, 
-'language': String, 
-'published': String, 
-'target': String, 
-'verb': String
-*/
 }
 
 path /subgroup_activity_streams/$groupid/$subgroupid/$activityid is SubGroupActivityID {
@@ -402,17 +390,6 @@ path /subgroup_check_in_current/$groupid/$subgroupid {
 
 type SubGroupCheckCurretUser {
   validate() = this.hasChildren(['identified_location_id', 'location', 'message', 'record_ref', 'source_device_type', 'source_type', 'subgroup_url', 'timestamp', 'type']);
-  /*
-  'identified_location_id': String, 
-  'location': String, 
-  'message': String, 
-  'record_ref': String, 
-  'source_device_type': String, 
-  'source_type': String, 
-  'subgroup_url': String, 
-  'timestamp': CurrentTimestamp, 
-  'type': String  
-  */
 }
 
 path /subgroup_check_in_current/$groupid/$subgroupid/$userid is SubGroupCheckCurretUser {
@@ -483,8 +460,8 @@ path /subgroup_check_in_current_by_user/$userid {
  }
  
  path /user_subgroup_memberships/$userid/$groupid {
-  read() = root['user_group_memberships'][auth.uid][$groupid] != null && (root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 1 || root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 2);
-  write() = prior(root['user_group_memberships'][auth.uid][$groupid]) != null && (prior(root['user_group_memberships'][auth.uid][$groupid]['membership_type']) == 1 || prior(root['user_group_memberships'][auth.uid][$groupid]['membership_type']) == 2);
+  read() = isUserGroupMemberShipExists() && (isUserGroupMemberShipEquals(1) || isUserGroupMemberShipEquals(2));
+  write() = prior(isUserGroupMemberShipExists()) && (prior(isUserGroupMemberShipEquals(1)) || prior(isUserGroupMemberShipEquals(2)));
  }
  
  type UserSubGroupMemberShipSubGroup {
@@ -502,13 +479,13 @@ path /subgroup_check_in_current_by_user/$userid {
  // Sub Group MemberShip Requests #### START 
  
  path /subgroup_membership_requests/$groupid {
-	read() = root['user_group_memberships'][auth.uid][$groupid] != null && ( root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 1 || root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 2);
- write() = root['user_group_memberships'][auth.uid][$groupid] != null && ( root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 1 || root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == 2);
+	read() = isUserGroupMemberShipExists() && ( isUserGroupMemberShipEquals(1) || isUserGroupMemberShipEquals(2));
+ write() = prior(isUserGroupMemberShipExists()) && ( prior(isUserGroupMemberShipEquals(1)) || prior(isUserGroupMemberShipEquals(2)) );
 }
 
 path /subgroup_membership_requests/$groupid/$subgroupid {
-	 read() = root['user_group_memberships'][auth.uid][$groupid]['membership_type'] > 0;
-	 write() = root['user_group_memberships'][auth.uid][$groupid]['membership_type'] > 0;
+	 read() = isUserGroupMemberShipGreaterZero();
+	 write() = prior(isUserGroupMemberShipGreaterZero());
 }
 
 type SubgroupMemberShipReqUseridMessage extends String {
@@ -538,8 +515,8 @@ path /subgroup_membership_requests_by_user/$userid {
 }
 
 path /subgroup_membership_requests_by_user/$userid/$groupid {
-	read() = root['user_group_memberships'][auth.uid][$groupid] != null && root['user_group_memberships'][auth.uid][$groupid]['membership_type'] > 0;
-	write() = root['user_group_memberships'][auth.uid][$groupid] != null && root['user_group_memberships'][auth.uid][$groupid]['membership_type'] > 0;
+	read() = isUserGroupMemberShipExists() && isUserGroupMemberShipGreaterZero();
+	write() = prior(isUserGroupMemberShipExists()) && prior(isUserGroupMemberShipGreaterZero());
 }
 
 type SubGroupReqByUserSubGroup {
@@ -547,7 +524,7 @@ type SubGroupReqByUserSubGroup {
 }
 
 path /subgroup_membership_requests_by_user/$userid/$groupid/$subgroupid is SubGroupReqByUserSubGroup {
-	read() = root['user_group_memberships'][auth.uid][$groupid] != null && root['user_group_memberships'][auth.uid][$groupid]['membership_type'] > 0;
+	read() = isUserGroupMemberShipExists() && isUserGroupMemberShipGreaterZero();
 }
  
 //Sub Group MemberShip Requests By User #### END
@@ -568,7 +545,7 @@ path /group_private_chats/$groupid/$chatid/$automessageid {
 
 path /user_private_chat_refs/$userid/$groupid {
  read() = (auth != null && auth.uid == $userid);
-  write() = (auth != null && auth.uid == $userid && prior(root['user_group_memberships'][auth.uid][$groupid]) != null && prior(root['user_group_memberships'][auth.uid][$groupid]['membership_type']) > 0);
+  write() = (auth != null && auth.uid == $userid && prior(isUserGroupMemberShipExists()) && prior(isUserGroupMemberShipGreaterZero()));
 }
 
 //Uer Private Chat ### END
@@ -578,8 +555,8 @@ path /user_private_chat_refs/$userid/$groupid {
 //Group Chats #### START
 
 path /group_chats/$groupid {
- 	read() = (auth != null) && root['group_members'][$groupid][auth.uid] != null && root['group_members'][$groupid][auth.uid]['membership_type'] > 0;
-  write() = (auth != null) && root['group_members'][$groupid][auth.uid] != null && root['group_members'][$groupid][auth.uid]['membership_type'] > 0;
+ 	read() = (auth != null) && isGroupMemberinGroupIDwithAuthIdExists() && isGroupMemberGroupIDAuthIdMemberShipGreaterZero();
+  write() = (auth != null) && prior(isGroupMemberinGroupIDwithAuthIdExists()) && prior(isGroupMemberGroupIDAuthIdMemberShipGreaterZero());
   validate() =  prior(root['groups/' + $groupid] != null);
 }
 
@@ -609,12 +586,12 @@ path /group_chats/$groupid/$chattopicid/messages/$messageid {
 //Sub Group Chats #### START
 
 path /subgroup_chats/$groupid {
-	read() = root['group_members'][$groupid][auth.uid] != null && ( root['group_members'][$groupid][auth.uid]['membership_type'] == 1 || root['group_members'][$groupid][auth.uid]['membership_type'] == 2);
+	read() = isGroupMemberinGroupIDwithAuthIdExists() && ( isGroupMemberGroupIDAuthIdMemberShipEuqals(1) || isGroupMemberGroupIDAuthIdMemberShipEuqals(2));
 }
 
 path /subgroup_chats/$groupid/$subgroupid {
 	read() = (auth != null) && root['subgroup_members'][$groupid][$subgroupid][auth.uid] != null && root['subgroup_members'][$groupid][$subgroupid][auth.uid]['membership_type'] > 0;
-	write() = (auth != null) && root['subgroup_members'][$groupid][$subgroupid][auth.uid] != null && root['subgroup_members'][$groupid][$subgroupid][auth.uid]['membership_type'] > 0;
+	write() = (auth != null) && prior(root['subgroup_members'][$groupid][$subgroupid][auth.uid] != null) && prior(root['subgroup_members'][$groupid][$subgroupid][auth.uid]['membership_type'] > 0);
 	validate() =  prior(root['subgroups/' + $groupid + '/' + $subgroupid] != null);
 }
 
@@ -632,8 +609,8 @@ path /subgroup_chats/$groupid/$subgroupid/$chattopicid/messages/$messageid {
 //TASKS #### START
 
 path /tasks/$groupid {
-	read() = (auth != null) && root['group_members'][$groupid][auth.uid] != null && root['group_members'][$groupid][auth.uid]['membership_type'] > 0;
-	write() = (auth != null) && prior(root['group_members'][$groupid][auth.uid] != null) && prior(root['group_members'][$groupid][auth.uid]['membership_type'] > 0);
+	read() = (auth != null) && isGroupMemberinGroupIDwithAuthIdExists() && isGroupMemberGroupIDAuthIdMemberShipGreaterZero();
+	write() = (auth != null) && prior(isGroupMemberinGroupIDwithAuthIdExists()) && prior(isGroupMemberGroupIDAuthIdMemberShipGreaterZero());
 }
 		
 //TASKS #### END
@@ -689,7 +666,7 @@ isGroupMemberGroupIDAuthIdMemberShipGreaterZero() = (root['group_members'][$grou
 //Checking MemeberShip Type Equal Too
 isGroupMemberGroupIDAuthIdMemberShipEuqals(dig) = (root['group_members'][$groupid][auth.uid]['membership_type'] == dig);
  
- //Checking SubGropMemebr + GroupIP + SubGroupID + Auth Exists
+//Checking SubGropMemebr + GroupIP + SubGroupID + Auth Exists
 isSubGroupMemberGroupIdSubGroupIpAuthIdExists() = (root['subgroup_members'][$groupid][$subgroupid][auth.uid] != null);
  
 //Checking SubGroup MemeberShip Type Greater then Equals ZERO
@@ -699,14 +676,16 @@ isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeGreaterEqualsZero() = (root['su
 isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeGreaterZero() = (root['subgroup_members'][$groupid][$subgroupid][auth.uid]['membership_type'] > 0);
 
 //Checking Subgroup MemeberShip Type Equal Too
- isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeEquals(dig) = (root['subgroup_members'][$groupid][$subgroupid][auth.uid]['membership_type'] == dig);
+isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeEquals(dig) = (root['subgroup_members'][$groupid][$subgroupid][auth.uid]['membership_type'] == dig);
  
- //Checking UserGroup MemberShip Exists
- isUserGroupMemberShipExists() = (root['user_group_memberships'][auth.uid][$groupid] != null);
+//Checking UserGroup MemberShip Exists
+isUserGroupMemberShipExists() = (root['user_group_memberships'][auth.uid][$groupid] != null);
  
- //User group MemberShip Type Equals To
- isUserGroupMemberShipEquals(dig) = (root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == dig);                                 
+//User group MemberShip Type Equals To
+isUserGroupMemberShipEquals(dig) = (root['user_group_memberships'][auth.uid][$groupid]['membership_type'] == dig);                                 
  
+//User group MemberShip Type Equals To
+isUserGroupMemberShipGreaterZero() = (root['user_group_memberships'][auth.uid][$groupid]['membership_type'] > 0);  
 
 
 
