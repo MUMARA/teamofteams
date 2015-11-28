@@ -132,7 +132,7 @@
             });
             $stateProvider.state('user.join-group', {
                 url: '/join-group',
-                templateUrl: 'components/join-Group/join-group.html',
+                templateUrl: 'components/join-group/join-group.html',
                 controller: 'JoinGroupController',
                 controllerAs: 'joinGroup'
             });
