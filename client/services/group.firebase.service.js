@@ -372,7 +372,7 @@ angular.module('core')
                                                         .then(function(){
                                                             deferred.resolve({unlistedMembersArray: response.unlisted});
                                                             //step  : entry for "subgroup-activity-streams"
-                                                            debugger;
+//                                                            debugger;
 
                                                             //self.asyncRecordSubgroupCreationActivity($localStorage.loggedInUser, group, subgroupInfo).then(function () {
                                                             //    if (response.members.length == 1) {
@@ -396,7 +396,7 @@ angular.module('core')
 
                                                         })
                                                         .catch(function(d){
-                                                            debugger;
+                                                            //debugger;
                                                         })
                                                     for(var member in mems){
 

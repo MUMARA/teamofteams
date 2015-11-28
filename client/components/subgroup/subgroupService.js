@@ -7,8 +7,8 @@
     'use strict';
     angular
         .module('app.subgroup',['core','ngMdIcons'])
-        .factory('SubGroupService',['groupFirebaseService','firebaseService','$location','$sessionStorage','soundService','userService',"messageService",'$q','$http','appConfig','$localStorage',
-            function(groupFirebaseService,firebaseService,$location,$sessionStorage,soundService,userService,messageService,$q,$http,appConfig,$localStorage){
+        .factory('SubGroupService',['$rootScope', 'groupFirebaseService','firebaseService','$location','$sessionStorage','soundService','userService',"messageService",'$q','$http','appConfig','$localStorage',
+            function($rootScope, groupFirebaseService,firebaseService,$location,$sessionStorage,soundService,userService,messageService,$q,$http,appConfig,$localStorage){
 
                 return {
 
@@ -27,6 +27,7 @@
                                 }
                                 else {
                                     $location.path('/user/group/'+groupID);
+
                                     messageService.showSuccess("SubGroup creation Successful");
                                 }
                             }, function(group){

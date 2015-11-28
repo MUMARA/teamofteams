@@ -21,6 +21,7 @@
         var groupID = $stateParams.groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
         /*VM functions*/
+        this.showEditSubGroup = false;
         this.groupid = groupID;
         this.activeID;
         this.subgroupData = 0;
@@ -32,7 +33,7 @@
         this.selectedAdminArray = [];
         this.membersArray = [];
         var SubgroupObj;
-        this.selectedindex = 0;
+        this.selectedindex = undefined;
         this.selectedindex2 = 0;
         this.filterUser = filterUser;
         this.filterUser2 = filterUser2;
@@ -44,6 +45,15 @@
             selectedUsersArray: []
 
         };
+        //Team Attendance
+        this.users = [];
+        this.GetSubGroupUsers = function(subgroupData) {
+            that.showEditSubGroup = false;
+            that.showTeamAttendace = true;
+            subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(groupID, subgroupData.$id).$loaded().then(function(data){
+                that.users = data;
+            })
+        }
         /*VM properties*/
 
         /*   this.Subgroup = {
@@ -70,7 +80,9 @@
         }
 
         this.veiwSubgroup = function (subgroupData, index) {
-            debugger
+            
+            this.showEditSubGroup = true;
+            that.showTeamAttendace = false;
             that.selectedindex = index;
             that.activeID = subgroupData.$id;
             var sub = subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, localStorage.userID)
@@ -79,7 +91,7 @@
 
                     //console.log(data === obj); // true
                     // $scope.subgroupSyncObj.subgroupSyncObj.$bindTo($scope, "subgroup");
-                                debugger
+                                
 
                     that.submembers = that.subgroupSyncObj.membersSyncArray;
                     // $scope.subgroups = $scope.subgroupSyncObj.subgroupsSyncArray;

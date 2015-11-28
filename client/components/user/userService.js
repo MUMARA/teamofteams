@@ -2,7 +2,8 @@
     'use strict';
     angular
         .module('app.user', ['core'])
-        .factory('userCompService', ['$interval', 'userService', '$location', 'authService', '$http', '$q', 'appConfig', '$sessionStorage', '$firebaseObject', 'firebaseService', 'userFirebaseService', '$firebaseArray', function ($interval, userService, $location, authService, $http, $q, appConfig, $localStorage, $firebaseObject, firebaseService, userFirebaseService, $firebaseArray) {
+        .factory('userCompService', ['$state', '$interval', 'userService', '$location', 'authService', '$http', '$q', 'appConfig', '$sessionStorage', '$firebaseObject', 'firebaseService', 'userFirebaseService', '$firebaseArray', 
+            function ($state, $interval, userService, $location, authService, $http, $q, appConfig, $localStorage, $firebaseObject, firebaseService, userFirebaseService, $firebaseArray) {
                  var FlattendGroupDataByUser = (function() {
                  var _cb, self,pending = true;
                  var $loadedDefer,_count=0;
@@ -129,7 +130,8 @@
                 },
                 'openJoinGroupPage': function () {
 
-                    $location.path('/user/join-group')
+                    // $location.path('/user/joingroup')
+                    $state.go('user.joingroup');
 
                 }
 

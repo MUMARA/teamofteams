@@ -39,8 +39,8 @@
                     }
                 }
             });
-            $stateProvider.state('forgotpassword', {
-                url: '/forgotpassword',
+            $stateProvider.state('forgot', {
+                url: '/forgot',
                 views: {
                     'nav': navLoginbar,
                     'main': {
@@ -130,8 +130,8 @@
                 controller: 'GeoFencingController',
                 controllerAs: 'geoFencing'
             });
-            $stateProvider.state('user.join-group', {
-                url: '/join-group',
+            $stateProvider.state('user.joingroup', {
+                url: '/joingroup',
                 templateUrl: 'components/join-group/join-group.html',
                 controller: 'JoinGroupController',
                 controllerAs: 'joinGroup'

@@ -3,19 +3,19 @@
     body > md-content > div > div.marginContainer > div > form > div > md-input-container.md-default-theme.md-input-has-value.md-input-invalid > div > div{position:relative !important;}.md-input{width:310px;max-width:310px; min-width:310px; }.grayScroller:hover{overflow:hidden;}
 </style>
 <div id="signUpPage">
-<form  name="singupForm" ng-submit="signUp._signUp()" style="height:100vh;padding: 20px;background-color: #005DE9;">
+<form  name="singupForm" ng-submit="signUp._signUp()" style="height:100vh;padding: 20px;background-color: #efefef;" >
 
 
     <div layout="row" >
         <div flex="10">
-            <a href="/" ><ng-md-icon icon="close" style="outline: none" size="50" layout-padding ></ng-md-icon></a>
+            <a ui-sref="home" ><ng-md-icon icon="close" style="outline: none" size="50" layout-padding ></ng-md-icon></a>
         </div>
-        <div flex="80">
+        <div flex="80" >
             <!--Sign Up User-->
             <md-content class="grayScroller" style="max-width:650px; height:100vh;margin: 0px auto">
                 <md-card style="margin: 0px auto">
                     <md-card-content style="padding: 50px;">
-                        <div layout="column" layout-align="space-around center" layout-margin>
+                        <div layout="column" layout-align="space-around center" layout-margin>  
 
 
                             <md-input-container>
@@ -63,7 +63,7 @@
                                     <div layout="row" class="invalid_color id_Error" ng-message="pattern">Unique ID without spaces or special characters length 3 to 20</div>
                                     <div layout="row" class="invalid_color id_Error" ng-message="checkUserId">This userID is not available.</div>
                                 </div>
-                            </md-input-container>
+                            </md-input-container><br />
                             <md-content style=" margin-left: 0px; font-size: small; ">Select a unique ID for yourself without spaces</md-content>
                             <md-button ng-click=" signUp.signup(singupForm)" class="md-raised md-primary" style="margin-top: 20px;" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId">Sign up</md-button>
                         </div>

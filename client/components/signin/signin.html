@@ -32,10 +32,10 @@
 
 <!--style="padding: 20px;background-color: #005DE9;"-->
 <div id="signInView">
-<form style="padding: 20px;background-color: #005DE9;" name="loginForm" novalidate>
+<form style="padding: 20px;background-color: #efefef;" name="loginForm" novalidate>
     <div layout="row">
         <div flex="10">
-            <a href="/">
+            <a ui-sref="home">
                 <ng-md-icon icon="close" style="outline: none" size="50" layout-padding></ng-md-icon>
             </a>
         </div>
@@ -71,7 +71,7 @@
                                 </div>
                             </md-input-container>
                             <div flex class="forgotPasswordContainer">
-                                <a ng-href="/forgotpassword">Forgot Password ?</a>
+                                <a ui-sref="forgot">Forgot Password ?</a>
                                 <md-input-container ng-if="signin.submitting" layout="column" layout-align="end center"
                                                     style="margin-top: 25px;">
                                     <md-progress-circular class="md-hue-2"

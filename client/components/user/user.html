@@ -188,7 +188,7 @@ display: block;"  ng-model="user.searchbox"  type="text" ng-change="$root.search
                                 }
                             </style>-->
                             <!--<md-select-label style="color:black;font-size: 16px;">SUBGROUPS</md-select-label>-->
-                            <md-option value="any">Every ONe</md-option>
+                            <md-option value="any">Every One</md-option>
                             <md-option  ng-repeat="(key,groups) in user.userMemData.data.groupSubgroupData">{{key}}</md-option>
                         </md-select>
 
@@ -347,16 +347,16 @@ display: block;"  ng-model="user.searchbox"  type="text" ng-change="$root.search
                                 </div>
                                 <div layout="column" layout-align="start center"
                                      style="margin-top:8%;position: relative;">
-                                    <span class="md-headline">{{key.$id}}</span>
+                                    <span ui-sref="user.group({groupID: key.$id})" class="md-headline">{{key.$id}}</span>
                                     <md-icon ng-src="{{key.userImg }}" class="user-locations"></md-icon>
-                                    <span class="md-subhead">Panacloud</span>
+                                    <span ui-sref="user.group({groupID: key.$id})" class="md-subhead">Panacloud</span>
+                                    
                                 </div>
                                 <div layout="row" layout-align="start start"
                                      style="border-top: 2px solid #dddddd;position: relative;margin-top:15%">
-                                    <md-button class="md-fab cards-button" aria-label="Eat cake"
-                                               style="background-color: #31B4CB;">
-                                        <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"
-                                                    ng-click="user.showGroupDetails(key.$id);flags.flag2 = true;flags.flag1 = false;user.changeShow1(key.$id,flags,'flag3',$index,$event)"></ng-md-icon>
+                                    <md-button class="md-fab cards-button" aria-label="User Status"
+                                               style="background-color: #31B4CB;" ng-click="user.showGroupDetails(key.$id);flags.flag2 = true;flags.flag1 = false;user.changeShow1(key.$id,flags,'flag3',$index,$event)">
+                                        <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>                                      
                                     </md-button>
                                     <div>
                                         <md-list>
@@ -514,12 +514,11 @@ display: block;"  ng-model="user.searchbox"  type="text" ng-change="$root.search
 
         <!--button side-->
         <div flex="15">
-            <nav style="position:absolute;top: 173px;" mfb-menu position="tr" effect="zoomin" label="hover here"
-                 resting-icon="ion-plus-round"
+            <nav style="position:absolute;top: 173px;" mfb-menu position="tr" effect="zoomin" resting-icon="ion-plus-round"
                  toggling-method="click" id="sideCustomNav">
                 <button mfb-button label="Add" id="sideButtonAdd" ng-click="user.openCreateGroupPage()"></button>
-                <button mfb-button label="JoinGroup" id="sideButtonSearch" ui-sref="user.join-group"></button>
-                <!-- <button mfb-button label="JoinGroup" id="sideButtonSearch" ng-click="user.openJoinGroupPage()"></button> -->
+                <!-- <button mfb-button label="JoinGroup" id="sideButtonSearch" ui-sref="user.joingroup"></button> -->
+                <button mfb-button label="JoinGroup" id="sideButtonSearch" ng-click="user.openJoinGroupPage()"></button>
                 <button mfb-button label="Delete" id="sideButtondelete"></button>
             </nav>
         </div>
