@@ -131,7 +131,7 @@
                 'openJoinGroupPage': function () {
 
                     // $location.path('/user/joingroup')
-                    $state.go('user.joingroup');
+                    $state.go('user.join-group');
 
                 }
 
