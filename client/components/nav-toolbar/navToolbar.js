@@ -117,25 +117,29 @@
                     if (self.checkinSending)return;
                     self.showUrlObj.group = group;
                     self.checkout = false;
-                    checkinService.createCurrentRefsBySubgroup(grId, sgrId, userID);
-                    self.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations();
-                    //var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(grId + '/' + sgrId + '/' + userID);
-                    var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(grId + '/' + sgrId + '/' + userID);
-                    userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
-                        .$loaded(function (snapshot) {
-                            self.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
-                            self.checkinObj.userLastStatus = snapshot;
-                            self.checkinObj.subgroupPath = grId + '/' + sgrId;
-
-                            updateStatusHelper(grId, sgrId, userID, checkoutFlag);
-                            /*$timeout(function () {
+                    checkinService.createCurrentRefsBySubgroup(grId, sgrId, userID).then(function(){
+                        self.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                        self.definedSubGroupLocationsObject = checkinService.getFireCurrentSubGroupLocationsObject();
+                        //console.log(self.definedSubGroupLocationsObject)
+                        //var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(grId + '/' + sgrId + '/' + userID);
+                        var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(grId + '/' + sgrId + '/' + userID);
+                        userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
+                            .$loaded(function (snapshot) {
                                 self.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
                                 self.checkinObj.userLastStatus = snapshot;
                                 self.checkinObj.subgroupPath = grId + '/' + sgrId;
 
-                                updateStatusHelper(grId, sgrId, userID, checkoutFlag)
-                            });*/
-                        });
+                                updateStatusHelper(grId, sgrId, userID, checkoutFlag);
+                                /*$timeout(function () {
+                                    self.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
+                                    self.checkinObj.userLastStatus = snapshot;
+                                    self.checkinObj.subgroupPath = grId + '/' + sgrId;
+
+                                    updateStatusHelper(grId, sgrId, userID, checkoutFlag)
+                                });*/
+                            });
+                    });
+                    
 
                 }
                 
@@ -150,11 +154,11 @@
                                 lat: location.coords.latitude,
                                 lon: location.coords.longitude
                             };
-                            var targetLat = self.definedSubGroupLocations[0].location.lat;
+                            var targetLat = self.definedSubGroupLocationsObject.location.lat;
                             // console.log('group target lat:' + targetLat);
-                            var targetLon = self.definedSubGroupLocations[0].location.lon;
+                            var targetLon = self.definedSubGroupLocationsObject.location.lon;
                             // console.log('group target lon:' + targetLon);
-                            var targetRadius = self.definedSubGroupLocations[0].location.radius;
+                            var targetRadius = self.definedSubGroupLocationsObject.location.radius;
                             // console.log('group rad:' + targetRadius);
                             var curLat = self.checkinObj.newStatus.location.lat;
                             // console.log('user lat:' + curLat);
@@ -163,7 +167,7 @@
                             var distance = self.CalculateDistance(targetLat, targetLon, curLat, curLon, 'K');
                             // console.log('distance:' + distance);
                             // console.log('distance in meter:' + distance * 1000);
-                            if ((distance * 1000) > targetRadius) {
+                            /*if ((distance * 1000) > targetRadius) {
                                 messageService.showFailure('Current Location does not near to the Team Location');
                                 self.checkinObj = {
                                     newStatus: {}
@@ -174,7 +178,7 @@
                                 return;
                             } else {
                                 messageService.showSuccess('You in the Team Location');
-                            }
+                            }*/
                             checkinService.updateUserStatusBySubGroup(groupID, subgroupID, userID, self.checkinObj.newStatus, self.definedSubGroupLocations, null)
                                 .then(function (res) {
                                     $timeout(function () {

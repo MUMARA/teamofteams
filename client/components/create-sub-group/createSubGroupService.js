@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.createSubGroup',['core','ngMdIcons'])
-        .factory('createSubGroupService',['groupFirebaseService','$firebaseObject','firebaseService','$location','$sessionStorage','soundService','userService',"messageService",'$q','$http','appConfig','$localStorage',
-            function(groupFirebaseService,$firebaseObject,firebaseService,$location,$sessionStorage,soundService,userService,messageService,$q,$http,appConfig,$localStorage){
+        .factory('createSubGroupService',['$rootScope', 'groupFirebaseService','$firebaseObject','firebaseService','$location','$sessionStorage','soundService','userService',"messageService",'$q','$http','appConfig','$localStorage',
+            function($rootScope, groupFirebaseService,$firebaseObject,firebaseService,$location,$sessionStorage,soundService,userService,messageService,$q,$http,appConfig,$localStorage){
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                 return {
 
@@ -26,7 +26,8 @@
                                 }
                                 else {
                                     $location.path('/user/group/'+groupID);
-                                    messageService.showSuccess("SubGroup creation Successful");
+                                    messageService.showSuccess("SubGroup creation Successful...");
+                                    $rootScope.newImg = null;
                                 }
                             }, function(group){
                                // form.$submitted = !form.$submitted

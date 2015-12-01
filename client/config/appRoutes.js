@@ -39,8 +39,8 @@
                     }
                 }
             });
-            $stateProvider.state('forgotpassword', {
-                url: '/forgotpassword',
+            $stateProvider.state('forgot', {
+                url: '/forgot',
                 views: {
                     'nav': navLoginbar,
                     'main': {
