@@ -1,6 +1,6 @@
 <!--<form style="background-color: #005DE9;" name="groupForm" ng-submit="cgc.answer( groupForm )" novalidate="" ng-controller="subgroupController as cgc">-->
 <!--<form style="background-color: #005DE9;" name="groupForm"  novalidate="" ng-controller="subgroupController as cgc">-->
-<form  style="background-color: #005DE9;bottom: 0px;top: 53px;width: 1300px; height: 100vh" name="groupForm"  novalidate="" >
+<form  style="background-color: #efefef;bottom: 0px;top: 53px;width: 1300px; height: 100vh" name="groupForm"  novalidate="" >
     <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="subgroup.hide()"></ng-md-icon>
 
 
@@ -23,7 +23,7 @@
                                     </div>
                                     <div flex="30">
                                         <md-input-container style="margin-left: 46px;" md-no-float>
-                                            <input name="groupId" ng-model="subgroup.Subgroup.subgroupID" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true"  groupPath="{{subgroup.groupName}}" check-group-existance="" required placeholder="Team URL"> <!-- check-user-id is a directive-->
+                                            <input name="groupId" ng-model="subgroup.Subgroup.subgroupID" autocomplete="off" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true"  groupPath="{{subgroup.groupName}}" check-group-existance="" required placeholder="Team URL"> <!-- check-user-id is a directive-->
                                             <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
                                                 <div class="invalid_color" ng-message="required">This is required.</div>
                                                 <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
@@ -57,7 +57,7 @@
 
                                 <div>
                                     <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                                        <img ng-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="subgroup.showAdvanced($event)"/>
+                                        <img ng-src="img/image.svg" alt="team image" class="cropper-main-image" ng-click="subgroup.showAdvanced($event)"/>
                                         <!--<md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100">
                                             <md-icon md-svg-src="img/image.svg" class="cropper-main-image" ></md-icon>
                                         </md-button>-->

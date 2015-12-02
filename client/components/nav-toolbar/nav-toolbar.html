@@ -10,7 +10,7 @@
         <div layout="row" layout-align="center center" class="toolbarPage">
             <div flex="60" offset="5">
                 <div layout='row' layout-align="start center">
-                    <img src='img/Untitled-3.svg' class="logoPana">
+                    <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="logoPana">
                     <span class="mainPana" ng-click="navToolbar.shiftToUserPage()">Panacloud</span>
                     <!--<input type="button" ng-click="navToolbar.testFn()" value="testFn"/>-->
                     <!--<md-progress-circular ng-show="navToolbar.checkinSending" style=" left:41px;-webkit-transform: scale(.8)!important" class="md-hue-2"-->
@@ -111,14 +111,16 @@
                 <div layout="row">
                     <div flex="33" class="toolbarQuiz">
                         <ng-md-icon icon="description" style="fill: white"
-                                    ng-click="navToolbar.quizStart()"></ng-md-icon>
+                                    ng-click="navToolbar.quizStart()">
+                            
+                        </ng-md-icon>
                         <!--<img src='img/info2.svg' class="svgImgSize1">-->
                     </div>
                     <div flex="33" class="toolbarDrop">
-                        <img src='img/info2.svg' class="svgImgSize1">
+                       <img src='img/info2.svg' class="svgImgSize1"><md-tooltip>Chat</md-tooltip>
                     </div>
                     <div flex="33" class="toolbarBell">
-                        <img src="img/infoB.svg" class="svgImgSize2">
+                        <img src="img/infoB.svg" class="svgImgSize2"><md-tooltip>Notification</md-tooltip>
                     </div>
                 </div>
             </div>

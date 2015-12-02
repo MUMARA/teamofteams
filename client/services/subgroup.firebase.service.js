@@ -7,9 +7,9 @@
 
 
 angular.module('core')
-    .factory('subgroupFirebaseService',["firebaseService", "$q", "$timeout", "$sessionStorage", "$firebaseObject",'userFirebaseService','groupFirebaseService','$localStorage',
+    .factory('subgroupFirebaseService',["$firebaseArray", "firebaseService", "$q", "$timeout", "$sessionStorage", "$firebaseObject",'userFirebaseService','groupFirebaseService','$localStorage',
         //function(firebaseService, $q, $timeout, $sessionStorage, $route, $firebaseObject,userFirebaseService,groupFirebaseService) {
-        function(firebaseService, $q, $timeout, $sessionStorage, $firebaseObject,userFirebaseService,groupFirebaseService,$localStorage) {
+        function($firebaseArray, firebaseService, $q, $timeout, $sessionStorage, $firebaseObject,userFirebaseService,groupFirebaseService,$localStorage) {
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
         return {
             getSubgroupSyncObjAsync: function(groupID, subgroupID, viewerUserID){
@@ -371,6 +371,11 @@ angular.module('core')
 
                 var ref = firebaseService.getRefGroups().child(groupId);
                 return $firebaseObject(ref)
+            },
+            getFirebaseGroupSubGroupMemberObj:function(groupid, subgroupid){
+
+                var ref = firebaseService.getRefSubGroupMembers().child(groupid).child(subgroupid);
+                return $firebaseArray(ref)
             },
             approveMembership: function( groupID, subgroupID ,loggedInUserObj, requestedMember ) {
                 var defer, userID, membershipType,

@@ -92,11 +92,11 @@
                                 <!--ng-repeat='(key,prop) in user.userObj track by key'>-->
                                 <md-card style="margin: 3px;">
                                     <md-card-content style="padding: 0px !important;">
-                                        <div layout="row" layout-align="center center" style="margin-top:5%">
+                                        <!-- <div layout="row" layout-align="center center" style="margin-top:5%">
                                             <div flex="75">
-                                                <a ng-href="/user/group/{{key.$id}}"><img src="{{key.groupImg||'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" alt="Washedcd c Out" style="width: 188px;height:80px"></a>
+                                                <a ng-href="/user/group/{{key.$id}}"><img src="{{key.groupImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" alt="Washedcd c Out" style="width: 188px;height:80px"></a>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div layout="column" layout-align="start center" style="margin-top:8%;position: relative;">
                                             <span class="md-headline">{{key.$id || key.title}}</span>
                                             <md-icon md-svg-src="img/location.svg" class="user-locations"></md-icon>

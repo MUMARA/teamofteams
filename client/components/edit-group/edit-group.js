@@ -27,7 +27,8 @@
         var groupObj = $firebaseObject(firebaseService.getRefGroups().child(groupId));
         groupObj.$loaded().then(function(data){
            $timeout(function(){
-               that.group = data;
+                console.log(data);
+                that.group = data;
 
                //debugger
            })
