@@ -22,8 +22,8 @@ var development = {
 
     /*sendgrid credentials*/
     sendgrid: {
-        USERNAME : 'app32789651@heroku.com',
-        PASSWORD : 'miqn2z73'
+        USERNAME : process.env.SENDGRID_USERNAME,
+        PASSWORD : process.env.SENDGRID_PASSWORD
     },
 
     /*mongoDB ( mongoLab ) credentials*/
@@ -56,8 +56,8 @@ var production = {
 
     /*sendgrid credentials*/
     sendgrid: {
-        USERNAME : 'cqo6ndln7007',
-        PASSWORD : 'app44150687@heroku.com'
+        USERNAME : process.env.SENDGRID_USERNAME,
+        PASSWORD : process.env.SENDGRID_PASSWORD
     },
 
     /*mongoDB ( mongoLab ) credentials*/
