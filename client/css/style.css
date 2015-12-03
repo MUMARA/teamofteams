@@ -1,3 +1,156 @@
+/* Start Animation */
+
+.teamAttendance {
+    -webkit-transition:all linear 0.1s;
+    transition:all linear 0.1s;
+    opacity: 1;
+}
+
+.teamAttendance.ng-hide-remove {
+    -webkit-transition:all linear 0.1s;
+    transition:all linear 0.1s;
+    opacity: 0;
+}
+
+.teamAttendance.ng-hide-add {
+    -webkit-transition:all linear 0s;
+    transition:all linear 0s;
+}
+
+.chatSide {
+    -webkit-transition:all linear 0.1s;
+    transition:all linear 0.1s;
+    opacity: 1;
+}
+
+.chatSide.ng-hide-remove {
+    -webkit-transition:all linear 0.1s;
+    transition:all linear 0.1s;
+    opacity: 0;
+}
+
+.chatSide.ng-hide-add {
+    -webkit-transition:all linear 0s;
+    transition:all linear 0s;
+}
+
+
+.onlineSide {
+    -webkit-transition:all linear 0.1s;
+    transition:all linear 0.1s;
+    opacity: 1;
+}
+
+.onlineSide.ng-hide-remove {
+    -webkit-transition:all linear 0.1s;
+    transition:all linear 0.1s;
+    opacity: 0;
+}
+
+.onlineSide.ng-hide-add {
+    -webkit-transition:all linear 0s;
+    transition:all linear 0s;
+}
+
+/*End Animation*/
+
+.textAlignLeft {
+    text-align: left;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.textAlignCenter {
+    text-align: center;
+}
+
+.textBold {
+    font-weight: bold;
+}
+
+.noborder {
+    border: 0px;
+}
+
+.nooutline {
+    outline: 0px;
+}
+
+.nomargin {
+    margin: 0px;
+}
+
+.nopadding {
+    padding: 0px;
+}
+
+.viewHeight {
+    height: 100vh;
+}
+
+.foreColorBlack {
+    color: black;
+}
+
+.foreColorWhite {
+    color: white;
+}
+
+.foreColorDarkGrey {
+    color: rgb(106, 106, 106)!important;
+}
+
+.foreColorLightGrey {
+    color: rgb(181, 181, 181)!important;
+}
+
+.backColorWhite {
+    background-color: white;
+}
+
+.backColorDarkGrey {
+    background-color: rgb(106, 106, 106)!important;
+}
+
+.backColorLightGrey {
+    background-color: rgb(181, 181, 181)!important;
+}
+
+.backColorPink {
+    background-color: rgb(197, 61, 177)!important;
+}
+
+.backColorOrange {
+    background-color: rgb(222, 89, 71)!important;
+}
+
+.roundShape {
+    display: block;
+    margin: auto;
+    width: 54px;
+    height: 54px;
+    border-radius: 27px;
+    border: 3px solid rgb(197, 25, 3);
+    margin-left: 10px;
+}
+
+.userGroupSubgroupImg {
+    background-image: url('../img/people_button.svg');
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #69B0A2;
+    position: absolute;
+    z-index: 9;
+    /* bottom: inherit; */
+    margin: 10px 30px;
+}
+
 .check-in-slider .md-container .md-thumb-container .md-thumb{
    /* background-color: #32b4ca;*/
     background-image: url("../img/ABCD.svg");
@@ -873,7 +1026,7 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div{
 }
 #myItems > div.background > div:nth-child(1) > md-card {
     width: 723px;
-    height: 100vh !important;
+    /*height: 100vh !important;*/
 }
 .progressCircularforNavBar{
     left:41px;
