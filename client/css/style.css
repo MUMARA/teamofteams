@@ -1,3 +1,9 @@
+.not-focusable:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
 .check-in-slider .md-container .md-thumb-container .md-thumb{
    /* background-color: #32b4ca;*/
     background-image: url("../img/ABCD.svg");

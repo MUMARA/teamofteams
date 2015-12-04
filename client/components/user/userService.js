@@ -125,13 +125,13 @@
 
                 'openCreateGroupPage': function () {
 
-                    $location.path('/user/' + userService.getCurrentUser().userID + '/create-group')
+                    $location.path('/user/' + userService.getCurrentUser().userID + '/create-group');
 
                 },
                 'openJoinGroupPage': function () {
-
                     // $location.path('/user/joingroup')
-                    $state.go('user.join-group');
+                    $location.path('/user/' + userService.getCurrentUser().userID + '/join-group');
+                    //$state.go('user.join-group');
 
                 }
 
