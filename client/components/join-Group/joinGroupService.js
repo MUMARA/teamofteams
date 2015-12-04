@@ -18,11 +18,11 @@
                         //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
                         userFirebaseService.asyncGroupJoiningRequest($localStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
                             .then(function () {
-                                console.log("Group join request sent successfully");
+                                //console.log("Group join request sent successfully");
                                 messageService.showSuccess("Group joining request sent successfully");
 
                             }, function (reason) {
-                                console.log("Unable to send group joining request");
+                                //console.log("Unable to send group joining request");
                                 messageService.showFailure(reason);
                             })
                     },
@@ -35,7 +35,7 @@
 
                     },
                     'cancelGroupJoining':function(){
-                        console.log("Group Creation Cancelled");
+                        //console.log("Group Creation Cancelled");
                         soundService.playFail();
                         $location.path('/user/'+userService.getCurrentUser().userID)
                     }

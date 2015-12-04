@@ -55,7 +55,7 @@
                 },
 
                 'cancelGroupCreation':function(groupID){
-                    console.log("Group Creation Cancelled");
+                    //console.log("Group Creation Cancelled");
                     soundService.playFail();
                     $location.path('/user/group/'+groupID)
                 }

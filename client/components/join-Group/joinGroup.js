@@ -9,9 +9,7 @@
                 //https://github.com/angular/material/issues/547#issuecomment-65620808
 
                 /*private variables*/
-                $scope.filteredGroups = {
-
-                };
+                $scope.filteredGroups = [];
 
 
 
@@ -55,6 +53,15 @@
 
                 this.uImg = ['washedout.png', 'PanacloudLogoForList.svg', 'citibankLogo.svg', 'habibBankLogo.svg', 'washedout.png', 'PanacloudLogoForList.svg', 'citibankLogo.svg', 'habibBankLogo.svg', 'habibBankLogo.svg'];
 
+                function loadAllGroups() {
+                     $scope.filteredGroups = Firebase.getAsArray(firebaseService.getRefGroupsNames().orderByKey());
+                     // console.log($scope.filteredGroups)
+                }
+
+                loadAllGroups();
+
+
+
 
                 //query for groups names list
                 function queryGroups() {
@@ -87,14 +94,14 @@
                             $firebaseObject(firebaseService.getRefGroupsNames().child(el.$id))
                                 .$loaded().then(function(gNames){
                                     // console.log($scope.filteredGroups[j]);
-                                    $scope.filteredGroups[j].groupImg = gNames.groupImgUrl;
-                                    $scope.filteredGroups[j].ownerImg = gNames.ownerImgUrl;
-
+                                    // $scope.filteredGroups[j].groupImg = gNames.groupImgUrl;
+                                    // $scope.filteredGroups[j].ownerImg = gNames.ownerImgUrl;
                                 });
                         });
 
                     } else {
-                        $scope.filteredGroups = [];
+                        // $scope.filteredGroups = [];
+                        loadAllGroups();
                     }
 
                     return $scope.filteredGroups;

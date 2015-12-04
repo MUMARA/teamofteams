@@ -149,7 +149,7 @@
                 controllerAs: 'createTeamsChannels'
             });
             $stateProvider.state('user.personalSettings', {
-                url: '/group/:groupID/personalSettings',
+                url: '/:userID/personalSettings',
                 templateUrl: 'components/personal-settings/personal-settings.html',
                 controller: 'PersonalSettingsController',
                 controllerAs: 'personalSettings'

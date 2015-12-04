@@ -12,7 +12,7 @@
                 return {
 
                     'cancelPersonalSettings': function (userId) {
-                        console.log("Personal Settings Cancelled");
+                        //console.log("Personal Settings Cancelled");
                         soundService.playFail();
                         $location.path('/user/' + userService.getCurrentUser().userID)
 
