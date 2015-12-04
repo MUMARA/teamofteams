@@ -5,9 +5,9 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
-    function CreateSubGroupController(subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -21,7 +21,9 @@
         var groupID = $stateParams.groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
         /*VM functions*/
-        this.showEditSubGroup = false;
+        // this.searchUser = '';
+        // this.processTeamAttendance =false;
+        // this.showEditSubGroup = false;
         this.groupid = groupID;
         this.activeID;
         this.subgroupData = 0;
@@ -45,15 +47,7 @@
             selectedUsersArray: []
 
         };
-        //Team Attendance
-        this.users = [];
-        this.GetSubGroupUsers = function(subgroupData) {
-            that.showEditSubGroup = false;
-            that.showTeamAttendace = true;
-            subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(groupID, subgroupData.$id).$loaded().then(function(data){
-                that.users = data;
-            })
-        }
+        
         /*VM properties*/
 
         /*   this.Subgroup = {
@@ -81,8 +75,8 @@
 
         this.veiwSubgroup = function (subgroupData, index) {
             
-            this.showEditSubGroup = true;
-            that.showTeamAttendace = false;
+            // this.showEditSubGroup = true;
+            // that.showTeamAttendace = false;
             that.selectedindex = index;
             that.activeID = subgroupData.$id;
             var sub = subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, localStorage.userID)

@@ -274,16 +274,18 @@
                     }
                     var _subgroupId = sub || subgroupId;
 
-                    checkinService.createCurrentRefsBySubgroup(groupId, _subgroupId, userId);
-                    $scope.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
-                        .$loaded().then(function (data) {
-                            if (data.length > 0) {
-                                $rootScope.mapData.setLatLng(data[0].location.lat, data[0].location.lon, true);
-                                $rootScope.mapData.makeCircle(data[0].location.radius)
-                            }else{
-                                $rootScope.mapData.reset()
-                            }
-                        })
+                    checkinService.createCurrentRefsBySubgroup(groupId, _subgroupId, userId).then(function(){
+                        $scope.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                            .$loaded().then(function (data) {
+                                if (data.length > 0) {
+                                    $rootScope.mapData.setLatLng(data[0].location.lat, data[0].location.lon, true);
+                                    $rootScope.mapData.makeCircle(data[0].location.radius)
+                                }else{
+                                    $rootScope.mapData.reset()
+                                }
+                            })    
+                    });
+                    
                 }
 
                 function getLatLngByAddress(newVal) {

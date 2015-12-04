@@ -342,7 +342,7 @@ angular.module('core')
                                                 "microgroups-count": 0,
                                                 "members-checked-in": {count: 0},
                                                 'logo-image':{
-                                                    url:subgroupInfo.imgLogoUrl, // pID is going to be changed with userID for single profile picture only
+                                                    url:subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
                                                     id: subgroupInfo.subgroupID,
                                                     'bucket-name': 'test2pwow',
                                                     source: 1,// 1 = google cloud storage

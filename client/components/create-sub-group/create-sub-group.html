@@ -89,7 +89,7 @@
                             <md-button ng-click="createSubGroup.openUserSettingPage()"><img src="../../img/3sami.svg" style="width: 33px;height: 33px;"/><br><span style="color: white;">Members</span></md-button>
                         </div>
                         <div>
-                            <md-button><img ng-click="createSubGroup.openGeoFencingPage()" src="../../img/5sami.svg" style="width: 33px;height: 33px;"><br><span style="color: white;">Fencing</span></md-button>
+                            <md-button ng-click="createSubGroup.openGeoFencingPage()" ><img src="../../img/5sami.svg" style="width: 33px;height: 33px;"><br><span style="color: white;">Fencing</span></md-button>
                         </div>
                         <div>
                             <md-button style="background-color: darkseagreen"><img src="../../img/4sami.svg" style="width: 33px;height: 33px"><br><span style="color: white;">Teams</span></md-button>
@@ -112,7 +112,7 @@
                                                      ng-repeat="subgroup in createSubGroup.subgroups"
                                                      ng-class="{'md-whiteframe-z3':createSubGroup.selectedindex===$index}">
 
-                                                <md-list-item class="md-3-line" class="selectable" style="padding: 0px !important;"> <!-- ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" -->
+                                                <md-list-item class="md-3-line" class="selectable" style="padding: 0px !important;" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)">
 
 
                                                     <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}"
@@ -129,8 +129,7 @@
                                     <span>
                                         <div style="float: right; width: 25px; margin-top: -18px">
                                             
-                                            <md-menu md-offset="0 50">
-                                             <!-- Trigger element is a md-button with an icon -->
+                                            <!-- <md-menu md-offset="0 50">
                                                 <md-button style="margin-left: -5px;" ng-click="$mdOpenMenu(ev)" class="md-icon-button" aria-label="Open team menu">
                                                     <ng-md-icon icon="more_vert" style="fill: #929497"></ng-md-icon>
                                                 </md-button>
@@ -138,9 +137,9 @@
                                                     <md-menu-item><md-button ng-click="createSubGroup.veiwSubgroup(subgroup,$index)">Edit Team</md-button></md-menu-item>
                                                     <md-menu-item><md-button ng-click="createSubGroup.GetSubGroupUsers(subgroup)">Team Attendance</md-button></md-menu-item>
                                                 </md-menu-content>
-                                            </md-menu>
-
+                                            </md-menu> -->
                                             
+                                            <ng-md-icon icon="more_vert" style="fill: #929497"></ng-md-icon>
                                             <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="fill: #929497;"></ng-md-icon></div>
                                         <img src="img/geoLocation.svg" width="40px" height="20px"
                                                style=" width:60px ; margin-left: 8px;margin-top: 22px;">
@@ -161,17 +160,7 @@
                                         <span style="color: #ffffff">+ Create Team</span>
                                     </md-button>
                                 </div>
-                                <md-content class="grayScroller" ng-show="createSubGroup.showTeamAttendace" flex style="height: 74vh">
-                                    <!-- Team Attendance -->
-                                    Team Attendace
-                                    <div ng-repeat="user in createSubGroup.users">
-                                        {{user.$id}}
-                                        <md-checkbox ng-true-value="expr" ng-false-value="expr" ng-model="variable" name="string" ng-change="expr" ng-disabled="boolean" aria-label="string">
-                                            content
-                                        </md-checkbox>
-                                    </div>
-                                </md-content>
-                                <md-content class="grayScroller" ng-show="createSubGroup.showEditSubGroup" flex style="height: 74vh">
+                                <md-content class="grayScroller" flex style="height: 74vh">
                                     <div style="margin-left: 5px;padding-top: 20px;padding-left: 6px" ng-hide="!createSubGroup.subgroups.length">
                                     <h2>Team Url
                                         <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon>

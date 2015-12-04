@@ -131,7 +131,7 @@
                 controllerAs: 'geoFencing'
             });
             $stateProvider.state('user.join-group', {
-                url: '/join-group',
+                url: '/:userID/join-group',
                 templateUrl: 'components/join-group/join-group.html',
                 controller: 'JoinGroupController',
                 controllerAs: 'joinGroup'

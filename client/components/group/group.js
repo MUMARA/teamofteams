@@ -5,13 +5,14 @@
     'use strict';
 
     angular.module('app.group')
-        .controller('GroupController', ['authService', 'chatService', 'firebaseService', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$sessionStorage", "$location", "utilService", "$localStorage", "$stateParams",
-            function (authService, chatService, firebaseService, $firebaseObject, $rootScope, groupService, groupFirebaseService, $sessionStorage, $location, utilService, $localStorage, $stateParams) {
+        .controller('GroupController', ['subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$sessionStorage", "$location", "utilService", "$localStorage", "$stateParams",
+            function (subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject,  $rootScope, groupService, groupFirebaseService, $sessionStorage, $location, utilService, $localStorage, $stateParams) {
 
                 // console.log("In Group Controller");
                 var $scope = this;
+                var that = this;
                 // var groupID = $location.path();
-                // var groupID = $stateParams.groupID;
+                var groupID = $stateParams.groupID;
                 //  $scope.groupID = groupID = utilService.trimID(groupID);
                 $scope.showAttemptQuiz = function(){
                     $location.path('/user/group/' + $scope.groupID + '/quizAttempt');
@@ -64,37 +65,36 @@
                         //$scope.pendingRequests = $scope.groupSyncObj.pendingMembershipSyncArray;
                         //$scope.activities = $scope.groupSyncObj.activitiesSyncArray;
 
-                        /*  if($scope.groupSyncObj.membershipType == 1){
-                         isOwner = true;
-                         isAdmin = true;
-                         isMember = true;
-                         } else if ($scope.groupSyncObj.membershipType == 2){
-                         isAdmin = true;
-                         isMember = true;
-                         }
-                         else if ($scope.groupSyncObj.membershipType == 3){
-                         isMember = true;
-                         }*/
+                        // console.log($scope.groupSyncObj.membershipType);
+                        if($scope.groupSyncObj.membershipType == 1){
+                            isOwner = true;
+                            isAdmin = true;
+                            isMember = true;
+                        } else if ($scope.groupSyncObj.membershipType == 2){
+                            isAdmin = true;
+                            isMember = true;
+                        } else if ($scope.groupSyncObj.membershipType == 3){
+                            isMember = true;
+                        }
                     });
 
+                
+                $scope.isOwner = function(){
+                    return isOwner;
+                };
+
+                $scope.isAdmin = function(){
+                    if(isOwner){
+                        return true;
+                    } else {
+                        return isAdmin;
+                    }
+                };
+
+                $scope.isMember = function(){
+                    return isMember;
+                };
                 /*
-                 $scope.isOwner = function($event){
-                 return isOwner;
-                 };
-
-                 $scope.isAdmin = function($event){
-                 if(isOwner){
-                 return true;
-                 }
-                 else {
-                 return isAdmin;
-                 }
-                 };
-
-                 $scope.isMember = function($event){
-                 return isMember;
-                 };
-
                  this.canActivate = function(){
                  return authService.resolveUserPage();
                  }*/
@@ -221,6 +221,137 @@
                     })
 
                 };
+
+                // Start Team Attendance
+                this.users = [];
+                this.currentSubGroup;
+                this.showTeamAttendace = false;
+                this.processTeamAttendance = false;
+                this.openTeamAttendance = function(){
+                    this.showTeamAttendace = !this.showTeamAttendace;
+                    $("#wrapper").toggleClass("toggled");
+                }
+                this.GetSubGroupUsers = function(subgroupData, index) {
+                    that.currentSubGroup = index;
+                    that.processTeamAttendance = true;
+                    that.users = [];
+                    subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(groupID, subgroupData.$id).$loaded().then(function(subgroupsdata){
+                        // data.forEach(function(subdata){
+                        //     $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id).child(subdata.$id)).$loaded().then(function(userdata){
+                        //         // console.log(subdata.$id);
+                        //         // console.log(userdata[2].$value);
+                        //         // console.log(userdata[8].$value);
+                        //         if(userdata[8]) {
+                        //             if(userdata[8].$value === 1) {
+                        //                 var status = true;                            
+                        //             } else {
+                        //             var status = false;
+                        //             }
+                        //             var type = userdata[2].$value
+                        //         } else {
+                        //             var status = false;
+                        //             var type = 'N/A'
+                        //         }
+                        //         that.users.push({id: subdata.$id, type: type, status: status, groupID: groupID, subgroupID: subgroupData.$id});
+                        //     })
+                        // });
+                        // console.log(subgroupsdata)
+                        $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id)).$loaded().then(function(usersdata){
+                            // console.log(usersdata);
+                            subgroupsdata.forEach(function(subgroupdata){
+                                usersdata.forEach(function(userdata){
+                                    // console.log(subgroupdata.$id);
+                                    // console.log(userdata.$id);
+                                    if (subgroupdata.$id === userdata.$id) {
+                                        // console.log(userdata.$id);
+                                        // console.log(userdata.message);
+                                        // console.log(userdata.type);
+                                        if(userdata.type === 1) {
+                                            var type = true;                            
+                                        } else {
+                                            var type = false;
+                                        }
+                                        $firebaseArray(firebaseService.getRefUsers().child(userdata.$id)).$loaded().then(function(usermasterdata){
+                                            // console.log(usermasterdata);
+                                            for (var i = usermasterdata.length - 1; i >= 0; i--) {
+                                                if(usermasterdata[i].$id === "profile-image") {
+                                                    var profileImage = usermasterdata[i].$value
+                                                }
+                                            };
+                                            that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});                                               
+                                        })
+                                    }
+                                });
+                            });
+                            that.processTeamAttendance = false;
+                        });
+                        // console.log(that.users);
+                    });
+                }
+                
+                var userCurrentCheckinRefBySubgroup;
+                this.checkinObj = {
+                    newStatus: {}
+                };
+
+                this.CheckInuser = function (grId, sgrId, userID, type) {
+                    // Do not change status of self login user
+                    if (localStorage.userID === userID) {
+                        messageService.showFailure('To change your status, please use toolbar!');
+                        that.GetSubGroupUsers({$id: sgrId});
+                        return;
+                    }
+                    that.processTeamAttendance = true;
+                    // check if user is already checked in
+                    $firebaseArray(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(userdata){
+                        // console.log(userdata);
+                        // console.log(userdata[5]);
+                        console.log(type)
+                        if (type) {
+                            if(userdata[5].$value === 1){
+                                messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
+                                that.processTeamAttendance = false;
+                                that.GetSubGroupUsers({$id: sgrId});
+                                return;
+                            }
+                        }
+                        // check in the user
+                        checkinService.createCurrentRefsBySubgroup(grId, sgrId, userID).then(function(){
+                        that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                        var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(grId + '/' + sgrId + '/' + userID);
+                        userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
+                            .$loaded(function (snapshot) {
+                                that.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
+                                updateStatusHelper(grId, sgrId, userID, type);
+                            });
+                        
+                        });
+                    });
+                    
+                    
+                }
+                
+                function updateStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
+                    checkinService.getCurrentLocation()
+                        .then(function (location) {
+                            that.checkinObj.newStatus.location = {
+                                lat: location.coords.latitude,
+                                lon: location.coords.longitude
+                            };
+                            checkinService.updateUserStatusBySubGroup(groupID, subgroupID, userID, that.checkinObj.newStatus, that.definedSubGroupLocations, null)
+                                .then(function (res) {
+                                    that.GetSubGroupUsers({$id: subgroupID});
+                                    messageService.showSuccess(res);
+                                    that.processTeamAttendance = false;
+                                }, function (reason) {
+                                    that.GetSubGroupUsers({$id: subgroupID});
+                                    messageService.showFailure(reason);
+                                });
+                        }, function (err) {
+                            messageService.showFailure(err.error.message);
+                        });
+                }
+                // End Team Attendance
 
 
             }]);

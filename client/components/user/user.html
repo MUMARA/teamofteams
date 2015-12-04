@@ -59,20 +59,7 @@
     #select_label_4 > span:nth-child(1){
         font-size: 12px
     }
-    .userGroupSubgroupImg {
-        background-image: url('../img/people_button.svg');
-        background-repeat: no-repeat;
-        background-size: 25px;
-        background-position: 8px;
-        width: 40px;
-        height: 40px;
-        border-radius: 20px;
-        background-color: #69B0A2;
-        position: absolute;
-        z-index: 9;
-        /* bottom: inherit; */
-        margin: 10px 30px;
-    }
+    
     .fontset{
         font-size: 16px !important;
     }
@@ -105,15 +92,6 @@
         position: relative;
         top: 23px;
         margin-left: 50px;
-    }
-    .roundShape{
-        display: block;
-        margin: auto;
-        width: 54px;
-        height: 54px;
-        border-radius: 27px;
-        border: 3px solid rgb(197, 25, 3);
-        margin-left: 10px;
     }
 </style>
 
@@ -148,10 +126,15 @@
                             }
                         </style>-->
                         <div class="userListSearchbox" style="background-color: rgb(239, 239, 239);">
-                            <md-input-container md-no-float>
-                                <md-icon md-svg-src="../../img/search.svg"></md-icon>
-                                <input  style="border:none;    margin-top: 5px;
-display: block;"  ng-model="user.searchbox"  type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="Use User Name">
+
+<!--   <md-input-container class="md-icon-float md-block">
+      <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon>
+      <input ng-model="user.name" type="text">
+    </md-input-container>
+ -->
+                            <md-input-container layout-padding md-no-float>
+                                <md-icon layout-margin md-svg-src="../../img/search.svg"></md-icon>
+                                <input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name">
                             </md-input-container>
                         </div>
 
