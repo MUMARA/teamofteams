@@ -80,7 +80,7 @@ angular.module('core')
                         // this callback will be called asynchronously
                         // when the response is available
                         //console.log("response: " + data);
-                        console.log('signup response object: ' + JSON.stringify(data));
+                        //console.log('signup response object: ' + JSON.stringify(data));
 
                         successFn(data);
                     }).

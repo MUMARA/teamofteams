@@ -1,7 +1,7 @@
 <!--<form style="background-color: #005DE9;" name="groupForm" ng-submit="cgc.answer( groupForm )" novalidate="" ng-controller="CreateGroupController as cgc">-->
 <!--<form style="background-color: #005DE9;" name="groupForm"  novalidate="" ng-controller="CreateGroupController as cgc">-->
         <div id="creatGroup">
-<form style="background-color: #efefef;" name="groupForm"  novalidate="" >
+<form style="background-color: #efefef;" name="groupForm"  autocomplete="off" novalidate="" >
     <ng-md-icon icon="close" size="50" style="outline: none" layout-padding ng-click="$root.newImg = null;createGroup.hide()"></ng-md-icon>
        <md-content class="grayScroller" style="height: calc(100vh - 88px);max-width:70%;margin: 0px auto">
         <md-card style="margin: 0px auto">
@@ -19,7 +19,7 @@
                              <input ng-model="asc" type="text" placeholder="Group URL">
                          </md-input-container>-->
                         <md-input-container md-no-float>
-                            <input name="groupId" ng-model="createGroup.group.groupID" autocomplete="off" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{createGroup.groupName}}" check-group-existance="" required placeholder="Group URL"> <!-- check-user-id is a directive-->
+                            <input name="groupId" ng-model="createGroup.group.groupID" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{createGroup.groupName}}" check-group-existance="" required placeholder="Group URL"> <!-- check-user-id is a directive-->
                             <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
                                 <div class="invalid_color" ng-message="required">This is required.</div>
                                 <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>

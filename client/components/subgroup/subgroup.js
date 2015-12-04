@@ -137,12 +137,14 @@
             return disableItem;
         }
         function answer(groupForm) {
+
             var fromDataFlag;
             that.abc=true;
             //return if form has invalid model.
             if (groupForm.$invalid) {
                 return;
             }
+
             that.Subgroup.members = that.Subgroup.membersArray.join();
             //if ($rootScope.croppedImage && $rootScope.croppedImage.src) {
             if ($rootScope.newImg) {
@@ -163,8 +165,8 @@
                 console.log(x);
             } else {
                 fromDataFlag = false;
-                SubGroupService.createSubGroup(localStorage.userID,that.group,that.Subgroup,that.subgroups,fromDataFlag,   that.abc)
-                $location.path('/user/group/'+groupID);
+                SubGroupService.createSubGroup(localStorage.userID,that.group,that.Subgroup,that.subgroups,fromDataFlag,groupID)
+                //$location.path('/user/group/'+groupID);
             }
         }
 
