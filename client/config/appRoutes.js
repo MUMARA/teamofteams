@@ -126,7 +126,7 @@
             });
             $stateProvider.state('user.geoFencing', {
                 url: '/group/:groupID/geoFencing',
-                templateUrl: 'components/geo-Fencing/geo-Fencing.html',
+                templateUrl: 'components/geo-fencing/geo-fencing.html',
                 controller: 'GeoFencingController',
                 controllerAs: 'geoFencing'
             });

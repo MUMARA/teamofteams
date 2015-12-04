@@ -31,14 +31,14 @@
                     </md-switch>
                     <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
                     <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
-                        <md-toolbar class="md-theme-light" style="background-color: #E0E0E0">
-                            <h2 class="md-toolbar-tools">
+                        <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
+                            <!-- <h2 class="md-toolbar-tools">
                                 <div flex="65" layout-align="center center" style="color: #000000;text-align: initial;">
-                                    <h3>Check IN</h3>
+                                    <h3>Check In</h3>
                                 </div>
                                 <div style="margin-left: -54px">
                                     <div layout="column" layout-align="center left">
-                                        <!--<input type="text" class="searchbox"/>-->
+                                        <!<input type="text" class="searchbox"/>>
                                         <md-autocomplete class="NavBarSearchbox"
                                                          md-search-text-change="null"
                                                          md-selected-item-change="ctrl.selectedItemChange(item)"
@@ -49,13 +49,18 @@
                                           md-highlight-flags="^i">{{item.display}}</span>
                                         </md-item-template>
                                         </md-autocomplete>
-                                        <md-input-container aria-label="Description fo your Slider" class="searchbox">
+                                        <! <md-input-container aria-label="Description fo your Slider" class="searchbox">
                                             <input type="text" ng-model="navToolbar.search" ng-change="navToolbar.queryGroups()" class="serachbox2" aria-label="Search Box">
-                                        </md-input-container>
-                                        <!--<ng-md-icon icon="search" style="fill: #929497;" flex="20"></ng-md-icon>-->
+                                        </md-input-container> -->
+                                        <!--<ng-md-icon icon="search" style="fill: #929497;" flex="20"></ng-md-icon>>
                                     </div>
                                 </div>
-                            </h2>
+                            </h2> -->
+                            <span class="foreColorDarkGrey">Check In</span>            
+                            <md-input-container md-no-float style="padding-bottom: 0px;">
+                                <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin"  autocomplete="off" class="serachbox2" ng-keyup="navToolbar.queryGroups()">
+                            </md-input-container>
+                            <ng-md-icon icon="search" style="fill: #929497;" ng-click="navToolbar.setFocus()"></ng-md-icon>
                         </md-toolbar>
                         <md-divider></md-divider>
                         <div>
@@ -111,16 +116,16 @@
                 <div layout="row">
                     <div flex="33" class="toolbarQuiz">
                         <ng-md-icon icon="description" style="fill: white"
-                                    ng-click="navToolbar.quizStart()">
+                                    ng-click="navToolbar.quizStart()" title="Quiz">
                             
                         </ng-md-icon>
                         <!--<img src='img/info2.svg' class="svgImgSize1">-->
                     </div>
                     <div flex="33" class="toolbarDrop">
-                       <img src='img/info2.svg' class="svgImgSize1"><md-tooltip>Chat</md-tooltip>
+                       <img src='img/info2.svg' class="svgImgSize1" title="Chat">
                     </div>
                     <div flex="33" class="toolbarBell">
-                        <img src="img/infoB.svg" class="svgImgSize2"><md-tooltip>Notification</md-tooltip>
+                        <img src="img/infoB.svg" class="svgImgSize2" title="Notification">
                     </div>
                 </div>
             </div>

@@ -40,6 +40,9 @@
                 this.queryGroups = queryGroups;
                 this.quizStart = quizStart
                 // alert(this.test)
+                this.setFocus = function () {
+                    document.getElementById("#GroupSearch").focus();   
+                }
                 function quizStart() {
                     // console.log('done')
                     $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
@@ -237,12 +240,13 @@
 
                         self.filteredGroups = Firebase.getAsArray(filteredGroupsNamesRef);
                         self.groupObj1 = self.filteredGroups;
-                        console.log(self.filteredGroups);
-                        console.log(self.groupObj1);
+                        // console.log(self.filteredGroups);
+                        // console.log(self.groupObj1);
 
 
                     } else {
-                        self.filteredGroups = [];
+                        // self.filteredGroups = [];
+                        self.filteredGroups = Firebase.getAsArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
                     }
 
                     return

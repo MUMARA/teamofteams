@@ -20,7 +20,7 @@ angular.module('core')
                 return this.trim(str, "/");
             },
             base64ToBlob:function(base64){
-                console.log(base64.split(',')[0])
+                // console.log(base64.split(',')[0])
                 var blobBin = atob(base64.split(',')[1]);
                 var array = [];
                 for (var i = 0; i < blobBin.length; i++) {
