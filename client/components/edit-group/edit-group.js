@@ -173,7 +173,7 @@
                 $rootScope.newImg = picture;
                 // console.log("this is image" + picture)
             },function(err){
-                console.log(err)
+                // console.log(err)
 
             })
 
@@ -194,7 +194,7 @@
     function DialogController($mdDialog) {
         this.my = {model:{img:''}};
         this.hide = function(picture) {
-            console.log(picture)
+            // console.log(picture)
             $mdDialog.hide(picture);
         };
 

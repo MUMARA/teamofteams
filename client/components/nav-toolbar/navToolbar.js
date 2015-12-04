@@ -12,6 +12,7 @@
                 var userData;
                 var self = this;
                 var userID = userService.getCurrentUser().userID;
+                self.myUserId = userID;
                 var userCurrentCheckinRefBySubgroup;
 
                 /*VM properties*/
@@ -32,6 +33,7 @@
                 /*VM function ref*/
 
                 this.logout = logout;
+                this.PersonalSetting = PersonalSetting;
                 this.showSubGroup = showSubGroup;
                 this.shiftToUserPage = shiftToUserPage;
                 //this.doChange = doChange;
@@ -253,6 +255,12 @@
                     self.filteredGroups
                     self.groupObj1;
                 }
+
+                function PersonalSetting() {
+                    $location.path('/user/'+userID+'/personalSettings')
+                }
+
+
             }]);
 
 })();

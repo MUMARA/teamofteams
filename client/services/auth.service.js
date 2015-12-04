@@ -91,7 +91,7 @@ angular.module('core')
                     });
             },
             logout: function(){
-                console.info('signing out');
+                // console.info('signing out');
                 $location.path("/");
                 // for manually sign out from firebase.
                 firebaseService.getRefMain().unauth();
@@ -101,7 +101,7 @@ angular.module('core')
             },
             //to resolve route "/user/:user" confirming is authenticated from firebase
             resolveUserPage : function(){
-                // alert('inside authService');
+                //alert('inside authService');
                 var defer = $q.defer();
                 //if ( $sessionStorage.loggedInUser ) {
                 if ( $localStorage.loggedInUser ) {
@@ -111,7 +111,7 @@ angular.module('core')
                         //firebaseService.asyncLogin( $sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token )
                         firebaseService.asyncLogin( $localStorage.loggedInUser.userID, $localStorage.loggedInUser.token )
                             .then(function ( response ) {
-                                console.info("Firebase Authentication Successful when restarting app");
+                                //console.info("Firebase Authentication Successful when restarting app");
                                 firebaseService.addUpdateHandler();
                                 defer.resolve();
                             }, function ( error ) {
