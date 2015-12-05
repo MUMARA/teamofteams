@@ -105,7 +105,7 @@
 
                             <div layout="row" style="border-top:solid 1px #d3d3d3; ">
 
-                                <div flex="25" style="background-color: #FDF8F8; ">
+                                <div flex="25" class="grayScroller" style="background-color: #FDF8F8; ">
                                     <md-content class="grayScroller" style="height: 69vh;">
                                         <md-card style="  margin: 1px 3px 0px 3px !important;" class=" md-whiteframe-z1">
                                             <md-list style="padding: 0px !important;"
@@ -155,10 +155,11 @@
                                                 <p>need to create teams</p>
                                             </md-list-item>
                                         </md-card>
-                                    </md-content>
+                                    
                                     <md-button ng-click="createSubGroup.subgroupPage()" class="md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" style="background-color: #60b089; margin-top: 36px; margin-left: 50px">
                                         <span style="color: #ffffff">+ Create Team</span>
                                     </md-button>
+                                    </md-content>
                                 </div>
                                 <md-content class="grayScroller" flex style="height: 74vh">
                                     <div style="margin-left: 5px;padding-top: 20px;padding-left: 6px" ng-hide="!createSubGroup.subgroups.length">

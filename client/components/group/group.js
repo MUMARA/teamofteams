@@ -307,7 +307,7 @@
                         // console.log(userdata);
                         // console.log(userdata[5]);
                         console.log(type)
-                        if (type) {
+                        if (!type) {
                             if(userdata[5].$value === 1){
                                 messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
                                 that.processTeamAttendance = false;

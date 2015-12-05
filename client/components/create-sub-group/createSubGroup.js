@@ -176,7 +176,7 @@
 
             subgroupFirebaseService.asyncUpdateSubgroupMembers(localStorage, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData)
                 .then(function (response) {
-                    console.log("Adding Members Successful");
+                    // console.log("Adding Members Successful");
                     var unlistedMembersArray = response.unlistedMembersArray,
                         notificationString;
 

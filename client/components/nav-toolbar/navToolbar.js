@@ -120,8 +120,9 @@
                     var grId = group && group.pId || self.showUrlObj.groupID;
                     var sgrId = group && group.subgroupId || self.showUrlObj.subgroupID;
                     if (self.checkinSending)return;
+                    self.checkinSending =true;
                     self.showUrlObj.group = group;
-                    self.checkout = false;
+                    // self.checkout = false;
                     checkinService.createCurrentRefsBySubgroup(grId, sgrId, userID).then(function(){
                         self.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
                         self.definedSubGroupLocationsObject = checkinService.getFireCurrentSubGroupLocationsObject();
@@ -149,27 +150,34 @@
                 }
                 
                 function updateStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
-                    self.checkinSending = true;
                     /* function requestUpdate() {
 
                      };*/
                     checkinService.getCurrentLocation()
                         .then(function (location) {
-                            self.checkinObj.newStatus.location = {
-                                lat: location.coords.latitude,
-                                lon: location.coords.longitude
-                            };
-                            var targetLat = self.definedSubGroupLocationsObject.location.lat;
+                            if(location) {
+                                self.checkinObj.newStatus.location = {
+                                    lat: location.coords.latitude,
+                                    lon: location.coords.longitude
+                                };    
+                            } else {
+                                self.checkinObj.newStatus.location = {
+                                    lat: 0,
+                                    lon: 0
+                                };
+                            }
+                            
+                            // var targetLat = self.definedSubGroupLocationsObject.location.lat;
                             // console.log('group target lat:' + targetLat);
-                            var targetLon = self.definedSubGroupLocationsObject.location.lon;
+                            // var targetLon = self.definedSubGroupLocationsObject.location.lon;
                             // console.log('group target lon:' + targetLon);
-                            var targetRadius = self.definedSubGroupLocationsObject.location.radius;
+                            // var targetRadius = self.definedSubGroupLocationsObject.location.radius;
                             // console.log('group rad:' + targetRadius);
-                            var curLat = self.checkinObj.newStatus.location.lat;
+                            // var curLat = self.checkinObj.newStatus.location.lat;
                             // console.log('user lat:' + curLat);
-                            var curLon = self.checkinObj.newStatus.location.lon;
+                            // var curLon = self.checkinObj.newStatus.location.lon;
                             // console.log('user lon:' + curLon);
-                            var distance = self.CalculateDistance(targetLat, targetLon, curLat, curLon, 'K');
+                            // var distance = self.CalculateDistance(targetLat, targetLon, curLat, curLon, 'K');
                             // console.log('distance:' + distance);
                             // console.log('distance in meter:' + distance * 1000);
                             /*if ((distance * 1000) > targetRadius) {
@@ -207,6 +215,7 @@
                                 });
                         }, function (err) {
                             messageService.showFailure(err.error.message);
+                            self.checkinSending = false;
                         });
                     }
 
