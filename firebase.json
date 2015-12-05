@@ -1,6 +1,7 @@
 {
   "firebase": "luminous-torch-4640",
-  "public": ".",
+  // "firebase": "panacloud",
+  "public": "client",
   "ignore": [
     "firebase.json",
     "**/.*",
