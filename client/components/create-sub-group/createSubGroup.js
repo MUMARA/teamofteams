@@ -258,7 +258,9 @@
                 })
                     .catch(function (err) {
 
-                        return alert('picture upload failed' + err)
+                        // return alert('picture upload failed' + err)
+                        return messageService.showFailure('picture upload failed' + err)
+                        that.abc = false;
                     });
                 // console.log(x);
             } else {
@@ -363,7 +365,7 @@
                 }
             };
             xhr.onerror = function (error) {
-                defer.reject(alert("Could not upload file."));
+                defer.reject(messageService.showSuccess('Could not upload file.'));
             };
             xhr.send(file);
             return defer.promise;
