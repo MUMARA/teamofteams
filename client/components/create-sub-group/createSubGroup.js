@@ -95,6 +95,8 @@
 
                 })
             SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
+            // console.log(1)
+            // console.log(SubgroupObj)
             SubgroupObj.$loaded().then(function (data) {
                 $timeout(function () {
                     that.subgroupData = data;
@@ -102,8 +104,8 @@
                     that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
 
                 })
-
-
+            // console.log(2)
+            // console.log(SubgroupObj)
             })
 
 
@@ -157,8 +159,8 @@
 
         this.selectedMember = function (userObj, index) {
             that.selectedindex2 = index;
-            console.log(userObj);
-            console.log("-----------------------------------");
+            // console.log(userObj);
+            // console.log("-----------------------------------");
             //this.selectedMemberArray.push(userObj)
             // that.membersArray.push(userObj.$id);
             //that.subgroupData.members=that.membersArray;
@@ -174,7 +176,7 @@
 
             subgroupFirebaseService.asyncUpdateSubgroupMembers(localStorage, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData)
                 .then(function (response) {
-                    console.log("Adding Members Successful");
+                    // console.log("Adding Members Successful");
                     var unlistedMembersArray = response.unlistedMembersArray,
                         notificationString;
 
@@ -246,17 +248,21 @@
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
                 that.saveFile(x, mimeType, that.subgroupData.$id).then(function (data) {
-                    console.log('subgroup img  uploaded ' + data)
+                    // console.log('subgroup img  uploaded ' + data)
+                    // console.log(3)
+                    // console.log(SubgroupObj)
                     SubgroupObj['logo-image'].url = data;
                     createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
                     // $rootScope.newImg=null;
                     that.abc = false;
                 })
-                    .catch(function () {
+                    .catch(function (err) {
 
-                        return alert('picture upload failed')
+                        // return alert('picture upload failed' + err)
+                        return messageService.showFailure('picture upload failed' + err)
+                        that.abc = false;
                     });
-                console.log(x);
+                // console.log(x);
             } else {
                 fromDataFlag = false;
                 createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
@@ -351,7 +357,7 @@
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....')
-                    console.log(url);
+                    // console.log(url);
                     //document.getElementById("preview").src = url;
                     // that.subgroupData.imgLogoUrl = url;
                     defer.resolve(url + '?random=' + new Date())
@@ -359,7 +365,7 @@
                 }
             };
             xhr.onerror = function (error) {
-                defer.reject(alert("Could not upload file."));
+                defer.reject(messageService.showSuccess('Could not upload file.'));
             };
             xhr.send(file);
             return defer.promise;

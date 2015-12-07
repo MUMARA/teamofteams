@@ -7,9 +7,9 @@
 
 
 angular.module('core')
-    .factory('subgroupFirebaseService',["$firebaseArray", "firebaseService", "$q", "$timeout", "$sessionStorage", "$firebaseObject",'userFirebaseService','groupFirebaseService','$localStorage',
+    .factory('subgroupFirebaseService',['checkinService', "$firebaseArray", "firebaseService", "$q", "$timeout", "$sessionStorage", "$firebaseObject",'userFirebaseService','groupFirebaseService','$localStorage',
         //function(firebaseService, $q, $timeout, $sessionStorage, $route, $firebaseObject,userFirebaseService,groupFirebaseService) {
-        function($firebaseArray, firebaseService, $q, $timeout, $sessionStorage, $firebaseObject,userFirebaseService,groupFirebaseService,$localStorage) {
+        function(checkinService, $firebaseArray, firebaseService, $q, $timeout, $sessionStorage, $firebaseObject,userFirebaseService,groupFirebaseService,$localStorage) {
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
         return {
             getSubgroupSyncObjAsync: function(groupID, subgroupID, viewerUserID){
@@ -299,7 +299,7 @@ angular.module('core')
                             memberCountRef.transaction(function ( currentValue ) {
                                 return (currentValue || 0) + memArray.length;
                             });
-                            debugger;
+                            // debugger;
                             var qArray=[];
                             var qArray2 =[];
                             var deffer = $q.defer();
@@ -318,22 +318,20 @@ angular.module('core')
                                 .then(function(){
                                     deferred.resolve({unlistedMembersArray: response.unlisted});
                                     //step  : entry for "subgroup-activity-streams"
-                                    debugger;
+                                    // debugger;
 
                                 })
                                 .catch(function(d){
-                                    debugger;
+                                    console.log(d);
                                 })
                             for(var member in memArray){
 
-                                var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(subgroupObj.groupID + "_" + subgroupObj.subgroupID).child(member))
-                                    .$loaded()
-
-                                var temp1=  $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
-
-                                qArray.push($q.all([temp,temp1]))
-
-
+                                var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(loggedInUserObj.userID).child(subgroupObj.groupID + "_" + subgroupObj.subgroupID).child(member))
+                                    .$loaded().then(function(){
+                                        var temp1=  $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded().then(function(){
+                                            qArray.push($q.all([temp,temp1]))
+                                        })
+                                    })
                             }
                             deffer.resolve($q.all(qArray));
 

@@ -98,12 +98,12 @@
                         that.userData.$save().then(function(data){
                             $location.path('/user/'+userService.getCurrentUser().userID)
                             perSettingForm.$submitted = false
-                            console.log('User profile updated')
+                            //console.log('User profile updated')
                             messageService.showSuccess('User profile updated')
                         },function(err){
                             perSettingForm.$submitted = false;
                             messageService.showFailure('Error occurred updating user profile')
-                            console.log('Error occurred updating user profile')
+                            //console.log('Error occurred updating user profile')
                         })
 
                     })
@@ -151,7 +151,7 @@
                         console.log(xhr.status);
                         console.log(xhr.responseText);
                         if (xhr.status === 200) {
-                            console.log(url);
+                            //console.log(url);
                             messageService.showSuccess('Picture uploaded')
                             //document.getElementById("preview").src = url;
                             //that.group.imgLogoUrl = url;
@@ -172,9 +172,9 @@
                         targetEvent: ev
                     }).then(function (picture) {
                         $rootScope.newImg = picture;
-                        console.log("this is image" + picture)
+                        //console.log("this is image" + picture)
                     }, function (err) {
-                        console.log(err)
+                        //console.log(err)
 
                     })
 

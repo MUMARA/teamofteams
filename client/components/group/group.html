@@ -126,13 +126,14 @@
             </ul>
         </div>
         <!-- right side-->
-        <div  id="page-content-wrapper" style="padding-left: 0px;padding-top: 0px;padding-right: 0px;">
+        <!-- <div id="page-content-wrapper" style="padding-left: 0px;padding-top: 0px;padding-right: 0px;"> -->
+        <div>
             <!--<div class="container-fluid">-->
-            <div layout="row">
+            <div class="viewHeight" layout="row">
                 <!--navigation side-->
                 <div style="  width: 70px;max-width: 70px;min-width: 70px;">
-                    <div layout="column" layout-fill>
-                        <div class="gradient" style="position:absolute;left:0px;height: 95vh;" layout="column" layout-align="space-between center">
+                    <div style="height:100vh; max-height:1024px; padding-bottom:50px;">
+                        <div class="gradient" layout="column" layout-align="space-between center">
                             <div>
                                 <a id="menu-toggle"><img src="img/menu.svg" style="width: 39px; height: 66px;  margin-left: 16px;" /> </a>
                                 <br>
@@ -146,9 +147,10 @@
                                     <img src="img/comment.svg" style="height: 39px; margin-top:4px;  margin-left: 14px;; " />
                                 </div>
                             </div>
+                            <div flex></div>
                             <div ng-show="group.isAdmin()" layout-align="center center">
                                 <md-divider style="background-color: white;"></md-divider>
-                                <img src="img/menu.svg" class="nooutline" ng-click="group.openTeamAttendance()" style="width: 39px; height: 66px; margin-bottom:20px;"/>
+                                <img src="img/menu.svg" class="nooutline" ng-click="group.openTeamAttendance()" style="width: 39px; height: 66px;"/>
                             </div>
                         </div>
 
@@ -190,7 +192,7 @@
                         </md-card>
                         <md-card class="md-whiteframe-z1" flex>
                             <md-list-item layout-padding class="backColorOrange foreColorWhite md-whiteframe-z1">
-                                <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"style="margin-left: 15px; margin-right: 30px;"></md-icon>
+                                <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"style="margin-left: 15px; margin-right: 50px;"></md-icon>
                                 <p class="textAlignLeft textBold" ng-repeat="field in ['User', 'Group', 'Subgroup', 'Status']">{{field}}</p>
                             </md-list-item>
                             <md-list-item layout-padding ng-repeat="user in group.users | filter: group.searchUser" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)">
@@ -208,9 +210,9 @@
                     </md-content>
                 </div>
                 <!--chat side-->
-                <div class="chatSide" ng-hide="group.showTeamAttendace" flex>
-                    <md-card style="margin: 0 !important;">
-                        <md-toolbar style="margin-left:7px;background-color: #ffffff; padding: 5px  !important; color: #000000;" class="md-whiteframe-z1">
+                <div  class="chatSide" ng-hide="group.showTeamAttendace" flex>
+                    <div layout="column" class="backColorWhite" style="height:100vh; max-height:1024px; padding-bottom:75px;">
+                        <md-toolbar layout-padding class="backColorWhite foreColorBlack md-whiteframe-z1">
 
                             <div style="margin-top: 10px">
                                 <div style="float:left;">Channel Headlines
@@ -222,10 +224,9 @@
                                     </svg>
                                 </div>
                             </div>
-
                         </md-toolbar>
                         <!--for group chats-->
-                        <md-content ng-hide="group.activesubID" style="height: 83vh" style="position:relative; bottom:10px; margin-left:7px" class="greenScroller">
+                        <md-content flex ng-hide="group.activesubID" class="backColorWhite greenScroller">
                             <!-- <div style="position: absolute;bottom: 0">-->
                             <div>
                                 <md-list style="position: relative; padding: 0px !important;" ng-repeat="message in group.messagesArray">
@@ -266,11 +267,9 @@
 
                                 </md-list>
                             </div>
-
-
                         </md-content>
                         <!--for teams chats-->
-                        <md-content ng-show="group.activesubID" style="height: 83vh" class="greenScroller">
+                        <md-content flex ng-show="group.activesubID" class="backColorWhite greenScroller">
                             <!-- <div style="position: absolute;bottom: 0">-->
                             <div>
                                 <md-list style="position: relative; padding: 0px !important;" ng-repeat="message in group.TeammessagesArray">
@@ -311,12 +310,10 @@
 
                                 </md-list>
                             </div>
-
-
                         </md-content>
                         <!--for group send msg-->
-                        <form ng-hide="group.activesubID" ng-submit="group.SendMsg()">
-                            <div layout="row" class="md-whiteframe-z5" style="    border: 1px solid lightgrey;text-align: center;position: relative;bottom: 1px;margin-left: 7px;border: 1px solid lightgrey;">
+                        <form ng-hide="group.activesubID" class="backColorWhite" ng-submit="group.SendMsg()" >
+                            <div layout="row" class="md-whiteframe-z5" >
                                 <div flex="80" style="    margin-left: 6px;padding: 10px;padding-left: 22px;">
                                     <md-input-container flex="90" class="chatBox" style="border: 1px solid lightgrey;background-color: #ffffff;padding: 0">
 
@@ -342,8 +339,8 @@
                         </form>
                         <!--for team send msg-->
 
-                        <form ng-show="group.activesubID" ng-submit="group.TeamSendMsg()">
-                            <div layout="row" class="md-whiteframe-z5" style="border: 1px solid lightgrey;">
+                        <form ng-show="group.activesubID" class="backColorWhite" ng-submit="group.TeamSendMsg()" >
+                            <div layout="row" class="md-whiteframe-z5" style="border: 1px solid lightgrey;" style="padding-bottom:150px;">
                                 <div flex="80" style="margin-left: 28px; padding: 10px">
                                     <md-input-container flex="90" class="chatBox" style="border: 1px solid lightgrey;background-color: #ffffff;padding: 0">
 
@@ -367,7 +364,7 @@
                                 </div>
                             </div>
                         </form>
-                    </md-card>
+                    </div>
                 </div>
                 <!--online side-->
                 <div class="onlineSide" ng-hide="group.showTeamAttendace" style="max-width:274px;width:274px;min-width:250px">
@@ -468,10 +465,10 @@
                         </md-toolbar>
 
                         <!--<md-button class="md-raised"><ng-md-icon icon="add_circle"></ng-md-icon></md-button>-->
-                        <md-button ng-hide="group.activesubID" class="md-fab" aria-label="Eat cake" style="margin-top: -80px;margin-left: 150px;width: 35px;height: 35px" ng-click="group.createChannelsPage()">
+                        <md-button ng-hide="group.activesubID" class="md-fab" aria-label="Create Group channel" style="margin-top: -80px;margin-left: 150px;width: 35px;height: 35px" ng-click="group.createChannelsPage()">
                             <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>
                         </md-button>
-                        <md-button ng-show="group.activesubID" class="md-fab" aria-label="Eat cake" style="margin-top: -80px;margin-left: 150px;width: 35px;height: 35px" ng-click="group.createTeamsChannelsPage()">
+                        <md-button ng-show="group.activesubID" class="md-fab" aria-label="Create Team channel" style="margin-top: -80px;margin-left: 150px;width: 35px;height: 35px" ng-click="group.createTeamsChannelsPage()">
                             <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>
                         </md-button>
                     </md-card>

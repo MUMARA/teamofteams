@@ -126,7 +126,7 @@
             });
             $stateProvider.state('user.geoFencing', {
                 url: '/group/:groupID/geoFencing',
-                templateUrl: 'components/geo-Fencing/geo-Fencing.html',
+                templateUrl: 'components/geo-fencing/geo-fencing.html',
                 controller: 'GeoFencingController',
                 controllerAs: 'geoFencing'
             });
@@ -149,7 +149,7 @@
                 controllerAs: 'createTeamsChannels'
             });
             $stateProvider.state('user.personalSettings', {
-                url: '/group/:groupID/personalSettings',
+                url: '/:userID/personalSettings',
                 templateUrl: 'components/personal-settings/personal-settings.html',
                 controller: 'PersonalSettingsController',
                 controllerAs: 'personalSettings'
