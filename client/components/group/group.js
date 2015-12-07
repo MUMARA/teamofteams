@@ -221,8 +221,12 @@
                     })
 
                 };
-
                 // Start Team Attendance
+                //update status when user checked-in or checked-out
+
+
+
+
                 this.users = [];
                 this.currentSubGroup;
                 this.showTeamAttendace = false;
@@ -235,6 +239,18 @@
                     that.currentSubGroup = index;
                     that.processTeamAttendance = true;
                     that.users = [];
+                    
+                    checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id).on('child_changed', function(snapshot, prevChildKey){
+                        // console.log(snapshot.val());    
+                        // console.log(snapshot.key()); 
+                        that.users.forEach(function(val,indx){
+                            if(val.id === snapshot.key()){
+                                val.type = snapshot.val().type;
+                                val.message = snapshot.val().message;
+                            }
+                        })
+                    });
+
                     subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(groupID, subgroupData.$id).$loaded().then(function(subgroupsdata){
                         // data.forEach(function(subdata){
                         //     $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id).child(subdata.$id)).$loaded().then(function(userdata){
@@ -298,7 +314,6 @@
                     // Do not change status of self login user
                     if (localStorage.userID === userID) {
                         messageService.showFailure('To change your status, please use toolbar!');
-                        that.GetSubGroupUsers({$id: sgrId});
                         return;
                     }
                     that.processTeamAttendance = true;
@@ -311,7 +326,6 @@
                             if(userdata[5].$value === 1){
                                 messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
                                 that.processTeamAttendance = false;
-                                that.GetSubGroupUsers({$id: sgrId});
                                 return;
                             }
                         }
@@ -340,11 +354,9 @@
                             };
                             checkinService.updateUserStatusBySubGroup(groupID, subgroupID, userID, that.checkinObj.newStatus, that.definedSubGroupLocations, null)
                                 .then(function (res) {
-                                    that.GetSubGroupUsers({$id: subgroupID});
                                     messageService.showSuccess(res);
                                     that.processTeamAttendance = false;
                                 }, function (reason) {
-                                    that.GetSubGroupUsers({$id: subgroupID});
                                     messageService.showFailure(reason);
                                 });
                         }, function (err) {
