@@ -92,7 +92,14 @@
                 url: '/:userID',
                 templateUrl: 'components/user/user.html',
                 controller: 'UserController',
-                controllerAs: 'user'
+                controllerAs: 'user',
+                resolve: {
+                    user: function($state, $stateParams, userService){
+                        if($stateParams.userID !== userService.getCurrentUser().userID){
+                            $state.go(user.dashboard, userService.getCurrentUser().userID)
+                        }
+                    }
+                }
             });
             $stateProvider.state('user.create-group', {
                 url: '/:userID/create-group',
