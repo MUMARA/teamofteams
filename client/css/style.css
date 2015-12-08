@@ -1046,3 +1046,6 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div{
 .offlineUser{
     border:3px solid #c51903
 }
+.md-toast-animating {
+    width: 500px !important;
+}
