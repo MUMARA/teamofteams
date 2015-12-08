@@ -89,11 +89,9 @@
             xhr.open("PUT", signed_request);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
             xhr.onload = function (data) {
-                console.log(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....')
-                    console.log(url);
                     that.group.imgLogoUrl = url + '?random=' + new Date();
                     defer.resolve(url)
 

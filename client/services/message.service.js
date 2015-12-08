@@ -10,7 +10,7 @@ angular.module('core')
         return {
             show: function( message ) {
                 $mdToast.show({
-                    template: '<md-toast>' + message + '</md-toast>',
+                    template: '<md-toast class="md-toast-animating">' + message + '</md-toast>',
                     hideDelay: 3000,
                     //hideDelay: 200000,
                     position: 'top left right'
