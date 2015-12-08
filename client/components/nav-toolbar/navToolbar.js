@@ -38,7 +38,7 @@
                 this.shiftToUserPage = shiftToUserPage;
                 //this.doChange = doChange;
                 this.updateStatus = updateStatus;
-                this.logout = logout;
+                //this.logout = logout;
                 this.queryGroups = queryGroups;
                 this.quizStart = quizStart
                 // alert(this.test)
@@ -69,6 +69,19 @@
                             self.showUrlObj.groupID = snapshot.groupID;
                             self.showUrlObj.subgroupID = snapshot.subgroupID;
                         }
+
+                        checkinService.getRefCheckinCurrentBySubgroup().child(snapshot.groupID).child(snapshot.subgroupID).on('child_changed', function(snapshot, prevChildKey){
+                            // console.log(snapshot.val());    
+                            // console.log(snapshot.key()); 
+                            if (snapshot.val().type === 1){
+                                self.checkout = true;
+                            } else {
+                                self.checkout = false;   
+                            }
+
+                            
+
+                        });
 
                     }, function (e) {
                         debugger;

@@ -134,7 +134,8 @@
  -->
                             <md-input-container layout-padding md-no-float>
                                 <md-icon layout-margin md-svg-src="../../img/search.svg"></md-icon>
-                                <input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name">
+                                <!-- <input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name"> -->
+                                <input   ng-model="user.searchbox" type="text" placeholder="User Name">
                             </md-input-container>
                         </div>
 
@@ -162,9 +163,8 @@
                             <md-option value="3">EveryOne</md-option>
                         </md-select>
                     </div>-->
-                    <div id="abc_" layout="column"  layout-align="center center" style=" position: relative;
-    top: 11px;height: 100px;">
-                        <md-select style="color:black;font-size: 16px;" placeholder="SUBGROUPS" ng-model="user.dropbox" ng-change="$root.searchFn(user.dropbox,1)" >
+                    <div id="abc_" layout="column"  layout-align="center center" style=" position: relative; top: 11px;height: 100px;">
+                        <md-select style="color:black;font-size: 16px;" placeholder="Every One" ng-model="user.dropbox" ng-change="$root.searchFn(user.dropbox,1)" >
                             <!--<style>
                                 #select_label_4 > span:nth-child(1){
                                     font-size: 12px
@@ -272,24 +272,26 @@
                                         margin-left: 10px;
                                     }
                                 </style>-->
-                                <div layout="row" ng-repeat="(key, userObj) in user.userMemData.data.flattenedsubGroupsByuser " ng-show="userObj.show"  class="margining " style="margin-bottom: 17px;">
+
+
+                                <!-- <div layout="row" ng-repeat="(key, userObj) in user.userMemData.data.flattenedsubGroupsByuser " ng-show="userObj.show"  class="margining " style="margin-bottom: 17px;"> -->
+                                <div layout="row" ng-repeat="user in user.users | filter: (user.searchbox)" class="margining " style="margin-bottom: 17px;">
                                     <div flex="10" class="circular">
                                         <!--<img ng-src="{{userObj['profile-image']}}" class="userCardImg " ng-style="{(userObj.type == 2) && {'border':'green'} ||{'border':'red'} }">-->
-                                        <img ng-src="{{userObj['profile-image']||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                        <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                              class="roundShape"
-                                             ng-style="userObj.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">                                             <!--ng-style="userObj.type == 1 ? 'onlineUser' :'offlineUser' ">-->
+                                             ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">                                             <!--ng-style="userObj.type == 1 ? 'onlineUser' :'offlineUser' ">-->
                                              <!--ng-style="userObj.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">-->
                                     </div>
                                     <div flex="90" layout="row">
-                                        <div flex="25" class="listCardHeading2" style="color: black">{{userObj.firstName + '' + userObj.lastName}}</div>
-                                        <div flex="25" class="listCardHeading2" style="color: #909090">{{userObj.contactNumber || 'No number'}}
+                                        <div flex="25" class="listCardHeading2" style="color: black">{{user.firstName + ' ' + user.lastName}}</div>
+                                        <div flex="25" class="listCardHeading2" style="color: #909090">{{user.contactNumber || 'No number'}}
                                         </div>
                                         <!--<div flex="25" class="listCardHeading2" style="color: #909090">{{userObj.groupID + '>' + userObj.subgroupID}}-->
                                         <div flex="25" class="listCardHeading2" style="color: #909090; margin-top: 16px">
-                                            <span>{{userObj.groupID + '>'}}</span>
-                                            <span>{{userObj.subgroupID}}</span>
+                                            <span>{{user.groupID}}</span>
                                         </div>
-                                        <div flex="25" class="listCardHeading2" style="color: #909090">{{userObj.timestamp |date:'MM/dd/yyyy @ h:mma'}}
+                                        <div flex="25" class="listCardHeading2" style="color: #909090">{{user.timestamp |date:'MM/dd/yyyy @ h:mma'}}
                                         </div>
                                     </div>
 
