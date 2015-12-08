@@ -1,10 +1,10 @@
 <!--<div ng-controller="personalSettingsController as psc">-->
 <div id="personalSettingPage">
-    <form style="background-color: #efefef;" name="personalSettingForm" novalidate="">
+    <form style="background-color: #efefef;" name="personalSettingForm" novalidate="" class="grayScroller viewHeight ">
         <!--<ng-md-icon icon="close" size="50" layout-padding ng-click="psc.hide()"></ng-md-icon>-->
         <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="$root.newImg = null ;personalSettings.hide()"></ng-md-icon>
-        <md-content class="grayScroller" style="height: 88vh;max-width:70%;margin: 0px auto">
-            <md-card style="margin: 0px auto">
+        <md-content style=" max-width:85%; margin: 0px auto; max-height: 75%;  ">
+            <md-card style="margin: 0px auto;"  >
                 <md-card-content style="padding: 50px;">
                     <h1 style="color: #d3d3d3">Personal Settings</h1>
 
@@ -122,7 +122,7 @@
                             </md-button>-->
                         </div>
                         <div>
-                            <img style="outline: none;" ng-src="{{$root.newImg}}" alt="" class="userCropper-main-button sampleUserImg" ng-hide="!$root.newImg" ng-click="cgc.showAdvanced($event)" />
+                            <img style="outline: none;" ng-src="{{$root.newImg}}" alt="" class="userCropper-main-button sampleUserImg" ng-hide="!$root.newImg" ng-click="personalSettings.showAdvanced($event)" />
                         </div>
 
                         <!--<image-cropper></image-cropper>-->

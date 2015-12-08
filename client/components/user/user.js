@@ -6,8 +6,6 @@
 
     function UserController($location, checkinService, $rootScope, $sessionStorage, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
 
-
-
         //$rootScope.fl= 'hello'
         var $scope = this;
         var that = this;

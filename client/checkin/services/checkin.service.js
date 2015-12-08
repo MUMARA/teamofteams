@@ -137,7 +137,7 @@
 
                 };
 
-                console.log(checkinObj)
+                // console.log(checkinObj)
 
                 checkinObj.message = statusObj.message || ( statusObj.type == 1 ? 'Checked-in' : 'Checked-out' );
 
