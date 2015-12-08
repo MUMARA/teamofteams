@@ -1013,7 +1013,7 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar{
     line-height: 0px;
 }
 md-list md-list-item button.md-button:not([disabled]):hover{
-    background-color: transparent;
+    background-color: transparent  !important;
 }
 .serachbox2{
     border-color: transparent !important;
