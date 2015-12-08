@@ -192,7 +192,10 @@
                         </md-card>
                         <md-card class="md-whiteframe-z1" flex>
                             <md-list-item layout-padding class="backColorOrange foreColorWhite md-whiteframe-z1">
-                                <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"style="margin-left: 15px; margin-right: 50px;"></md-icon>
+                            <md-button class="md-fab backColorOrange" aria-label="checkout" ng-click="group.checkoutAll()" style="margin-left: 15px; margin-right: 50px;">
+                                <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"  ></md-icon>
+                            </md-button>
+                                
                                 <p class="textAlignLeft textBold" ng-repeat="field in ['User', 'Group', 'Subgroup', 'Status']">{{field}}</p>
                             </md-list-item>
                             <md-list-item layout-padding ng-repeat="user in group.users | filter: group.searchUser" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)">
