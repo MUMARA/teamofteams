@@ -249,8 +249,8 @@ md-switch{
 }
 .toolbarListCard{
     position: absolute;
-    width: 411px;
-    height: 330px;
+    width: 350px;
+    height: 300px;
     z-index: 99999;
     right: -26px;
     top: 22px;
@@ -1012,7 +1012,7 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar{
 .md-button.md-fab{
     line-height: 0px;
 }
-md-list md-list-item button.md-button:not([disabled]):hover{
+md-list md-list-item button .md-button:not([disabled]):hover{
     background-color: transparent  !important;
 }
 .serachbox2{

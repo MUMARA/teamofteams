@@ -10,7 +10,7 @@
             <div flex="60" offset="5">
                 <div layout='row' layout-align="start center">
                     <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline logoPana">
-                    <span class="mainPana" ng-click="navToolbar.shiftToUserPage()">Panacloud</span>
+                    <span class="mainPana" ng-click="navToolbar.shiftToUserPage()">TeamsofTeams</span>
                     <!--<input type="button" ng-click="navToolbar.testFn()" value="testFn"/>-->
                     <!--<md-progress-circular ng-show="navToolbar.checkinSending" style=" left:41px;-webkit-transform: scale(.8)!important" class="md-hue-2"-->
                     <md-progress-circular ng-show="navToolbar.checkinSending" class="md-hue-2 progressCircularforNavBar" md-mode="indeterminate"></md-progress-circular>
@@ -29,7 +29,7 @@
             </md-button>
             <div flex="10" ng-show="!navToolbar.checkout">
                 <div style="position: relative">
-                    <md-switch ng-model="navToolbar.switchCheckIn" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
+                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.ChalBay()" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
                     </md-switch>
                     <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
                     <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
@@ -58,49 +58,60 @@
                                     </div>
                                 </div>
                             </h2> -->
-                            <span class="foreColorDarkGrey">Check In</span>
+                            <!-- <div style="color: #000000;text-align: initial;">
+                                <h4>Check In</h4>
+                            </div> -->
                             <md-input-container md-no-float style="padding-bottom: 0px;">
-                                <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" ng-keyup="navToolbar.queryGroups()">
+                                <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team" >
                             </md-input-container>
                             <ng-md-icon icon="search" style="fill: #929497;" ng-click="navToolbar.setFocus()"></ng-md-icon>
                         </md-toolbar>
-                        <md-divider></md-divider>
-                        <div>
-                            <md-toolbar class="md-theme-light" layout="row" style="background-color: white">
-                                <!--<div flex="10"></div>-->
-                                <div layout="row" layout-align="space-around center" flex>
-                                    <div style="color:#7dd9e8" class="user">Groups</div>
-                                    <div style="color:#7dd9e8" class="user userTeam">Teams</div>
-                                </div>
-                            </md-toolbar>
-                            <md-divider></md-divider>
-                        </div>
-                        <div id="test1" layout="row" style="padding-top: 1px;height:61%">
+                        <div id="test1" layout="row" style="padding-top: 1px;height:78%">
                             <div layout="column" flex style="border-right: 1px solid #c2c2c2">
                                 <md-content class="grayScroller ">
-                                    <md-list ng-hide="navToolbar.groupObj1" style="height: 200%; overflow-x: hidden">
-                                        <!--<md-list-item ng-repeat='(key,prop) in navToolbar.groups track by key' ng-mouseover="navToolbar.showSubGroup(key,prop)">-->
+                              <!--       <md-list ng-hide="navToolbar.groupObj1" style="height: 200%; overflow-x: hidden">
+                                        <!<md-list-item ng-repeat='(key,prop) in navToolbar.groups track by key' ng-mouseover="navToolbar.showSubGroup(key,prop)">>
                                         <md-list-item ng-repeat='group in navToolbar.groups track by $index' ng-mouseover="navToolbar.showSubGroup(group)">
-                                            <!--<md-list-item ng-repeat='group in ["hee","hi","ok"] track by $index' ng-mouseover="navToolbar.showSubGroup(group)">-->
+                                            <!<md-list-item ng-repeat='group in ["hee","hi","ok"] track by $index' ng-mouseover="navToolbar.showSubGroup(group)">>
                                             <div class="column" flex="10"><img src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
                                             <div class="column" layout-align="center center" flex="90" style="color: #757575;font-size: large">
                                                 <div class="groupName">{{group.$id}}</div>
                                             </div>
                                         </md-list-item>
-                                    </md-list>
-                                    <md-list ng-show="navToolbar.groupObj1" style="height: 200%; overflow-x: hidden">
-                                        <!--<md-list-item ng-repeat='(key,prop) in navToolbar.groups track by key' ng-mouseover="navToolbar.showSubGroup(key,prop)">-->
+                                    </md-list> -->
+
+                                    <md-list ng-hide="navToolbar.groupObj1" style="">
+                                      <md-list-item ng-repeat="group in navToolbar.ListGroupSubGroup | filter: navToolbar.search">
+                                            <div class="column" layout-align="start end" flex style="color: #757575;font-size: large">
+                                                <div layout="row">
+                                                    <div flex="5"><img src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
+                                                    <div flex layout-align="start center" class="groupName textAlignLeft">{{group.group}}</div>   
+                                                </div>
+                                                <md-list>
+                                                  <md-list-item ng-repeat="subgroup in group.subGroups"  ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)">
+                                                    <div style="color: #757575;font-size:large;" flex>
+                                                        <div class="groupName textAlignCenter">{{subgroup.subgroupId}}</div>
+                                                    </div>
+                                                  </md-list-item>
+                                                </md-list>
+                                                <md-divider md-outset style="padding-bottom:10px"></md-divider>  
+
+                                            </div> 
+                                      </md-list-item>
+                                    </md-list>  
+                                    <!-- <md-list ng-show="navToolbar.groupObj1" style="height: 200%; overflow-x: hidden">
+                                        <!<md-list-item ng-repeat='(key,prop) in navToolbar.groups track by key' ng-mouseover="navToolbar.showSubGroup(key,prop)">>
                                         <md-list-item ng-repeat='group1 in navToolbar.groupObj1 track by $index' ng-mouseover="navToolbar.showSubGroup(group1)">
-                                            <!--<md-list-item ng-repeat='group in ["hee","hi","ok"] track by $index' ng-mouseover="navToolbar.showSubGroup(group)">-->
+                                            <md-list-item ng-repeat='group in ["hee","hi","ok"] track by $index' ng-mouseover="navToolbar.showSubGroup(group)">
                                             <div class="column" flex="10"><img src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
                                             <div class="column" layout-align="center center" flex="90" style="color: #757575;font-size: large">
                                                 <div class="groupName">{{group1.$id}}</div>
                                             </div>
                                         </md-list-item>
-                                    </md-list>
+                                    </md-list> -->
                                 </md-content>
                             </div>
-                            <div layout="column" flex>
+                          <!--   <div layout="column" flex>
                                 <md-content class="grayScroller ">
                                     <md-list>
                                         <md-list-item style="padding-left: 11px; font-size: large" ng-repeat="subgroup in navToolbar.subgroups track by $index" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)">
@@ -109,7 +120,7 @@
                                         </md-list-item>
                                     </md-list>
                                 </md-content>
-                            </div>
+                            </div> -->
                         </div>
                     </md-card>
                 </div>

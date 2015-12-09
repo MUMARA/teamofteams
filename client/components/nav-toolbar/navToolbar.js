@@ -25,6 +25,7 @@
             this.switchMsg = false;
             this.userImgClickCard = false;
             this.groups = {};
+            this.ListGroupSubGroup = [];
             this.subgroups = [];
             this.filteredGroups;
             this.groupObj1;
@@ -89,23 +90,30 @@
                     console.log(e)
                 });
 
-            this.groupObj = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID))
-                .$loaded().then(function(d) {
 
-                    if (d && d.length) {
-                        self.noSubgropData = false
-                        showSubGroup(d[0], d[0].$id);
-                        $timeout(function() {
-                            self.groups = d
-                        })
-                    } else {
-                        self.noSubgropData = true
-                    }
 
-                }, function(e) {
-                    debugger;
-                    console.log(e)
-                });
+
+
+            self.groups = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
+            // this.groupObj = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID))
+            //     .$loaded().then(function(d) {
+            //         if (d && d.length) {
+            //             self.noSubgropData = false
+            //             showSubGroup(d[0], d[0].$id);
+            //             $timeout(function() {
+            //                 // self.groups = d;
+            //                 self.groups = self.groupObj;
+            //                 // self.listGroupSubGroups = d;
+            //                 console.log('asa')
+            //                 console.log(self.groups);
+            //             })
+            //         } else {
+            //             self.noSubgropData = true
+            //         }
+            //     }, function(e) {
+            //         debugger;
+            //         console.log(e)
+            //     });
 
             /* VM and Helper Functions*/
             // this.userLocation = {};
@@ -237,6 +245,7 @@
                     });
             }
 
+            
             function logout() {
                 authService.logout();
 
@@ -246,7 +255,28 @@
                 $location.path('/user/' + userService.getCurrentUser().userID)
             }
 
+            this.ChalBay = function(){
+            self.ListGroupSubGroup = [];
+                self.groups.forEach(function(group, groupId){
+                    var tmp = {
+                        group: group.$id,
+                        subGroups: []
+                    }
+                    for (var i in group) {
+                        if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
+                            var temp = {};
+                            temp.pId = group.$id; // group Name == pId
+                            temp.subgroupId = i;
+                            temp.data = group[i];
+                            tmp.subGroups.push(temp)
+                        }
+                    }
+                    self.ListGroupSubGroup.push(tmp);
+                })
+            }
+
             function showSubGroup(group, pId) {
+              
                 self.subgroups = [];
                 for (var i in group) {
                     if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
