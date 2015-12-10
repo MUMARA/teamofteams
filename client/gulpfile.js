@@ -99,7 +99,7 @@ gulp.task("minifying", function() {
             "./checkin/controllers/home.checkin.app.BySubgroup.controller.js",
             "./checkin/controllers/user.checkin.controller.js",
             "./checkin/controllers/charts.checkin.controller.js",
-            "./app-dev.js",
+            "./app.js",
             // "./config/appRoutes.js",
             // "./config/ngMaterialConfig.js"
         ])
