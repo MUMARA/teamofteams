@@ -50,7 +50,7 @@
                                         <span style="color: #9E9E9E;margin: 19px;font-size: 14px;">Sort by</span>
                                         <div offset="3"  >
                                             <div layout="column" layout-align="center left" flex>
-                                                <md-select placeholder="Screen Name" ng-model="someVal" class="user">
+                                                <md-select aria-label="userSetting" placeholder="Screen Name" ng-model="someVal" class="user">
                                                     <md-option value="1" style="color: black">Screen Name</md-option>
                                                     <md-option value="2" style="color: black">Screen Name</md-option>
                                                     <md-option value="3" style="color: black">Screen Name</md-option>
@@ -100,8 +100,8 @@
                                                 <div flex class="listCardHeading2" style="color: #909090;font-size: 14px !important;">
                                                     <div style="margin-left: 60px;">
                                                         <div layout="column" layout-align="center left" flex>
-                                                            <md-select ng-model="someVal" class="user" ng-if="member.membershipType != 1">
-                                                                <md-option value="1" ng-click="userSetting.changeMemberRole(3, member)" style="color: black" ng-if="member.membershipType != 3">Member</md-option>
+                                                            <md-select aria-label="userSetting" ng-model="someVal" class="user" ng-if="member.membershipType != 1">
+                                                                <md-option value="1" ng-click="userSetting.changeMemberRole(3, member)"  style="color: black" ng-if="member.membershipType != 3">Member</md-option>
                                                                 <md-option value="2" ng-click="userSetting.changeMemberRole(2, member)"  style="color: black" ng-if="member.membershipType != 2">Make admin</md-option>
                                                                <!-- <md-option value="3" ng-click="userSetting.changeMemberRole(-1, member)"  style="color: black" ng-if="member.membershipType != -1">Blocked Member</md-option>-->
                                                                 <md-option ng-click="userSetting.changeMemberRole(null, member)" value="3" style="color: black">Delete Memeber</md-option>
@@ -137,7 +137,7 @@
                                         <span style="color: #9E9E9E;margin: 19px;font-size: 14px;">Sort by</span>
                                         <div offset="3"  >
                                             <div layout="column" layout-align="center left" flex>
-                                                <md-select placeholder="Screen Name" ng-model="someVal" class="user">
+                                                <md-select aria-label="userSetting" placeholder="Screen Name" ng-model="someVal" class="user">
                                                     <md-option value="1" style="color: black">Screen Name</md-option>
                                                     <md-option value="2" style="color: black">Screen Name</md-option>
                                                     <md-option value="3" style="color: black">Screen Name</md-option>
@@ -219,7 +219,7 @@
                                         <span style="color: #9E9E9E;margin: 19px;font-size: 14px;">Sort by</span>
                                         <div offset="3"  >
                                             <div layout="column" layout-align="center left" flex>
-                                                <md-select placeholder="Screen Name" ng-model="someVal" class="user">
+                                                <md-select aria-label="userSetting" placeholder="Screen Name" ng-model="someVal" class="user">
                                                     <md-option value="1" style="color: black">Screen Name</md-option>
                                                     <md-option value="2" style="color: black">Screen Name</md-option>
                                                     <md-option value="3" style="color: black">Screen Name</md-option>
@@ -268,7 +268,7 @@
                                                 <div flex class="listCardHeading2" style="color: #909090;font-size: 14px !important;">
                                                     <div>
                                                         <div layout="column" layout-align="center left" flex>
-                                                            <md-select placeholder="Screen Name" ng-model="someVal" class="user ">
+                                                            <md-select aria-label="userSetting" placeholder="Screen Name" ng-model="someVal" class="user ">
                                                                 <md-option value="1" style="color: black">Member</md-option>
                                                                 <md-option value="2" style="color: black">Blocked Member</md-option>
                                                                 <md-option value="3" style="color: black">Delete Memeber</md-option>

@@ -159,7 +159,7 @@
                 <!-- Team Attendance -->
                 <div class="teamAttendance md-whiteframe-z1" ng-show="group.showTeamAttendace" flex>
                     <md-toolbar class="backColorWhite md-whiteframe-z1" layout="row" layout-padding layout-align="space-between center">
-                        <h2 class="foreColorDarkGrey nomargin">Team Attendace</h2>
+                        <h2 class="foreColorDarkGrey nomargin">Manaul Team Attendace</h2>
                         <md-progress-circular md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="36"></md-progress-circular>
                         <md-input-container flex="50" md-no-float   >
                             <md-icon md-svg-src="../../img/searchDarkGrey.svg"></md-icon>
@@ -169,7 +169,7 @@
                     <md-content layout="row" layout-align="space-between start">
                         <md-card class="md-whiteframe-z1">
                             <md-list-item layout-padding class="backColorPink foreColorWhite md-whiteframe-z1" style="min-height: 52px;"> <!-- Min Height Due to user list card is getting 52px -->
-                                <span>Subgroups</span>
+                                <span>Teams</span>
                                 <span flex></span>
                             </md-list-item>
                             <md-list layout-margin class="md-whiteframe-z1" ng-repeat="subgroup in group.subgroups">
@@ -192,7 +192,10 @@
                         </md-card>
                         <md-card class="md-whiteframe-z1" flex>
                             <md-list-item layout-padding class="backColorOrange foreColorWhite md-whiteframe-z1">
-                                <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"style="margin-left: 15px; margin-right: 50px;"></md-icon>
+                            <md-button class="md-fab backColorOrange" aria-label="checkout" ng-click="group.checkoutAll()" style="margin-left: 15px; margin-right: 50px;">
+                                <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"  ></md-icon>
+                            </md-button>
+                                
                                 <p class="textAlignLeft textBold" ng-repeat="field in ['User', 'Group', 'Subgroup', 'Status']">{{field}}</p>
                             </md-list-item>
                             <md-list-item layout-padding ng-repeat="user in group.users | filter: group.searchUser" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)">

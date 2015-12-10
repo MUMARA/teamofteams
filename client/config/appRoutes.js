@@ -26,6 +26,16 @@
                         controller: 'HomeController',
                         controllerAs: 'home'
                     }
+                },
+                resolve: {
+                    user: function($location, userService){
+                        var user = userService.getCurrentUser();
+
+                        if(user){
+                            $location.path('/user/' + user.userID)
+                            //$state.go(user.dashboard, userService.getCurrentUser().userID)
+                        }
+                    }
                 }
             });
             $stateProvider.state('signin', {

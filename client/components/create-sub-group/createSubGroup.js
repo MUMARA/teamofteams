@@ -15,8 +15,7 @@
         /*private variables*/
         var that = this;
         var user = userService.getCurrentUser();
-
-
+        $rootScope.newImg =false;
         var localStorage = $localStorage.loggedInUser;
         var groupID = $stateParams.groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)

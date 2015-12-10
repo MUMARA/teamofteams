@@ -24,15 +24,15 @@
         'app.userSetting',
         'app.geoFencing',
         'app.quiz',
-        'app.quizAddBook',
-        'app.quizAddChapter',
-        'app.quizAddTopic',
-        'app.quizAddQuestion',
-        'app.quizCreate',
-        'app.quizAttempt',
-        'app.quizAttempting',
-        'app.quizAssign',
-        'app.quizResult'
+        // 'app.quizAddBook',
+        // 'app.quizAddChapter',
+        // 'app.quizAddTopic',
+        // 'app.quizAddQuestion',
+        // 'app.quizCreate',
+        // 'app.quizAttempt',
+        // 'app.quizAttempting',
+        // 'app.quizAssign',
+        // 'app.quizResult'
     ]);
 
 

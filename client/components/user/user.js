@@ -6,8 +6,6 @@
 
     function UserController($location, checkinService, $rootScope, $sessionStorage, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
 
-
-
         //$rootScope.fl= 'hello'
         var $scope = this;
         var that = this;
@@ -93,12 +91,12 @@
                                             $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
                                             userDataUbind[j] = img.$watch(function(dataVal) {
 
-                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img)
+                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value)
                                             })
                                         })
                                 }
                             }, function(e) {
-                                console.log('Error:user.js_line84')
+                                console.log(e)
                             });
                     });
 
@@ -224,6 +222,7 @@
                                     if (val.id === snapshot.key()) {
                                         val.type = snapshot.val().type;
                                         val.message = snapshot.val().message;
+                                        val.timestamp = snapshot.val().timestamp;
                                     }
                                 })
                             });

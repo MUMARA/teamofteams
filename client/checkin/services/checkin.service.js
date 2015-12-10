@@ -137,6 +137,8 @@
 
                 };
 
+                // console.log(checkinObj)
+
                 checkinObj.message = statusObj.message || ( statusObj.type == 1 ? 'Checked-in' : 'Checked-out' );
 
                 var userCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID +  '/' + subgroupId + '/' +  userID  );
@@ -152,15 +154,20 @@
                             .then(function(snapShot){
                                 var temp = $firebaseObject( refs.refSubGroupCheckinCurrentByUser.child(userID))
                                     .$loaded().then(function(snapshot){
-                                        snapshot.timestamp = fireTimeStamp;
-                                        snapshot.type = statusObj.type; // 1 = in, 2 = out
-                                        snapshot.groupID = groupID;
-                                        snapshot.subgroupID = subgroupId;
-                                        snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
-                                        snapshot['source-type']= 1;  //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
-                                        snapshot.$save().then(function(d){
+                                        // console.log('before')
+                                        // console.log(snapshot)
+                                        // snapshot.timestamp = fireTimeStamp;
+                                        // snapshot.type = statusObj.type; // 1 = in, 2 = out
+                                        // snapshot.groupID = groupID;
+                                        // snapshot.subgroupID = subgroupId;
+                                        // snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
+                                        // snapshot['source-type']= 1;  //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                                        // console.log('after')
+                                        // console.log(snapshot)
+                                        // snapshot.$save().then(function(d){
 
-                                            checkinObj['record-ref'] = snapShot.key();
+                                            // checkinObj['record-ref'] = snapShot.key();
+                                            checkinObj['record-ref'] = 'snapShot.key()';
                                             angular.extend( $userCheckinCurrent, checkinObj );
                                             $userCheckinCurrent.$save()
                                                 .then(function() {
@@ -175,7 +182,7 @@
 
                                                 }, errorCallback);
 
-                                        },errorCallback)
+                                        // },errorCallback)
 
                                     },errorCallback)
 
@@ -259,6 +266,25 @@
                         defer.reject();
                     });
 
+                return defer.promise;
+            },
+            updateAllSubGroupCount: function ( groupID, subgroupID , numberofuser ) {
+                var defer = $q.defer();
+
+                var groupCheckedIn = firebaseService.getRefGroups().child( groupID + '/' + subgroupID + '/members-checked-in');
+                var $checkin = $firebaseObject( groupCheckedIn );
+
+                $checkin.$loaded()
+                    .then(function() {
+                        $checkin.count = ( $checkin.count || 0 ) - numberofuser;
+                        $checkin.$save().then(function () {
+                            defer.resolve();
+                        }, function () {
+                            defer.reject();
+                        });
+                    }, function() {
+                        defer.reject();
+                    });
                 return defer.promise;
             },
             updateSubGroupCount: function ( groupID, subgroupID , checkinType ) {

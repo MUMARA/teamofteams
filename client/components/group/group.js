@@ -229,6 +229,7 @@
 
                 this.users = [];
                 this.currentSubGroup;
+                this.currentSudGroupID;
                 this.showTeamAttendace = false;
                 this.processTeamAttendance = false;
                 this.openTeamAttendance = function(){
@@ -237,7 +238,9 @@
                 }
                 this.GetSubGroupUsers = function(subgroupData, index) {
                     that.currentSubGroup = index;
+                    that.currentSudGroupID = subgroupData.$id;
                     that.processTeamAttendance = true;
+                    //for emprty array on team change
                     that.users = [];
                     
                     checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id).on('child_changed', function(snapshot, prevChildKey){
@@ -321,7 +324,7 @@
                     $firebaseArray(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(userdata){
                         // console.log(userdata);
                         // console.log(userdata[5]);
-                        console.log(type)
+                        // console.log(type)
                         if (!type) {
                             if(userdata[5].$value === 1){
                                 messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
@@ -364,6 +367,64 @@
                         });
                 }
                 // End Team Attendance
+
+
+
+
+
+                this.checkoutObj = {};
+                this.checkoutAll = function(){
+                    that.processTeamAttendance = true;
+                    // checkinService.getCurrentLocation()
+                    //     .then(function (location) {
+                    //         that.checkoutObj.location = {
+                    //             lat: location.coords.latitude,
+                    //             lon: location.coords.longitude
+                    //         };
+                           //that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});                                               
+
+                            that.users.forEach(function(val, i){
+                                if((val.type === 1 || val.type === true) && (val.id != localStorage.userID)) {
+                                    checkinService.createCurrentRefsBySubgroup(val.groupID, val.subgroupID, val.id).then(function(){
+                                        that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                                        var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(val.groupID + '/' + val.subgroupID + '/' + val.id);
+                                        userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
+                                            .$loaded(function (snapshot) {
+                                                that.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
+                                                updateAllStatusHelper(val.groupID, val.subgroupID, val.id, 1);
+                                            });
+                                    }); 
+                                } //if
+                            }) //foreach
+
+                            // that.checkoutObj.type = 2;
+                            // var numberofusers = 0;
+                            //checkinService.updateAllSubGroupCount(groupID, that.currentSudGroupID, numberofusers);
+                        // }, function (err) {
+                        //     messageService.showFailure(err.error.message);
+                        // });
+                }
+
+                function updateAllStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
+                    checkinService.getCurrentLocation()
+                        .then(function (location) {
+                            that.checkinObj.newStatus.location = {
+                                lat: location.coords.latitude,
+                                lon: location.coords.longitude
+                            };
+                            checkinService.updateUserStatusBySubGroup(groupID, subgroupID, userID, that.checkinObj.newStatus, that.definedSubGroupLocations, null)
+                                .then(function (res) {
+                                    //messageService.showSuccess(res);
+                                    that.processTeamAttendance = false;
+                                }, function (reason) {
+                                    //messageService.showFailure(reason);
+                                });
+                        }, function (err) {
+                            //messageService.showFailure(err.error.message);
+                        });
+                } //updateAllStatusHelper
+
+
 
 
             }]);

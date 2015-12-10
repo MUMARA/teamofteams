@@ -39,7 +39,7 @@
             },
             //======================================
             {
-                method: 'saveGroupProfilePicture', 
+                method: 'saveGroupProfilePicture',
                 httpVerb: 'post',
                 url: 'api/groupProfilepicture',
                 params:[]

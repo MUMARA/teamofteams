@@ -2,24 +2,16 @@
  * Created by admin on 5/13/2015.
  */
 
-(function () {
-    'use strict';
+(function() {
+        'use strict';
 
-    angular
-        .module('app.home', [])
-        .controller('HomeController', HomeController );
+        angular
+            .module('app.home', [])
+            .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['authService'];
+        HomeController.$inject = ['authService', 'userService', "$state", "$localStorage"]
 
-    function HomeController(authService) {
-        /*this.canActivate = function(){
-            return authService.resolveUserPage();
-        }*/
-    }
+        function HomeController(authService, userService, $state, $localStorage) {
 
-
+        }
 })();
-
-
-
-
