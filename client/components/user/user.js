@@ -222,6 +222,7 @@
                                     if (val.id === snapshot.key()) {
                                         val.type = snapshot.val().type;
                                         val.message = snapshot.val().message;
+                                        val.timestamp = snapshot.val().timestamp;
                                     }
                                 })
                             });

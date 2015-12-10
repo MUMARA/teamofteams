@@ -128,7 +128,7 @@ gulp.task("minifying", function() {
 
 
 
-gulp.task('webserver', ['minifying'], function() {
+gulp.task('webserver', function() {
     gulp.src('.')
         .pipe(webserver({
             livereload: true,
