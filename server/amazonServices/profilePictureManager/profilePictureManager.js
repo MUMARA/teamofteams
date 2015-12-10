@@ -308,7 +308,7 @@ module.exports.saveQuizBookPicture = function (filePath, userID, quizID, token, 
 };
 
 /*quiz bank api end*/
-module.exports.saveSubGroupProfilePicture = function (filePath, userID, groupID, token, res, bucketID, _fileType) {
+module.exports.saveGroupProfilePicture = function (filePath, userID, groupID, token, res, bucketID, _fileType) {
     try {
 
         var that = this;
@@ -318,7 +318,7 @@ module.exports.saveSubGroupProfilePicture = function (filePath, userID, groupID,
 
         } else {
 
-            return errorHadler('No file source present.', res);
+            return errorHadler('No file soruce present.', res);
         }
 
         if (!userID) {

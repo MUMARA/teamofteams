@@ -15,9 +15,7 @@
                 this.answer = answer;
                 this.hide = hide;
                 this.loggedInUserData = userService.getCurrentUser();
-
-
-
+                $rootScope.newImg = false;
                 this.userData = $firebaseObject(firebaseService.getRefUsers().child(this.loggedInUserData.userID))
                 this.userData.$loaded()
                     .then(function (data) {
@@ -29,7 +27,6 @@
                         console.log(err)
                     })
 
-
                 /*VM Functions*/
 
                 function answer(perSettingForm) {
@@ -38,6 +35,7 @@
                   /*  if (perSettingForm.$invalid) {
                         return;
                     }*/
+
                     function saveDataToServer(){
                         if( that.userData.firstName != firstName || that.userData.lastName != lastName){
                             data1 = {
@@ -95,10 +93,10 @@
                         delete that.userData.newPassword;
                         if(!that.userData['date-created'])that.userData['date-created']= new Date().getTime();
                         that.userData['status'] = -1;
+                        // console.log(that.userData)
                         that.userData.$save().then(function(data){
                             $location.path('/user/'+userService.getCurrentUser().userID)
-                            perSettingForm.$submitted = false
-                            //console.log('User profile updated')
+                            perSettingForm.$submitted = false                          
                             messageService.showSuccess('User profile updated')
                         },function(err){
                             perSettingForm.$submitted = false;
@@ -148,14 +146,14 @@
                     xhr.open("PUT", signed_request);
                     xhr.setRequestHeader('x-amz-acl', 'public-read');
                     xhr.onload = function (data) {
-                        console.log(xhr.status);
-                        console.log(xhr.responseText);
+                        // console.log(xhr.status);
+                        // console.log(xhr.responseText);
                         if (xhr.status === 200) {
                             //console.log(url);
                             messageService.showSuccess('Picture uploaded')
                             //document.getElementById("preview").src = url;
                             //that.group.imgLogoUrl = url;
-                            console.log(url);
+                            // console.log(url);
                             defer.resolve(url)
                         }
                     };

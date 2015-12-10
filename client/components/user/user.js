@@ -91,12 +91,12 @@
                                             $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
                                             userDataUbind[j] = img.$watch(function(dataVal) {
 
-                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img)
+                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value)
                                             })
                                         })
                                 }
                             }, function(e) {
-                                console.log('Error:user.js_line84')
+                                console.log(e)
                             });
                     });
 
