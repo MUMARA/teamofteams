@@ -183,7 +183,7 @@ path /groups/$groupid/members_checked_in/count {
 }
  
 path /groups/$groupid/members_checked_in/checked_in/$userid {
-  validate() = prior(isUserExists(uid));
+  validate() = prior(isUserExists(auth.uid));
   write() = isUser($userid) && prior(isGroupMemberinGroupIDwithAuthIdExists()) && prior(isGroupMemberGroupIDAuthIdMemberShipGreaterZero());
 }
  
@@ -320,7 +320,7 @@ type SubGroupMemberCountNumber2 extends Number {
   //read() = isSubGroupMemberGroupIdSubGroupIpAuthIdExists() && isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeGreaterZero();
   read() = root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'] != null && isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeGreaterZero();
   write() = prior(isSubGroupMemberGroupIdSubGroupIpAuthIdExists()) && ( prior(isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeEquals(1)) || prior(isSubGroupMemberGroupIdSubGroupIpAuthIdMemberTypeEquals(2)));
-  validate() = prior(this.hasChildren('members-checked-in'));
+  validate() = this.hasChildren(['members-checked-in']);
  }
  
  
@@ -413,7 +413,7 @@ type ActorType {
 }
 
 type SubGroupActivityID {
-validate() = this.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb']) && this.child('actor').child('id') === auth.uid;
+validate() = this.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb']) && this.child('actor').child('id').val() === auth.uid;
 }
 
 path /subgroup_activity_streams/$groupid/$subgroupid/$activityid is SubGroupActivityID {
