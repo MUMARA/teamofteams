@@ -25,14 +25,14 @@
         ".write": "auth.uid == $userid"
       }
     },
-    "users_presence": {
+    "users-presence": {
       "$userid": {
         ".read": "auth != null",
         ".write": "auth != null && auth.uid == $userid",
-        "last_modified": {
+        "last-modified": {
           ".validate": "newData.isNumber() && newData.val() <= now"
         },
-        "defined_status": {
+        "defined-status": {
           ".validate": "newData.isNumber()"
         },
         "connections": {
@@ -51,7 +51,7 @@
         }
       }
     },
-    "user_group_memberships": {
+    "user-group-memberships": {
       "$userid": {
         ".validate": "root.child('users').child($userid).val() != null",
         ".read": "auth != null && auth.uid == $userid",
@@ -67,11 +67,11 @@
             ".validate": "false"
           },
           ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && (root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2)",
-          ".write": "data.val() == null && (auth != null && auth.uid == $userid) && (newData.child('membership_type').val() == 1 || newData.child('membership_type').val() == 0) || root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+          ".write": "data.val() == null && (auth != null && auth.uid == $userid) && (newData.child('membership-type').val() == 1 || newData.child('membership-type').val() == 0) || root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
         }
       }
     },
-    "group_members": {
+    "group-members": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         "$userid": {
@@ -86,7 +86,7 @@
             ".validate": "false"
           },
           ".read": "auth != null && auth.uid == $userid",
-          ".write": "data.val() == null && (auth != null && auth.uid == $userid) && newData.child('membership_type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && (root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2)"
+          ".write": "data.val() == null && (auth != null && auth.uid == $userid) && newData.child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && (root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2)"
         }
       }
     },
@@ -127,12 +127,12 @@
             ".validate": "newData.isNumber() && newData.val() == 1 || newData.val() == 2 || newData.val() == 3"
           }
         },
-        "members_checked_in": {
+        "members-checked-in": {
           "count": {
             ".validate": "newData.isNumber() && newData.val() >= 0",
             ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
           },
-          "checked_in": {
+          "checked-in": {
             "$userid": {
               ".validate": "root.child('users').child(auth.uid).val() != null",
               ".write": "auth != null && auth.uid == $userid && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
@@ -140,24 +140,24 @@
           }
         }
       },
-      "logo_image": {
+      "logo-image": {
         ".validate": "newData.hasChildren(['url', 'id', 'bucket-name', 'source', 'mediaType'])"
       }
     },
-    "groups_names": {
+    "groups-names": {
       ".read": "auth != null",
       "$groupid": {
         ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)"
       }
     },
-    "group_activity_streams": {
+    "group-activity-streams": {
       "$groupid": {
         ".validate": "root.child('groups/' + $groupid).val() != null",
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
       }
     },
-    "group_check_in_current": {
+    "group-check-in-current": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
@@ -166,7 +166,7 @@
         }
       }
     },
-    "group_check_in_records": {
+    "group-check-in-records": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
@@ -175,13 +175,13 @@
         }
       }
     },
-    "group_locations_defined": {
+    "group-locations-defined": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)"
       }
     },
-    "group_membership_requests": {
+    "group-membership-requests": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
@@ -191,7 +191,7 @@
         }
       }
     },
-    "group_membership_requests_by_user": {
+    "group-membership-requests-by-user": {
       "$userid": {
         ".read": "auth != null && auth.uid == $userid",
         ".write": "auth != null && auth.uid == $userid",
@@ -230,12 +230,12 @@
           },
           ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
           ".write": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
-          "members_checked_in": {
+          "members-checked-in": {
             "count": {
               ".validate": "newData.val() >= 0 && newData.isNumber()",
               ".write": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
             },
-            "checked_in": {
+            "checked-in": {
               "$userid": {
                 ".validate": "root.child('users/' + $userid).val() != null",
                 ".write": "auth != null && auth.uid == $userid && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
@@ -245,7 +245,7 @@
         }
       }
     },
-    "subgroups_names": {
+    "subgroups-names": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
@@ -254,7 +254,7 @@
         }
       }
     },
-    "subgroup_members": {
+    "subgroup-members": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
         ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
@@ -276,11 +276,11 @@
         }
       }
     },
-    "flattened_groups": {
+    "flattened-groups": {
       ".read": "true",
       ".write": "true"
     },
-    "subgroup_activity_streams": {
+    "subgroup-activity-streams": {
       "$groupid": {
         ".read": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0)",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 2)",
@@ -293,7 +293,7 @@
         }
       }
     },
-    "subgroup_check_in_current": {
+    "subgroup-check-in-current": {
       "$groupid": {
         ".read": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0)",
@@ -306,13 +306,13 @@
         }
       }
     },
-    "subgroup_check_in_current_by_user": {
+    "subgroup-check-in-current-by-user": {
       "$userid": {
         ".read": "auth != null && auth.uid == $userid || root.child('users').child($userid).val() != null",
         ".write": "auth != null && root.child('group-members').child(newData.child('groupID').val()).child(auth.uid).val() != null && (root.child('group-members').child(newData.child('groupID').val()).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child(newData.child('groupID').val()).child(auth.uid).child('membership-type').val() > 0)"
       }
     },
-    "subgroup_check_in_records": {
+    "subgroup-check-in-records": {
       "$groupid": {
         ".read": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0)",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
@@ -325,7 +325,7 @@
         }
       }
     },
-    "subgroup_locations_defined": {
+    "subgroup-locations-defined": {
       "$groupid": {
         ".read": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0)",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
@@ -340,7 +340,7 @@
         }
       }
     },
-    "user_subgroup_memberships": {
+    "user-subgroup-memberships": {
       "$userid": {
         ".validate": "root.child('users/' + $userid).val() != null",
         ".read": "auth.uid == $userid || auth.uid != null && root.child('users').child($userid).val() != null",
@@ -364,7 +364,7 @@
         }
       }
     },
-    "subgroup_membership_requests": {
+    "subgroup-membership-requests": {
       "$groupid": {
         ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && (root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2)",
         ".write": "root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && (root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2)",
@@ -388,7 +388,7 @@
         }
       }
     },
-    "subgroup_membership_requests_by_user": {
+    "subgroup-membership-requests-by-user": {
       "$userid": {
         ".validate": "root.child('users/' + $userid).val() != null",
         ".read": "auth.uid == $userid",
@@ -408,7 +408,7 @@
         }
       }
     },
-    "group_private_chats": {
+    "group-private-chats": {
       "$groupid": {
         "$chatid": {
           ".read": "auth != null && root.child('user-private-chat-refs').child(auth.uid).child($groupid).child($chatid).val() != null",
@@ -418,7 +418,7 @@
         }
       }
     },
-    "user_private_chat_refs": {
+    "user-private-chat-refs": {
       "$userid": {
         "$groupid": {
           ".read": "auth != null && auth.uid == $userid",
@@ -426,7 +426,7 @@
         }
       }
     },
-    "group_chats": {
+    "group-chats": {
       "$groupid": {
         ".validate": "root.child('groups/' + $groupid).val() != null",
         ".read": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
@@ -453,7 +453,7 @@
         }
       }
     },
-    "subgroup_chats": {
+    "subgroup-chats": {
       "$groupid": {
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
         "$subgroupid": {
