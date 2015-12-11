@@ -84,7 +84,6 @@
                     console.log(e)
                 });
 
-
             self.groups = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
             // this.groupObj = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID))
             //     .$loaded().then(function(d) {
@@ -246,7 +245,7 @@
                 $location.path('/user/' + userService.getCurrentUser().userID)
             }
 
-            this.ChalBay = function(){
+            this.checkinClick = function(){
             self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId){
                     var tmp = {

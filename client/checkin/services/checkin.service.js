@@ -156,18 +156,17 @@
                                     .$loaded().then(function(snapshot){
                                         // console.log('before')
                                         // console.log(snapshot)
-                                        // snapshot.timestamp = fireTimeStamp;
-                                        // snapshot.type = statusObj.type; // 1 = in, 2 = out
-                                        // snapshot.groupID = groupID;
-                                        // snapshot.subgroupID = subgroupId;
-                                        // snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
-                                        // snapshot['source-type']= 1;  //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                                        snapshot.timestamp = fireTimeStamp;
+                                        snapshot.type = statusObj.type; // 1 = in, 2 = out
+                                        snapshot.groupID = groupID;
+                                        snapshot.subgroupID = subgroupId;
+                                        snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
+                                        snapshot['source-type']= 1;  //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
                                         // console.log('after')
                                         // console.log(snapshot)
-                                        // snapshot.$save().then(function(d){
+                                        snapshot.$save().then(function(d){
 
-                                            // checkinObj['record-ref'] = snapShot.key();
-                                            checkinObj['record-ref'] = 'snapShot.key()';
+                                            checkinObj['record-ref'] = snapShot.key();
                                             angular.extend( $userCheckinCurrent, checkinObj );
                                             $userCheckinCurrent.$save()
                                                 .then(function() {
@@ -182,7 +181,7 @@
 
                                                 }, errorCallback);
 
-                                        // },errorCallback)
+                                        },errorCallback)
 
                                     },errorCallback)
 
