@@ -59,7 +59,7 @@
             </md-button>
             <div flex="10" ng-show="!navToolbar.checkout">
                 <div style="position: relative">
-                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.ChalBay()" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
+                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
                     </md-switch>
                     <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
                     <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">

@@ -78,6 +78,10 @@
                          } else {
                              self.checkout = false;
                          }
+
+                         console.log('chkkk: ' + self.checkout  );
+
+
                      });
                  }
              }, function(e) {
@@ -246,7 +250,7 @@
                 $location.path('/user/' + userService.getCurrentUser().userID)
             }
 
-            this.ChalBay = function(){
+            this.checkinClick = function(){
             self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId){
                     var tmp = {
