@@ -129,32 +129,26 @@
         <!-- <div id="page-content-wrapper" style="padding-left: 0px;padding-top: 0px;padding-right: 0px;"> -->
         <div>
             <!--<div class="container-fluid">-->
-            <div class="viewHeight" layout="row">
+            <div layout="row">
                 <!--navigation side-->
-                <div style="  width: 70px;max-width: 70px;min-width: 70px;">
-                    <div style="height:100vh; max-height:1024px; padding-bottom:50px;">
+                <div class="viewHeight" style="padding-bottom:60px;">
+                <!-- <div style="  width: 70px;max-width: 70px;min-width: 70px;"> -->
+                    <!-- <div style="height:100vh; max-height:1024px; padding-bottom:50px;"> -->
                         <div class="gradient" layout="column" layout-align="space-between center">
                             <div>
-                                <a id="menu-toggle"><img src="img/menu.svg" style="width: 39px; height: 66px;  margin-left: 16px;" /> </a>
-                                <br>
-                                <md-divider style="background-color: white;"></md-divider>
-                                <br>
-                                <img src="img/line.svg" style="height: 39px;  margin-left: 14px;  " />
-                                <br>
-                                <br>
-                                <img src="img/comment.svg" style="height: 39px; margin-top:4px;  margin-left: 14px;; " />
-                                <div id="quizResultIcon" ng-click="group.showAttemptQuiz()" style="border: 1px none;padding-bottom: 10px;padding-top: 10px;">
-                                    <img src="img/comment.svg" style="height: 39px; margin-top:4px;  margin-left: 14px;; " />
-                                </div>
+                                <img src="img/menu.svg" class="nooutline icon40px" layout-margin id="menu-toggle" /> </a>
+                                <md-divider class="backColorWhite"></md-divider>
+                                <img src="img/line.svg" class="nooutline icon40px" layout-margin />
+                                <div><img src="img/comment.svg" class="nooutline icon40px" layout-margin /></div>
                             </div>
-                            <div flex></div>
-                            <div ng-show="group.isAdmin()" layout-align="center center">
-                                <md-divider style="background-color: white;"></md-divider>
-                                <img src="img/menu.svg" class="nooutline" ng-click="group.openTeamAttendance()" style="width: 39px; height: 66px;"/>
+                            <div ng-show="group.isAdmin()">
+                                <md-divider class="backColorWhite"></md-divider>
+                                <img src="img/menu.svg" class="nooutline icon40px" layout-margin ng-click="group.openTeamAttendance()" />
+                                <div><img src="img/line.svg" class="nooutline icon40px" layout-margin /></div>
                             </div>
                         </div>
-
-                    </div>
+                    <!-- </div> -->
+                <!-- </div> -->
                 </div>
                 <!-- Team Attendance -->
                 <div class="teamAttendance md-whiteframe-z1" ng-show="group.showTeamAttendace" flex>

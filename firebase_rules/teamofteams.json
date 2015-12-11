@@ -134,7 +134,7 @@
           },
           "checked-in": {
             "$userid": {
-              ".validate": "root.child('users').child(uid).val() != null",
+              ".validate": "root.child('users').child(auth.uid).val() != null",
               ".write": "auth != null && auth.uid == $userid && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
             }
           }
@@ -206,7 +206,7 @@
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
         ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         "$subgroupid": {
-          ".validate": "newData.hasChildren(['title', 'desc', 'timestamp', 'members-count', 'subgroups-count', 'logo-image']) && data.hasChildren('members-checked-in')",
+          ".validate": "newData.hasChildren(['title', 'desc', 'timestamp', 'members-count', 'subgroups-count', 'logo-image', 'members-checked-in'])",
           "title": {
             ".validate": "newData.isString() && (newData.val().length >= 4 && newData.val().length <= 40)"
           },
@@ -287,7 +287,7 @@
         "$subgroupid": {
           ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
           "$activityid": {
-            ".validate": "newData.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb']) && newData.child('actor').child('id') == auth.uid",
+            ".validate": "newData.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb']) && newData.child('actor').child('id').val() == auth.uid",
             ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
           }
         }
