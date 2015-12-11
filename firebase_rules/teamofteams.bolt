@@ -413,7 +413,7 @@ type ActorType {
 }
 
 type SubGroupActivityID {
-validate() = this.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb']) && this.actor.id === auth.uid;
+  validate() = this.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb']) && this.actor.id === auth.uid;
 }
 
 path /subgroup_activity_streams/$groupid/$subgroupid/$activityid is SubGroupActivityID {
