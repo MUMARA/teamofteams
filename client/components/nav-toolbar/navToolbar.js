@@ -70,28 +70,19 @@
                         self.showUrlObj.userID = userID;
                         self.showUrlObj.groupID = snapshot.groupID;
                         self.showUrlObj.subgroupID = snapshot.subgroupID;
+                        checkinService.getRefCheckinCurrentBySubgroup().child(snapshot.groupID).child(snapshot.subgroupID).on('child_changed', function(snapshot, prevChildKey) {
+                            // console.log(snapshot.val());    
+                            // console.log(snapshot.key()); 
+                            if (snapshot.val().type === 1) {
+                                self.checkout = true;
+                            } else {
+                                self.checkout = false;
+                            }
+                        });
                     }
-
-                    checkinService.getRefCheckinCurrentBySubgroup().child(snapshot.groupID).child(snapshot.subgroupID).on('child_changed', function(snapshot, prevChildKey) {
-                        // console.log(snapshot.val());    
-                        // console.log(snapshot.key()); 
-                        if (snapshot.val().type === 1) {
-                            self.checkout = true;
-                        } else {
-                            self.checkout = false;
-                        }
-
-
-
-                    });
-
                 }, function(e) {
-                    debugger;
                     console.log(e)
                 });
-
-
-
 
 
             self.groups = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
