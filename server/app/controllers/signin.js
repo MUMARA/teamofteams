@@ -63,7 +63,6 @@ function updateLastLogin(res, user) {
         }
     }, function(err, user) {
         var userObj;
-
         if (err) {
             res.send({
                 statusCode: 0,
@@ -72,7 +71,6 @@ function updateLastLogin(res, user) {
         } else {
             userObj = getUserObjForResponse(user);
             userObj.token = token;
-
             res.send({
                 statusCode: 1,
                 statusDesc: "signed in successfully.",

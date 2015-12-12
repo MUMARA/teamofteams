@@ -12,7 +12,6 @@ var AWS = {};
 
 if (process.env.NODE_ENV == 'development') {
     AWS = {
-        
         'userBucketName':'pwowuserimg',
         'groupBucketName':'pwowgroupimg',
         'subgroupBucketName':'pwowsubgroupimg',

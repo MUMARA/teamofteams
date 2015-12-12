@@ -8,8 +8,6 @@ var express    = require('express'),
     bodyParser = require('body-parser'),
     morgan     = require('morgan');
 
-process.env.NODE_ENV = process.env.NODE_ENV || "development";
-
 //initializing local DB Server
 require('./config/mongoose')();
 
