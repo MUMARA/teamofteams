@@ -61,14 +61,16 @@ body > md-content > div > div.marginContainer > div > form > div > md-input-cont
                                 </md-input-container>
                                 <md-input-container>
                                     <label>Password</label>
-                                    <input name="password" ng-model="signUp.user.password" type="password" required>
+                                    <input name="password" ng-model="signUp.user.password" type="password" required  minlength="3" maxlength="40" >
                                     <div ng-hide="singupForm.password.$untouched" ng-messages="singupForm.password.$error">
+                                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                                         <div class="invalid_color" ng-message="required">This is required.</div>
                                     </div>
                                 </md-input-container>
                                 <md-input-container>
                                     <label>Confirm Password</label>
-                                    <input name="confirmPassword" ng-model="signUp.user.confirmPassword" compare-to="signUp.user.password" type="password" required>
+                                    <input name="confirmPassword" ng-model="signUp.user.confirmPassword" compare-to="signUp.user.password" type="password" required  minlength="3" maxlength="40" >
                                     <div ng-hide="singupForm.confirmPassword.$untouched" ng-messages="singupForm.confirmPassword.$error">
                                         <div class="invalid_color" ng-message="required">This is required.</div>
                                         <div class="invalid_color" ng-message="compareTo">Password does not match.</div>
