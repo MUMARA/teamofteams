@@ -9,6 +9,7 @@
 
             return {
                 'login':function(user,location){
+
                     var defer = $q.defer();
                     authService.login(user,function(data, firebaseData){
                         messageService.showSuccess('Login successful');
