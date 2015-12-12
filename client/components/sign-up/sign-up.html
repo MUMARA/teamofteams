@@ -14,7 +14,7 @@ body > md-content > div > div.marginContainer > div > form > div > md-input-cont
 }
 </style>
 <div id="signUpPage">
-    <form name="singupForm" ng-submit="signUp._signUp()" style="height:100vh;padding: 20px;background-color: #efefef;">
+    <form name="singupForm" ng-submit="signUp._signUp()" style="height:100vh;padding: 20px;background-color: #efefef;" novalidate>
         <div layout="row">
             <div flex="10">
                 <a ui-sref="home">
@@ -27,6 +27,10 @@ body > md-content > div > div.marginContainer > div > form > div > md-input-cont
                     <md-card style="margin: 0px auto">
                         <md-card-content style="padding: 50px;">
                             <div layout="column" layout-align="space-around center" layout-margin>
+
+
+                            <div layout="row" style="margin-left: 26px;">
+                                
                                 <md-input-container>
                                     <label>User ID</label>
                                     <input name="userId" ng-model="signUp.user.userID" ng-pattern="/^([a-zA-Z0-9]){3,20}$/" check-user-id="" required>
@@ -37,6 +41,20 @@ body > md-content > div > div.marginContainer > div > form > div > md-input-cont
                                         <div layout="row" class="invalid_color id_Error" ng-message="checkUserId">This userID is not available.</div>
                                     </div>
                                 </md-input-container>
+                                
+                                <!--  <md-menu md-offset="0 0" style="padding-top: 28px;"> -->
+                                 <!-- <md-button  aria-label="Open sample menu"> -->
+
+                                 <ng-md-icon style="padding-top: 28px;" class="fillColorLightGrey" icon="help_outline" title="* Select a unique ID for yourself without spaces & special characters" >
+                                 </ng-md-icon>
+                                 <!-- </md-button> -->
+                             <!--     <md-menu-content>
+                                   <md-menu-item>* Select a unique ID for yourself without spaces & special characters</md-menu-item>
+                                 </md-menu-content>
+                                </md-menu> -->
+                                
+                            </div>
+
                                 <md-input-container>
                                     <label>Email Address</label>
                                     <input name="email" ng-model="signUp.user.email" type="email" required>
@@ -74,8 +92,12 @@ body > md-content > div > div.marginContainer > div > form > div > md-input-cont
                                         <div class="invalid_color" ng-message="compareTo">Password does not match.</div>
                                     </div>
                                 </md-input-container>
-                                <md-content style=" margin-left: 0px; font-size: small; "> * Select a unique ID for yourself without spaces</md-content>
-                                <md-button ng-click=" signUp.signup(singupForm)" class="md-raised md-primary" style="margin-top: 20px;" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId">Sign up</md-button>
+
+                                <md-progress-circular md-mode="indeterminate" ng-show="signUp.process" md-diameter="30"></md-progress-circular>
+                                <!--For operations where the user is asked to wait a moment while something finishes up, and it’s not necessary to expose what's happening behind the scenes and how long it will take, use an md-mode="indeterminate" indicator.-->
+
+                                <!-- <md-content style=" margin-left: 0px; font-size: small; "> * Select a unique ID for yourself without spaces</md-content> -->
+                                <md-button ng-click="signUp.signup(singupForm)" class="md-raised md-primary" style="margin-top: 20px;" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId || signUp.process ">Sign up</md-button>
                             </div>
                         </md-card-content>
                     </md-card>

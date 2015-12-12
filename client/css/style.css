@@ -112,6 +112,10 @@
     fill: white;
 }
 
+.fillColorLightGrey {
+    fill: rgb(181, 181, 181);
+}
+
 .foreColorBlack {
     color: black;
 }

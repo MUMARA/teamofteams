@@ -22,7 +22,7 @@ var mainApplicationModule = angular.module(mainApplicationModuleName, [
 }]);
 mainApplicationModule.value('appConfig', {
     'apiBaseUrl': 'https://panacloudapi.herokuapp.com',
-    //'apiBaseUrl': 'http://localhost:3000',
+    // 'apiBaseUrl': 'http://localhost:3000',
     'myFirebase': 'https://luminous-torch-4640.firebaseio.com',
     'firebaseAuth': false,
     'serverPostApi':{
