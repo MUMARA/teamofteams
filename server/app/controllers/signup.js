@@ -132,7 +132,8 @@ function sendVerificationEmail( user ) {
     var template = ejs.render( verificationEmailTemplate, {
         email : user.email,
         token : user.uuid,
-        baseUrl : appconfig.DOMAIN,
+        baseUrl : appconfig.BASEURL,
+        domain : appconfig.DOMAIN,
         supportEmail : appconfig.SUPPORT
     });
 
