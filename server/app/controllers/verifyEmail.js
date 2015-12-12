@@ -48,12 +48,14 @@ exports.verifyEmail = function( req, res ){
                         statusDesc: "account verification failed. please try again."
                     });
                 } else {
-                    template = ejs.render( accountConfirmationTemplate, {
-                        user: user,
-                        app: appconfig
-                    });
 
-                    res.send(template);
+                    res.redirect(appconfig.DOMAIN+'#/signin/');
+                    // template = ejs.render( accountConfirmationTemplate, {
+                    //     user: user,
+                    //     app: appconfig
+                    // });
+
+                    // res.send(template);
                 }
             });
         } else {

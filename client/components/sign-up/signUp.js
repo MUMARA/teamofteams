@@ -17,6 +17,7 @@
         /*private properties*/
         var that = this;
         var routeToRedirectAfterSuccess = '/signin';
+        this.process = false;
 
         /*VM properties*/
         this.user = {
@@ -33,15 +34,17 @@
         /*function declarations*/
         function signup() {
 
+            that.process = true;
             that.user.userID = that.user.userID.toLowerCase();
             that.user.userID = that.user.userID.replace(/[^a-zA-Z0-9]/g, '');
 
             signUpService.signup(that.user,routeToRedirectAfterSuccess)
                 .then(function(){
-                console.log('Success')
+                    that.process = false;
+                // console.log('Success')
                 })
                 .catch(function(){
-                    console.log('failed')
+                    // console.log('failed')
                 })
         };
         /*this.canActivate = function(){
