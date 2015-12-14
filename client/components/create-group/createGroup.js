@@ -38,6 +38,8 @@
             members: "",
             membersArray: [],
             signupMode : "2"
+            address: '',
+            phone: 0
 
         };
         this.group.timeZone = getTiemZoneOffset()
