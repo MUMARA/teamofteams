@@ -99,7 +99,7 @@ angular.module('core')
                                                 title: groupObj.title,
                                                 desc: groupObj.desc || '',
                                                 address: groupObj.address || '',
-                                                phone: groupObj.phone || '',
+                                                phone: groupObj.phone || 0,
                                                 timeZone: groupObj.timeZone,
                                                 timestamp: firebaseTimeStamp,
                                                 "members-count": 1,
