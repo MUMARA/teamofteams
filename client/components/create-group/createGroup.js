@@ -7,7 +7,7 @@
     function CreateGroupController(messageService,$http, $rootScope, firebaseService,$firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
-
+        $rootScope.newImg = false;
 
         /*private variables*/
 
@@ -36,7 +36,8 @@
             title: "",
             desc: "",
             members: "",
-            membersArray: []
+            membersArray: [],
+            signupMode : "2"
 
         };
         this.group.timeZone = getTiemZoneOffset()
@@ -128,28 +129,29 @@
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
                 that.saveFile(x, mimeType, that.group.groupID).then(function (data) {
-                    createGroupService.createGroup(that.group, fromDataFlag,groupForm)
-                    $location.path('/user/'+ user.userID)
+                    createGroupService.createGroup(that.group, fromDataFlag,groupForm, function(){
+                        $location.path('/user/'+ user.userID);    
+                    })
                 })
                 .catch(function () {
                     groupForm.$submitted = false;
                     return  messageService.showSuccess('picture upload failed')
                 });
-            }else
-                {
-                    fromDataFlag = false;
-                    createGroupService.createGroup(that.group, fromDataFlag,groupForm)
-                    $location.path('/user/'+ user.userID)
-                }
-
+            } else {
+                fromDataFlag = false;
+                createGroupService.createGroup(that.group, fromDataFlag,groupForm, function(){
+                    $location.path('/user/'+ user.userID);
+                });
             }
+
+        }
 
 
 
 
             this.selectFile = function (_this) {
                 var file = _this.files[0];
-                console.log(file.name);
+                //console.log(file.name);
 
             };
 

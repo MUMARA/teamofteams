@@ -1,18 +1,18 @@
 <md-dialog aria-label="cropper">
-        <md-dialog-content class="sticky-container">
-            <md-subheader class="md-sticky-no-effect"><h4 style="color:#000000">Select Group Photo</h4><br>To select different Image Tap on Image</md-subheader>
-
-            <div>
-                <div cropper-directive>
-                </div>
+    <ng-md-icon icon="close" class="noOutline" size="20" layout-padding ng-click="ctrl.hide($root.newImg)"></ng-md-icon>
+    <md-dialog-content class="sticky-container">
+        <md-subheader class="md-sticky-no-effect">
+            <h4 style="color:#000000">Select Photo</h4>
+            <br>To select different Image Tap on Image</md-subheader>
+        <div>
+            <div cropper-directive>
             </div>
-        </md-dialog-content>
-        <div class="md-actions" layout="row">
-            <span flex></span>
-            <md-button ng-click="ctrl.hide($root.newImg)" ng-show="$root.newImg" class="md-primary">
-             Done
-            </md-button>
         </div>
-
-
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <span flex></span>
+        <md-button ng-click="ctrl.hide($root.newImg)" ng-show="$root.newImg" class="md-primary">
+            Done
+        </md-button>
+    </div>
 </md-dialog>

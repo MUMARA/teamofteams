@@ -59,10 +59,14 @@
                         //}
                     );
 
+                    //var x = userPresenceRef.child('last-modified');
+
                     // setting up details about current connection
                     currentConnRef.set({
                             type: 3, // 1 = mobile, 2 = tablet, 3 = web, 4 = watch , 5 = hololens
-                            started: Firebase.ServerValue.TIMESTAMP
+                            started: Firebase.ServerValue.TIMESTAMP,
+                            //'last-modified': 'assasa'
+
                         } //@for debugging purpose for mahmood bhai
                         //    function( err ) {
                         //    if ( err ) {

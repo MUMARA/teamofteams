@@ -24,7 +24,7 @@ exports.signIn = function(req, res) {
                 
                 //checking pending request
                 if (process.env.NODE_ENV == "production") {
-                    if (user.status == 'pending') {
+                    if (user.status == 0) {
                         res.send({
                             statusCode: 0,
                             statusDesc: "Before signin please verify your email address!"

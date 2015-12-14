@@ -47,6 +47,9 @@
                     <p ng-if="navToolbar.checkout" style="padding-top: 9px;padding-left:48px; color:rgb(239, 239, 239);"><span style="text-transform: uppercase;">
                         {{navToolbar.showUrlObj.userID}}</span> checked in from {{navToolbar.showUrlObj.groupID}} / {{navToolbar.showUrlObj.subgroupID}}
                     </p>
+                    <p ng-if="navToolbar.noTeams" style="padding-top: 9px;padding-left:48px; color:rgb(239, 239, 239);">
+                        Currently you are not a member of any Team!
+                    </p>
                 </div>
             </div>
             <div ng-show="!navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
@@ -59,7 +62,7 @@
             </md-button>
             <div flex="10" ng-show="!navToolbar.checkout">
                 <div style="position: relative">
-                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
+                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
                     </md-switch>
                     <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
                     <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
@@ -188,7 +191,7 @@
             <div>
                 <md-menu md-offset="0 50">
                     <!-- Trigger element is a md-button with an icon -->
-                    <img style="border-radius: 50%" ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="userImg">
+                    <img style="border-radius: 50%" ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="userImg">
                     <!-- <md-button ng-click="()" class="md-icon-button" aria-label="Open sample menu">
                    <md-icon md-svg-icon="call:phone"></md-icon>
                  </md-button> -->

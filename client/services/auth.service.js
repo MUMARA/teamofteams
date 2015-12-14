@@ -45,7 +45,7 @@ angular.module('core')
                     error(function(data, status, headers, config) {
                         // called asynchronously if an error occurs
                         // or server returns response with an error status.
-                        console.log('login error response object: ' + JSON.stringify(status));
+                        //console.log('login error response object: ' + JSON.stringify(status));
                         failureFn();
                     });
 
@@ -81,7 +81,6 @@ angular.module('core')
                         // when the response is available
                         //console.log("response: " + data);
                         //console.log('signup response object: ' + JSON.stringify(data));
-
                         successFn(data);
                     }).
                     error(function(data, status, headers, config) {
