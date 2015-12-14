@@ -70,7 +70,7 @@ function addFirebaseUser(user, callback){
         email       : user.email,
         firstName   : user.firstName,
         lastName    : user.lastName,
-        status      : 'pending',
+        status      : 0,
        'date-created': Firebase.ServerValue.TIMESTAMP
     }, function(error) {
         if (error) {

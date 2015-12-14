@@ -80,7 +80,7 @@
                     </div>
                     <div layout="row">
                         <md-input-container flex>
-                            <label>Contact Number</label>
+                            <label>Mobile Number</label>
                             <input name="contactNumber" type="number" ng-model="personalSettings.userData.contactNumber">
                         </md-input-container>
                         <md-input-container flex>
@@ -101,7 +101,7 @@
                     <div>
                         <span layout="row" style="color: #5D5D5D">See Your Photo</span>
                         <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                            <img style="outline: none;" ng-src="{{personalSettings.userData['profile-image'] ||'../../img/sampleUserImg.svg'}}" alt="../../img/sampleUserImg.svg" class="cropper-main-image sampleUserImg" ng-click="personalSettings.showAdvanced($event)"/>
+                            <img style="outline: none;" ng-src="{{personalSettings.userData['profile-image'] || '../../img/sampleUserImg.svg'}}" alt="../../img/sampleUserImg.svg" class="cropper-main-image sampleUserImg" ng-click="personalSettings.showAdvanced($event)"/>
                             <!--<md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100">
                                 <md-icon md-svg-src="img/image.svg" class="cropper-main-image" ></md-icon>
                             </md-button>-->

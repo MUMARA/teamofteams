@@ -7,7 +7,7 @@
     function CreateGroupController(messageService,$http, $rootScope, firebaseService,$firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
-        $rootScope.newImg = false;
+        $rootScope.newImg = '';
 
         /*private variables*/
 
@@ -37,8 +37,9 @@
             desc: "",
             members: "",
             membersArray: [],
-            signupMode : "2"
-
+            signupMode : "2",
+            address: '',
+            phone: ''
         };
         this.group.timeZone = getTiemZoneOffset()
 
