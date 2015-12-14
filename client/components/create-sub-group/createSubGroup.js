@@ -128,9 +128,9 @@
                 targetEvent: ev
             }).then(function (picture) {
                 $rootScope.newImg = picture;
-                console.log("this is image" + picture)
+                //console.log("this is image" + picture)
             }, function (err) {
-                console.log(err)
+                //console.log(err)
 
             })
 
@@ -304,7 +304,7 @@
                 $rootScope.newImg = picture;
                 // console.log("this is image" + picture)
             }, function (err) {
-                console.log(err)
+                //console.log(err)
 
             })
 

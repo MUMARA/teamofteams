@@ -10,9 +10,10 @@ var development = {
     /*product application*/
     product: {
         BASEURL: 'https://panacloudapi.herokuapp.com/',
-        //BASEURL: 'https://127.0.0.1:3000/',
+        // BASEURL: 'https://127.0.0.1:3000/',
         TITLE: 'Automated Attendance System',
-        SUPPORT: 'support@aasystem.com'
+        SUPPORT: 'support@teamofteams.io',
+        DOMAIN: 'https://www.teamofteams.io/'
     },
     /*firebase credentials*/
     firebase: {
@@ -46,7 +47,8 @@ var production = {
     product: {
         BASEURL: 'https://teamofteams.herokuapp.com/',
         TITLE: 'Automated Attendance System',
-        SUPPORT: 'support@aasystem.com'
+        SUPPORT: 'support@teamofteams.io',
+        DOMAIN: 'https://www.teamofteams.io/'
     },
     /*firebase credentials*/
     firebase: {

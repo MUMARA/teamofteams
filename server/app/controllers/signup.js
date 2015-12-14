@@ -133,6 +133,7 @@ function sendVerificationEmail( user ) {
         email : user.email,
         token : user.uuid,
         baseUrl : appconfig.BASEURL,
+        domain : appconfig.DOMAIN,
         supportEmail : appconfig.SUPPORT
     });
 
