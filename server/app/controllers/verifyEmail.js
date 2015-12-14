@@ -32,14 +32,14 @@ fs.readFile( __dirname + '/../views/accountConfirmation.ejs', function( err, tem
 exports.verifyEmail = function( req, res ){
 
     //check for user with uuid similar to token
-    User.findOneAndUpdate({uuid : req.params.uuid}, {$set:{status: 'verified'}}, function( err, user ) {
+    User.findOneAndUpdate({uuid : req.params.uuid}, {$set:{status: 1}}, function( err, user ) {
         if( err ){
             res.send({
                 statusCode: 0,
                 statusDesc: "error occurred."
             });
         } else if ( user ) {
-            fireHandler.updateUserStatus( user.userID, 'verified', function( err ) {
+            fireHandler.updateUserStatus( user.userID, 1, function( err ) {
                 var template;
 
                 if ( err ) {

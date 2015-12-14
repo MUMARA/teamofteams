@@ -17,7 +17,7 @@ var UserSchema = Schema({
     firstName : String,
     lastName : String,
     uuid : String,
-    status : String,
+    status : Number,
     lastLogin : String,
     lastGenerated : String, //last token generated on login.
     token : String,
