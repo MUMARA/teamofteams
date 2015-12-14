@@ -87,7 +87,8 @@
 
                     saveDataToServer().then(function(data){
                         if(data[2]) {
-                            that.userData['profile-image'] = data[2]+'?random='+ new Date();
+                            //that.userData['profile-image'] = data[2]+'?random='+ new Date();
+                            that.userData['profile-image'] = data[2];
                         }
                         delete that.userData.oldPassword;
                         delete that.userData.newPassword;
@@ -150,6 +151,7 @@
                         // console.log(xhr.responseText);
                         if (xhr.status === 200) {
                             //console.log(url);
+                            $rootScope.userImg = $rootScope.newImg
                             messageService.showSuccess('Picture uploaded')
                             //document.getElementById("preview").src = url;
                             //that.group.imgLogoUrl = url;
@@ -164,6 +166,7 @@
                     return defer.promise;
                 }
                 function showAdvanced(ev) {
+                    $rootScope.newImg = '';
                     $mdDialog.show({
                         controller: "DialogController as ctrl",
                         templateUrl: 'directives/dilogue1.tmpl.html',

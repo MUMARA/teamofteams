@@ -62,13 +62,13 @@ angular.module('core')
                         //console.log($image[0].src);
                         $image.cropper({
 
-                            autoCropArea: 0.75,
+                            autoCropArea: 0.70,
                             strict: true,
                             guides: false,
                             highlight: false,
                             dragCrop: false,
                             movable: true,
-                            resizable: true,
+                            resizable: false,
                             zoomable:false,
                             built: function () {
                                 $image.cropper('setCanvasData', canvasData);

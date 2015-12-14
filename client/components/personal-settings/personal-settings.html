@@ -81,32 +81,17 @@
                     <div layout="row">
                         <md-input-container flex>
                             <label>Contact Number</label>
-                            <input name="contactNumber" type="number" ng-model="personalSettings.userData.contactNumber" minlength="11" maxlength="40" required>
-                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.contactNumber.$touched" ng-messages="personalSettingForm.contactNumber.$error">
-                                <div class="invalid_color" ng-message="required">This is required.</div>
-                                <div class="invalid_color" ng-message="minlength">Required minimum length 11</div>
-                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
-                            </div>
+                            <input name="contactNumber" type="number" ng-model="personalSettings.userData.contactNumber">
                         </md-input-container>
                         <md-input-container flex>
                             <label>Profession</label>
-                            <input name="profession" type="text" ng-model="personalSettings.userData.profession" minlength="3" maxlength="40" required>
-                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.profession.$touched" ng-messages="personalSettingForm.profession.$error">
-                                <div class="invalid_color" ng-message="required">This is required.</div>
-                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
-                            </div>
+                            <input name="profession" type="text" ng-model="personalSettings.userData.profession">
                         </md-input-container>
                     </div>
                     <div layout="row">
                         <md-input-container flex>
                             <label>About Your Self</label>
-                            <input name="description" type="text" ng-model="personalSettings.userData.desc" required>
-                            <div ng-show="personalSettingForm.$submitted || personalSettingForm.description.$touched" ng-messages="personalSettingForm.description.$error">
-                                <div class="invalid_color" ng-message="required">This is required.</div>
-                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
-                            </div>
+                            <input name="description" type="text" ng-model="personalSettings.userData.desc">
                         </md-input-container>
                     </div>
                     <!--<div>
@@ -135,8 +120,7 @@
                 </md-card-content>
                 <div layout="row">
                     <div flex="20" offset="50">
-                        <md-progress-circular class="" ng-show="personalSettingForm.$submitted"
-                                              md-mode="indeterminate"></md-progress-circular>
+                        <md-progress-circular class="" ng-show="personalSettingForm.$submitted" md-mode="indeterminate"></md-progress-circular>
                     </div>
                     <div flex offset="10">
 

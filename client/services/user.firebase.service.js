@@ -990,5 +990,15 @@ angular.module('core')
 
                 return deferred.promise;
             }
+            //,   userExists: function(userID){
+            //     firebaseService.getRefUsers().child(userID).once(function(snapshot){
+            //         console.log(snapshot)
+            //         if(snapshot){
+            //             return true;
+            //         } else {
+            //             return false;
+            //         }
+            //     })
+            // }
         }
     }]);

@@ -63,26 +63,27 @@
                     soundService.playFail('Error occurred.');
                 });
 
-            $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID))
-                .$loaded().then(function(snapshot) {
-                    if (snapshot.type == 1 && snapshot.groupID && snapshot.subgroupID) {
-                        self.checkout = true;
-                        self.showUrlObj.userID = userID;
-                        self.showUrlObj.groupID = snapshot.groupID;
-                        self.showUrlObj.subgroupID = snapshot.subgroupID;
-                        checkinService.getRefCheckinCurrentBySubgroup().child(snapshot.groupID).child(snapshot.subgroupID).on('child_changed', function(snapshot, prevChildKey) {
-                            // console.log(snapshot.val());    
-                            // console.log(snapshot.key()); 
-                            if (snapshot.val().type === 1) {
-                                self.checkout = true;
-                            } else {
-                                self.checkout = false;
-                            }
-                        });
-                    }
-                }, function(e) {
-                    console.log(e)
-                });
+            $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(snapshot) {
+                if (snapshot.type == 1 && snapshot.groupID && snapshot.subgroupID) {
+                    self.checkout = true;
+                    self.showUrlObj.userID = userID;
+                    self.showUrlObj.groupID = snapshot.groupID;
+                    self.showUrlObj.subgroupID = snapshot.subgroupID;
+                }
+                if(snapshot.groupID && snapshot.subgroupID){
+                    checkinService.getRefCheckinCurrentBySubgroup().child(snapshot.groupID).child(snapshot.subgroupID).on('child_changed', function(snapshot, prevChildKey) {
+                        console.log(snapshot.val());    
+                        // console.log(snapshot.key()); 
+                        if (snapshot.val().type === 1) {
+                            self.checkout = true;
+                        } else {
+                            self.checkout = false;
+                        }
+                    });
+                }
+            }, function(e) {
+                //console.log(e)
+            });
 
             self.groups = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
             // this.groupObj = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID))
