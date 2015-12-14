@@ -97,9 +97,9 @@ angular.module('core')
                                             var dataToSet = {
                                                 'group-owner-id': userService.getCurrentUser().userID,
                                                 title: groupObj.title,
-                                                desc: groupObj.desc,
-                                                address: groupObj.address,
-                                                phone: groupObj.phone,
+                                                desc: groupObj.desc || '',
+                                                address: groupObj.address || '',
+                                                phone: groupObj.phone || 0,
                                                 timeZone: groupObj.timeZone,
                                                 timestamp: firebaseTimeStamp,
                                                 "members-count": 1,
