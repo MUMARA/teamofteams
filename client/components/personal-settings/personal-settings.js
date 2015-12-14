@@ -15,7 +15,7 @@
                 this.answer = answer;
                 this.hide = hide;
                 this.loggedInUserData = userService.getCurrentUser();
-                $rootScope.newImg = false;
+                $rootScope.newImg = {};
                 this.userData = $firebaseObject(firebaseService.getRefUsers().child(this.loggedInUserData.userID))
                 this.userData.$loaded()
                     .then(function (data) {
