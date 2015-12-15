@@ -34,8 +34,8 @@
                                     }
                                 }, function(group){
                                     form.$submitted = false;
-                                    $rootScope.newImg = null
-                                    messageService.showFailure("Group not created, " + group.groupID + " already exists");
+                                    $rootScope.newImg = null;
+                                    messageService.showFailure("Group not created, " + " already exists");
                                 })
                 },
                 'cancelGroupCreation':function(userId){
