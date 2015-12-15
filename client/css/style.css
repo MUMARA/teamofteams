@@ -112,16 +112,28 @@
     fill: white;
 }
 
+.fillColorBlack {
+    fill: black;
+}
+
+.fillColorDarkGrey {
+    fill: rgb(106, 106, 106)!important;
+}
+
 .fillColorLightGrey {
-    fill: rgb(181, 181, 181);
+    fill: rgb(181, 181, 181)!important;
+}
+
+.fillColorLightGrey2 {
+    fill: rgb(240, 240, 240)!important;
 }
 
 .foreColorBlack {
-    color: black;
+    color: black!important;
 }
 
 .foreColorWhite {
-    color: white;
+    color: white!important;
 }
 
 .foreColorDarkGrey {
@@ -130,6 +142,10 @@
 
 .foreColorLightGrey {
     color: rgb(181, 181, 181)!important;
+}
+
+.foreColorLightGrey2 {
+    color: rgb(240, 240, 240)!important;
 }
 
 .backColorBlack {
@@ -146,6 +162,10 @@
 
 .backColorLightGrey {
     background-color: rgb(181, 181, 181)!important;
+}
+
+.backColorLightGrey2 {
+    background-color: rgb(240, 240, 240)!important;
 }
 
 .backColorPink {

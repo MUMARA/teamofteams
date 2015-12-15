@@ -14,7 +14,6 @@
 }
 
 .positionli {
-    color: silver;
     /*font-weight: bold;*/
     text-align: left;
     text-transform: uppercase;
@@ -95,7 +94,7 @@
                             <md-input-container md-no-float style="padding-bottom: 0px;">
                                 <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
                             </md-input-container>
-                            <ng-md-icon icon="search" style="fill: #929497;" ng-click="navToolbar.setFocus()"></ng-md-icon>
+                            <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()"></ng-md-icon>
                         </md-toolbar>
                         <div id="test1" layout="row" style="padding-top: 1px;height:78%">
                             <div layout="column" flex style="border-right: 1px solid #c2c2c2">
@@ -112,7 +111,7 @@
                                     </md-list> -->
                                     <md-list class="paddingZero" ng-hide="navToolbar.groupObj1" style="">
                                         <md-list-item class="paddingZero" ng-repeat="group in navToolbar.ListGroupSubGroup | filter: navToolbar.search">
-                                            <div class="column" layout-align="start end" flex style="color: #757575;font-size: large">
+                                            <div class="column" layout-align="start end" flex style="color: silver;font-size: large">
                                                 <div layout="row">
                                                     <div flex="10"><img class='imgResize' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
                                                     <span class="size">{{group.group}}</span> </div>

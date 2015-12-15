@@ -54,15 +54,16 @@
     }
 
     body > md-content > div > div.marginContainer > div > div > div > md-content {
-        overflow: hidden
+        /*overflow: hidden*/
     }
 </style>
 <div>
-    <div style="margin:0 auto !important; background-color: #F05A29;height: 100vh; bottom: 0px top: 53px; width: 1200px" name="joinGroupForm  novalidate=">
+    <!-- <div style="margin:0 auto !important; background-color: #F05A29;height: 100vh; bottom: 0px top: 53px; width: 1200px" name="joinGroupForm  novalidate="> -->
+    <div style="margin:0 auto !important; height: 100vh; bottom: 0px top: 53px; width: 1200px" class="backColorLightGrey2">
         <a>
             <ng-md-icon icon="close" size="50" style="outline: none" layout-padding ng-click="joinGroup.hide()"></ng-md-icon>
         </a>
-        <md-content style="text-align: center; height: 100vh;max-width:80%;margin: 0px auto">
+        <md-content style="text-align: center; max-height: 80%; h;max-width:80%;margin: 0px auto; padding-bottom: 50px;">
             <div laout="column">
                 <form name="joinGroupForm" layout="row" layout-padding>
                     <!--<div>-->
@@ -77,20 +78,21 @@
                     <!--&lt;!&ndash;<span md-highlight-text="joinGroup.searchText">{{group['.value'] }}</span>&ndash;&gt;-->
                     <!--</md-autocomplete>-->
                     <!--</div>-->
-                    <md-input-container md-no-float flex>
-                        <md-icon md-svg-src="../../img/search.svg" aria-label="Search Icon"></md-icon>
-                        <input type="text" ng-model="joinGroup.search"  ng-keyup="joinGroup.queryGroups()" placeholder="Search">
+                    <md-input-container md-no-float flex style="font-size: xx-large;">
+                        <input type="text" ng-model="joinGroup.search" class="serachbox2 foreColorDarkGrey" ng-keyup="joinGroup.queryGroups()" placeholder="Search">
+
                     </md-input-container>
-             
+                    <ng-md-icon icon="search" size="48"  class="fillColorDarkGrey"></ng-md-icon>
+             <!-- <md-icon md-svg-src="../../img/search.svg" class="fillColorDarkGrey" aria-label="Search Icon"></md-icon>  -->
                    <!--  <md-input-container>
                         <label>Search</label>
                         <input type="text" ng-model="joinGroup.search" ng-keyup="joinGroup.queryGroups()">
                           <ng-md-icon icon="search"></ng-md-icon>
                     </md-input-container> -->
                 </form>
-                <div layout="row" flex="80">
+                <div layout="row" flex="80" layout-align="center center">
                     <md-content class="grayScroller" style="text-align: center;">
-                        <md-content layout="row" layout-wrap layout-align="start center" >
+                        <md-content layout="row" layout-wrap layout-align="center center" >
                             <!--<div layout="column" style="width: 220px">-->
                             <!-- <div  style="width: 240px;height:285px;color: #676767;display:inline-block !important"
                                      ng-repeat="(key,prop) in  joinGroup.listgroup track by key">-->
