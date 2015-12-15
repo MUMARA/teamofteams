@@ -11,7 +11,7 @@
 
 .cropper-main-button{
     width: 150px;
-    height: 90px;
+    height: auto;
     padding: 0px !important;
 
 }

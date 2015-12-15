@@ -11,7 +11,7 @@
                 <div layout="column">
 
                     <div>
-                        <md-button style="background-color: darkseagreen"><img src="../../img/6sami.svg" style="width: 33px;height: 33px;"/><br><span style="color: white;">Group</span></md-button>
+                        <md-button style="background-color: darkseagreen"><img src="../../img/6sami.svg" style="width: 33px;height: 33px;"/><br><span style="color: white;" >Group</span></md-button>
                     </div>
 
                     <div>
@@ -29,9 +29,9 @@
         <div flex="90" >
         <md-card style="margin: 0px auto; border-radius: 5px">
             <md-card-content layout="column" style="padding-top: 0px; padding-left: 40px">
-                <h1 style="color: #d3d3d3">Edit Group</h1>
+                <h2 style="color: #d3d3d3">Edit Team of Teams</h2>
                 <hr/>
-                <h2>Group Url <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
+                <h3>Team Url <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h3>
                 <div layout="row">
                     <div flex="20" style="padding-top: 1.0%;">
                         <span>teamsofteams.com.io/</span>
@@ -42,7 +42,7 @@
                              <input ng-model="asc" type="text" placeholder="Group URL">
                          </md-input-container>-->
                         <md-input-container md-no-float >
-                            <input disabled name="groupId" ng-model="editGroup.group.$id" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{editGroup.groupName}}"   placeholder="Group URL"> <!-- check-user-id is a directive-->
+                            <input disabled name="groupId" ng-model="editGroup.group.$id" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{editGroup.groupName}}"   placeholder="Team URL"> <!-- check-user-id is a directive-->
                             <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
                                 <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
                                 <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
@@ -53,7 +53,7 @@
                 </div>
 
 
-                <h2>General Information</h2>
+                <h3>General Information</h3>
                 <div layout="row">
                     <div flex="50">
 
@@ -71,9 +71,8 @@
                         <md-input-container>
                             <label>Phone</label>
                             <!--<input ng-model="editGroup.group.phone" name="phone"  minlength="11" maxlength="40" required ng-pattern="/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/">-->
-                            <input ng-model="editGroup.group.phone" name="phone"  minlength="11" maxlength="40" required >
+                            <input ng-model="editGroup.group.phone" name="phone"  minlength="11" maxlength="40">
                             <div ng-show="groupForm.$submitted || groupForm.phone.$touched" ng-messages="groupForm.phone.$error">
-                                <div class="invalid_color" ng-message="required">This is required.</div>
 
                                 <div class="invalid_color" ng-message="minlength">Required minimum length 11</div>
                                 <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
@@ -89,30 +88,29 @@
                 </div>
                 <div>
                     <md-input-container>
-                        <label>Time Zone</label>
-                        <input ng-init="editGroup.group.timeZone = editGroup.getTiemZoneOffset()" ng-model="editGroup.group.timeZone">
+                        <label>Current Time Zone</label>
+                        <input ng-disabled="true" ng-init="editGroup.group.timeZone = editGroup.getTiemZoneOffset()" ng-model="editGroup.group.timeZone">
                     </md-input-container>
                 </div>
                 <div>
 
                     <md-input-container>
                         <label>Description</label>
-                        <textarea minlength="5" maxlength="40" name="groupDesc" required ng-model="editGroup.group.desc" cols="25" rows="1"></textarea>
+                        <textarea minlength="5" maxlength="40" name="groupDesc" ng-model="editGroup.group.desc" cols="25" rows="1"></textarea>
                         <div ng-show="groupForm.$submitted || groupForm.groupDesc.$touched" ng-messages="groupForm.groupDesc.$error">
-                            <div class="invalid_color" ng-message="required">This is required.</div>
                             <div class="invalid_color" ng-message="minlength">Required minimum length 5</div>
                             <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                         </div>
                     </md-input-container>
                 </div>
 
-                <h2>Group Sign Up Mode <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </ng-md-icon></h2>
+                <h3>Group Sign Up Mode <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </ng-md-icon></h3>
 
-                <div disabled>
+                <div >
                     <md-radio-group ng-model="editGroup.group.signupMode">
-                        <md-radio-button value="1" class="md-primary">Invitation Only</md-radio-button>
-                        <md-radio-button value="2">Request Support</md-radio-button>
-                        <md-radio-button value="3">Any Email Address from these domains.</md-radio-button>
+                        <md-radio-button value="1" ng-disabled="true" class="md-primary">Invitation Only</md-radio-button>
+                        <md-radio-button value="2" ng-disabled="true">Request Support</md-radio-button>
+                        <md-radio-button value="3" ng-disabled="true">Any Email Address from these domains.</md-radio-button>
                     </md-radio-group>
                     <md-input-container md-no-float>
                         <!--<md-icon md-svg-src="img/icons/ic_phone_24px.svg"></md-icon>-->
@@ -125,7 +123,7 @@
                     </md-input-container>
                 </div>
 
-                <h2>Set Group Logo <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </ng-md-icon></h2>
+                <h3>Set Logo <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </ng-md-icon></h3>
                 <div>
                     <div  class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap >
                         <img ng-src="{{$root.newImg || editGroup.group['logo-image'].url}}" alt="img/image.svg" class="cropper-main-image" ng-click="editGroup.showAdvanced($event)"/>

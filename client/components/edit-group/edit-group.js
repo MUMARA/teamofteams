@@ -30,6 +30,7 @@
 
                 // console.log(data);
                 that.group = data;
+                that.group.signupMode = "2";
 
                 //debugger
             })

@@ -191,7 +191,7 @@
         function DialogController($mdDialog) {
             this.my = {model: {img: ''}};
             this.hide = function (picture) {
-                console.log(picture)
+                //console.log(picture)
                 $mdDialog.hide(picture);
             };
 
