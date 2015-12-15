@@ -29,12 +29,14 @@
                 },
                 resolve: {
                     user: function($location, userService){
-                        var user = userService.getCurrentUser();
+                        var user = userService.getUserPresenceFromLocastorage().then(function(data){
+                            if(data){
+                                $location.path('/user/' + userService.getCurrentUser().userID)
+                                //$state.go(user.dashboard, userService.getCurrentUser().userID)
+                            }
+                        });
 
-                        if(user){
-                            $location.path('/user/' + user.userID)
-                            //$state.go(user.dashboard, userService.getCurrentUser().userID)
-                        }
+                       
                     }
                 }
             });
