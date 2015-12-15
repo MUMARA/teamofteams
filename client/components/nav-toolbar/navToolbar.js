@@ -29,7 +29,6 @@
             this.subgroups = [];
             this.filteredGroups;
             this.groupObj1;
-            this.noTeams = false
             //this.userObj2;
             this.switchCheckIn = false
                 /*VM function ref*/
@@ -250,7 +249,7 @@
             this.checkinClick = function(){
 
                 if (self.groups.length === 0) {
-                    this.noTeams = true;
+                    messageService.showFailure('Currently you are not a member of any Team!');
                 }
                 self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId){
