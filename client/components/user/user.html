@@ -335,13 +335,17 @@
                                      style="margin-top:8%;position: relative;">
                                     <span ui-sref="user.group({groupID: key.$id})" class="md-headline">{{key.$id}}</span>
                                     <md-icon ng-src="{{key.userImg }}" class="user-locations"></md-icon>
-                                    <span ui-sref="user.group({groupID: key.$id})" class="md-subhead">Panacloud</span>
+                                    <span ui-sref="user.group({groupID: key.$id})" class="md-subhead">
+                                        Panacloud
+                                    </span>
                                     
                                 </div>
                                 <div layout="row" layout-align="start start"
                                      style="border-top: 2px solid #dddddd;position: relative;margin-top:15%">
-                                    <md-button class="md-fab cards-button" aria-label="User Status"
-                                               style="background-color: #31B4CB;" ng-click="user.showGroupDetails(key.$id);flags.flag2 = true;flags.flag1 = false;user.changeShow1(key.$id,flags,'flag3',$index,$event)">
+                                    <!-- <md-button class="md-fab cards-button" aria-label="User Status"
+                                               style="background-color: #31B4CB;" ng-click="user.showGroupDetails(key.$id);flags.flag2 = true;flags.flag1 = false;user.changeShow1(key.$id,flags,'flag3',$index,$event)"> -->
+                                   <md-button class="md-fab cards-button" aria-label="User Status"
+                                               style="background-color: #31B4CB;">
                                         <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>                                      
                                     </md-button>
                                     <div>
