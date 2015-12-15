@@ -49,17 +49,18 @@
                     </p>
                 </div>
             </div>
-            <div ng-show="!navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
+            <div flex style="width: 10px; height: 25px; margin-left: 40px">
                 <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
             </div>
-            <md-button ng-click="navToolbar.updateStatus(navToolbar.showUrlObj.group,true)" ng-show="navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
+            <!-- <md-button ng-click="navToolbar.updateStatus(navToolbar.showUrlObj.group,true)" ng-show="navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
                 <p style="  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 20px;text-transform: none;">
                     {{navToolbar.checkout ? "Check out": 'Check In'}}
                 </p>
-            </md-button>
-            <div flex="10" ng-show="!navToolbar.checkout">
+            </md-button> -->
+            <!-- <div flex="10" ng-show="!navToolbar.checkout"> -->
+            <div flex="10">
                 <div style="position: relative">
-                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
+                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider">
                     </md-switch>
                     <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
                     <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
@@ -117,7 +118,7 @@
                                                     <span class="size">{{group.group}}</span> </div>
                                                 <div style="color: #757575;font-size:large;" flex>
                                                     <ul class="removeBullets">
-                                                        <li class="positionli" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in group.subGroups">{{subgroup.subgroupId}}</li>
+                                                        <li class="positionli nooutline" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in group.subGroups">{{subgroup.subgroupId}}</li>
                                                     </ul>
                                                 </div>
                                                 <md-divider md-outset style="padding-bottom:10px"></md-divider>

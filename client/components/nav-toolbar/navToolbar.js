@@ -63,27 +63,53 @@
                     soundService.playFail('Error occurred.');
                 });
 
-            $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(snapshot) {
-                if (snapshot.type == 1 && snapshot.groupID && snapshot.subgroupID) {
+            // $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(snapshot) {
+            //     if (snapshot.type == 1 && snapshot.groupID && snapshot.subgroupID) {
+            //         self.checkout = true;
+            //         self.switchCheckIn = true;
+            //         self.showUrlObj.userID = userID;
+            //         self.showUrlObj.groupID = snapshot.groupID;
+            //         self.showUrlObj.subgroupID = snapshot.subgroupID;
+            //     }
+            // }, function(e) {
+            //     console.log(e)
+            // });
+
+            checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('value', function(snapshot, prevChildKey) {
+                // console.log(snapshot.val());
+                // console.log(snapshot.val().type);
+                if (snapshot.val().type == 2) {
+                    self.checkout = false;
+                    self.switchCheckIn = false;
+                    self.showUrlObj.userID = '';
+                    self.showUrlObj.groupID = '';
+                    self.showUrlObj.subgroupID = '';
+                } else  if(snapshot.val().type == 1 ){
                     self.checkout = true;
+                    self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
-                    self.showUrlObj.groupID = snapshot.groupID;
-                    self.showUrlObj.subgroupID = snapshot.subgroupID;
+                    self.showUrlObj.groupID = snapshot.val().groupID;
+                    self.showUrlObj.subgroupID = snapshot.val().subgroupID;
                 }
-                if(snapshot.groupID && snapshot.subgroupID){
-                    checkinService.getRefCheckinCurrentBySubgroup().child(snapshot.groupID).child(snapshot.subgroupID).on('child_changed', function(snapshot, prevChildKey) {
-                        console.log(snapshot.val());    
-                        // console.log(snapshot.key()); 
-                        if (snapshot.val().type === 1) {
-                            self.checkout = true;
-                        } else {
-                            self.checkout = false;
-                        }
-                    });
+            })
+
+            checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('child_changed', function(snapshot, prevChildKey) {
+                // console.log(snapshot.val());
+                // console.log(snapshot.val().type);
+                if (snapshot.val().type == 2) {
+                    self.checkout = false;
+                    self.switchCheckIn = false;
+                    self.showUrlObj.userID = '';
+                    self.showUrlObj.groupID = '';
+                    self.showUrlObj.subgroupID = '';
+                } else  if(snapshot.val().type == 1 ){
+                    self.checkout = true;
+                    self.switchCheckIn = true;
+                    self.showUrlObj.userID = userID;
+                    self.showUrlObj.groupID = snapshot.val().groupID;
+                    self.showUrlObj.subgroupID = snapshot.val().subgroupID;
                 }
-            }, function(e) {
-                //console.log(e)
-            });
+            })
 
             self.groups = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
             // this.groupObj = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID))
@@ -222,6 +248,7 @@
                                     } else {
                                         self.checkout = false;
                                         self.switchCheckIn = false;
+                                        self.switchMsg = false;
                                     }
                                 });
 
@@ -251,6 +278,13 @@
                 if (self.groups.length === 0) {
                     messageService.showFailure('Currently you are not a member of any Team!');
                 }
+                if (!self.switchMsg) {
+                    if (self.checkout) {
+                        self.updateStatus(self.showUrlObj.group,true)
+                        return    
+                    }
+                }
+                self.switchMsg = !self.switchMsg
                 self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId){
                     var tmp = {

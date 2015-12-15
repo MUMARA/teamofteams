@@ -261,7 +261,7 @@ md-switch .md-thumb-container {
     width: 32px;
 }
 md-switch{
-    margin-left: 64px;
+    /*margin-left: 64px;*/
 }
 .userImg{
     width: 36px;
