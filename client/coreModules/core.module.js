@@ -24,7 +24,8 @@ angular.module('core', [
     'ng-mfb',
     'ui.select',
     'ngSanitize',
-    'ui.router'
+    'ui.router',
+    'ngImgCrop'
 
  /*   'customdirectives'*/
 
