@@ -1,21 +1,21 @@
 /**
  * Created by Adnan Irfan on 06-Jul-15.
  */
-(function () {
+(function() {
     'use strict';
 
     angular
-        .module('app.quizAssign', ['firebase','app.quiz'])
+        .module('app.quizAssign', ['firebase', 'app.quiz'])
         .factory('quizAssignService', quizAssignService);
 
-    function quizAssignService(){
+    function quizAssignService() {
 
         var that = this;
         that.SelectedQuiz = null;
         that.SelectedGroup = null;
 
         return {
-            'quiz': function () {
+            'quiz': function() {
 
             }
 

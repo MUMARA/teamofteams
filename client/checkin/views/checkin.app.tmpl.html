@@ -4,8 +4,7 @@
             <h2>Checkin System</h2>
         </div>
         <p style="margin-left: 5px">
-            Checkin System helps members to update checkin status for the organisation(s), and It helps
-            Organisation Admins to view all members 's checkin updates in real-time.
+            Checkin System helps members to update checkin status for the organisation(s), and It helps Organisation Admins to view all members 's checkin updates in real-time.
         </p>
     </md-card>
     <div layout="row">
@@ -19,7 +18,7 @@
                     <md-item ng-repeat="(key, member) in members| array |filter:filterIn">
                         <md-item-content class="content-height">
                             <div class="md-tile-left" style="margin-left: 12px; margin-right: -8px;">
-                                <img class="imgRadius" get-gravatar="{{member.profile.email}}" watch="member.profile.email"/>
+                                <img class="imgRadius" get-gravatar="{{member.profile.email}}" watch="member.profile.email" />
                             </div>
                             <div class="md-tile-content">
                                 <div ng-click="goToMember(member.profile)" class="selectable">
@@ -38,36 +37,36 @@
                         <md-divider ng-if="!$last"></md-divider>
                     </md-item>
                 </div>
-               <div flex="50" style="border-left: 1px solid gainsboro">
-                   <h3 class="no-padng-margn list-h3">Out List</h3>
-                   <md-item ng-repeat="(key, member) in members| array |filter:filterOut">
-                       <md-item-content  class="content-height">
-                           <div class="md-tile-left" style="margin-left: 12px; margin-right: -8px;">
-                               <img class="imgRadius" get-gravatar="{{member.profile.email}}" watch="member.profile.email"/>
-                           </div>
-                           <div class="md-tile-content">
-                               <div ng-click="goToMember(member.profile)" class="selectable">
-                                   <h3>@{{member.profile.$id}}</h3>
-                                   <h4>{{member.profile.firstName + ' ' + member.profile.lastName}}</h4>
-                               </div>
-                               <p>{{ ( member.currentStatus.type === 1 ? 'In' : 'Out' ) + ': ' + member.currentStatus.message}}</p>
-                               <p>{{'Last Updated: ' + ( member.currentStatus.timestamp | date: 'medium' )}}</p>
-                               <p ng-show="isAdmin">
-                                   Location:
-                                   <span ng-show="member.currentStatus.location" ng-click="showLocation( $event, member, true )" class="selectable">{{ getLocationName( member.currentStatus, definedGroupLocations ) }}</span>
-                                   <span ng-hide="member.currentStatus.location">Not Available</span>
-                               </p>
-                           </div>
-                       </md-item-content>
-                       <md-divider ng-if="!$last"></md-divider>
-                   </md-item>
-               </div>
+                <div flex="50" style="border-left: 1px solid gainsboro">
+                    <h3 class="no-padng-margn list-h3">Out List</h3>
+                    <md-item ng-repeat="(key, member) in members| array |filter:filterOut">
+                        <md-item-content class="content-height">
+                            <div class="md-tile-left" style="margin-left: 12px; margin-right: -8px;">
+                                <img class="imgRadius" get-gravatar="{{member.profile.email}}" watch="member.profile.email" />
+                            </div>
+                            <div class="md-tile-content">
+                                <div ng-click="goToMember(member.profile)" class="selectable">
+                                    <h3>@{{member.profile.$id}}</h3>
+                                    <h4>{{member.profile.firstName + ' ' + member.profile.lastName}}</h4>
+                                </div>
+                                <p>{{ ( member.currentStatus.type === 1 ? 'In' : 'Out' ) + ': ' + member.currentStatus.message}}</p>
+                                <p>{{'Last Updated: ' + ( member.currentStatus.timestamp | date: 'medium' )}}</p>
+                                <p ng-show="isAdmin">
+                                    Location:
+                                    <span ng-show="member.currentStatus.location" ng-click="showLocation( $event, member, true )" class="selectable">{{ getLocationName( member.currentStatus, definedGroupLocations ) }}</span>
+                                    <span ng-hide="member.currentStatus.location">Not Available</span>
+                                </p>
+                            </div>
+                        </md-item-content>
+                        <md-divider ng-if="!$last"></md-divider>
+                    </md-item>
+                </div>
             </md-list>
         </md-card>
         <md-card flex>
             <div style="margin-left: 12px" layout="row">
                 <div>
-                    <img class="imgRadius" style="margin-top: 14px;" get-gravatar="{{user.email}}" watch="user.email"/>
+                    <img class="imgRadius" style="margin-top: 14px;" get-gravatar="{{user.email}}" watch="user.email" />
                 </div>
                 <div class="md-tile-content">
                     <h3>{{user.firstName + ' ' + user.lastName}}</h3>

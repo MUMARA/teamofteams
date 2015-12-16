@@ -6,8 +6,8 @@
 
 
 angular.module('core')
-    .factory('groupFirebaseService',["firebaseService", "$q", "$timeout", '$sessionStorage', 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService","$localStorage",
-        function(firebaseService, $q, $timeout, $sessionStorage, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService,$localStorage) {
+    .factory('groupFirebaseService', ["firebaseService", "$q", "$timeout", '$sessionStorage', 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService", "$localStorage",
+        function(firebaseService, $q, $timeout, $sessionStorage, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService, $localStorage) {
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -15,858 +15,873 @@ angular.module('core')
                 pendingMembershipSyncArray: [],
                 activitiesSyncArray: []
             };*/
-        var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+            var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
 
 
-        return {
-           getSignedinUserObj: firebaseService.getSignedinUserObj,
+            return {
+                getSignedinUserObj: firebaseService.getSignedinUserObj,
 
-           getGroupSyncObjAsync: function(groupID, viewerUserID){
-               var deferred = $q.defer();
-               var self = this;
-             var  syncObj = {
-                   subgroupsSyncArray: [],
-                   membersSyncArray: [],
-                   pendingMembershipSyncArray: [],
-                   activitiesSyncArray: []
-               };
-               syncObj.self = this;
-               syncObj.viewerUserID = viewerUserID;
-               syncObj.groupID = groupID;
-               syncObj.userGroupMembershipRef = firebaseService.getRefUserGroupMemberships().child(viewerUserID).child(groupID);
-               syncObj.groupSyncObj = $firebaseObject(firebaseService.getRefGroups().child(groupID));
-               syncObj.userGroupMembershipRef.once("value", function(snapshot){
-                   if(snapshot.val()){
+                getGroupSyncObjAsync: function(groupID, viewerUserID) {
+                    var deferred = $q.defer();
+                    var self = this;
+                    var syncObj = {
+                        subgroupsSyncArray: [],
+                        membersSyncArray: [],
+                        pendingMembershipSyncArray: [],
+                        activitiesSyncArray: []
+                    };
+                    syncObj.self = this;
+                    syncObj.viewerUserID = viewerUserID;
+                    syncObj.groupID = groupID;
+                    syncObj.userGroupMembershipRef = firebaseService.getRefUserGroupMemberships().child(viewerUserID).child(groupID);
+                    syncObj.groupSyncObj = $firebaseObject(firebaseService.getRefGroups().child(groupID));
+                    syncObj.userGroupMembershipRef.once("value", function(snapshot) {
+                        if (snapshot.val()) {
 
-                       syncObj.membershipType = snapshot.val()["membership-type"];
-                       syncObj.timestamp = snapshot.val()["timestamp"];
-                       syncObj.userGroupMembershipRef.on("child_changed", self.membershipChanged, syncObj);
-                       syncObj.userGroupMembershipRef.on("child_removed", self.membershipDeleted, syncObj);
-                       self.addListeners(syncObj);
-                   } else {
-                       syncObj.membershipType = -100;//right now not a member
-                       //listen to if membership added later
-                       firebaseService.getRefUserGroupMemberships().on("child_added", self.membershipAddedLater, syncObj);
-                   }
-
-                   deferred.resolve(syncObj);
-               });
-
-
-               return deferred.promise;
-           },
-            addListeners: function(syncObj){
-                if(syncObj.membershipType >= 1){
-                    syncObj.subgroupRef = this.syncSubgroups(syncObj.groupID, syncObj.subgroupsSyncArray, syncObj);
-                    syncObj.groupMembershipRef = syncObj.self.syncGroupMembers(syncObj.groupID, syncObj.membersSyncArray, syncObj);
-                    syncObj.groupActivitiesRef = syncObj.self.syncGroupActivities(syncObj.groupID, syncObj.activitiesSyncArray, syncObj);
-                }
-
-                if(syncObj.membershipType == 1 || syncObj.membershipType == 2){
-                    syncObj.groupPendingMembershipRequestsRef = syncObj.self.syncGroupPendingMembershipRequests(syncObj.groupID, syncObj.pendingMembershipSyncArray, syncObj);
-                }
-            },
-            membershipAddedLater: function(snapshot){
-                if(this.groupID == snapshot.key()){//has become a member now
-                    this.membershipType = snapshot.val()["membership-type"];
-                    this.timestamp = snapshot.val()["timestamp"];
-                    this.userGroupMembershipRef.on("child_changed", this.self.membershipChanged, this);
-                    this.userGroupMembershipRef.on("child_removed", this.self.membershipDeleted, this);
-                    this.self.addListeners(this);
-                }
-            },
-            membershipChanged: function(snapshot){
-                var newMembershipType = snapshot.val();
-                if(newMembershipType != this.membershipType){//membership type has changed
-                    if(this.membershipType == 3){//previously was a member
-                        if(newMembershipType == 2){//now a admin
-                            this.groupPendingMembershipRequestsRef = this.self.syncGroupPendingMembershipRequests(this.groupID, this.pendingMembershipSyncArray, this);
-                        }
-                        else if(newMembershipType == -1){//has been suspended
-                            this.self.removeConfidentialGroupData.call(this, this.groupID);
-                        }
-                    }
-
-                    if(this.membershipType == 2){//previously was a admin
-                        if(newMembershipType == 3){//now a member only
-                            if(this.groupPendingMembershipRequestsRef){
-                                this.groupPendingMembershipRequestsRef.off("child_added", this.self.groupMembershipRequestAdded, this.pendingMembershipSyncArray);
-                                this.groupPendingMembershipRequestsRef.off("child_removed", this.self.groupMembershipRequestDeleted, this.pendingMembershipSyncArray);
-                            }
-
-                            while(this.pendingMembershipSyncArray.length > 0) {//empty pending
-                                this.pendingMembershipSyncArray.pop();
-                            }
-
-                        }
-                        else if(newMembershipType == -1){//has been suspended
-                            this.self.removeConfidentialGroupData.call(this, this.groupID);
-                        }
-                    }
-                    this.membershipType = newMembershipType;
-                }
-            },
-            removeConfidentialGroupData: function(groupIDMembershipDeleted){
-                if(this.groupID == groupIDMembershipDeleted){ //group membership deleted which logged-in-user was viewing
-                    this.membershipType = -100;
-                    this.timestamp = undefined;
-
-                    if(this.userGroupMembershipRef){
-                        this.userGroupMembershipRef.off("child_changed", this.self.membershipChanged, this);
-                        this.userGroupMembershipRef.off("child_removed", this.self.membershipDeleted, this);
-                    }
-
-                    if(this.subgroupRef){
-                        if(this.subgroupsRefContext){
-                            this.subgroupRef.off('child_added', this.self.groupUserMembershipAdded, this.subgroupsRefContext);
+                            syncObj.membershipType = snapshot.val()["membership-type"];
+                            syncObj.timestamp = snapshot.val()["timestamp"];
+                            syncObj.userGroupMembershipRef.on("child_changed", self.membershipChanged, syncObj);
+                            syncObj.userGroupMembershipRef.on("child_removed", self.membershipDeleted, syncObj);
+                            self.addListeners(syncObj);
+                        } else {
+                            syncObj.membershipType = -100; //right now not a member
+                            //listen to if membership added later
+                            firebaseService.getRefUserGroupMemberships().on("child_added", self.membershipAddedLater, syncObj);
                         }
 
-                        this.subgroupRef.off('child_removed', this.self.groupUserMembershipAdded, this.subgroupsArray);
-                    }
-
-                    if ( this.subgroupsRefContext ) {
-                        this.subgroupsRefContext.subgroupsMembershipRef.off('child_added', this.self.subgroupsAdded, this.subgroupsRefContext);
-                        this.subgroupsRefContext.subgroupsMembershipRef.off('child_removed', this.self.subgroupsDeleted, this.subgroupsRefContext);
-                    }
-
-                    if(this.groupMembershipRef){
-                        this.groupMembershipRef.off('child_added', this.self.groupUserMembershipAdded, this.membersSyncArray);
-                        this.groupMembershipRef.off('child_changed', this.self.groupUserMembershipChanged, this.membersSyncArray);
-                        this.groupMembershipRef.off('child_removed', this.self.groupUserMembershipDeleted, this.membersSyncArray);
-                    }
-
-                    if(this.groupActivitiesRef){
-                        this.groupActivitiesRef.off("child_added", this.self.groupActivityAdded, this.activitiesSyncArray);
-                    }
-
-                    if(this.groupPendingMembershipRequestsRef){
-                        this.groupPendingMembershipRequestsRef.off("child_added", this.self.groupMembershipRequestAdded, this.pendingMembershipSyncArray);
-                        this.groupPendingMembershipRequestsRef.off("child_removed", this.self.groupMembershipRequestDeleted, this.pendingMembershipSyncArray);
-                    }
-
-                    while(this.subgroupsSyncArray.length > 0) {//empty teams
-                        this.subgroupsSyncArray.pop();
-                    }
-                    while(this.membersSyncArray.length > 0) {//empty members
-                        this.membersSyncArray.pop();
-                    }
-                    while(this.pendingMembershipSyncArray.length > 0) {//empty pending
-                        this.pendingMembershipSyncArray.pop();
-                    }
-                    while(this.activitiesSyncArray.length > 0) {//empty activities
-                        this.activitiesSyncArray.pop();
-                    }
-
-                }
-            },
-            membershipDeleted: function(snapshot){//is no longer a member
-                var groupIDMembershipDeleted = snapshot.key();
-                this.self.removeConfidentialGroupData.call(this, groupIDMembershipDeleted);
-
-            },
-            syncSubgroups: function(groupID, subgroupsArray, syncObj){
-                var subgroupsRef = firebaseService.getRefSubGroups().child(groupID);
-                var subgroupsMembershipRef = firebaseService.getRefUserSubGroupMemberships().child(syncObj.viewerUserID).child(groupID);
-
-                syncObj.subgroupsRefContext = {
-                    subgroupsMembershipRef: subgroupsMembershipRef,
-                    subgroupRef: subgroupsRef,
-                    subgroupsArray: subgroupsArray
-                };
-
-                subgroupsMembershipRef.on('child_added', this.subgroupsAdded, syncObj.subgroupsRefContext);
-                subgroupsMembershipRef.on('child_removed', this.subgroupsDeleted, syncObj.subgroupsRefContext);
-                return subgroupsRef;
-            },
-            subgroupsAdded: function(snapshot) {
-                var self = this;
-                var subgroupSyncObj = $firebaseObject( this.subgroupRef.child( snapshot.key() ) );
-                $timeout(function () {
-                    self.subgroupsArray.push(subgroupSyncObj);
-                });
-            },
-            subgroupsDeleted: function(snapshot){
-                var self = this;
-                var subgroupID = snapshot.key();
-                this.subgroupsArray.forEach(function(obj, i){
-                    if(obj.$id == subgroupID){
-                        $timeout(function() {
-                            self.subgroupsArray.splice(i, 1);
-                        });
-                    }
-                });
-            },
-            syncGroupMembers: function(groupID, memberArray){
-                var ref = firebaseService.getRefGroupMembers().child(groupID);
-                ref.on('child_added', this.groupUserMembershipAdded, memberArray);
-                ref.on('child_changed', this.groupUserMembershipChanged, memberArray);
-                ref.on('child_removed', this.groupUserMembershipDeleted, memberArray);
-                return ref;
-            },
-            groupUserMembershipAdded: function(snapshot){
-                var self = this;
-                var userSyncObj = $firebaseObject(firebaseService.getRefUsers().child(snapshot.key()));
-                $timeout(function() {
-                    self.push({
-                        userID: snapshot.key(),
-                        membershipType: snapshot.val()["membership-type"],
-                        timestamp: snapshot.val()["timestamp"],
-                        userSyncObj: userSyncObj,
-                        //FIXME when implementing in client2 , eliminate userSyncObj to avoid duplicate listeners.
-                        user: userPresenceService.getUserSyncObject( snapshot.key() )
+                        deferred.resolve(syncObj);
                     });
-                });
-            },
-            groupUserMembershipChanged: function(snapshot){
-                var userID = snapshot.key();
-                var membershipObj = snapshot.val();
-                this.forEach(function(obj){
-                    if(obj.userID == userID){
-                        $timeout(function() {
-                            obj.membershipType = membershipObj["membership-type"];
-                        });
-                    }
-                });
-            },
-            groupUserMembershipDeleted: function(snapshot){
-                var self = this;
-                var userID = snapshot.key();
-                this.forEach(function(obj, i){
-                    if(obj.userID == userID){
-                        $timeout(function() {
-                            self.splice(i, 1);
-                        });
-                    }
-                });
-            },
-            syncGroupActivities: function(groupID, activitiesSyncArray){
-                var ref = firebaseService.getRefGroupsActivityStreams().child(groupID).orderByPriority();
-                ref.on("child_added", this.groupActivityAdded, activitiesSyncArray);
-                return ref;
-            },
-            groupActivityAdded: function(snapshot){
-                var self = this;
-                var activity = snapshot.val();
-                $timeout(function() {
-                    if(activity){
-                        self.push(activity);
-                    }
-                });
-            },
-            syncGroupPendingMembershipRequests: function(groupID, pendingMembershipSyncArray){
-                var ref = firebaseService.getRefGroupMembershipRequests().child(groupID);
-                ref.on("child_added", this.groupMembershipRequestAdded, pendingMembershipSyncArray);
-                ref.on("child_removed", this.groupMembershipRequestDeleted, pendingMembershipSyncArray);
-                return ref;
-            },
-            groupMembershipRequestAdded: function(snapshot){
-                var self = this;
-                var userSyncObj = $firebaseObject( firebaseService.getRefUsers().child( snapshot.key() ));
-                $timeout(function() {
-                    self.push({userID: snapshot.key(), message: snapshot.val()["message"],
-                        timestamp: snapshot.val()["timestamp"], userSyncObj: userSyncObj});
-                });
-            },
-            groupMembershipRequestDeleted: function(snapshot){
-                var self = this;
-                var userID = snapshot.key();
-                this.forEach(function(obj, i){
-                    if(obj.userID == userID){
-                        $timeout(function() {
-                            self.splice(i, 1);
-                        });
-                    }
-                });
-            },
-            asyncCreateSubgroup: function(userID, group, subgroupInfo, subgroupList){
 
-                /* NODES TO HIT FOR CREATING SUBGROUPS:
-                 subgroup-members
-                 user-subgroup-memberships
-                 subgroup-names
-                 subgroups
-                 subgroup-activity-streams
-                 */
 
-                var self = this;
-                var deferred = $q.defer();
-                var subgroupExist = false;
-                var errorHandler = function( reason ){
-                    deferred.reject( reason || "Subgroup creation failed. error occurred in accessing server.");
-                };
-
-                //Step 1: check if subgroup does not exist
-                subgroupList.forEach(function(subgroup){
-                    if(subgroup.subgroupID == subgroupInfo.subgroupID){
-                        errorHandler("Subgroup not created, " + subgroupInfo.subgroupID + " already exists");//subgroup ID already exists
-                        subgroupExist = true;
-                    }
-                });
-
-                if ( subgroupExist ) {
                     return deferred.promise;
-                }
+                },
+                addListeners: function(syncObj) {
+                    if (syncObj.membershipType >= 1) {
+                        syncObj.subgroupRef = this.syncSubgroups(syncObj.groupID, syncObj.subgroupsSyncArray, syncObj);
+                        syncObj.groupMembershipRef = syncObj.self.syncGroupMembers(syncObj.groupID, syncObj.membersSyncArray, syncObj);
+                        syncObj.groupActivitiesRef = syncObj.self.syncGroupActivities(syncObj.groupID, syncObj.activitiesSyncArray, syncObj);
+                    }
 
-                //step : create an entry for "subgroup-members"
-                self.asyncCreateSubGroupMembersJSON(userID, subgroupInfo.members)
-                    .then(function(response) {
-                    var memRef = firebaseService.getRefSubGroupMembers().child(group.$id).child(subgroupInfo.subgroupID);
-                    var mems = response.memberJSON;
-                    //if(response.members.length != 0) { //by default admin is included in membersJSON of subgroup.
-
-                    //step : create subgroup members
-                    memRef.set(mems, function (error) {
-                        if (error) {
-                            //roleback previous
-                            errorHandler();
+                    if (syncObj.membershipType == 1 || syncObj.membershipType == 2) {
+                        syncObj.groupPendingMembershipRequestsRef = syncObj.self.syncGroupPendingMembershipRequests(syncObj.groupID, syncObj.pendingMembershipSyncArray, syncObj);
+                    }
+                },
+                membershipAddedLater: function(snapshot) {
+                    if (this.groupID == snapshot.key()) { //has become a member now
+                        this.membershipType = snapshot.val()["membership-type"];
+                        this.timestamp = snapshot.val()["timestamp"];
+                        this.userGroupMembershipRef.on("child_changed", this.self.membershipChanged, this);
+                        this.userGroupMembershipRef.on("child_removed", this.self.membershipDeleted, this);
+                        this.self.addListeners(this);
+                    }
+                },
+                membershipChanged: function(snapshot) {
+                    var newMembershipType = snapshot.val();
+                    if (newMembershipType != this.membershipType) { //membership type has changed
+                        if (this.membershipType == 3) { //previously was a member
+                            if (newMembershipType == 2) { //now a admin
+                                this.groupPendingMembershipRequestsRef = this.self.syncGroupPendingMembershipRequests(this.groupID, this.pendingMembershipSyncArray, this);
+                            } else if (newMembershipType == -1) { //has been suspended
+                                this.self.removeConfidentialGroupData.call(this, this.groupID);
+                            }
                         }
-                        else {
-                            // step: create and entry for "subgroups-names"
-                            var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
-                            groupNameRef.set(subgroupInfo.title, function (error) {
-                                if (error) {
-                                    deferred.reject();
-                                    //role back previous
-                                } else {
-                                    //step: create an entry for "user-subgroup-memberships"
-                                    self.asyncCreateUserSubgroupMemberships( group.$id, subgroupInfo.subgroupID, mems )
-                                        .then(function () {
 
-                                            //step : create an entry for "subgroups"
-                                            var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
-                                            subgroupRef.set({
-                                                title: subgroupInfo.title,
-                                                desc: subgroupInfo.desc,
-                                                timestamp: firebaseTimeStamp,
-                                                "members-count": response.membersCount,
-                                                "microgroups-count": 0,
-                                                "members-checked-in": {count: 0},
-                                                'logo-image':{
-                                                    url:subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
-                                                    id: subgroupInfo.subgroupID,
-                                                    'bucket-name': 'test2pwow',
-                                                    source: 1,// 1 = google cloud storage
-                                                    mediaType: 'image/png' //image/jpeg
-                                                }
-                                            }, function(error) {
-                                                if (error) {
-                                                    //role back previous
-                                                    errorHandler();
-                                                } else {
-                                                    // creating flattened-groups data in firebase
-                                                    var qArray=[];
-                                                    var qArray2 =[];
-                                                    var deffer = $q.defer();
-                                                    deffer.promise
-                                                        .then(function(dataArrofArr){
-
-                                                                dataArrofArr.forEach(function(arr){
-                                                                    if(arr[1].type == 1){
-                                                                        arr[0].checkedin=true
-                                                                    }else{
-                                                                        arr[0].checkedin=false
-                                                                    }
-                                                                    qArray2.push(arr[0].$save())
-                                                                });
-                                                            return $q.all(qArray2) })
-                                                        .then(function(){
-                                                            deferred.resolve({unlistedMembersArray: response.unlisted});
-                                                            //step  : entry for "subgroup-activity-streams"
-//                                                            debugger;
-
-                                                            //self.asyncRecordSubgroupCreationActivity($localStorage.loggedInUser, group, subgroupInfo).then(function () {
-                                                            //    if (response.members.length == 1) {
-                                                            //        //self.asyncRecordSubgroupMemberAdditionActivity($sessionStorage.loggedInUser, group, subgroupInfo, response.members[0])
-                                                            //        self.asyncRecordSubgroupMemberAdditionActivity($localStorage.loggedInUser, group, subgroupInfo, response.members[0])
-                                                            //            .then(function () {
-                                                            //                deferred.resolve({unlistedMembersArray: response.unlisted});
-                                                            //            });
-                                                            //    }
-                                                            //    else if (response.members.length > 1) {
-                                                            //        //self.asyncRecordManySubgroupsMembersAdditionActivity($sessionStorage.loggedInUser, group, subgroupInfo, response.members)
-                                                            //        self.asyncRecordManySubgroupsMembersAdditionActivity($localStorage.loggedInUser, group, subgroupInfo, response.members)
-                                                            //            .then(function () {
-                                                            //                deferred.resolve({unlistedMembersArray: response.unlisted});
-                                                            //            });
-                                                            //    }
-                                                            //    else {
-                                                            //        deferred.resolve({unlistedMembersArray: response.unlisted});
-                                                            //    }
-                                                            //});
-
-                                                        })
-                                                        .catch(function(d){
-                                                            //debugger;
-                                                        })
-                                                    for(var member in mems){
-
-                                                       var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
-                                                            .$loaded()
-
-                                                       var temp1=  $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
-
-                                                        qArray.push($q.all([temp,temp1]))
-
-
-                                                    }
-                                                    deffer.resolve($q.all(qArray))
-
-                                                }
-                                            });
-
-                                        }, errorHandler);
+                        if (this.membershipType == 2) { //previously was a admin
+                            if (newMembershipType == 3) { //now a member only
+                                if (this.groupPendingMembershipRequestsRef) {
+                                    this.groupPendingMembershipRequestsRef.off("child_added", this.self.groupMembershipRequestAdded, this.pendingMembershipSyncArray);
+                                    this.groupPendingMembershipRequestsRef.off("child_removed", this.self.groupMembershipRequestDeleted, this.pendingMembershipSyncArray);
                                 }
+
+                                while (this.pendingMembershipSyncArray.length > 0) { //empty pending
+                                    this.pendingMembershipSyncArray.pop();
+                                }
+
+                            } else if (newMembershipType == -1) { //has been suspended
+                                this.self.removeConfidentialGroupData.call(this, this.groupID);
+                            }
+                        }
+                        this.membershipType = newMembershipType;
+                    }
+                },
+                removeConfidentialGroupData: function(groupIDMembershipDeleted) {
+                    if (this.groupID == groupIDMembershipDeleted) { //group membership deleted which logged-in-user was viewing
+                        this.membershipType = -100;
+                        this.timestamp = undefined;
+
+                        if (this.userGroupMembershipRef) {
+                            this.userGroupMembershipRef.off("child_changed", this.self.membershipChanged, this);
+                            this.userGroupMembershipRef.off("child_removed", this.self.membershipDeleted, this);
+                        }
+
+                        if (this.subgroupRef) {
+                            if (this.subgroupsRefContext) {
+                                this.subgroupRef.off('child_added', this.self.groupUserMembershipAdded, this.subgroupsRefContext);
+                            }
+
+                            this.subgroupRef.off('child_removed', this.self.groupUserMembershipAdded, this.subgroupsArray);
+                        }
+
+                        if (this.subgroupsRefContext) {
+                            this.subgroupsRefContext.subgroupsMembershipRef.off('child_added', this.self.subgroupsAdded, this.subgroupsRefContext);
+                            this.subgroupsRefContext.subgroupsMembershipRef.off('child_removed', this.self.subgroupsDeleted, this.subgroupsRefContext);
+                        }
+
+                        if (this.groupMembershipRef) {
+                            this.groupMembershipRef.off('child_added', this.self.groupUserMembershipAdded, this.membersSyncArray);
+                            this.groupMembershipRef.off('child_changed', this.self.groupUserMembershipChanged, this.membersSyncArray);
+                            this.groupMembershipRef.off('child_removed', this.self.groupUserMembershipDeleted, this.membersSyncArray);
+                        }
+
+                        if (this.groupActivitiesRef) {
+                            this.groupActivitiesRef.off("child_added", this.self.groupActivityAdded, this.activitiesSyncArray);
+                        }
+
+                        if (this.groupPendingMembershipRequestsRef) {
+                            this.groupPendingMembershipRequestsRef.off("child_added", this.self.groupMembershipRequestAdded, this.pendingMembershipSyncArray);
+                            this.groupPendingMembershipRequestsRef.off("child_removed", this.self.groupMembershipRequestDeleted, this.pendingMembershipSyncArray);
+                        }
+
+                        while (this.subgroupsSyncArray.length > 0) { //empty teams
+                            this.subgroupsSyncArray.pop();
+                        }
+                        while (this.membersSyncArray.length > 0) { //empty members
+                            this.membersSyncArray.pop();
+                        }
+                        while (this.pendingMembershipSyncArray.length > 0) { //empty pending
+                            this.pendingMembershipSyncArray.pop();
+                        }
+                        while (this.activitiesSyncArray.length > 0) { //empty activities
+                            this.activitiesSyncArray.pop();
+                        }
+
+                    }
+                },
+                membershipDeleted: function(snapshot) { //is no longer a member
+                    var groupIDMembershipDeleted = snapshot.key();
+                    this.self.removeConfidentialGroupData.call(this, groupIDMembershipDeleted);
+
+                },
+                syncSubgroups: function(groupID, subgroupsArray, syncObj) {
+                    var subgroupsRef = firebaseService.getRefSubGroups().child(groupID);
+                    var subgroupsMembershipRef = firebaseService.getRefUserSubGroupMemberships().child(syncObj.viewerUserID).child(groupID);
+
+                    syncObj.subgroupsRefContext = {
+                        subgroupsMembershipRef: subgroupsMembershipRef,
+                        subgroupRef: subgroupsRef,
+                        subgroupsArray: subgroupsArray
+                    };
+
+                    subgroupsMembershipRef.on('child_added', this.subgroupsAdded, syncObj.subgroupsRefContext);
+                    subgroupsMembershipRef.on('child_removed', this.subgroupsDeleted, syncObj.subgroupsRefContext);
+                    return subgroupsRef;
+                },
+                subgroupsAdded: function(snapshot) {
+                    var self = this;
+                    var subgroupSyncObj = $firebaseObject(this.subgroupRef.child(snapshot.key()));
+                    $timeout(function() {
+                        self.subgroupsArray.push(subgroupSyncObj);
+                    });
+                },
+                subgroupsDeleted: function(snapshot) {
+                    var self = this;
+                    var subgroupID = snapshot.key();
+                    this.subgroupsArray.forEach(function(obj, i) {
+                        if (obj.$id == subgroupID) {
+                            $timeout(function() {
+                                self.subgroupsArray.splice(i, 1);
                             });
-
-
                         }
                     });
-                });
-
-                return deferred.promise;
-            },
-            asyncCreateSubGroupMembersJSON: function(ownerUserID, listStr, existingMembersObj) {
-                /*
-                @param ownerUserID // 'ownerid'
-                @param listStr // 'userid1,userid2'
-                @param existingMembersObj // { userid1 : {}, userid2: {}}
-
-                @return memberJSON {object} {
-                 userId1: {
-                      memberhsip-type: 1, // members
-                      timestamp: timestamp
-                   },
-                 userid2 : {
-                     memberhsip-type: 3, // members
-                     timestamp: timestamp
-                 }
-                 }
-
-                   */
-
-                var deferred = $q.defer();
-
-                var groupMembersJSON = {};
-                var unlistedMembers = [];
-                var members = [];
-
-                //this time we are including ownerid in membersJSON with membership-type: 1. unlike groupmemberJSON method
-                groupMembersJSON[ownerUserID] = {
-                    "membership-type": 1, //1 means owner, 2 will mean admin, 3 means member only
-                    timestamp: firebaseTimeStamp
-                };
-
-                if( listStr.length < 2 ) {
-                    deferred.resolve({
-                        memberJSON: groupMembersJSON,
-                        unlisted: unlistedMembers,
-                        members: members,
-                        membersCount: 1
+                },
+                syncGroupMembers: function(groupID, memberArray) {
+                    var ref = firebaseService.getRefGroupMembers().child(groupID);
+                    ref.on('child_added', this.groupUserMembershipAdded, memberArray);
+                    ref.on('child_changed', this.groupUserMembershipChanged, memberArray);
+                    ref.on('child_removed', this.groupUserMembershipDeleted, memberArray);
+                    return ref;
+                },
+                groupUserMembershipAdded: function(snapshot) {
+                    var self = this;
+                    var userSyncObj = $firebaseObject(firebaseService.getRefUsers().child(snapshot.key()));
+                    $timeout(function() {
+                        self.push({
+                            userID: snapshot.key(),
+                            membershipType: snapshot.val()["membership-type"],
+                            timestamp: snapshot.val()["timestamp"],
+                            userSyncObj: userSyncObj,
+                            //FIXME when implementing in client2 , eliminate userSyncObj to avoid duplicate listeners.
+                            user: userPresenceService.getUserSyncObject(snapshot.key())
+                        });
                     });
-                } else {
-                    existingMembersObj = existingMembersObj || {};
+                },
+                groupUserMembershipChanged: function(snapshot) {
+                    var userID = snapshot.key();
+                    var membershipObj = snapshot.val();
+                    this.forEach(function(obj) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                obj.membershipType = membershipObj["membership-type"];
+                            });
+                        }
+                    });
+                },
+                groupUserMembershipDeleted: function(snapshot) {
+                    var self = this;
+                    var userID = snapshot.key();
+                    this.forEach(function(obj, i) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                self.splice(i, 1);
+                            });
+                        }
+                    });
+                },
+                syncGroupActivities: function(groupID, activitiesSyncArray) {
+                    var ref = firebaseService.getRefGroupsActivityStreams().child(groupID).orderByPriority();
+                    ref.on("child_added", this.groupActivityAdded, activitiesSyncArray);
+                    return ref;
+                },
+                groupActivityAdded: function(snapshot) {
+                    var self = this;
+                    var activity = snapshot.val();
+                    $timeout(function() {
+                        if (activity) {
+                            self.push(activity);
+                        }
+                    });
+                },
+                syncGroupPendingMembershipRequests: function(groupID, pendingMembershipSyncArray) {
+                    var ref = firebaseService.getRefGroupMembershipRequests().child(groupID);
+                    ref.on("child_added", this.groupMembershipRequestAdded, pendingMembershipSyncArray);
+                    ref.on("child_removed", this.groupMembershipRequestDeleted, pendingMembershipSyncArray);
+                    return ref;
+                },
+                groupMembershipRequestAdded: function(snapshot) {
+                    var self = this;
+                    var userSyncObj = $firebaseObject(firebaseService.getRefUsers().child(snapshot.key()));
+                    $timeout(function() {
+                        self.push({
+                            userID: snapshot.key(),
+                            message: snapshot.val()["message"],
+                            timestamp: snapshot.val()["timestamp"],
+                            userSyncObj: userSyncObj
+                        });
+                    });
+                },
+                groupMembershipRequestDeleted: function(snapshot) {
+                    var self = this;
+                    var userID = snapshot.key();
+                    this.forEach(function(obj, i) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                self.splice(i, 1);
+                            });
+                        }
+                    });
+                },
+                asyncCreateSubgroup: function(userID, group, subgroupInfo, subgroupList) {
 
-                    var memberArray = listStr.split(",");
-                    var promises = [];
+                    /* NODES TO HIT FOR CREATING SUBGROUPS:
+                     subgroup-members
+                     user-subgroup-memberships
+                     subgroup-names
+                     subgroups
+                     subgroup-activity-streams
+                     */
 
-                    memberArray.forEach(function (val, i) {
-                        val = val.trim();
-                        var promise = firebaseService.asyncCheckIfUserExists(val);
-                        promise.then(function (response) {
-                            if ( response.exists ) {
-                                /*check if requested userID is :
-                                 * a valid user,
-                                 * has not already been added to members list of group (if updating members list) */
-                                if ( val != ownerUserID && !existingMembersObj[val] ) {
-                                    groupMembersJSON[val] = {
-                                        "membership-type": 3, //1 means owner, 2 will mean admin, 3 means member only
-                                        timestamp: firebaseTimeStamp
-                                    };
-                                    members.push(val);
-                                    //}
+                    var self = this;
+                    var deferred = $q.defer();
+                    var subgroupExist = false;
+                    var errorHandler = function(reason) {
+                        deferred.reject(reason || "Subgroup creation failed. error occurred in accessing server.");
+                    };
+
+                    //Step 1: check if subgroup does not exist
+                    subgroupList.forEach(function(subgroup) {
+                        if (subgroup.subgroupID == subgroupInfo.subgroupID) {
+                            errorHandler("Subgroup not created, " + subgroupInfo.subgroupID + " already exists"); //subgroup ID already exists
+                            subgroupExist = true;
+                        }
+                    });
+
+                    if (subgroupExist) {
+                        return deferred.promise;
+                    }
+
+                    //step : create an entry for "subgroup-members"
+                    self.asyncCreateSubGroupMembersJSON(userID, subgroupInfo.members)
+                        .then(function(response) {
+                            var memRef = firebaseService.getRefSubGroupMembers().child(group.$id).child(subgroupInfo.subgroupID);
+                            var mems = response.memberJSON;
+                            //if(response.members.length != 0) { //by default admin is included in membersJSON of subgroup.
+
+                            //step : create subgroup members
+                            memRef.set(mems, function(error) {
+                                if (error) {
+                                    //roleback previous
+                                    errorHandler();
                                 } else {
-                                    unlistedMembers.push(val);
-                                }
-                            } else {
-                                unlistedMembers.push(val);
-                            }
-                        });
+                                    // step: create and entry for "subgroups-names"
+                                    var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
+                                    groupNameRef.set(subgroupInfo.title, function(error) {
+                                        if (error) {
+                                            deferred.reject();
+                                            //role back previous
+                                        } else {
+                                            //step: create an entry for "user-subgroup-memberships"
+                                            self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
+                                                .then(function() {
 
-                        promises.push(promise);
-                    });
+                                                    //step : create an entry for "subgroups"
+                                                    var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
+                                                    subgroupRef.set({
+                                                        title: subgroupInfo.title,
+                                                        desc: subgroupInfo.desc,
+                                                        timestamp: firebaseTimeStamp,
+                                                        "members-count": response.membersCount,
+                                                        "microgroups-count": 0,
+                                                        "members-checked-in": {
+                                                            count: 0
+                                                        },
+                                                        'logo-image': {
+                                                            url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
+                                                            id: subgroupInfo.subgroupID,
+                                                            'bucket-name': 'test2pwow',
+                                                            source: 1, // 1 = google cloud storage
+                                                            mediaType: 'image/png' //image/jpeg
+                                                        }
+                                                    }, function(error) {
+                                                        if (error) {
+                                                            //role back previous
+                                                            errorHandler();
+                                                        } else {
+                                                            // creating flattened-groups data in firebase
+                                                            var qArray = [];
+                                                            var qArray2 = [];
+                                                            var deffer = $q.defer();
+                                                            deffer.promise
+                                                                .then(function(dataArrofArr) {
 
-                    $q.all(promises).then(function () {
-                        deferred.resolve({
-                            memberJSON: groupMembersJSON,
-                            membersCount: memberArray.length,
-                            unlisted: unlistedMembers,
-                            members: members
-                        });
-                    }, function () {
-                        deferred.reject();
-                    });
-                }
+                                                                    dataArrofArr.forEach(function(arr) {
+                                                                        if (arr[1].type == 1) {
+                                                                            arr[0].checkedin = true
+                                                                        } else {
+                                                                            arr[0].checkedin = false
+                                                                        }
+                                                                        qArray2.push(arr[0].$save())
+                                                                    });
+                                                                    return $q.all(qArray2)
+                                                                })
+                                                                .then(function() {
+                                                                    deferred.resolve({
+                                                                        unlistedMembersArray: response.unlisted
+                                                                    });
+                                                                    //step  : entry for "subgroup-activity-streams"
+                                                                    //                                                            debugger;
 
-                return deferred.promise;
-            },
-            asyncCreateUserSubgroupMemberships: function (groupID, subGroupID, memberJSONObj ) {
-                var defer = $q.defer();
-                var promise;
-                var promises = [];
-                var userSubgroupMembershipRef = firebaseService.getRefUserSubGroupMemberships();
+                                                                    //self.asyncRecordSubgroupCreationActivity($localStorage.loggedInUser, group, subgroupInfo).then(function () {
+                                                                    //    if (response.members.length == 1) {
+                                                                    //        //self.asyncRecordSubgroupMemberAdditionActivity($sessionStorage.loggedInUser, group, subgroupInfo, response.members[0])
+                                                                    //        self.asyncRecordSubgroupMemberAdditionActivity($localStorage.loggedInUser, group, subgroupInfo, response.members[0])
+                                                                    //            .then(function () {
+                                                                    //                deferred.resolve({unlistedMembersArray: response.unlisted});
+                                                                    //            });
+                                                                    //    }
+                                                                    //    else if (response.members.length > 1) {
+                                                                    //        //self.asyncRecordManySubgroupsMembersAdditionActivity($sessionStorage.loggedInUser, group, subgroupInfo, response.members)
+                                                                    //        self.asyncRecordManySubgroupsMembersAdditionActivity($localStorage.loggedInUser, group, subgroupInfo, response.members)
+                                                                    //            .then(function () {
+                                                                    //                deferred.resolve({unlistedMembersArray: response.unlisted});
+                                                                    //            });
+                                                                    //    }
+                                                                    //    else {
+                                                                    //        deferred.resolve({unlistedMembersArray: response.unlisted});
+                                                                    //    }
+                                                                    //});
 
-                angular.forEach( memberJSONObj, function ( membershipObj, memberID ) {
-                    promise = $q.defer();
+                                                                })
+                                                                .catch(function(d) {
+                                                                    //debugger;
+                                                                })
+                                                            for (var member in mems) {
 
-                    userSubgroupMembershipRef.child(memberID + '/' + groupID + '/' + subGroupID)
-                        .set( membershipObj, function( err ) {
-                            if ( err ) {
-                                promise.reject();
-                            } else {
-                                promise.resolve();
-                            }
-                        });
+                                                                var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
+                                                                    .$loaded()
 
-                    promises.push( promise );
-                });
+                                                                var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
 
-                $q.all(promises).then(function () {
-                    defer.resolve();
-                }, function () {
-                    defer.reject();
-                });
+                                                                qArray.push($q.all([temp, temp1]))
 
-                return defer.promise;
-            },
-            asyncCreateGroupMembersJSON: function(ownerUserID, groupMemberList, listStr) {
-                var self = this;
-                var deferred = $q.defer();
-                var subgroupMembersJSON = {};
 
-                var unlistedMembers = [];
-                var members = [];
+                                                            }
+                                                            deffer.resolve($q.all(qArray))
 
-                if(listStr.length < 2) {
-                    deferred.resolve({memberJSON: subgroupMembersJSON, unlisted: unlistedMembers,  members: members});
-                }
-                else {
-                    var memberArray = listStr.split(",");
-                    var promises = [];
-                    memberArray.forEach(function (val, i) {
-                        val = val.trim();
-                        var promise = firebaseService.asyncCheckIfUserExists(val);
-                        promise.then(function (response) {
-                            if (response.exists) {
-                                if (val != ownerUserID) {
-                                    var added = false;
-                                    groupMemberList.forEach( function (memberVal) {
-                                        if (memberVal.userID == val) {//user must be member of the parent group
-                                            var key = val;
-                                            subgroupMembersJSON[key] = {"membership-type": 3, timestamp: firebaseTimeStamp};//1 means member only, 2 will mean admin
-                                            members.push(val);
-                                            added = true;
+                                                        }
+                                                    });
+
+                                                }, errorHandler);
                                         }
                                     });
 
-                                    if (!added) {
-                                        unlistedMembers.push(val);
-                                    }
-                                }
-                                else {
-                                    unlistedMembers.push(val);
-                                }
-                            }
-                            else {
-                                unlistedMembers.push(val);
-                            }
-                        });
 
-                        promises.push(promise);
-                    });
-
-                    $q.all(promises).then(function () {
-                        deferred.resolve({memberJSON: subgroupMembersJSON, unlisted: unlistedMembers, members: members});
-                    }, function () {
-                        deferred.reject();
-                    });
-                }
-
-                return deferred.promise;
-            },
-            asyncRecordSubgroupCreationActivity: function(user, group, subgroup){
-                var deferred = $q.defer();
-                var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
-                var actor ={
-                    "type": "user",
-                    "id": user.userID, //this is the userID, and an index should be set on this
-                    "email": user.email,
-                    "displayName": user.firstName + " " + user.lastName
-                };
-
-                var object = {
-                    "type": "subgroup",
-                    "id": subgroup.subgroupID, //an index should be set on this
-                    "url": group.$id + "/"+ subgroup.subgroupID,
-                    "displayName": subgroup.title
-                };
-
-                var target = {
-                    "type": "group",
-                    "id": group.$id, //an index should be set on this
-                    "url": group.$id,
-                    "displayName": group.title
-                };
-
-                var activity = {
-                    language: "en",
-                    verb: "subgroup-creation",
-                    published: firebaseTimeStamp,
-                    displayName: actor.displayName + " created " + subgroup.title + " in " + group.title,
-                    actor : actor,
-                    object : object,
-                    target : target
-                };
-
-                var newActivityRef = ref.push();
-                newActivityRef.set(activity, function(error){
-                    if(error){
-
-                    } else {
-                        var activityID = newActivityRef.key();
-                        var activityEntryRef = ref.child(activityID);
-                        activityEntryRef.once("value", function(snapshot){
-                            var timestamp = snapshot.val().published;
-                            newActivityRef.setPriority(0 - timestamp, function(error2){
-                                if(error2){
-
-                                }
-                                else {
-                                    deferred.resolve();
                                 }
                             });
                         });
 
+                    return deferred.promise;
+                },
+                asyncCreateSubGroupMembersJSON: function(ownerUserID, listStr, existingMembersObj) {
+                    /*
+                    @param ownerUserID // 'ownerid'
+                    @param listStr // 'userid1,userid2'
+                    @param existingMembersObj // { userid1 : {}, userid2: {}}
 
+                    @return memberJSON {object} {
+                     userId1: {
+                          memberhsip-type: 1, // members
+                          timestamp: timestamp
+                       },
+                     userid2 : {
+                         memberhsip-type: 3, // members
+                         timestamp: timestamp
+                     }
+                     }
+
+                       */
+
+                    var deferred = $q.defer();
+
+                    var groupMembersJSON = {};
+                    var unlistedMembers = [];
+                    var members = [];
+
+                    //this time we are including ownerid in membersJSON with membership-type: 1. unlike groupmemberJSON method
+                    groupMembersJSON[ownerUserID] = {
+                        "membership-type": 1, //1 means owner, 2 will mean admin, 3 means member only
+                        timestamp: firebaseTimeStamp
+                    };
+
+                    if (listStr.length < 2) {
+                        deferred.resolve({
+                            memberJSON: groupMembersJSON,
+                            unlisted: unlistedMembers,
+                            members: members,
+                            membersCount: 1
+                        });
+                    } else {
+                        existingMembersObj = existingMembersObj || {};
+
+                        var memberArray = listStr.split(",");
+                        var promises = [];
+
+                        memberArray.forEach(function(val, i) {
+                            val = val.trim();
+                            var promise = firebaseService.asyncCheckIfUserExists(val);
+                            promise.then(function(response) {
+                                if (response.exists) {
+                                    /*check if requested userID is :
+                                     * a valid user,
+                                     * has not already been added to members list of group (if updating members list) */
+                                    if (val != ownerUserID && !existingMembersObj[val]) {
+                                        groupMembersJSON[val] = {
+                                            "membership-type": 3, //1 means owner, 2 will mean admin, 3 means member only
+                                            timestamp: firebaseTimeStamp
+                                        };
+                                        members.push(val);
+                                        //}
+                                    } else {
+                                        unlistedMembers.push(val);
+                                    }
+                                } else {
+                                    unlistedMembers.push(val);
+                                }
+                            });
+
+                            promises.push(promise);
+                        });
+
+                        $q.all(promises).then(function() {
+                            deferred.resolve({
+                                memberJSON: groupMembersJSON,
+                                membersCount: memberArray.length,
+                                unlisted: unlistedMembers,
+                                members: members
+                            });
+                        }, function() {
+                            deferred.reject();
+                        });
                     }
-                });
 
-                return deferred.promise;
-            },
-            asyncRecordSubgroupMemberAdditionActivity: function(user, group, subgroup, memberUserID){
-                var deferred = $q.defer();
-                var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
-                var actor = {
-                    "type": "user",
-                    "id": user.userID, //this is the userID, and an index should be set on this
-                    "email": user.email,
-                    "displayName": user.firstName + " " + user.lastName
-                };
+                    return deferred.promise;
+                },
+                asyncCreateUserSubgroupMemberships: function(groupID, subGroupID, memberJSONObj) {
+                    var defer = $q.defer();
+                    var promise;
+                    var promises = [];
+                    var userSubgroupMembershipRef = firebaseService.getRefUserSubGroupMemberships();
 
-                var target = {
-                    "type": "subgroup",
-                    "id": subgroup.subgroupID,
-                    "url": group.$id + "/" + subgroup.subgroupID,
-                    "displayName": subgroup.title,
-                    "parent" : {
-                        "type": "group",
-                        "id" : group.$id,
-                        "displayName" : group.title,
-                        "url": group.$id
+                    angular.forEach(memberJSONObj, function(membershipObj, memberID) {
+                        promise = $q.defer();
+
+                        userSubgroupMembershipRef.child(memberID + '/' + groupID + '/' + subGroupID)
+                            .set(membershipObj, function(err) {
+                                if (err) {
+                                    promise.reject();
+                                } else {
+                                    promise.resolve();
+                                }
+                            });
+
+                        promises.push(promise);
+                    });
+
+                    $q.all(promises).then(function() {
+                        defer.resolve();
+                    }, function() {
+                        defer.reject();
+                    });
+
+                    return defer.promise;
+                },
+                asyncCreateGroupMembersJSON: function(ownerUserID, groupMemberList, listStr) {
+                    var self = this;
+                    var deferred = $q.defer();
+                    var subgroupMembersJSON = {};
+
+                    var unlistedMembers = [];
+                    var members = [];
+
+                    if (listStr.length < 2) {
+                        deferred.resolve({
+                            memberJSON: subgroupMembersJSON,
+                            unlisted: unlistedMembers,
+                            members: members
+                        });
+                    } else {
+                        var memberArray = listStr.split(",");
+                        var promises = [];
+                        memberArray.forEach(function(val, i) {
+                            val = val.trim();
+                            var promise = firebaseService.asyncCheckIfUserExists(val);
+                            promise.then(function(response) {
+                                if (response.exists) {
+                                    if (val != ownerUserID) {
+                                        var added = false;
+                                        groupMemberList.forEach(function(memberVal) {
+                                            if (memberVal.userID == val) { //user must be member of the parent group
+                                                var key = val;
+                                                subgroupMembersJSON[key] = {
+                                                    "membership-type": 3,
+                                                    timestamp: firebaseTimeStamp
+                                                }; //1 means member only, 2 will mean admin
+                                                members.push(val);
+                                                added = true;
+                                            }
+                                        });
+
+                                        if (!added) {
+                                            unlistedMembers.push(val);
+                                        }
+                                    } else {
+                                        unlistedMembers.push(val);
+                                    }
+                                } else {
+                                    unlistedMembers.push(val);
+                                }
+                            });
+
+                            promises.push(promise);
+                        });
+
+                        $q.all(promises).then(function() {
+                            deferred.resolve({
+                                memberJSON: subgroupMembersJSON,
+                                unlisted: unlistedMembers,
+                                members: members
+                            });
+                        }, function() {
+                            deferred.reject();
+                        });
                     }
-                };
 
-                firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res){
-                    var object = {
+                    return deferred.promise;
+                },
+                asyncRecordSubgroupCreationActivity: function(user, group, subgroup) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
+                    var actor = {
                         "type": "user",
-                        "id": memberUserID, //an index should be set on this
-                        "email": res.user.email,
-                        "displayName": res.user.firstName + " " + res.user.lastName
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var object = {
+                        "type": "subgroup",
+                        "id": subgroup.subgroupID, //an index should be set on this
+                        "url": group.$id + "/" + subgroup.subgroupID,
+                        "displayName": subgroup.title
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": group.$id, //an index should be set on this
+                        "url": group.$id,
+                        "displayName": group.title
                     };
 
                     var activity = {
                         language: "en",
-                        verb: "subgroup-added-member",
+                        verb: "subgroup-creation",
                         published: firebaseTimeStamp,
-                        displayName: actor.displayName + " added " + object.displayName + " as a member in " + subgroup.title,
-                        actor : actor,
-                        object : object,
+                        displayName: actor.displayName + " created " + subgroup.title + " in " + group.title,
+                        actor: actor,
+                        object: object,
                         target: target
                     };
 
                     var newActivityRef = ref.push();
-                    newActivityRef.set(activity, function(error){
-                        if(error){
+                    newActivityRef.set(activity, function(error) {
+                        if (error) {
 
                         } else {
                             var activityID = newActivityRef.key();
                             var activityEntryRef = ref.child(activityID);
-                            activityEntryRef.once("value", function(snapshot){
+                            activityEntryRef.once("value", function(snapshot) {
                                 var timestamp = snapshot.val().published;
-                                newActivityRef.setPriority(0 - timestamp, function(error2){
-                                    if(error2){
+                                newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                    if (error2) {
 
-                                    }
-                                    else {
+                                    } else {
                                         deferred.resolve();
                                     }
                                 });
                             });
+
+
                         }
                     });
 
-                });
-
-                return deferred.promise;
-            },
-            asyncRecordManySubgroupsMembersAdditionActivity: function(user, group, subgroup, membersArray){
-                var deferred = $q.defer();
-                var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
-                var self = this;
-                var actor ={
-                    "type": "user",
-                    "id": user.userID, //this is the userID, and an index should be set on this
-                    "email": user.email,
-                    "displayName": user.firstName + " " + user.lastName
-                };
-
-                var object = {
-                    "type": "UserCollection",
-                    "totalItems": membersArray.length,
-                    "items": {}
-                };
-
-                var target = {
-                    "type": "subgroup",
-                    "id": subgroup.subgroupID,
-                    "url": group.$id + "/" + subgroup.subgroupID,
-                    "displayName": subgroup.title,
-                    "parent" : {
-                        "type": "group",
-                        "id" : group.$id,
-                        "displayName" : group.title,
-                        "url": group.$id
-                    }
-
-                };
-
-                var promiseArray = [];
-                membersArray.forEach(function(m){
-                    promiseArray.push(firebaseService.asyncCheckIfUserExists(m));
-                });
-
-                $q.all(promiseArray).then(function(values){
-                    values.forEach(function(v){
-                        object.items[v.userID] = {
-                            "verb": "subgroup-added-member",
-                            "object": {
-                                "type": "user",
-                                "id": v.userID,
-                                "email": v.user.email,
-                                "displayName": v.user.firstName + " " + v.user.lastName
-                            }
-                        };
-                    });
-
-
-                    var activity = {
-                        language: "en",
-                        verb: "subgroup-added-many-members",
-                        published: firebaseTimeStamp,
-                        displayName: actor.displayName + " added members to " + subgroup.title + " team",
-                        actor : actor,
-                        object : object,
-                        target : target
+                    return deferred.promise;
+                },
+                asyncRecordSubgroupMemberAdditionActivity: function(user, group, subgroup, memberUserID) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
                     };
 
-                    var newActivityRef = ref.push();
-                    newActivityRef.set(activity, function(error){
-                        if(error){
-
-                        } else {
-                            var activityID = newActivityRef.key();
-                            var activityEntryRef = ref.child(activityID);
-                            activityEntryRef.once("value", function(snapshot){
-                                var timestamp = snapshot.val().published;
-                                newActivityRef.setPriority(0 - timestamp, function(error2){
-                                    if(error2){
-
-                                    }
-                                    else {
-                                        deferred.resolve();
-                                    }
-                                });
-                            });
+                    var target = {
+                        "type": "subgroup",
+                        "id": subgroup.subgroupID,
+                        "url": group.$id + "/" + subgroup.subgroupID,
+                        "displayName": subgroup.title,
+                        "parent": {
+                            "type": "group",
+                            "id": group.$id,
+                            "displayName": group.title,
+                            "url": group.$id
                         }
-                    });
-                });
+                    };
 
-                return deferred.promise;
-            },
-            asyncUpdateGroupMembers: function( loggedInUserObj, groupObj, requestedMembersList, groupExistingMembersArray ) {
-                var deferred = $q.defer();
+                    firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+                        var object = {
+                            "type": "user",
+                            "id": memberUserID, //an index should be set on this
+                            "email": res.user.email,
+                            "displayName": res.user.firstName + " " + res.user.lastName
+                        };
 
-                //create an object from membersSyncArray.
-                var groupExistingMembersObj = {};
-                angular.forEach( groupExistingMembersArray, function( memberObj ) {
-                    groupExistingMembersObj[ memberObj.userID ] = true;
-                });
+                        var activity = {
+                            language: "en",
+                            verb: "subgroup-added-member",
+                            published: firebaseTimeStamp,
+                            displayName: actor.displayName + " added " + object.displayName + " as a member in " + subgroup.title,
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
 
-                userFirebaseService.asyncCreateGroupMembersJSON( loggedInUserObj.userID, requestedMembersList, groupExistingMembersObj )
-                    .then(function (response) {
+                        var newActivityRef = ref.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
 
-                        var promises = [];
-
-                        //Add group to each user
-                        var promise;
-                        var memArray = response.members;
-                        memArray.forEach(function( memberID ) {
-                            promise = userFirebaseService.asyncAddUserMembership( memberID, groupObj.groupID, 3 );
-                            promises.push( promise );
-                        });
-
-                        //Add membersJSON to given group
-                        var addMembersToGroupDefer = $q.defer();
-                        firebaseService.getRefGroupMembers().child(groupObj.groupID).update(response.memberJSON, function (err) {
-                            if(err){
-                                //handle this scenario
-                                console.log('adding membersJSON to group failed', err);
                             } else {
-                                addMembersToGroupDefer.resolve();
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = ref.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+
+                                        } else {
+                                            deferred.resolve();
+                                        }
+                                    });
+                                });
                             }
                         });
 
-                        promises.push(addMembersToGroupDefer.promise);
+                    });
 
-                        $q.all(promises).then(function () {
-                            var memberCountRef = firebaseService.getRefGroups().child(groupObj.groupID + '/' + 'members-count');
-                            memberCountRef.transaction(function ( currentValue ) {
-                                return (currentValue || 0) + memArray.length;
+                    return deferred.promise;
+                },
+                asyncRecordManySubgroupsMembersAdditionActivity: function(user, group, subgroup, membersArray) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
+                    var self = this;
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var object = {
+                        "type": "UserCollection",
+                        "totalItems": membersArray.length,
+                        "items": {}
+                    };
+
+                    var target = {
+                        "type": "subgroup",
+                        "id": subgroup.subgroupID,
+                        "url": group.$id + "/" + subgroup.subgroupID,
+                        "displayName": subgroup.title,
+                        "parent": {
+                            "type": "group",
+                            "id": group.$id,
+                            "displayName": group.title,
+                            "url": group.$id
+                        }
+
+                    };
+
+                    var promiseArray = [];
+                    membersArray.forEach(function(m) {
+                        promiseArray.push(firebaseService.asyncCheckIfUserExists(m));
+                    });
+
+                    $q.all(promiseArray).then(function(values) {
+                        values.forEach(function(v) {
+                            object.items[v.userID] = {
+                                "verb": "subgroup-added-member",
+                                "object": {
+                                    "type": "user",
+                                    "id": v.userID,
+                                    "email": v.user.email,
+                                    "displayName": v.user.firstName + " " + v.user.lastName
+                                }
+                            };
+                        });
+
+
+                        var activity = {
+                            language: "en",
+                            verb: "subgroup-added-many-members",
+                            published: firebaseTimeStamp,
+                            displayName: actor.displayName + " added members to " + subgroup.title + " team",
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
+
+                        var newActivityRef = ref.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
+
+                            } else {
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = ref.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+
+                                        } else {
+                                            deferred.resolve();
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+
+                    return deferred.promise;
+                },
+                asyncUpdateGroupMembers: function(loggedInUserObj, groupObj, requestedMembersList, groupExistingMembersArray) {
+                    var deferred = $q.defer();
+
+                    //create an object from membersSyncArray.
+                    var groupExistingMembersObj = {};
+                    angular.forEach(groupExistingMembersArray, function(memberObj) {
+                        groupExistingMembersObj[memberObj.userID] = true;
+                    });
+
+                    userFirebaseService.asyncCreateGroupMembersJSON(loggedInUserObj.userID, requestedMembersList, groupExistingMembersObj)
+                        .then(function(response) {
+
+                            var promises = [];
+
+                            //Add group to each user
+                            var promise;
+                            var memArray = response.members;
+                            memArray.forEach(function(memberID) {
+                                promise = userFirebaseService.asyncAddUserMembership(memberID, groupObj.groupID, 3);
+                                promises.push(promise);
                             });
 
-                            if(memArray.length == 1) {
-                                userFirebaseService.asyncRecordGroupMemberAdditionActivity(groupObj, loggedInUserObj, response.members[0])
-                                    .then(function(){
-                                        deferred.resolve({unlistedMembersArray: response.unlisted});
-                                    })
-                            }
-                            else if (memArray.length > 1) {
-                                userFirebaseService.asyncRecordManyGroupMembersAdditionActivity(groupObj, loggedInUserObj, response.members)
-                                    .then(function(){
-                                        deferred.resolve({unlistedMembersArray: response.unlisted});
+                            //Add membersJSON to given group
+                            var addMembersToGroupDefer = $q.defer();
+                            firebaseService.getRefGroupMembers().child(groupObj.groupID).update(response.memberJSON, function(err) {
+                                if (err) {
+                                    //handle this scenario
+                                    console.log('adding membersJSON to group failed', err);
+                                } else {
+                                    addMembersToGroupDefer.resolve();
+                                }
+                            });
+
+                            promises.push(addMembersToGroupDefer.promise);
+
+                            $q.all(promises).then(function() {
+                                var memberCountRef = firebaseService.getRefGroups().child(groupObj.groupID + '/' + 'members-count');
+                                memberCountRef.transaction(function(currentValue) {
+                                    return (currentValue || 0) + memArray.length;
+                                });
+
+                                if (memArray.length == 1) {
+                                    userFirebaseService.asyncRecordGroupMemberAdditionActivity(groupObj, loggedInUserObj, response.members[0])
+                                        .then(function() {
+                                            deferred.resolve({
+                                                unlistedMembersArray: response.unlisted
+                                            });
+                                        })
+                                } else if (memArray.length > 1) {
+                                    userFirebaseService.asyncRecordManyGroupMembersAdditionActivity(groupObj, loggedInUserObj, response.members)
+                                        .then(function() {
+                                            deferred.resolve({
+                                                unlistedMembersArray: response.unlisted
+                                            });
+                                        });
+                                } else {
+                                    deferred.resolve({
+                                        unlistedMembersArray: response.unlisted
                                     });
-                            }
-                            else {
-                                deferred.resolve({unlistedMembersArray: response.unlisted});
-                            }
+                                }
+                            });
+
+                        }, function() {
+                            deferred.reject();
                         });
 
-                    }, function () {
-                        deferred.reject();
-                    });
-
-                return deferred.promise;
+                    return deferred.promise;
                 },
-                approveMembership: function( groupID, loggedInUserObj, requestedMember ) {
+                approveMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID, membershipType,
                         userMembershipObj, errorHandler;
 
@@ -874,51 +889,51 @@ angular.module('core')
                     membershipType = 3; //for members only, should be dynamic when make admin feature added.
                     userID = requestedMember.userID;
 
-                    errorHandler = function (err) {
+                    errorHandler = function(err) {
                         defer.reject('Error occurred in accessing server.');
                     };
 
                     userMembershipObj = {};
                     userMembershipObj[userID] = {
-                        'membership-type' : membershipType,
-                        timestamp : firebaseTimeStamp
+                        'membership-type': membershipType,
+                        timestamp: firebaseTimeStamp
                     };
 
                     //add user to group-membership list
-                    firebaseService.getRefGroupMembers().child( groupID )
-                        .update( userMembershipObj, function ( err ) {
+                    firebaseService.getRefGroupMembers().child(groupID)
+                        .update(userMembershipObj, function(err) {
                             if (err) {
                                 errorHandler();
                             } else {
                                 //step1: change membership-type of user in user-membership list
                                 firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
-                                    .set(userMembershipObj[userID], function (err) {
+                                    .set(userMembershipObj[userID], function(err) {
                                         if (err) {
                                             errorHandler();
                                         } else {
                                             //step2: delete user request from group-membership-requests
                                             firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
-                                                .remove(function (err) {
+                                                .remove(function(err) {
                                                     var groupCountRef;
                                                     if (err) {
                                                         errorHandler();
                                                     } else {
                                                         //step3: set members count in meta-data of group
                                                         groupCountRef = firebaseService.getRefGroups().child(groupID + '/members-count');
-                                                        groupCountRef.once('value', function (snapshot) {
+                                                        groupCountRef.once('value', function(snapshot) {
                                                             var membersCount = snapshot.val();
-                                                            membersCount = ( membersCount || 0 ) + 1;
-                                                            groupCountRef.set(membersCount, function (err) {
+                                                            membersCount = (membersCount || 0) + 1;
+                                                            groupCountRef.set(membersCount, function(err) {
                                                                 if (err) {
                                                                     errorHandler();
                                                                 } else {
                                                                     //step4: publish an activity
                                                                     firebaseService.getRefGroups().child(groupID)
-                                                                        .once('value', function (snapshot) {
+                                                                        .once('value', function(snapshot) {
                                                                             var groupObj = snapshot.val();
                                                                             groupObj.groupID = groupID;
                                                                             userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('approve', groupObj, loggedInUserObj, userID)
-                                                                                .then(function (res) {
+                                                                                .then(function(res) {
                                                                                     defer.resolve(res);
                                                                                 }, errorHandler);
                                                                         });
@@ -934,36 +949,36 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                rejectMembership: function( groupID, loggedInUserObj, requestedMember ) {
+                rejectMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID,
                         errorHandler;
 
                     defer = $q.defer();
                     userID = requestedMember.userID;
 
-                    errorHandler = function ( err ) {
+                    errorHandler = function(err) {
                         defer.reject('Error occurred in accessing server.');
                     };
 
                     //step1: delete group membership request from user-membership list
-                    firebaseService.getRefUserGroupMemberships().child( userID + '/' + groupID)
-                        .remove(function( err ) {
+                    firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
+                        .remove(function(err) {
                             if (err) {
                                 errorHandler();
                             } else {
                                 //step2: delete user request from group-membership-requests
                                 firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
-                                    .remove(function (err) {
+                                    .remove(function(err) {
                                         if (err) {
                                             errorHandler();
                                         } else {
                                             //step3: publish an activity
                                             firebaseService.getRefGroups().child(groupID)
-                                                .once('value', function (snapshot) {
+                                                .once('value', function(snapshot) {
                                                     var groupObj = snapshot.val();
                                                     groupObj.groupID = groupID;
                                                     userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('reject', groupObj, loggedInUserObj, userID)
-                                                        .then(function (res) {
+                                                        .then(function(res) {
                                                             defer.resolve(res);
                                                         }, errorHandler);
                                                 });
@@ -974,7 +989,7 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                changeMemberRole: function( newType, member, groupObj, loggedInUser ) {
+                changeMemberRole: function(newType, member, groupObj, loggedInUser) {
                     var defer, self, prevType,
                         errorHandler;
 
@@ -982,31 +997,31 @@ angular.module('core')
                     self = this;
                     prevType = member.membershipType;
 
-                    errorHandler = function( err ) {
+                    errorHandler = function(err) {
                         defer.reject('Error occurred in accessing server.');
                     };
 
-                    if( newType ) {
+                    if (newType) {
                         //update membership type in user memberships
-                        userFirebaseService.asyncAddUserMembership( member.userSyncObj.$id, groupObj.$id, newType )
+                        userFirebaseService.asyncAddUserMembership(member.userSyncObj.$id, groupObj.$id, newType)
                             .then(function() {
                                 var userMem = {};
-                                userMem[ member.userSyncObj.$id ] = {
+                                userMem[member.userSyncObj.$id] = {
                                     'membership-type': newType,
                                     timestamp: firebaseTimeStamp
                                 };
 
                                 //update membership type in group memberships
-                                firebaseService.getRefGroupMembers().child( groupObj.$id )
-                                    .update(userMem, function( err ) {
-                                        if ( err ) {
+                                firebaseService.getRefGroupMembers().child(groupObj.$id)
+                                    .update(userMem, function(err) {
+                                        if (err) {
                                             errorHandler();
                                         } else {
 
                                             //publish an activity for membership changed.
-                                            userFirebaseService.asyncRecordMembershipChangeActivity( prevType, newType, member.userSyncObj, groupObj, loggedInUser )
-                                                .then(function( res ) {
-                                                    defer.resolve( res );
+                                            userFirebaseService.asyncRecordMembershipChangeActivity(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
+                                                .then(function(res) {
+                                                    defer.resolve(res);
                                                 }, errorHandler);
                                         }
                                     });
@@ -1014,77 +1029,77 @@ angular.module('core')
                             }, errorHandler);
 
                     } else {
-                        self.asyncRemoveUserFromGroup( member.userSyncObj.$id, groupObj.$id )
+                        self.asyncRemoveUserFromGroup(member.userSyncObj.$id, groupObj.$id)
                             .then(function() {
                                 //publish an activity for group-member-removed.
-                                userFirebaseService.asyncRecordMemberRemoved( prevType, newType, member.userSyncObj, groupObj, loggedInUser )
-                                    .then(function (res) {
+                                userFirebaseService.asyncRecordMemberRemoved(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
+                                    .then(function(res) {
                                         defer.resolve(res);
                                     }, errorHandler);
 
                             }, errorHandler);
-                       /* confirmDialogService('Are you sure to remove this user ?')
-                            .then(function () {
-                                //remove user from group
+                        /* confirmDialogService('Are you sure to remove this user ?')
+                             .then(function () {
+                                 //remove user from group
 
-                            }, function() {
-                                defer.reject('Cancelled removing user.');
-                            });*/
+                             }, function() {
+                                 defer.reject('Cancelled removing user.');
+                             });*/
                     }
 
                     return defer.promise;
                 },
 
-                asyncRemoveUserFromGroup: function( memberID, groupID ) {
+                asyncRemoveUserFromGroup: function(memberID, groupID) {
                     var defer, self,
                         errorHandler;
 
                     self = this;
                     defer = $q.defer();
-                    errorHandler = function(){
+                    errorHandler = function() {
                         defer.reject('Error occurred in accessing server.')
                     };
 
-                    self.asyncRemoveUserCheckin( memberID, groupID )
-                        .then(function( res ) {
-                            self.asyncUpdateGroupDataForRemoveUser( res, groupID )
+                    self.asyncRemoveUserCheckin(memberID, groupID)
+                        .then(function(res) {
+                            self.asyncUpdateGroupDataForRemoveUser(res, groupID)
                                 .then(function() {
-                                    self.asyncRemoveUserMembership( memberID, groupID )
+                                    self.asyncRemoveUserMembership(memberID, groupID)
                                         .then(function() {
                                             defer.resolve();
-                                        }, errorHandler );
-                                }, errorHandler );
-                        }, errorHandler );
+                                        }, errorHandler);
+                                }, errorHandler);
+                        }, errorHandler);
 
                     return defer.promise;
                 },
-                asyncRemoveUserCheckin: function( memberID, groupID) {
+                asyncRemoveUserCheckin: function(memberID, groupID) {
                     var defer = $q.defer();
 
                     //check for current check-in/out status of user
-                    var userCurrentCheckinRef = checkinService.getRefCheckinCurrent().child( groupID + '/' + memberID );
-                    userCurrentCheckinRef.once('value', function( snapshot ) {
+                    var userCurrentCheckinRef = checkinService.getRefCheckinCurrent().child(groupID + '/' + memberID);
+                    userCurrentCheckinRef.once('value', function(snapshot) {
                         var checkinObj = snapshot.val();
 
                         //if user's check-in/out exists
-                        if ( checkinObj ) {
+                        if (checkinObj) {
                             //remove user check-in/out
-                            userCurrentCheckinRef.remove(function (err) {
-                                if ( err ) {
-                                   defer.reject();
+                            userCurrentCheckinRef.remove(function(err) {
+                                if (err) {
+                                    defer.reject();
                                 } else {
-                                    defer.resolve( checkinObj );
+                                    defer.resolve(checkinObj);
                                 }
                             });
                         } else {
                             //if not yet checked-in, skip checkin removal
-                            defer.resolve( null );
+                            defer.resolve(null);
                         }
                     });
 
                     return defer.promise;
                 },
-                asyncRemoveUserMembership: function( memberID, groupID ) {
+                asyncRemoveUserMembership: function(memberID, groupID) {
                     var defer, errorHandler;
 
                     defer = $q.defer();
@@ -1093,14 +1108,14 @@ angular.module('core')
                         defer.reject('Error occurred in accessing server.');
                     };
 
-                    firebaseService.getRefGroupMembers().child( groupID + '/' + memberID )
-                        .remove(function( err ) {
-                            if ( err ) {
+                    firebaseService.getRefGroupMembers().child(groupID + '/' + memberID)
+                        .remove(function(err) {
+                            if (err) {
                                 errorHandler();
                             } else {
-                                firebaseService.getRefUserGroupMemberships().child( memberID + '/' + groupID )
-                                    .remove(function( err ) {
-                                        if ( err ) {
+                                firebaseService.getRefUserGroupMemberships().child(memberID + '/' + groupID)
+                                    .remove(function(err) {
+                                        if (err) {
                                             errorHandler();
                                         } else {
                                             defer.resolve();
@@ -1111,34 +1126,34 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                asyncUpdateGroupDataForRemoveUser: function( checkinObj, groupID ) {
+                asyncUpdateGroupDataForRemoveUser: function(checkinObj, groupID) {
                     var defer = $q.defer();
 
                     //update group meta-data
-                    var groupDataRef = firebaseService.getRefGroups().child( groupID );
-                    groupDataRef.once('value', function( snapshot ) {
+                    var groupDataRef = firebaseService.getRefGroups().child(groupID);
+                    groupDataRef.once('value', function(snapshot) {
                         var updateObj = {};
                         var dataObject = snapshot.val();
 
-                        if ( checkinObj && checkinObj.type == 1 ) {
+                        if (checkinObj && checkinObj.type == 1) {
                             updateObj['members-checked-in'] = {
                                 count: dataObject['members-checked-in'].count - 1
                             };
                         }
 
                         updateObj['members-count'] = dataObject['members-count'] - 1;
-                        groupDataRef.update(updateObj, function( err ) {
-                            if ( err ) {
-                               defer.reject();
+                        groupDataRef.update(updateObj, function(err) {
+                            if (err) {
+                                defer.reject();
                             } else {
-                               defer.resolve();
+                                defer.resolve();
                             }
                         });
                     });
 
                     return defer.promise;
                 },
-                asyncLeaveGroup: function( userObj, groupObj ) {
+                asyncLeaveGroup: function(userObj, groupObj) {
                     var defer, errorHandler, self;
 
                     defer = $q.defer();
@@ -1148,18 +1163,18 @@ angular.module('core')
                         defer.reject('could not access server data');
                     };
 
-                    userFirebaseService.asyncRecordMemberLeft( userObj, groupObj )
-                        .then(function ( res ) {
-                            self.asyncRemoveUserFromGroup( userObj.$id, groupObj.$id )
-                                .then(function () {
-                                    defer.resolve( res );
-                                }, errorHandler );
+                    userFirebaseService.asyncRecordMemberLeft(userObj, groupObj)
+                        .then(function(res) {
+                            self.asyncRemoveUserFromGroup(userObj.$id, groupObj.$id)
+                                .then(function() {
+                                    defer.resolve(res);
+                                }, errorHandler);
 
-                        }, errorHandler );
+                        }, errorHandler);
 
                     return defer.promise;
                 },
-                asyncRemoveGroup: function( userObj, groupObj ) {
+                asyncRemoveGroup: function(userObj, groupObj) {
                     var defer, self, errorHandler,
                         promises, dfr;
 
@@ -1167,77 +1182,77 @@ angular.module('core')
                     self = this;
                     promises = [];
 
-                    errorHandler = function( reason ) {
-                        defer.reject( reason || 'could not access server data');
+                    errorHandler = function(reason) {
+                        defer.reject(reason || 'could not access server data');
                     };
 
                     //for node: group-activity-streams > $groupid
-                    self.asyncRemoveGroupActivityStreams( groupObj.$id )
+                    self.asyncRemoveGroupActivityStreams(groupObj.$id)
                         .then(function() {
 
                             //for node: "group-check-in-current" and "group-check-in-records"
-                            self.asyncRemoveGroupCheckin( groupObj.$id )
+                            self.asyncRemoveGroupCheckin(groupObj.$id)
                                 .then(function() {
 
                                     //for node: group-locations-defined > $groupid
-                                    self.asyncRemoveGroupDefLocs( groupObj.$id )
+                                    self.asyncRemoveGroupDefLocs(groupObj.$id)
                                         .then(function() {
 
                                             //for node: group-membership-requests > $groupid AND group-membership-requests-by-user
-                                            self.asyncRemoveGroupMembershipRequests( groupObj.$id )
-                                                .then(function(){
+                                            self.asyncRemoveGroupMembershipRequests(groupObj.$id)
+                                                .then(function() {
 
                                                     //for node: "group-names"
-                                                    self.asyncRemoveGroupNames( groupObj.$id )
+                                                    self.asyncRemoveGroupNames(groupObj.$id)
                                                         .then(function() {
 
                                                             //for node: "groups"
-                                                            self.asyncRemoveGroupMetaDeta( groupObj.$id )
+                                                            self.asyncRemoveGroupMetaDeta(groupObj.$id)
                                                                 .then(function() {
 
                                                                     //get members list array
-                                                                    self.asyncGetGroupMembersArray( groupObj.$id )
-                                                                        .then(function( membersArray ) {
+                                                                    self.asyncGetGroupMembersArray(groupObj.$id)
+                                                                        .then(function(membersArray) {
 
                                                                             dfr = $q.defer();
-                                                                            angular.forEach( membersArray, function( memberID ) {
+                                                                            angular.forEach(membersArray, function(memberID) {
 
                                                                                 //for node: group-members and user-group-memberships
-                                                                                self.asyncRemoveUserMembership( memberID, groupObj.$id )
+                                                                                self.asyncRemoveUserMembership(memberID, groupObj.$id)
                                                                                     .then(function() {
-                                                                                        dfr.resolve('You have removed "' + groupObj.title +'" group successfully.');
+                                                                                        dfr.resolve('You have removed "' + groupObj.title + '" group successfully.');
                                                                                     }, function() {
                                                                                         dfr.reject();
                                                                                     });
 
-                                                                                promises.push( dfr.promise );
+                                                                                promises.push(dfr.promise);
                                                                             });
 
-                                                                            $q.all( promises ).then(function() {
+                                                                            $q.all(promises).then(function() {
                                                                                 defer.resolve('group has been removed successfully.');
                                                                             }, errorHandler);
                                                                         });
                                                                 }, errorHandler);
                                                         }, errorHandler);
-                                                }, errorHandler );
-                                        }, errorHandler );
-                                }, errorHandler );
-                        }, errorHandler );
+                                                }, errorHandler);
+                                        }, errorHandler);
+                                }, errorHandler);
+                        }, errorHandler);
 
                     return defer.promise;
                 },
-                asyncRemoveGroupCheckin: function( groupID ) {
+                asyncRemoveGroupCheckin: function(groupID) {
                     //for "group-check-in-current" and "group-check-in-records"
                     var defer = $q.defer();
 
-                    firebaseService.getRefGroupCheckinCurrent().child( groupID )
-                        .remove(function( err ) {
-                            if ( err ) {
+                    firebaseService.getRefGroupCheckinCurrent().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
                                 defer.reject();
                             } else {
-                                firebaseService.getRefGroupCheckinRecords().child( groupID )
-                                    .remove(function( err ) {
-                                        if ( err ) {
+                                firebaseService.getRefGroupCheckinRecords().child(groupID)
+                                    .remove(function(err) {
+                                        if (err) {
                                             defer.reject();
                                         } else {
                                             defer.resolve();
@@ -1248,13 +1263,13 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                asyncRemoveGroupDefLocs: function( groupID ) {
+                asyncRemoveGroupDefLocs: function(groupID) {
                     //for "group-locations-defined"
                     var defer = $q.defer();
 
-                    firebaseService.getRefGroupLocsDefined().child( groupID )
-                        .remove(function( err ) {
-                            if ( err ) {
+                    firebaseService.getRefGroupLocsDefined().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
                                 defer.reject();
                             } else {
                                 defer.resolve();
@@ -1263,22 +1278,22 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                asyncRemoveGroupActivityStreams: function( groupID ) {
+                asyncRemoveGroupActivityStreams: function(groupID) {
                     //for "group-activity-streams"
                     var defer = $q.defer();
 
-                    firebaseService.getRefGroupsActivityStreams().child( groupID )
-                        .remove(function( err ) {
-                         if ( err ) {
-                             defer.reject();
-                         } else {
-                             defer.resolve();
-                         }
+                    firebaseService.getRefGroupsActivityStreams().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                defer.resolve();
+                            }
                         });
 
                     return defer.promise;
                 },
-                asyncRemoveGroupMembershipRequests: function( groupID ) {
+                asyncRemoveGroupMembershipRequests: function(groupID) {
                     //for "group-membership-requests" and "group-membership-requests-by-user"
                     var defer, requestedMembers,
                         promises, dfr;
@@ -1286,24 +1301,24 @@ angular.module('core')
                     defer = $q.defer();
                     promises = [];
 
-                    firebaseService.getRefGroupMembershipRequests().child( groupID )
-                        .on('value', function( snapshot ) {
+                    firebaseService.getRefGroupMembershipRequests().child(groupID)
+                        .on('value', function(snapshot) {
                             requestedMembers = snapshot.val() || {};
-                            requestedMembers = Object.keys( requestedMembers );
+                            requestedMembers = Object.keys(requestedMembers);
 
                             //if group does not have any membership-requests, skip requests removal step
-                            if ( !requestedMembers.length ) {
+                            if (!requestedMembers.length) {
                                 defer.resolve();
                             } else {
                                 //if group have membership-requests for approval or rejection.
-                                angular.forEach( requestedMembers, function( requestedMemberID ) {
+                                angular.forEach(requestedMembers, function(requestedMemberID) {
                                     dfr = $q.defer();
-                                    promises.push( dfr.promise );
+                                    promises.push(dfr.promise);
 
                                     //remove requested Member's request from "group-membership-requests-by-user"
-                                    firebaseService.getRefGroupMembershipRequestsByUser().child( requestedMemberID + '/' + groupID )
-                                        .remove(function( err ) {
-                                            if ( err ) {
+                                    firebaseService.getRefGroupMembershipRequestsByUser().child(requestedMemberID + '/' + groupID)
+                                        .remove(function(err) {
+                                            if (err) {
                                                 dfr.reject();
                                             } else {
                                                 dfr.resolve();
@@ -1311,7 +1326,7 @@ angular.module('core')
                                         });
                                 });
 
-                                $q.all( promises )
+                                $q.all(promises)
                                     .then(function() {
                                         defer.resolve();
                                     }, function() {
@@ -1325,13 +1340,13 @@ angular.module('core')
                     return defer.promise;
 
                 },
-                asyncRemoveGroupNames: function( groupID ) {
+                asyncRemoveGroupNames: function(groupID) {
                     //for "group-names"
                     var defer = $q.defer();
 
-                    firebaseService.getRefGroupsNames().child( groupID )
-                        .remove(function( err ) {
-                            if ( err ) {
+                    firebaseService.getRefGroupsNames().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
                                 defer.reject();
                             } else {
                                 defer.resolve();
@@ -1340,13 +1355,13 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                asyncRemoveGroupMetaDeta: function( groupID ) {
+                asyncRemoveGroupMetaDeta: function(groupID) {
                     //for "groups"
                     var defer = $q.defer();
 
-                    firebaseService.getRefGroups().child( groupID )
-                        .remove(function( err ) {
-                            if ( err ) {
+                    firebaseService.getRefGroups().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
                                 defer.reject();
                             } else {
                                 defer.resolve();
@@ -1355,19 +1370,20 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                asyncGetGroupMembersArray: function( groupID ) {
+                asyncGetGroupMembersArray: function(groupID) {
                     //to get an array that contains userIDs of all members of group
                     var defer = $q.defer();
 
-                    firebaseService.getRefGroupMembers().child( groupID )
-                        .on('value', function( snapshot ) {
+                    firebaseService.getRefGroupMembers().child(groupID)
+                        .on('value', function(snapshot) {
                             var membersObj = snapshot.val() || {};
-                            defer.resolve( Object.keys( membersObj ) );
+                            defer.resolve(Object.keys(membersObj));
                         }, function() {
                             defer.reject('permission denied to access data.');
                         });
 
                     return defer.promise;
                 }
-        };
-        }]);
+            };
+        }
+    ]);

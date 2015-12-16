@@ -2,7 +2,7 @@
  * Created by Aamir Hafeez on 29-Jul-15.
  */
 
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -10,6 +10,7 @@
         .controller('QuizAddBookController', QuizAddBookController);
 
     QuizAddBookController.$inject = ['$location', 'userService', '$mdDialog', '$rootScope', '$timeout', 'quizService', 'utilService', '$q', 'appConfig'];
+
     function QuizAddBookController($location, userService, $mdDialog, $rootScope, $timeout, quizService, utilService, $q, appConfig) {
 
         /*Variables*/
@@ -27,7 +28,7 @@
 
         //All Function
         function back() {
-            $timeout(function () {
+            $timeout(function() {
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
             }, 0)
         };
@@ -38,30 +39,34 @@
 
                 title: $scope.name,
                 description: $scope.desc,
-                imgLogoUrl:$scope.imgLogoUrl
+                imgLogoUrl: $scope.imgLogoUrl
             };
 
             if ($rootScope.newImg) {
                 var x = utilService.base64ToBlob($rootScope.newImg);
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                $scope.saveFile(x, mimeType, $scope.bookID).then(function (url) {
-                    $scope.temps.imgLogoUrl = url + '?random=' + new Date();
-                    //its for sending data on firebase by Name's node
-                    userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({'membership-type': 1});
+                $scope.saveFile(x, mimeType, $scope.bookID).then(function(url) {
+                        $scope.temps.imgLogoUrl = url + '?random=' + new Date();
+                        //its for sending data on firebase by Name's node
+                        userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
+                            'membership-type': 1
+                        });
 
-                    userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({"membership-type": 1});
-                    userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
+                        userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
+                            "membership-type": 1
+                        });
+                        userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
 
-                    // quizService.setBookAfterCreation($scope.bookID)
-                    // ref.child($scope.bookID).set(temp);
-                    $scope.name = "";
-                    $scope.desc = "";
-                    //$scope.newImg = null;
-                    alert('book creation successful')
-                    $location.path('/user/' + user.userID)
-                })
-                    .catch(function () {
+                        // quizService.setBookAfterCreation($scope.bookID)
+                        // ref.child($scope.bookID).set(temp);
+                        $scope.name = "";
+                        $scope.desc = "";
+                        //$scope.newImg = null;
+                        alert('book creation successful')
+                        $location.path('/user/' + user.userID)
+                    })
+                    .catch(function() {
                         //bookForm.$submitted = false;
                         //return messageService.showSuccess('picture upload failed')
                         alert('picture upload failed')
@@ -74,18 +79,17 @@
         }
 
 
-        this.saveFile = function (file, type, quizID) {
+        this.saveFile = function(file, type, quizID) {
 
             var defer = $q.defer();
             var xhr = new XMLHttpRequest();
             xhr.open("GET", appConfig.apiBaseUrl + "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" + type);
-            xhr.onreadystatechange = function () {
+            xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
                         defer.resolve(upload_file(file, response.signed_request, response.url));
-                    }
-                    else {
+                    } else {
                         defer.reject(alert("Could not get signed URL."))
                     }
                 }
@@ -100,7 +104,7 @@
             var xhr = new XMLHttpRequest();
             xhr.open("PUT", signed_request);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
-            xhr.onload = function (data) {
+            xhr.onload = function(data) {
                 console.log(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
@@ -112,7 +116,7 @@
 
                 }
             };
-            xhr.onerror = function (error) {
+            xhr.onerror = function(error) {
                 defer.reject(messageService.showSuccess("Could not upload file."));
             };
             xhr.send(file);
@@ -158,26 +162,26 @@
          }*/
 
 
-        this.selectFile = function (_this) {
+        this.selectFile = function(_this) {
             var file = _this.files[0];
             console.log(file.name);
 
         };
 
-        this.signupModeDisabled = function (val) {
+        this.signupModeDisabled = function(val) {
             return val === '3'
         };
 
         //Cropper Code start
-        this.showAdvanced = function (ev) {
+        this.showAdvanced = function(ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue.tmpl.html',
                 targetEvent: ev
-            }).then(function (picture) {
+            }).then(function(picture) {
                 $rootScope.newImg = picture;
                 console.log("this is image" + picture)
-            }, function (err) {
+            }, function(err) {
                 console.log(err)
 
             })

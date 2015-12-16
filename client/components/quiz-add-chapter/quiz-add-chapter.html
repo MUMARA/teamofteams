@@ -9,29 +9,22 @@
     margin: 0 auto;
     left: 0px;
     top: 0px !important;">
-    <ng-md-icon icon="close" size="30" style="outline: none; margin-top: 53px; position: relative; top: 20%"
-                ng-click="quizAddChapter.back()"></ng-md-icon>
+    <ng-md-icon icon="close" size="30" style="outline: none; margin-top: 53px; position: relative; top: 20%" ng-click="quizAddChapter.back()"></ng-md-icon>
 </div>
-
 <div id="creatGroup" style="width: 1360px">
-
-
-    <form style="background-color: #efefef;"name="chapterForm"  novalidate="">
-
-
-
-
+    <form style="background-color: #efefef;" name="chapterForm" novalidate="">
         <md-content class="grayScroller" style="height: calc(102.6vh - 88px);max-width:70%;margin: 0 auto">
             <md-card style="">
                 <md-card-content style="padding: 50px; box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.25);
 -moz-box-shadow: 0px 0px 10px 4px rgba(255  , 255, 255, 0.25);
 -webkit-box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.25);">
                     <h1 style="color: rgb(110,100,110) ;font-weight: 500; text-align: center"><u>Add Chapters</u></h1>
-
                     <h2 style="font-weight: 500;">Chapter Title <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
                     <md-input-container>
-                        <label><!--Title-->Chapter Title</label>
-                        <input name="chapterTitle" ng-model="quizAddChapter.Title" minlength="3" maxlength="30" required> <!--check-chapter-existance=""-->
+                        <label>
+                            <!--Title-->Chapter Title</label>
+                        <input name="chapterTitle" ng-model="quizAddChapter.Title" minlength="3" maxlength="30" required>
+                        <!--check-chapter-existance=""-->
                         <div ng-show="chapterForm.$submitted || chapterForm.chapterTitle.$touched" ng-messages="chapterForm.chapterTitle.$error">
                             <div class="invalid_color" ng-message="required">This is required.</div>
                             <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
@@ -41,7 +34,8 @@
                     </md-input-container>
                     <h2 style="font-weight: 500;">Chapter Description</h2>
                     <md-input-container>
-                        <label><!--Title-->Chapter Description</label>
+                        <label>
+                            <!--Title-->Chapter Description</label>
                         <textarea name="chapterDescription" ng-model="quizAddChapter.Description" minlength="8" maxlength="200" required></textarea>
                         <div ng-show="chapterForm.$submitted || chapterForm.chapterDescription.$touched" ng-messages="chapterForm.chapterDescription.$error">
                             <div class="invalid_color" ng-message="required">This is required.</div>
@@ -53,14 +47,11 @@
                         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
                         <md-button ng-disabled="chapterForm.$invalid" class="md-primary" style="margin-left: 80%;" ng-click="quizAddChapter.addChapters()">Create</md-button>
                     </div>
-
-
                     <!--<md-button class="md-raised md-primary" ng-click="add.addChapters()" style="margin-left: 90%">Add</md-button>-->
                     <!--
                                         <ul>
                                             <li ng-repeat="ch in quizAddBook.chapters">{{ch}}</li>
                                         </ul>-->
-
                 </md-card-content>
             </md-card>
         </md-content>

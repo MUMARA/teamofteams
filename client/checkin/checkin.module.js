@@ -6,8 +6,8 @@
 
 (function() {
 
-// Invoke 'strict' JavaScript mode
-'use strict';
+    // Invoke 'strict' JavaScript mode
+    'use strict';
 
     angular
         .module('checkin', [

@@ -2,16 +2,16 @@
  * Created by admin on 5/13/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('app.forgot')
         .controller('ForgotController', ForgotController);
 
-    ForgotController.$inject = ["forgotService","authService"];
+    ForgotController.$inject = ["forgotService", "authService"];
 
-    function ForgotController(forgotService,authService) {
+    function ForgotController(forgotService, authService) {
 
         /*private properties*/
         var that = this;
@@ -28,18 +28,18 @@
         //sends email address to get password via that email address
         function forgotPassword() {
             that.submitting = true;
-            forgotService.forgotPassword( that.user )
-                .then(function( res ) {
+            forgotService.forgotPassword(that.user)
+                .then(function(res) {
                     that.submitting = false;
 
-                }, function( reason ) {
+                }, function(reason) {
                     that.submitting = false;
 
                 });
         }
-       /* this.canActivate = function(){
-            return authService.resolveUserPage();
-        }*/
+        /* this.canActivate = function(){
+             return authService.resolveUserPage();
+         }*/
 
 
     }

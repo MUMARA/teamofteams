@@ -2,18 +2,18 @@
  * Created by Shahzad on 2/25/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('core')
-        .factory('confirmDialogService', confirmDialogService );
+        .factory('confirmDialogService', confirmDialogService);
 
     confirmDialogService.$inject = ['$mdDialog'];
 
-    function confirmDialogService( $mdDialog ) {
+    function confirmDialogService($mdDialog) {
 
-        return function ( cautionString ) {
+        return function(cautionString) {
             return $mdDialog.show({
                 templateUrl: 'core/views/confirmDialog.tmpl.html',
                 controller: 'ConfirmDialogCtrl',

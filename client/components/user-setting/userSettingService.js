@@ -2,50 +2,51 @@
  * Created by sj on 6/10/2015.
  */
 
-(function () {
+(function() {
     'use strict';
     angular
-        .module('app.userSetting',['core','ngMdIcons'])
-        .factory('userSettingService',['groupFirebaseService','$location','$sessionStorage','soundService','userService',"messageService",'$q','$http','appConfig','$localStorage',
-            function(groupFirebaseService,$location,$sessionStorage,soundService,userService,messageService,$q,$http,appConfig,$localStorage){
+        .module('app.userSetting', ['core', 'ngMdIcons'])
+        .factory('userSettingService', ['groupFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage',
+            function(groupFirebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage) {
 
                 return {
 
-                    'userSetting':function(userID,group,SubgroupInfo,subgroupList,formDataFlag){
+                    'userSetting': function(userID, group, SubgroupInfo, subgroupList, formDataFlag) {
                         //var pageUserId = userService.getCurrentUser().userID;
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
-                        groupFirebaseService.asyncCreateSubgroup(userID,group ,SubgroupInfo,subgroupList,formDataFlag)
-                            .then(function(response){
+                        groupFirebaseService.asyncCreateSubgroup(userID, group, SubgroupInfo, subgroupList, formDataFlag)
+                            .then(function(response) {
                                 console.log("Group Creation Successful");
                                 var unlistedMembersArray = response.unlistedMembersArray;
-                                if(unlistedMembersArray.length > 0){
+                                if (unlistedMembersArray.length > 0) {
 
                                     messageService.showSuccess("Group creation Successful, but following are not valid IDs: " + unlistedMembersArray);
-                                }
-                                else {
+                                } else {
                                     messageService.showSuccess("Group creation Successful");
                                 }
-                            }, function(group){
+                            }, function(group) {
                                 messageService.showFailure("Group not created, " + SubgroupInfo.groupID + " already exists");
                             })
                     },
-                    'cancelSubGroupCreation':function(userId){
+                    'cancelSubGroupCreation': function(userId) {
                         console.log("Group Creation Cancelled");
                         soundService.playFail();
-                        $location.path('/user/'+userService.getCurrentUser().userID)
+                        $location.path('/user/' + userService.getCurrentUser().userID)
                     },
-                    'uploadPicture': function (file, groupID) {
+                    'uploadPicture': function(file, groupID) {
                         var defer = $q.defer();
                         var reader = new FileReader();
-                        reader.onload = function () {
+                        reader.onload = function() {
 
                             var blobBin = atob(reader.result.split(',')[1]);
                             var array = [];
                             for (var i = 0; i < blobBin.length; i++) {
                                 array.push(blobBin.charCodeAt(i));
                             }
-                            var fileBlob = new Blob([new Uint8Array(array)], {type: 'image/png'});
+                            var fileBlob = new Blob([new Uint8Array(array)], {
+                                type: 'image/png'
+                            });
 
 
                             var data = new FormData();
@@ -56,7 +57,9 @@
 
                             defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {
                                 withCredentials: true,
-                                headers: {'Content-Type': undefined},
+                                headers: {
+                                    'Content-Type': undefined
+                                },
                                 transformRequest: angular.identity
                             }));
 
@@ -66,22 +69,24 @@
 
                     },
 
-                    'getGroupImgFromServer':function(){
+                    'getGroupImgFromServer': function() {
                         var defer = $q.defer();
                         $http({
-                            url: appConfig.apiBaseUrl + '/api/profilepicture/mmm',
-                            method: "GET",
-                            params: {token:userService.getCurrentUser().token }
-                        })
-                            .then(function(data){
+                                url: appConfig.apiBaseUrl + '/api/profilepicture/mmm',
+                                method: "GET",
+                                params: {
+                                    token: userService.getCurrentUser().token
+                                }
+                            })
+                            .then(function(data) {
                                 var reader = new FileReader();
-                                reader.onload = function(){
+                                reader.onload = function() {
                                     defer.resolve(reader.result)
                                 };
                                 reader.readAsDataURL(data.data.profilePicture);
 
                             })
-                            .catch(function(err){
+                            .catch(function(err) {
                                 defer.reject(err)
                             });
 
@@ -101,8 +106,7 @@
                     return c.join("");
 
                 }
-            }])
+            }
+        ])
 
 })();
-
-

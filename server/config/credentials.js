@@ -23,19 +23,19 @@ var development = {
 
     /*sendgrid credentials*/
     sendgrid: {
-        USERNAME : process.env.SENDGRID_USERNAME,
-        PASSWORD : process.env.SENDGRID_PASSWORD
+        USERNAME: process.env.SENDGRID_USERNAME,
+        PASSWORD: process.env.SENDGRID_PASSWORD
     },
 
     /*mongoDB ( mongoLab ) credentials*/
     mongoDB: {
-        URI : 'mongodb://heroku_app32789651:6439bsgc56ehi5cpkpnoelqgmt@ds047950.mongolab.com:47950/heroku_app32789651'
+        URI: 'mongodb://heroku_app32789651:6439bsgc56ehi5cpkpnoelqgmt@ds047950.mongolab.com:47950/heroku_app32789651'
     },
 
     /*push notification services credential e.g. GCM, APN*/
     pushNotifications: {
         gcm: {
-            SERVER_KEY : 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
         }
     }
 
@@ -58,30 +58,30 @@ var production = {
 
     /*sendgrid credentials*/
     sendgrid: {
-        USERNAME : process.env.SENDGRID_USERNAME,
-        PASSWORD : process.env.SENDGRID_PASSWORD
+        USERNAME: process.env.SENDGRID_USERNAME,
+        PASSWORD: process.env.SENDGRID_PASSWORD
     },
 
     /*mongoDB ( mongoLab ) credentials*/
     mongoDB: {
-        URI : 'mongodb://heroku_z1gg2qp7:kf4cemovh3t2vrgco5qpruogrn@ds057214.mongolab.com:57214/heroku_z1gg2qp7'
+        URI: 'mongodb://heroku_z1gg2qp7:kf4cemovh3t2vrgco5qpruogrn@ds057214.mongolab.com:57214/heroku_z1gg2qp7'
     },
 
     /*push notification services credential e.g. GCM, APN*/
     pushNotifications: {
         gcm: {
-            SERVER_KEY : 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
         }
     }
 
 };
 
- var credentialsObj = {};
- 
-if(process.env.NODE_ENV == 'development') {
+var credentialsObj = {};
+
+if (process.env.NODE_ENV == 'development') {
     credentialsObj = development
-} else if(process.env.NODE_ENV == 'production') {
+} else if (process.env.NODE_ENV == 'production') {
     credentialsObj = production
 }
-    
+
 module.exports = credentialsObj

@@ -80,7 +80,7 @@
                     userPresenceRef.child('last-modified').onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
 
                     i++; //for run once (increment)
-                } 
+                }
             });
         }
 
@@ -135,7 +135,7 @@
                         recentConnection = recentConnection[recentConnection.length - 1];
 
                         // 1 = web, 2 = ios, 3 = andriod  (changed as per sir zia's instruction, issue # 92)
-                        switch (userPresenceObj.connections[recentConnection].type) { 
+                        switch (userPresenceObj.connections[recentConnection].type) {
                             case 1:
                                 userSyncObject.availability.device = 'Web';
                                 break;

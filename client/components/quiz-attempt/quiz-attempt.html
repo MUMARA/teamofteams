@@ -1,29 +1,39 @@
 <style>
+.checkboxdemoSyncing .checkboxDemo1 div {
+    clear: both;
+}
 
-    .checkboxdemoSyncing .checkboxDemo1 div {
-        clear: both; }
-    .checkboxdemoSyncing .checkboxDemo1 md-checkbox {
-        float: left; }
-    .checkboxdemoSyncing legend {
-        color: #3F51B5; }
-    .checkboxdemoSyncing legend code {
-        color: #3F51B5;
-        font-weight: normal; }
-    .checkboxdemoSyncing p {
-        padding-left: 8px; }
-    .checkboxdemoSyncing .info {
-        padding-left: 13px; }
-    .checkboxdemoSyncing div.standard {
-        padding: 8px;
-        padding-left: 15px; }
-    .checkboxdemoSyncing fieldset.standard {
-        border-style: solid;
-        border-width: 1px; }
+.checkboxdemoSyncing .checkboxDemo1 md-checkbox {
+    float: left;
+}
 
+.checkboxdemoSyncing legend {
+    color: #3F51B5;
+}
+
+.checkboxdemoSyncing legend code {
+    color: #3F51B5;
+    font-weight: normal;
+}
+
+.checkboxdemoSyncing p {
+    padding-left: 8px;
+}
+
+.checkboxdemoSyncing .info {
+    padding-left: 13px;
+}
+
+.checkboxdemoSyncing div.standard {
+    padding: 8px;
+    padding-left: 15px;
+}
+
+.checkboxdemoSyncing fieldset.standard {
+    border-style: solid;
+    border-width: 1px;
+}
 </style>
-
-
-
 <div style="box-shadow: 0px 2px 0px -1px rgba(0, 0, 0, 0.2), 1px 0px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 
     position: fixed;
@@ -34,55 +44,41 @@
     min-width: 100%;
     margin: 0 auto;
     left: 0px;
-    top: 0px !important;"><ng-md-icon icon="close" size="30" style="outline: none; margin-top: 53px; position: relative; top: 20%"
-                                      ng-if="quizAttempt.showClose"
-                                      ng-click="quizAttempt.back()"></div>
-
-
+    top: 0px !important;">
+    <ng-md-icon icon="close" size="30" style="outline: none; margin-top: 53px; position: relative; top: 20%" ng-if="quizAttempt.showClose" ng-click="quizAttempt.back()">
+</div>
 <div style="width: 1360px;">
-    <div style="background-color: #efefef; height: 1360px" >
-
-        <md-content class="grayScroller" style="height: calc(100vh - 88px);max-width:85%;margin: 0px auto" >
-
+    <div style="background-color: #efefef; height: 1360px">
+        <md-content class="grayScroller" style="height: calc(100vh - 88px);max-width:85%;margin: 0px auto">
             <!--Card start-->
-            <md-card style="" >
-
+            <md-card style="">
                 <!--first page content-->
-                <md-card-content layout="column" layout-align="center center"
-                                 style="height: 600px;margin: 1px !important;" ng-show="quizAttempt.click1">
-
+                <md-card-content layout="column" layout-align="center center" style="height: 600px;margin: 1px !important;" ng-show="quizAttempt.click1">
                     <h2>Quiz {{quizAttempt.bookName}} </h2>
                     <h3>Total Question {{quizAttempt.totalQuestion}}</h3>
-
                     <md-card style="width: 1000px">
                         <md-toolbar style="background-color: #2bafbf">
                             <div class="md-toolbar-tools">
-                                    <span>
+                                <span>
                                         <h1>Rules & Regulations</h1>
                                     </span>
                             </div>
                         </md-toolbar>
-
                         <md-card-content class="md-raised md-primary">
-
                             <div flex="50">
                                 <md-checkbox ng-repeat="rule in quizAttempt.rules" ng-click="quizAttempt.check12(rule)">
                                     {{ rule }}
                                 </md-checkbox>
                             </div>
-
                         </md-card-content>
                         <div class="md-actions" layout="row" layout-align="end center">
-
-
-                            <md-button class="md-raised" ng-disabled="!quizAttempt.startQuiz" style="margin: 20px" ng-click = "quizAttempt.nowClick()">Agree & Start</md-button>
+                            <md-button class="md-raised" ng-disabled="!quizAttempt.startQuiz" style="margin: 20px" ng-click="quizAttempt.nowClick()">Agree & Start</md-button>
                         </div>
                     </md-card>
                 </md-card-content>
-
                 <md-card-content style="height: 100%;margin: 1px !important;" ng-show="quizAttempt.click">
                     <!--Toolbar -->
-                    <div  >
+                    <div>
                         <md-card style="">
                             <md-card-content class="grayScroller" layout="row">
                                 <h4 flex><b> {{quizAttempt.questionArr[quizAttempt.quizAttemptTitle]}} </b></h4>
@@ -97,7 +93,6 @@
                                 <!-- Question Area-->
                                 <div style="height: 200px">
                                     <md-card style="height: 100%">
-
                                         <!--QUESTION VIEW-->
                                         <md-card-content class="grayScroller" style="">
                                             <span>{{quizAttempt.questionArr[quizAttempt.quizAttemptQuestion]}}</span>
@@ -105,39 +100,28 @@
                                     </md-card>
                                 </div>
                                 <!--Options option -->
-
                                 <!--RADIO BUTTON OPTION-->
                                 <md-card style="">
                                     <md-card-content class="grayScroller">
                                         <md-radio-group ng-model="quizAttempt.answer" class="md-primary">
-                                            <md-radio-button
-                                                    ng-if="quizAttempt.questionArr[quizAttempt.quizAttemptType] === 'Radio Button'"
-                                                    ng-repeat="itrate in quizAttempt.questionArr[quizAttempt.quizAttemptOption]"
-                                                    ng-value="itrate.optionText" required>
+                                            <md-radio-button ng-if="quizAttempt.questionArr[quizAttempt.quizAttemptType] === 'Radio Button'" ng-repeat="itrate in quizAttempt.questionArr[quizAttempt.quizAttemptOption]" ng-value="itrate.optionText" required>
                                                 {{itrate.optionText}}
                                                 <md-divider></md-divider>
                                             </md-radio-button>
                                         </md-radio-group>
-
                                         <!--CHECK BOX OPTION-->
-                                        <md-checkbox style="margin: 0 10px 0 5px; padding-top:0; padding-bottom: 0"
-                                                     ng-if="quizAttempt.questionArr[quizAttempt.quizAttemptType] === 'CheckBox'"
-                                                     ng-repeat="itrate in quizAttempt.questionArr[quizAttempt.quizAttemptOption]"
-                                                     ng-click="quizAttempt.toggl(itrate.optionText, quizAttempt.selectd)">
+                                        <md-checkbox style="margin: 0 10px 0 5px; padding-top:0; padding-bottom: 0" ng-if="quizAttempt.questionArr[quizAttempt.quizAttemptType] === 'CheckBox'" ng-repeat="itrate in quizAttempt.questionArr[quizAttempt.quizAttemptOption]" ng-click="quizAttempt.toggl(itrate.optionText, quizAttempt.selectd)">
                                             {{itrate.optionText}}
                                             <md-divider></md-divider>
                                         </md-checkbox>
                                     </md-card-content>
                                 </md-card>
-
-
                                 <!-- Next Button -->
                                 <div layout="row">
                                     <div flex="20" offset="70">
                                     </div>
                                     <div>
-                                        <md-button ng-disabled="quizAttempt.enbNext && !quizAttempt.answer"
-                                                   ng-click="quizAttempt.next123()" style="border: solid silver"><b>{{quizAttempt.button123}}</b>
+                                        <md-button ng-disabled="quizAttempt.enbNext && !quizAttempt.answer" ng-click="quizAttempt.next123()" style="border: solid silver"><b>{{quizAttempt.button123}}</b>
                                         </md-button>
                                     </div>
                                 </div>

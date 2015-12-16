@@ -2,20 +2,20 @@
  * Created by Shahzad on 2/27/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('checkin')
-        .controller('ChartsCheckinCtrl', ChartsCheckinCtrl );
+        .controller('ChartsCheckinCtrl', ChartsCheckinCtrl);
 
     ChartsCheckinCtrl.$inject = ['$scope', '$timeout', 'firebaseService'];
 
-    function ChartsCheckinCtrl( $scope, $timeout, firebaseService ) {
+    function ChartsCheckinCtrl($scope, $timeout, firebaseService) {
 
         /*listeners*/
-        var currentGroupDataRef = firebaseService.getRefGroups().child( $scope.groupID );
-        currentGroupDataRef.on('value', groupDataChanged );
+        var currentGroupDataRef = firebaseService.getRefGroups().child($scope.groupID);
+        currentGroupDataRef.on('value', groupDataChanged);
 
         /*VM functions*/
         //...
@@ -45,8 +45,7 @@
                 x: "Not available",
                 y: [3],
                 tooltip: "not available"
-            }
-            ]
+            }]
         };
 
         //$scope.chartTeamConfig = {
@@ -99,10 +98,10 @@
         };
 
         //listener for any change in group checkin. updates charts values.
-        function groupDataChanged( snapshot ) {
+        function groupDataChanged(snapshot) {
             var groupMetaDataObj = snapshot.val();
 
-            $timeout(function () {
+            $timeout(function() {
                 $scope.chartGroupActive = true;
 
                 $scope.totalMembers = groupMetaDataObj['members-count'];
@@ -110,17 +109,15 @@
                 $scope.checkedOutUsers = $scope.totalMembers - $scope.checkedInUsers;
 
                 $scope.chartGroupData = {
-                    data: [
-                        {
-                            x: 'Checked In',
-                            y: [$scope.checkedInUsers],
-                            tooltip: "Checked-In Users: " + $scope.checkedInUsers
-                        },
-                        {
-                            x: 'Checked out',
-                            y: [$scope.checkedOutUsers],
-                            tooltip: "Checked-Out Users: " + $scope.checkedOutUsers
-                        }]
+                    data: [{
+                        x: 'Checked In',
+                        y: [$scope.checkedInUsers],
+                        tooltip: "Checked-In Users: " + $scope.checkedInUsers
+                    }, {
+                        x: 'Checked out',
+                        y: [$scope.checkedOutUsers],
+                        tooltip: "Checked-Out Users: " + $scope.checkedOutUsers
+                    }]
                 };
             });
         }

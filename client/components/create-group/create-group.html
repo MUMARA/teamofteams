@@ -1,11 +1,11 @@
 <!--<form style="background-color: #005DE9;" name="groupForm" ng-submit="cgc.answer( groupForm )" novalidate="" ng-controller="CreateGroupController as cgc">-->
 <!--<form style="background-color: #005DE9;" name="groupForm"  novalidate="" ng-controller="CreateGroupController as cgc">-->
 <div id="creatGroup">
-    <form style="background-color: #efefef;" name="groupForm"  autocomplete="off" novalidate="" >
+    <form style="background-color: #efefef;" name="groupForm" autocomplete="off" novalidate="">
         <ng-md-icon icon="close" size="50" style="outline: none" layout-padding ng-click="$root.newImg = null;createGroup.hide()"></ng-md-icon>
         <md-content class="grayScroller" style="height: calc(100vh - 88px);max-width:70%;margin: 0px auto">
             <md-card style="margin: 0px auto">
-                <md-card-content >
+                <md-card-content>
                     <h2 style="color: #d3d3d3;padding: 0px 50px;">Create Team of Teams</h2>
                     <md-divider></md-divider>
                     <div style="padding: 0px 50px;">
@@ -20,7 +20,8 @@
                                      <input ng-model="asc" type="text" placeholder="Group URL">
                                  </md-input-container>-->
                                 <md-input-container md-no-float>
-                                    <input name="groupId" ng-model="createGroup.group.groupID" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{createGroup.groupName}}" check-group-existance="" required placeholder="Team URL"> <!-- check-user-id is a directive-->
+                                    <input name="groupId" ng-model="createGroup.group.groupID" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{createGroup.groupName}}" check-group-existance="" required placeholder="Team URL">
+                                    <!-- check-user-id is a directive-->
                                     <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
                                         <div class="invalid_color" ng-message="required">This is required.</div>
                                         <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
@@ -45,8 +46,9 @@
                                     </div>
                                 </md-input-container>-->
                                 <md-input-container>
-                                    <label><!--Title-->Name</label>
-                                    <input name="groupTitle"  ng-model="createGroup.group.title" minlength="3" maxlength="40" required>
+                                    <label>
+                                        <!--Title-->Name</label>
+                                    <input name="groupTitle" ng-model="createGroup.group.title" minlength="3" maxlength="40" required>
                                     <div ng-show="groupForm.$submitted || groupForm.groupTitle.$touched" ng-messages="groupForm.groupTitle.$error">
                                         <div class="invalid_color" ng-message="required">This is required.</div>
                                         <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
@@ -58,7 +60,7 @@
                                 <md-input-container>
                                     <label>Contact Number</label>
                                     <!--<input ng-model="createGroup.group.phone" name="phone"  minlength="11" maxlength="40" required ng-pattern="/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/">-->
-                                    <input ng-model="createGroup.group.phone" name="phone"  minlength="11" maxlength="40">
+                                    <input ng-model="createGroup.group.phone" name="phone" minlength="11" maxlength="40">
                                     <div ng-show="groupForm.$submitted || groupForm.phone.$touched" ng-messages="groupForm.phone.$error">
                                         <div class="invalid_color" ng-message="minlength">Required minimum length 11</div>
                                         <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
@@ -74,8 +76,8 @@
                         </div>
                         <div>
                             <md-input-container>
-                                <label style="color: #d3d3d3" >Current Time Zone</label>
-                                <input  ng-model="createGroup.group.timeZone" ng-disabled="true">
+                                <label style="color: #d3d3d3">Current Time Zone</label>
+                                <input ng-model="createGroup.group.timeZone" ng-disabled="true">
                             </md-input-container>
                         </div>
                         <div>
@@ -88,39 +90,29 @@
                                 </div>
                             </md-input-container>
                         </div>
-
-
-
-
                         <h3> Sign Up Mode <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></h3>
-
                         <md-radio-group ng-model="createGroup.group.signupMode" class="md-primary">
-                            <md-radio-button value="1" ng-disabled="true" >Invitation Only</md-radio-button>
+                            <md-radio-button value="1" ng-disabled="true">Invitation Only</md-radio-button>
                             <md-radio-button value="2" ng-disabled="true">Request Support</md-radio-button>
-                            <md-radio-button value="3" ng-disabled="true" >Any Email Address from these domains.</md-radio-button>
+                            <md-radio-button value="3" ng-disabled="true">Any Email Address from these domains.</md-radio-button>
                         </md-radio-group>
-                        <md-input-container >
-                            <label >To allow email addresses from multiple domains, separate them with commas</label>
+                        <md-input-container>
+                            <label>To allow email addresses from multiple domains, separate them with commas</label>
                             <input ng-disabled="true" style="color: #d3d3d3">
                         </md-input-container>
                         <h3>Set Logo <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></h3>
                         <div>
                             <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                                <img style="outline: none;" ng-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)"/>
-
+                                <img style="outline: none;" ng-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)" />
                             </div>
                             <div>
                                 <img style="outline: none;" ng-src="{{$root.newImg}}" alt="" class="cropper-main-button" ng-hide="!$root.newImg" ng-click="createGroup.showAdvanced($event)" />
                             </div>
-
                             <image-cropper></image-cropper>
-
                         </div>
-
                         <div layout="row">
                             <div flex="20" offset="50">
-                                <md-progress-circular class="" ng-show="groupForm.$submitted"
-                                                      md-mode="indeterminate"></md-progress-circular>
+                                <md-progress-circular class="" ng-show="groupForm.$submitted" md-mode="indeterminate"></md-progress-circular>
                             </div>
                             <div flex offset="10">
                                 <!--<md-button class="md-raised md-primary">Submit</md-button>-->
@@ -132,6 +124,4 @@
             </md-card>
         </md-content>
     </form>
-
-
 </div>

@@ -3,7 +3,8 @@
         <md-card-content>
             <h2 class="md-title">Forgot Password</h2>
             <p>
-                Please submit the form with your email address. <br/> We will send you the password via email, right away.
+                Please submit the form with your email address.
+                <br/> We will send you the password via email, right away.
             </p>
             <!--<p>Please submit the form with your email address. We will send you the password right away, via email.</p>-->
             <form style="padding: 20px;" name="forgetForm" ng-submit="forgot.forgotPassword()" novalidate>
@@ -16,10 +17,10 @@
                         </div>
                     </md-input-container>
                     <md-input-container ng-if="forgot.submitting">
-                        <md-progress-circular  class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
+                        <md-progress-circular class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
                     </md-input-container>
                     <!--<md-text-float label="Password"  ng-model="user.password"> </md-text-float>-->
-                    <md-button class="md-raised md-primary" ng-disabled="forgetForm.$invalid" style="margin-top: 20px;" >Submit</md-button>
+                    <md-button class="md-raised md-primary" ng-disabled="forgetForm.$invalid" style="margin-top: 20px;">Submit</md-button>
                 </div>
             </form>
         </md-card-content>

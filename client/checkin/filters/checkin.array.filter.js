@@ -5,21 +5,20 @@
 
 (function() {
 
-// Invoke 'strict' JavaScript mode
+    // Invoke 'strict' JavaScript mode
     'use strict';
 
     angular
         .module('checkin')
         .filter('array', function() {
-            return function( items ) {
+            return function(items) {
                 var filteredItems = [];
 
-                for( var key in items ) {
-                    filteredItems.push( items[ key ] )
+                for (var key in items) {
+                    filteredItems.push(items[key])
                 }
 
                 return filteredItems;
             };
         });
 })();
-

@@ -1,12 +1,13 @@
 /**
  * Created by sj on 6/10/2015.
  */
-(function () {
+(function() {
     'use strict';
     angular
         .module('app.createSubGroup')
         .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
+
     function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
@@ -15,14 +16,14 @@
         /*private variables*/
         var that = this;
         var user = userService.getCurrentUser();
-        $rootScope.newImg =false;
+        $rootScope.newImg = false;
         var localStorage = $localStorage.loggedInUser;
         var groupID = $stateParams.groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
-        /*VM functions*/
-        // this.searchUser = '';
-        // this.processTeamAttendance =false;
-        // this.showEditSubGroup = false;
+            /*VM functions*/
+            // this.searchUser = '';
+            // this.processTeamAttendance =false;
+            // this.showEditSubGroup = false;
         this.groupid = groupID;
         this.activeID;
         this.subgroupData = 0;
@@ -39,14 +40,14 @@
         this.filterUser = filterUser;
         this.filterUser2 = filterUser2;
         this.submembers = 0;
-        this.closeToggleAdmin =  closeToggleAdmin
+        this.closeToggleAdmin = closeToggleAdmin
         this.closeAdminToggler = closeAdminToggler
-            this.memberss = {
+        this.memberss = {
             memberIDs: "",
             selectedUsersArray: []
 
         };
-        
+
         /*VM properties*/
 
         /*   this.Subgroup = {
@@ -59,32 +60,32 @@
          };*/
 
 
-        this.openUserSettingPage = function () {
+        this.openUserSettingPage = function() {
             $location.path('/user/group/' + groupID + '/user-setting');
         };
-        this.openEditGroup = function () {
+        this.openEditGroup = function() {
             $location.path('user/group/' + groupID + '/edit-group');
         }
-        this.openGeoFencingPage = function () {
+        this.openGeoFencingPage = function() {
             $location.path('/user/group/' + groupID + '/geoFencing');
         };
-        this.subgroupPage = function () {
+        this.subgroupPage = function() {
             $location.path('user/group/' + this.groupid + '/subgroup');
         }
 
-        this.veiwSubgroup = function (subgroupData, index) {
-            
+        this.veiwSubgroup = function(subgroupData, index) {
+
             // this.showEditSubGroup = true;
             // that.showTeamAttendace = false;
             that.selectedindex = index;
             that.activeID = subgroupData.$id;
             var sub = subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, localStorage.userID)
-                .then(function (syncObj) {
+                .then(function(syncObj) {
                     that.subgroupSyncObj = syncObj;
 
                     //console.log(data === obj); // true
                     // $scope.subgroupSyncObj.subgroupSyncObj.$bindTo($scope, "subgroup");
-                                
+
 
                     that.submembers = that.subgroupSyncObj.membersSyncArray;
                     // $scope.subgroups = $scope.subgroupSyncObj.subgroupsSyncArray;
@@ -96,15 +97,15 @@
             SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
             // console.log(1)
             // console.log(SubgroupObj)
-            SubgroupObj.$loaded().then(function (data) {
-                $timeout(function () {
-                    that.subgroupData = data;
-                    //that.group.groupID = data.$id;
-                    that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
+            SubgroupObj.$loaded().then(function(data) {
+                $timeout(function() {
+                        that.subgroupData = data;
+                        //that.group.groupID = data.$id;
+                        that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
 
-                })
-            // console.log(2)
-            // console.log(SubgroupObj)
+                    })
+                    // console.log(2)
+                    // console.log(SubgroupObj)
             })
 
 
@@ -121,25 +122,25 @@
         }
 
 
-        this.showAdvanced = function (ev) {
+        this.showAdvanced = function(ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
                 targetEvent: ev
-            }).then(function (picture) {
+            }).then(function(picture) {
                 $rootScope.newImg = picture;
                 //console.log("this is image" + picture)
-            }, function (err) {
+            }, function(err) {
                 //console.log(err)
 
             })
 
         };
 
- 
+
         this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, localStorage.userID)
-            .then(function (syncObj) {
-                $timeout(function () {
+            .then(function(syncObj) {
+                $timeout(function() {
 
                     that.groupSyncObj = syncObj;
                     // that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
@@ -156,7 +157,7 @@
             });
 
 
-        this.selectedMember = function (userObj, index) {
+        this.selectedMember = function(userObj, index) {
             that.selectedindex2 = index;
             // console.log(userObj);
             // console.log("-----------------------------------");
@@ -174,7 +175,7 @@
             });
 
             subgroupFirebaseService.asyncUpdateSubgroupMembers(localStorage, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData)
-                .then(function (response) {
+                .then(function(response) {
                     // console.log("Adding Members Successful");
                     var unlistedMembersArray = response.unlistedMembersArray,
                         notificationString;
@@ -189,25 +190,26 @@
                         notificationString = 'Adding Members Successful.';
                         messageService.showFailure(notificationString);
                     }
-                }, function (reason) {
+                }, function(reason) {
                     messageService.showFailure(reason);
                 });
 
 
         };
-        this.selectedAdmin = function (newType, member) {
+        this.selectedAdmin = function(newType, member) {
             // console.log(member.userSyncObj.$id);
             // console.log(member.user.profile.firstName);
             this.selectedAdminArray.push(member.user.profile)
             createSubGroupService.changeMemberRole(newType, member, groupID, that.activeID)
-                .then(function () {
+                .then(function() {
                     messageService.showSuccess("New Admin selected");
-                }, function (reason) {
+                }, function(reason) {
                     messageService.showFailure(reason);
                 });
 
 
         };
+
         function filterUser(userID) {
             var disableItem = false;
             for (var i = 0; i < that.submembers.length; i++) {
@@ -246,16 +248,16 @@
 
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                that.saveFile(x, mimeType, that.subgroupData.$id).then(function (data) {
-                    // console.log('subgroup img  uploaded ' + data)
-                    // console.log(3)
-                    // console.log(SubgroupObj)
-                    SubgroupObj['logo-image'].url = data;
-                    createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
-                    // $rootScope.newImg=null;
-                    that.abc = false;
-                })
-                    .catch(function (err) {
+                that.saveFile(x, mimeType, that.subgroupData.$id).then(function(data) {
+                        // console.log('subgroup img  uploaded ' + data)
+                        // console.log(3)
+                        // console.log(SubgroupObj)
+                        SubgroupObj['logo-image'].url = data;
+                        createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
+                            // $rootScope.newImg=null;
+                        that.abc = false;
+                    })
+                    .catch(function(err) {
 
                         // return alert('picture upload failed' + err)
                         return messageService.showFailure('picture upload failed' + err)
@@ -277,14 +279,13 @@
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
             xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.subgroupData.$id + "&file_type=" + type);
-            xhr.onreadystatechange = function () {
+            xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
 
                         var response = JSON.parse(xhr.responseText);
                         defer.resolve(that.upload_file(file, response.signed_request, response.url));
-                    }
-                    else {
+                    } else {
                         defer.reject(alert("Could not get signed URL."))
                     }
                 }
@@ -295,15 +296,15 @@
 
 
         //Cropper Code start
-        this.showAdvanced = function (ev) {
+        this.showAdvanced = function(ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
                 targetEvent: ev
-            }).then(function (picture) {
+            }).then(function(picture) {
                 $rootScope.newImg = picture;
                 // console.log("this is image" + picture)
-            }, function (err) {
+            }, function(err) {
                 //console.log(err)
 
             })
@@ -313,7 +314,7 @@
 
         //Cropper Code End
 
-        this.canActivate = function () {
+        this.canActivate = function() {
             return authService.resolveUserPage();
         }
 
@@ -324,46 +325,48 @@
         this.toggleAdmin = AdminToggler('rights');
 
         function buildToggler(navID) {
-            var debounceFn = $mdUtil.debounce(function () {
+            var debounceFn = $mdUtil.debounce(function() {
                 $mdSidenav(navID)
                     .toggle()
-                    .then(function () {
+                    .then(function() {
                         // console.log("toggle " + navID + " is done");
                     });
             }, 300);
 
             return debounceFn;
         };
+
         function AdminToggler(navID) {
-            var debounceFnc = $mdUtil.debounce(function () {
+            var debounceFnc = $mdUtil.debounce(function() {
                 $mdSidenav(navID)
                     .toggle()
-                    .then(function () {
+                    .then(function() {
                         // console.log("toggle " + navID + " is done");
                     });
             }, 300);
 
             return debounceFnc;
         };
+
         function upload_file(file, signed_request, url) {
 
             var defer = $q.defer();
             var xhr = new XMLHttpRequest();
             xhr.open("PUT", signed_request);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
-            xhr.onload = function (data) {
+            xhr.onload = function(data) {
                 // alert(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....')
-                    // console.log(url);
-                    //document.getElementById("preview").src = url;
-                    // that.subgroupData.imgLogoUrl = url;
+                        // console.log(url);
+                        //document.getElementById("preview").src = url;
+                        // that.subgroupData.imgLogoUrl = url;
                     defer.resolve(url + '?random=' + new Date())
-                    //document.getElementById("avatar_url").value = url;
+                        //document.getElementById("avatar_url").value = url;
                 }
             };
-            xhr.onerror = function (error) {
+            xhr.onerror = function(error) {
                 defer.reject(messageService.showSuccess('Could not upload file.'));
             };
             xhr.send(file);
@@ -372,13 +375,13 @@
 
         that.OwnerRef = $firebaseObject(firebaseService.getRefGroups().child(groupID))
             .$loaded()
-            .then(function (groupData) {
+            .then(function(groupData) {
 
                 if (groupData['group-owner-id']) {
                     //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
-                    that.picRef = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
+                    that.picRef = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']) /*.child('profile-image')*/ )
                         .$loaded()
-                        .then(function (userData) {
+                        .then(function(userData) {
 
                             that.userObj = userData;
 
@@ -386,23 +389,29 @@
 
                 }
             });
-        function closeAdminToggler () {
+
+        function closeAdminToggler() {
             $mdSidenav('rights').close()
-                .then(function () {
+                .then(function() {
                     // console.log("close LEFT is done");
                 });
         };
-        function closeToggleAdmin () {
+
+        function closeToggleAdmin() {
             $mdSidenav('right').close()
-                .then(function () {
+                .then(function() {
                     // console.log("close LEFT is done");
                 });
         };
     }
 
     function DialogController($mdDialog) {
-        this.my = {model: {img: ''}};
-        this.hide = function (picture) {
+        this.my = {
+            model: {
+                img: ''
+            }
+        };
+        this.hide = function(picture) {
             // console.log("dialog box pic" + picture)
             $mdDialog.hide(picture);
         };

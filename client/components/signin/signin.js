@@ -2,16 +2,16 @@
  * Created by admin on 5/13/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('app.signin')
         .controller('SigninController', SigninController);
 
-    SigninController.$inject = ["singInService",'$mdToast','authService'];
+    SigninController.$inject = ["singInService", '$mdToast', 'authService'];
 
-    function SigninController(singInService,$mdToast,authService) {
+    function SigninController(singInService, $mdToast, authService) {
         /*Private Variables*/
         var that = this;
         var pageToRoutAfterLoginSuccess = "user/";
@@ -32,10 +32,10 @@
             that.submitting = true;
 
             singInService.login(form.user, pageToRoutAfterLoginSuccess)
-                .then(function (data) {
+                .then(function(data) {
                     that.submitting = false;
                 })
-                .catch(function () {
+                .catch(function() {
                     that.submitting = false;
                 });
 

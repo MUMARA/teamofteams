@@ -1,9 +1,9 @@
-(function () {
+(function() {
     'use strict';
     angular
         .module('app.quizCreate', ['firebase', 'app.quiz'])
         .factory('quizCreateService',
-            function () {
+            function() {
 
                 var that = this;
                 that.book = null;
@@ -14,81 +14,81 @@
                 that.topicIndex = null;
                 that.question = null;
                 return {
-                    'quiz': function () {
+                    'quiz': function() {
 
                     },
-                    'getSelected': function () {
+                    'getSelected': function() {
                         return {
                             book: that.book,
                             chapter: that.chapter,
                             topic: that.topic
                         }
                     },
-                    'getBook': function () {
+                    'getBook': function() {
                         return that.book;
                     },
-                    'getChapter': function () {
+                    'getChapter': function() {
                         return that.chapter;
                     },
-                    'getTopic': function () {
+                    'getTopic': function() {
                         return that.topic;
                     },
-                    'getQuestionObject': function () {
+                    'getQuestionObject': function() {
                         return that.question;
                     },
 
-                    'getBookIndex': function () {
+                    'getBookIndex': function() {
                         return that.bookIndex;
                     },
-                    'getChapterIndex': function () {
+                    'getChapterIndex': function() {
                         return that.chapterIndex + '';
                     },
-                    'getTopicIndex': function () {
+                    'getTopicIndex': function() {
                         return that.topicIndex;
                     },
 
 
-                    'setBook': function (bookId, bookIndex) {
+                    'setBook': function(bookId, bookIndex) {
                         that.book = bookId;
                         that.bookIndex = bookIndex;
                         console.log('Book Saved in Service Index: ' + bookIndex)
                     },
-                    'setChapter': function (chapterId, chapterIndex) {
+                    'setChapter': function(chapterId, chapterIndex) {
                         that.chapter = chapterId;
                         that.chapterIndex = chapterIndex;
                         console.log('Chapter Saved in Service Index: ' + chapterIndex);
                     },
-                    'setTopic': function (topicId, topicIndex) {
+                    'setTopic': function(topicId, topicIndex) {
                         that.topic = topicId;
                         that.topicIndex = topicIndex;
                         console.log('Topic Saved in Service Index: ' + topicIndex)
                     },
-                    'setQuestionObject': function (question) {
+                    'setQuestionObject': function(question) {
                         that.question = question;
                     },
 
-                    'getSelectedBook': function () {
+                    'getSelectedBook': function() {
                         return that.SelectedBook;
                     },
-                    'getSelectedChapter': function () {
+                    'getSelectedChapter': function() {
                         return that.SelectedChapter;
                     },
-                    'getSelectedTopic': function () {
+                    'getSelectedTopic': function() {
                         return that.SelectedTopic;
                     },
-                    'getSelectedQuestion': function () {
+                    'getSelectedQuestion': function() {
                         return that.SelectedQuestion;
                     },
-                    'setSelectedBook': function (index) {
+                    'setSelectedBook': function(index) {
                         that.SelectedBook = index;
                     },
-                    'setSelectedChapter': function (index) {
+                    'setSelectedChapter': function(index) {
                         that.SelectedChapter = index;
                     },
-                    'setSelectedTopic': function (index) {
+                    'setSelectedTopic': function(index) {
                         that.SelectedTopic = index;
                     },
-                    'setSelectedQuestion': function (index) {
+                    'setSelectedQuestion': function(index) {
                         that.SelectedQuestion = index;
                     }
                 }

@@ -5,19 +5,18 @@
 
 (function() {
 
-// Invoke 'strict' JavaScript mode
+    // Invoke 'strict' JavaScript mode
     'use strict';
 
     angular
         .module('checkin')
-        .filter('getLocationNameByID', getLocationNameByID );
+        .filter('getLocationNameByID', getLocationNameByID);
 
     getLocationNameByID.$inject = ['checkinService'];
 
-    function getLocationNameByID( checkinService ) {
-        return function( checkinObj, locations ) {
-            return checkinService.getLocationName( checkinObj, locations );
+    function getLocationNameByID(checkinService) {
+        return function(checkinObj, locations) {
+            return checkinService.getLocationName(checkinObj, locations);
         };
     }
 })();
-

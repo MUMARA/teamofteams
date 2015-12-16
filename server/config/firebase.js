@@ -7,4 +7,4 @@
 var credentials = require("./credentials.js");
 var FirebaseTokenGenerator = require("firebase-token-generator");
 
-module.exports = new FirebaseTokenGenerator( credentials.firebase.SECRET );
+module.exports = new FirebaseTokenGenerator(credentials.firebase.SECRET);

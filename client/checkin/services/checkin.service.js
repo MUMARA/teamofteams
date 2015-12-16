@@ -9,9 +9,9 @@
         .module('checkin')
         .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['$q', '$geolocation', 'firebaseService', "$firebaseObject",'$firebaseArray'];
+    checkinService.$inject = ['$q', '$geolocation', 'firebaseService', "$firebaseObject", '$firebaseArray'];
 
-    function checkinService( $q, $geolocation, firebaseService, $firebaseObject,$firebaseArray ) {
+    function checkinService($q, $geolocation, firebaseService, $firebaseObject, $firebaseArray) {
 
         /*private variables*/
         var refs, fireTimeStamp;
@@ -20,7 +20,7 @@
         fireTimeStamp = Firebase.ServerValue.TIMESTAMP;
 
         refs = {
-            main : firebaseService.getRefMain()
+            main: firebaseService.getRefMain()
         };
 
         refs.refGroupCheckinCurrent = refs.main.child('group-check-in-current');
@@ -32,16 +32,16 @@
         refs.refSubGroupLocationsDefined = refs.main.child('subgroup-locations-defined');
         refs.refSubGroupCheckinCurrentByUser = refs.main.child('subgroup-check-in-current-by-user');
 
-        function getLocation(groupID,subgroupID){
+        function getLocation(groupID, subgroupID) {
             var defer = $q.defer();
-                var locationRef = new Firebase(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID).toString());
-                locationRef.orderByValue().on("value", function(snapshot) {
-                    snapshot.forEach(function(data){
-                        //console.log(data.val());
-                        refs.$currentSubGroupLocationsObject = data.val();
-                    })
-                    defer.resolve();
-                });
+            var locationRef = new Firebase(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID).toString());
+            locationRef.orderByValue().on("value", function(snapshot) {
+                snapshot.forEach(function(data) {
+                    //console.log(data.val());
+                    refs.$currentSubGroupLocationsObject = data.val();
+                })
+                defer.resolve();
+            });
             return defer.promise;
         }
 
@@ -51,33 +51,33 @@
             getRefGroups: firebaseService.getRefGroups,
             getRefUserGroupMemberships: firebaseService.getRefUserGroupMemberships,
             getRefUserSubGroupMemberships: firebaseService.getRefUserGroupMemberships,
-            createCurrentRefs: function ( groupID, userID ) {
-                refs.$currentGroupLocations = Firebase.getAsArray( refs.refGroupLocationsDefined.child(groupID) );
-                refs.refCurrentGroupCheckinCurrent = refs.refGroupCheckinCurrent.child( groupID );
+            createCurrentRefs: function(groupID, userID) {
+                refs.$currentGroupLocations = Firebase.getAsArray(refs.refGroupLocationsDefined.child(groupID));
+                refs.refCurrentGroupCheckinCurrent = refs.refGroupCheckinCurrent.child(groupID);
 
-                var userCheckinRecords = refs.refGroupCheckinRecords.child( groupID + '/' + userID  );
-                refs.$userCheckinRecords = Firebase.getAsArray( userCheckinRecords );
+                var userCheckinRecords = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
+                refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
             },
-            createCurrentRefsBySubgroup: function ( groupID,subgroupID, userID ) {
+            createCurrentRefsBySubgroup: function(groupID, subgroupID, userID) {
                 var defer = $q.defer();
-                    getLocation(groupID,subgroupID).then(function(data){
-                            //refs.$currentSubGroupLocations = Firebase.getAsArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
-                            refs.$currentSubGroupLocations = $firebaseArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
-                            //refs.refCurrentSubGroupCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID).child(subgroupID);
-                            var userCheckinRecords = refs.refSubGroupCheckinRecords.child( groupID + '/' +subgroupID + '/' + userID  );
-                            refs.$userCheckinRecords = Firebase.getAsArray( userCheckinRecords );
-                        defer.resolve('test');
-                    });
+                getLocation(groupID, subgroupID).then(function(data) {
+                    //refs.$currentSubGroupLocations = Firebase.getAsArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
+                    refs.$currentSubGroupLocations = $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID));
+                    //refs.refCurrentSubGroupCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID).child(subgroupID);
+                    var userCheckinRecords = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupID + '/' + userID);
+                    refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+                    defer.resolve('test');
+                });
                 return defer.promise;
             },
-            getRefSubgroupCheckinCurrentByUser:function(){
+            getRefSubgroupCheckinCurrentByUser: function() {
                 return refs.refSubGroupCheckinCurrentByUser;
             },
-            getFireAsObject: function ( ref ) {
-                return $firebaseObject( ref );
+            getFireAsObject: function(ref) {
+                return $firebaseObject(ref);
             },
-            getRefGroupLocationsDefined: function( groupID ) {
-                return refs.refGroupLocationsDefined.child( groupID );
+            getRefGroupLocationsDefined: function(groupID) {
+                return refs.refGroupLocationsDefined.child(groupID);
             },
             getRefCheckinCurrent: function() {
                 return refs.refGroupCheckinCurrent;
@@ -85,11 +85,11 @@
             getRefCheckinCurrentBySubgroup: function() {
                 return refs.refSubGroupCheckinCurrent;
             },
-            getRefGroupCheckinCurrent: function( groupID ) {
+            getRefGroupCheckinCurrent: function(groupID) {
                 return refs.refGroupCheckinCurrent.child(groupID);
             },
-            getRefSubGroupCheckinCurrent: function( userID ,groupID , subgroupId ) {
-                return refs.refSubGroupCheckinCurrent.child( userID+ '/' + groupID + '/' + subgroupId);
+            getRefSubGroupCheckinCurrent: function(userID, groupID, subgroupId) {
+                return refs.refSubGroupCheckinCurrent.child(userID + '/' + groupID + '/' + subgroupId);
             },
             getFireCurrentGroupLocations: function() {
                 return refs.$currentGroupLocations;
@@ -100,29 +100,29 @@
             getFireCurrentSubGroupLocationsObject: function() {
                 return refs.$currentSubGroupLocationsObject;
             },
-            getFireGroup: function( groupID ) {
+            getFireGroup: function(groupID) {
                 var refGroups = this.getRefGroups();
-                return this.getFireAsObject( refGroups.child( groupID ) );
+                return this.getFireAsObject(refGroups.child(groupID));
             },
             geoLocationSupport: function() {
                 return typeof window.navigator !== 'undefined' && typeof window.navigator.geolocation !== 'undefined';
             },
-            getCurrentLocation: function () {
+            getCurrentLocation: function() {
                 return $geolocation.getCurrentPosition({
                     timeout: 60000,
                     maximumAge: 250,
                     enableHighAccuracy: true
                 });
             },
-            updateUserStatusBySubGroup: function( groupID, subgroupId, userID, statusObj, definedLocations, groupObj ) {
+            updateUserStatusBySubGroup: function(groupID, subgroupId, userID, statusObj, definedLocations, groupObj) {
                 var defer = $q.defer();
-                var errorCallback = function (err) {
+                var errorCallback = function(err) {
                     defer.reject('error occurred in connecting to the server', err);
                 };
 
                 var self = this;
 
-                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng( statusObj.location, definedLocations).$id : 'Other';
+                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(statusObj.location, definedLocations).$id : 'Other';
 
                 var checkinObj = {
 
@@ -139,21 +139,21 @@
 
                 // console.log(checkinObj)
 
-                checkinObj.message = statusObj.message || ( statusObj.type == 1 ? 'Checked-in' : 'Checked-out' );
+                checkinObj.message = statusObj.message || (statusObj.type == 1 ? 'Checked-in' : 'Checked-out');
 
-                var userCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID +  '/' + subgroupId + '/' +  userID  );
-                var $userCheckinCurrent = $firebaseObject( userCheckinCurrent );
+                var userCheckinCurrent = refs.refSubGroupCheckinCurrent.child(groupID + '/' + subgroupId + '/' + userID);
+                var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
 
                 $userCheckinCurrent
                     .$loaded()
                     .then(function() {
-                        var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(groupID +  '/' + subgroupId+ '/' +  userID );
+                        var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupId + '/' + userID);
                         var _ref = new Firebase(userCheckinRecordsRef.toString());
                         var _userCheckinREcordsRef = $firebaseArray(_ref);
                         _userCheckinREcordsRef.$add(checkinObj)
-                            .then(function(snapShot){
-                                var temp = $firebaseObject( refs.refSubGroupCheckinCurrentByUser.child(userID))
-                                    .$loaded().then(function(snapshot){
+                            .then(function(snapShot) {
+                                var temp = $firebaseObject(refs.refSubGroupCheckinCurrentByUser.child(userID))
+                                    .$loaded().then(function(snapshot) {
                                         // console.log('before')
                                         // console.log(snapshot)
                                         snapshot.timestamp = fireTimeStamp;
@@ -161,17 +161,17 @@
                                         snapshot.groupID = groupID;
                                         snapshot.subgroupID = subgroupId;
                                         snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
-                                        snapshot['source-type']= 1;  //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                                        snapshot['source-type'] = 1; //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
                                         // console.log('after')
                                         // console.log(snapshot)
-                                        snapshot.$save().then(function(d){
+                                        snapshot.$save().then(function(d) {
 
                                             checkinObj['record-ref'] = snapShot.key();
-                                            angular.extend( $userCheckinCurrent, checkinObj );
+                                            angular.extend($userCheckinCurrent, checkinObj);
                                             $userCheckinCurrent.$save()
                                                 .then(function() {
-                                                    self.updateSubGroupCount( groupID, subgroupId, checkinObj.type )
-                                                        .then(function () {
+                                                    self.updateSubGroupCount(groupID, subgroupId, checkinObj.type)
+                                                        .then(function() {
                                                             /*self.asyncRecordUserCheckSubGroupActivity(checkinObj, userID, groupID,subgroupId, groupObj, definedLocations)
                                                              .then(function () {
                                                              defer.resolve('Status updated successfully.');
@@ -181,25 +181,25 @@
 
                                                 }, errorCallback);
 
-                                        },errorCallback)
+                                        }, errorCallback)
 
-                                    },errorCallback)
+                                    }, errorCallback)
 
-                            },errorCallback)
+                            }, errorCallback)
 
                     }, errorCallback);
 
                 return defer.promise;
             },
-            updateUserStatus: function( groupID, userID, statusObj, definedLocations, groupObj ) {
+            updateUserStatus: function(groupID, userID, statusObj, definedLocations, groupObj) {
                 var defer = $q.defer();
-                var errorCallback = function (err) {
+                var errorCallback = function(err) {
                     defer.reject('error occurred in connecting to the server', err);
                 };
 
                 var self = this;
 
-                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng( statusObj.location, definedLocations).$id : 'Other';
+                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(statusObj.location, definedLocations).$id : 'Other';
 
                 var checkinObj = {
                     //id: 'autoGeneratedTimestampBasedRecordID', // from record
@@ -213,28 +213,28 @@
                     'identified-location-id': identifiedLocation
                 };
 
-                checkinObj.message = statusObj.message || ( statusObj.type == 1 ? 'Checked-in' : 'Checked-out' );
+                checkinObj.message = statusObj.message || (statusObj.type == 1 ? 'Checked-in' : 'Checked-out');
 
-                var userCheckinCurrent = refs.refGroupCheckinCurrent.child( groupID + '/' +  userID  );
-                var $userCheckinCurrent = $firebaseObject( userCheckinCurrent );
+                var userCheckinCurrent = refs.refGroupCheckinCurrent.child(groupID + '/' + userID);
+                var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
 
                 $userCheckinCurrent
                     .$loaded()
                     .then(function() {
 
-                        var userCheckinRecordsRef = refs.refGroupCheckinRecords.child( groupID + '/' +  userID  );
-                        var $userCheckinRecords = Firebase.getAsArray( userCheckinRecordsRef );
+                        var userCheckinRecordsRef = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
+                        var $userCheckinRecords = Firebase.getAsArray(userCheckinRecordsRef);
 
-                        var recRef = $userCheckinRecords.$add( checkinObj );
+                        var recRef = $userCheckinRecords.$add(checkinObj);
                         checkinObj.id = recRef.key();
 
-                        angular.extend( $userCheckinCurrent, checkinObj );
+                        angular.extend($userCheckinCurrent, checkinObj);
                         $userCheckinCurrent.$save()
                             .then(function() {
-                                self.updateGroupCount( groupID, checkinObj.type )
-                                    .then(function () {
+                                self.updateGroupCount(groupID, checkinObj.type)
+                                    .then(function() {
                                         self.asyncRecordUserCheckGroupActivity(checkinObj, userID, groupID, groupObj, definedLocations)
-                                            .then(function () {
+                                            .then(function() {
                                                 defer.resolve('Status updated successfully.');
 
                                             }, errorCallback);
@@ -247,18 +247,18 @@
 
                 return defer.promise;
             },
-            updateGroupCount: function ( groupID, checkinType ) {
+            updateGroupCount: function(groupID, checkinType) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefGroups().child( groupID + '/members-checked-in');
-                var $checkin = $firebaseObject( groupCheckedIn );
+                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/members-checked-in');
+                var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
                     .then(function() {
-                        $checkin.count = ( $checkin.count || 0 ) + ( checkinType == 1 ? 1 : -1 );
-                        $checkin.$save().then(function () {
+                        $checkin.count = ($checkin.count || 0) + (checkinType == 1 ? 1 : -1);
+                        $checkin.$save().then(function() {
                             defer.resolve();
-                        }, function () {
+                        }, function() {
                             defer.reject();
                         });
                     }, function() {
@@ -267,18 +267,18 @@
 
                 return defer.promise;
             },
-            updateAllSubGroupCount: function ( groupID, subgroupID , numberofuser ) {
+            updateAllSubGroupCount: function(groupID, subgroupID, numberofuser) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefGroups().child( groupID + '/' + subgroupID + '/members-checked-in');
-                var $checkin = $firebaseObject( groupCheckedIn );
+                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
                     .then(function() {
-                        $checkin.count = ( $checkin.count || 0 ) - numberofuser;
-                        $checkin.$save().then(function () {
+                        $checkin.count = ($checkin.count || 0) - numberofuser;
+                        $checkin.$save().then(function() {
                             defer.resolve();
-                        }, function () {
+                        }, function() {
                             defer.reject();
                         });
                     }, function() {
@@ -286,18 +286,18 @@
                     });
                 return defer.promise;
             },
-            updateSubGroupCount: function ( groupID, subgroupID , checkinType ) {
+            updateSubGroupCount: function(groupID, subgroupID, checkinType) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefGroups().child( groupID + '/' + subgroupID + '/members-checked-in');
-                var $checkin = $firebaseObject( groupCheckedIn );
+                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
                     .then(function() {
-                        $checkin.count = ( $checkin.count || 0 ) + ( checkinType == 1 ? 1 : -1 );
-                        $checkin.$save().then(function () {
+                        $checkin.count = ($checkin.count || 0) + (checkinType == 1 ? 1 : -1);
+                        $checkin.$save().then(function() {
                             defer.resolve();
-                        }, function () {
+                        }, function() {
                             defer.reject();
                         });
                     }, function() {
@@ -306,12 +306,12 @@
 
                 return defer.promise;
             },
-            asyncRecordUserCheckGroupActivity: function( checkinObj, userID, groupID, groupObj, definedLocations ){
+            asyncRecordUserCheckGroupActivity: function(checkinObj, userID, groupID, groupObj, definedLocations) {
                 var deferred = $q.defer();
 
                 var currentUser = firebaseService.getSignedinUserObj();
-                var locationName = this.getLocationName( checkinObj, definedLocations );
-                var groupActivityRef = firebaseService.getRefGroupsActivityStreams().child( groupID );
+                var locationName = this.getLocationName(checkinObj, definedLocations);
+                var groupActivityRef = firebaseService.getRefGroupsActivityStreams().child(groupID);
 
                 var actor = {
                     type: 'user',
@@ -326,7 +326,7 @@
                     id: null,
                     url: null,
                     displayName: locationName,
-                    image : null
+                    image: null
                 };
 
                 var target = {
@@ -337,7 +337,7 @@
                 };
 
                 var displayName = actor.displayName +
-                    ( checkinObj.type == 1 ? ' checked-in' : ' checked-out' ) +
+                    (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
                     ' at "' + locationName +
                     '" location of ' + groupObj.title + '.';
 
@@ -346,27 +346,26 @@
                     verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
                     published: fireTimeStamp,
                     displayName: displayName,
-                    actor : actor,
-                    object : object,
-                    target : target
+                    actor: actor,
+                    object: object,
+                    target: target
                 };
 
                 var newActivityRef = groupActivityRef.push();
-                newActivityRef.set(activity, function( err ){
-                    if ( err ) {
+                newActivityRef.set(activity, function(err) {
+                    if (err) {
                         deferred.reject();
                         console.log('error occurred in check-in activity', err);
                     } else {
                         var activityID = newActivityRef.key();
                         var activityEntryRef = groupActivityRef.child(activityID);
-                        activityEntryRef.once('value', function( snapshot ) {
+                        activityEntryRef.once('value', function(snapshot) {
                             var timestamp = snapshot.val();
-                            newActivityRef.setPriority(0 - timestamp.published, function( error ) {
-                                if ( error ) {
+                            newActivityRef.setPriority(0 - timestamp.published, function(error) {
+                                if (error) {
                                     deferred.reject();
                                     console.log('error occurred in check-in activity', error);
-                                }
-                                else {
+                                } else {
                                     deferred.resolve();
                                 }
                             });
@@ -376,12 +375,12 @@
 
                 return deferred.promise;
             },
-            asyncRecordUserCheckSubGroupActivity: function( checkinObj, userID, groupID,subgroupID, groupObj, definedLocations ){
+            asyncRecordUserCheckSubGroupActivity: function(checkinObj, userID, groupID, subgroupID, groupObj, definedLocations) {
                 var deferred = $q.defer();
 
                 var currentUser = firebaseService.getSignedinUserObj();
-                var locationName = this.getLocationName( checkinObj, definedLocations );
-                var subGroupActivityRef = firebaseService.getRefSubGroupsActivityStreams().child( groupID + "/" + subgroupID ); //"subgroup-activity-streams"
+                var locationName = this.getLocationName(checkinObj, definedLocations);
+                var subGroupActivityRef = firebaseService.getRefSubGroupsActivityStreams().child(groupID + "/" + subgroupID); //"subgroup-activity-streams"
 
                 var actor = {
                     type: 'user',
@@ -396,7 +395,7 @@
                     id: null,
                     url: null,
                     displayName: locationName,
-                    image : null
+                    image: null
                 };
 
                 var target = {
@@ -407,7 +406,7 @@
                 };
 
                 var displayName = actor.displayName +
-                    ( checkinObj.type == 1 ? ' checked-in' : ' checked-out' ) +
+                    (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
                     ' at "' + locationName +
                     '" location of ' + groupObj.title + '.';
 
@@ -416,27 +415,26 @@
                     verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
                     published: fireTimeStamp,
                     displayName: displayName,
-                    actor : actor,
-                    object : object,
-                    target : target
+                    actor: actor,
+                    object: object,
+                    target: target
                 };
 
                 var newActivityRef = subGroupActivityRef.push();
-                newActivityRef.set(activity, function( err ){
-                    if ( err ) {
+                newActivityRef.set(activity, function(err) {
+                    if (err) {
                         deferred.reject();
                         console.log('error occurred in check-in activity', err);
                     } else {
                         var activityID = newActivityRef.key();
                         var activityEntryRef = subGroupActivityRef.child(activityID);
-                        activityEntryRef.once('value', function( snapshot ) {
+                        activityEntryRef.once('value', function(snapshot) {
                             var timestamp = snapshot.val();
-                            newActivityRef.setPriority(0 - timestamp.published, function( error ) {
-                                if ( error ) {
+                            newActivityRef.setPriority(0 - timestamp.published, function(error) {
+                                if (error) {
                                     deferred.reject();
                                     console.log('error occurred in check-in activity', error);
-                                }
-                                else {
+                                } else {
                                     deferred.resolve();
                                 }
                             });
@@ -446,15 +444,15 @@
 
                 return deferred.promise;
             },
-            addLocation: function( groupID, userID, locationObj ) {
+            addLocation: function(groupID, userID, locationObj) {
                 var defer = $q.defer();
 
                 var newLocation = {
                     'group-url': groupID,
-                    'title' : locationObj.title,
-                    'type': 1,// 1 = Geo location, 2 = Beacon
+                    'title': locationObj.title,
+                    'type': 1, // 1 = Geo location, 2 = Beacon
                     'location': {
-                        'lat' : locationObj.lat,
+                        'lat': locationObj.lat,
                         'lon': locationObj.lng,
                         'radius': locationObj.radius
                     },
@@ -462,8 +460,8 @@
                     'timestamp': fireTimeStamp
                 };
 
-                var ref = refs.$currentGroupLocations.$add( newLocation );
-                if( ref.key() ){
+                var ref = refs.$currentGroupLocations.$add(newLocation);
+                if (ref.key()) {
                     defer.resolve('Location has been added to "' + groupID + '".');
                 } else {
                     defer.reject('Error occurred in saving on server.');
@@ -471,15 +469,15 @@
 
                 return defer.promise;
             },
-            addLocationBySubgroup: function( groupID,subgroupID, userID, locationObj ,multiple,recordId ) {
+            addLocationBySubgroup: function(groupID, subgroupID, userID, locationObj, multiple, recordId) {
                 var defer = $q.defer();
 
                 var newLocation = {
                     'subgroup-url': groupID + '/' + subgroupID,
-                    'title' : locationObj.title,
-                    'type': 1,// 1 = Geo location, 2 = Beacon
+                    'title': locationObj.title,
+                    'type': 1, // 1 = Geo location, 2 = Beacon
                     'location': {
-                        'lat' : locationObj.locationObj.lat,
+                        'lat': locationObj.locationObj.lat,
                         'lon': locationObj.locationObj.lng,
                         'radius': locationObj.locationObj.radius
                     },
@@ -487,22 +485,22 @@
                     'timestamp': fireTimeStamp
                 };
                 var syncRef;
-                if(!multiple && refs.$currentSubGroupLocations.length){
+                if (!multiple && refs.$currentSubGroupLocations.length) {
                     //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
-                    angular.extend(refs.$currentSubGroupLocations[0],newLocation)
+                    angular.extend(refs.$currentSubGroupLocations[0], newLocation)
                     refs.$currentSubGroupLocations.$save(0)
-                        .then(function(){
+                        .then(function() {
                             defer.resolve('Location has been added to "' + subgroupID + '".');
-                        },function(){
+                        }, function() {
                             defer.reject('Error occurred in saving on server.');
                         })
 
-                }else{
+                } else {
 
-                    refs.$currentSubGroupLocations.$add( newLocation )
-                        .then(function(){
+                    refs.$currentSubGroupLocations.$add(newLocation)
+                        .then(function() {
                             defer.resolve('Location has been added to "' + subgroupID + '".');
-                        },function(){
+                        }, function() {
                             defer.reject('Error occurred in saving on server.');
 
                         });
@@ -518,7 +516,7 @@
                 return defer.promise;
             },
             //for Admins: get the predefined location timestampID, from which user checked-in or checked-out.
-            getDefinedLocationByLatLng: function ( userLoc, definedLocations, radius ) {
+            getDefinedLocationByLatLng: function(userLoc, definedLocations, radius) {
                 var distance, currentLatLon,
                     location, newLocLatLng;
 
@@ -531,13 +529,13 @@
                 //if no radius provided to calculate distance. e.g user check-in/out from any location.
                 radius = radius || 0;
 
-                newLocLatLng = new L.LatLng( userLoc.lat, userLoc.lon || userLoc.lng );
+                newLocLatLng = new L.LatLng(userLoc.lat, userLoc.lon || userLoc.lng);
 
-                angular.forEach( definedLocations, function ( definedLoc ) {
-                    currentLatLon = new L.LatLng( definedLoc.location.lat, definedLoc.location.lon);
-                    distance = newLocLatLng.distanceTo( currentLatLon );
+                angular.forEach(definedLocations, function(definedLoc) {
+                    currentLatLon = new L.LatLng(definedLoc.location.lat, definedLoc.location.lon);
+                    distance = newLocLatLng.distanceTo(currentLatLon);
 
-                    if ( distance <= definedLoc.location.radius + radius ) {
+                    if (distance <= definedLoc.location.radius + radius) {
                         location = definedLoc;
                     }
                 });
@@ -546,18 +544,18 @@
             },
 
             //for Admins: get the predefined location name, from which user checked-in or checked-out.
-            getLocationName: function( userStatusObj, definedLocations ) {
+            getLocationName: function(userStatusObj, definedLocations) {
 
                 //handle if no previous check-in found and got null.
-                if ( !userStatusObj ) {
+                if (!userStatusObj) {
                     return;
                 }
 
                 var locationID = 'Other';
                 var locID = userStatusObj['identified-location-id'];
 
-                angular.forEach( definedLocations, function ( definedLoc ) {
-                    if ( locID === definedLoc.$id ) {
+                angular.forEach(definedLocations, function(definedLoc) {
+                    if (locID === definedLoc.$id) {
                         locationID = definedLoc.title;
                     }
                 });

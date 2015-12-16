@@ -283,7 +283,7 @@
                                                             that.totalonlinegroupmember[group.$id] += 1
                                                         }
                                                         that.totalgroupmember[group.$id] += 1
-                                                        // console.log(that.users);                 
+                                                            // console.log(that.users);                 
                                                     })
                                                 }
                                             });

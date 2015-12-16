@@ -12,8 +12,8 @@
         /*private variables*/
         var that = this;
         var user = userService.getCurrentUser();
-        var groupId= $stateParams.groupID;
-        $rootScope.newImg =false;
+        var groupId = $stateParams.groupID;
+        $rootScope.newImg = false;
         /*VM functions*/
         this.groupPath = '';
         this.queryUsers = queryUsers;

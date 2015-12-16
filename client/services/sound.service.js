@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('core')
-    .factory('soundService', ["ngAudio", function( ngAudio ) {
+    .factory('soundService', ["ngAudio", function(ngAudio) {
         var successSound = ngAudio.load("sounds/guitar_success.mp3"); // returns NgAudioObject
         var failSound = ngAudio.load("sounds/piano_fail.mp3");
 

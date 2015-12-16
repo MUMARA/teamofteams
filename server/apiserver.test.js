@@ -21,12 +21,12 @@ var config = {
     //user credentials can be used in following tests
     testUser: {
         email: 'panacloudservice@gmail.com',
-        password : '123456',
-        firstName : 'Pana',
-        lastName : 'Cloud',
-        userID : 'panacloud67344',
+        password: '123456',
+        firstName: 'Pana',
+        lastName: 'Cloud',
+        userID: 'panacloud67344',
         token: '', //to be stored on login test.
-        groupID : 'testgroup',
+        groupID: 'testgroup',
         // TODO should be dynamic to resolve validity issues.
         devices: {
             android: "APA91bFS6o8Ycd2s_22uVnhwEsdwRM0PhBM3EXdtrN2qWEDP4CYlbBLKEWkqO9_yF0F8aAv94zjFsD5rvJdzf6oDjeysIHgtTNdLmDko0sdhwpo39kMNslz04Vb4529BJS3T43QLDpGi5vCISv4it7fcJVZV-XYndNVUfrqAmm1_UAeBmP4fZDSnD4X5CJykV7uE0BOB0Xu8"
@@ -36,26 +36,28 @@ var config = {
         groupID: 'testgroup1',
         title: 'Test Group',
         desc: 'Group created for testing purpose'
-        //other field will be injected from firebase test API.
+            //other field will be injected from firebase test API.
     }
 };
 
 //create a server for firebase authentication
-http.createServer(function( req, res ){
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+http.createServer(function(req, res) {
+    res.writeHead(200, {
+        'Content-Type': 'text/plain'
+    });
     res.end('Hello, Automated Attendance System!\n');
 }).listen(config.PORT);
 
 
 /*test declarations*/
-describe('express rest api server', function(){
+describe('express rest api server', function() {
     //this.timeout(10000);
 
-    it('should sign-up successfully', function(done){
+    it('should sign-up successfully', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'signup')
             .send(config.testUser)
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(1);
@@ -65,11 +67,11 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should fail signing-up again with same credentials', function(done){
+    it('should fail signing-up again with same credentials', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'signup')
             .send(config.testUser)
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(2); //email address already used.
@@ -79,14 +81,14 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should sign-in successfully with valid credentials', function(done){
+    it('should sign-in successfully with valid credentials', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'signin')
             .send({
                 email: config.testUser.email,
-                password : config.testUser.password
+                password: config.testUser.password
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(1);
@@ -99,14 +101,14 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should fail signing-in with invalid credentials', function(done){
+    it('should fail signing-in with invalid credentials', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'signin')
             .send({
                 email: config.testUser.email,
-                password : 'invalidpassword'
+                password: 'invalidpassword'
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(0);
@@ -117,19 +119,19 @@ describe('express rest api server', function(){
     });
 
     //authenticate from firebase.
-    it('should login server from firebase', function(){
+    it('should login server from firebase', function() {
         this.timeout(8000);
 
         var promise = firebaseTestApi.authenticateServer();
-        promise.finally(function(){
-            expect( promise.inspect().state ).to.eql('fulfilled');
+        promise.finally(function() {
+            expect(promise.inspect().state).to.eql('fulfilled');
             done();
         });
     });
 
     /*all tests that requires user to be logged in*/
 
-    it('should register android device', function(done){
+    it('should register android device', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'registerdevice')
             .send({
@@ -139,7 +141,7 @@ describe('express rest api server', function(){
                     android: config.testUser.devices.android
                 }
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(1);
@@ -148,7 +150,7 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should not register same android device', function(done){
+    it('should not register same android device', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'registerdevice')
             .send({
@@ -158,7 +160,7 @@ describe('express rest api server', function(){
                     android: config.testUser.devices.android
                 }
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(0);
@@ -167,18 +169,18 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should create a new group via firebaseTestApi.', function ( done ) {
+    it('should create a new group via firebaseTestApi.', function(done) {
         this.timeout(8000);
 
-        var promise = firebaseTestApi.createGroup( config.testGroup, config.testUser.userID );
-        promise.finally(function(){
-            expect( promise.inspect().state ).to.eql('fulfilled');
+        var promise = firebaseTestApi.createGroup(config.testGroup, config.testUser.userID);
+        promise.finally(function() {
+            expect(promise.inspect().state).to.eql('fulfilled');
             done();
         });
 
     });
 
-    it('should send a push notification to all group members\'s devices', function(done){
+    it('should send a push notification to all group members\'s devices', function(done) {
         //this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'sendnotification')
             .send({
@@ -188,7 +190,7 @@ describe('express rest api server', function(){
                 userID: config.testUser.userID,
                 token: config.testUser.token
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(1);
@@ -197,7 +199,7 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should not send a push notification with invalid payload', function(done){
+    it('should not send a push notification with invalid payload', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'sendnotification')
             .send({
@@ -207,7 +209,7 @@ describe('express rest api server', function(){
                 userID: config.testUser.userID,
                 token: config.testUser.token
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(0);
@@ -216,7 +218,7 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should remove user\'s android device', function(done){
+    it('should remove user\'s android device', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'unregisterdevice')
             .send({
@@ -226,7 +228,7 @@ describe('express rest api server', function(){
                     android: config.testUser.devices.android
                 }
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(1);
@@ -235,7 +237,7 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should not remove user\'s same android device', function(done){
+    it('should not remove user\'s same android device', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'unregisterdevice')
             .send({
@@ -245,7 +247,7 @@ describe('express rest api server', function(){
                     android: config.testUser.devices.android
                 }
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(0);
@@ -255,7 +257,7 @@ describe('express rest api server', function(){
     });
 
     /*Removes user*/
-    it('should delete user', function(done){
+    it('should delete user', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'deleteuser')
             .send({
@@ -263,7 +265,7 @@ describe('express rest api server', function(){
                 password: config.testUser.password,
                 token: config.testUser.token
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(1);
@@ -272,14 +274,14 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should not get sign in with credentials of deleted user', function(done){
+    it('should not get sign in with credentials of deleted user', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.post(config.app.BASE_URL + 'signin')
             .send({
                 email: config.testUser.email,
-                password : config.testUser.password
+                password: config.testUser.password
             })
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(0);
@@ -289,11 +291,11 @@ describe('express rest api server', function(){
             });
     });
 
-    it('should confirm that the userID ( ' + config.testUser.userID + ' ) is available for new sign-up', function(done){
+    it('should confirm that the userID ( ' + config.testUser.userID + ' ) is available for new sign-up', function(done) {
         this.timeout(config.TIMEOUT);
         superagent.get(config.app.BASE_URL + 'checkuserid/' + config.testUser.userID)
             .send()
-            .end(function(e, res){
+            .end(function(e, res) {
                 expect(e).to.eql(null);
                 expect(typeof res.body).to.eql('object');
                 expect(res.body.statusCode).to.eql(1);

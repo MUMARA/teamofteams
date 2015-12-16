@@ -1,10 +1,10 @@
-(function () {
+(function() {
     'use strict';
 
     angular
-        .module( 'app.JoinGroup')
-        .controller('JoinGroupController', ['joinGroupService', 'firebaseService', 'authService', '$firebaseObject','$firebaseArray',
-            function (joinGroupService, firebaseService, authService, $firebaseObject,$firebaseArray) {
+        .module('app.JoinGroup')
+        .controller('JoinGroupController', ['joinGroupService', 'firebaseService', 'authService', '$firebaseObject', '$firebaseArray',
+            function(joinGroupService, firebaseService, authService, $firebaseObject, $firebaseArray) {
                 var $scope = this;
                 //https://github.com/angular/material/issues/547#issuecomment-65620808
 
@@ -17,24 +17,24 @@
                 this.listgroup;
                 //this.groupOne = $firebaseObject(firebaseService.getRefGroupsNames());
                 this.groupOne = $firebaseArray(firebaseService.getRefGroupsNames());
-                this.groupOne.$loaded().then(function (data) {
-                    if(data){
+                this.groupOne.$loaded().then(function(data) {
+                    if (data) {
                         //console.log(data);
                     }
 
-                }).catch(function (err) {
-                      console.log(err);
+                }).catch(function(err) {
+                    console.log(err);
                 });
 
-                $scope.clear = function(){
-                    if($scope.listgroup == 0){
+                $scope.clear = function() {
+                    if ($scope.listgroup == 0) {
 
-                        $scope.listgroup =   $scope.groupOne;
+                        $scope.listgroup = $scope.groupOne;
                     }
                     console.log($scope.listgroup);
                 };
 
-                $scope.listgroup =   this.groupOne;
+                $scope.listgroup = this.groupOne;
                 // console.log( $scope.listgroup);
 
 
@@ -54,8 +54,8 @@
                 this.uImg = ['washedout.png', 'PanacloudLogoForList.svg', 'citibankLogo.svg', 'habibBankLogo.svg', 'washedout.png', 'PanacloudLogoForList.svg', 'citibankLogo.svg', 'habibBankLogo.svg', 'habibBankLogo.svg'];
 
                 function loadAllGroups() {
-                     $scope.filteredGroups = Firebase.getAsArray(firebaseService.getRefGroupsNames().orderByKey());
-                     // console.log($scope.filteredGroups)
+                    $scope.filteredGroups = Firebase.getAsArray(firebaseService.getRefGroupsNames().orderByKey());
+                    // console.log($scope.filteredGroups)
                 }
 
                 loadAllGroups();
@@ -89,10 +89,10 @@
                                     }
                                 });
                         })*/
-                        $scope.filteredGroups.forEach(function(el,i){
+                        $scope.filteredGroups.forEach(function(el, i) {
                             var j = i;
                             $firebaseObject(firebaseService.getRefGroupsNames().child(el.$id))
-                                .$loaded().then(function(gNames){
+                                .$loaded().then(function(gNames) {
                                     // console.log($scope.filteredGroups[j]);
                                     // $scope.filteredGroups[j].groupImg = gNames.groupImgUrl;
                                     // $scope.filteredGroups[j].ownerImg = gNames.ownerImgUrl;
@@ -122,7 +122,7 @@
                 }
 
 
-                this.validator = function (form) {
+                this.validator = function(form) {
                     if (($scope.selectedItem && $scope.selectedItem.$id) && form.$valid) {
                         return false
                     } else {
@@ -136,5 +136,6 @@
                     return joinGroupService.canActivate()
                 }
                 */
-            }]);
+            }
+        ]);
 })();

@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -18,21 +18,21 @@
 
         /*  Functions  */
         function back() {
-            $timeout(function () {
+            $timeout(function() {
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
             }, 0)
         };
-        $scope.prev = function () {
-            $timeout(function () {
+        $scope.prev = function() {
+            $timeout(function() {
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
             })
         };
-        $scope.addChapters = function () {
+        $scope.addChapters = function() {
             console.log($scope.Title + " " + $scope.Description)
             ref.child("question-bank-chapters").child($scope.bookId).push({
                 title: $scope.Title,
                 description: $scope.Description
-            }, function () {
+            }, function() {
                 $scope.Title = '';
                 $scope.Description = '';
                 $scope.prev();

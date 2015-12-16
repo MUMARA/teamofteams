@@ -84,7 +84,7 @@
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
-                } else  if(snapshot.val().type == 1 ){
+                } else if (snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
@@ -102,7 +102,7 @@
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
-                } else  if(snapshot.val().type == 1 ){
+                } else if (snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
@@ -263,7 +263,7 @@
                     });
             }
 
-            
+
             function logout() {
                 authService.logout();
 
@@ -273,20 +273,20 @@
                 $location.path('/user/' + userService.getCurrentUser().userID)
             }
 
-            this.checkinClick = function(){
+            this.checkinClick = function() {
 
                 if (self.groups.length === 0) {
                     messageService.showFailure('Currently you are not a member of any Team!');
                 }
                 if (!self.switchMsg) {
                     if (self.checkout) {
-                        self.updateStatus(self.showUrlObj.group,true)
-                        return    
+                        self.updateStatus(self.showUrlObj.group, true)
+                        return
                     }
                 }
                 self.switchMsg = !self.switchMsg
                 self.ListGroupSubGroup = [];
-                self.groups.forEach(function(group, groupId){
+                self.groups.forEach(function(group, groupId) {
                     var tmp = {
                         group: group.$id,
                         subGroups: []
@@ -305,7 +305,7 @@
             }
 
             function showSubGroup(group, pId) {
-              
+
                 self.subgroups = [];
                 for (var i in group) {
                     if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {

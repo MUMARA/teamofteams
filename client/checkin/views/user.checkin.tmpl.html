@@ -2,15 +2,14 @@
     <div layout="row">
         <div>
             <!--<md-icon icon="images/icons/ic_account_circle_48px.svg" style="width: 48px; height: 48px; margin-top: 25px"></md-icon>-->
-            <img class="userProfileImg" get-gravatar="{{user.email}}" watch="user.email" alt="ProfileImg"/>
+            <img class="userProfileImg" get-gravatar="{{user.email}}" watch="user.email" alt="ProfileImg" />
         </div>
         <div class="md-tile-content">
             <h3>@{{userID}}</h3>
             <h3>{{user.firstName}} {{user.lastName}}</h3>
             <h3>{{user.email}}</h3>
-
         </div>
-    </div >
+    </div>
     <div layout="column" style="margin: 5px">
         <div style="margin-top: 5px" ng-repeat="groupObj in subscribedGroups | array | filter : filterCheckin ">
             <div>
@@ -24,9 +23,9 @@
 <!--<div  ng-show="showLocationTab" flex layout="row" layout-align="space-around center" ng-show="isOwner">-->
 <div flex layout="row" layout-align="space-around center" ng-show="isOwner">
     <div flex="15"><img src="images/icons/checkin1.png" style="width: 70px; height: 70px; margin-left: 0;margin-top: 0;" /></div>
-    <div flex="85" >
+    <div flex="85">
         <form style="padding: 0px 4px 10px 10px;">
-            <div layout="column" layout-align="space-around start" >
+            <div layout="column" layout-align="space-around start">
                 <md-input-container style="width: 80%">
                     <label>Status message (optional)</label>
                     <input ng-model="newStatus.message" type="text" class="input-full">
