@@ -19,9 +19,6 @@
         this.onlineGroupMembers = [];
         this.offlineGroupMembers = [];
 
-        this.totalonlinegroupmember = {};
-        this.totalgroupmember = {};
-
         // if($location.path.indexOf(this.pageUserId) == -1) {
         //     $location.path('/user/'+this.pageUserId+'/')
         // }
@@ -80,9 +77,14 @@
                             .then(function(groupData) {
                                 groupDataUbind[j] = groupData.$watch(function() {
                                     $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
+                                    $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
+                                    $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
+                                    $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;                            
                                 });
                                 $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
-
+                                $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
+                                $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
+                                $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;
                                 if (groupData['group-owner-id']) {
                                     //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
                                     $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))
@@ -202,14 +204,10 @@
                             alert(flag);
                             debugger;*/
         }
-
-        $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(that.pageUserId.userID)).$loaded().then(function(groupdata) {
-            groupdata.forEach(function(group, i) {
-                that.totalonlinegroupmember[group.$id] = 0;
-                that.totalgroupmember[group.$id] = 0;
-            });
-        })
+        var count = 0;
         this.GetSubGroupUsers = function() {
+                if (count == 1) return;
+                count = 1
                 that.users = [];
                 $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(that.pageUserId.userID)).$loaded().then(function(groupdata) {
                     groupdata.forEach(function(group, i) {
@@ -220,19 +218,22 @@
                                 // console.log(subGroup);
                                 // console.log(val.$id);
                                 // Update wala manjan
+                                var subGroupID = subGroup;
                                 checkinService.getRefCheckinCurrentBySubgroup().child(group.$id).child(subGroup).on('child_changed', function(snapshot, prevChildKey) {
                                     // console.log(snapshot.val());    
                                     // console.log(snapshot.key()); 
                                     that.users.forEach(function(val, indx) {
                                         if (val.id === snapshot.key()) {
-                                            val.type = snapshot.val().type;
-                                            val.message = snapshot.val().message;
-                                            val.timestamp = snapshot.val().timestamp;
+                                            if (val.groupID === (group.$id + ' / ' + subGroupID)) {
+                                                // alert(group.$id + ' / ' + subGroupID)
+                                                val.type = snapshot.val().type;
+                                                val.message = snapshot.val().message;
+                                                val.timestamp = snapshot.val().timestamp;
+                                            }
                                         }
                                     })
                                 });
                                 //user wala manjan
-                                var subGroupID = subGroup;
                                 subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(group.$id, subGroup).$loaded().then(function(subgroupsdata) {
 
                                     $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(group.$id).child(subGroupID)).$loaded().then(function(usersdata) {
@@ -279,11 +280,7 @@
                                                             firstName: firstName,
                                                             lastName: lastName
                                                         });
-                                                        if (type) {
-                                                            that.totalonlinegroupmember[group.$id] += 1
-                                                        }
-                                                        that.totalgroupmember[group.$id] += 1
-                                                            // console.log(that.users);                 
+                                                        // console.log(that.users);                 
                                                     })
                                                 }
                                             });
