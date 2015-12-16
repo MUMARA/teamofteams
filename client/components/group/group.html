@@ -61,7 +61,7 @@
                                 <div>
                                     <md-list>
                                         <md-list-item class="md-3-line">
-                                            <md-progress-circular class="md-hue-2 groupPageGroupLogo" md-diameter="35"></md-progress-circular>
+                                            <md-progress-circular ng-value="((group.group['members-checked-in'].count / group.group['members-count']) *100) | number:0" class="md-hue-2 groupPageGroupLogo"></md-progress-circular>
                                         </md-list-item>
                                     </md-list>
                                 </div>
