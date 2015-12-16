@@ -82,7 +82,6 @@ function createUser(res, user) {
         lastName: user.lastName,
         uuid: nodeUuid.v1(),
         status: 0
-            // status      : 'pending'
     };
 
     fireHandler.addUser(userObj, function(err, firebaseObj) {

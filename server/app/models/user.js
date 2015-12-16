@@ -12,19 +12,19 @@ var UserSchema = Schema({
         type: String,
         index: true
     },
-    email: String,
-    password: String,
-    firstName: String,
-    lastName: String,
-    uuid: String,
-    status: Number,
-    lastLogin: String,
-    lastGenerated: String, //last token generated on login.
-    token: String,
-    devices: {
-        android: Array,
-        iphone: Array,
-        windowsPhone: Array
+    email : String,
+    password : String,
+    firstName : String,
+    lastName : String,
+    uuid : String,
+    status : Number,
+    lastLogin : String,
+    lastGenerated : String, //last token generated on login.
+    token : String,
+    devices : {
+        android : Array,
+        iphone : Array,
+        windowsPhone : Array
     },
     'profile-image': String,
     dateCreated: String
