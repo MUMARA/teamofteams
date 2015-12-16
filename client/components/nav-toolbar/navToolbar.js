@@ -78,13 +78,13 @@
             checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('value', function(snapshot, prevChildKey) {
                 // console.log(snapshot.val());
                 // console.log(snapshot.val().type);
-                if (snapshot.val().type == 2) {
+                if (snapshot.val() && snapshot.val().type == 2) {
                     self.checkout = false;
                     self.switchCheckIn = false;
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
-                } else if (snapshot.val().type == 1) {
+                } else if (snapshot.val() && snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
@@ -96,13 +96,13 @@
             checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('child_changed', function(snapshot, prevChildKey) {
                 // console.log(snapshot.val());
                 // console.log(snapshot.val().type);
-                if (snapshot.val().type == 2) {
+                if (snapshot.val() && snapshot.val().type == 2) {
                     self.checkout = false;
                     self.switchCheckIn = false;
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
-                } else if (snapshot.val().type == 1) {
+                } else if (snapshot.val() && snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;

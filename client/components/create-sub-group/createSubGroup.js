@@ -16,7 +16,7 @@
         /*private variables*/
         var that = this;
         var user = userService.getCurrentUser();
-        $rootScope.newImg = false;
+        $rootScope.newImg = '';
         var localStorage = $localStorage.loggedInUser;
         var groupID = $stateParams.groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
@@ -258,10 +258,9 @@
                         that.abc = false;
                     })
                     .catch(function(err) {
-
                         // return alert('picture upload failed' + err)
-                        return messageService.showFailure('picture upload failed' + err)
                         that.abc = false;
+                        return messageService.showFailure('picture upload failed' + err)
                     });
                 // console.log(x);
             } else {
@@ -286,7 +285,7 @@
                         var response = JSON.parse(xhr.responseText);
                         defer.resolve(that.upload_file(file, response.signed_request, response.url));
                     } else {
-                        defer.reject(alert("Could not get signed URL."))
+                        defer.reject(essageService.showFailure("Could not get signed URL."))
                     }
                 }
             };
