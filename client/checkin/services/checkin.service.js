@@ -172,11 +172,14 @@
                                                 .then(function() {
                                                     self.updateSubGroupCount(groupID, subgroupId, checkinObj.type)
                                                         .then(function() {
+                                                            self.updateGroupCount(groupID, checkinObj.type)
+                                                                .then(function() {
+                                                                    defer.resolve('Status updated successfully.');
                                                             /*self.asyncRecordUserCheckSubGroupActivity(checkinObj, userID, groupID,subgroupId, groupObj, definedLocations)
                                                              .then(function () {
                                                              defer.resolve('Status updated successfully.');
                                                              }, errorCallback);*/
-                                                            defer.resolve('Status updated successfully.');
+                                                            }, errorCallback);    
                                                         }, errorCallback);
 
                                                 }, errorCallback);
