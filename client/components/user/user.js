@@ -204,8 +204,10 @@
                             alert(flag);
                             debugger;*/
         }
-
+        var count = 0;
         this.GetSubGroupUsers = function() {
+                if (count == 1) return;
+                count = 1
                 that.users = [];
                 $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(that.pageUserId.userID)).$loaded().then(function(groupdata) {
                     groupdata.forEach(function(group, i) {
@@ -216,19 +218,22 @@
                                 // console.log(subGroup);
                                 // console.log(val.$id);
                                 // Update wala manjan
+                                var subGroupID = subGroup;
                                 checkinService.getRefCheckinCurrentBySubgroup().child(group.$id).child(subGroup).on('child_changed', function(snapshot, prevChildKey) {
                                     // console.log(snapshot.val());    
                                     // console.log(snapshot.key()); 
                                     that.users.forEach(function(val, indx) {
                                         if (val.id === snapshot.key()) {
-                                            val.type = snapshot.val().type;
-                                            val.message = snapshot.val().message;
-                                            val.timestamp = snapshot.val().timestamp;
+                                            if (val.groupID === (group.$id + ' / ' + subGroupID)) {
+                                                // alert(group.$id + ' / ' + subGroupID)
+                                                val.type = snapshot.val().type;
+                                                val.message = snapshot.val().message;
+                                                val.timestamp = snapshot.val().timestamp;
+                                            }
                                         }
                                     })
                                 });
                                 //user wala manjan
-                                var subGroupID = subGroup;
                                 subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(group.$id, subGroup).$loaded().then(function(subgroupsdata) {
 
                                     $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(group.$id).child(subGroupID)).$loaded().then(function(usersdata) {
