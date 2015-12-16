@@ -1,7 +1,7 @@
 /**
  * Created by Adnan Irfan on 09-Jul-15.
  */
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -20,23 +20,23 @@
         $scope.chapterId = $stateParams.id;
 
         function back() {
-            $timeout(function () {
+            $timeout(function() {
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
             }, 0)
         };
 
-        $scope.addTopics = function () {
+        $scope.addTopics = function() {
             console.log($scope.Title + ' ' +
-            $scope.Description)
+                $scope.Description)
             ref.child("question-bank-topic").child(quizService.getBook()).child($scope.chapterId).push({
                 description: $scope.Description,
                 title: $scope.Title
-            }, function () {
+            }, function() {
                 $scope.prev();
             });
         };
-        $scope.prev = function () {
-            $timeout(function () {
+        $scope.prev = function() {
+            $timeout(function() {
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
             })
         };

@@ -6,22 +6,22 @@
  * To change this template use File | Settings | File Templates.
  */
 
-    'use strict';
+'use strict';
 
-    var preFix = '/';
-    var amazonServiceRoutes = [
+var preFix = '/';
+var amazonServiceRoutes = [
 
-        "./profilePictureManager/routes"
-    ];
+    "./profilePictureManager/routes"
+];
 
 
-module.exports.setupRoutes = function (app) {
+module.exports.setupRoutes = function(app) {
 
-    amazonServiceRoutes.forEach(function (route) {
+    amazonServiceRoutes.forEach(function(route) {
 
         var apiFile = require(route);
 
-        apiFile.config.forEach(function (api) {
+        apiFile.config.forEach(function(api) {
 
 
             var routePath = preFix + api.url;
@@ -31,7 +31,7 @@ module.exports.setupRoutes = function (app) {
             function apiCall(req, res, next) {
                 var handler = apiFile[api.method];
 
-                var params = api.params.map(function (param) {
+                var params = api.params.map(function(param) {
                     return req.params[param];
                 });
 
@@ -41,5 +41,3 @@ module.exports.setupRoutes = function (app) {
         });
     });
 };
-
-

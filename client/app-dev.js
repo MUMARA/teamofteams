@@ -8,7 +8,7 @@
 
 // Set the main application name
 //var mainApplicationModuleName = 'Panacloud.WOW';// Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
-var mainApplicationModuleName = 'myApp';// Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
+var mainApplicationModuleName = 'myApp'; // Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
 var mainApplicationModule = angular.module(mainApplicationModuleName, [
     // 'ngNewRouter',
     'ngMaterial',
@@ -16,7 +16,7 @@ var mainApplicationModule = angular.module(mainApplicationModuleName, [
     'core'
 
 
-]).run(['authService',function(authService){
+]).run(['authService', function(authService) {
     // alert('run');
     // authService.resolveUserPage();
 }]);
@@ -25,9 +25,9 @@ mainApplicationModule.value('appConfig', {
     // 'apiBaseUrl': 'http://localhost:3000',
     'myFirebase': 'https://luminous-torch-4640.firebaseio.com',
     'firebaseAuth': false,
-    'serverPostApi':{
-        userProfilePictureUpload:'api/groupProfilepicture',
-        groupProfilePictureUpload:'api/groupProfilepicture'
+    'serverPostApi': {
+        userProfilePictureUpload: 'api/groupProfilepicture',
+        groupProfilePictureUpload: 'api/groupProfilepicture'
     }
 });
 

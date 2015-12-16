@@ -8,8 +8,8 @@
     min-width: 100%;
     margin: 0 auto;
     left: 0px;
-    top: 0px !important;"><ng-md-icon icon="close" size="30"
-                                      ng-click="quizAddQuestion.prev()" style="margin-top: 53px; position: relative; top: 20%"></ng-md-icon>
+    top: 0px !important;">
+    <ng-md-icon icon="close" size="30" ng-click="quizAddQuestion.prev()" style="margin-top: 53px; position: relative; top: 20%"></ng-md-icon>
 </div>
 <div id="creatGroup" style="width: 1360px">
     <form style="background-color: #efefef;width: 1360px" name="groupForm" novalidate="">
@@ -27,10 +27,9 @@
                         <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon>
                     </h2>
                     <md-input-container>
-                        <label><!--Title-->Question Title</label>
-                        <input name="questionTitle" ng-model="quizAddQuestion.question.Title" minlength="3"
-                               maxlength="30"
-                               required ng-change="quizAddQuestion.showButton1 = true" autofocus="true">
+                        <label>
+                            <!--Title-->Question Title</label>
+                        <input name="questionTitle" ng-model="quizAddQuestion.question.Title" minlength="3" maxlength="30" required ng-change="quizAddQuestion.showButton1 = true" autofocus="true">
                         <div ng-show="groupForm.$submitted || groupForm.questionTitle.$touched" ng-messages="groupForm.questionTitle.$error">
                             <div class="invalid_color" ng-message="required">This is required.</div>
                             <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
@@ -40,10 +39,9 @@
                     <!--Question Description-->
                     <h2 style="font-weight: 500;">Question Description</h2>
                     <md-input-container>
-                        <label><!--Title-->Question Description</label>
-                                <textarea name="questionDescription" ng-model="quizAddQuestion.question.Description"
-                                          minlength="10"
-                                          maxlength="200" required></textarea>
+                        <label>
+                            <!--Title-->Question Description</label>
+                        <textarea name="questionDescription" ng-model="quizAddQuestion.question.Description" minlength="10" maxlength="200" required></textarea>
                         <div ng-show="groupForm.$submitted || groupForm.questionDescription.$touched" ng-messages="groupForm.questionDescription.$error">
                             <div class="invalid_color" ng-message="required">This is required.</div>
                             <div class="invalid_color" ng-message="minlength">Required minimum length 10</div>
@@ -56,9 +54,7 @@
                             <h2 style="font-weight: 500;">Answer Type</h2>
                         </div>
                         <div flex="20">
-                            <md-select ng-model="user" style="min-width: 200px;"
-                                       md-on-close="quizAddQuestion.setBoxValue()"
-                                       ng-change="quizAddQuestion.typeChanged()">
+                            <md-select ng-model="user" style="min-width: 200px;" md-on-close="quizAddQuestion.setBoxValue()" ng-change="quizAddQuestion.typeChanged()">
                                 <md-select-label ng-value="quizAddQuestion.myType = user">{{ user ? user.name : 'Select Type'}}
                                 </md-select-label>
                                 <md-option ng-value="user" ng-repeat="user in quizAddQuestion.types">{{user.name}}
@@ -68,12 +64,10 @@
                         <!--Radio Button Right Answer-->
                         <div flex="25">
                             <p ng-show="quizAddQuestion.showCheckText">Add Options</p>
-
                         </div>
                         <!--Question AddButton-->
                         <div flex="5">
-                            <md-button style="background-color: #058b97" class="md-primary md-fab" ng-click="quizAddQuestion.addOption()"
-                                       ng-show="quizAddQuestion.showAddButton">
+                            <md-button style="background-color: #058b97" class="md-primary md-fab" ng-click="quizAddQuestion.addOption()" ng-show="quizAddQuestion.showAddButton">
                                 Add
                             </md-button>
                         </div>
@@ -82,17 +76,12 @@
                     <div ng-show="quizAddQuestion.showRadioOptions" layout="row">
                         <div flex="10">
                             <md-radio-group ng-model="quizAddQuestion.myAnswer" class="md-primary">
-                                <md-radio-button ng-repeat="option in quizAddQuestion.question.QuestionOptions"
-                                                 ng-value="option"
-                                                 ng-disabled="!option.optionText"
-                                                 aria-label="Radio-Button"
-                                                 style="margin-bottom: 78%; margin-left: 50%;"
-                                                    ng-style="{'margin-top' : quizAddQuestion.myTop[$index]}">
+                                <md-radio-button ng-repeat="option in quizAddQuestion.question.QuestionOptions" ng-value="option" ng-disabled="!option.optionText" aria-label="Radio-Button" style="margin-bottom: 78%; margin-left: 50%;" ng-style="{'margin-top' : quizAddQuestion.myTop[$index]}">
                                 </md-radio-button>
                             </md-radio-group>
                         </div>
                         <div flex="90">
-                            <md-input-container ng-repeat="option in quizAddQuestion.question.QuestionOptions" >
+                            <md-input-container ng-repeat="option in quizAddQuestion.question.QuestionOptions">
                                 <div layout="row">
                                     <div flex="80">
                                         <label>Option {{$index+1}}</label>
@@ -110,11 +99,7 @@
                     <div ng-show="quizAddQuestion.showCheckOptions">
                         <md-input-container ng-repeat="option in quizAddQuestion.question.QuestionOptions" layout="row">
                             <div flex="10">
-                                <md-checkbox ng-model="option.id"
-                                             ng-change="quizAddQuestion.setCheckBoxValue($index)"
-                                             aria-label="Checkbox 1"
-                                             ng-disabled="!option.optionText"
-                                             style="margin-left: 50%; color: #31B4CB">
+                                <md-checkbox ng-model="option.id" ng-change="quizAddQuestion.setCheckBoxValue($index)" aria-label="Checkbox 1" ng-disabled="!option.optionText" style="margin-left: 50%; color: #31B4CB">
                                 </md-checkbox>
                             </div>
                             <div flex="90">
@@ -132,16 +117,13 @@
                     </div>
                     <!--Bottom Buttons-->
                     <div layout="row" layout-align="end center">
-                        <md-button ng-click="quizAddQuestion.showAnswer(); quizAddQuestion.prev()"
-                                   ng-disabled="!quizAddQuestion.question.Title || !quizAddQuestion.question.Description || (!quizAddQuestion.answerTag.length > 0 && ((quizAddQuestion.myAnswer.rightAnswer) != '' && (quizAddQuestion.myAnswer.rightAnswer) != true))">
+                        <md-button ng-click="quizAddQuestion.showAnswer(); quizAddQuestion.prev()" ng-disabled="!quizAddQuestion.question.Title || !quizAddQuestion.question.Description || (!quizAddQuestion.answerTag.length > 0 && ((quizAddQuestion.myAnswer.rightAnswer) != '' && (quizAddQuestion.myAnswer.rightAnswer) != true))">
                             Save and Exit
                         </md-button>
-                        <md-button ng-click="quizAddQuestion.showAdvanced($event);"
-                                   ng-disabled="!quizAddQuestion.question.Title || !quizAddQuestion.question.Description || (!quizAddQuestion.answerTag.length > 0 && ((quizAddQuestion.myAnswer.rightAnswer) != '' && (quizAddQuestion.myAnswer.rightAnswer) != true))">
+                        <md-button ng-click="quizAddQuestion.showAdvanced($event);" ng-disabled="!quizAddQuestion.question.Title || !quizAddQuestion.question.Description || (!quizAddQuestion.answerTag.length > 0 && ((quizAddQuestion.myAnswer.rightAnswer) != '' && (quizAddQuestion.myAnswer.rightAnswer) != true))">
                             view
                         </md-button>
-                        <md-button ng-click="quizAddQuestion.addQuestionsAndContinue();"
-                                   ng-disabled="!quizAddQuestion.question.Title || !quizAddQuestion.question.Description  || (!quizAddQuestion.answerTag.length > 0 && ((quizAddQuestion.myAnswer.rightAnswer) != '' && (quizAddQuestion.myAnswer.rightAnswer) != true))">
+                        <md-button ng-click="quizAddQuestion.addQuestionsAndContinue();" ng-disabled="!quizAddQuestion.question.Title || !quizAddQuestion.question.Description  || (!quizAddQuestion.answerTag.length > 0 && ((quizAddQuestion.myAnswer.rightAnswer) != '' && (quizAddQuestion.myAnswer.rightAnswer) != true))">
                             Save and Add More
                         </md-button>
                     </div>

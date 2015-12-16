@@ -1,39 +1,40 @@
-
 <style>
-    .triangle {
-        width: 33%;
-        height: 0;
-        border-bottom: 50px solid white;
-        border-left: 50px solid transparent;
-        border-right: 50px solid white;
-       margin:-8px 66%;
-    }
+.triangle {
+    width: 33%;
+    height: 0;
+    border-bottom: 50px solid white;
+    border-left: 50px solid transparent;
+    border-right: 50px solid white;
+    margin: -8px 66%;
+}
 
-    md-checkbox.md-checked .md-icon {
-        border: none;
-        background-color:#027ba7}
-    md-checkbox[disabled] {
-        cursor: no-drop;
-        background-color:#027ba7}
-    md-checkbox.md-checked .md-icon:after {
-        -webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
-        position: absolute;
-        left: 6px;
-        top: 2px;
-        background-color:#027ba7;
-        display: table;
-        width: 6px;
-        height: 12px;
-        border-width: 2px;
-        border-style: solid;
-        border-top: 0;
-        border-left: 0;
-        content: ''; }
+md-checkbox.md-checked .md-icon {
+    border: none;
+    background-color: #027ba7
+}
 
+md-checkbox[disabled] {
+    cursor: no-drop;
+    background-color: #027ba7
+}
 
+md-checkbox.md-checked .md-icon:after {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    background-color: #027ba7;
+    display: table;
+    width: 6px;
+    height: 12px;
+    border-width: 2px;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    content: '';
+}
 </style>
-
 <div style="
 
     position: fixed;
@@ -46,75 +47,47 @@
     left: 0px;
     top: 0px !important;" class="ng-scope">
     <div style="position: absolute;top: 3%; left:3%" ng-click="quizAttempting.back()">
-        <img style="width: 150%" src="../../img/arrow-left.svg"/>
+        <img style="width: 150%" src="../../img/arrow-left.svg" />
     </div>
-
-
     <div layout="column" style="width: 50%;height: 100%;margin: 25px auto ">
-
-           <div class="triangle">
-              <h4 style="width: 150px;margin: 17% 0% 0% 0%; color:#027ba7 "><b> Time Left: &nbsp <span>{{quizAttempting.textContent}}</span></b></h4>
-           </div>
-
-
-
+        <div class="triangle">
+            <h4 style="width: 150px;margin: 17% 0% 0% 0%; color:#027ba7 "><b> Time Left: &nbsp <span>{{quizAttempting.textContent}}</span></b></h4>
+        </div>
         <md-card style="background-color:#f5f5f5; height: 92% ">
             <md-toolbar style="background-color: #02baff;height: 20%">
                 <div class="md-toolbar-tools">
                     <h2 class="md-flex" style="color: white">
                        Q: {{quizAttempting.questionArr[quizAttempting.quizAttemptQuestion]}}
                     </h2>
-                    <md-button ng-disabled="quizAttempting.enbNext && !quizAttempting.answer" class="md-fab " aria-label="Eat cake"  ng-click="quizAttempting.next123()"
-                               style="width: 50px !important;
+                    <md-button ng-disabled="quizAttempting.enbNext && !quizAttempting.answer" class="md-fab " aria-label="Eat cake" ng-click="quizAttempting.next123()" style="width: 50px !important;
                                 height: 50px !important
                                 ;background-color: #027ba7;
                                 position: absolute;
                                 top: 80%;
                                 left:85% ">
-                        <ng-md-icon icon="check"
-                                    style="fill: #ffffff;position: absolute;bottom: 30%;left: 25%"></ng-md-icon>
+                        <ng-md-icon icon="check" style="fill: #ffffff;position: absolute;bottom: 30%;left: 25%"></ng-md-icon>
                     </md-button>
                 </div>
             </md-toolbar>
-
             <md-card-content>
                 <div>
-
-                <md-radio-group ng-model="quizAttempting.answer" class="md-primary">
-                    <md-radio-button style="border-bottom: 1px solid darkgrey; padding: 3%;margin: 0 10px 0 5px"
-                            ng-if="quizAttempting.questionArr[quizAttempting.quizAttemptType] === 'Radio Button'"
-                            ng-repeat="itrate in quizAttempting.questionArr[quizAttempting.quizAttemptOption]"
-                            ng-value="itrate.optionText" required>
+                    <md-radio-group ng-model="quizAttempting.answer" class="md-primary">
+                        <md-radio-button style="border-bottom: 1px solid darkgrey; padding: 3%;margin: 0 10px 0 5px" ng-if="quizAttempting.questionArr[quizAttempting.quizAttemptType] === 'Radio Button'" ng-repeat="itrate in quizAttempting.questionArr[quizAttempting.quizAttemptOption]" ng-value="itrate.optionText" required>
+                            {{itrate.optionText}}
+                            <!--<md-divider></md-divider>-->
+                        </md-radio-button>
+                    </md-radio-group>
+                    <!--CHECK BOX OPTION-->
+                    <md-checkbox style="margin: 0 10px 0 5px; padding: 3%;border-bottom: 1px solid darkgrey" ng-if="quizAttempting.questionArr[quizAttempting.quizAttemptType] === 'CheckBox'" ng-repeat="itrate in quizAttempting.questionArr[quizAttempting.quizAttemptOption]" ng-click="quizAttempting.toggl(itrate.optionText, quizAttempting.selectd)">
                         {{itrate.optionText}}
-                        <!--<md-divider></md-divider>-->
-                    </md-radio-button>
-                </md-radio-group>
-
-                <!--CHECK BOX OPTION-->
-                <md-checkbox style="margin: 0 10px 0 5px; padding: 3%;border-bottom: 1px solid darkgrey"
-                             ng-if="quizAttempting.questionArr[quizAttempting.quizAttemptType] === 'CheckBox'"
-                             ng-repeat="itrate in quizAttempting.questionArr[quizAttempting.quizAttemptOption]"
-                             ng-click="quizAttempting.toggl(itrate.optionText, quizAttempting.selectd)">
-                    {{itrate.optionText}}
-
-                </md-checkbox>
+                    </md-checkbox>
                     <!--<md-divider></md-divider>-->
                 </div>
-
             </md-card-content>
-
-
-
-
-
-
-                <md-toolbar style="border-top: 4px solid darkgrey;background-color: white;height: 10%;margin-top: 47%">
-
-
-                    <h4 style="color: darkgrey; position: absolute;left: 85%; top: 18%"><b>&nbsp <span ng-model="quizAttempting.counter">{{quizAttempting.counter}}/{{quizAttempting.totalQuestion}}</span>
+            <md-toolbar style="border-top: 4px solid darkgrey;background-color: white;height: 10%;margin-top: 47%">
+                <h4 style="color: darkgrey; position: absolute;left: 85%; top: 18%"><b>&nbsp <span ng-model="quizAttempting.counter">{{quizAttempting.counter}}/{{quizAttempting.totalQuestion}}</span>
                     </b>
                     </h4>
-
                 <h4 style="color: darkgrey; position: absolute;left: 3%" flex class="md-3-line md-no-proxy">
 
                     <!--<img style="width: 15%" ng-src="../../img/userImg1.svg" class="md-avatar" alt="" src="../../img/userImg1.svg">-->
@@ -122,18 +95,13 @@
                          ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                          class="userImg">
                     <b> {{quizAttempting.questionArr[quizAttempting.quizAttemptTitle]}} </b></h4>
-
-            </md-toolbar >
-
-
+            </md-toolbar>
             <!--<md-divider></md-divider>-->
             <!--<md-list-item class="md-2-line" style="border-color: #ffffff">-->
-                <!--<img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" />-->
-                <!--<div class="md-list-item-text">-->
-
-                <!--</div>-->
+            <!--<img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" />-->
+            <!--<div class="md-list-item-text">-->
+            <!--</div>-->
             <!--</md-list-item>-->
-
         </md-card>
     </div>
-    </div>
+</div>

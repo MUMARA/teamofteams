@@ -2,14 +2,14 @@
  * Created by Shahzad on 04/10/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     /*requires modules*/
     var mongoose = require('mongoose'),
-        User     = mongoose.model('User'),
-        fs       = require('fs'),
-        ejs      = require('ejs'),
+        User = mongoose.model('User'),
+        fs = require('fs'),
+        ejs = require('ejs'),
         sendgrid = require('../../config/sendgrid'),
         credentials = require('../../config/credentials');
 
@@ -23,7 +23,7 @@
     passwordRecoveryEmailTemplate = '';
 
     //caching password recovery email template to use later on coming requests
-    fs.readFile( __dirname + '/../views/passwordRecoveryEmail.ejs', function( err, template ) {
+    fs.readFile(__dirname + '/../views/passwordRecoveryEmail.ejs', function(err, template) {
         if (err) {
             console.log('file read error: ' + err);
         } else {
@@ -38,17 +38,17 @@
 
 
     /*functions declarations*/
-    function forgotPassword( req, res ) {
+    function forgotPassword(req, res) {
         User.findOne({
-            email : req.body.email
-        }, function( err, user ) {
-            if ( err ) {
+            email: req.body.email
+        }, function(err, user) {
+            if (err) {
                 res.send({
                     statusCode: 0,
                     statusDesc: "error occurred."
                 });
-            } else if ( user ) {
-                sendPasswordRecoveryEmail( user );
+            } else if (user) {
+                sendPasswordRecoveryEmail(user);
                 res.send({
                     statusCode: 1,
                     statusDesc: "you would receive an email with a password recovery link, shortly."
@@ -63,27 +63,27 @@
     }
 
     //to send a password email
-    function sendPasswordRecoveryEmail( user ) {
-        var template = ejs.render( passwordRecoveryEmailTemplate, {
+    function sendPasswordRecoveryEmail(user) {
+        var template = ejs.render(passwordRecoveryEmailTemplate, {
             user: user,
             app: appconfig
         });
 
         var payload = {
-            to : user.email,
-            from : appconfig.SUPPORT,
-            subject : 'Account Recovery Email - "'+ appconfig.TITLE,
-            html : template
+            to: user.email,
+            from: appconfig.SUPPORT,
+            subject: 'Account Recovery Email - "' + appconfig.TITLE,
+            html: template
         };
 
-        sendgrid.send( payload, function( err, json ) {
-            if ( err ) {
-                console.log( 'email sent error: ' + user.email );
-                return console.error( err );
+        sendgrid.send(payload, function(err, json) {
+            if (err) {
+                console.log('email sent error: ' + user.email);
+                return console.error(err);
             }
 
-            console.log( 'email sent success: ' + user.email );
-            console.log( json );
+            console.log('email sent success: ' + user.email);
+            console.log(json);
         });
     }
 

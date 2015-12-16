@@ -2,17 +2,17 @@
  * Created by admin on 5/13/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('app.sign-up')
-        .controller('SignUpController', SignUpController );
+        .controller('SignUpController', SignUpController);
 
-    SignUpController.$inject = ['signUpService','authService'];
+    SignUpController.$inject = ['signUpService', 'authService'];
 
-    function SignUpController(signUpService,authService) {
-      //
+    function SignUpController(signUpService, authService) {
+        //
 
         /*private properties*/
         var that = this;
@@ -38,12 +38,12 @@
             that.user.userID = that.user.userID.toLowerCase();
             that.user.userID = that.user.userID.replace(/[^a-zA-Z0-9]/g, '');
 
-            signUpService.signup(that.user,routeToRedirectAfterSuccess)
-                .then(function(){
+            signUpService.signup(that.user, routeToRedirectAfterSuccess)
+                .then(function() {
                     that.process = false;
-                // console.log('Success')
+                    // console.log('Success')
                 })
-                .catch(function(){
+                .catch(function() {
                     // console.log('failed')
                 })
         };

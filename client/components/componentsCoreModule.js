@@ -2,7 +2,7 @@
  * Created by Mehmood on 5/20/2015.
  */
 
-(function () {
+(function() {
     'use strict';
     angular.module('components', [
         "app.createChannels",
@@ -37,6 +37,3 @@
 
 
 })();
-
-
-

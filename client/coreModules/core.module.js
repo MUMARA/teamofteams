@@ -24,12 +24,13 @@ angular.module('core', [
     'ng-mfb',
     'ui.select',
     'ngSanitize',
-    'ui.router'
+    'ui.router',
+    'ngImgCrop'
 
- /*   'customdirectives'*/
+    /*   'customdirectives'*/
 
     //'angularCharts'
-]) .filter('trustUrl', function ($sce) {
+]).filter('trustUrl', function($sce) {
     return function(url) {
         /*var temp;
         $.get(url).success(function(data){
@@ -41,8 +42,7 @@ angular.module('core', [
     };
 })
 
-   /* .run(["authService",function(authService){
-        //debugger;
-        authService.resolveUserPage();
-    }]);*/
-
+/* .run(["authService",function(authService){
+     //debugger;
+     authService.resolveUserPage();
+ }]);*/

@@ -2,12 +2,12 @@
  * Created by Shahzad on 3/27/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     /*requires modules*/
     var Firebase = require("firebase");
-    var Q  = require("q");
+    var Q = require("q");
     var credentials = require("../../config/credentials.js");
     var firebaseBaseUrl = credentials.firebase.BASEURL;
 
@@ -19,8 +19,8 @@
 
             var refMain;
             var refMain2;
-            this.refs.main = new Firebase( firebaseBaseUrl );
-            this.refs.main2 = new Firebase( "https://pspractice.firebaseio.com/" );
+            this.refs.main = new Firebase(firebaseBaseUrl);
+            this.refs.main2 = new Firebase("https://pspractice.firebaseio.com/");
 
             refMain = this.refs.main;
             refMain2 = this.refs.main2;
@@ -59,17 +59,17 @@
         getRefQuizbank: function() {
             return this.refs.refQuizbanks;
         },
-        asyncIsUserGroupMember: function( groupID, userID ) {
+        asyncIsUserGroupMember: function(groupID, userID) {
             var deferred, refUserMembers;
 
             deferred = Q.defer();
 
             //get group members list
-            refUserMembers = this.refs.refUserGroupMemberships.child( userID + '/' + groupID );
-            refUserMembers.once('value', function( snapshot ) {
+            refUserMembers = this.refs.refUserGroupMemberships.child(userID + '/' + groupID);
+            refUserMembers.once('value', function(snapshot) {
                 var data = snapshot.val();
 
-                if ( data ) {
+                if (data) {
                     deferred.resolve(data);
                 } else {
                     deferred.reject();
@@ -80,7 +80,7 @@
 
             return deferred.promise;
         },
-        asyncGetGroupMembersList: function( groupID ) {
+        asyncGetGroupMembersList: function(groupID) {
             var deferred, refUserMembers,
                 membersArray;
 
@@ -88,12 +88,12 @@
             membersArray = [];
 
             //get group members list
-            refUserMembers = this.refs.refGroupMembers.child( groupID );
-            refUserMembers.once('value', function( snapshot ) {
+            refUserMembers = this.refs.refGroupMembers.child(groupID);
+            refUserMembers.once('value', function(snapshot) {
                 var data = snapshot.val();
 
-                if ( data ) {
-                    for ( var key in data ) {
+                if (data) {
+                    for (var key in data) {
                         membersArray.push(key);
                     }
                     deferred.resolve({
@@ -109,75 +109,75 @@
 
             return deferred.promise;
         },
-        asyncUpdateUser : function ( userID, payload ){
+        asyncUpdateUser: function(userID, payload) {
 
             var defer = Q.defer();
 
-            this.getRefUsers().child( userID )
-                .update( payload , function(err){
-                    if(err){
+            this.getRefUsers().child(userID)
+                .update(payload, function(err) {
+                    if (err) {
                         defer.reject(err)
-                    }else{
+                    } else {
                         defer.resolve()
                     }
                 });
 
             return defer.promise;
         },
-        asyncUpdateGroup : function ( groupID, payload ){
+        asyncUpdateGroup: function(groupID, payload) {
 
             var defer = Q.defer();
 
-            this.getRefGroups().child( groupID )
-                .update( payload , function(err){
-                    if(err){
+            this.getRefGroups().child(groupID)
+                .update(payload, function(err) {
+                    if (err) {
                         defer.reject(err)
-                    }else{
+                    } else {
                         defer.resolve()
                     }
                 });
 
             return defer.promise;
         },
-        asyncUpdateQuizbank : function ( quizID, payload ){
+        asyncUpdateQuizbank: function(quizID, payload) {
 
             var defer = Q.defer();
 
-            this.getRefQuizbank().child( quizID )
-                .update( payload , function(err){
-                    if(err){
+            this.getRefQuizbank().child(quizID)
+                .update(payload, function(err) {
+                    if (err) {
                         defer.reject(err)
-                    }else{
+                    } else {
                         defer.resolve()
                     }
                 });
 
             return defer.promise;
         },
-        asyncUpdateSubGroup : function ( groupID,subgroupID, payload ){
+        asyncUpdateSubGroup: function(groupID, subgroupID, payload) {
 
             var defer = Q.defer();
 
-            this.getRefSubGroups().child( groupID).child(subgroupID)
-                .update( payload , function(err){
-                    if(err){
+            this.getRefSubGroups().child(groupID).child(subgroupID)
+                .update(payload, function(err) {
+                    if (err) {
                         defer.reject(err)
-                    }else{
+                    } else {
                         defer.resolve()
                     }
                 });
 
             return defer.promise;
         },
-        asyncRemoveUserProfileImage : function ( userID ){
+        asyncRemoveUserProfileImage: function(userID) {
 
             var defer = Q.defer();
 
-            this.getRefUsers().child( userID).child('profile-image')
-                .remove(function(err){
-                    if(err){
+            this.getRefUsers().child(userID).child('profile-image')
+                .remove(function(err) {
+                    if (err) {
                         defer.reject(err)
-                    }else{
+                    } else {
                         defer.resolve()
                     }
                 });

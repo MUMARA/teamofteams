@@ -21,7 +21,7 @@ exports.signIn = function(req, res) {
             });
         } else if (user) {
             if (user.password === req.body.password) {
-                
+
                 //checking pending request
                 if (process.env.NODE_ENV == "production") {
                     if (user.status == 0) {
@@ -30,7 +30,7 @@ exports.signIn = function(req, res) {
                             statusDesc: "Before signin please verify your email address!"
                         });
                     }
-                }//checking pending request
+                } //checking pending request
 
                 updateLastLogin(res, user);
             } else {

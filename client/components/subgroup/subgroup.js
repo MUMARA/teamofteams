@@ -1,21 +1,21 @@
 /**
  * Created by sj on 6/10/2015.
  */
-(function () {
+(function() {
     'use strict';
     angular
         .module('app.subgroup')
-        .controller('SubgroupController',['$rootScope','messageService','$stateParams','$localStorage','groupFirebaseService','firebaseService','$location','createSubGroupService','userService','authService','$timeout','utilService','$mdDialog','$mdSidenav','$mdUtil','$q','appConfig',SubgroupController])
-    //  .controller("DialogController", ["$mdDialog", DialogController]);
-    function SubgroupController($rootScope,messageService,$stateParams,$localStorage,groupFirebaseService,firebaseService,$location,SubGroupService,userService,authService,$timeout,utilService,$mdDialog,$mdSidenav,$mdUtil,$q,appConfig) {
+        .controller('SubgroupController', ['$rootScope', 'messageService', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', SubgroupController])
+        //  .controller("DialogController", ["$mdDialog", DialogController]);
+    function SubgroupController($rootScope, messageService, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, SubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
         /*private variables*/
         var that = this;
         var user = userService.getCurrentUser();
 
 
         var localStorage = $localStorage.loggedInUser;
-        var groupID=$stateParams.groupID;
-        this.groupid=groupID;
+        var groupID = $stateParams.groupID;
+        this.groupid = groupID;
         /*VM functions*/
         this.groupPath = '';
         this.queryUsers = queryUsers;
@@ -39,22 +39,22 @@
             membersArray: []
 
         };
-        this.openUserSettingPage = function () {
-            $location.path('/user/group/'+groupID+'/user-setting');
+        this.openUserSettingPage = function() {
+            $location.path('/user/group/' + groupID + '/user-setting');
         };
-        this.openEditGroup = function () {
-            $location.path('user/group/'+groupID+'/edit-group');
+        this.openEditGroup = function() {
+            $location.path('user/group/' + groupID + '/edit-group');
         }
 
         //query for users names list
-        function queryUsers ( val ){
-            if( val ) {
+        function queryUsers(val) {
+            if (val) {
                 var filteredUsersRef = firebaseService.getRefUsers()
                     .orderByKey()
                     .startAt(val)
                     .endAt(val + '~');
 
-                that.filteredUsers = Firebase.getAsArray( filteredUsersRef );
+                that.filteredUsers = Firebase.getAsArray(filteredUsersRef);
             } else {
                 that.filteredUsers = [];
             }
@@ -64,8 +64,8 @@
         function hide() {
             /*   createGroupService.cancelGroupCreation();*/
             /* $mdDialog.cancel();*/
-            $rootScope.newImg=null;
-            $location.path('/user/group/'+groupID);
+            $rootScope.newImg = null;
+            $location.path('/user/group/' + groupID);
 
         }
 
@@ -76,10 +76,10 @@
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
                 targetEvent: ev
-            }).then(function(picture){
+            }).then(function(picture) {
                 $rootScope.newImg = picture;
                 console.log("this is image" + picture)
-            },function(err){
+            }, function(err) {
                 console.log(err)
 
             })
@@ -89,10 +89,10 @@
 
 
         this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, localStorage.userID)
-            .then(function(syncObj){
+            .then(function(syncObj) {
                 that.groupSyncObj = syncObj;
-               // that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
-                that.group=that.groupSyncObj.groupSyncObj;
+                // that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
+                that.group = that.groupSyncObj.groupSyncObj;
                 that.members = that.groupSyncObj.membersSyncArray;
                 that.subgroups = that.groupSyncObj.subgroupsSyncArray;
                 that.pendingRequests = that.groupSyncObj.pendingMembershipSyncArray;
@@ -100,15 +100,15 @@
 
 
             });
-        this.selectedMember = function(userObj){
+        this.selectedMember = function(userObj) {
             console.log(userObj);
             console.log("-----------------------------------");
             this.selectedMemberArray.push(userObj)
             that.Subgroup.membersArray.push(userObj.$id);
-            this.Subgroup.members=this.Subgroup.membersArray;
+            this.Subgroup.members = this.Subgroup.membersArray;
         };
-        this.selectedAdmin = function(newType, member){
-            console.log( member.userSyncObj.$id);
+        this.selectedAdmin = function(newType, member) {
+            console.log(member.userSyncObj.$id);
             console.log(member.user.profile.firstName);
             this.selectedAdminArray.push(member.user.profile)
 
@@ -117,29 +117,32 @@
 
         function filterUser(userID) {
             var disableItem = false;
-            for ( var i = 0; i <  that.members.length; i++ ) {
-                if ( userID ===  localStorage.userID ) {
+            for (var i = 0; i < that.members.length; i++) {
+                if (userID === localStorage.userID) {
                     disableItem = true;
-                } else if ( that.Subgroup.membersArray.indexOf( userID ) >= 0 ) {
-                    disableItem = true;
-                }
-            }
-
-            return disableItem;
-        } function filterUser2(userID) {
-            var disableItem = false;
-            for ( var i = 0; i <  that.members.length; i++ ) {
-                if ( that.Subgroup.membersArray.indexOf( userID ) >= 0 ) {
+                } else if (that.Subgroup.membersArray.indexOf(userID) >= 0) {
                     disableItem = true;
                 }
             }
 
             return disableItem;
         }
+
+        function filterUser2(userID) {
+            var disableItem = false;
+            for (var i = 0; i < that.members.length; i++) {
+                if (that.Subgroup.membersArray.indexOf(userID) >= 0) {
+                    disableItem = true;
+                }
+            }
+
+            return disableItem;
+        }
+
         function answer(groupForm) {
 
             var fromDataFlag;
-            that.abc=true;
+            that.abc = true;
             //return if form has invalid model.
             if (groupForm.$invalid) {
                 return;
@@ -153,37 +156,36 @@
 
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                that.saveFile(x,mimeType,this.Subgroup.subgroupID).then(function(data){
-                    console.log('subgroup img  uploaded ' + data)
-                    SubGroupService.createSubGroup(localStorage.userID,that.group,that.Subgroup,that.subgroups,fromDataFlag,groupID)
-                  //  $location.path('/user/group/'+groupID);
-                })
-                    .catch(function(){
+                that.saveFile(x, mimeType, this.Subgroup.subgroupID).then(function(data) {
+                        console.log('subgroup img  uploaded ' + data)
+                        SubGroupService.createSubGroup(localStorage.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
+                            //  $location.path('/user/group/'+groupID);
+                    })
+                    .catch(function() {
 
                         return alert('picture upload failed')
                     });
                 console.log(x);
             } else {
                 fromDataFlag = false;
-                SubGroupService.createSubGroup(localStorage.userID,that.group,that.Subgroup,that.subgroups,fromDataFlag,groupID)
-                //$location.path('/user/group/'+groupID);
+                SubGroupService.createSubGroup(localStorage.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
+                    //$location.path('/user/group/'+groupID);
             }
         }
 
-        function saveFile(file,type,groupID){
+        function saveFile(file, type, groupID) {
             var defer = $q.defer();
 
             var xhr = new XMLHttpRequest();
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_'+that.Subgroup.subgroupID + "." + type.split('/')[1]+ "&file_type=" + type);
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID="+ groupID + '&subgroupID'+ that.Subgroup.subgroupID + "&file_type=" + type);
-            xhr.onreadystatechange = function(){
-                if(xhr.readyState === 4){
-                    if(xhr.status === 200){
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.Subgroup.subgroupID + "&file_type=" + type);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
-                        defer.resolve(that.upload_file(file, response.signed_request, response.url)) ;
-                    }
-                    else{
+                        defer.resolve(that.upload_file(file, response.signed_request, response.url));
+                    } else {
                         defer.reject(alert("Could not get signed URL."))
                     }
                 }
@@ -193,7 +195,7 @@
         }
 
 
-        this.signupModeDisabled = function(val){
+        this.signupModeDisabled = function(val) {
             return val === '3'
         }
 
@@ -203,10 +205,10 @@
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
                 targetEvent: ev
-            }).then(function(picture){
+            }).then(function(picture) {
                 $rootScope.newImg = picture;
                 console.log("this is image" + picture)
-            },function(err){
+            }, function(err) {
                 console.log(err)
 
             })
@@ -216,7 +218,7 @@
 
         //Cropper Code End
 
-        this.canActivate  = function(){
+        this.canActivate = function() {
             return authService.resolveUserPage();
         }
 
@@ -227,45 +229,46 @@
         this.toggleAdmin = AdminToggler('rights');
 
         function buildToggler(navID) {
-            var debounceFn =  $mdUtil.debounce(function(){
+            var debounceFn = $mdUtil.debounce(function() {
                 $mdSidenav(navID)
                     .toggle()
-                    .then(function () {
+                    .then(function() {
                         console.log("toggle " + navID + " is done");
                     });
-            },300);
+            }, 300);
 
             return debounceFn;
         };
+
         function AdminToggler(navID) {
-            var debounceFnc =  $mdUtil.debounce(function(){
+            var debounceFnc = $mdUtil.debounce(function() {
                 $mdSidenav(navID)
                     .toggle()
-                    .then(function () {
+                    .then(function() {
                         console.log("toggle " + navID + " is done");
                     });
-            },300);
+            }, 300);
 
             return debounceFnc;
         };
 
 
-        function upload_file(file, signed_request, url){
+        function upload_file(file, signed_request, url) {
 
             var defer = $q.defer();
             var xhr = new XMLHttpRequest();
             xhr.open("PUT", signed_request);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
             xhr.onload = function(data) {
-               // alert(xhr.status);
-               // alert(xhr.responseText);
+                // alert(xhr.status);
+                // alert(xhr.responseText);
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....')
                     console.log(url);
                     //document.getElementById("preview").src = url;
                     that.Subgroup.imgLogoUrl = url + '?random=' + new Date();
                     defer.resolve(url)
-                    //document.getElementById("avatar_url").value = url;
+                        //document.getElementById("avatar_url").value = url;
                 }
             };
             xhr.onerror = function(error) {
@@ -274,9 +277,9 @@
             xhr.send(file);
             return defer.promise;
         }
-        this.close = function () {
+        this.close = function() {
             $mdSidenav('right').close()
-                .then(function () {
+                .then(function() {
                     console.log("close LEFT is done");
                 });
         };
@@ -285,9 +288,13 @@
     }
 
     function DialogController($mdDialog) {
-        this.my = {model:{img:''}};
+        this.my = {
+            model: {
+                img: ''
+            }
+        };
         this.hide = function(picture) {
-            console.log("dialog box pic"+picture)
+            console.log("dialog box pic" + picture)
             $mdDialog.hide(picture);
         };
 

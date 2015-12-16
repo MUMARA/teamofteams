@@ -14,7 +14,6 @@
 }
 
 .positionli {
-    color: silver;
     /*font-weight: bold;*/
     text-align: left;
     text-transform: uppercase;
@@ -40,29 +39,27 @@
             <div flex="60" offset="5">
                 <div layout='row' layout-align="start center">
                     <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline logoPana">
-                    <span class="mainPana" ng-click="navToolbar.shiftToUserPage()">Teams of Teams</span>
+                    <span class="mainPana" ng-click="navToolbar.shiftToUserPage()">Team of Teams</span>
                     <!--<input type="button" ng-click="navToolbar.testFn()" value="testFn"/>-->
                     <!--<md-progress-circular ng-show="navToolbar.checkinSending" style=" left:41px;-webkit-transform: scale(.8)!important" class="md-hue-2"-->
                     <md-progress-circular ng-show="navToolbar.checkinSending" class="md-hue-2 progressCircularforNavBar" md-mode="indeterminate"></md-progress-circular>
                     <p ng-if="navToolbar.checkout" style="padding-top: 9px;padding-left:48px; color:rgb(239, 239, 239);"><span style="text-transform: uppercase;">
                         {{navToolbar.showUrlObj.userID}}</span> checked in from {{navToolbar.showUrlObj.groupID}} / {{navToolbar.showUrlObj.subgroupID}}
                     </p>
-                    <p ng-if="navToolbar.noTeams" style="padding-top: 9px;padding-left:48px; color:rgb(239, 239, 239);">
-                        Currently you are not a member of any Team!
-                    </p>
                 </div>
             </div>
-            <div ng-show="!navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
+            <div flex style="width: 10px; height: 25px; margin-left: 40px">
                 <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
             </div>
-            <md-button ng-click="navToolbar.updateStatus(navToolbar.showUrlObj.group,true)" ng-show="navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
+            <!-- <md-button ng-click="navToolbar.updateStatus(navToolbar.showUrlObj.group,true)" ng-show="navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
                 <p style="  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 20px;text-transform: none;">
                     {{navToolbar.checkout ? "Check out": 'Check In'}}
                 </p>
-            </md-button>
-            <div flex="10" ng-show="!navToolbar.checkout">
+            </md-button> -->
+            <!-- <div flex="10" ng-show="!navToolbar.checkout"> -->
+            <div flex="10">
                 <div style="position: relative">
-                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider" ng-change="navToolbar.switchMsg = !navToolbar.switchMsg">
+                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider">
                     </md-switch>
                     <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
                     <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
@@ -97,7 +94,7 @@
                             <md-input-container md-no-float style="padding-bottom: 0px;">
                                 <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
                             </md-input-container>
-                            <ng-md-icon icon="search" style="fill: #929497;" ng-click="navToolbar.setFocus()"></ng-md-icon>
+                            <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()"></ng-md-icon>
                         </md-toolbar>
                         <div id="test1" layout="row" style="padding-top: 1px;height:78%">
                             <div layout="column" flex style="border-right: 1px solid #c2c2c2">
@@ -114,13 +111,13 @@
                                     </md-list> -->
                                     <md-list class="paddingZero" ng-hide="navToolbar.groupObj1" style="">
                                         <md-list-item class="paddingZero" ng-repeat="group in navToolbar.ListGroupSubGroup | filter: navToolbar.search">
-                                            <div class="column" layout-align="start end" flex style="color: #757575;font-size: large">
+                                            <div class="column" layout-align="start end" flex style="color: silver;font-size: large">
                                                 <div layout="row">
                                                     <div flex="10"><img class='imgResize' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
                                                     <span class="size">{{group.group}}</span> </div>
                                                 <div style="color: #757575;font-size:large;" flex>
                                                     <ul class="removeBullets">
-                                                        <li class="positionli" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in group.subGroups">{{subgroup.subgroupId}}</li>
+                                                        <li class="positionli nooutline" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in group.subGroups">{{subgroup.subgroupId}}</li>
                                                     </ul>
                                                 </div>
                                                 <md-divider md-outset style="padding-bottom:10px"></md-divider>

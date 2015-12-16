@@ -4,9 +4,9 @@
 
 //read http://webapplog.com/express-js-4-node-js-and-mongodb-rest-api-tutorial/
 
-var express    = require('express'),
+var express = require('express'),
     bodyParser = require('body-parser'),
-    morgan     = require('morgan');
+    morgan = require('morgan');
 
 //initializing local DB Server
 require('./config/mongoose')();
@@ -23,7 +23,7 @@ var profilePictureManager = require('./amazonServices/profilePictureManager/prof
 
 var app = express();
 
-app.respRef='';
+app.respRef = '';
 
 var formidable = require('formidable');
 
@@ -34,8 +34,13 @@ app.use(express.static(__dirname + '/public'));
 //using morgan logger
 app.use(morgan('dev'));
 
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
+app.use(bodyParser.urlencoded({
+    limit: '50mb',
+    extended: true
+}));
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -50,8 +55,8 @@ app.get('/', function(req, res) {
 amazonServiceRoutes.setupRoutes(app);
 profilePictureManager.init();
 
-app.get('/api/env', function(req, res){
-   res.send(process.env.NODE_ENV); 
+app.get('/api/env', function(req, res) {
+    res.send(process.env.NODE_ENV);
 });
 app.get('/api/verifyemail/:uuid', verifyEmailCtrl.verifyEmail);
 app.get('/api/checkuserid/:userID', usersCtrl.checkAvailability);
@@ -68,7 +73,7 @@ app.post('/api/deleteuser', usersCtrl.removeUser);
 app.post('/api/sendnotification', notification.sendNotification);
 app.post('/api/registerdevice', notification.registerDevice);
 app.post('/api/unregisterdevice', notification.unregisterDevice);
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function(err) {
     console.error(err);
     console.log("Node NOT Exiting...");
     console.log(err)

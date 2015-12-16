@@ -4,13 +4,13 @@
 
 //Can be used to validate form fields for confirmPassword, confirmEmail and etc.
 
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('core')
-        .directive("compareTo", compareTo )
-        .directive("compareAgainst", compareAgainst );
+        .directive("compareTo", compareTo)
+        .directive("compareAgainst", compareAgainst);
 
     function compareTo() {
         return {
@@ -18,9 +18,9 @@
             scope: {
                 otherModelValue: "=compareTo"
             },
-            link: function( scope, element, attributes, ngModel ) {
+            link: function(scope, element, attributes, ngModel) {
 
-                ngModel.$validators.compareTo = function( modelValue ) {
+                ngModel.$validators.compareTo = function(modelValue) {
                     return modelValue == scope.otherModelValue;
                 };
 
@@ -30,15 +30,16 @@
             }
         };
     }
+
     function compareAgainst() {
         return {
             require: "ngModel",
             scope: {
                 otherModelValue: "=compareAgainst"
             },
-            link: function( scope, element, attributes, ngModel ) {
+            link: function(scope, element, attributes, ngModel) {
 
-                ngModel.$validators.compareAgainst = function( modelValue ) {
+                ngModel.$validators.compareAgainst = function(modelValue) {
                     return modelValue !== scope.otherModelValue;
                 };
 

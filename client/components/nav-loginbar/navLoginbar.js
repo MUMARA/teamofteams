@@ -1,10 +1,9 @@
-
-(function () {
+(function() {
     'use strict';
 
     angular
-        .module('app.navLoginbar', ['ngMdIcons','core'])
-        .controller('NavLoginbarController', NavLoginbarController );
+        .module('app.navLoginbar', ['ngMdIcons', 'core'])
+        .controller('NavLoginbarController', NavLoginbarController);
 
     NavLoginbarController.$inject = ['authService'];
 

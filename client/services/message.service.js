@@ -5,10 +5,10 @@
 'use strict';
 
 angular.module('core')
-    .factory('messageService', ["$mdToast", "soundService", function( $mdToast, soundService ) {
-        var position ='top left';
+    .factory('messageService', ["$mdToast", "soundService", function($mdToast, soundService) {
+        var position = 'top left';
         return {
-            show: function( message ) {
+            show: function(message) {
                 $mdToast.show({
                     template: '<md-toast class="md-toast-animating">' + message + '</md-toast>',
                     hideDelay: 3000,
@@ -16,18 +16,18 @@ angular.module('core')
                     position: 'top left right'
                 });
             },
-            showSuccess: function( message ){
-                this.show( message || 'Process successful.');
+            showSuccess: function(message) {
+                this.show(message || 'Process successful.');
                 soundService.playSuccess();
             },
-            showFailure: function( message ){
-                this.show( message || 'Process failed.');
+            showFailure: function(message) {
+                this.show(message || 'Process failed.');
                 soundService.playFail();
             },
-            changePosition:function(position){
+            changePosition: function(position) {
                 position = position
             },
-            reset:function(){
+            reset: function() {
                 position = 'top left'
             }
         };

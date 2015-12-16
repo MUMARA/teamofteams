@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -15,21 +15,21 @@
         $scope.OutOf = QuizAttemptingService.getTotalQuestion();
 
         var myNewFirebaseRef = new Firebase("https://pspractice.firebaseio.com/quiz-create/" + bookId);
-        myNewFirebaseRef.on('child_added', function (snapShot) {
+        myNewFirebaseRef.on('child_added', function(snapShot) {
             var quizId = myNewFirebaseRef.child(snapShot.key());
-            quizId.on('child_added', function (dataSnapShot) {
+            quizId.on('child_added', function(dataSnapShot) {
                 var chId = quizId.child(dataSnapShot.key());
-                chId.on('child_added', function (dataSnapShot1) {
+                chId.on('child_added', function(dataSnapShot1) {
                     var topicId = chId.child(dataSnapShot1.key());
-                    topicId.on('child_added', function (dataSnapShot2) {
+                    topicId.on('child_added', function(dataSnapShot2) {
                         var quesId = topicId.child(dataSnapShot2.key());
-                        quesId.on('child_added', function (dataSnapShot3) {
+                        quesId.on('child_added', function(dataSnapShot3) {
                             var aId = quesId.child(dataSnapShot3.key());
-                            aId.on('child_added', function (dataSnapShot4) {
+                            aId.on('child_added', function(dataSnapShot4) {
                                 var bId = aId.child(dataSnapShot4.key());
-                                bId.on('child_added', function (dataSnapShot5) {
+                                bId.on('child_added', function(dataSnapShot5) {
                                     var cId = bId.child(dataSnapShot5.key());
-                                    cId.on('child_added', function (dataSnapShot6) {
+                                    cId.on('child_added', function(dataSnapShot6) {
                                         $scope.questionArr.push(dataSnapShot6.val());
                                         console.log($scope.questionArr);
                                         $scope.totalQuestion = $scope.questionArr.length / 5;
@@ -47,13 +47,12 @@
                 })
             })
         });
-        $scope.goToMain = function () {
-            $timeout(function () {
-                document.getElementById('navBar').style.display="block";
+        $scope.goToMain = function() {
+            $timeout(function() {
+                document.getElementById('navBar').style.display = "block";
                 $location.path('/user/' + userService.getCurrentUser().userID);
 
             })
         }
     }
 })();
-

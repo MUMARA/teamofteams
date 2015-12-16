@@ -11,7 +11,7 @@
                 templateUrl: 'components/nav-loginbar/nav-loginbar.html',
                 controller: 'NavLoginbarController',
                 controllerAs: 'navLoginbar'
-            };  
+            };
             var navToolbar = {
                 templateUrl: 'components/nav-toolbar/nav-toolbar.html',
                 controller: 'NavToolbarController',
@@ -28,13 +28,15 @@
                     }
                 },
                 resolve: {
-                    user: function($location, userService){
-                        var user = userService.getCurrentUser();
+                    user: function($location, userService) {
+                        var user = userService.getUserPresenceFromLocastorage().then(function(data) {
+                            if (data) {
+                                $location.path('/user/' + userService.getCurrentUser().userID)
+                                    //$state.go(user.dashboard, userService.getCurrentUser().userID)
+                            }
+                        });
 
-                        if(user){
-                            $location.path('/user/' + user.userID)
-                            //$state.go(user.dashboard, userService.getCurrentUser().userID)
-                        }
+
                     }
                 }
             });
@@ -104,8 +106,8 @@
                 controller: 'UserController',
                 controllerAs: 'user',
                 resolve: {
-                    user: function($state, $stateParams, userService){
-                        if($stateParams.userID !== userService.getCurrentUser().userID){
+                    user: function($state, $stateParams, userService) {
+                        if ($stateParams.userID !== userService.getCurrentUser().userID) {
                             $state.go(user.dashboard, userService.getCurrentUser().userID)
                         }
                     }

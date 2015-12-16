@@ -19,7 +19,8 @@
         this.onlineGroupMembers = [];
         this.offlineGroupMembers = [];
 
-
+        this.totalonlinegroupmember = {};
+        this.totalgroupmember = {};
 
         // if($location.path.indexOf(this.pageUserId) == -1) {
         //     $location.path('/user/'+this.pageUserId+'/')
@@ -202,6 +203,12 @@
                             debugger;*/
         }
 
+        $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(that.pageUserId.userID)).$loaded().then(function(groupdata) {
+            groupdata.forEach(function(group, i) {
+                that.totalonlinegroupmember[group.$id] = 0;
+                that.totalgroupmember[group.$id] = 0;
+            });
+        })
         this.GetSubGroupUsers = function() {
                 that.users = [];
                 $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(that.pageUserId.userID)).$loaded().then(function(groupdata) {
@@ -272,7 +279,11 @@
                                                             firstName: firstName,
                                                             lastName: lastName
                                                         });
-                                                        // console.log(that.users);                 
+                                                        if (type) {
+                                                            that.totalonlinegroupmember[group.$id] += 1
+                                                        }
+                                                        that.totalgroupmember[group.$id] += 1
+                                                            // console.log(that.users);                 
                                                     })
                                                 }
                                             });

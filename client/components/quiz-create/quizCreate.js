@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -41,7 +41,8 @@
         /*This will show hide quiz tabs*/
         var counter = 1;
         var tabCounter = 1;
-        var arr = [], name = '';
+        var arr = [],
+            name = '';
         that.myChapters = [];
         that.myChaptersKey = [];
         that.thirdTopics = [];
@@ -54,7 +55,7 @@
         that.questions = [];
         that.questionsId = [];
 
-        that.prev = function () {
+        that.prev = function() {
             $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
         };
         //Firebase
@@ -69,7 +70,7 @@
         this.threeTab = false;
 
         //Show Hide Head Buttons.
-        this.one = function () {
+        this.one = function() {
             counter = 1;
             this.buttonText = 'Next';
             that.showOne = true;
@@ -77,7 +78,7 @@
             that.showThree = false;
         };
 
-        this.two = function () {
+        this.two = function() {
             this.buttonText = 'Next';
             counter = 2;
             that.showOne = false;
@@ -85,7 +86,7 @@
             that.showThree = false;
         };
 
-        this.three = function () {
+        this.three = function() {
             counter = 3;
             that.showOne = false;
             that.showTwo = false;
@@ -93,7 +94,7 @@
         };
 
 
-        this.four = function () {
+        this.four = function() {
             counter = 4;
             that.showOne = false;
             that.showTwo = false;
@@ -102,7 +103,7 @@
         };
 
         //Next Button
-        this.goToNext = function () {
+        this.goToNext = function() {
             counter++;
             if (counter == 2) {
                 that.showOne = false;
@@ -139,7 +140,7 @@
                 that.latestNode = [];
 
                 // seleted data start
-                that.setSelectedQuestion = function (thisScope) {
+                that.setSelectedQuestion = function(thisScope) {
                     if (that.lastSelectedTopic.selectedTopic) {
                         $('.selectedTopic').addClass('previousSelected');
                         if (that.lastSelectedQuestion) {
@@ -150,7 +151,7 @@
                     }
                 };
 
-                that.setSelectedTopic = function (thisScope) {
+                that.setSelectedTopic = function(thisScope) {
                     if (that.lastSelectedChapter.selected) {
                         $('.previousSelected').removeClass('previousSelected');
                         $('.selectedChapter').addClass('previousSelected');
@@ -162,7 +163,7 @@
                     }
                 };
 
-                that.setSelectedChapter = function (thisScope) {
+                that.setSelectedChapter = function(thisScope) {
                     $('.selectedChapter').removeClass('previousSelected');
                     if (that.lastSelectedChapter) {
                         that.lastSelectedChapter.selected = '';
@@ -175,7 +176,7 @@
                 //2nd Tab Functions
                 var chapterCounter = 0;
                 //Chapters
-                ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
+                ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function(snapShot) {
                     //$timeout(function () {
                     that.chapters.push(snapShot.val());
                     that.chaptersId.push(snapShot.key());
@@ -193,9 +194,9 @@
                 that.awaisObject[quizService.getBook()] = {};
 
                 //Topics
-                that.showTopics = function (chapterIndex) {
+                that.showTopics = function(chapterIndex) {
                     that.showQuestionView1 = false;
-                    if(that.quizObject[bookId]['quizQuestion'] == undefined){
+                    if (that.quizObject[bookId]['quizQuestion'] == undefined) {
                         that.quizObject[bookId]['quizQuestion'] = {};
                     }
                     that.quizObject[bookId]['quizQuestion'][that.chaptersId[chapterIndex]] = {};
@@ -220,8 +221,8 @@
                         that.topicsId = [];
                         that.topicId = null;
                         topicCounter = 0;
-                        ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function (snapShot) {
-                            $timeout(function () {
+                        ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function(snapShot) {
+                            $timeout(function() {
                                 that.topics.push(snapShot.val());
                                 that.viewAllTopics[chapterIndex].push(snapShot.val());
                                 that.topicsId.push(snapShot.key());
@@ -232,14 +233,13 @@
                                 topicCounter++;
                             }, 0)
                         })
-                    }
-                    else {
+                    } else {
                         that.topics = that.viewAllTopics[chapterIndex];
                         that.myChapterIndex = chapterIndex;
                     }
                 };
                 //Questions.
-                that.showQuestions = function (topicIndex) {
+                that.showQuestions = function(topicIndex) {
                     that.showQuestionView1 = false;
                     if (that.quizObject[bookId]['quizQuestion'][that.chaptersId[that.myChapterIndex]]['ChapterTopics'][that.topicsId[topicIndex]] == undefined) {
                         that.quizObject[bookId]['quizQuestion'][that.chaptersId[that.myChapterIndex]]['ChapterTopics'][that.topicsId[topicIndex]] = {};
@@ -266,8 +266,8 @@
                         quizCreateService.setTopic(that.topicId, topicIndex);
 
                         ref.child('questions').child(quizService.getBook()).child(quizCreateService.getChapter()).child(quizCreateService.getTopic()).on('child_added',
-                            function (snapShot) {
-                                $timeout(function () {
+                            function(snapShot) {
+                                $timeout(function() {
                                     that.questions.push(snapShot.val());
                                     that.questionsId.push(snapShot.key());
                                     that.nestedQuestions[that.myChapterIndex][topicIndex].push(snapShot.val());
@@ -277,20 +277,19 @@
                                     myCounter++;
                                 }, 0)
                             });
-                    }
-                    else {
+                    } else {
                         that.questionIndex = topicIndex;
                         that.nestedQuestions[that.myChapterIndex][topicIndex] = that.tempQuestions[that.myChapterIndex][topicIndex];
                     }
                 };
-                that.showQuestionView = function (question) {
+                that.showQuestionView = function(question) {
                     that.showQuestionView1 = true;
                     if (question !== null) {
                         quizService.setQuestionObject(question);
                     }
                     that.questionView = question;
                 };
-                that.showTickIcon = function (trueFalseValue, questionIndex) {
+                that.showTickIcon = function(trueFalseValue, questionIndex) {
                     if (trueFalseValue == false) {
                         that.showQuestionView1 = true;
                         that.nestedQuestions[that.myChapterIndex][that.questionIndex][questionIndex].id = true;
@@ -302,13 +301,12 @@
                         }
                         that.quizObject[bookId]['quizQuestion'][that.chaptersId[that.myChapterIndex]]['ChapterTopics'][that.topicsId[that.questionIndex]]['TopicQuestions'][that.questionsId[questionIndex]] = that.tempQuestions[that.myChapterIndex][that.questionIndex][questionIndex];
                         that.awaisObject[bookId][that.chaptersId[that.myChapterIndex]][that.topicsId[that.questionIndex]][that.questionsId[questionIndex]] = that.tempQuestions[that.myChapterIndex][that.questionIndex][questionIndex];
-                    }
-                    else if (trueFalseValue == true) {
+                    } else if (trueFalseValue == true) {
                         that.nestedQuestions[that.myChapterIndex][that.questionIndex][questionIndex].id = false;
                         that.tempQuestions[that.myChapterIndex][that.questionIndex][questionIndex].id = false;
                         arr = that.viewAllQuestions;
                         name = that.nestedQuestions[that.myChapterIndex][that.questionIndex][questionIndex].Title;
-                        angular.forEach(arr, function (data, key) {
+                        angular.forEach(arr, function(data, key) {
                             if (data.Title == name) {
                                 arr.splice(key, 1);
                             }
@@ -318,8 +316,7 @@
                         delete(that.awaisObject[bookId][that.chaptersId[that.myChapterIndex]][that.topicsId[that.questionIndex]][that.questionsId[questionIndex]]);
                     }
                 };
-            }
-            else if (counter == 3) {
+            } else if (counter == 3) {
                 this.buttonText = 'Finish and Exit';
                 that.showOne = false;
                 that.showTwo = false;
@@ -335,16 +332,16 @@
                 /*Quiz Create.*/
 
                 //Delete Topics if Questions not there.
-                angular.forEach(that.quizObject[bookId]['quizQuestion'], function (datum, key) {
-                    angular.forEach(datum['ChapterTopics'], function(datum1, key2){
-                        if(Object.keys(datum1['TopicQuestions']).length == 0){
-                            delete (that.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
+                angular.forEach(that.quizObject[bookId]['quizQuestion'], function(datum, key) {
+                    angular.forEach(datum['ChapterTopics'], function(datum1, key2) {
+                        if (Object.keys(datum1['TopicQuestions']).length == 0) {
+                            delete(that.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
                         }
                     })
                 });
 
                 //Delete Chapters if Topics not there.
-                angular.forEach(that.quizObject[bookId]['quizQuestion'], function (data, key) {
+                angular.forEach(that.quizObject[bookId]['quizQuestion'], function(data, key) {
                     if (Object.keys(data['ChapterTopics']).length == 0) {
                         delete(that.quizObject[bookId]['quizQuestion'][key])
                     }
@@ -353,24 +350,24 @@
                 /*Quiz Attempt*/
 
                 //Delete Topics if Questions not there.
-                angular.forEach(that.awaisObject[bookId], function (datum, key) {
-                    angular.forEach(datum, function(datum1, key2){
-                        if(Object.keys(datum1).length == 0){
-                            delete (that.awaisObject[bookId][key][key2]);
+                angular.forEach(that.awaisObject[bookId], function(datum, key) {
+                    angular.forEach(datum, function(datum1, key2) {
+                        if (Object.keys(datum1).length == 0) {
+                            delete(that.awaisObject[bookId][key][key2]);
                         }
                     })
                 });
 
                 //Delete Chapters if Topics not there.
-                angular.forEach(that.awaisObject[bookId], function (data, key) {
+                angular.forEach(that.awaisObject[bookId], function(data, key) {
                     if (Object.keys(data).length == 0) {
                         delete(that.awaisObject[bookId][key])
                     }
                 });
                 that.quizObject[bookId]['quizDetails'] = {
-                    title   :   that.quizTitle,
-                    description :   that.quizDescription,
-                    time        :   that.quizTime
+                    title: that.quizTitle,
+                    description: that.quizDescription,
+                    time: that.quizTime
                 };
             }
             //Last option.
@@ -387,37 +384,37 @@
                     tabCounter++;
                 }
                 //Object With Answer.
-                ref.child('quiz-create').child(bookId).push(that.quizObject[bookId], function () {
+                ref.child('quiz-create').child(bookId).push(that.quizObject[bookId], function() {
 
-                        angular.forEach(that.awaisObject[bookId], function (one) {
-                            angular.forEach(one, function (two) {
-                                angular.forEach(two, function (three) {
-                                    angular.forEach(three.QuestionOptions, function (deleteAnswer) {
-                                        delete(deleteAnswer.rightAnswer);
-                                    });
+                    angular.forEach(that.awaisObject[bookId], function(one) {
+                        angular.forEach(one, function(two) {
+                            angular.forEach(two, function(three) {
+                                angular.forEach(three.QuestionOptions, function(deleteAnswer) {
+                                    delete(deleteAnswer.rightAnswer);
                                 });
                             });
                         });
-                        //Object WithoutAnswer.
-                       // ref.child('quiz-attempt').child(bookId).push(that.awaisObject[bookId]);
-                    angular.forEach(that.viewAllQuestions, function (data) {
-                     delete(data.$$hashKey);
-                     angular.forEach(data.QuestionOptions, function(option){
-                     delete(option.$$hashKey);
-                     });
-                     ref.child('quiz-create').child(bookId).on("child_added",function(snapshot){
-                     that.latestNode.push(snapshot.key());
-                     });
-                     ref.child('quiz-attempt').child(bookId).child(that.latestNode[that.latestNode.length-1]).set(
-                     that.awaisObject[bookId]
-                     );
-                     });
-
                     });
-               /* console.log('QuizObject');
-                console.log(that.quizObject[bookId]);
-                console.log('AwaisObject');
-                console.log(that.awaisObject[bookId]);*/
+                    //Object WithoutAnswer.
+                    // ref.child('quiz-attempt').child(bookId).push(that.awaisObject[bookId]);
+                    angular.forEach(that.viewAllQuestions, function(data) {
+                        delete(data.$$hashKey);
+                        angular.forEach(data.QuestionOptions, function(option) {
+                            delete(option.$$hashKey);
+                        });
+                        ref.child('quiz-create').child(bookId).on("child_added", function(snapshot) {
+                            that.latestNode.push(snapshot.key());
+                        });
+                        ref.child('quiz-attempt').child(bookId).child(that.latestNode[that.latestNode.length - 1]).set(
+                            that.awaisObject[bookId]
+                        );
+                    });
+
+                });
+                /* console.log('QuizObject');
+                 console.log(that.quizObject[bookId]);
+                 console.log('AwaisObject');
+                 console.log(that.awaisObject[bookId]);*/
 
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
             }

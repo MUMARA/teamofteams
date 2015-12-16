@@ -1,22 +1,22 @@
-.cropperWindow{
+.cropperWindow {
     width: 800px;
     height: 400px;
 }
-.cropperWindowButtons{
+
+.cropperWindowButtons {
     position: absolute;
     bottom: 5px;
     left: 40%;
     z-index: 5;
 }
 
-.cropper-main-button{
+.cropper-main-button {
     width: 150px;
-    height: 90px;
+    height: auto;
     padding: 0px !important;
-
 }
 
-.cropper-main-image{
+.cropper-main-image {
     width: 150px;
     /*height: auto;*/
 }

@@ -7,4 +7,4 @@
 var sendgrid = require('sendgrid');
 var credentials = require("./credentials.js");
 
-module.exports = sendgrid( credentials.sendgrid.USERNAME, credentials.sendgrid.PASSWORD );
+module.exports = sendgrid(credentials.sendgrid.USERNAME, credentials.sendgrid.PASSWORD);

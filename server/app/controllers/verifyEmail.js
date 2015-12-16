@@ -18,7 +18,7 @@ appconfig = credentials.product;
 accountConfirmationTemplate = '';
 
 //caching verification email template to use later on every signup
-fs.readFile( __dirname + '/../views/accountConfirmation.ejs', function( err, template ) {
+fs.readFile(__dirname + '/../views/accountConfirmation.ejs', function(err, template) {
     if (err) {
         console.log('file read error: ' + err);
     } else {
@@ -29,20 +29,26 @@ fs.readFile( __dirname + '/../views/accountConfirmation.ejs', function( err, tem
 
 
 //to confirm an account email address.
-exports.verifyEmail = function( req, res ){
+exports.verifyEmail = function(req, res) {
 
     //check for user with uuid similar to token
-    User.findOneAndUpdate({uuid : req.params.uuid}, {$set:{status: 1}}, function( err, user ) {
-        if( err ){
+    User.findOneAndUpdate({
+        uuid: req.params.uuid
+    }, {
+        $set: {
+            status: 1
+        }
+    }, function(err, user) {
+        if (err) {
             res.send({
                 statusCode: 0,
                 statusDesc: "error occurred."
             });
-        } else if ( user ) {
-            fireHandler.updateUserStatus( user.userID, 1, function( err ) {
+        } else if (user) {
+            fireHandler.updateUserStatus(user.userID, 1, function(err) {
                 var template;
 
-                if ( err ) {
+                if (err) {
                     res.send({
                         statusCode: 0,
                         statusDesc: "account verification failed. please try again."

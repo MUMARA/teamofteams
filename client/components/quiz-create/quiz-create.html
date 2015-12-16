@@ -1,45 +1,45 @@
 <style>
-    .selectedChapter md-card-content {
-        background-color: #83d2e3;
-    }
+.selectedChapter md-card-content {
+    background-color: #83d2e3;
+}
 
-    .selectedTopic md-card-content {
-        background-color: #83d2e3;
-    }
+.selectedTopic md-card-content {
+    background-color: #83d2e3;
+}
 
-    .selectedQuestion md-card-content {
-        background-color: #83d2e3;
-    }
+.selectedQuestion md-card-content {
+    background-color: #83d2e3;
+}
 
-    .previousSelected md-card-content {
-        background-color: #888888;
-    }
+.previousSelected md-card-content {
+    background-color: #888888;
+}
 
-    .selectedTab {
-        padding-left: 0;
-        -webkit-transition: all 1s ease;
-        -moz-transition: all 1s ease;
-        -o-transition: all 1s ease;
-        transition: all 1s ease;
-        opacity: 0.5;
-        background-color: #058b97;
-    }
+.selectedTab {
+    padding-left: 0;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+    opacity: 0.5;
+    background-color: #058b97;
+}
 
-    .selectedBook {
-        background-color: #83d2e3;
-    }
+.selectedBook {
+    background-color: #83d2e3;
+}
 
-    .selectedTest {
-        background-color: blue;
-    }
+.selectedTest {
+    background-color: blue;
+}
 
-    .marginLeft {
-        margin-left: 11px;
-    }
+.marginLeft {
+    margin-left: 11px;
+}
 
-    #createQuiz {
-        width: 1300px;
-    }
+#createQuiz {
+    width: 1300px;
+}
 </style>
 <div style="box-shadow: 0px 2px 0px -1px rgba(0, 0, 0, 0.2), 1px 0px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 
@@ -51,38 +51,31 @@
     min-width: 100%;
     margin: 0 auto;
     left: 0px;
-    top: 0px !important;"><ng-md-icon icon="close" size="30"
-                                      ng-click="quizCreate.prev()" style="margin-top: 53px"></ng-md-icon></div>
-
+    top: 0px !important;">
+    <ng-md-icon icon="close" size="30" ng-click="quizCreate.prev()" style="margin-top: 53px"></ng-md-icon>
+</div>
 <div id="createQuiz" style="height: calc(106.6vh - 88px);">
-
-
     <md-content class="grayScroller" style="height: calc(95.6vh - 88px);max-width:85%;margin: 0px auto;
                 margin-top:10px;
                 overflow-x:hidden;
-                background-color: #fff"
-                layout="column">
-
+                background-color: #fff" layout="column">
         <!--<div flex="8"></div>-->
         <div flex="25">
             <div style="position: fixed;top:20%;left: 40%;">
                 <!--link of all tabs-->
                 <div layout="row" style="">
-                    <md-button class="md-fab md-mini md-primary" aria-label="Use Android" style="margin : 0 "
-                               ng-click="quizCreate.one()">1
+                    <md-button class="md-fab md-mini md-primary" aria-label="Use Android" style="margin : 0 " ng-click="quizCreate.one()">1
                     </md-button>
                     <div style="border: 1px solid black;width: 80px;height: 1px;margin-top: 7%;"></div>
-                    <md-button class="md-fab md-mini md-primary" aria-label="Use Android" style="margin : 0"
-                               ng-click="quizCreate.two()" ng-disabled="!quizCreate.twoTab">2
+                    <md-button class="md-fab md-mini md-primary" aria-label="Use Android" style="margin : 0" ng-click="quizCreate.two()" ng-disabled="!quizCreate.twoTab">2
                     </md-button>
                     <div style="border: 1px solid black;width: 80px;height: 1px;margin-top: 7%;"></div>
-                    <md-button class="md-fab md-mini md-primary" aria-label="Use Android" style="margin : 0"
-                               ng-click="quizCreate.three()" ng-disabled="!quizCreate.threeTab">3
+                    <md-button class="md-fab md-mini md-primary" aria-label="Use Android" style="margin : 0" ng-click="quizCreate.three()" ng-disabled="!quizCreate.threeTab">3
                     </md-button>
                 </div>
             </div>
         </div>
-        <div flex="75"  layout="column" layout-align="centre centre">
+        <div flex="75" layout="column" layout-align="centre centre">
             <div flex="80">
                 <!--first tab-->
                 <div ng-show="quizCreate.showOne" layout="row" layout-align="cntre centre">
@@ -91,20 +84,17 @@
                         <!--Title-->
                         <md-input-container>
                             <label>Quiz Title</label>
-                            <input type="text" name="quizTitle" ng-model="quizCreate.quizTitle" md-minlength="3"
-                                   md-maxlength="40" required  autofocus="true"/>
+                            <input type="text" name="quizTitle" ng-model="quizCreate.quizTitle" md-minlength="3" md-maxlength="40" required autofocus="true" />
                         </md-input-container>
                         <!--Description-->
                         <md-input-container>
                             <label>Quiz Description</label>
-                    <textarea type="text" name="quizDescription" ng-model="quizCreate.quizDescription"
-                              md-minlength="10"
-                              md-maxlength="200" required></textarea>
+                            <textarea type="text" name="quizDescription" ng-model="quizCreate.quizDescription" md-minlength="10" md-maxlength="200" required></textarea>
                         </md-input-container>
                         <!--Duration-->
                         <md-input-container>
                             <label>Quiz Time Duration = min:sec</label>
-                            <input type="number" ng-model="quizCreate.quizTime" required >
+                            <input type="number" ng-model="quizCreate.quizTime" required>
                         </md-input-container>
                     </form>
                     <div flex="30"></div>
@@ -114,30 +104,19 @@
                     <!--Chapter Side-->
                     <md-card style="margin: 1px ;height: 400px;" flex="20">
                         <md-toolbar md-scroll-shrink style="background-color: #fff;">
-                            <div class="md-toolbar-tools"
-                                 style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
-
+                            <div class="md-toolbar-tools" style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
                                 <h2 style="color: black">
                                     <span>Chapters</span>
                                 </h2>
                             </div>
                         </md-toolbar>
                         <md-card-content style="">
-                            <md-card
-                                    style="margin: 1px !important;"
-                                    ng-repeat="chapter in quizCreate.chapters"
-                                    ng-click="quizCreate.setSelectedChapter(this);
+                            <md-card style="margin: 1px !important;" ng-repeat="chapter in quizCreate.chapters" ng-click="quizCreate.setSelectedChapter(this);
                                         !quizCreate.showQuizBar && quizCreate.showTopics($index);
-                                        quizCreate.showQuizBar && quizCreate.showQuizTopics($index);"
-                                    id="chapid{{$index}}"
-                                    class="{{selected}}">
-                                <md-card-content
-                                        style="padding: 0 !important;"
-                                        title="{{chapter.description}}">
-                                    <div layout="row"
-                                         style="position: relative;border:1px none">
-                                        <div flex style="border:1px none;" layout="row"
-                                             layout-align="start center">
+                                        quizCreate.showQuizBar && quizCreate.showQuizTopics($index);" id="chapid{{$index}}" class="{{selected}}">
+                                <md-card-content style="padding: 0 !important;" title="{{chapter.description}}">
+                                    <div layout="row" style="position: relative;border:1px none">
+                                        <div flex style="border:1px none;" layout="row" layout-align="start center">
                                             <span flex="10"></span>
                                             <h5>{{chapter.title}}</h5>
                                         </div>
@@ -152,28 +131,20 @@
                     <!--Topic side-->
                     <md-card style="height: 400px;margin: 1px; overflow: auto !important;" flex="20">
                         <md-toolbar md-scroll-shrink style="background-color: #fff;">
-                            <div class="md-toolbar-tools"
-                                 style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
+                            <div class="md-toolbar-tools" style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
                                 <h2 style="color: black">
                                     <span>Topics</span>
                                 </h2>
                             </div>
                         </md-toolbar>
                         <md-card-content>
-                            <md-card style="margin: 1px !important;" ng-repeat="topic in quizCreate.topics"
-                                     ng-click="quizCreate.setSelectedTopic(this);
+                            <md-card style="margin: 1px !important;" ng-repeat="topic in quizCreate.topics" ng-click="quizCreate.setSelectedTopic(this);
                                          !quizCreate.showQuizBar && quizCreate.showQuestions($index);
-                                         quizCreate.showQuizBar && quizCreate.showQuizQuestions($index);"
-                                     id="topicId{{$index}}"
-                                     ng-mouseenter="quizCreate.hover(chapter)"
-                                     ng-mouseleave="quizCreate.hover(chapter)"
-                                     class="{{selectedTopic}}">
+                                         quizCreate.showQuizBar && quizCreate.showQuizQuestions($index);" id="topicId{{$index}}" ng-mouseenter="quizCreate.hover(chapter)" ng-mouseleave="quizCreate.hover(chapter)" class="{{selectedTopic}}">
                                 <md-card-content style="padding: 0px !important;" title="{{topic.description}}">
                                     <!--<div layout="column" layout-align="space-between center">-->
-                                    <div layout="row"
-                                         style="position: relative;border:1px none">
-                                        <div flex style="border:1px none;;" layout="row"
-                                             layout-align="start center">
+                                    <div layout="row" style="position: relative;border:1px none">
+                                        <div flex style="border:1px none;;" layout="row" layout-align="start center">
                                             <span flex="10"></span>
                                             <h5>{{topic.title}}</h5>
                                         </div>
@@ -187,28 +158,21 @@
                     <!--Questions side-->
                     <md-card style="margin: 1px !important;height: 400px;" flex="20">
                         <md-toolbar md-scroll-shrink style="background-color: #fff;">
-                            <div class="md-toolbar-tools"
-                                 style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
+                            <div class="md-toolbar-tools" style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
                                 <h2 style="color: black">
                                     <span>Questions</span>
                                 </h2>
                             </div>
                         </md-toolbar>
                         <md-card-content>
-
-                            <md-card style="margin: 1px !important;"
-                                     ng-repeat="question in quizCreate.nestedQuestions[quizCreate.myChapterIndex][quizCreate.questionIndex]"
-                                     ng-click="quizCreate.setSelectedQuestion(this); quizCreate.showQuestionView(question,$index); quizCreate.showTickIcon(question.id, $index);"
-                                     class="{{selectedQuestion}}">
+                            <md-card style="margin: 1px !important;" ng-repeat="question in quizCreate.nestedQuestions[quizCreate.myChapterIndex][quizCreate.questionIndex]" ng-click="quizCreate.setSelectedQuestion(this); quizCreate.showQuestionView(question,$index); quizCreate.showTickIcon(question.id, $index);" class="{{selectedQuestion}}">
                                 <md-card-content style="padding: 0px !important;" title="{{question.Description}}">
                                     <div layout="row" style="position: relative;border:1px none">
-                                        <div flex="90" style="border:1px none;" layout="row"
-                                             layout-align="start center">
+                                        <div flex="90" style="border:1px none;" layout="row" layout-align="start center">
                                             <span flex="10"></span>
                                             <h5>{{question.Title}}</h5>
                                         </div>
-                                        <ng-md-icon flex="10" icon="done" style="fill:green; margin-left: -6px;"
-                                                    ng-show="quizCreate.nestedQuestions[quizCreate.myChapterIndex][quizCreate.questionIndex][$index].id"></ng-md-icon>
+                                        <ng-md-icon flex="10" icon="done" style="fill:green; margin-left: -6px;" ng-show="quizCreate.nestedQuestions[quizCreate.myChapterIndex][quizCreate.questionIndex][$index].id"></ng-md-icon>
                                     </div>
                                 </md-card-content>
                             </md-card>
@@ -218,8 +182,7 @@
                     <div flex="40" style="height:350px !important;">
                         <md-card style="color: #000000;height: 400px;margin: 1px !important;">
                             <md-toolbar md-scroll-shrink style="background-color: #fff;">
-                                <div class="md-toolbar-tools"
-                                     style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
+                                <div class="md-toolbar-tools" style="border-bottom: 2px solid #dddddd;margin: 0 auto;height:45px !important">
                                     <h2 style="color: black">
                                         <span>Question View</span>
                                     </h2>
@@ -243,7 +206,6 @@
                                             </li>
                                         </ul>
                                     </md-card-content>
-
                                 </md-card>
                             </md-card-content>
                         </md-card>
@@ -253,8 +215,7 @@
                 <div ng-show="quizCreate.showThree">
                     <md-card style="height:400px">
                         <md-toolbar md-scroll-shrink style="background-color: #fff;">
-                            <div class="md-toolbar-tools"
-                                 style="border-bottom: 2px solid #dddddd;height:45px !important" layout="row" layout="center center">
+                            <div class="md-toolbar-tools" style="border-bottom: 2px solid #dddddd;height:45px !important" layout="row" layout="center center">
                                 <div flex="35">
                                     <h2 style="color: black">
                                         <span class="md-headline" style="margin-left: 30%;">Selected Questions</span>
@@ -268,7 +229,7 @@
                             </div>
                         </md-toolbar>
                         <div layout="row">
-                            <div  style="overflow :auto; height: 350px" flex = "40">
+                            <div style="overflow :auto; height: 350px" flex="40">
                                 <md-content style="width: 75%; text-align: center;margin-left: 80px; height: 330px;">
                                     <md-card style="height: 25px" ng-repeat="question in quizCreate.viewAllQuestions">
                                         <md-content ng-click=" quizCreate.setSelectedQuestion(this); quizCreate.showQuestionView(question,$index)">{{question.Title}}</md-content>
@@ -276,10 +237,6 @@
                                     <md-divider inset></md-divider>
                                 </md-content>
                             </div>
-
-
-
-
                             <md-card-content flex>
                                 <md-card ng-show="quizCreate.showQuestionView1" style="padding-left: 5%;margin-top: -35px; word-wrap: break-word">
                                     <md-card-content style="height: 320px">
@@ -298,23 +255,17 @@
                                             </li>
                                         </ul>
                                     </md-card-content>
-
-
-
-</md-card>
-                                </md-card-content>
+                                </md-card>
+                            </md-card-content>
                         </div>
                     </md-card>
-
                 </div>
                 <!--four tab-->
             </div>
             <div flex="20" style="margin:40px auto">
-            <md-button  class="md-raised"
-                       ng-disabled="!quizCreate.quizTitle || !quizCreate.quizDescription || !quizCreate.quizTime"
-                       ng-click="quizCreate.goToNext()">
-                {{quizCreate.buttonText}}
-            </md-button>
+                <md-button class="md-raised" ng-disabled="!quizCreate.quizTitle || !quizCreate.quizDescription || !quizCreate.quizTime" ng-click="quizCreate.goToNext()">
+                    {{quizCreate.buttonText}}
+                </md-button>
             </div>
         </div>
     </md-content>

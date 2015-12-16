@@ -12,8 +12,8 @@
         /*private variables*/
         var that = this;
         var user = userService.getCurrentUser();
-        var groupId= $stateParams.groupID;
-        $rootScope.newImg =false;
+        var groupId = $stateParams.groupID;
+        $rootScope.newImg = '';
         /*VM functions*/
         this.groupPath = '';
         this.queryUsers = queryUsers;
@@ -30,6 +30,7 @@
 
                 // console.log(data);
                 that.group = data;
+                that.group.signupMode = "2";
 
                 //debugger
             })

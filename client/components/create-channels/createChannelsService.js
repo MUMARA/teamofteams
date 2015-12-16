@@ -4,13 +4,13 @@
 /**
  * Created by sj on 6/6/2015.
  */
-(function () {
+(function() {
     'use strict';
     angular
-        .module('app.createChannels',['core'])
-        .factory('createChannelService',['userService','$location','authService','$http','$q','appConfig','$sessionStorage','$firebaseObject','firebaseService','userFirebaseService',function(userService,$location,authService,$http,$q,appConfig,$localStorage,$firebaseObject,firebaseService,userFirebaseService){
+        .module('app.createChannels', ['core'])
+        .factory('createChannelService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$sessionStorage', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $localStorage, $firebaseObject, firebaseService, userFirebaseService) {
 
-            return{}
+            return {}
         }])
 
 })();

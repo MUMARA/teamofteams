@@ -2,20 +2,20 @@
  * Created by QASEEM WAKEEL on 9/4/2015.
  */
 
-(function () {
+(function() {
     'use strict';
 
     angular
-        .module('app.quizAttempting', ['core','app.quiz'])
+        .module('app.quizAttempting', ['core', 'app.quiz'])
         .factory('QuizAttemptingService', ['quizService', function(quizService) {
 
             var $scope = this;
             $scope.length = null;
             return {
-                'setTotalQuestion': function (length) {
+                'setTotalQuestion': function(length) {
                     $scope.length = length;
                 },
-                'getTotalQuestion': function () {
+                'getTotalQuestion': function() {
                     return $scope.length;
                 }
 

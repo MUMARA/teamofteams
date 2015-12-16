@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -8,7 +9,6 @@
     <!--   <base href="/">-->
     <title>Team of Teams</title>
     <!-- Bootstrap Core CSS -->
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--
@@ -24,209 +24,190 @@
         document.createElement('ui-select-choices');
     </script>
     <![endif]-->
-<!---->
-
-<link href="img/favico/favicon.ico" rel="icon" type="image/x-icon" />
-
+    <!---->
+    <link href="img/favico/favicon.ico" rel="icon" type="image/x-icon" />
 </head>
-<body ng-app="myApp" ng-controller="AppController as app">
 
-<!--
+<body ng-app="myApp" ng-controller="AppController as app">
+    <!--
 <body  ng-controller="AppController as app">
 -->
-<md-content style="z-index:9; overflow: hidden">
-    <div layout="column" >
-
-        <div layout="row"  id="navBar" class="toolbarContainer">
-            <div   ui-view="nav" flex="100"></div>
+    <md-content style="z-index:9; overflow: hidden">
+        <div layout="column">
+            <div layout="row" id="navBar" class="toolbarContainer">
+                <div ui-view="nav" flex="100"></div>
+            </div>
+            <div layout="row" class="marginContainer">
+                <div ui-view="main" flex="100"></div>
+            </div>
         </div>
-        <div layout="row" class="marginContainer">
-            <div  ui-view="main" flex="100" ></div>
-        </div>
-    </div>
-</md-content>
-
-<!-- <div ui-view="nav"></div>
+    </md-content>
+    <!-- <div ui-view="nav"></div>
 <div ui-view="main"></div>
  -->
-<!-- jQuery -->
-<script src="lib/jquery.js"></script>
-
-
-<!--bower components and other lib-->
-<script type="text/javascript" src="bower_components/rsvp/rsvp.js"></script>
-<script src="lib/bootstrap.min.js"></script>
-
-<script type="text/javascript" src="bower_components/moment/moment.js"></script>
-
-<!--<script type="text/javascript" src="checkin/libs/leaflet-map/leaflet.js"></script>-->
-<script type="text/javascript" src="bower_components/angular/angular.js"></script>
-<script type="text/javascript" src="bower_components/angular-ui-select/dist/select.js"></script>
-<script type="text/javascript" src="bower_components/select2/select2.js"></script>
-<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-
-<script type="text/javascript" src="directives/angular-leaflet-directive.min.js"></script>
-<!--<script type="text/javascript" src="checkin/libs/leaflet-map/leaflet.js"></script>-->
-<!--new router-->
-<!-- <script src="router.es5.js"></script> -->
-<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-<!--<script src="//cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script>-->
-<script src="lib/angular-material-icons.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-messages/angular-messages.js"></script>
-<script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
-<script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
-<script type="text/javascript" src="bower_components/angular-audio/app/angular.audio.js"></script>
-<script type="text/javascript" src="bower_components/angular-moment/angular-moment.js"></script>
-<script type="text/javascript" src="bower_components/angular-material/angular-material.js"></script>
-<script type="text/javascript" src="bower_components/firebase/firebase-debug.js"></script>
-<script type="text/javascript" src="bower_components/angularfire/dist/angularfire.js"></script>
-<script type="text/javascript" src="bower_components/geofire/dist/geofire.js"></script>
-<script type="text/javascript" src="bower_components/angularGeoFire/dist/angularGeoFire.js"></script>
-<script type="text/javascript" src="bower_components/ngstorage/ngStorage.js"></script>
-<script type="text/javascript" src="bower_components/ngGeolocation/ngGeolocation.js"></script>
-<script type="text/javascript" src="bower_components/angular-ui-select/dist/select.js"></script>
-
-<script src="bower_components/ng-mfb/src/mfb-directive.js"></script>
-<script src="bower_components/cropper/dist/cropper.js"></script>
-
-<!--modules-->
-
-<script type="text/javascript" src="coreModules/core.module.js"></script>
-<script type="text/javascript" src="coreModules/firebase-as-array.js"></script>
-
-<!--app components-->
-
-<script src="components/user/userService.js"></script>
-<script src="components/user/user.js"></script>
-
-<script src="components/group/groupService.js"></script>
-
-<script src="components/group/group.js"></script>
-
-<script src="components/home/home.js"></script>
-<script src="components/nav-loginbar/navLoginbar.js"></script>
-<script src="components/nav-toolbar/navToobarService.js"></script>
-<script src="components/nav-toolbar/navToolbar.js"></script>
-<script src="components/signin/signInService.js"></script>
-<script src="components/signin/signin.js"></script>
-<script src="components/sign-up/signUpService.js"></script>
-<script src="components/sign-up/signUp.js"></script>
-<script src="components/forgot/forgotService.js"></script>
-<script src="components/forgot/forgot.js"></script>
-<script src="components/create-group/createGroupService.js"></script>
-<script src="components/create-group/createGroup.js"></script>
-<script src="components/edit-group/editGroupService.js"></script>
-<script src="components/edit-group/edit-group.js"></script>
-<script src="components/subgroup/subgroupService.js"></script>
-<script src="components/subgroup/subgroup.js"></script>
-<script src="components/create-sub-group/createSubGroupService.js"></script>
-<script src="components/create-sub-group/createSubGroup.js"></script>
-<script src="components/join-group/joinGroupService.js"></script>
-<script src="components/join-group/joinGroup.js"></script>
-<script src="components/personal-settings/personal-settingsService.js"></script>
-<script src="components/personal-settings/personal-settings.js"></script>
-<script src="components/user-setting/userSettingService.js"></script>
-<script src="components/user-setting/userSetting.js"></script>
-<script src="components/geo-fencing/geo-fencing.js"></script>
-<script src="components/create-channels/createChannelsService.js"></script>
-<script src="components/create-channels/createChannels.js"></script>
-<script src="components/create-teams-channels/createTeamsChannelsService.js"></script>
-<script src="components/create-teams-channels/createTeamsChannels.js"></script>
-<!--QUIZ JS-->
-<script src="components/quiz/quizService.js"></script>
-<script src="components/quiz/quiz.js"></script>
-<script src="components/quiz-add-book/quizAddBookService.js"></script>
-<script src="components/quiz-add-book/quizAddBook.js"></script>
-<script src="components/quiz-add-chapter/quizAddChapterService.js"></script>
-<script src="components/quiz-add-chapter/quizAddChapter.js"></script>
-<script src="components/quiz-add-topic/quizAddTopicService.js"></script>
-<script src="components/quiz-add-topic/quizAddTopic.js"></script>
-<script src="components/quiz-add-question/quizAddQuestionService.js"></script>
-<script src="components/quiz-add-question/quizAddQuestion.js"></script>
-<script src="components/quiz-create/quizCreateService.js"></script>
-<script src="components/quiz-create/quizCreate.js"></script>
-<script src="components/quiz-attempt/quizAttemptService.js"></script>
-<script src="components/quiz-attempt/quizAttempt.js"></script>
-<script src="components/quiz-attempting/quizAttemptingService.js"></script>
-<script src="components/quiz-attempting/quizAttempting.js"></script>
-<script src="components/quiz-assign/quizAssignService.js"></script>
-<script src="components/quiz-assign/quizAssign.js"></script>
-<script src="components/quiz-result/quizResultService.js"></script>
-<script src="components/quiz-result/quizResult.js"></script>
-<script src="components/geo-fencing/geo-fencing.js"></script>
-
-<!--subcomp-->
-<!--app services-->
-<script type="text/javascript" src="components/componentsCoreModule.js"></script>
-<script type="text/javascript" src="services/auth.service.js"></script>
-<script type="text/javascript" src="services/chatService.js"></script>
-<script type="text/javascript" src="services/user.service.js"></script>
-<script type="text/javascript" src="services/util.service.js"></script>
-<script type="text/javascript" src="services/message.service.js"></script>
-<script type="text/javascript" src="services/confirmDialog.service.js"></script>
-<script type="text/javascript" src="services/firebase.service.js"></script>
-<script type="text/javascript" src="services/user.firebase.service.js"></script>
-<script type="text/javascript" src="services/group.firebase.service.js"></script>
-
-<script type="text/javascript" src="services/sound.service.js"></script>
-<script type="text/javascript" src="services/userPresence.firebase.js"></script>
-<script type="text/javascript" src="services/userHelper.firebase.js"></script>
-<script type="text/javascript" src="services/subgroup.firebase.service.js"></script>
-<!--directives-->
-<script type="text/javascript" src="directives/checkUserID.directive.js"></script>
-<script type="text/javascript" src="directives/activitiesList.directive.js"></script>
-<script type="text/javascript" src="directives/getGavatar.directive.js"></script>
-<!--<script type="text/javascript" src="directives/angular-leaflet-directive.min.js"></script>-->
-<script type="text/javascript" src="directives/compareTo.directive.js"></script>
-<script type="text/javascript" src="directives/checkUserID.directive.js"></script>
-<script type="text/javascript" src="directives/checkGroupExistance.directive.js"></script>
-<!--<script type="text/javascript" src="directives/imageCropper.directive.js"></script>-->
-<script type="text/javascript" src="directives/cropper.directive.js"></script>
-<!--app controllers-->
-<!--app directives-->
-<!--checkin module-->
-<!--Check-in module dependencies-->
-<!--<script type="text/javascript" src="checkin/libs/leaflet-map/leaflet.js"></script>-->
-<script type="text/javascript" src="checkin/libs/leaflet-map/leaflet-src.js"></script>
-<script type="text/javascript" src="checkin/libs/GoogleLayer.js"></script>
-<script type="text/javascript" src="checkin/checkin.module.js"></script>
-<script type="text/javascript" src="checkin/services/checkin.service.js"></script>
-<script type="text/javascript" src="checkin/filters/checkin.array.filter.js"></script>
-<script type="text/javascript" src="checkin/filters/checkin.getLocationNameByID.filter.js"></script>
-<script type="text/javascript" src="checkin/controllers/defineLocation.controller.js"></script>
-<script type="text/javascript" src="checkin/controllers/home.checkin.app.controller.js"></script>
-<script type="text/javascript" src="checkin/controllers/home.checkin.app.BySubgroup.controller.js"></script>
-<script type="text/javascript" src="checkin/controllers/user.checkin.controller.js"></script>
-<script type="text/javascript" src="checkin/controllers/charts.checkin.controller.js"></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="app.js"></script>
-<!-- <script src="app-dev.js"></script> -->
-
-<!--appConfig-->
-<script type="text/javascript" src="config/appRoutes.js"></script>
-<script type="text/javascript" src="config/ngMaterialConfig.js"></script>
-
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<!-- Custom CSS -->
-<link href="css/simple-sidebar.css" rel="stylesheet">
-<link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/user.css">
-<link rel="stylesheet" href="css/group.css">
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic">
-<link rel="stylesheet" type="text/css" href="checkin/libs/leaflet-map/leaflet.css">
-<link rel="stylesheet" href="bower_components/ng-mfb/mfb/dist/mfb.css">
-<link rel="stylesheet" type="text/css" href="bower_components/angular-ui-select/dist/select.css"/>
-<link rel="stylesheet" type="text/css" href="bower_components/select2/select2.css">
-<!-- Custom CSS -->
-<link href="css/simple-sidebar.css" rel="stylesheet">
-<link  href="bower_components/cropper/dist/cropper.css" rel="stylesheet">
-<link href="css/my-cropper.css" rel="stylesheet">
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3&sensor=false"></script>
-<script type="text/javascript" src="./lib/leaflet-google.js"></script>
-
-<!--<script type="text/javascript">
+    <!-- jQuery -->
+    <script src="lib/jquery.js"></script>
+    <!--bower components and other lib-->
+    <script type="text/javascript" src="bower_components/rsvp/rsvp.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components/moment/moment.js"></script>
+    <!--<script type="text/javascript" src="checkin/libs/leaflet-map/leaflet.js"></script>-->
+    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-select/dist/select.js"></script>
+    <script type="text/javascript" src="bower_components/select2/select2.js"></script>
+    <script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="directives/angular-leaflet-directive.min.js"></script>
+    <!--<script type="text/javascript" src="checkin/libs/leaflet-map/leaflet.js"></script>-->
+    <!--new router-->
+    <!-- <script src="router.es5.js"></script> -->
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <!--<script src="//cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script>-->
+    <script src="lib/angular-material-icons.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-messages/angular-messages.js"></script>
+    <script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
+    <script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
+    <script type="text/javascript" src="bower_components/angular-audio/app/angular.audio.js"></script>
+    <script type="text/javascript" src="bower_components/angular-moment/angular-moment.js"></script>
+    <script type="text/javascript" src="bower_components/angular-material/angular-material.js"></script>
+    <script type="text/javascript" src="bower_components/firebase/firebase-debug.js"></script>
+    <script type="text/javascript" src="bower_components/angularfire/dist/angularfire.js"></script>
+    <script type="text/javascript" src="bower_components/geofire/dist/geofire.js"></script>
+    <script type="text/javascript" src="bower_components/angularGeoFire/dist/angularGeoFire.js"></script>
+    <script type="text/javascript" src="bower_components/ngstorage/ngStorage.js"></script>
+    <script type="text/javascript" src="bower_components/ngGeolocation/ngGeolocation.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-select/dist/select.js"></script>
+    <script src="bower_components/ng-mfb/src/mfb-directive.js"></script>
+    <script src="bower_components/cropper/dist/cropper.js"></script>
+    <!--modules-->
+    <script type="text/javascript" src="coreModules/core.module.js"></script>
+    <script type="text/javascript" src="coreModules/firebase-as-array.js"></script>
+    <!--app components-->
+    <script src="components/user/userService.js"></script>
+    <script src="components/user/user.js"></script>
+    <script src="components/group/groupService.js"></script>
+    <script src="components/group/group.js"></script>
+    <script src="components/home/home.js"></script>
+    <script src="components/nav-loginbar/navLoginbar.js"></script>
+    <script src="components/nav-toolbar/navToobarService.js"></script>
+    <script src="components/nav-toolbar/navToolbar.js"></script>
+    <script src="components/signin/signInService.js"></script>
+    <script src="components/signin/signin.js"></script>
+    <script src="components/sign-up/signUpService.js"></script>
+    <script src="components/sign-up/signUp.js"></script>
+    <script src="components/forgot/forgotService.js"></script>
+    <script src="components/forgot/forgot.js"></script>
+    <script src="components/create-group/createGroupService.js"></script>
+    <script src="components/create-group/createGroup.js"></script>
+    <script src="components/edit-group/editGroupService.js"></script>
+    <script src="components/edit-group/edit-group.js"></script>
+    <script src="components/subgroup/subgroupService.js"></script>
+    <script src="components/subgroup/subgroup.js"></script>
+    <script src="components/create-sub-group/createSubGroupService.js"></script>
+    <script src="components/create-sub-group/createSubGroup.js"></script>
+    <script src="components/join-group/joinGroupService.js"></script>
+    <script src="components/join-group/joinGroup.js"></script>
+    <script src="components/personal-settings/personal-settingsService.js"></script>
+    <script src="components/personal-settings/personal-settings.js"></script>
+    <script src="components/user-setting/userSettingService.js"></script>
+    <script src="components/user-setting/userSetting.js"></script>
+    <script src="components/geo-fencing/geo-fencing.js"></script>
+    <script src="components/create-channels/createChannelsService.js"></script>
+    <script src="components/create-channels/createChannels.js"></script>
+    <script src="components/create-teams-channels/createTeamsChannelsService.js"></script>
+    <script src="components/create-teams-channels/createTeamsChannels.js"></script>
+    <!--QUIZ JS-->
+    <script src="components/quiz/quizService.js"></script>
+    <script src="components/quiz/quiz.js"></script>
+    <script src="components/quiz-add-book/quizAddBookService.js"></script>
+    <script src="components/quiz-add-book/quizAddBook.js"></script>
+    <script src="components/quiz-add-chapter/quizAddChapterService.js"></script>
+    <script src="components/quiz-add-chapter/quizAddChapter.js"></script>
+    <script src="components/quiz-add-topic/quizAddTopicService.js"></script>
+    <script src="components/quiz-add-topic/quizAddTopic.js"></script>
+    <script src="components/quiz-add-question/quizAddQuestionService.js"></script>
+    <script src="components/quiz-add-question/quizAddQuestion.js"></script>
+    <script src="components/quiz-create/quizCreateService.js"></script>
+    <script src="components/quiz-create/quizCreate.js"></script>
+    <script src="components/quiz-attempt/quizAttemptService.js"></script>
+    <script src="components/quiz-attempt/quizAttempt.js"></script>
+    <script src="components/quiz-attempting/quizAttemptingService.js"></script>
+    <script src="components/quiz-attempting/quizAttempting.js"></script>
+    <script src="components/quiz-assign/quizAssignService.js"></script>
+    <script src="components/quiz-assign/quizAssign.js"></script>
+    <script src="components/quiz-result/quizResultService.js"></script>
+    <script src="components/quiz-result/quizResult.js"></script>
+    <script src="components/geo-fencing/geo-fencing.js"></script>
+    <!--subcomp-->
+    <!--app services-->
+    <script type="text/javascript" src="components/componentsCoreModule.js"></script>
+    <script type="text/javascript" src="services/auth.service.js"></script>
+    <script type="text/javascript" src="services/chatService.js"></script>
+    <script type="text/javascript" src="services/user.service.js"></script>
+    <script type="text/javascript" src="services/util.service.js"></script>
+    <script type="text/javascript" src="services/message.service.js"></script>
+    <script type="text/javascript" src="services/confirmDialog.service.js"></script>
+    <script type="text/javascript" src="services/firebase.service.js"></script>
+    <script type="text/javascript" src="services/user.firebase.service.js"></script>
+    <script type="text/javascript" src="services/group.firebase.service.js"></script>
+    <script type="text/javascript" src="services/sound.service.js"></script>
+    <script type="text/javascript" src="services/userPresence.firebase.js"></script>
+    <script type="text/javascript" src="services/userHelper.firebase.js"></script>
+    <script type="text/javascript" src="services/subgroup.firebase.service.js"></script>
+    <!--directives-->
+    <script type="text/javascript" src="directives/checkUserID.directive.js"></script>
+    <script type="text/javascript" src="directives/activitiesList.directive.js"></script>
+    <script type="text/javascript" src="directives/getGavatar.directive.js"></script>
+    <!--<script type="text/javascript" src="directives/angular-leaflet-directive.min.js"></script>-->
+    <script type="text/javascript" src="directives/compareTo.directive.js"></script>
+    <script type="text/javascript" src="directives/checkUserID.directive.js"></script>
+    <script type="text/javascript" src="directives/checkGroupExistance.directive.js"></script>
+    <!--<script type="text/javascript" src="directives/imageCropper.directive.js"></script>-->
+    <script type="text/javascript" src="directives/cropper.directive.js"></script>
+    <!--app controllers-->
+    <!--app directives-->
+    <!--checkin module-->
+    <!--Check-in module dependencies-->
+    <!--<script type="text/javascript" src="checkin/libs/leaflet-map/leaflet.js"></script>-->
+    <script type="text/javascript" src="checkin/libs/leaflet-map/leaflet-src.js"></script>
+    <script type="text/javascript" src="checkin/libs/GoogleLayer.js"></script>
+    <script type="text/javascript" src="checkin/checkin.module.js"></script>
+    <script type="text/javascript" src="checkin/services/checkin.service.js"></script>
+    <script type="text/javascript" src="checkin/filters/checkin.array.filter.js"></script>
+    <script type="text/javascript" src="checkin/filters/checkin.getLocationNameByID.filter.js"></script>
+    <script type="text/javascript" src="checkin/controllers/defineLocation.controller.js"></script>
+    <script type="text/javascript" src="checkin/controllers/home.checkin.app.controller.js"></script>
+    <script type="text/javascript" src="checkin/controllers/home.checkin.app.BySubgroup.controller.js"></script>
+    <script type="text/javascript" src="checkin/controllers/user.checkin.controller.js"></script>
+    <script type="text/javascript" src="checkin/controllers/charts.checkin.controller.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <!-- <script src="app.js"></script> -->
+    <script src="app-dev.js"></script>
+    <!--appConfig-->
+    <script type="text/javascript" src="config/appRoutes.js"></script>
+    <script type="text/javascript" src="config/ngMaterialConfig.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/user.css" />
+    <link rel="stylesheet" href="css/group.css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic" />
+    <link rel="stylesheet" type="text/css" href="checkin/libs/leaflet-map/leaflet.css" />
+    <link rel="stylesheet" href="bower_components/ng-mfb/mfb/dist/mfb.css" />
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-select/dist/select.css" />
+    <link rel="stylesheet" type="text/css" href="bower_components/select2/select2.css" />
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet" />
+    <link href="bower_components/cropper/dist/cropper.css" rel="stylesheet" />
+    <link href="css/my-cropper.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3&sensor=false"></script>
+    <script type="text/javascript" src="./lib/leaflet-google.js"></script>
+    <!-- Angular Image Cropper START-->
+    <link href="bower_components/ng-img-crop/compile/unminified/ng-img-crop.css" rel="stylesheet" />
+    <script type="text/javascript" src="bower_components/ng-img-crop/compile/unminified/ng-img-crop.js"></script>
+    <!-- Angular Image Cropper END-->
+    <!--<script type="text/javascript">
 
     var geocoder = new google.maps.Geocoder();
     var address = "khadda market dha";
@@ -240,6 +221,6 @@
         }
     });
 </script>-->
-
 </body>
+
 </html>

@@ -24,8 +24,8 @@ var authDateFirebase = null;
 exports.authenticate = authenticate;
 
 //listens for auth event. when auth expires or initially, get server authenticated with firebase.
-myFirebaseRef.onAuth(function( auth ) {
-    if ( auth ) {
+myFirebaseRef.onAuth(function(auth) {
+    if (auth) {
         authenticatedFirebase = true;
         console.log('onAuth: authenticated');
     } else {
@@ -36,22 +36,22 @@ myFirebaseRef.onAuth(function( auth ) {
 });
 
 //creates an epoch number for next 30 days
-function getNext30DayEpoch(){
+function getNext30DayEpoch() {
     var nowEpoch = new Date().valueOf();
-    return nowEpoch + ( 3600000 * 24 * 30 ); // current epoch + ( 1min * 24hrs * 30days )
+    return nowEpoch + (3600000 * 24 * 30); // current epoch + ( 1min * 24hrs * 30days )
 }
 
 //authenticate node server with firebase
-function authenticate(callback){
+function authenticate(callback) {
     var adminJWT = tokenGenerator.createToken({
         uid: 'admin'
-    },{
-        admin : true,
+    }, {
+        admin: true,
         expires: getNext30DayEpoch()
     });
 
-    myFirebaseRef.authWithCustomToken( adminJWT, function( error, authData ) {
-    //myFirebaseRef.authWithCustomToken("Jixsdx7sC1tMpovUMMV5AeMMR8EXFcw3JgCf4k4m", function(error, authData) {
+    myFirebaseRef.authWithCustomToken(adminJWT, function(error, authData) {
+        //myFirebaseRef.authWithCustomToken("Jixsdx7sC1tMpovUMMV5AeMMR8EXFcw3JgCf4k4m", function(error, authData) {
         if (error) {
             console.log("FB Login Failed!", error);
             callback && callback(error);
@@ -64,21 +64,21 @@ function authenticate(callback){
 }
 
 //adds a user on firebase
-function addFirebaseUser(user, callback){
-    var userRef =  usersRef.child( user.userID );
+function addFirebaseUser(user, callback) {
+    var userRef = usersRef.child(user.userID);
     userRef.set({
-        email       : user.email,
-        firstName   : user.firstName,
-        lastName    : user.lastName,
-        status      : 0,
-       'date-created': Firebase.ServerValue.TIMESTAMP
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        status: 0,
+        'date-created': Firebase.ServerValue.TIMESTAMP
     }, function(error) {
         if (error) {
             callback(error);
 
         } else {
-            userRef.once('value',function(snapshot){
-                callback(null,snapshot.val());
+            userRef.once('value', function(snapshot) {
+                callback(null, snapshot.val());
             });
         }
     });
@@ -87,28 +87,24 @@ function addFirebaseUser(user, callback){
 //to confirm a user account email address.
 exports.addUser = function(user, callback) {
     if (authenticatedFirebase) {
-        addFirebaseUser(user, function(error1, firebaseUser){
-            if(error1){
+        addFirebaseUser(user, function(error1, firebaseUser) {
+            if (error1) {
                 callback(error1);
-            }
-            else {
-                callback(null,firebaseUser);
+            } else {
+                callback(null, firebaseUser);
             }
         });
-    }
-    else {
-        authenticate(function (error) {
+    } else {
+        authenticate(function(error) {
             if (error) {
                 callback(error);
-            }
-            else {
+            } else {
                 //authenticatedFirebase = true;
-                addFirebaseUser(user, function(error1,firebaseUser){
-                    if(error1){
+                addFirebaseUser(user, function(error1, firebaseUser) {
+                    if (error1) {
                         callback(error1);
-                    }
-                    else {
-                        callback(null,firebaseUser);
+                    } else {
+                        callback(null, firebaseUser);
                     }
                 });
             }
@@ -118,11 +114,11 @@ exports.addUser = function(user, callback) {
 };
 
 //to remove a user account.
-exports.removeUser = function( userID, callback ) {
+exports.removeUser = function(userID, callback) {
     var removeUser = function() {
-        usersRef.child( userID ).remove(function( err ) {
-            if( err ){
-                callback( err );
+        usersRef.child(userID).remove(function(err) {
+            if (err) {
+                callback(err);
             } else {
                 //TODO remove user's memberships from groups, subgroups, and microgroups.
                 callback();
@@ -130,14 +126,13 @@ exports.removeUser = function( userID, callback ) {
         });
     };
 
-    if ( authenticatedFirebase ) {
+    if (authenticatedFirebase) {
         removeUser();
     } else {
-        authenticate(function( error ) {
-            if ( error ) {
-                callback( error );
-            }
-            else {
+        authenticate(function(error) {
+            if (error) {
+                callback(error);
+            } else {
                 //authenticatedFirebase = true;
                 removeUser();
             }
@@ -146,25 +141,24 @@ exports.removeUser = function( userID, callback ) {
 };
 
 //to update email status of a user account.
-exports.updateUserStatus = function( userID, status, callback ) {
+exports.updateUserStatus = function(userID, status, callback) {
     var updateStatus = function() {
-        usersRef.child( userID + '/' + 'status').set( status, function( err ) {
-            if( err ){
-                callback( err );
+        usersRef.child(userID + '/' + 'status').set(status, function(err) {
+            if (err) {
+                callback(err);
             } else {
                 callback();
             }
         });
     };
 
-    if ( authenticatedFirebase ) {
+    if (authenticatedFirebase) {
         updateStatus();
     } else {
         authenticate(function(error) {
-            if ( error ) {
-                callback( error );
-            }
-            else {
+            if (error) {
+                callback(error);
+            } else {
                 //authenticatedFirebase = true;
                 updateStatus();
             }

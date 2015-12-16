@@ -6,101 +6,93 @@
  * To change this template use File | Settings | File Templates.
  */
 
-    'use strict';
+'use strict';
 
-    var profilePictureManager = require("./profilePictureManager");
-    var formidable = require("formidable");
+var profilePictureManager = require("./profilePictureManager");
+var formidable = require("formidable");
 
-    var routes = {
-        config:[
-            {
-                method: 'saveUserProfilepicture',
-                httpVerb: 'post',
-                url: 'api/profilepicture',
-                params:[]
-            } ,
-            {
-                method: 'saveuserprofilepicture',
-                httpVerb: 'get',
-                url: 'api/saveuserprofilepicture',
-                params:[]
-            },
-            {
-                method: 'removeUserProfilepicture',
-                httpVerb: 'delete',
-                url: 'api/profilepicture/:userID/:token',
-                params:['pid']
-            },
-            {
-                method: 'serveUserProfilepicture',
-                httpVerb: 'get',
-                url: 'api/profilepicture/:userID',
-                params:['pid']
-            },
-            //======================================
-            {
-                method: 'saveGroupProfilePicture',
-                httpVerb: 'post',
-                url: 'api/groupProfilepicture',
-                params:[]
-            },
-            {
-                method: 'savegroupprofilepicture',
-                httpVerb: 'get',
-                url: 'api/savegroupprofilepicture',
-                params:[]
-            },
+var routes = {
+    config: [{
+            method: 'saveUserProfilepicture',
+            httpVerb: 'post',
+            url: 'api/profilepicture',
+            params: []
+        }, {
+            method: 'saveuserprofilepicture',
+            httpVerb: 'get',
+            url: 'api/saveuserprofilepicture',
+            params: []
+        }, {
+            method: 'removeUserProfilepicture',
+            httpVerb: 'delete',
+            url: 'api/profilepicture/:userID/:token',
+            params: ['pid']
+        }, {
+            method: 'serveUserProfilepicture',
+            httpVerb: 'get',
+            url: 'api/profilepicture/:userID',
+            params: ['pid']
+        },
+        //======================================
+        {
+            method: 'saveGroupProfilePicture',
+            httpVerb: 'post',
+            url: 'api/groupProfilepicture',
+            params: []
+        }, {
+            method: 'savegroupprofilepicture',
+            httpVerb: 'get',
+            url: 'api/savegroupprofilepicture',
+            params: []
+        },
 
-            {
-                method: 'removeGroupProfilePicture',
-                httpVerb: 'delete',
-                url: 'api/groupProfilepicture/:groupID/:token',
-                params:['pid']
-            },
-            {
-                method: 'serveGroupProfilePicture',
-                httpVerb: 'get',
-                url: 'api/groupProfilepicture/:groupID',
-                params:['pid']
-            },
-            //======================================
-            {
-                method: 'saveSubGroupProfilePicture',
-                httpVerb: 'post',
-                url: 'api/subGroupProfilepicture',
-                params:[]
-            },
-            {
-                method: 'savesubgroupprofilepicture',
-                httpVerb: 'get',
-                url: 'api/savesubgroupprofilepicture',
-                params:[]
-            },
-            //======================================
-            {
-                method: 'saveQuizBookPicture',
-                httpVerb: 'post',
-                url: 'api/saveQuizBookPicture',
-                params:[]
-            },
-            {
-                method: 'savequizBookPicture',
-                httpVerb: 'get',
-                url: 'api/savequizBookPicture',
-                params:[]
-            }
-        ],
+        {
+            method: 'removeGroupProfilePicture',
+            httpVerb: 'delete',
+            url: 'api/groupProfilepicture/:groupID/:token',
+            params: ['pid']
+        }, {
+            method: 'serveGroupProfilePicture',
+            httpVerb: 'get',
+            url: 'api/groupProfilepicture/:groupID',
+            params: ['pid']
+        },
+        //======================================
+        {
+            method: 'saveSubGroupProfilePicture',
+            httpVerb: 'post',
+            url: 'api/subGroupProfilepicture',
+            params: []
+        }, {
+            method: 'savesubgroupprofilepicture',
+            httpVerb: 'get',
+            url: 'api/savesubgroupprofilepicture',
+            params: []
+        },
+        //======================================
+        {
+            method: 'saveQuizBookPicture',
+            httpVerb: 'post',
+            url: 'api/saveQuizBookPicture',
+            params: []
+        }, {
+            method: 'savequizBookPicture',
+            httpVerb: 'get',
+            url: 'api/savequizBookPicture',
+            params: []
+        }
+    ],
 
-    saveUserProfilepicture:function(req, res){
+    saveUserProfilepicture: function(req, res) {
 
         var form = new formidable.IncomingForm();
 
         form.parse(req, function(err, fields, files) {
 
             console.log(fields.token);
-            if(Object.keys(files).length){
-                profilePictureManager.saveUserProfilepicture(files['source'],fields.userID, fields.token, res, 'user');
-            }else{
+            if (Object.keys(files).length) {
+                profilePictureManager.saveUserProfilepicture(files['source'], fields.userID, fields.token, res, 'user');
+            } else {
                 res.send({
                     statusCode: 0,
                     statusDesc: "User did not send any file to Upload."
@@ -109,46 +101,46 @@
         });
 
     },
-    removeUserProfilepicture:function(req, res){
+    removeUserProfilepicture: function(req, res) {
 
-        profilePictureManager.remove(req.params.userID, req.query.token , res, 'user');
+        profilePictureManager.remove(req.params.userID, req.query.token, res, 'user');
 
     },
 
 
 
-    serveUserProfilepicture:function(req, res){
+    serveUserProfilepicture: function(req, res) {
 
-        profilePictureManager.serveProfilePicture(req.params.userID, req.query.token , res, 'user');
+        profilePictureManager.serveProfilePicture(req.params.userID, req.query.token, res, 'user');
 
     },
 
 
     //    ===================== group Profile Picture===========================
 
-    'saveGroupProfilePicture':function(req, res){
+    'saveGroupProfilePicture': function(req, res) {
 
-            var form = new formidable.IncomingForm();
-            form.parse(req, function(err, fields, files) {
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
 
-                if(Object.keys(files).length){
+            if (Object.keys(files).length) {
 
-                    profilePictureManager.saveGroupProfilePicture(files['source'],fields.userID, fields.groupID,  fields.token, res,'group');
+                profilePictureManager.saveGroupProfilePicture(files['source'], fields.userID, fields.groupID, fields.token, res, 'group');
 
-                }else{
-                    res.send({
-                        statusCode: 0,
-                        statusDesc: "User did not send any file to Upload."
-                    });
-                }
+            } else {
+                res.send({
+                    statusCode: 0,
+                    statusDesc: "User did not send any file to Upload."
+                });
+            }
 
-            });
+        });
 
     },
 
-    removeGroupProfilePicture:function(req, res){
+    removeGroupProfilePicture: function(req, res) {
 
-        profilePictureManager.remove(req.params.groupID, req.params.token , res, 'group');
+        profilePictureManager.remove(req.params.groupID, req.params.token, res, 'group');
 
     },
     /*serveGroupProfilePicture:function(req, res){
@@ -157,121 +149,121 @@
 
     },*/
 
-    'saveSubGroupProfilePicture':function(req, res){
+    'saveSubGroupProfilePicture': function(req, res) {
 
-            var form = new formidable.IncomingForm();
-            form.parse(req, function(err, fields, files) {
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
 
-                if(Object.keys(files).length){
+            if (Object.keys(files).length) {
 
-                    profilePictureManager.saveSubGroupProfilePicture(files['source'],fields.userID, fields.groupID, fields.subgroupID,  fields.token, res,'subgroup');
+                profilePictureManager.saveSubGroupProfilePicture(files['source'], fields.userID, fields.groupID, fields.subgroupID, fields.token, res, 'subgroup');
 
-                }else{
-                    res.send({
-                        statusCode: 0,
-                        statusDesc: "User did not send any file to Upload."
-                    });
-                }
+            } else {
+                res.send({
+                    statusCode: 0,
+                    statusDesc: "User did not send any file to Upload."
+                });
+            }
 
-            });
+        });
 
-        },
-    'savegroupprofilepicture':function(req, res){
-        checkFileType(req,res)
-        if(!req.query.groupID){
+    },
+    'savegroupprofilepicture': function(req, res) {
+        checkFileType(req, res)
+        if (!req.query.groupID) {
             res.send({
                 statusCode: 0,
                 statusDesc: "groupID required"
             });
             return;
         }
-        profilePictureManager.getAmazonUrl(req,res,'group')
+        profilePictureManager.getAmazonUrl(req, res, 'group')
 
     },
-    'saveuserprofilepicture':function(req, res){
+    'saveuserprofilepicture': function(req, res) {
 
-        checkFileType(req,res)
-        if(!req.query.userID){
+        checkFileType(req, res)
+        if (!req.query.userID) {
             res.send({
                 statusCode: 0,
                 statusDesc: "userID required"
             });
             return;
         }
-        profilePictureManager.getAmazonUrl(req,res,'user')
+        profilePictureManager.getAmazonUrl(req, res, 'user')
 
     },
-    'savesubgroupprofilepicture':function(req, res){
+    'savesubgroupprofilepicture': function(req, res) {
 
-        checkFileType(req,res)
-        if(!req.query.groupID){
+        checkFileType(req, res)
+        if (!req.query.groupID) {
             res.send({
                 statusCode: 0,
                 statusDesc: "groupID required"
             });
             return;
         }
-        if(!req.query.subgroupID) {
+        if (!req.query.subgroupID) {
             res.send({
                 statusCode: 0,
                 statusDesc: "subgroupID required"
             });
 
         }
-        profilePictureManager.getAmazonUrl(req,res,'subgroup')
+        profilePictureManager.getAmazonUrl(req, res, 'subgroup')
 
     },
 
     /*quiz bank api*/
 
-        'saveQuizBookPicture':function(req, res){
+    'saveQuizBookPicture': function(req, res) {
 
-            var form = new formidable.IncomingForm();
-            form.parse(req, function(err, fields, files) {
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
 
-                if(Object.keys(files).length){
+            if (Object.keys(files).length) {
 
-                    profilePictureManager.saveQuizBookPicture(files['source'],fields.userID, fields.quizID,  fields.token, res,'quizbank');
+                profilePictureManager.saveQuizBookPicture(files['source'], fields.userID, fields.quizID, fields.token, res, 'quizbank');
 
-                }else{
-                    res.send({
-                        statusCode: 0,
-                        statusDesc: "User did not send any file to Upload."
-                    });
-                }
-
-            });
-
-        },
-
-        'savequizBookPicture':function(req, res){
-            checkFileType(req,res)
-            if(!req.query.quizID){
+            } else {
                 res.send({
                     statusCode: 0,
-                    statusDesc: "quizID required"
+                    statusDesc: "User did not send any file to Upload."
                 });
-                return;
             }
-            profilePictureManager.getAmazonUrl(req,res,'quizbank')
 
+        });
+
+    },
+
+    'savequizBookPicture': function(req, res) {
+        checkFileType(req, res)
+        if (!req.query.quizID) {
+            res.send({
+                statusCode: 0,
+                statusDesc: "quizID required"
+            });
+            return;
         }
+        profilePictureManager.getAmazonUrl(req, res, 'quizbank')
 
-    };
+    }
 
-function checkFileType(req,res){
+};
+
+function checkFileType(req, res) {
     var exp = /^.*\/(jpg|jpeg|gif|JPG|png|PNG)$/;
-    if(!req.query.file_type){
+    if (!req.query.file_type) {
         res.send({
             statusCode: 0,
             statusDesc: "file_type required"
         });
         return;
-    }else{
-        if(!exp.test(req.query.file_type)){
+    } else {
+        if (!exp.test(req.query.file_type)) {
             res.send({
                 statusCode: 0,
-                statusDesc:  'file_type should match "image/png" or "image/< any of the following > --(jpg|jpeg|gif|JPG|png|PNG)"'
+                statusDesc: 'file_type should match "image/png" or "image/< any of the following > --(jpg|jpeg|gif|JPG|png|PNG)"'
             });
         }
     }
