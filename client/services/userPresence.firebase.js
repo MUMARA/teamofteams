@@ -63,7 +63,8 @@
 
                     // setting up details about current connection
                     currentConnRef.set({
-                            type: 3, // 1 = mobile, 2 = tablet, 3 = web, 4 = watch , 5 = hololens
+                            // type: 3, // 1 = mobile, 2 = tablet, 3 = web, 4 = watch , 5 = hololens
+                            type: 1, // 1 = web, 2 = ios, 3 = andriod  (changed as per sir zia's instruction, issue # 92)
                             started: Firebase.ServerValue.TIMESTAMP,
                             //'last-modified': 'assasa'
 
@@ -133,15 +134,16 @@
                         recentConnection = Object.keys(userPresenceObj.connections);
                         recentConnection = recentConnection[recentConnection.length - 1];
 
-                        switch (userPresenceObj.connections[recentConnection].type) { // 1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
+                        // 1 = web, 2 = ios, 3 = andriod  (changed as per sir zia's instruction, issue # 92)
+                        switch (userPresenceObj.connections[recentConnection].type) { 
                             case 1:
-                                userSyncObject.availability.device = 'Mobile';
+                                userSyncObject.availability.device = 'Web';
                                 break;
                             case 2:
-                                userSyncObject.availability.device = 'Tablet';
+                                userSyncObject.availability.device = 'IOS';
                                 break;
                             case 3:
-                                userSyncObject.availability.device = 'Web';
+                                userSyncObject.availability.device = 'Android';
                                 break;
                             case 4:
                                 userSyncObject.availability.device = 'iWatch';
@@ -152,6 +154,26 @@
                             default:
                                 userSyncObject.availability.device = 'Unknown';
                         }
+
+                        // switch (userPresenceObj.connections[recentConnection].type) { // 1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
+                        //     case 1:
+                        //         userSyncObject.availability.device = 'Mobile';
+                        //         break;
+                        //     case 2:
+                        //         userSyncObject.availability.device = 'Tablet';
+                        //         break;
+                        //     case 3:
+                        //         userSyncObject.availability.device = 'Web';
+                        //         break;
+                        //     case 4:
+                        //         userSyncObject.availability.device = 'iWatch';
+                        //         break;
+                        //     case 5:
+                        //         userSyncObject.availability.device = 'HoloLens';
+                        //         break;
+                        //     default:
+                        //         userSyncObject.availability.device = 'Unknown';
+                        // }
                     }
                 });
             }
