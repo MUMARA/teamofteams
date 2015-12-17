@@ -17,6 +17,7 @@
         var that = this;
         var user = userService.getCurrentUser();
         $rootScope.newImg = '';
+        this.teamsettingpanel = false;
         var localStorage = $localStorage.loggedInUser;
         var groupID = $stateParams.groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
@@ -75,6 +76,7 @@
 
         this.veiwSubgroup = function(subgroupData, index) {
 
+            that.teamsettingpanel = true;
             // this.showEditSubGroup = true;
             // that.showTeamAttendace = false;
             that.selectedindex = index;

@@ -47,9 +47,9 @@ body > md-content > div > div.marginContainer > div > form > div > div:nth-child
                             <div layout="column" layout-align="space-around center" layout-margin>
                                 <md-input-container>
                                     <md-icon class="email"></md-icon>
-                                    <input ng-model="loginForm.user.email" type="email" placeholder="Email (required)" ng-required="true">
+                                    <input ng-model="loginForm.user.email" type="email" placeholder="Email" ng-required="true">
                                     <div ng-hide="loginForm.userEmail.$pristine" ng-messages="loginForm.userEmail.$error" ng-messages-multiple>
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
+                                        <!-- <div class="invalid_color" ng-message="required">This is required.</div> -->
                                         <div class="invalid_color" ng-message="email">Not valid email</div>
                                     </div>
                                 </md-input-container>
@@ -58,7 +58,7 @@ body > md-content > div > div.marginContainer > div > form > div > div:nth-child
                                     <md-icon style="display:inline-block;"></md-icon>
                                     <input ng-model="loginForm.user.password" type="password" placeholder="Password">
                                     <div ng-hide="loginForm.userPassword.$pristine" ng-messages="loginForm.userPassword.$error" ng-messages-multiple>
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
+                                        <!-- <div class="invalid_color" ng-message="required">This is required.</div> -->
                                     </div>
                                 </md-input-container>
                                 <div flex class="forgotPasswordContainer">
@@ -69,7 +69,7 @@ body > md-content > div > div.marginContainer > div > form > div > div:nth-child
                                 </div>
                                 <md-text-float label="Password" ng-model="user.password"></md-text-float>
                                 <div flex class="forgotPasswordContainer">
-                                    <md-button class="md-raised md-primary " ng-disabled="loginForm.$invalid" style="margin-top: 20px;" ng-click="signin.login(loginForm)">Login
+                                    <md-button class="md-raised md-primary " ng-disabled="loginForm.$invalid && loginForm.$error" style="margin-top: 20px;" ng-click="signin.login(loginForm)">Login
                                     </md-button>
                                 </div>
                             </div>

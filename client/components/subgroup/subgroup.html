@@ -7,14 +7,14 @@
             <div flex>
                 <md-card style=" margin: 0px auto;border-radius:5px;">
                     <md-card-content style="padding: 0px;">
-                        <h1 style="color: #d3d3d3;">Create Team</h1>
+                        <h1 style="color: #d3d3d3;" layout-padding>Create Team</h1>
                         <br/>
                         <div layout="row" style="border-top:solid 1px #d3d3d3; ">
                             <div flex style="margin-left: 5px;padding: 20px">
-                                <h2>Team Url <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
+                                <h2>Url <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
                                 <div layout="row">
                                     <div flex="20" style="padding-top: 1.0%;">
-                                        <span>teamofteams.com.io/{{subgroup.groupid}}/</span>
+                                        <span>teamofteams.io/{{subgroup.groupid}}/</span>
                                     </div>
                                     <div flex="30">
                                         <md-input-container style="margin-left: 46px;" md-no-float>
@@ -29,7 +29,7 @@
                                     </div>
                                 </div>
                                 <md-input-container>
-                                    <label>Team Name</label>
+                                    <label>Name</label>
                                     <input name="groupTitle" ng-model="subgroup.Subgroup.title" minlength="3" maxlength="40" required>
                                     <div ng-show="groupForm.$submitted || groupForm.groupTitle.$touched" ng-messages="groupForm.groupTitle.$error">
                                         <div class="invalid_color" ng-message="required">This is required.</div>
@@ -46,7 +46,7 @@
                                         <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                                     </div>
                                 </md-input-container>
-                                <h2>Set Team Photo </h2>
+                                <h2>Select Photo</h2>
                                 <div>
                                     <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
                                         <img ng-src="img/image.svg" alt="team image" class="cropper-main-image" ng-click="subgroup.showAdvanced($event)" />
@@ -64,7 +64,7 @@
                                     </div>-->
                                 </div>
                                 <h2>Team Members</h2>
-                                <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="subgroup.toggleRight();"><span style="color: white;">+ Add</span></md-button>
+                                <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="subgroup.toggleRight();"><span style="color: white;">Add</span></md-button>
                                 <md-chips>
                                     <md-chip ng-repeat="user in subgroup.selectedMemberArray" style="height:40px">
                                         <img ng-src="{{user['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 34px; height: 37px;      border-radius: 50%; margin-left: -11px" />
@@ -85,7 +85,7 @@
                                     </div>
                                     <div flex>
                                         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
-                                        <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" ng-disabled="groupForm.$invalid" ng-click="subgroup.answer( groupForm )"><span style="color: white;">+ Create Team</span></md-button>
+                                        <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" ng-disabled="groupForm.$invalid" ng-click="subgroup.answer( groupForm )"><span style="color: white;">Create Team</span></md-button>
                                     </div>
                                 </div>
                             </div>
