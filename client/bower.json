@@ -36,7 +36,9 @@
     "angular-ui-select2": "~0.0.5",
     "cropper": "~0.9.3",
     "angular-ui-router": "~0.2.15",
-    "ng-img-crop": "ngImgCrop#~0.3.2"
+    "ng-img-crop": "ngImgCrop#~0.3.2",
+    "angular-img-cropper": "~1.1.0",
+    "angular-material-icons": "~0.6.0"
   },
   "resolutions": {
     "angular-animate": "1.4.0-rc.0",

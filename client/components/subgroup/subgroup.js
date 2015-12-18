@@ -17,6 +17,7 @@
         var groupID = $stateParams.groupID;
         this.groupid = groupID;
         /*VM functions*/
+        $rootScope.newImg = '';
         this.groupPath = '';
         this.queryUsers = queryUsers;
         this.answer = answer;

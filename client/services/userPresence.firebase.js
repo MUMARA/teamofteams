@@ -47,6 +47,7 @@
                     var userPresenceRef = refs.usersPresence.child(userID);
 
                     //get an entry for the current connection.
+                    userPresenceRef.child('last-modified').set(Firebase.ServerValue.TIMESTAMP);
                     var currentConnRef = userPresenceRef.child('connections').push();
 
                     // when user disconnect, remove the connection. ( we should run .remove() before .set(), to avoid ghost entries. )

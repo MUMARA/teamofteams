@@ -35,11 +35,11 @@
                     <md-card style="margin: 1px !important;">
                         <md-card-content style="padding: 8px !important;">
                             <div layout="row" layout-align="center center" style="margin-top:5%">
-                                <div flex="75">
-                                    <md-card ng-click="group.activeGroup()">
-                                        <img style="outline: none" ng-src="{{group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" alt="Washed Out">
-                                    </md-card>
-                                </div>
+                                <!-- <div flex="75"> -->
+                                    <!-- <div ng-click="group.activeGroup()"> -->
+                                        <img style="outline: none; width: 80px; height:80px;" ng-src="{{group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" ng-click="group.activeGroup()" alt="group image">
+                                    <!-- </div> -->
+                                <!-- </div> -->
                             </div>
                             <div layout="column" layout-align="start center" style="margin-top:5%;position: relative;">
                                 <span class="md-headline">{{group.group.$id}}</span>
@@ -61,7 +61,10 @@
                                 <div>
                                     <md-list>
                                         <md-list-item class="md-3-line">
-                                            <md-progress-circular ng-value="((group.group['members-checked-in'].count / group.group['members-count']) *100) | number:0" class="md-hue-2 groupPageGroupLogo"></md-progress-circular>
+                                            <md-progress-circular ng-value="100" class="md-hue-2 groupPageGroupLogo"></md-progress-circular>
+                                            <span style="position: absolute; top: 9px; right: 31px;">
+                                                {{ ( group.group['members-checked-in'].count / group.group['members-count'] ) * 100 | number: 0}}
+                                            </span>
                                         </md-list-item>
                                     </md-list>
                                 </div>
@@ -73,25 +76,30 @@
                         <md-card style="  margin: 4px 0px 0px 3px !important;">
                             <md-list style="padding: 0px !important;" ng-repeat="subgroup in group.subgroups" ng-class="{'md-whiteframe-z5':group.selectedindex===$index}">
                                 <md-list-item class="md-3-line" style="padding: 0px !important;" ng-click="group.subgrouppage(subgroup,$index)">
-                                    <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 100px;width: 70px;" />
+                                    <div style="width: 72px; height: 120px; overflow: hidden;" ng-show="subgroup['logo-image'].url">
+                                        <img ng-src="{{subgroup['logo-image'].url}}" style="height: 120px;width: 120px;" />
+                                    </div>
+                                    <div style="width: 72px; height: 120px; overflow: hidden;" ng-hide="subgroup['logo-image'].url">
+                                        <img ng-src="{{'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" />
+                                    </div>
                                     <div class="md-list-item-text" style="padding: 0px; margin-top: 2px">
                                         <p style="text-indent: 0px;margin-left: 10px; font-weight: 800">
                                             {{subgroup.title}}</p>
-                                        <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 34px; height: 37px;      border-radius: 50%;   margin-top: 30px; margin-left: 7px;" />
+                                        <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 40px; height: 40px;      border-radius: 50%;   margin-top: 30px; margin-left: 7px;" />
                                         <span>
                                         <div style="float: right; width: 26px; margin-top: -20px">
                                             <ng-md-icon icon="more_vert" style="fill: #929497;"></ng-md-icon>
                                             <ng-md-icon ng-show="group.selectedindex===$index" icon="chevron_right" style="fill: #929497;"></ng-md-icon></div>
                                         <img src="img/geoLocation.svg" width="40px" height="20px"
-                                               style=" width:40px ; margin-left: 20px;margin-top: 22px;">
+                                               style=" width:40px ; margin-left: 30px;margin-top: 25px;">
                                         <img src="img/notification1.svg" style="width: 15px; margin-top: 22px"></span>
                                     </div>
                                     <md-divider></md-divider>
                                 </md-list-item>
                             </md-list>
-                            <md-list-item ng-show="!group.subgroups.length">
+                            <!-- <md-list-item ng-show="!group.subgroups.length">
                                 <p>Please create Teams</p>
-                            </md-list-item>
+                            </md-list-item> -->
                         </md-card>
                     </md-content>
                     <!--<div style="text-align: center;margin-top: 50px;">

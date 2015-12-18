@@ -28,7 +28,6 @@
                     })
 
                 /*VM Functions*/
-
                 function answer(perSettingForm) {
                     var uploadFile, editUser, changePassword, data1, data2, pFlag, eFlag, imgFlag;
                     var promiseArray = [];

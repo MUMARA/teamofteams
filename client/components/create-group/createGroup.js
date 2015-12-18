@@ -190,6 +190,17 @@
         }
 
         function DialogController($mdDialog) {
+            // Start Image Crop
+                this.cropper = {};
+                this.cropper.sourceImage = null;
+                this.cropper.croppedImage   = null;
+                this.bounds = {};
+                this.bounds.left = 0;
+                this.bounds.right = 0;
+                this.bounds.top = 0;
+                this.bounds.bottom = 0;
+                $rootScope.newImg = this.cropper.croppedImage
+            // End Image Crop
             this.my = {
                 model: {
                     img: ''

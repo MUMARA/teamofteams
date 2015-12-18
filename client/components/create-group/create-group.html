@@ -3,15 +3,18 @@
 <div id="creatGroup">
     <form style="background-color: #efefef;" name="groupForm" autocomplete="off" novalidate="">
         <ng-md-icon icon="close" size="50" style="outline: none" layout-padding ng-click="$root.newImg = null;createGroup.hide()"></ng-md-icon>
-        <md-content class="grayScroller" style="height: calc(100vh - 88px);max-width:70%;margin: 0px auto">
+        <md-content class="grayScroller" style="height: calc(100vh - 100px);max-width:70%;margin: 0px auto">
             <md-card style="margin: 0px auto">
                 <md-card-content>
                     <h2 style="color: #d3d3d3;padding: 0px 50px;">Create Team of Teams</h2>
                     <md-divider></md-divider>
                     <div style="padding: 0px 50px;">
-                        <h3>Team URL <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h3>
+                        <h3>
+                            URL
+                            <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey"></ng-md-icon>
+                        </h3>
                         <div layout="row">
-                            <div flex="20" style="padding-top: 1.8%;">
+                            <div flex="20" style="padding-top: 1.8%;" class="foreColorLightGrey">
                                 <p>teamofteams.io/</p>
                             </div>
                             <div flex="30">
@@ -90,7 +93,7 @@
                                 </div>
                             </md-input-container>
                         </div>
-                        <h3> Sign Up Mode <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></h3>
+                        <h3> Sign Up Mode <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey"></h3>
                         <md-radio-group ng-model="createGroup.group.signupMode" class="md-primary">
                             <md-radio-button value="1" ng-disabled="true">Invitation Only</md-radio-button>
                             <md-radio-button value="2" ng-disabled="true">Request Support</md-radio-button>
@@ -100,7 +103,7 @@
                             <label>To allow email addresses from multiple domains, separate them with commas</label>
                             <input ng-disabled="true" style="color: #d3d3d3">
                         </md-input-container>
-                        <h3>Set Logo <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></h3>
+                        <h3>Set Logo <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey"></h3>
                         <div>
                             <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
                                 <img style="outline: none;" ng-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)" />

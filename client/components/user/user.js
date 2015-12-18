@@ -28,7 +28,9 @@
         // }
 
 
-
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        }
         $scope.openCreateGroupPage = function() {
             userCompService.openCreateGroupPage();
         };
@@ -80,11 +82,17 @@
                                     $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
                                     $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
                                     $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;                            
+                                    if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
+                                        $scope.userObj[j].membersPercentage = 0
+                                    }
                                 });
                                 $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
                                 $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
                                 $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
                                 $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;
+                                // if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
+                                //     $scope.userObj[j].membersPercentage = 0
+                                // }
                                 if (groupData['group-owner-id']) {
                                     //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
                                     $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))

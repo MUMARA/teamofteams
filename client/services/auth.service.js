@@ -5,9 +5,9 @@
 
 // Create the 'example' controller
 angular.module('core')
-    .factory('authService', ["$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
+    .factory('authService', ["messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
         "$sessionStorage", "firebaseService",
-        function($q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
+        function(messageService, $q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
             firebaseService) {
 
             return {
@@ -97,6 +97,7 @@ angular.module('core')
                     Firebase.goOffline();
                     //delete $sessionStorage.loggedInUser;
                     delete $localStorage.loggedInUser;
+                    messageService.showFailure("logout successfully");
                 },
                 //to resolve route "/user/:user" confirming is authenticated from firebase
                 resolveUserPage: function() {

@@ -1,9 +1,9 @@
 <!--<div ng-controller="personalSettingsController as psc">-->
-<div id="personalSettingPage">
-    <form style="background-color: #efefef;" name="personalSettingForm" novalidate="" class="grayScroller viewHeight ">
+<div id="personalSettingPage" style="padding-top: 55px;">
+    <form style="background-color: #efefef;" name="personalSettingForm" novalidate="" class="grayScroller viewHeight">
         <!--<ng-md-icon icon="close" size="50" layout-padding ng-click="psc.hide()"></ng-md-icon>-->
-        <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="$root.newImg = null ;personalSettings.hide()"></ng-md-icon>
-        <md-content style=" max-width:85%; margin: 0px auto; max-height: 75%;  ">
+       <!--  <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="$root.newImg = null ;personalSettings.hide()"></ng-md-icon> -->
+        <md-content style=" max-width:85%; margin: 0px auto; max-height: 85%;  ">
             <md-card style="margin: 0px auto;">
                 <md-card-content style="padding: 50px;">
                     <h1 style="color: #d3d3d3">Personal Settings</h1>
@@ -94,10 +94,16 @@
                         <span layout="row" style="color: #5D5D5D">See Your Photo</span>
                         <img src="../../img/sampleUserImg.svg" layout="row" class="sampleUserImg">
                     </div>-->
-                    <div>
-                        <span layout="row" style="color: #5D5D5D">See Your Photo</span>
+                    <div  layout="column" layout-align="space-between start">
+                        <div class="foreColorLightGrey">
+                            Set Your Photo
+                            <!-- <ng-md-icon icon="info_outline" class="icon10px fillColorLightGrey"></ng-md-icon> -->
+                            <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey">
+                        </ng-md-icon>
+                        </div>
+                        <br />
                         <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                            <img style="outline: none;" ng-src="{{personalSettings.userData['profile-image'] || '../../img/sampleUserImg.svg'}}" alt="../../img/sampleUserImg.svg" class="cropper-main-image sampleUserImg" ng-click="personalSettings.showAdvanced($event)" />
+                            <img style="outline: none;" ng-src="{{personalSettings.userData['profile-image'] || '../../img/sampleUserImg.svg'}}" alt="sample user img" class="cropper-main-image sampleUserImg" ng-click="personalSettings.showAdvanced($event)" />
                             <!--<md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100">
                                 <md-icon md-svg-src="img/image.svg" class="cropper-main-image" ></md-icon>
                             </md-button>-->
@@ -111,16 +117,16 @@
                             <img src="img/image.png" alt=""/>
                         </div>-->
                     </div>
+                    <div layout="row">
+                        <div flex="20" offset="50">
+                            <md-progress-circular class="" ng-show="personalSettingForm.$submitted" md-mode="indeterminate"></md-progress-circular>
+                        </div>
+                        <div flex offset="10">
+                            <!--<md-button ng-disabled="personalSettingForm.$invalid" class="md-raised" style="background-color: #61B188; color: white;" ng-click="personalSettings.answer( personalSettingForm )">SEND</md-button>-->
+                            <md-button class="md-raised backColorSeaGreen foreColorWhite" ng-click="personalSettings.answer( personalSettingForm )">Save</md-button>
+                        </div>
+                    </div>
                 </md-card-content>
-                <div layout="row">
-                    <div flex="20" offset="50">
-                        <md-progress-circular class="" ng-show="personalSettingForm.$submitted" md-mode="indeterminate"></md-progress-circular>
-                    </div>
-                    <div flex offset="10">
-                        <!--<md-button ng-disabled="personalSettingForm.$invalid" class="md-raised" style="background-color: #61B188; color: white;" ng-click="personalSettings.answer( personalSettingForm )">SEND</md-button>-->
-                        <md-button class="md-raised" style="background-color: #61B188; color: white;" ng-click="personalSettings.answer( personalSettingForm )">Save</md-button>
-                    </div>
-                </div>
             </md-card>
         </md-content>
     </form>

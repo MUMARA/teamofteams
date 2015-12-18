@@ -94,6 +94,21 @@
     margin-left: 20px;
 }
 
+.icon10px {
+    width: 50px;
+    height: 50px;
+}
+
+.icon20px {
+    width: 50px;
+    height: 20px;
+}
+
+.icon23px {
+    width: 23px;
+    height: 23px;
+}
+
 .icon30px {
     width: 30px;
     height: 30px;
@@ -128,6 +143,10 @@
     fill: rgb(240, 240, 240)!important;
 }
 
+.fillColorSeaGreen {
+    fill: rgb(50, 180, 202)!important;
+}
+
 .foreColorBlack {
     color: black!important;
 }
@@ -148,6 +167,10 @@
     color: rgb(240, 240, 240)!important;
 }
 
+.foreColorSeaGreen {
+    color: rgb(50, 180, 202)!important;
+}
+
 .backColorBlack {
     background-color: black;
 }
@@ -166,6 +189,10 @@
 
 .backColorLightGrey2 {
     background-color: rgb(240, 240, 240)!important;
+}
+
+.backColorSeaGreen {
+    background-color: rgb(50, 180, 202)!important;
 }
 
 .backColorPink {
@@ -666,7 +693,6 @@ md-list-item .md-list-item-inner > .md-avatar:first-child {
     overflow: auto;
 }
 
-
 /*scroller end*/
 
 .md-autocomplete input:not(.md-input) {
@@ -1021,7 +1047,7 @@ md-list.md-default-theme md-list-item button {
     min-width: 100%;
     margin: 0 auto;
     left: 0px;
-    background-color: #32b4ca;
+    /*background-color: #32b4ca;*/
     z-index: 99;
 }
 

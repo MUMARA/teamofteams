@@ -33,8 +33,8 @@
 }
 </style>
 <div>
-    <div class="toolbarBackground"></div>
-    <md-toolbar class="navToolbar" style="z-index: 99999;">
+    <div class="toolbarBackground backColorSeaGreen"></div>
+    <md-toolbar class="navToolbar" style="z-index: 99999; ">
         <div layout="row" layout-align="center center" class="toolbarPage">
             <div flex="60" offset="5">
                 <div layout='row' layout-align="start center">
@@ -43,9 +43,9 @@
                     <!--<input type="button" ng-click="navToolbar.testFn()" value="testFn"/>-->
                     <!--<md-progress-circular ng-show="navToolbar.checkinSending" style=" left:41px;-webkit-transform: scale(.8)!important" class="md-hue-2"-->
                     <md-progress-circular ng-show="navToolbar.checkinSending" class="md-hue-2 progressCircularforNavBar" md-mode="indeterminate"></md-progress-circular>
-                    <p ng-if="navToolbar.checkout" style="padding-top: 9px;padding-left:48px; color:rgb(239, 239, 239);"><span style="text-transform: uppercase;">
+                    <!-- <p ng-if="navToolbar.checkout" style="padding-top: 9px;padding-left:48px; color:rgb(239, 239, 239);"><span style="text-transform: uppercase;">
                         {{navToolbar.showUrlObj.userID}}</span> checked in from {{navToolbar.showUrlObj.groupID}} / {{navToolbar.showUrlObj.subgroupID}}
-                    </p>
+                    </p> -->
                 </div>
             </div>
             <div flex style="width: 10px; height: 25px; margin-left: 40px">
@@ -170,40 +170,44 @@
                     </md-card>
                 </div>
             </div>
-            <div flex="10">
-                <div layout="row">
-                    <div flex="33" class="toolbarQuiz">
-                        <ng-md-icon icon="description" style="fill: white" ng-click="navToolbar.quizStart()" title="Quiz">
+            <div flex="15">
+                <div layout="row" layout-align="space-between center">
+                    <!-- <div class="toolbarQuiz"> -->
+                        <ng-md-icon icon="description" class="fillColorWhite nooutline" ng-click="navToolbar.quizStart()" title="Quiz">
                         </ng-md-icon>
                         <!--<img src='img/info2.svg' class="svgImgSize1">-->
-                    </div>
-                    <div flex="33" class="toolbarDrop">
-                        <img src='img/info2.svg' class="svgImgSize1" title="Chat">
-                    </div>
-                    <div flex="33" class="toolbarBell">
-                        <img src="img/infoB.svg" class="svgImgSize2" title="Notification">
+                    <!-- </div> -->
+                    <!-- <div class="toolbarDrop"> -->
+                        <!-- <img src='img/info2.svg' class="icon23px nooutline" title="Chat" > -->
+                        <ng-md-icon icon="hangouts" class="fillColorWhite nooutline" title="Quiz">
+                        </ng-md-icon>
+                    <!-- </div> -->
+                    <!-- <div class="toolbarBell"> -->
+                        <!-- <img src="img/infoB.svg" class="icon23px nooutline" title="Notification"> -->
+                        <ng-md-icon icon="notifications" class="fillColorWhite nooutline" title="Quiz">
+                        </ng-md-icon>
+                    <!-- </div> -->
+                    <div flex ="50">
+                        <md-menu md-offset="0 50">
+                            <!-- Trigger element is a md-button with an icon -->
+                            <img style="border-radius: 50%" ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="userImg nooutline">
+                            <!-- <md-button ng-click="()" class="md-icon-button" aria-label="Open sample menu">
+                           <md-icon md-svg-icon="call:phone"></md-icon>
+                         </md-button> -->
+                            <md-menu-content>
+                                <!-- <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button>
+                           </md-menu-item> -->
+                                <md-menu-item>
+                                    <!-- <md-button ui-sref="user.personalSettings({userID: navToolbar.myUserId })">Personal Setting</md-button> -->
+                                    <md-button ng-click="navToolbar.PersonalSetting()">Personal Setting</md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="navToolbar.logout()">Logout</md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
                     </div>
                 </div>
-            </div>
-            <div>
-                <md-menu md-offset="0 50">
-                    <!-- Trigger element is a md-button with an icon -->
-                    <img style="border-radius: 50%" ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="userImg">
-                    <!-- <md-button ng-click="()" class="md-icon-button" aria-label="Open sample menu">
-                   <md-icon md-svg-icon="call:phone"></md-icon>
-                 </md-button> -->
-                    <md-menu-content>
-                        <!-- <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button>
-                   </md-menu-item> -->
-                        <md-menu-item>
-                            <!-- <md-button ui-sref="user.personalSettings({userID: navToolbar.myUserId })">Personal Setting</md-button> -->
-                            <md-button ng-click="navToolbar.PersonalSetting()">Personal Setting</md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button ng-click="navToolbar.logout()">Logout</md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
             </div>
             <!-- <div flex="5" style="position: relative;" ng-click="navToolbar.userImgClickCard = !navToolbar.userImgClickCard" id="navBarImg">
                 <img style="border-radius: 50%" ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  class="userImg">
