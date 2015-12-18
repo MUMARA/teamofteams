@@ -28,7 +28,9 @@
         // }
 
 
-
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        }
         $scope.openCreateGroupPage = function() {
             userCompService.openCreateGroupPage();
         };

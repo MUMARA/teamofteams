@@ -143,17 +143,21 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                                 border-color: transparent !important;
                             }
                         </style>-->
-                        <div class="userListSearchbox" style="background-color: rgb(239, 239, 239);">
+                        <div class="userListSearchbox" layout="row" layout-align="space-between center" style="background-color: rgb(239, 239, 239);">
 
 <!--   <md-input-container class="md-icon-float md-block">
       <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon>
       <input ng-model="user.name" type="text">
     </md-input-container>
  -->
-                            <md-input-container layout-padding md-no-float>
+                            <!-- <md-input-container layout-padding md-no-float>
                                 <md-icon layout-margin md-svg-src="../../img/search.svg"></md-icon>
-                                <!-- <input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name"> -->
-                                <input   ng-model="user.searchbox" type="text" placeholder="User Name">
+                                --<input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name">--
+                                <input   ng-model="user.searchbox" type="text" class="serachbox2" placeholder="User Name">
+                            </md-input-container> -->
+                            <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="user.setFocus()" layout-margin></ng-md-icon>
+                            <md-input-container md-no-float style="padding-bottom: 0px;" flex>
+                                <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
                             </md-input-container>
                         </div>
 
@@ -247,7 +251,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                                     <div flex="85" class="userToolBar" layout="row">
                                         <div flex="25" class="listCardHeading fontset">Name</div>
                                         <div flex="25" class="listCardHeading fontset">Phone</div>
-                                        <div flex="25" class="listCardHeading fontset">Group</div>
+                                        <div flex="25" class="listCardHeading fontset">Team</div>
                                         <div flex="25" class="listCardHeading fontset">Last Modified</div>
                                     </div>
                                 </div>
@@ -328,7 +332,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                             <md-card-content style="padding: 8px !important;">
                                 <div layout="row" layout-align="center center" style="margin-top:5%">
                                     <div flex="75">
-                                        <a ui-sref="user.group({groupID: key.$id})"><img ng-src=" {{ key.groupUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" alt="Washedcd c Out" style="width: 188px;height:80px;margin-left: -14px"></a>
+                                        <a ui-sref="user.group({groupID: key.$id})"><img ng-src=" {{ key.groupUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" alt="group image" style="width: 80px;height:80px; margin-left: 35px;"></a>
                                     </div>
                                 </div>
                                 <div layout="column" layout-align="start center" style="margin-top:8%;position: relative;">

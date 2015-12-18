@@ -49,12 +49,12 @@
                                 <h2>Select Photo</h2>
                                 <div>
                                     <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                                        <img ng-src="img/image.svg" alt="team image" class="cropper-main-image" ng-click="subgroup.showAdvanced($event)" />
-                                        <!--<md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100">
-                                            <md-icon md-svg-src="img/image.svg" class="cropper-main-image" ></md-icon>
-                                        </md-button>-->
+                                        <!-- <img ng-src="{{'img/image.svg'}}" alt="team image" class="cropper-main-image" ng-click="subgroup.showAdvanced($event)" /> -->
+                                        <!-- <md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100"> -->
+                                            <md-icon md-svg-src="img/image.svg" class="cropper-main-image nooutline" ng-click="subgroup.showAdvanced($event)"></md-icon>
+                                        <!-- </md-button> -->
                                     </div>
-                                    <div>
+                                    <div style="width: 80px; overflow: hidden;">
                                         <img ng-src="{{$root.newImg}}" alt="" class="cropper-main-button" ng-hide="!$root.newImg" ng-click="subgroup.showAdvanced($event)" />
                                     </div>
                                     <!--<image-cropper></image-cropper>-->

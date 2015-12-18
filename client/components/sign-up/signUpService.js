@@ -16,6 +16,7 @@
                                 $location.path(location);
                             } else {
                                 messageService.showFailure(data.statusDesc);
+                                defer.reject();
                             }
                         },
                         function() {

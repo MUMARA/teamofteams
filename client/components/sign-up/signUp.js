@@ -44,6 +44,7 @@
                     // console.log('Success')
                 })
                 .catch(function() {
+                    that.process = false;
                     // console.log('failed')
                 })
         };
