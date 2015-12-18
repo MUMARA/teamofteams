@@ -103,14 +103,18 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                     <md-card style="  margin: 1px 3px 0px 3px !important;" class=" md-whiteframe-z2" ng-init="_index={0:true}">
                                         <md-list style="padding: 0px !important;" ng-repeat="subgroup in geoFencing.subgroups" ng-class="{'md-whiteframe-z5': $parent._index[$index]}" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showLocationBySubGroup(subgroup.$id)">
                                             <md-list-item ng-click="geoFencing.veiwSubgroup(subgroup, $index)" class="md-3-line" style="padding: 0px !important;">
-                                                <img ng-src="{{subgroup['logo-image'].url}}" style="height: 120px;width: 90px;" />
+                                                <div style="width: 72px; height: 120px; overflow: hidden;">
+                                                    <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 120px;width: 120px;" />
+                                                </div>
                                                 <div class="md-list-item-text" style="padding: 0px; margin-top: 2px">
                                                     <b><p style="text-indent: 0px;margin-left: 10px;">
-                                                        {{subgroup.title}}</p></b>
-                                                    <img ng-src="{{item.face}}" class="md-avatar" style="  width: 33px; margin-top: 16px" />
-                                                    <span><img src="img/geoLocation.svg" width="40px" height="20px"
-                                               style=" width:60px ; margin-left: 30px;margin-top: 22px;">
-                                        <img src="img/notification1.svg" style="width: 16px; margin-top: 22px"></span>
+                                                        {{subgroup.title}}
+                                                    </p></b>
+                                                    <img ng-src="{{item.face || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" style="width: 40px; height:40px; margin-top: 25px; margin-left: 7px" />
+                                                    <span>
+                                                        <img src="img/geoLocation.svg" width="40px" height="20px" style=" width:40px ; margin-left: 40px;margin-top: 25px;">
+                                                        <img src="img/notification1.svg" style="width: 16px; margin-top: 22px">
+                                                    </span>
                                                 </div>
                                                 <md-divider></md-divider>
                                             </md-list-item>

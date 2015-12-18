@@ -114,11 +114,13 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                         <md-card style="  margin: 1px 3px 0px 3px !important;" class=" md-whiteframe-z1">
                                             <md-list style="padding: 0px !important;" ng-repeat="subgroup in createSubGroup.subgroups" ng-class="{'md-whiteframe-z3':createSubGroup.selectedindex===$index}">
                                                 <md-list-item class="md-3-line" class="selectable" style="padding: 0px !important;" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)">
-                                                    <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 100px;width: 70px;" />
+                                                    <div style="width: 72px; height: 120px; overflow: hidden;">
+                                                        <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 120px;width: 120px;" />
+                                                    </div>
                                                     <div class="md-list-item-text" style="padding: 0px; margin-top: 2px">
                                                         <p style="text-indent: 0px;margin-left: 10px; font-weight: 800">
                                                             {{subgroup.title}}</p>
-                                                        <img ng-src="{{createSubGroup.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 34px; height: 37px;      border-radius: 50%;   margin-top: 30px; margin-left: 7px;" />
+                                                        <img ng-src="{{createSubGroup.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 40px; height: 40px;      border-radius: 50%;   margin-top: 30px; margin-left: 7px;" />
                                                         <span>
                                         <div style="float: right; width: 25px; margin-top: -18px">
                                             
@@ -135,7 +137,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                             <ng-md-icon icon="more_vert" style="fill: #929497"></ng-md-icon>
                                             <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="fill: #929497;"></ng-md-icon></div>
                                         <img src="img/geoLocation.svg" width="40px" height="20px"
-                                               style=" width:60px ; margin-left: 8px;margin-top: 22px;">
+                                               style=" width:40px ; margin-left: 20px;margin-top: 25px;">
                                         <img src="img/notification1.svg" style="width: 16px; margin-top: 22px">
 
                                     </span>
@@ -195,15 +197,20 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                             </div>
                                         </md-input-container>
                                         <!-- select photo -->
-                                        <h2>Select Photo </h2>
+                                        <h2>Set Team Photo </h2>
                                         <div>
                                             <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                                                <img ng-src="{{ createSubGroup.subgroupData['logo-image'].url || 'img/image.svg'}}" class="cropper-main-image2" ng-click="createSubGroup.showAdvanced($event)" />
+                                                <div style="width: 96px; height: 160px; overflow: hidden;" ng-show="createSubGroup.subgroupData['logo-image'].url">
+                                                    <img ng-src="{{ createSubGroup.subgroupData['logo-image'].url || 'img/image.svg'}}" class="cropper-main-image" ng-click="createSubGroup.showAdvanced($event)" />
+                                                </div>
+                                                <div ng-hide="createSubGroup.subgroupData['logo-image'].url">
+                                                    <img ng-src="{{'img/image.svg'}}" class="cropper-main-image" ng-click="createSubGroup.showAdvanced($event)" />
+                                                </div>
                                                 <!--<md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100">
                                                 <md-icon md-svg-src="img/image.svg" class="cropper-main-image" ></md-icon>
                                             </md-button>-->
                                             </div>
-                                            <div>
+                                            <div style="width: 96px; overflow: hidden;">
                                                 <img ng-src="{{$root.newImg}}" alt="" class="cropper-main-button" ng-hide="!$root.newImg" ng-click="createSubGroup.showAdvanced($event)" />
                                             </div>
                                             <!--<image-cropper></image-cropper>-->
