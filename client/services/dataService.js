@@ -122,13 +122,13 @@ angular.module('core')
                             userGroups.forEach(function(item, index){
                                 if (item.groupID === group.key()) {
                                     if (snapshot.key() === "title") {
-                                        item.membersOnline = snapshot.val()
+                                        item.title = snapshot.val()
                                     }
                                     if (snapshot.key() === "members-checked-in") {
                                         item.membersOnline = snapshot.val().count
                                     }
                                      if (snapshot.key() === "members-count") {
-                                        item.membersOnline = snapshot.val()
+                                        item.members = snapshot.val()
                                     }
                                 }
                             });

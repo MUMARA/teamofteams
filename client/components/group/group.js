@@ -282,7 +282,6 @@
 
                     // },9000)
                     
-             
                 this.GetSubGroupUsers = function(subgroupData, index) {
                     that.currentSubGroup = index;
                     that.currentSudGroupID = subgroupData.$id;

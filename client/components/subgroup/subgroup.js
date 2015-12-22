@@ -33,8 +33,8 @@
         /*VM properties*/
         this.filteredUsers = [];
         this.Subgroup = {
-            subgroupID: "",
-            title: "",
+            // subgroupID: "",
+            // title: "",
             desc: "",
             members: "",
             membersArray: []
@@ -169,6 +169,7 @@
                 console.log(x);
             } else {
                 fromDataFlag = false;
+                console.log(that.Subgroup);
                 SubGroupService.createSubGroup(localStorage.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
                     //$location.path('/user/group/'+groupID);
             }
