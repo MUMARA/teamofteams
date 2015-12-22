@@ -12,16 +12,27 @@
 		</div>
 	</div>
 	<div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
-		<md-button class="md-fab cards-button" aria-label="User Status" style="background-color: #31B4CB;">
+		<md-button class="md-fab cards-button" aria-label="User Status" style="background-color: #31B4CB;margin-top: 4%">
             <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>
         </md-button>
 		<div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin layout-padding>
 			<img ng-src="{{group.owerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px" alt="group owner image" />
 		</div>
+
 		<div>
-			<md-progress-circular md-diameter="48" ng-value="100" class="md-accent userPageGroupProg"></md-progress-circular>
-            <span style="position: absolute; top: 27px; right: 101px;">{{ ((group.membersOnline / group.members) * 100) | number: 0 }}%</span>
-            <!-- <span style="position: absolute; top: 5px; right: 33px; font-size: 2em;">{{ group.membersOnline }} - {{group.members}}</span> -->
+			<md-list>
+				<md-list-item class="md-3-line">
+					<div layout="center center">
+						<md-progress-circular md-diameter="48" ng-value="100" class="md-accent userPageGroupProg"></md-progress-circular>
+						<span style="margin-left: -47%;margin-top:22%;font-size: 11px">{{ ((group.membersOnline / group.members) * 100) | number: 0 }}%</span>
+					</div>
+				</md-list-item>
+			</md-list>
 		</div>
+		<!--<div>-->
+			<!--<md-progress-circular md-diameter="48" ng-value="100" class="md-accent userPageGroupProg"></md-progress-circular>-->
+            <!--<span style="position: absolute; top: 29px; right: 119px;font-size: 12px">{{ ((group.membersOnline / group.members) * 100) | number: 0 }}%</span>-->
+            <!--&lt;!&ndash; <span style="position: absolute; top: 5px; right: 33px; font-size: 2em;">{{ group.membersOnline }} - {{group.members}}</span> &ndash;&gt;-->
+		<!--</div>-->
 	</div>
 </md-card>

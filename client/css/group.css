@@ -88,9 +88,10 @@ width:350px;
 .listCardHeading {
     /*text-align: center;*/
     /*vertical-align: baseline;*/
-    color: rgb(96, 176, 137);
+    color: #5DC2D4
     font-size: 15px;
     margin: 19px 18px 0px 100px;
+    font-weight: bold;
     /*display:inline-block;*/
     /*position:absolute;*/
 }

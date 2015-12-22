@@ -251,10 +251,10 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                             }
                         </style>-->
                                     <div flex="85" class="userToolBar" layout="row">
-                                        <div flex="25" class="listCardHeading fontset">Name</div>
-                                        <div flex="25" class="listCardHeading fontset">Phone</div>
-                                        <div flex="25" class="listCardHeading fontset">Team</div>
-                                        <div flex="25" class="listCardHeading fontset">Last Modified</div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Name</b></div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Phone</b></div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Team</b></div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Last Modified</b></div>
                                     </div>
                                 </div>
                             </md-toolbar>
@@ -274,7 +274,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                             <md-content class="grayScroller">
                                 <md-list>
                                     <md-list-item class="md-2-line">
-                                        <div class="md-list-item-text">
+                                        <div class="md-list-item-text" style="margin-top: -3%">
                                             <!--<div flex="10"></div>-->
                                             <!--<style>
                                     body > md-content > div > div.marginContainer > div > div > div.background > div:nth-child(1) > md-card > div > md-toolbar > div {
@@ -303,14 +303,14 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                                                     <!--ng-style="userObj.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">-->
                                                 </div>
                                                 <div flex="90" layout="row">
-                                                    <div flex="25" class="listCardHeading2" style="color: black">{{usr.firstName + ' ' + usr.lastName}}</div>
-                                                    <div flex="25" class="listCardHeading2" style="color: #909090">{{usr.contactNumber || 'No number'}}
+                                                    <div flex="25" class="listCardHeading2" style="color: black;margin-left: 3%;font-size: 13px">{{usr.firstName + ' ' + usr.lastName}}</div>
+                                                    <div flex="25" class="listCardHeading2" style="color: #909090;font-size: 13px">{{usr.contactNumber || 'No number'}}
                                                     </div>
                                                     <!--<div flex="25" class="listCardHeading2" style="color: #909090">{{userObj.groupID + '>' + userObj.subgroupID}}-->
-                                                    <div flex="25" class="listCardHeading2" style="color: #909090; margin-top: 16px">
+                                                    <div flex="25" class="listCardHeading2" style="color: #909090; margin-top: 16px;font-size: 13px;max-width: 22%">
                                                         <span>{{usr.groupsubgroupTitle}}</span>
                                                     </div>
-                                                    <div flex="25" class="listCardHeading2" style="color: #909090">{{usr.timestamp |date:'MM/dd/yyyy @ h:mma'}}
+                                                    <div flex="25" class="listCardHeading2" style="color: #909090;margin-left: 4%;font-size: 13px">{{usr.timestamp |date:'MM/dd/yyyy'}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -324,7 +324,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
         </div>
         <div flex="30">
             <!--<md-content style="height: 628px;width: 473px;overflow-x: hidden;margin-top: 5px;z-index: 1;" class="greenScroller">-->
-            <md-content style="height: 90vh ;width: 473px;overflow-x: hidden;margin-top: 5px;z-index: 1;" class="greenScroller">
+            <md-content style="height: 90vh ;width: 473px;overflow-x: hidden;z-index: 1;" class="greenScroller">
                 <div layout="row" style="width: 480px" layout-wrap>
                     <!--<div layout="column" style="width: 235px;height:285px;color: #676767"
                          ng-repeat='(key,prop) in user.userObj track by key'>-->
