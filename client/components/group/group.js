@@ -5,8 +5,8 @@
     'use strict';
 
     angular.module('app.group')
-        .controller('GroupController', ['$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$sessionStorage", "$location", "utilService", "$localStorage", "$stateParams",
-            function($timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $sessionStorage, $location, utilService, $localStorage, $stateParams) {
+        .controller('GroupController', ['dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$sessionStorage", "$location", "utilService", "$localStorage", "$stateParams",
+            function(dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $sessionStorage, $location, utilService, $localStorage, $stateParams) {
 
                 // console.log("In Group Controller");
                 var $scope = this;
@@ -195,10 +195,17 @@
 
 
                 $scope.subgrouppage = function(subgroup1, index) {
-                    $scope.selectedindex = index;
-                    $scope.activesubID = subgroup1.$id;
-                    // console.log(subgroup1)
-                    $scope.Teamchannels = chatService.geTeamChannelsSyncArray($scope.groupID, $scope.activesubID);
+                    if (that.activePanel === 'activity') {
+                        that.GetSubGroupUsers(subgroup1, index)
+                    } else if (that.activePanel === 'chat') {
+                        $scope.selectedindex = index;
+                        $scope.activesubID = subgroup1.$id;
+                        // console.log(subgroup1)
+                        $scope.Teamchannels = chatService.geTeamChannelsSyncArray($scope.groupID, $scope.activesubID);    
+                    } else if (that.activePanel === 'manualAttendace') {                        
+                        that.GetSubGroupUsers(subgroup1, index)
+                    }
+                    
                 }
 
                 $scope.viewTeamChannelMessages = function(channel) {
@@ -234,88 +241,59 @@
                 this.users = [];
                 this.currentSubGroup;
                 this.currentSudGroupID;
-                this.showTeamAttendace = false;
+                this.showActivity = true;
+                this.showChat = false;
+                this.showManualAttendace = false;
                 this.processTeamAttendance = false;
-                this.openTeamAttendance = function() {
-                    this.showTeamAttendace = !this.showTeamAttendace;
-                    $("#wrapper").toggleClass("toggled");
+                this.activePanel = 'activity';
+                this.showPanel = function(pname) {
+                    if(pname === 'activity') {
+                        that.showActivity = true; 
+                        that.activePanel = 'activity';
+                    } else {
+                        that.showActivity = false;
+                    }
+                    if (pname === 'chat') {
+                        that.showChat = true; 
+                        that.activePanel = 'chat';
+                    } else {
+                        that.showChat = false;
+                    }
+                    if (pname === 'manualAttendace') {
+                        that.showManualAttendace = true;
+                        that.activePanel = 'manualAttendace';
+                    } else {
+                        that.showManualAttendace = false;
+                    }
                 }
+                
+
+                that.users =  dataService.getUserData();                
+             
+                    
+                    // $timeout(function(){
+                    //     alert(1)
+                    //     dataService.getUserData().forEach(function(val,indx){
+                    //     alert(indx)
+                    //     if(val.groupID == groupID){
+                    //         that.users.push(val);
+                    //     }
+                    // });
+
+                    // },9000)
+                    
+             
                 this.GetSubGroupUsers = function(subgroupData, index) {
                     that.currentSubGroup = index;
                     that.currentSudGroupID = subgroupData.$id;
-                    that.processTeamAttendance = true;
+                    // that.processTeamAttendance = true;
                     //for emprty array on team change
                     that.users = [];
 
-                    checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id).on('child_changed', function(snapshot, prevChildKey) {
-                        // console.log(snapshot.val());    
-                        // console.log(snapshot.key()); 
-                        that.users.forEach(function(val, indx) {
-                            if (val.id === snapshot.key()) {
-                                val.type = snapshot.val().type;
-                                val.message = snapshot.val().message;
-                            }
-                        })
-                    });
-
-                    subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(groupID, subgroupData.$id).$loaded().then(function(subgroupsdata) {
-                        // data.forEach(function(subdata){
-                        //     $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id).child(subdata.$id)).$loaded().then(function(userdata){
-                        //         // console.log(subdata.$id);
-                        //         // console.log(userdata[2].$value);
-                        //         // console.log(userdata[8].$value);
-                        //         if(userdata[8]) {
-                        //             if(userdata[8].$value === 1) {
-                        //                 var status = true;                            
-                        //             } else {
-                        //             var status = false;
-                        //             }
-                        //             var type = userdata[2].$value
-                        //         } else {
-                        //             var status = false;
-                        //             var type = 'N/A'
-                        //         }
-                        //         that.users.push({id: subdata.$id, type: type, status: status, groupID: groupID, subgroupID: subgroupData.$id});
-                        //     })
-                        // });
-                        // console.log(subgroupsdata)
-                        $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(groupID).child(subgroupData.$id)).$loaded().then(function(usersdata) {
-                            // console.log(usersdata);
-                            subgroupsdata.forEach(function(subgroupdata) {
-                                usersdata.forEach(function(userdata) {
-                                    // console.log(subgroupdata.$id);
-                                    // console.log(userdata.$id);
-                                    if (subgroupdata.$id === userdata.$id) {
-                                        // console.log(userdata.$id);
-                                        // console.log(userdata.message);
-                                        // console.log(userdata.type);
-                                        if (userdata.type === 1) {
-                                            var type = true;
-                                        } else {
-                                            var type = false;
-                                        }
-                                        $firebaseArray(firebaseService.getRefUsers().child(userdata.$id)).$loaded().then(function(usermasterdata) {
-                                            // console.log(usermasterdata);
-                                            for (var i = usermasterdata.length - 1; i >= 0; i--) {
-                                                if (usermasterdata[i].$id === "profile-image") {
-                                                    var profileImage = usermasterdata[i].$value
-                                                }
-                                            };
-                                            that.users.push({
-                                                id: userdata.$id,
-                                                type: type,
-                                                message: userdata.message,
-                                                groupID: groupID,
-                                                subgroupID: subgroupData.$id,
-                                                profileImage: profileImage
-                                            });
-                                        })
-                                    }
-                                });
-                            });
-                            that.processTeamAttendance = false;
-                        });
-                        // console.log(that.users);
+                    dataService.getUserData().forEach(function(val,indx){
+                        if(val.groupID == groupID && val.subgroupID == subgroupData.$id){
+                            that.users.push(val);
+                        }
                     });
                 }
 
@@ -337,7 +315,7 @@
                         // console.log(userdata[5]);
                         // console.log(type)
                         if (!type) {
-                            if (userdata[5].$value === 1) {
+                            if (userdata[5] && userdata[5].$value === 1) {
                                 messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
                                 that.processTeamAttendance = false;
                                 return;
@@ -372,8 +350,10 @@
                                     that.processTeamAttendance = false;
                                 }, function(reason) {
                                     messageService.showFailure(reason);
+                                    that.processTeamAttendance =false;
                                 });
                         }, function(err) {
+                            that.processTeamAttendance = false;
                             messageService.showFailure(err.error.message);
                         });
                 }
@@ -393,7 +373,7 @@
                     //             lon: location.coords.longitude
                     //         };
                     //that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});                                               
-
+                    return
                     that.users.forEach(function(val, i) {
                             if ((val.type === 1 || val.type === true) && (val.id != localStorage.userID)) {
                                 checkinService.createCurrentRefsBySubgroup(val.groupID, val.subgroupID, val.id).then(function() {

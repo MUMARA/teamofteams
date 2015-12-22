@@ -96,6 +96,7 @@ angular.module('core')
                                             //Step 4: Add to group
                                             var dataToSet = {
                                                 'group-owner-id': userService.getCurrentUser().userID,
+                                                'owner-img-url': groupObj.ownerImgUrl,
                                                 title: groupObj.title,
                                                 desc: groupObj.desc || '',
                                                 address: groupObj.address || '',

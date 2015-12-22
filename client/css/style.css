@@ -1,5 +1,22 @@
 /* Start Animation */
 
+.activity {
+    -webkit-transition: all linear 0.1s;
+    transition: all linear 0.1s;
+    opacity: 1;
+}
+
+.activity.ng-hide-remove {
+    -webkit-transition: all linear 0.1s;
+    transition: all linear 0.1s;
+    opacity: 0;
+}
+
+.activity.ng-hide-add {
+    -webkit-transition: all linear 0s;
+    transition: all linear 0s;
+}
+
 .teamAttendance {
     -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
