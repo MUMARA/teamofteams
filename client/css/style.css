@@ -1250,7 +1250,7 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar {
     background-color: rgba(158, 158, 158, 0.2) !important;
 }
 
-#prof > svg {
+.prof > svg {
     margin-top: 1px;
 }
 
@@ -1304,4 +1304,8 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 
 .md-toast-animating {
     width: 500px !important;
+}
+.imgWidthHeight{
+    width: 80px !important;
+    height: 80px !important;
 }

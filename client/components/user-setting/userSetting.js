@@ -50,7 +50,7 @@
 
 
             });
-
+            console.log(this.members);
         function hide() {
             /*   createGroupService.cancelGroupCreation();*/
             /* $mdDialog.cancel();*/
