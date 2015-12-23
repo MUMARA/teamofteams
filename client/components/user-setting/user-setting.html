@@ -86,9 +86,9 @@
                                                         <!--<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">-->
                                                     </div>
                                                     <div flex class="userToolBar" layout="row">
-                                                        <div flex="40" class="listCardHeading">Name</div>
-                                                        <div flex="40" class="listCardHeading">Phone</div>
-                                                        <div flex="20" class="listCardHeading">Action</div>
+                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A">Name</div>
+                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A;margin-left: 5%">Phone</div>
+                                                        <div flex="20" class="listCardHeading" style="color: #79BA9A;margin-left: 7%">Action</div>
                                                     </div>
                                                 </div>
                                             </md-toolbar>
@@ -97,7 +97,7 @@
                                             <!---->
 
 
-                                            <div class="teamList" style="margin: 51px;margin-right: 0">
+                                            <div class="teamList" style="margin: 7px;margin-right: 0">
 
                                                 <div layout="row" ng-repeat="member in userSetting.members"
                                                      ng-repeat="list in userSetting.userarray" class="margining ">
@@ -116,7 +116,7 @@
 
                                                         </div>
                                                         <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;">
+                                                             style="color: #909090;font-size: 14px !important;margin-left: 13%">
                                                             {{member.userSyncObj.contactNumber}}
                                                         </div>
                                                         <div flex class="listCardHeading2"
@@ -125,29 +125,29 @@
                                                                 <div layout="column" layout-align="center left" flex>
                                                                     <md-select aria-label="userSetting" ng-model="someVal"
                                                                                class="user"
-                                                                               ng-if="member.membershipType != 1" placeholder="Member">
-                                                                        <md-option value="1"
-                                                                                   ng-click="userSetting.changeMemberRole(3, member)"
-                                                                                   style="color: black"
-                                                                                   ng-if="member.membershipType != 3">Member
+                                                                               ng-if="member.membershipType != 1" placeholder="Member" style="margin-left: 44%">
+                                                                        <md-option
+                                                                                class="transparency"
+                                                                                value="3"
+                                                                                style="color: black">Member
                                                                         </md-option>
                                                                         <md-option value="2"
                                                                                    ng-click="userSetting.changeMemberRole(2, member)"
                                                                                    style="color: black"
                                                                                    class="transparency"
-                                                                                   ng-if="member.membershipType != 2">Make
-                                                                            admin
+                                                                                   ng-if="member.membershipType != 2">Block Account
                                                                         </md-option>
                                                                         <!-- <md-option value="3" ng-click="userSetting.changeMemberRole(-1, member)"  style="color: black" ng-if="member.membershipType != -1">Blocked Member</md-option>-->
                                                                         <md-option
                                                                                 ng-click="userSetting.changeMemberRole(null, member)"
                                                                                 class="transparency"
-                                                                                value="3" style="color: black">Delete
-                                                                            Memeber
+                                                                                value="3"
+                                                                                style="color: black">Delete Account
                                                                         </md-option>
+
                                                                     </md-select>
                                                                     <div ng-if="member.membershipType == 1">
-                                                                        <ng-md-icon icon="person" style="fill: black;margin-left: 38%"
+                                                                        <ng-md-icon icon="person" style="fill: black;margin-left: 85%"
                                                                                     size="20"></ng-md-icon>
                                                                     </div>
                                                                 </div>
@@ -208,10 +208,10 @@
                                                     <div flex="15">
                                                         <!--<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">-->
                                                     </div>
-                                                    <div flex class="userToolBar" layout="row">
-                                                        <div flex="40" class="listCardHeading">Name</div>
-                                                        <div flex="40" class="listCardHeading">Status</div>
-                                                        <div flex="20" class="listCardHeading">Action</div>
+                                                    <div flex class="userToolBar" layout="row" >
+                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A">Name</div>
+                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A; margin-left: 5%">Status</div>
+                                                        <div flex="20" class="listCardHeading" style="color: #79BA9A; margin-left: 7%">Action</div>
                                                     </div>
                                                 </div>
                                             </md-toolbar>
@@ -220,7 +220,7 @@
                                             <!---->
 
 
-                                            <div class="teamList" style="margin: 51px;margin-right: 0">
+                                            <div class="teamList" style="margin: 7px;margin-right: 0">
                                                 <div layout="row" ng-repeat="request in userSetting.pendingRequests"
                                                      class="margining ">
                                                     <div flex="15" style="max-width: 8%">
@@ -238,7 +238,7 @@
 
                                                         </div>
                                                         <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;">
+                                                             style="color: #909090;font-size: 14px !important;margin-left: 13%">
                                                             {{request.userSyncObj.contactNumber}}
                                                         </div>
                                                         <div flex class="listCardHeading2"
@@ -247,7 +247,7 @@
                                                                 <div layout="column" layout-align="center left" flex>
                                                                     <md-select placeholder="Pending" ng-model="someVal"
                                                                                class="user"
-                                                                               style="font-size: 12px !important;">
+                                                                               style="font-size: 13px !important;margin-left: 43%">
                                                                         <md-option value="1" style="color: black"
                                                                                    class="transparency"
                                                                                    ng-click="userSetting.approveMembership(request)">
@@ -317,9 +317,9 @@
                                                         <!--<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">-->
                                                     </div>
                                                     <div flex class="userToolBar" layout="row">
-                                                        <div flex="40" class="listCardHeading">Name</div>
-                                                        <div flex="40" class="listCardHeading">Phone</div>
-                                                        <div flex="20" class="listCardHeading">Action</div>
+                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A">Name</div>
+                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A;margin-left: 5%">Phone</div>
+                                                        <div flex="20" class="listCardHeading" style="color: #79BA9A;margin-left: 7%">Action</div>
                                                     </div>
                                                 </div>
                                             </md-toolbar>
@@ -328,7 +328,7 @@
                                             <!---->
 
 
-                                            <div class="teamList" style="margin: 51px;margin-right: 0">
+                                            <div class="teamList" style="margin: 7px;margin-right: 0">
                                                 <div layout="row" ng-repeat="list in userSetting.userarray"
                                                      class="margining ">
                                                     <div flex="15" style="max-width: 8%">
@@ -344,7 +344,7 @@
 
                                                         </div>
                                                         <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;">
+                                                             style="color: #909090;font-size: 14px !important;margin-left: 13%">
                                                             {{list.phone}}
                                                         </div>
                                                         <div flex class="listCardHeading2"

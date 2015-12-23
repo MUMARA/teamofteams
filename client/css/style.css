@@ -410,9 +410,10 @@ md-switch {
 }
 
 .user {
-    margin-top: 16px;
+    margin-top: -1px;
     font-size: 14px;
     padding: 0 !important;
+
 }
 
 .userListSearchbox {
@@ -804,7 +805,8 @@ md-autocomplete input:not(.md-input) {
 
 .userToolBar {
     /*margin-top: -21px;*/
-    margin-left: -36px;
+    margin-left: -61px;
+    margin-top: -1%;
 
 }
 
