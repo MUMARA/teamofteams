@@ -40,7 +40,28 @@ angular.module('core', [
         //var temp = webkitURL.createObjectURL(url)*/
         return url
     };
-})
+}).filter('emptyString', [
+  function() {
+    return function(input, param) {
+      if (!param) return input
+
+      var ret = [];
+      if (!angular.isDefined(param)) param = true;
+
+
+      if (param) {
+        angular.forEach(input, function(v) {
+          if (angular.isDefined(v.comment) && v.comment) {
+            v.comment = v.comment.replace(/^\s*/g, '');
+            ret.push(v);
+          }
+
+        });
+      }
+      return ret;
+    };
+  }
+])
 
 /* .run(["authService",function(authService){
      //debugger;

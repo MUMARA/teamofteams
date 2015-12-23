@@ -234,8 +234,17 @@
                 };
                 // Start Team Attendance
                 //update status when user checked-in or checked-out
+                this.someValue1=  false;
+                this.someValue2=  true;
+                this.someValue3=  true;
+                this.someValue4=  true;
+                this.show = function (showval1,showval2,showval3,showval4 ) {
+                     that.someValue1 = showval1;
+                    that.someValue2 = showval2;
+                    that.someValue3 = showval3;
+                    that.someValue4 = showval4;
 
-
+                }
 
 
                 this.users = [];
@@ -250,18 +259,21 @@
                     if(pname === 'activity') {
                         that.showActivity = true; 
                         that.activePanel = 'activity';
+                        that.show(false ,true ,true,true)
                     } else {
                         that.showActivity = false;
                     }
                     if (pname === 'chat') {
                         that.showChat = true; 
                         that.activePanel = 'chat';
+                        that.show(true ,false ,true,true)
                     } else {
                         that.showChat = false;
                     }
                     if (pname === 'manualAttendace') {
                         that.showManualAttendace = true;
                         that.activePanel = 'manualAttendace';
+                        that.show(true ,true ,false,true)
                     } else {
                         that.showManualAttendace = false;
                     }

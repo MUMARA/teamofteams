@@ -61,10 +61,12 @@
                                 <div>
                                     <md-list>
                                         <md-list-item class="md-3-line">
+                                            <div layout="center center">
                                             <md-progress-circular ng-value="100" class="md-hue-2 groupPageGroupLogo"></md-progress-circular>
-                                            <span style="position: absolute; top: 9px; right: 31px;">
-                                                {{ ( group.group['members-checked-in'].count / group.group['members-count'] ) * 100 | number: 0}}
+                                            <span style="margin-left: -60%;margin-top:10%;font-size: 12px">
+                                                {{ ( group.group['members-checked-in'].count / group.group['members-count'] ) * 100 | number: 0}}%
                                             </span>
+                                            </div>
                                         </md-list-item>
                                     </md-list>
                                 </div>
@@ -124,16 +126,28 @@
                     <!-- <div style="  width: 70px;max-width: 70px;min-width: 70px;"> -->
                     <!-- <div style="height:100vh; max-height:1024px; padding-bottom:50px;"> -->
                     <div class="gradient" layout="column" layout-align="space-between center">
-                        <div>
+                        <div style="margin-left: 50%">
                             <img src="img/menu.svg" class="nooutline icon40px" layout-margin id="menu-toggle" /> </a>
-                            <md-divider class="backColorWhite"></md-divider>
+                            <md-divider class="backColorWhite1"></md-divider>
+                            <div layout="row">
                             <img src="img/line.svg" class="nooutline icon40px" layout-margin ng-click="group.showPanel('activity')"/>
-                            <div><img src="img/comment.svg" class="nooutline icon40px" layout-margin ng-click="group.showPanel('chat')" /></div>
+                                <span class="showArrow"><img src="img/1arrow.png"  ng-hide="group.someValue1"></span>
+                            </div>
+                            <div layout="row">
+                                <img src="img/comment.svg" class="nooutline icon40px" layout-margin ng-click="group.showPanel('chat')" />
+                                <span class="showArrow"><img src="img/1arrow.png"  ng-hide="group.someValue2"></span>
+                            </div>
                         </div>
-                        <div ng-show="group.isAdmin()">
-                            <md-divider class="backColorWhite"></md-divider>
-                            <img src="img/menu.svg" class="nooutline icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" />
-                            <div><img src="img/line.svg" class="nooutline icon40px" layout-margin /></div>
+                        <div ng-show="group.isAdmin()" style="margin-left: 50%">
+                            <md-divider class="backColorWhite1"></md-divider>
+                            <div layout="row">
+                                <img src="img/menu.svg"  class="nooutline icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" />
+                                <span class="showArrow"><img src="img/1arrow.png"  ng-hide="group.someValue3"></span>
+                            </div>
+                            <div layout="row">
+                                <img src="img/line.svg" class="nooutline icon40px" layout-margin />
+                                <span class="showArrow"><img src="img/1arrow.png"  ng-hide="group.someValue4"></span>
+                            </div>
                         </div>
                     </div>
                     <!-- </div> -->
@@ -149,7 +163,7 @@
                             <input type="text" ng-model="group.searchUser" placeholder="Search">
                         </md-input-container>
                     </md-toolbar>
-                    <md-content layout="row" layout-align="space-between start">
+                    <md-content layout="row" layout-align="space-between start" style="background-color: #FFFFFF;overflow:auto">
                         <!-- <md-card class="md-whiteframe-z1">
                             <md-list-item layout-padding class="backColorPink foreColorWhite md-whiteframe-z1" style="min-height: 83.941px;">
                                 <!Min Height Due to user list card is getting 83.941px >
@@ -174,19 +188,19 @@
                                 </md-list-item>
                             </md-list>
                         </md-card> -->
-                        <md-card class="md-whiteframe-z1" flex>
-                            <md-list-item layout-padding class="backColorOrange foreColorWhite md-whiteframe-z1">
+                        <md-card class="md-whiteframe-z1" flex >
+                            <md-list-item class="backColorOrange foreColorWhite md-whiteframe-z1">
                                 <md-button class="md-fab-mini backColorOrange" aria-label="checkout" ng-click="group.checkoutAll()" style="margin-left: 15px; margin-right: 50px;">
                                     <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"></md-icon>
                                 </md-button>
                                 <p class="textAlignLeft textBold" ng-repeat="field in ['User', 'Group', 'Subgroup', 'Status']">{{field}}</p>
                             </md-list-item>
-                            <md-list-item layout-padding ng-repeat="user in group.users | filter: group.searchUser" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)">
+                            <md-list-item ng-repeat="user in group.users | filter: group.searchUser" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)">
                                 <!-- <md-checkbox ng-model="user.type" ng-change="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" aria-label="user status"></md-checkbox> -->
                                 <div flex="10" class="circular">
                                     <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="roundShape" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
                                 </div>
-                                <p>{{user.firstName}} {{user.lastName}}</p>
+                                <p>{{user.fullName}}</p>
                                 <p>{{user.groupTitle}}</p>
                                 <p>{{user.subgroupTitle}}</p>
                                 <p>{{user.message}}</p>
@@ -196,32 +210,34 @@
                     </md-content>
                 </div>
                 <!-- Activity -->
-                <div class="activity md-whiteframe-z1 grayScroller" ng-show="group.showActivity" flex>
-                    <md-toolbar class="backColorWhite md-whiteframe-z1" layout="row" layout-padding layout-align="space-between center">
-                        <!-- <h2 class="foreColorDarkGrey nomargin">Activity</h2> -->
-                        <md-input-container flex="50" md-no-float>
-                            <md-icon md-svg-src="../../img/searchDarkGrey.svg"></md-icon>
-                            <input type="text" ng-model="group.searchActivity" placeholder="Search">
-                        </md-input-container>
-                    </md-toolbar>
-                    <md-content layout="row" layout-align="space-between start">
-                        <md-card class="md-whiteframe-z1" flex>
-                            <md-list-item layout-padding class="backColorOrange foreColorWhite md-whiteframe-z1">
-                                <p class="textAlignLeft textBold" ng-repeat="field in ['Name', 'Mobile', 'Team', 'Last Modified']">{{field}}</p>
-                            </md-list-item>
-                            <md-list-item layout-padding ng-repeat="user in group.users | filter: {groupID: group.groupID, firstName: group.searchActivity}">
-                                <!-- <md-checkbox ng-model="user.type" ng-change="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" aria-label="user status"></md-checkbox> -->
-                                <div flex="10" class="circular">
-                                    <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="roundShape" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
-                                </div>
-                                <p>{{user.firstName}} {{user.lastName}}</p>
-                                <p>{{user.contactNumber}}</p>
-                                <p>{{user.groupsubgroupTitle}}</p>
-                                <p>{{user.timestamp}}</p>
-                                <md-divider></md-divider>
-                            </md-list-item>
-                        </md-card>
-                    </md-content>
+                <div class="viewHeight grayScroller" flex>
+                    <div class="activity md-whiteframe-z1" style="padding-bottom:7%" ng-show="group.showActivity">
+                        <md-toolbar class="backColorWhite md-whiteframe-z1" layout="row" layout-padding layout-align="space-between center">
+                            <!-- <h2 class="foreColorDarkGrey nomargin">Activity</h2> -->
+                            <md-input-container flex="50" md-no-float>
+                                <md-icon md-svg-src="../../img/searchDarkGrey.svg"></md-icon>
+                                <input type="text" ng-model="group.searchActivity" placeholder="Search">
+                            </md-input-container>
+                        </md-toolbar>
+                        <md-content layout="row" layout-align="space-between start" style="background-color: #FFFEFF">
+                            <md-card class="md-whiteframe-z1" flex>
+                                <md-list-item layout-padding class="backcolorwhite foreColorWhite md-whiteframe-z1 paddings">
+                                    <p class="textAlignLeft textBold textColor" ng-repeat="field in ['Name', 'Mobile', 'Team', 'Last Modified']">{{field}}</p>
+                                </md-list-item>
+                                <md-list-item layout-padding ng-repeat="user in group.users | filter: {groupID: group.groupID, firstName: group.searchActivity}"  class="hoverColor">
+                                    <!-- <md-checkbox ng-model="user.type" ng-change="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" aria-label="user status"></md-checkbox> -->
+                                    <div flex="10" class="circular">
+                                        <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="roundShape" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
+                                    </div>
+                                    <p><b>{{user.firstName}} {{user.lastName}}</b></p>
+                                    <p>{{user.contactNumber}}</p>
+                                    <p>{{user.groupsubgroupTitle}}</p>
+                                    <p>{{user.timestamp | date:'MM/dd/yyyy'}}</p>
+                                    <md-divider></md-divider>
+                                </md-list-item>
+                            </md-card>
+                        </md-content>
+                    </div>
                 </div>
                 <!--chat side-->
                 <div class="chatSide" ng-show="group.showChat" flex>

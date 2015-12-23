@@ -33,8 +33,8 @@
         /*VM properties*/
         this.filteredUsers = [];
         this.Subgroup = {
-            subgroupID: "",
-            title: "",
+            // subgroupID: "",
+            // title: "",
             desc: "",
             members: "",
             membersArray: []

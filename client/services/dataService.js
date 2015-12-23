@@ -90,7 +90,8 @@ angular.module('core')
                                         message: message,
                                         profileImage: usermasterdata['profile-image'] || '',
                                         firstName: usermasterdata.firstName,
-                                        lastName: usermasterdata.lastName
+                                        lastName: usermasterdata.lastName,
+                                        fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
                                     });
                                 })
                             });
