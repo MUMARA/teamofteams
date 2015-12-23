@@ -1393,3 +1393,15 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 .mainCard1{
     margin-top: 2%;
 }
+.button1{
+    background-color:#EFEFEF;
+    padding: 3%;
+    border: none;
+    outline: none;
+}
+.button1:hover{
+    background-color: #EFEFEF;
+}
+.button1:visited{
+    background-color: #EFEFEF;
+}
