@@ -189,10 +189,8 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                         </md-input-container>
                                         <md-input-container>
                                             <label>Description</label>
-                                            <textarea minlength="5" maxlength="40" name="groupDesc" required ng-model="createSubGroup.subgroupData.desc" cols="25" rows="1"></textarea>
+                                            <textarea maxlength="40" name="groupDesc" ng-model="createSubGroup.subgroupData.desc" cols="25" rows="1"></textarea>
                                             <div ng-show="groupForm.$submitted || groupForm.groupDesc.$touched" ng-messages="groupForm.groupDesc.$error">
-                                                <div class="invalid_color" ng-message="required">This is required.</div>
-                                                <div class="invalid_color" ng-message="minlength">Required minimum length 5</div>
                                                 <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                                             </div>
                                         </md-input-container>

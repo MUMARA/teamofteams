@@ -6,9 +6,9 @@
 		<h4 class="textAlignCenter" layout-margin>
 			{{ group.title }}
 		</h4>
-		<div ui-sref="user.group({groupID: group.groupID})" layout="row" layout-align="center center">
+		<div layout="row" layout-align="center center" ng-show="group.addressTitle">
 	        <md-icon md-svg-src="img/location.svg" class="nomargin"></md-icon>
-			<div>Panacloud</div>
+			<div>{{group.addressTitle}}</div>
 		</div>
 	</div>
 	<div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">

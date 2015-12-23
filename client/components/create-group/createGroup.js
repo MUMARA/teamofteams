@@ -129,9 +129,8 @@
                     var temp = $rootScope.newImg.split(',')[0];
                     var mimeType = temp.split(':')[1].split(';')[0];
                     that.saveFile(x, mimeType, that.group.groupID).then(function(data) {
-                            createGroupService.createGroup(that.group, fromDataFlag, groupForm, function() {
-                                $location.path('/user/' + user.userID);
-                            })
+                            createGroupService.createGroup(that.group, fromDataFlag, groupForm);
+                            $location.path('/user/' + user.userID);
                         })
                         .catch(function() {
                             groupForm.$submitted = false;
@@ -139,9 +138,8 @@
                         });
                 } else {
                     fromDataFlag = false;
-                    createGroupService.createGroup(that.group, fromDataFlag, groupForm, function() {
-                        $location.path('/user/' + user.userID);
-                    });
+                    createGroupService.createGroup(that.group, fromDataFlag, groupForm)
+                    $location.path('/user/' + user.userID);
                 }
 
             }
@@ -169,7 +167,7 @@
                     $rootScope.newImg = picture;
                     // console.log("this is image" + picture)
                 }, function(err) {
-                    console.log(err)
+                    // console.log(err)
 
                 })
 

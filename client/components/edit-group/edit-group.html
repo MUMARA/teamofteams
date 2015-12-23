@@ -79,11 +79,19 @@
                                 </md-input-container>
                             </div>
                         </div>
-                        <div>
-                            <md-input-container>
-                                <label>Address</label>
-                                <input ng-model="editGroup.group.address">
-                            </md-input-container>
+                        <div layout="row">
+                            <div flex="25">
+                                <md-input-container>
+                                    <label>Address Title</label>
+                                    <input ng-model="editGroup.group['address-title']">
+                                </md-input-container>
+                            </div>
+                            <div flex="75">
+                                <md-input-container>
+                                    <label>Address</label>
+                                    <input ng-model="editGroup.group.address">
+                                </md-input-container>
+                            </div>
                         </div>
                         <div>
                             <md-input-container>
