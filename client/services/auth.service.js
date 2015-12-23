@@ -5,9 +5,9 @@
 
 // Create the 'example' controller
 angular.module('core')
-    .factory('authService', ["messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
+    .factory('authService', ["dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
         "$sessionStorage", "firebaseService",
-        function(messageService, $q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
+        function(dataService, messageService, $q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
             firebaseService) {
 
             return {
@@ -29,6 +29,7 @@ angular.module('core')
                             firebaseService.asyncLogin($localStorage.loggedInUser.userID, $localStorage.loggedInUser.token)
                                 .then(function(response) {
                                     successFn(data, response);
+                                    // dataService.loadData();
                                 }, function(error) {
                                     if (error) {
                                         console.error("Firebase Authentication failed: ", error);
@@ -92,6 +93,8 @@ angular.module('core')
                 logout: function() {
                     // console.info('signing out');
                     $location.path("/");
+                    //empty data in dataservice
+                    dataService.unloadData();
                     // for manually sign out from firebase.
                     firebaseService.getRefMain().unauth();
                     Firebase.goOffline();
@@ -106,6 +109,7 @@ angular.module('core')
                     //if ( $sessionStorage.loggedInUser ) {
                     if ($localStorage.loggedInUser) {
                         if (appConfig.firebaseAuth) {
+                            dataService.loadData();
                             defer.resolve();
                         } else {
                             //firebaseService.asyncLogin( $sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token )
@@ -113,6 +117,7 @@ angular.module('core')
                                 .then(function(response) {
                                     //console.info("Firebase Authentication Successful when restarting app");
                                     firebaseService.addUpdateHandler();
+                                    dataService.loadData();
                                     defer.resolve();
                                 }, function(error) {
                                     if (error) {

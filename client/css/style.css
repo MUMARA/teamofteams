@@ -1,5 +1,22 @@
 /* Start Animation */
 
+.activity {
+    -webkit-transition: all linear 0.1s;
+    transition: all linear 0.1s;
+    opacity: 1;
+}
+
+.activity.ng-hide-remove {
+    -webkit-transition: all linear 0.1s;
+    transition: all linear 0.1s;
+    opacity: 0;
+}
+
+.activity.ng-hide-add {
+    -webkit-transition: all linear 0s;
+    transition: all linear 0s;
+}
+
 .teamAttendance {
     -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
@@ -69,7 +86,14 @@
 .textBold {
     font-weight: bold;
 }
+.textColor{
+    color: #67C5D5;
+}
+.paddings{
+    padding-left: 11%!important;
 
+
+}
 .noborder {
     border: 0px;
 }
@@ -115,8 +139,8 @@
 }
 
 .icon40px {
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 43px;
 }
 
 .viewHeight {
@@ -178,6 +202,10 @@
 .backColorWhite {
     background-color: white;
 }
+.backColorWhite1 {
+    background-color: white;
+    margin-left: -20%;
+}
 
 .backColorDarkGrey {
     background-color: rgb(106, 106, 106)!important;
@@ -202,7 +230,9 @@
 .backColorOrange {
     background-color: rgb(222, 89, 71)!important;
 }
-
+.backColorOrange {
+    background-color: rgb(222, 89, 71)!important;
+}
 .roundShape {
     display: block;
     margin: auto;
@@ -213,20 +243,20 @@
     margin-left: 10px;
 }
 
-.userGroupSubgroupImg {
-    background-image: url('../img/people_button.svg');
-    background-repeat: no-repeat;
-    background-size: 25px;
-    background-position: 8px;
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    background-color: #69B0A2;
-    position: absolute;
-    z-index: 9;
-    /* bottom: inherit; */
-    margin: 10px 30px;
-}
+/*.userGroupSubgroupImg {*/
+    /*background-image: url('../img/people_button.svg');*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: 25px;*/
+    /*background-position: 8px;*/
+    /*width: 40px;*/
+    /*height: 40px;*/
+    /*border-radius: 20px;*/
+    /*background-color: #69B0A2;*/
+    /*position: absolute;*/
+    /*z-index: 9;*/
+    /*/!* bottom: inherit; *!/*/
+    /*margin: 10px 30px;*/
+/*}*/
 
 .check-in-slider .md-container .md-thumb-container .md-thumb {
     /* background-color: #32b4ca;*/
@@ -381,7 +411,7 @@ md-switch {
 
 .user {
     margin-top: 16px;
-    font-size: 20px;
+    font-size: 14px;
     padding: 0 !important;
 }
 
@@ -406,8 +436,13 @@ md-switch {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.margining:hover {
+    background-color: #EFEFEF;
+}
 
-
+.hoverColor:hover{
+    background-color: #EFEFEF;
+}
 /*user listCard*/
 
 md-content.md-default-theme {
@@ -568,9 +603,9 @@ md-list-item .md-list-item-inner > .md-avatar:first-child {
 }
 
 .gradient {
-    width: 56px;
-    max-width: 56px;
-    min-width: 56px;
+    width: 68px;
+    max-width: 68px;
+    min-width: 68px;
     background: #0375fc;
     /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -769,7 +804,8 @@ md-autocomplete input:not(.md-input) {
 
 .userToolBar {
     /*margin-top: -21px;*/
-    margin-left: -29px;
+    margin-left: -36px;
+
 }
 
 #sideCustomNav .mfb-component__button--main,
@@ -1233,7 +1269,7 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar {
     background-color: rgba(158, 158, 158, 0.2) !important;
 }
 
-#prof > svg {
+.prof > svg {
     margin-top: 1px;
 }
 
@@ -1287,4 +1323,73 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 
 .md-toast-animating {
     width: 500px !important;
+}
+.imgWidthHeight{
+    width: 80px !important;
+    height: 80px !important;
+}
+.showArrow {
+    margin-left: -5%;
+    margin-top:14%;
+    width: 34px;
+    height: 34px;
+}
+.cardBackground{
+    background-color: #FFFFFF;
+}
+
+.user-setting-tab {
+    height: 35px;
+    position: relative;
+    width: 140px;
+    max-width: 106%;
+    min-width: 205%;
+    text-align: center;
+    margin-left: -60%;
+    outline: none;
+}
+
+.user-setting-tab:before, div:after {
+    opacity: 0.5;
+    display:block;
+    content: "";
+    position:absolute;
+    width: 0;
+    height: 0;
+}
+
+.user-setting-tab:before {
+    top: 40%; left: 0;
+}
+
+.user-setting-tab:after {
+    top: 40%; right: 0;
+
+}
+.transparency{
+    background-color:#FFFFFF ;
+    color: black;
+    margin-top: 13%;
+}
+.transparency:hover{
+    background-color: #EFEFEF;
+}
+.transparency1{
+    background-color:#FFFFFF ;
+    color: black;
+    margin-top: 13%;
+}
+.transparency1:hover{
+    background-color: #EFEFEF;
+}
+.userHover{
+    padding: 0px 0px 0px 0px;  !important;
+    position: relative;
+}
+.userHover:hover{
+    background-color: #0078A8;
+}
+
+.mainCard1{
+    margin-top: 2%;
 }

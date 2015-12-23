@@ -71,11 +71,19 @@
                                 </md-input-container>
                             </div>
                         </div>
-                        <div>
-                            <md-input-container>
-                                <label>Address</label>
-                                <input ng-model="createGroup.group.address">
-                            </md-input-container>
+                        <div layout="row">
+                            <div flex="25">
+                                <md-input-container>
+                                    <label>Address Title</label>
+                                    <input ng-model="createGroup.group.addressTitle">
+                                </md-input-container>
+                            </div>
+                            <div flex="75">
+                                <md-input-container>
+                                    <label>Address</label>
+                                    <input ng-model="createGroup.group.address">
+                                </md-input-container>
+                            </div>
                         </div>
                         <div>
                             <md-input-container>
@@ -94,10 +102,10 @@
                             </md-input-container>
                         </div>
                         <h3> Sign Up Mode <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey"></h3>
-                        <md-radio-group ng-model="createGroup.group.signupMode" class="md-primary">
-                            <md-radio-button value="1" ng-disabled="true">Invitation Only</md-radio-button>
-                            <md-radio-button value="2" ng-disabled="true">Request Support</md-radio-button>
-                            <md-radio-button value="3" ng-disabled="true">Any Email Address from these domains.</md-radio-button>
+                        <md-radio-group ng-model="createGroup.group.signupMode">
+                            <md-radio-button value="1" ng-disabled="true" class="md-primary">Invitation Only</md-radio-button>
+                            <md-radio-button value="2" ng-disabled="true" class="md-primary">Request Support</md-radio-button>
+                            <md-radio-button value="3" ng-disabled="true" class="md-primary">Any Email Address from these domains.</md-radio-button>
                         </md-radio-group>
                         <md-input-container>
                             <label>To allow email addresses from multiple domains, separate them with commas</label>

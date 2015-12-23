@@ -194,8 +194,10 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                                 }
                             </style>-->
                             <!--<md-select-label style="color:black;font-size: 16px;">SUBGROUPS</md-select-label>-->
-                            <md-option value="any">Every One</md-option>
-                            <md-option  ng-repeat="(key,groups) in user.userMemData.data.groupSubgroupData">{{key}}</md-option>
+                            <md-option value="0">Every One</md-option>
+                            <md-option value="1">Online</md-option>
+                            <md-option value="2">Offline</md-option>
+                            <!-- <md-option  ng-repeat="(key,groups) in user.userMemData.data.groupSubgroupData">{{key}}</md-option> -->
                         </md-select>
 
                     </div>
@@ -249,10 +251,10 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                             }
                         </style>-->
                                     <div flex="85" class="userToolBar" layout="row">
-                                        <div flex="25" class="listCardHeading fontset">Name</div>
-                                        <div flex="25" class="listCardHeading fontset">Phone</div>
-                                        <div flex="25" class="listCardHeading fontset">Team</div>
-                                        <div flex="25" class="listCardHeading fontset">Last Modified</div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Name</b></div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Phone</b></div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Team</b></div>
+                                        <div flex="25" class="listCardHeading fontset"><b>Last Modified</b></div>
                                     </div>
                                 </div>
                             </md-toolbar>
@@ -272,7 +274,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                             <md-content class="grayScroller">
                                 <md-list>
                                     <md-list-item class="md-2-line">
-                                        <div class="md-list-item-text">
+                                        <div class="md-list-item-text" style="margin-top: -3%">
                                             <!--<div flex="10"></div>-->
                                             <!--<style>
                                     body > md-content > div > div.marginContainer > div > div > div.background > div:nth-child(1) > md-card > div > md-toolbar > div {
@@ -293,22 +295,22 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                                     }
                                 </style>-->
                                             <!-- <div layout="row" ng-repeat="(key, userObj) in user.userMemData.data.flattenedsubGroupsByuser " ng-show="userObj.show"  class="margining " style="margin-bottom: 17px;"> -->
-                                            <div layout="row" ng-repeat="user in user.users | filter: (user.searchbox)" class="margining " style="margin-bottom: 17px;">
+                                            <div layout="row" ng-repeat="usr in user.users | orderBy: ['firstName', 'lastName', 'groupsubgroup'] | filter: user.searchbox" class="margining " style="margin-bottom: 17px;" ng-hide="usr.duplicate">
                                                 <div flex="10" class="circular">
                                                     <!--<img ng-src="{{userObj['profile-image']}}" class="userCardImg " ng-style="{(userObj.type == 2) && {'border':'green'} ||{'border':'red'} }">-->
-                                                    <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="roundShape" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">
+                                                    <img ng-src="{{usr.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="roundShape" ng-style="usr.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">
                                                     <!--ng-style="userObj.type == 1 ? 'onlineUser' :'offlineUser' ">-->
                                                     <!--ng-style="userObj.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">-->
                                                 </div>
                                                 <div flex="90" layout="row">
-                                                    <div flex="25" class="listCardHeading2" style="color: black">{{user.firstName + ' ' + user.lastName}}</div>
-                                                    <div flex="25" class="listCardHeading2" style="color: #909090">{{user.contactNumber || 'No number'}}
+                                                    <div flex="25" class="listCardHeading2" style="color: black;margin-left: 3%;font-size: 13px">{{usr.fullName}}</div>
+                                                    <div flex="25" class="listCardHeading2" style="color: #909090;font-size: 13px">{{usr.contactNumber || 'No number'}}
                                                     </div>
                                                     <!--<div flex="25" class="listCardHeading2" style="color: #909090">{{userObj.groupID + '>' + userObj.subgroupID}}-->
-                                                    <div flex="25" class="listCardHeading2" style="color: #909090; margin-top: 16px">
-                                                        <span>{{user.groupID}}</span>
+                                                    <div flex="25" class="listCardHeading2" style="color: #909090; margin-top: 16px;font-size: 13px;max-width: 22%">
+                                                        <span>{{usr.groupsubgroupTitle}}</span>
                                                     </div>
-                                                    <div flex="25" class="listCardHeading2" style="color: #909090">{{user.timestamp |date:'MM/dd/yyyy @ h:mma'}}
+                                                    <div flex="25" class="listCardHeading2" style="color: #909090;margin-left: 4%;font-size: 13px">{{usr.timestamp |date:'MM/dd/yyyy'}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -322,110 +324,19 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
         </div>
         <div flex="30">
             <!--<md-content style="height: 628px;width: 473px;overflow-x: hidden;margin-top: 5px;z-index: 1;" class="greenScroller">-->
-            <md-content style="height: 90vh ;width: 473px;overflow-x: hidden;margin-top: 5px;z-index: 1;" class="greenScroller">
+            <md-content style="height: 90vh ;width: 473px;overflow-x: hidden;z-index: 1;" class="greenScroller">
                 <div layout="row" style="width: 480px" layout-wrap>
                     <!--<div layout="column" style="width: 235px;height:285px;color: #676767"
                          ng-repeat='(key,prop) in user.userObj track by key'>-->
-                    <div layout="column" style="width: 235px;height:285px;color: #676767; margin-bottom: 10px;" ng-repeat='key in user.userObj track by $index'>
-                        <!--<md-card style="margin: 3px;" ng-init="flags = {flag1:true}" ng-show="flags.flag1"-->
-                        <md-card ng-init="flags = {flag1:true}" ng-show="flags.flag1" id="{{'gCard'+$index}}">
-                            <md-card-content style="padding: 8px !important;">
-                                <div layout="row" layout-align="center center" style="margin-top:5%">
-                                    <div flex="75">
-                                        <a ui-sref="user.group({groupID: key.$id})"><img ng-src=" {{ key.groupUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png'}}" class="md-card-image" alt="group image" style="width: 80px;height:80px; margin-left: 35px;"></a>
-                                    </div>
-                                </div>
-                                <div layout="column" layout-align="start center" style="margin-top:8%;position: relative;">
-                                    <span ui-sref="user.group({groupID: key.$id})" class="md-headline">{{key.$id}}</span>
-                                    <md-icon ng-src="{{key.userImg }}" class="user-locations"></md-icon>
-                                    <span ui-sref="user.group({groupID: key.$id})" class="md-subhead">
-                                        Panacloud
-                                    </span>
-                                </div>
-                                <div layout="row" layout-align="start start" style="border-top: 2px solid #dddddd;position: relative;margin-top:15%">
-                                    <!-- <md-button class="md-fab cards-button" aria-label="User Status"
-                                               style="background-color: #31B4CB;" ng-click="user.showGroupDetails(key.$id);flags.flag2 = true;flags.flag1 = false;user.changeShow1(key.$id,flags,'flag3',$index,$event)"> -->
-                                    <md-button class="md-fab cards-button" aria-label="User Status" style="background-color: #31B4CB;">
-                                        <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>
-                                    </md-button>
-                                    <div>
-                                        <md-list>
-                                            <md-list-item class="md-3-line" style="border-right: 2px solid #dddddd">
-                                                <img ng-src="{{key.userImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="" />
-                                            </md-list-item>
-                                        </md-list>
-                                    </div>
-                                    <div>
-                                        <md-list>
-                                            <md-list-item class="md-3-line">
-                                                <md-progress-circular ng-value="key.membersPercentage" class="md-accent userPageGroupProg"></md-progress-circular>
-                                                <span style="position: absolute; top: 5px; right: 33px; font-size: 2em;">{{key.membersPercentage}}</span>
-                                            </md-list-item>
-                                        </md-list>
-                                    </div>
-                                </div>
-                            </md-card-content>
-                        </md-card>
-                        <div layout="column" style="width: 235px;height:285px;color: #676767;margin: -5px;" ng-show="flags.flag2">
-                            <md-card style="width: 229px;height: 285px;background-color: #31B4CB;color:#ffffff;" id="profile-card1">
-                                <md-card-content>
-                                    <img ng-src="" alt="" />
-                                </md-card-content>
-                            </md-card>
+                    
+
+                    <!-- <div ng-repeat='key in user.groups track by $index'>
+                         {{ key.title}} - {{key.groupID}
+                    </div> -->
+                        <div ng-repeat="group in user.groups">
+                            <groupcard-directive group="group"></groupcard-directive>   
                         </div>
-                        <div layout="column" style="width: 235px;height:auto;color: #676767;margin: -5px;" ng-show="flags.flag3">
-                            <md-card style="width: 229px;min-height: 280px !important;background-color: #31B4CB;color:#ffffff;" id="profile-card">
-                                <md-card-content>
-                                    <ng-md-icon icon="clear" size="20" style="fill:#ffffff;padding-top:20px;z-index: 15" id="profile-card-clear-icon" ng-click="user.deleteAll(); flags={};flags.flag1=true"></ng-md-icon>
-                                    <md-tabs md-align-tabs="bottom" id="mycustom">
-                                        <md-tab label="Info">
-                                            <md-content>
-                                                <div layout="row" layout-wrap id="custom-layout-margin" style="background-color: #31B4CB;color:#ffffff">
-                                                    <div ng-repeat="n in user.groupMembers">
-                                                        <md-list>
-                                                            <md-list-item class="md-3-line" style="height: 48px;">
-                                                                <img ng-src="img/washedout.png" class="md-avatar" alt="" />
-                                                            </md-list-item>
-                                                            <span style="margin-left: 22%" class="md-caption">{{n}}</span>
-                                                        </md-list>
-                                                    </div>
-                                                </div>
-                                            </md-content>
-                                        </md-tab>
-                                        <md-tab label="Ofline">
-                                            <md-content>
-                                                <!--<p>{{key}}</p>-->
-                                                <div layout="row" layout-wrap style="background-color: #31B4CB;color:#ffffff">
-                                                    <div ng-repeat="f in user.offlineGroupMembers">
-                                                        <md-list>
-                                                            <md-list-item class="md-3-line" style="height: 48px;">
-                                                                <img ng-src="img/washedout.png" class="md-avatar" alt="" />
-                                                            </md-list-item>
-                                                            <span style="margin-left: 22%" class="md-caption">{{f.$id}}</span>
-                                                        </md-list>
-                                                    </div>
-                                                </div>
-                                            </md-content>
-                                        </md-tab>
-                                        <md-tab label="Online">
-                                            <md-content>
-                                                <div layout="row" layout-wrap style="background-color: #31B4CB;color:#ffffff">
-                                                    <div ng-repeat="f in user.onlineGroupMembers">
-                                                        <md-list>
-                                                            <md-list-item class="md-3-line" style="height: 48px;">
-                                                                <img ng-src="img/washedout.png" class="md-avatar" alt="" />
-                                                            </md-list-item>
-                                                            <span style="margin-left: 22%" class="md-caption">{{f.$id}}</span>
-                                                        </md-list>
-                                                    </div>
-                                                </div>
-                                            </md-content>
-                                        </md-tab>
-                                    </md-tabs>
-                                </md-card-content>
-                            </md-card>
-                        </div>
-                    </div>
+                         
                     <!--<div layout="column" style="width: 235px;height:285px;color: #676767;margin: -5px;">
 
                         <md-card style="width: 229px;height: 275px;background-color: #31B4CB;color:#ffffff;" id="profile-card">

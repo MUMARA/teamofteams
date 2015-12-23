@@ -33,8 +33,8 @@
         /*VM properties*/
         this.filteredUsers = [];
         this.Subgroup = {
-            subgroupID: "",
-            title: "",
+            // subgroupID: "",
+            // title: "",
             desc: "",
             members: "",
             membersArray: []
@@ -79,9 +79,9 @@
                 targetEvent: ev
             }).then(function(picture) {
                 $rootScope.newImg = picture;
-                console.log("this is image" + picture)
+                //console.log("this is image" + picture)
             }, function(err) {
-                console.log(err)
+                //console.log(err)
 
             })
 
@@ -102,15 +102,15 @@
 
             });
         this.selectedMember = function(userObj) {
-            console.log(userObj);
-            console.log("-----------------------------------");
+            // console.log(userObj);
+            // console.log("-----------------------------------");
             this.selectedMemberArray.push(userObj)
             that.Subgroup.membersArray.push(userObj.$id);
             this.Subgroup.members = this.Subgroup.membersArray;
         };
         this.selectedAdmin = function(newType, member) {
-            console.log(member.userSyncObj.$id);
-            console.log(member.user.profile.firstName);
+            // console.log(member.userSyncObj.$id);
+            // console.log(member.user.profile.firstName);
             this.selectedAdminArray.push(member.user.profile)
 
 
@@ -158,7 +158,7 @@
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
                 that.saveFile(x, mimeType, this.Subgroup.subgroupID).then(function(data) {
-                        console.log('subgroup img  uploaded ' + data)
+                        // console.log('subgroup img  uploaded ' + data)
                         SubGroupService.createSubGroup(localStorage.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
                             //  $location.path('/user/group/'+groupID);
                     })
@@ -166,9 +166,10 @@
 
                         return alert('picture upload failed')
                     });
-                console.log(x);
+                // console.log(x);
             } else {
                 fromDataFlag = false;
+                // console.log(that.Subgroup);
                 SubGroupService.createSubGroup(localStorage.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
                     //$location.path('/user/group/'+groupID);
             }
@@ -208,9 +209,9 @@
                 targetEvent: ev
             }).then(function(picture) {
                 $rootScope.newImg = picture;
-                console.log("this is image" + picture)
+                // console.log("this is image" + picture)
             }, function(err) {
-                console.log(err)
+                // console.log(err)
 
             })
 
@@ -234,7 +235,7 @@
                 $mdSidenav(navID)
                     .toggle()
                     .then(function() {
-                        console.log("toggle " + navID + " is done");
+                        // console.log("toggle " + navID + " is done");
                     });
             }, 300);
 
@@ -246,7 +247,7 @@
                 $mdSidenav(navID)
                     .toggle()
                     .then(function() {
-                        console.log("toggle " + navID + " is done");
+                        // console.log("toggle " + navID + " is done");
                     });
             }, 300);
 
@@ -265,9 +266,9 @@
                 // alert(xhr.responseText);
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....')
-                    console.log(url);
+                    // console.log(url);
                     //document.getElementById("preview").src = url;
-                    that.Subgroup.imgLogoUrl = url + '?random=' + new Date();
+                    that.Subgroup.imgLogoUrl = url; // + '?random=' + new Date();
                     defer.resolve(url)
                         //document.getElementById("avatar_url").value = url;
                 }
@@ -281,7 +282,7 @@
         this.close = function() {
             $mdSidenav('right').close()
                 .then(function() {
-                    console.log("close LEFT is done");
+                    // console.log("close LEFT is done");
                 });
         };
 
@@ -295,7 +296,7 @@
             }
         };
         this.hide = function(picture) {
-            console.log("dialog box pic" + picture)
+            // console.log("dialog box pic" + picture)
             $mdDialog.hide(picture);
         };
 

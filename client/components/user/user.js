@@ -2,9 +2,9 @@
     'use strict';
 
     angular.module('app.user')
-        .controller('UserController', ['$location', 'checkinService', '$rootScope', '$sessionStorage', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
+        .controller('UserController', ['dataService', '$q', '$location', 'checkinService', '$rootScope', '$sessionStorage', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
 
-    function UserController($location, checkinService, $rootScope, $sessionStorage, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
+    function UserController(dataService, $q, $location, checkinService, $rootScope, $sessionStorage, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
 
         //$rootScope.fl= 'hello'
         var $scope = this;
@@ -64,58 +64,86 @@
         var userObjUbind;
         this.userObj = [];
 
-        function getUserObj() {
-            var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.pageUserId.userID))
-                .$loaded()
-                .then(function(data) {
-                    userObjUbind = data.$watch(function() {
-                        getUserObj()
-                    });
-                    $scope.userObj = data;
-                    data.forEach(function(el, i) {
-                        var j = i;
-                        $firebaseObject(firebaseService.getRefGroups().child(el.$id))
-                            .$loaded()
-                            .then(function(groupData) {
-                                groupDataUbind[j] = groupData.$watch(function() {
-                                    $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
-                                    $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
-                                    $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
-                                    $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;                            
-                                    if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
-                                        $scope.userObj[j].membersPercentage = 0
-                                    }
-                                });
-                                $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
-                                $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
-                                $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
-                                $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;
-                                // if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
-                                //     $scope.userObj[j].membersPercentage = 0
-                                // }
-                                if (groupData['group-owner-id']) {
-                                    //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
-                                    $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))
-                                        .$loaded()
-                                        .then(function(img) {
+        // function getUserObj() {
+        //     var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.pageUserId.userID))
+        //         .$loaded()
+        //         .then(function(data) {
+        //             userObjUbind = data.$watch(function() {
+        //                 getUserObj()
+        //             });
+        //             $scope.userObj = data;
+        //             data.forEach(function(el, i) {
+        //                 var j = i;
+        //                 $firebaseObject(firebaseService.getRefGroups().child(el.$id))
+        //                     .$loaded()
+        //                     .then(function(groupData) {
+        //                         groupDataUbind[j] = groupData.$watch(function() {
+        //                             $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
+        //                             $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
+        //                             $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
+        //                             $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;                            
+        //                             if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
+        //                                 $scope.userObj[j].membersPercentage = 0
+        //                             }
+        //                         });
+        //                         $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
+        //                         $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
+        //                         $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
+        //                         $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;
+        //                         // if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
+        //                         //     $scope.userObj[j].membersPercentage = 0
+        //                         // }
+        //                         if (groupData['group-owner-id']) {
+        //                             //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
+        //                             $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))
+        //                                 .$loaded()
+        //                                 .then(function(img) {
 
-                                            $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
-                                            userDataUbind[j] = img.$watch(function(dataVal) {
+        //                                     $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
+        //                                     userDataUbind[j] = img.$watch(function(dataVal) {
 
-                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value)
-                                            })
-                                        })
-                                }
-                            }, function(e) {
-                                console.log(e)
-                            });
-                    });
+        //                                         $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value)
+        //                                     })
+        //                                 })
+        //                         }
+        //                     }, function(e) {
+        //                         console.log(e)
+        //                     });
+        //             });
 
-                })
-                .catch(function() {});
-        }
+        //         })
+        //         .catch(function() {});
+        // }
 
-        getUserObj();
+        // getUserObj();
+        this.groups = []
+        this.groups = dataService.getUserGroups();
+        // this.GetGroupsData = function(groupsData) {
+        //     // var defer = $q.defer()
+        //     // var groups = []
+        //     that.groups = []
+        //     groupsData.forEach(function(val, index) {
+        //         // console.log(val.$id);
+        //         $firebaseObject(firebaseService.getRefGroups().child(val.$id)).$loaded().then(function(groupData) {
+        //             // console.log(groupData);
+        //             that.groups.push(groupData);
+        //         })
+        //         // if (groupsData.length == (index + 1)) {
+        //            // defer.resolve(groups); 
+        //         // }
+        //     })
+        //     // return defer.promise;
+        // }
+        // $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.pageUserId.userID)).$loaded().then(function(groupsData) {
+        //     // console.log(groupsData);
+        //     that.GetGroupsData(groupsData)/*.then(function(groupsData){
+        //         that.groups = []
+        //         that.groups = groupsData;
+        //     })*/
+        //     groupsData.$watch(function(){
+        //         that.GetGroupsData(groupsData)
+        //     })
+        // })
 
         this.showGroupDetails = function(key) {
             //console.log(key)
@@ -207,110 +235,12 @@
 
                 }
             });
-
-            /*
-                            alert(flag);
-                            debugger;*/
         }
-        var count = 0;
-        this.GetSubGroupUsers = function() {
-                if (count == 1) return;
-                count = 1
-                that.users = [];
-                $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(that.pageUserId.userID)).$loaded().then(function(groupdata) {
-                    groupdata.forEach(function(group, i) {
-                        // console.log(val);
-                        // console.log(i);
-                        for (var subGroup in group) {
-                            if (subGroup.indexOf('$') == -1) {
-                                // console.log(subGroup);
-                                // console.log(val.$id);
-                                // Update wala manjan
-                                var subGroupID = subGroup;
-                                checkinService.getRefCheckinCurrentBySubgroup().child(group.$id).child(subGroup).on('child_changed', function(snapshot, prevChildKey) {
-                                    // console.log(snapshot.val());    
-                                    // console.log(snapshot.key()); 
-                                    that.users.forEach(function(val, indx) {
-                                        if (val.id === snapshot.key()) {
-                                            if (val.groupID === (group.$id + ' / ' + subGroupID)) {
-                                                // alert(group.$id + ' / ' + subGroupID)
-                                                val.type = snapshot.val().type;
-                                                val.message = snapshot.val().message;
-                                                val.timestamp = snapshot.val().timestamp;
-                                            }
-                                        }
-                                    })
-                                });
-                                //user wala manjan
-                                subgroupFirebaseService.getFirebaseGroupSubGroupMemberObj(group.$id, subGroup).$loaded().then(function(subgroupsdata) {
 
-                                    $firebaseArray(checkinService.getRefCheckinCurrentBySubgroup().child(group.$id).child(subGroupID)).$loaded().then(function(usersdata) {
-                                        // console.log(usersdata);
-                                        subgroupsdata.forEach(function(subgroupdata) {
-                                            usersdata.forEach(function(userdata) {
-                                                // console.log(subgroupdata.$id);
-                                                // console.log(userdata.$id);
-                                                if (subgroupdata.$id === userdata.$id) {
-                                                    // console.log(userdata);
-                                                    // console.log(userdata.$id);
-                                                    // console.log(userdata.message);
-                                                    // console.log(userdata.type);
-                                                    if (userdata.type === 1) {
-                                                        var type = true;
-                                                    } else {
-                                                        var type = false;
-                                                    }
-                                                    var timestamp = userdata.timestamp
-                                                    $firebaseArray(firebaseService.getRefUsers().child(userdata.$id)).$loaded().then(function(usermasterdata) {
-                                                        // console.log(usermasterdata);
-                                                        for (var i = usermasterdata.length - 1; i >= 0; i--) {
-                                                            if (usermasterdata[i].$id === "profile-image") {
-                                                                var profileImage = usermasterdata[i].$value
-                                                            }
-                                                            if (usermasterdata[i].$id === "contactNumber") {
-                                                                var contactNumber = usermasterdata[i].$value
-                                                            }
-                                                            if (usermasterdata[i].$id === "firstName") {
-                                                                var firstName = usermasterdata[i].$value
-                                                            }
-                                                            if (usermasterdata[i].$id === "lastName") {
-                                                                var lastName = usermasterdata[i].$value
-                                                            }
-                                                        };
-                                                        // console.log()
-                                                        that.users.push({
-                                                            id: userdata.$id,
-                                                            type: type,
-                                                            groupID: group.$id + ' / ' + subGroupID,
-                                                            contactNumber: contactNumber,
-                                                            timestamp: timestamp,
-                                                            profileImage: profileImage,
-                                                            firstName: firstName,
-                                                            lastName: lastName
-                                                        });
-                                                        // console.log(that.users);                 
-                                                    })
-                                                }
-                                            });
-                                        });
-                                    });
-                                });
-                            }
-                        }
-                    }); //groupdata.forEach
-                }); //$firebaseArray(firebaseService.getRefUserSubGroupMemberships() on load
-            } //this.GetSubGroupUsers
-
-
-        //register event for user add user in SubGropus
-        firebaseService.getRefUserSubGroupMemberships().child(that.pageUserId.userID).on('child_added', function(groupdata) {
-            that.GetSubGroupUsers();
-        });
-
-        //this.GetSubGroupUsers();
+        that.users = []
+        that.users = dataService.getUserData();
+        
     }
-
-
 
 })();
 /*
