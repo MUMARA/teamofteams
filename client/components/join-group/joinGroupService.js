@@ -4,8 +4,8 @@
 (function() {
     'use strict';
     angular.module('app.JoinGroup', ['core'])
-        .factory('joinGroupService', ['userFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService', '$localStorage',
-            function(userFirebaseService, $location, $sessionStorage, soundService, userService, messageService, firebaseService, $q, authService, $localStorage) {
+        .factory('joinGroupService', ['$timeout', '$firebaseArray', 'userFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService', '$localStorage',
+            function($timeout, $firebaseArray, userFirebaseService, $location, $sessionStorage, soundService, userService, messageService, firebaseService, $q, authService, $localStorage) {
                 return {
                     'userData': function(pageUserID) {
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
