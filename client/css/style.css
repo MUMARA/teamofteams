@@ -147,6 +147,11 @@
     height: 100vh;
 }
 
+.fillColorTransparent {
+    fill: transparent;
+}
+
+
 .fillColorWhite {
     fill: white;
 }
@@ -1414,3 +1419,11 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 .button1:visited{
     background-color: #EFEFEF;
 }
+.plainbutton {
+    width: 100%;
+    border: none;
+}
+
+.buttonHover:hover{
+    background-color: #1EA9E4 !important;
+};

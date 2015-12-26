@@ -81,6 +81,10 @@
             // that.showTeamAttendace = false;
             that.selectedindex = index;
             that.activeID = subgroupData.$id;
+
+            //load user Admins
+            loadAdminUSers(this.groupid, that.activeID);
+            
             var sub = subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, localStorage.userID)
                 .then(function(syncObj) {
                     that.subgroupSyncObj = syncObj;
@@ -211,6 +215,16 @@
 
 
         };
+
+        this.myAlert = function(){
+            alert('Delete Functionality will be implemented soon');
+        }
+
+        function loadAdminUSers(groupid, subgroupid){
+            createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
+                 that.selectedAdminArray = data;
+            })
+        }
 
         function filterUser(userID) {
             var disableItem = false;
