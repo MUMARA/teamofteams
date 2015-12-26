@@ -106,7 +106,7 @@
                         current: {
                             lat: self.lat,
                             lng: self.lng,
-                            message: '<strong> Location title </span>',
+                            message: '<strong> 34C Stadium Lane 3, Karachi, Pakistan </span>',
                             focus: true,
                             draggable: self.dragable
                         }
@@ -168,8 +168,8 @@
                         //debugger
                         return new L.LatLng(lat, lng)
                     },
-                    'setPopupMessage': function(message) {
-                        self.markers.message = '<strong>' + message + '</strong><br/>'
+                    'setPopupMessage': function(message) { //set message
+                        self.markers.current.message = '<strong>' + message + '</strong><br/>'
                     },
                     'updateCircleRadius': function(radius) {
 
@@ -219,6 +219,8 @@
                     'reset': function() {
                         this.setLatLng(24.8131137, 67.04971699999999, true);
                         self.radius = 0;
+                        self.setPopupMessage('<strong> 34C Stadium Lane 3, Karachi, Pakistan </span>');
+
                         //setLocation()
                     }
 
@@ -282,6 +284,7 @@
                             if (data.length > 0) {
                                 $rootScope.mapData.setLatLng(data[0].location.lat, data[0].location.lon, true);
                                 $rootScope.mapData.makeCircle(data[0].location.radius)
+                                $rootScope.mapData.setPopupMessage(data[0].title)
                             } else {
                                 $rootScope.mapData.reset()
                             }
@@ -290,7 +293,7 @@
 
             }
 
-            function getLatLngByAddress(newVal) {
+            function getLatLngByAddress(newVal) { 
                 if (newVal) {
                     var geocoder = new google.maps.Geocoder();
                     geocoder.geocode({
@@ -298,9 +301,9 @@
                     }, function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             //debugger
-
-                            var lat = results[0].geometry.location.lat();
-                            var lng = results[0].geometry.location.lng();
+console.log(results[0].formatted_address)
+                            var lat = results[0].geometry.location.lat() ? results[0].geometry.location.lat() : 0;
+                            var lng = results[0].geometry.location.lng() ? results[0].geometry.location.lng() : 0;
                             $rootScope.mapData.setPopupMessage(results[0].formatted_address)
                             $rootScope.mapData.setLatLng(lat, lng, true);
 
@@ -317,7 +320,8 @@
                     groupID: $scope.groupId,
                     subgroupID: $scope.subgroupId,
                     userID: $scope.userId,
-                    title: 'location title',
+                    // title: 'location title',
+                    title: $rootScope.mapData.markers.current.message,
                     locationObj: $rootScope.mapData.markers.current
 
                 };

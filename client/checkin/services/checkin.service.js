@@ -493,7 +493,7 @@
                     angular.extend(refs.$currentSubGroupLocations[0], newLocation)
                     refs.$currentSubGroupLocations.$save(0)
                         .then(function() {
-                            defer.resolve('Location has been added to "' + subgroupID + '".');
+                            defer.resolve('Location has been added.');
                         }, function() {
                             defer.reject('Error occurred in saving on server.');
                         })
@@ -502,7 +502,7 @@
 
                     refs.$currentSubGroupLocations.$add(newLocation)
                         .then(function() {
-                            defer.resolve('Location has been added to "' + subgroupID + '".');
+                            defer.resolve('Location has been added.');
                         }, function() {
                             defer.reject('Error occurred in saving on server.');
 
