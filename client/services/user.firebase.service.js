@@ -96,10 +96,12 @@ angular.module('core')
                                             //Step 4: Add to group
                                             var dataToSet = {
                                                 'group-owner-id': userService.getCurrentUser().userID,
+                                                'owner-img-url': groupObj.ownerImgUrl,
                                                 title: groupObj.title,
                                                 desc: groupObj.desc || '',
+                                                'address-title': groupObj.addressTitle || '',
                                                 address: groupObj.address || '',
-                                                phone: groupObj.phone || 0,
+                                                phone: groupObj.phone,
                                                 timeZone: groupObj.timeZone,
                                                 timestamp: firebaseTimeStamp,
                                                 "members-count": 1,

@@ -106,7 +106,7 @@
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded ....')
-                    that.group['logo-image'].url = url + '?random=' + new Date()
+                    that.group['logo-image'].url = url || '';
                         //debugger
                     defer.resolve(url)
                 }

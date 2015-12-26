@@ -3,7 +3,7 @@
 <form style="background-color: #efefef; width: 1300px;" name="groupForm" novalidate="">
     <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="$root.newImg=null;editGroup.hide()"></ng-md-icon>
     <!--<md-content class="grayScroller" style="height: calc(100vh - 88px);/*max-width:70%;*/margin: 0px auto; width: 1080px">-->
-    <md-content style="height: calc(100vh - 88px);/*max-width:70%;*/margin: 0px auto; width: 1080px">
+    <md-content style="height: calc(100vh - 88px);/*max-width:70%;*/margin: 0px auto; width: 1080px;overflow: hidden">
         <div layout="row">
             <div flex="6" style=" margin-left:7px;text-align: right; max-height: 400px;height: 340px;min-height: 300px;margin-top: 0px;text-align: center;background-color: rgb(96, 176, 137);">
                 <div style="background-color:rgb(96, 176, 137);width:0px;">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div flex="90">
+            <div flex="90" style="overflow: auto">
                 <md-card style="margin: 0px auto; border-radius: 5px">
                     <md-card-content layout="column" style="padding-top: 0px; padding-left: 40px">
                         <h2 style="color: #d3d3d3">Edit Team of Teams</h2>
@@ -79,11 +79,19 @@
                                 </md-input-container>
                             </div>
                         </div>
-                        <div>
-                            <md-input-container>
-                                <label>Address</label>
-                                <input ng-model="editGroup.group.address">
-                            </md-input-container>
+                        <div layout="row">
+                            <div flex="25">
+                                <md-input-container>
+                                    <label>Address Title</label>
+                                    <input ng-model="editGroup.group['address-title']">
+                                </md-input-container>
+                            </div>
+                            <div flex="75">
+                                <md-input-container>
+                                    <label>Address</label>
+                                    <input ng-model="editGroup.group.address">
+                                </md-input-container>
+                            </div>
                         </div>
                         <div>
                             <md-input-container>
@@ -134,7 +142,10 @@
                             </div>
                             <div flex offset="10">
                                 <!--<md-button class="md-raised md-primary">Submit</md-button>-->
-                                <md-button ng-disabled="groupForm.$invalid" class="md-primary" ng-click="editGroup.answer( groupForm )">Edit</md-button>
+                                <!--<md-button  class="md-primary" ></md-button>-->
+                                <md-button ng-disabled="groupForm.$invalid" class="md-accent md-raised md-hue-1 md-button md-default-theme"
+                                           ng-click="editGroup.answer( groupForm )"><span style="color:white;">Save</span>
+                                </md-button>
                             </div>
                         </div>
                     </md-card-content>

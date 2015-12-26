@@ -15,7 +15,7 @@
                     'userData': function(pageUserID) {
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
                     },
-                    'createGroup': function(groupInfo, formDataFlag, form, cb) {
+                    'createGroup': function(groupInfo, formDataFlag, form) {
                         //var pageUserId = userService.getCurrentUser().userID;
                         groupInfo.groupID = groupInfo.groupID.toLowerCase();
                         groupInfo.groupID = groupInfo.groupID.replace(/[^a-z0-9]/g, '');
@@ -28,8 +28,7 @@
                                 if (unlistedMembersArray.length > 0) {
                                     messageService.showSuccess("Group creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
-                                    //messageService.showSuccess("Group creation Successful");
-                                    cb();
+                                    messageService.showSuccess("Group creation Successful");
                                 }
                             }, function(group) {
                                 form.$submitted = false;

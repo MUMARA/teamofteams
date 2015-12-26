@@ -21,6 +21,7 @@
                         var dataToSet = {
                             title: groupInfo.title,
                             desc: groupInfo.desc,
+                            'address-title': groupInfo['address-title'],
                             address: groupInfo.address,
                             phone: groupInfo.phone,
                             timeZone: groupInfo.timeZone,
