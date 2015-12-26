@@ -711,6 +711,7 @@ md-list-item .md-list-item-inner > .md-avatar:first-child {
 .greenScroller,
 .grayScroller {
     overflow: hidden;
+
 }
 
 .greenScroller::-webkit-scrollbar-thumb,
@@ -1426,4 +1427,4 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 
 .buttonHover:hover{
     background-color: #1EA9E4 !important;
-};
+}
