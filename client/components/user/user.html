@@ -155,6 +155,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                                 --<input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name">--
                                 <input   ng-model="user.searchbox" type="text" class="serachbox2" placeholder="User Name">
                             </md-input-container> -->
+
                             <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="user.setFocus()" layout-margin></ng-md-icon>
                             <md-input-container md-no-float style="padding-bottom: 0px;" flex>
                                 <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
@@ -271,7 +272,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                 }
             </style>-->
                         <md-card class="user_listItems">
-                            <md-content class="grayScroller">
+                            <md-content style="overflow-x: hidden">
                                 <md-list>
                                     <md-list-item class="md-2-line">
                                         <div class="md-list-item-text" style="margin-top: -3%">
