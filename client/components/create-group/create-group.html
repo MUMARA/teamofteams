@@ -129,7 +129,10 @@
                             </div>
                             <div flex offset="10">
                                 <!--<md-button class="md-raised md-primary">Submit</md-button>-->
-                                <md-button ng-disabled="groupForm.$invalid" class="md-primary" ng-click="createGroup.answer( groupForm )">Create</md-button>
+                                <!--<md-button ng-disabled="groupForm.$invalid" class="md-primary" ng-click="createGroup.answer( groupForm )">Create</md-button>-->
+                                <md-button ng-disabled="groupForm.$invalid" class="md-accent md-raised md-hue-1 md-button md-default-theme"
+                                           ng-click="createGroup.answer( groupForm )"><span style="color:white;"> Save</span>
+                                </md-button>
                             </div>
                         </div>
                     </div>

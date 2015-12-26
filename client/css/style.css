@@ -417,8 +417,15 @@ md-switch {
 }
 
 .userListSearchbox {
+     height: 44px;
+     /*width: 200px;*/
+     font-size: smaller;
+     /*padding-top: 20px;*/
+     /*margin-left: -6px;*/
+ }
+.memberSettingSearchbox {
     height: 44px;
-    /*width: 200px;*/
+    width: 75%;
     font-size: smaller;
     /*padding-top: 20px;*/
     /*margin-left: -6px;*/

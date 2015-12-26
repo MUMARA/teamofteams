@@ -56,7 +56,16 @@
                                                                      &lt;!&ndash; ngIf: !floatingLabel &ndash;&gt;
                                                                      <input flex="" type="search" id="input-01Q" name="" ng-if="!floatingLabel" autocomplete="off" ng-required="isRequired" ng-disabled="isDisabled" ng-model="$mdAutocompleteCtrl.scope.searchText" ng-keydown="$mdAutocompleteCtrl.keydown($event)" ng-blur="$mdAutocompleteCtrl.blur()" ng-focus="$mdAutocompleteCtrl.focus()" placeholder="Serach" aria-owns="ul-01Q" aria-label="Serach" aria-autocomplete="list" aria-haspopup="true" aria-activedescendant="" aria-expanded="false" class="ng-pristine ng-scope ng-valid ng-valid-required ng-touched" tabindex="0" aria-required="false" aria-invalid="false">&lt;!&ndash; end ngIf: !floatingLabel &ndash;&gt;          &lt;!&ndash; ngIf: $mdAutocompleteCtrl.scope.searchText && !isDisabled &ndash;&gt;          &lt;!&ndash; ngIf: $mdAutocompleteCtrl.loading &ndash;&gt;                  </md-autocomplete-wrap>        <aria-status class="md-visually-hidden" role="status" aria-live="assertive">          &lt;!&ndash; ngRepeat: message in $mdAutocompleteCtrl.messages &ndash;&gt;        </aria-status></md-autocomplete>
                                                          </div>-->
+                                                    <div class="memberSettingSearchbox" layout="row" layout-align="space-between center" style="background-color: rgb(239, 239, 239);">
+
+                                                        <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" layout-margin></ng-md-icon>
+                                                        <md-input-container md-no-float style="padding-bottom: 0px;" flex>
+                                                            <input type="text"  ng-model="userSetting.searchUser" aria-label="search dashboard" class="serachbox2" placeholder="Find by name, phone or email">
+
+                                                        </md-input-container>
+                                                    </div>
                                                 </div>
+
                                                 <span style="color: #9E9E9E;margin: 19px;font-size: 14px;">Sort by</span>
 
                                                 <div offset="3">
@@ -99,7 +108,7 @@
 
                                             <div class="teamList" style="margin: 7px;margin-right: 0">
 
-                                                <div layout="row" ng-repeat="member in userSetting.members"
+                                                <div layout="row" ng-repeat="member in userSetting.members | filter : userSetting.searchUser"
                                                      ng-repeat="list in userSetting.userarray" class="margining ">
                                                     <div flex="15" style="max-width: 8%">
                                                         <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
