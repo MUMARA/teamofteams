@@ -6,9 +6,11 @@
     'use strict';
     angular
         .module('app.createSubGroup', ['core', 'ngMdIcons'])
-        .factory('createSubGroupService', ['$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage',
-            function($rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage) {
+        .factory('createSubGroupService', ['$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage',
+            function($firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage) {
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+                var groupAdminUsers = [];
+
                 return {
 
                     'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID) {
@@ -215,8 +217,22 @@
                         });
 
                         return deferred.promise;
-                    }
+                    },
 
+                    getAdminUsers: function(groupid, subgroupid, cb){
+                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_added', function(snapshot){
+                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
+
+                                if(snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2){
+                                    // console.log(userData.val());
+                                    // console.log(snapshot.val());
+                                    groupAdminUsers.push(userData.val());
+                                    cb(groupAdminUsers);    
+                                }
+
+                            })
+                        })
+                    }
                 };
 
                 function Uint8ToString(u8a) {
