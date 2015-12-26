@@ -30,7 +30,7 @@
 
 
             $rootScope.address = '';
-
+            this.showPanel = false;
 
             var $scope = this;
             var map = leafletData.getMap().then(function(map) {
