@@ -92,8 +92,8 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                     </div>
                 </div>
             </div>
-            <div flex="90">
-                <md-card style="margin: 0px auto; border-radius: 5px">
+            <div flex="90" style="height: 85vh; ">
+                <md-card style="margin: 0px auto; border-radius: 5px; overflow-x: hidden; overflow: auto;">
                     <md-card-content style="padding: 0px;">
                         <h1 style="color: #d3d3d3;">&nbsp;&nbsp;&nbsp;Geo Fencing</h1>
                         <br/>
@@ -101,7 +101,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                             <div flex="25" style="background-color: #FDF8F8; ">
                                 <md-content class="grayScroller" style="height: 721px;">
                                     <md-card style="  margin: 1px 3px 0px 3px !important;" class=" md-whiteframe-z2" ng-init="_index={0:true}">
-                                        <md-list style="padding: 0px !important;" ng-repeat="subgroup in geoFencing.subgroups" ng-class="{'md-whiteframe-z5': $parent._index[$index]}" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showLocationBySubGroup(subgroup.$id)">
+                                        <md-list style="padding: 0px !important;" ng-repeat="subgroup in geoFencing.subgroups" ng-class="{'md-whiteframe-z5': $parent._index[$index]}" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showLocationBySubGroup(subgroup.$id); geoFencing.showPanel = true;">
                                             <md-list-item ng-click="geoFencing.veiwSubgroup(subgroup, $index)" class="md-3-line" style="padding: 0px !important;">
                                                 <div style="width: 72px; height: 120px; overflow: hidden;">
                                                     <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 120px;width: 120px;" />
@@ -129,7 +129,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                     </md-button>-->
                                 </div>
                             </div>
-                            <div flex layout="coulumn" style="margin-left: 5px;padding: 20px" layout="row">
+                            <div flex layout="coulumn" style="margin-left: 5px;padding: 20px" layout="row" ng-show="geoFencing.showPanel">
                                 <div flex layout="row">
 
 
@@ -159,9 +159,9 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
 
                                 <div layout="row" flex style="  position: absolute;left: 353px;top: 200px;height: 0%">
                                     <div aria-label="Location">
-                                        <md-content class="mapModel" style="width:725px;height: 400px;">
+                                        <md-content class="mapModel" style="width:700px;height: 400px;">
                                             <!--<md-subheader class="md-sticky-no-effect" style="background-color: #dcedc8; margin: 0px; margin-left: -24px; margin-right: -24px; margin-top: -24px;">{{ title || "Location" }}</md-subheader>-->
-                                            <leaflet center="$root.mapData.center" markers="$root.mapData.markers" event-broadcast="$root.mapData.events" markers-nested="true" height="400px" width="725px"></leaflet>
+                                            <leaflet center="$root.mapData.center" markers="$root.mapData.markers" event-broadcast="$root.mapData.events" markers-nested="true" height="400px" width="700px"></leaflet>
                                             <!--<leaflet ng-if="!showLocation"  height="300px" width="600px"></leaflet>-->
                                         </md-content>
 
