@@ -1,0 +1,40 @@
+<div layout="column" layout-align="center center" layout-padding>
+    <div layout="row" layout-align="center center" style="width:80%;" layout-padding>
+        <md-input-container md-no-float style="font-size: xx-large;" class="nopadding" flex>
+            <input type="text" ng-model="joinGroup.search" class="serachbox2 foreColorDarkGrey" placeholder="Search" autofocus>
+        </md-input-container>
+        <ng-md-icon icon="search" size="48" class="fillColorDarkGrey"></ng-md-icon>
+    </div>
+    <div>
+         <md-progress-circular ng-show="joinGroup.loadingData" md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <div layout="row" layout-align="center center" layout-wrap style="height: 80vh; overflow-x:hidden; overflow:auto" class="md-whiteframe-z2 backColorLightGrey">
+        <md-card class="md-whiteframe-z4" style="width: 220px; height: 300px;" class="foreColorDarkGrey" ng-repeat="key in joinGroup.filteredGroups | filter: joinGroup.search">
+            <div style="margin:auto;">
+                <a ui-sref="user.group({groupID: group.groupID})" layout="row" layout-align="center center">
+                    <img ng-src="{{ group.imgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
+                </a>
+                <h4 class="textAlignCenter" layout-margin>
+                    {{ key.title }}
+                </h4>
+                <div layout="row" layout-align="center center" ng-show="key['address-title']">
+                    <md-icon md-svg-src="img/location.svg" class="nomargin"></md-icon>
+                    <div>{{key['address-title']}}</div>
+                </div>
+            </div>
+            <div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
+                <md-button class="md-fab cards-button" aria-label="User Status" style="background-color: #31B4CB;margin-top: 4%">
+                    <ng-md-icon icon="add" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>
+                </md-button>
+                <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin layout-padding>
+                    <img ng-src="{{group.owerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px user-iamge" alt="group owner image" />
+                </div>
+                <div>
+                    <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="joinGroup.answer( key.$id )">
+                        <span style="color:white;">REQUEST</span>
+                    </md-button>
+                </div>
+            </div>
+        </md-card>
+    </div>
+</div>

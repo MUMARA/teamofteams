@@ -150,7 +150,7 @@
                         // console.log(xhr.responseText);
                         if (xhr.status === 200) {
                             //console.log(url);
-                            $rootScope.userImg = $rootScope.newImg
+                            $rootScope.userImg = $rootScope.newImg;
                             messageService.showSuccess('Picture uploaded')
                                 //document.getElementById("preview").src = url;
                                 //that.group.imgLogoUrl = url;

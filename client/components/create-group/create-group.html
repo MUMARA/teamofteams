@@ -114,7 +114,9 @@
                         <h3>Set Logo <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey"></h3>
                         <div>
                             <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                                <img style="outline: none;" ng-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)" />
+                                <!--<img style="outline: none;" ng-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)" />-->
+                                <md-icon style="outline: none;"  md-svg-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)"></md-icon>
+
                             </div>
                             <div>
                                 <img style="outline: none;" ng-src="{{$root.newImg}}" alt="" class="cropper-main-button" ng-hide="!$root.newImg" ng-click="createGroup.showAdvanced($event)" />
@@ -127,7 +129,10 @@
                             </div>
                             <div flex offset="10">
                                 <!--<md-button class="md-raised md-primary">Submit</md-button>-->
-                                <md-button ng-disabled="groupForm.$invalid" class="md-primary" ng-click="createGroup.answer( groupForm )">Create</md-button>
+                                <!--<md-button ng-disabled="groupForm.$invalid" class="md-primary" ng-click="createGroup.answer( groupForm )">Create</md-button>-->
+                                <md-button ng-disabled="groupForm.$invalid" class="md-accent md-raised md-hue-1 md-button md-default-theme"
+                                           ng-click="createGroup.answer( groupForm )"><span style="color:white;"> Save</span>
+                                </md-button>
                             </div>
                         </div>
                     </div>

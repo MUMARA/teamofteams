@@ -48,7 +48,7 @@
                             </div>
                             <!--</div>-->
                             <div layout="row" layout-align="start start" style="border-top: 2px solid #dddddd;position: relative;margin-top:15%">
-                                <md-button ng-show="group.isAdmin()" class="md-fab cards-button" aria-label="Setting Page Link" ng-click="group.editgroupPage()" style="background-color: #3466E7;">
+                                <md-button ng-show="group.isAdmin()" class="md-fab cards-button" aria-label="Setting Page Link" ng-click="group.editgroupPage()" style="background-color: #1086EF;margin-top: 5%;margin-right: -2%">
                                     <ng-md-icon icon="settings" style="fill: #ffffff" size="20" id="prof"></ng-md-icon>
                                 </md-button>
                                 <div>
@@ -190,13 +190,13 @@
                                 </md-list>
                             </md-card> -->
                             <md-card class="md-whiteframe-z1" flex >
-                                <md-list-item class="backColorOrange foreColorWhite md-whiteframe-z1">
-                                    <md-button class="md-fab-mini backColorOrange" aria-label="checkout" ng-click="group.checkoutAll()" style="margin-left: 15px; margin-right: 50px;">
+                                <md-list-item class="backcolorwhite  foreColorWhite md-whiteframe-z1">
+                                    <md-button class="md-fab md-mini backColorOrange" aria-label="checkout" ng-click="group.checkoutAll()" style="margin-left: 27px; margin-right: 50px;">
                                         <md-icon md-svg-icon="../img/people_button.svg" aria-label="People Group Icon"></md-icon>
                                     </md-button>
-                                    <p class="textAlignLeft textBold" ng-repeat="field in ['User', 'Group', 'Subgroup', 'Status']">{{field}}</p>
+                                    <p class="textAlignLeft textBold textColor" ng-repeat="field in ['User', 'Group', 'Subgroup', 'Status']" style="margin: -1.35%">{{field}}</p>
                                 </md-list-item>
-                                <md-list-item ng-repeat="user in group.users | filter: group.searchUser" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)">
+                                <md-list-item ng-repeat="user in group.users | filter: group.searchUser" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" style="padding:1%;">
                                     <!-- <md-checkbox ng-model="user.type" ng-change="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" aria-label="user status"></md-checkbox> -->
                                     <div flex="10" class="circular">
                                         <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="roundShape" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">

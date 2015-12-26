@@ -155,6 +155,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                                 --<input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name">--
                                 <input   ng-model="user.searchbox" type="text" class="serachbox2" placeholder="User Name">
                             </md-input-container> -->
+
                             <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="user.setFocus()" layout-margin></ng-md-icon>
                             <md-input-container md-no-float style="padding-bottom: 0px;" flex>
                                 <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
@@ -271,7 +272,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
                 }
             </style>-->
                         <md-card class="user_listItems">
-                            <md-content class="grayScroller">
+                            <md-content style="overflow-x: hidden">
                                 <md-list>
                                     <md-list-item class="md-2-line">
                                         <div class="md-list-item-text" style="margin-top: -3%">
@@ -386,7 +387,7 @@ body > md-content > div > div.marginContainer > div > div > div.background > div
         </div>
         <!--button side-->
         <div flex="15">
-            <nav style="position:absolute;top: 173px;" mfb-menu position="tr" effect="zoomin" resting-icon="ion-plus-round" toggling-method="click" id="sideCustomNav" label="Team of Teams" class="nooutline">
+            <nav style="position:absolute;top: 180px;" mfb-menu position="tr" effect="zoomin" resting-icon="ion-plus-round" toggling-method="click" id="sideCustomNav" label="Team of Teams" class="nooutline">
                 <button mfb-button label="Add" id="sideButtonAdd" ng-click="user.openCreateGroupPage()" class="nooutline"></button>
                 <!-- <button mfb-button label="JoinGroup" id="sideButtonSearch" ui-sref="user.join-group"></button> -->
                 <button mfb-button label="Join" id="sideButtonSearch" ng-click="user.openJoinGroupPage()" class="nooutline"></button>

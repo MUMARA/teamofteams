@@ -27,7 +27,8 @@
                 //$scope.userID="zia1";
                 $scope.activeGroup = function() {
                     $scope.activesubID = null;
-                    $scope.selectedindex = false
+                    $scope.selectedindex = false;
+                    that.users =  dataService.getUserData();
 
 
                 }

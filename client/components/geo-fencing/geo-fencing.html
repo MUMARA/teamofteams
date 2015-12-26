@@ -92,8 +92,8 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                     </div>
                 </div>
             </div>
-            <div flex="90">
-                <md-card style="margin: 0px auto; border-radius: 5px">
+            <div flex="90" style="height: 85vh; ">
+                <md-card style="margin: 0px auto; border-radius: 5px; overflow-x: hidden; overflow: auto;">
                     <md-card-content style="padding: 0px;">
                         <h1 style="color: #d3d3d3;">&nbsp;&nbsp;&nbsp;Geo Fencing</h1>
                         <br/>
@@ -101,7 +101,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                             <div flex="25" style="background-color: #FDF8F8; ">
                                 <md-content class="grayScroller" style="height: 721px;">
                                     <md-card style="  margin: 1px 3px 0px 3px !important;" class=" md-whiteframe-z2" ng-init="_index={0:true}">
-                                        <md-list style="padding: 0px !important;" ng-repeat="subgroup in geoFencing.subgroups" ng-class="{'md-whiteframe-z5': $parent._index[$index]}" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showLocationBySubGroup(subgroup.$id)">
+                                        <md-list style="padding: 0px !important;" ng-repeat="subgroup in geoFencing.subgroups" ng-class="{'md-whiteframe-z5': $parent._index[$index]}" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showLocationBySubGroup(subgroup.$id); geoFencing.showPanel = true;">
                                             <md-list-item ng-click="geoFencing.veiwSubgroup(subgroup, $index)" class="md-3-line" style="padding: 0px !important;">
                                                 <div style="width: 72px; height: 120px; overflow: hidden;">
                                                     <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 120px;width: 120px;" />
@@ -129,40 +129,43 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                     </md-button>-->
                                 </div>
                             </div>
-                            <div flex layout="coulumn" style="margin-left: 5px;padding: 20px" layout="row">
+                            <div flex layout="coulumn" style="margin-left: 5px;padding: 20px" layout="row" ng-show="geoFencing.showPanel">
                                 <div flex layout="row">
-                                    <div flex="80">
-                                        <!--<md-autocomplete class="searchbox"
 
-                                                         md-items="geoFencing.address"
 
-                                                         placeholder="Address">
-                                        </md-autocomplete>-->
-                                        <!-- <md-autocomplete id="xyx"
-                                                md-delay="500"
-                                                md-autofocus="true"
-                                                md-selected-item="ctrl.selectedItem"
-                                                md-search-text="ctrl.searchText"
-                                                md-items="group in queryGroups(ctrl.searchText)"
-                                                md-item-text="group['.value']"
-                                                placeholder="Address">
-                                            <span md-highlight-text="ctrl.searchText">{{ group['.value'] }}</span>
-                                        </md-autocomplete>-->
-                                        <md-input-container>
-                                            <input type="text" ng-model="geoFencing.address" aria-label="Geofencing Address Box" />
+                                    <div class="userListSearchbox" layout="row" layout-align="space-between center" style="background-color: rgb(239, 239, 239);width: 79%;margin-left: 3%">
+                                        <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" layout-margin></ng-md-icon>
+                                        <md-input-container md-no-float style="padding-bottom: 0px;" flex>
+                                            <input type="text" id="#UserSearch" ng-model="geoFencing.address" aria-label="Geofencing Address Box" class="serachbox2" placeholder="Address" style="margin-bottom: 1%">
                                         </md-input-container>
                                     </div>
+
+
+                                        <!--<div flex="80" >-->
+
+                                            <!--<md-input-container md-no-float style=" background-color: #EFEFEF;border: none">-->
+                                                <!--<md-icon md-svg-src="../../img/magnify.svg" style="color: #B3B3B3"></md-icon>-->
+                                                <!--<input type="text" ng-model="geoFencing.address" aria-label="Geofencing Address Box" placeholder="Address" style="border: none" />-->
+                                            <!--</md-input-container>-->
+
+                                        <!--</div>-->
+
+
+
                                     <div flex="20">
-                                        <md-button class="md-raised" ng-click='geoFencing.getLatLngByAddress(geoFencing.address)'><span>Find on Map</span></md-button>
+                                         <md-button class="md-raised" ng-click='geoFencing.getLatLngByAddress(geoFencing.address)'><span style="color: #60B089"><b>Find on Map</b></span></md-button>
                                     </div>
                                 </div>
-                                <div layout="row" flex style="  position: absolute;left: 400px;top: 200px;height: 0%">
+
+                                <div layout="row" flex style="  position: absolute;left: 353px;top: 200px;height: 0%">
                                     <div aria-label="Location">
-                                        <md-content class="mapModel" style="width:600px;height: 350px;">
+                                        <md-content class="mapModel" style="width:700px;height: 400px;">
                                             <!--<md-subheader class="md-sticky-no-effect" style="background-color: #dcedc8; margin: 0px; margin-left: -24px; margin-right: -24px; margin-top: -24px;">{{ title || "Location" }}</md-subheader>-->
-                                            <leaflet center="$root.mapData.center" markers="$root.mapData.markers" event-broadcast="$root.mapData.events" markers-nested="true" height="300px" width="600px"></leaflet>
+                                            <leaflet center="$root.mapData.center" markers="$root.mapData.markers" event-broadcast="$root.mapData.events" markers-nested="true" height="400px" width="700px"></leaflet>
                                             <!--<leaflet ng-if="!showLocation"  height="300px" width="600px"></leaflet>-->
                                         </md-content>
+
+
                                         <div style="height: 30px !important;" class="md-actions">
                                             <!--<md-button ng-click="hide()" class="md-primary">-->
                                             <!--close-->
@@ -174,15 +177,21 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                                     <md-slider flex class="md-primary" md-discrete ng-model="$root.mapData.radius" step="1" min="1" max="100" aria-label="rating">
                                                     </md-slider>
                                                 </div>
-                                                <md-button flex="20" layout="column" class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" layout="center" ng-click=" geoFencing.setSubgroupLocation();$root.mapData.dragable = !$root.mapData.dragable">
+                                                <md-button flex="20" layout="column"
+                                                           class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" layout="center"
+                                                           ng-click=" geoFencing.setSubgroupLocation();$root.mapData.dragable = !$root.mapData.dragable">
                                                     <span style="color: white;">save</span>
                                                 </md-button>
                                             </div>
-                                            <md-button ng-show="!$root.mapData.dragable" class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" layout="center" ng-click="$root.mapData.dragable = !$root.mapData.dragable">
-                                                <span style="color: white;">Add GeoFence</span>
+                                            <md-button ng-show="!$root.mapData.dragable"
+                                                       class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" layout="center"
+                                                       ng-click="$root.mapData.dragable = !$root.mapData.dragable" style="margin-left: 40%;width: 25%">
+                                                <span style="color: white;">+ Add GeoFence</span>
                                             </md-button>
                                         </div>
                                     </div>
+
+
                                     <!--<div style="text-align: center;margin-top: 50px;">-->
                                     <!--<md-button-->
                                     <!--class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2"-->
