@@ -1,70 +1,58 @@
 /* Start Animation */
 
 .activity {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 1;
 }
 
 .activity.ng-hide-remove {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 0;
 }
 
 .activity.ng-hide-add {
-    -webkit-transition: all linear 0s;
     transition: all linear 0s;
 }
 
 .teamAttendance {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 1;
 }
 
 .teamAttendance.ng-hide-remove {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 0;
 }
 
 .teamAttendance.ng-hide-add {
-    -webkit-transition: all linear 0s;
     transition: all linear 0s;
 }
 
 .chatSide {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 1;
 }
 
 .chatSide.ng-hide-remove {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 0;
 }
 
 .chatSide.ng-hide-add {
-    -webkit-transition: all linear 0s;
     transition: all linear 0s;
 }
 
 .onlineSide {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 1;
 }
 
 .onlineSide.ng-hide-remove {
-    -webkit-transition: all linear 0.1s;
     transition: all linear 0.1s;
     opacity: 0;
 }
 
 .onlineSide.ng-hide-add {
-    -webkit-transition: all linear 0s;
     transition: all linear 0s;
 }
 
@@ -86,14 +74,15 @@
 .textBold {
     font-weight: bold;
 }
-.textColor{
+
+.textColor {
     color: #67C5D5;
 }
-.paddings{
+
+.paddings {
     padding-left: 11%!important;
-
-
 }
+
 .noborder {
     border: 0px;
 }
@@ -151,7 +140,6 @@
     fill: transparent;
 }
 
-
 .fillColorWhite {
     fill: white;
 }
@@ -207,6 +195,7 @@
 .backColorWhite {
     background-color: white;
 }
+
 .backColorWhite1 {
     background-color: white;
     margin-left: -20%;
@@ -235,9 +224,11 @@
 .backColorOrange {
     background-color: rgb(222, 89, 71)!important;
 }
+
 .backColorOrange {
     background-color: rgb(222, 89, 71)!important;
 }
+
 .roundShape {
     display: block;
     margin: auto;
@@ -248,19 +239,46 @@
     margin-left: 10px;
 }
 
+
 /*.userGroupSubgroupImg {*/
-    /*background-image: url('../img/people_button.svg');*/
-    /*background-repeat: no-repeat;*/
-    /*background-size: 25px;*/
-    /*background-position: 8px;*/
-    /*width: 40px;*/
-    /*height: 40px;*/
-    /*border-radius: 20px;*/
-    /*background-color: #69B0A2;*/
-    /*position: absolute;*/
-    /*z-index: 9;*/
-    /*/!* bottom: inherit; *!/*/
-    /*margin: 10px 30px;*/
+
+
+/*background-image: url('../img/people_button.svg');*/
+
+
+/*background-repeat: no-repeat;*/
+
+
+/*background-size: 25px;*/
+
+
+/*background-position: 8px;*/
+
+
+/*width: 40px;*/
+
+
+/*height: 40px;*/
+
+
+/*border-radius: 20px;*/
+
+
+/*background-color: #69B0A2;*/
+
+
+/*position: absolute;*/
+
+
+/*z-index: 9;*/
+
+
+/*/!* bottom: inherit; *!/*/
+
+
+/*margin: 10px 30px;*/
+
+
 /*}*/
 
 .check-in-slider .md-container .md-thumb-container .md-thumb {
@@ -418,16 +436,16 @@ md-switch {
     margin-top: -1px;
     font-size: 14px;
     padding: 0 !important;
-
 }
 
 .userListSearchbox {
-     height: 44px;
-     /*width: 200px;*/
-     font-size: smaller;
-     /*padding-top: 20px;*/
-     /*margin-left: -6px;*/
- }
+    height: 44px;
+    /*width: 200px;*/
+    font-size: smaller;
+    /*padding-top: 20px;*/
+    /*margin-left: -6px;*/
+}
+
 .memberSettingSearchbox {
     height: 44px;
     width: 75%;
@@ -449,13 +467,16 @@ md-switch {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 .margining:hover {
     background-color: #EFEFEF;
 }
 
-.hoverColor:hover{
+.hoverColor:hover {
     background-color: #EFEFEF;
 }
+
+
 /*user listCard*/
 
 md-content.md-default-theme {
@@ -599,15 +620,10 @@ md-list-item .md-list-item-inner > .md-avatar:first-child {
     /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAzNzVmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzMmI0Y2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-    background: -moz-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0375fc), color-stop(100%, #32b4cc));
     /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* IE10+ */
     background: linear-gradient(to bottom, #0375fc 0%, #32b4cc 100%);
     /* W3C */
@@ -623,15 +639,10 @@ md-list-item .md-list-item-inner > .md-avatar:first-child {
     /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAzNzVmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzMmI0Y2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-    background: -moz-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0375fc), color-stop(100%, #32b4cc));
     /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #0375fc 0%, #32b4cc 100%);
     /* IE10+ */
     background: linear-gradient(to bottom, #0375fc 0%, #32b4cc 100%);
     /* W3C */
@@ -711,7 +722,6 @@ md-list-item .md-list-item-inner > .md-avatar:first-child {
 .greenScroller,
 .grayScroller {
     overflow: hidden;
-
 }
 
 .greenScroller::-webkit-scrollbar-thumb,
@@ -741,6 +751,7 @@ md-list-item .md-list-item-inner > .md-avatar:first-child {
 .greenScroller:hover {
     overflow: auto;
 }
+
 
 /*scroller end*/
 
@@ -785,6 +796,7 @@ md-autocomplete input:not(.md-input) {
 }
 
 .no-select {
+    -ms-user-select: none;
     user-select: none;
     -o-user-select: none;
     -moz-user-select: none;
@@ -820,7 +832,6 @@ md-autocomplete input:not(.md-input) {
     /*margin-top: -21px;*/
     margin-left: -61px;
     margin-top: -1%;
-
 }
 
 #sideCustomNav .mfb-component__button--main,
@@ -1167,8 +1178,6 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar {
     height: 141px;
     box-sizing: border-box;
     border: 3px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
     border-radius: 50%;
 }
 
@@ -1235,8 +1244,6 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar {
     /*max-height: 55px;*/
     box-sizing: border-box;
     border: 3px solid #8BC53F;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
     border-radius: 50%;
 }
 
@@ -1314,16 +1321,19 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 
 .progressCircularforNavBar {
     left: 41px;
+    -webkit-transform: scale(0.8) !important;
     transform: scale(0.8) !important;
     top: -7px;
 }
 
 .groupPageGroupLogo {
+    -webkit-transform: scale(0.9) !important;
     transform: scale(0.9) !important;
     top: 14px
 }
 
 .userPageGroupProgress {
+    -webkit-transform: scale(0.9) !important;
     transform: scale(0.9) !important;
     top: 15px;
 }
@@ -1339,17 +1349,20 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 .md-toast-animating {
     width: 500px !important;
 }
-.imgWidthHeight{
+
+.imgWidthHeight {
     width: 80px !important;
     height: 80px !important;
 }
+
 .showArrow {
     margin-left: -5%;
-    margin-top:8%;
+    margin-top: 8%;
     width: 34px;
     height: 34px;
 }
-.cardBackground{
+
+.cardBackground {
     background-color: #FFFFFF;
 }
 
@@ -1364,67 +1377,80 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
     outline: none;
 }
 
-.user-setting-tab:before, div:after {
+.user-setting-tab:before,
+div:after {
     opacity: 0.5;
-    display:block;
+    display: block;
     content: "";
-    position:absolute;
+    position: absolute;
     width: 0;
     height: 0;
 }
 
 .user-setting-tab:before {
-    top: 40%; left: 0;
+    top: 40%;
+    left: 0;
 }
 
 .user-setting-tab:after {
-    top: 40%; right: 0;
+    top: 40%;
+    right: 0;
+}
 
-}
-.transparency{
-    background-color:#FFFFFF ;
+.transparency {
+    background-color: #FFFFFF;
     color: black;
     margin-top: 13%;
 }
-.transparency:hover{
+
+.transparency:hover {
     background-color: #EFEFEF;
 }
-.transparency1{
-    background-color:#FFFFFF ;
+
+.transparency1 {
+    background-color: #FFFFFF;
     color: black;
     margin-top: 13%;
 }
-.transparency1:hover{
+
+.transparency1:hover {
     background-color: #EFEFEF;
 }
-.userHover{
-    padding: 0px 0px 0px 0px;  !important;
+
+.userHover {
+    padding: 0px 0px 0px 0px;
+    !important;
     position: relative;
 }
-.userHover:hover{
+
+.userHover:hover {
     background-color: #0078A8;
 }
 
-.mainCard1{
+.mainCard1 {
     margin-top: 2%;
 }
-.button1{
-    background-color:#EFEFEF;
+
+.button1 {
+    background-color: #EFEFEF;
     padding: 3%;
     border: none;
     outline: none;
 }
-.button1:hover{
+
+.button1:hover {
     background-color: #EFEFEF;
 }
-.button1:visited{
+
+.button1:visited {
     background-color: #EFEFEF;
 }
+
 .plainbutton {
     width: 100%;
     border: none;
 }
 
-.buttonHover:hover{
+.buttonHover:hover {
     background-color: #1EA9E4 !important;
 }
