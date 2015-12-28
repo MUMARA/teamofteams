@@ -62,7 +62,7 @@
                                     </div>-->
                                 </div>
                                 <h2>Team Members</h2>
-                                <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="subgroup.toggleRight();"><span style="color: white;">Add</span></md-button>
+                                <md-button  style="background: #60B089" class="md-raised md-hue-1 md-button md-default-theme" ng-click="subgroup.toggleRight();"><span style="color: white;">Add</span></md-button>
                                 <md-chips>
                                     <md-chip ng-repeat="user in subgroup.selectedMemberArray" style="height:40px">
                                         <img ng-src="{{user['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 34px; height: 37px;      border-radius: 50%; margin-left: -11px" />
