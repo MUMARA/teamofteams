@@ -9,9 +9,9 @@
         .module('app.forgot')
         .controller('ForgotController', ForgotController);
 
-    ForgotController.$inject = ["forgotService", "authService"];
+    ForgotController.$inject = ["forgotService", "$state"];
 
-    function ForgotController(forgotService, authService) {
+    function ForgotController(forgotService, $state) {
 
         /*private properties*/
         var that = this;
@@ -30,18 +30,13 @@
             that.submitting = true;
             forgotService.forgotPassword(that.user)
                 .then(function(res) {
+                    $state.go("signin");
                     that.submitting = false;
 
                 }, function(reason) {
                     that.submitting = false;
-
                 });
         }
-        /* this.canActivate = function(){
-             return authService.resolveUserPage();
-         }*/
-
-
     }
 
 })();

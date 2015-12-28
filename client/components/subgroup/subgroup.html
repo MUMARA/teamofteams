@@ -1,15 +1,15 @@
 <!--<form style="background-color: #005DE9;" name="groupForm" ng-submit="cgc.answer( groupForm )" novalidate="" ng-controller="subgroupController as cgc">-->
 <!--<form style="background-color: #005DE9;" name="groupForm"  novalidate="" ng-controller="subgroupController as cgc">-->
-<form name="groupForm" novalidate="" class="viewHeight">
-    <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="subgroup.hide()"></ng-md-icon>
-    <md-content style="max-width:85%;margin: 0px auto; max-height: 80%;" class="grayScroller viewHeight">
+<form name="groupForm" novalidate="">
+    <!-- <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="subgroup.hide()"></ng-md-icon> -->
+    <md-content style="max-width:85%;margin: 0px auto; height:85vh; margin-top:3%">
         <div layout="row">
             <div flex>
                 <md-card style=" margin: 0px auto;border-radius:5px;">
                     <md-card-content style="padding: 0px;">
-                        <h1 style="color: #d3d3d3;" layout-padding>Create Team</h1>
-                        <br/>
-                        <div layout="row" style="border-top:solid 1px #d3d3d3; ">
+                        <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Create Team</h1>
+                        <md-divider md-outset></md-divider>
+                        <div layout="row">
                             <div flex style="margin-left: 5px;padding: 20px">
                                 <h2>Url <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
                                 <div layout="row">
@@ -17,7 +17,7 @@
                                         <span>teamofteams.io/{{subgroup.groupid}}/</span>
                                     </div>
                                     <div flex="30">
-                                        <md-input-container style="margin-left: 46px;" md-no-float>
+                                        <md-input-container md-no-float>
                                             <input name="groupId" ng-model="subgroup.Subgroup.subgroupID" autocomplete="off" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{subgroup.groupName}}" check-group-existance="" required placeholder="Team URL">
                                             <!-- check-user-id is a directive-->
                                             <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
@@ -62,7 +62,7 @@
                                     </div>-->
                                 </div>
                                 <h2>Team Members</h2>
-                                <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="subgroup.toggleRight();"><span style="color: white;">Add</span></md-button>
+                                <md-button  style="background: #60B089" class="md-raised md-hue-1 md-button md-default-theme" ng-click="subgroup.toggleRight();"><span style="color: white;">Add</span></md-button>
                                 <md-chips>
                                     <md-chip ng-repeat="user in subgroup.selectedMemberArray" style="height:40px">
                                         <img ng-src="{{user['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 34px; height: 37px;      border-radius: 50%; margin-left: -11px" />
@@ -79,7 +79,7 @@
                                 <br>
                                 <div layout="row">
                                     <div flex='20' offset="50">
-                                        <md-progress-circular ng-show="subgroup.abc " md-mode="indeterminate"></md-progress-circular>
+                                        <md-progress-circular ng-show="subgroup.abc " md-mode="indeterminate" md-diameter="30"></md-progress-circular>
                                     </div>
                                     <div flex>
                                         <!--<md-button class="md-raised md-primary">Submit</md-button>-->

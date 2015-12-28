@@ -41,13 +41,16 @@ body > md-content > div > div.marginContainer > div > form > div > div:nth-child
                 </a>
             </div> -->
             <div layout="row" layout-align="center center">
-                <md-content class="grayScroller" style="max-width:650px; height:100vh;margin: 0px auto">
+                <md-content style="max-width:650px; height:85vh;margin: 0px auto">
                     <md-card style="margin: 0px auto">
                         <md-card-content style="padding: 50px;">
                             <div layout="column" layout-align="space-around center" layout-margin>
-                                <md-input-container>
-                                    <md-icon icon="email"></md-icon>
-                                    <input ng-model="loginForm.user.email" type="email" placeholder="Email" ng-required="true">
+                                <md-input-container md-no-float>
+                                    <div layout="row" layout-align="start center">
+                                        <ng-md-icon icon="email" class="fillColorDarkGrey"></ng-md-icon>
+                                        <span> Email</span>
+                                    </div>
+                                    <input ng-model="loginForm.user.email" type="email" ng-required="true" aria-label="email">
                                     <div ng-hide="loginForm.userEmail.$pristine" ng-messages="loginForm.userEmail.$error" ng-messages-multiple>
                                         <!-- <div class="invalid_color" ng-message="required">This is required.</div> -->
                                         <div class="invalid_color" ng-message="email">Not valid email</div>
@@ -55,16 +58,20 @@ body > md-content > div > div.marginContainer > div > form > div > div:nth-child
                                 </md-input-container>
                                 <md-input-container md-no-float>
                                     <!--<md-icon md-svg-src="img/icons/ic_place_24px.svg" style="display:inline-block;"></md-icon>-->
-                                    <md-icon style="display:inline-block;"></md-icon>
-                                    <input ng-model="loginForm.user.password" type="password" placeholder="Password">
+                                    <div layout="row" layout-align="start center">
+                                        <ng-md-icon icon="vpn_key" class="fillColorDarkGrey"></ng-md-icon> Password
+                                    </div>
+                                    <input ng-model="loginForm.user.password" type="password" ng-required="true" aria-label="password">
                                     <div ng-hide="loginForm.userPassword.$pristine" ng-messages="loginForm.userPassword.$error" ng-messages-multiple>
                                         <!-- <div class="invalid_color" ng-message="required">This is required.</div> -->
                                     </div>
                                 </md-input-container>
                                 <div flex class="forgotPasswordContainer">
-                                    <a ui-sref="forgot" class="foreColorSeaGreen">Forgot Password?</a>
+                                    <!-- <a ui-sref="forgot" class="foreColorSeaGreen">Forgot Password?</a> -->
+                                    <md-button class="foreColorSeaGreen" ui-sref="forgot">Forgot Password?
+                                    </md-button>
                                     <md-input-container ng-if="signin.submitting" layout="column" layout-align="end center" style="margin-top: 25px;">
-                                        <md-progress-circular class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
+                                        <md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
                                     </md-input-container>
                                 </div>
                                 <md-text-float label="Password" ng-model="user.password"></md-text-float>

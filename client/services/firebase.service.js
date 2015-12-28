@@ -52,7 +52,7 @@ angular.module('core')
                             //delete $sessionStorage.loggedInUser;
                             delete $localStorage.loggedInUser;
                             appConfig.firebaseAuth = false;
-                            messageService.showFailure("logged out or session destroyed, please login again.");
+                            messageService.showFailure("User is logged out, Please login again.");
                             //$location.path("/user/login");
                         }
                     });

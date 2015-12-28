@@ -32,7 +32,10 @@
 
 
                 }
-
+                
+                this.setFocus = function() {
+                    document.getElementById("#UserSearch").focus();
+                }
 
                 $scope.openCreateSubGroupPage = function() {
                     $location.path('/user/group/' + $scope.groupID + '/create-subgroup');
@@ -132,7 +135,7 @@
                 $scope.messagesArray = [];
                 $scope.activeChannelID = null;
                 $scope.activeTittle = null;
-                $scope.selectedindex = 0;
+                $scope.selectedindex = false;
                 $scope.text = {
                     msg: ""
                 }
@@ -196,17 +199,15 @@
 
 
                 $scope.subgrouppage = function(subgroup1, index) {
+                    $scope.selectedindex = index;
                     if (that.activePanel === 'activity') {
                         that.GetSubGroupUsers(subgroup1, index)
                     } else if (that.activePanel === 'chat') {
-                        $scope.selectedindex = index;
                         $scope.activesubID = subgroup1.$id;
-                        // console.log(subgroup1)
                         $scope.Teamchannels = chatService.geTeamChannelsSyncArray($scope.groupID, $scope.activesubID);    
                     } else if (that.activePanel === 'manualAttendace') {                        
                         that.GetSubGroupUsers(subgroup1, index)
                     }
-                    
                 }
 
                 $scope.viewTeamChannelMessages = function(channel) {

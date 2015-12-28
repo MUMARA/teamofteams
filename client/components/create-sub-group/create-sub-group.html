@@ -78,7 +78,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
         </div>
         <md-content class="grayScroller" style=" max-height: 100%;max-width:83%;margin: 0px auto; overflow: hidden !important;">
             <div layout="row">
-                <div flex="6" style=" margin-left:6px;text-align: right; max-height: 400px;height: 340px;min-height: 300px;margin-top: 0px;text-align: center;background-color: rgb(96, 176, 137);">
+                <div flex="6" style=" margin-left:6px;text-align: right; max-height: 375px;height: 340px;min-height: 300px;margin-top: 0px;text-align: center;background-color: rgb(96, 176, 137);">
                     <div style="background-color:rgb(96, 176, 137);width:0px;">
                         <div layout="column">
                             <!--<div>
@@ -86,19 +86,19 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                                                                           style="width: 33px;height: 33px;"/><br><span
                                         style="color: white;">Group</span></md-button>
                             </div>-->
-                            <md-button ng-click="createSubGroup.openEditGroup()"><img src="../../img/6sami.svg" style="width: 33px;height: 33px;" />
+                            <md-button ng-click="createSubGroup.openEditGroup()"><img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
                                 <br><span style="color: white;">Group</span></md-button>
                         </div>
                         <div>
-                            <md-button ng-click="createSubGroup.openUserSettingPage()"><img src="../../img/3sami.svg" style="width: 33px;height: 33px;" />
+                            <md-button ng-click="createSubGroup.openUserSettingPage()"><img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
                                 <br><span style="color: white;">Members</span></md-button>
                         </div>
                         <div>
-                            <md-button ng-click="createSubGroup.openGeoFencingPage()"><img src="../../img/5sami.svg" style="width: 33px;height: 33px;">
+                            <md-button ng-click="createSubGroup.openGeoFencingPage()"><img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
                                 <br><span style="color: white;">Fencing</span></md-button>
                         </div>
                         <div>
-                            <md-button style="background-color: darkseagreen"><img src="../../img/4sami.svg" style="width: 33px;height: 33px">
+                            <md-button style="background-color: darkseagreen"><img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
                                 <br><span style="color: white;">Teams</span></md-button>
                         </div>
                     </div>
@@ -106,9 +106,9 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                 <div flex="90">
                     <md-card style=" margin: 0px auto;border-radius:5px;">
                         <md-card-content style="padding: 0px;">
-                            <h1 style="color: #d3d3d3;">&nbsp;&nbsp;&nbsp;Teams Settings</h1>
-                            <br/>
-                            <div layout="row" style="border-top:solid 1px #d3d3d3; ">
+                            <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Teams Settings</h1>
+                            <md-divider md-outset></md-divider>
+                            <div layout="row">
                                 <div flex="25" class="grayScroller" style="background-color: #FDF8F8; ">
                                     <md-content class="grayScroller" style="height: 69vh;">
                                         <md-card style="  margin: 1px 3px 0px 3px !important;" class=" md-whiteframe-z1">
@@ -213,7 +213,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                         <h2>Team Admin</h2>
                                         <div layout="row">
                                             <div flex="10">
-                                                <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="createSubGroup.toggleAdmin()"><span style="color: white;font-size: 14px;">Assign</span></md-button>
+                                                <md-button  style="background: #60B089" class=" md-raised md-hue-1 md-button md-default-theme" ng-click="createSubGroup.toggleAdmin()"><span style="color: white;font-size: 14px;">Assign</span></md-button>
                                             </div>
                                             <div flex="20">
                                             </div>
@@ -231,7 +231,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
                                         </md-chips>
                                         <!--adding team members-->
                                         <h2>Team Members</h2>
-                                        <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="createSubGroup.toggleRight();"><span style="color: white;">Add</span>
+                                        <md-button  style="background: #60B089" class="md-raised md-hue-1 md-button md-default-theme" ng-click="createSubGroup.toggleRight();"><span style="color: white;">Add</span>
                                         </md-button>
                                         <md-chips>
                                             <md-chip ng-repeat="mems in createSubGroup.submembers" style="height:40px" class="backColorDarkGrey">
@@ -260,7 +260,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
             <!--add members sidenav-->
             <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="background-color: #68C2E8 !important;">
             <div layout="column" layout-align="space-between center">
-                <md-content class="grayScroller">
+                <md-content class="grayScroller" style="width: 100%;overflow: hidden">
                     <button ng-repeat="member in createSubGroup.members track by $index" ng-disabled="createSubGroup.filterUser(member.user.profile.$id)" ng-class="$index%2==0 ? 'moh' : 'sin'" ng-click="createSubGroup.selectedMember(member.user.profile,$index)"  class="nooutline plainbutton buttonHover">
                         <div layout="row" layout-align="start center" layout-padding>
                             <!-- <ng-md-icon icon="done" style="fill:green;" ng-if="member.membershipType==1">
@@ -300,7 +300,7 @@ a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
             <!--add team admin sidenav-->
             <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="rights" style="background-color: #68C2E8 !important;">
             <div layout="column" layout-align="space-between center">
-                <md-content class="grayScroller" >
+                <md-content class="grayScroller" style="width: 100%;overflow: hidden">
                     <button ng-class="$index%2==0 ? 'moh' : 'sin'" ng-click="createSubGroup.selectedAdmin(2,member)" ng-repeat="member in createSubGroup.members track by $index" class="nooutline plainbutton buttonHover">
                         <div layout="row" layout-align="start center" layout-padding>
                          <ng-md-icon icon="done" ng-class="createSubGroup.filterUser2(member.user.profile.$id) ? 'fillColorWhite' : 'fillColorTransparent' ">

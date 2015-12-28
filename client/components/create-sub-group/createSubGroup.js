@@ -132,7 +132,8 @@
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
-                targetEvent: ev
+                targetEvent: ev,
+                escapeToClose: false
             }).then(function(picture) {
                 $rootScope.newImg = picture;
                 //console.log("this is image" + picture)
@@ -312,6 +313,8 @@
 
         //Cropper Code start
         this.showAdvanced = function(ev) {
+            $rootScope.tmpImg = $rootScope.newImg;
+            $rootScope.newImg = '';
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',

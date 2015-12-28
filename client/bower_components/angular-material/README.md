@@ -13,7 +13,7 @@ You can install this package locally either with `npm`, `jspm`, or `bower`.
 npm install angular-material
 
 # To install latest release and update package.json
-npm install angular-material --save-dev
+npm install angular-material --save
 
 # To install from HEAD of master
 npm install http://github.com/angular/bower-material/tarball/master
@@ -35,7 +35,7 @@ jspm install angular-material=github:angular/bower-material@master;
 jspm inspect;
 ```
 
-Now you can use `require('angular-material')` when installing with npm or jsmp and using Browserify or Webpack.
+Now you can use `require('angular-material')` when installing with **npm** or **jspm**, or when using Browserify or Webpack.
 
 ### bower
 

@@ -73,16 +73,18 @@
 
 
         this.showAdvanced = function(ev) {
+            $rootScope.tmpImg = $rootScope.newImg;
+            $rootScope.newImg = '';
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
-                targetEvent: ev
+                targetEvent: ev,
+                escapeToClose: false
             }).then(function(picture) {
                 $rootScope.newImg = picture;
                 //console.log("this is image" + picture)
             }, function(err) {
                 //console.log(err)
-
             })
 
         };
@@ -201,24 +203,6 @@
             return val === '3'
         }
 
-        //Cropper Code start
-        this.showAdvanced = function(ev) {
-            $mdDialog.show({
-                controller: "DialogController as ctrl",
-                templateUrl: 'directives/dilogue1.tmpl.html',
-                targetEvent: ev
-            }).then(function(picture) {
-                $rootScope.newImg = picture;
-                // console.log("this is image" + picture)
-            }, function(err) {
-                // console.log(err)
-
-            })
-
-        };
-
-
-        //Cropper Code End
 
         this.canActivate = function() {
             return authService.resolveUserPage();

@@ -100,7 +100,6 @@ angular.module('core')
                     Firebase.goOffline();
                     //delete $sessionStorage.loggedInUser;
                     delete $localStorage.loggedInUser;
-                    messageService.showFailure("logout successfully");
                 },
                 //to resolve route "/user/:user" confirming is authenticated from firebase
                 resolveUserPage: function() {
