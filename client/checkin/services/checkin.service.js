@@ -6,7 +6,8 @@
     'use strict';
 
     angular
-        .module('checkin')
+        // .module('checkin')
+        .module('core')
         .factory('checkinService', checkinService);
 
     checkinService.$inject = ['$q', '$geolocation', 'firebaseService', "$firebaseObject", '$firebaseArray'];

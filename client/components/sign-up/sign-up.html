@@ -1,5 +1,7 @@
 <div layout="row" layout-align="center center" layout-padding layout-margin  class="viewHeight80">
-    <form flex="30" name="loginForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll" layout="column" layout-align="center center">
+    <form flex="30" name="loginForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll">
+        <md-content  layout="column" layout-align="center center">
+        
         <div layout="row" layout-align="center center" style="margin-left: 26px;">
             <md-input-container>
                 <label>User ID</label>
@@ -54,5 +56,6 @@
         </md-input-container>
         <md-progress-circular md-mode="indeterminate" ng-show="signUp.process" md-diameter="30"></md-progress-circular>
         <md-button ng-click="signUp.signup(singupForm)" class="md-raised backColorSeaGreen foreColorWhite" style="margin-top: 20px;" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId || signUp.process ">Sign up</md-button>
+        </md-content>
     </form>
 </div>

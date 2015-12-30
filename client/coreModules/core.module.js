@@ -9,21 +9,21 @@
 // Create the 'example' module
 angular.module('core', [
 
-    'angularMoment',
+    // 'angularMoment',
     'ngAudio',
     'ngAnimate',
     'ngAria',
-    'checkin',
+    // 'checkin',
     'ngMdIcons',
     //'ngMaterial',
     'firebase',
     'ngStorage',
     'ngGeolocation',
-    'ui.select',
+    // 'ui.select',
     'ngMessages',
     'ng-mfb',
-    'ui.select',
-    'ngSanitize',
+    // 'ui.select',
+    // 'ngSanitize',
     'ui.router',
     'angular-img-cropper',
     'md.data.table'

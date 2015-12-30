@@ -1,13 +1,16 @@
 <!--<div ng-controller="personalSettingsController as psc">-->
 <div id="personalSettingPage" style="padding-top: 55px;">
-    <form style="background-color: #efefef;" name="personalSettingForm" novalidate="" class="grayScroller viewHeight">
+    <form style="background-color: #efefef;" name="personalSettingForm" novalidate="" class="grayScroller viewHeight80">
         <!--<ng-md-icon icon="close" size="50" layout-padding ng-click="psc.hide()"></ng-md-icon>-->
        <!--  <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="$root.newImg = null ;personalSettings.hide()"></ng-md-icon> -->
+       <div class="backColorWhite" style=" max-width:85%; margin: 0px auto; ">
+            <h1 style="color: #d3d3d3; padding: 25px; margin:0px;">Personal Settings</h1>
+            <md-divider md-outset></md-divider>
+        </div>
         <md-content style=" max-width:85%; margin: 0px auto; max-height: 85%;  ">
             <md-card style="margin: 0px auto;">
                 <md-card-content style="padding: 50px;">
-                    <h1 style="color: #d3d3d3">Personal Settings</h1>
-                    <hr/>
+                    <h3 style="color: #5D5D5D; margin-top:0px">General Information</h3>                    
                     <div layout="row">
                         <md-input-container flex>
                             <label>User ID</label>
@@ -19,7 +22,6 @@
                             </div>
                         </md-input-container>
                     </div>
-                    <h3 style="color: #5D5D5D">General Information</h3>
                     <div layout="row">
                         <md-input-container flex>
                             <label>First Name</label>
@@ -109,7 +111,7 @@
                             </md-button>-->
                         </div>
                         <div>
-                            <img style="outline: none;" ng-src="{{$root.newImg}}" alt="" class="userCropper-main-button sampleUserImg" ng-hide="!$root.newImg" ng-click="personalSettings.showAdvanced($event)" />
+                            <img style="outline: none;" ng-src="{{$root.newImg}}" alt="" class="cropper-main-image sampleUserImg" ng-hide="!$root.newImg" ng-click="personalSettings.showAdvanced($event)" />
                         </div>
                         <!--<image-cropper></image-cropper>-->
                         <!--<input ng-model="as3" style="display:none" type="file" id="fileUploadEl"  onchange="angular.element(this).scope().cgc.postPicture(this)"/>
@@ -117,11 +119,11 @@
                             <img src="img/image.png" alt=""/>
                         </div>-->
                     </div>
-                    <div layout="row">
-                        <div flex="20" offset="50">
-                            <md-progress-circular class="" ng-show="personalSettingForm.$submitted" md-mode="indeterminate"></md-progress-circular>
+                    <div layout="row" layout-align="end center">
+                        <div >
+                            <md-progress-circular ng-show="personalSettingForm.$submitted" md-diameter="30" md-mode="indeterminate"></md-progress-circular>
                         </div>
-                        <div flex offset="10">
+                        <div >
                             <!--<md-button ng-disabled="personalSettingForm.$invalid" class="md-raised" style="background-color: #61B188; color: white;" ng-click="personalSettings.answer( personalSettingForm )">SEND</md-button>-->
                             <md-button class="md-raised backColorSeaGreen foreColorWhite" ng-click="personalSettings.answer( personalSettingForm )">Save</md-button>
                         </div>

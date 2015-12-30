@@ -131,6 +131,14 @@
     margin-right: 10px;
 }
 
+.leftmargin5px {
+    margin-left: 5px;
+}
+
+.rightmargin5px {
+    margin-right: 5px;
+}
+
 /*.paddings {
     padding-left: 11%!important;
 }
@@ -572,8 +580,8 @@ md-autocomplete.md-default-theme {
 */
 .cards-button {
     position: absolute;
-    top: -40%;
-    right: 2%;
+    top: -35%;
+    right: 5%;
     width: 40px !important;
     height: 40px !important;
     background-color: #31B4CB !important;
@@ -1491,3 +1499,26 @@ div:after {
     background-color: #1EA9E4 !important;
 }
 */
+
+.cropperWindow {
+    width: 800px;
+    height: 400px;
+}
+
+.cropperWindowButtons {
+    position: absolute;
+    bottom: 5px;
+    left: 40%;
+    z-index: 5;
+}
+
+.cropper-main-button {
+    width: 160px;
+    height: 160px;
+    padding: 0px !important;
+}
+
+.cropper-main-image {
+    width: 160px;
+    height: 160px;
+}

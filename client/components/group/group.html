@@ -1,6 +1,6 @@
 <div layout="row" layout-align="center start">
     <!-- Side Nav Bar -->
-    <div class="viewHeight" layout="column" layout-align="start center">
+    <div class="viewHeight" layout="column" style="padding-bottom: 60px">
         <md-card style="width: 220px; height: 300px; margin:0px;" class="foreColorDarkGrey" layout="column">
             <div style="margin:auto;">
                 <a ui-sref="user.group({groupID: group.group.groupID})" layout="row" layout-align="center center">
@@ -14,8 +14,8 @@
                     <div>{{group.group['address-title']}}</div>
                 </div>
             </div>
-            <div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
-                <md-button class="md-fab cards-button" aria-label="Setting" ng-show="group.group.isAdmin()">
+            <div flex="25" style="border-top: 2px solid #dddddd; margin:0px" layout="row" layout-align="start center">
+                <md-button class="md-fab " aria-label="Setting" ng-show="group.isAdmin()" ng-click="group.editgroupPage()" style="position: absolute; top: 265px; left: 160px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
                     <ng-md-icon icon="settings" class="fillColorWhite" size="20"></ng-md-icon>
                 </md-button>
                 <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
@@ -27,7 +27,13 @@
                 </div>
             </div>
         </md-card>
-        <div style="border-bottom: 5px solid green;"></div>
+        <div style="border-bottom: 5px solid green; width:220px"></div>
+        <div style="overflow-x: hidden; overflow-y: auto;">
+            <div ng-repeat="subgroup in group.subgroups track by $index" class="backColorWhite" style="height:120px;">
+                <subgroupcard-directive subgroup="subgroup" ng-click="group.subgrouppage(subgroup,$index)" class="nooutline"></subgroupcard-directive>
+                <ng-md-icon ng-show="group.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
+            </div>
+        </div>
     </div>
     <!--navigation side-->
     <div class="viewHeight gradient" layout="column" layout-align="space-between center">
@@ -111,14 +117,11 @@
                 <thead md-head>
                     <tr md-row>
                         <th md-column>
-                            <md-button class="md-fab md-mini backColorOrange" aria-label="checkout" style="line-height: 40px !important;" ng-click="group.checkoutAll()" >
-                                <md-icon md-svg-icon="../img/people_button.svg" class="nomargin" aria-label="People Group Icon"></md-icon>
-                            </md-button>
                         </th>
                         <th md-column>Name</th>
-                        <th md-column>Team of Teams</th>
+                        <th md-column>Phone</th>
                         <th md-column>Team</th>
-                        <th md-column>Message</th>
+                        <th md-column>Last Modified</th>
                     </tr>
                 </thead>
                 <tbody md-body>
@@ -127,9 +130,9 @@
                             <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon50px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
                         </td>
                         <td md-cell>{{user.fullName}}</td>
-                        <td md-cell>{{user.groupTitle}}</td>
-                        <td md-cell>{{user.subgroupTitle}}</td>
-                        <td md-cell>{{user.message}}</td>
+                        <td md-cell>{{user.contactNumber}}</td>
+                        <td md-cell>{{user.groupsubgroupTitle}}</td>
+                        <td md-cell>{{user.timestamp | date:'MM/dd/yyyy'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -243,9 +246,9 @@
     </div>
     <!--online side-->
     <div class="viewHeight onlineSide" ng-show="group.showChat" style="max-width:400px;width:400px;min-width:400px">
-        <md-card style="margin: 0 !important; color: #000000">
-            <md-toolbar class="md-whiteframe-z1 backColorWhite">
-                <md-tabs style=" background-color: #68C2E8" class="OnlineChat">
+        <md-card class="nomargin" layout-fill style="padding-bottom:50px;">
+            <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
+                <md-tabs style=" background-color: #68C2E8" class="OnlineChat" layout-fill>
                     <!--channel side-->
                     <md-tab label="channels" class="rightTbs">
                         <md-content ng-hide="group.activesubID" ng-repeat="channel in group.channels track by $index">
@@ -291,31 +294,32 @@
                         <md-content class="grayScroller">
                             <md-list style="padding: 0px 0px 5px 0px;!important;position: relative" ng-class="$index%2==0 ? 'moh' : 'sin'" ng-repeat="member in group.members track by $index">
                                 <span ng-class="$index%3==0 ? 'statusOnline' : 'statusOffline'"></span>
-                                <md-list-item class="md-3-line selectable">
-                                    <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" style="margin-top:10px;   margin-left: 38px" />
-                                    <div class="md-list-item-text" style="  padding: 11px 0 11px 0;">
-                                        <h4 style="color:#ffffff;  margin: -4px 0 -34px 11px !important">
-                                            <span layout="row" layout-align="start center">
-                                                <span flex="80" layout="column">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
-                                            <md-button offset="20" layout="column" class="md-icon-button" aria-label="More" style="">
-                                                <md-icon md-svg-icon="img/ring.svg"
-                                                         style="height: 17px !important;"></md-icon>
+                                <md-list-item class="md-1-line selectable" layout-align="space-between center">
+                                    <div layout="row" layout-align="space-between center">
+                                    <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar leftmargin10px"/>
+                                    <!-- <div class="md-list-item-text" style="  padding: 11px 0 11px 0;"> -->
+                                        <h4 style="color:#ffffff;">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}
+                                            <!-- <span layout="row" layout-align="start center"> -->
+                                                <!-- <span flex="80" layout="column"></span> -->
+                                                </h4></div>
+                                            <md-button class="md-icon-button" aria-label="More">
+                                                <md-icon md-svg-icon="img/ring.svg" class="fillColorWhite"></md-icon>
                                             </md-button>
-                                            </span>
-                                        </h4>
-                                    </div>
+                                            <!-- </span> -->
+                                        <!-- </h4> -->
+                                    <!-- </div> -->
                                 </md-list-item>
                             </md-list>
                         </md-content>
                     </md-tab>
                 </md-tabs>
-            </md-toolbar>
+            <!-- </md-toolbar> -->
             <!--<md-button class="md-raised"><ng-md-icon icon="add_circle"></ng-md-icon></md-button>-->
-            <md-button ng-hide="group.activesubID" class="md-fab" aria-label="Create Group channel" style="margin-top: -80px;margin-left: 150px;width: 35px;height: 35px" ng-click="group.createChannelsPage()">
-                <ng-md-icon icon="add" style="fill: #ffffff" size="20" class="prof"></ng-md-icon>
+            <md-button ng-hide="group.activesubID" class="md-fab" aria-label="Create Group channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="group.createChannelsPage()">
+                <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
             </md-button>
-            <md-button ng-show="group.activesubID" class="md-fab" aria-label="Create Team channel" style="margin-top: -80px;margin-left: 150px;width: 35px;height: 35px" ng-click="group.createTeamsChannelsPage()">
-                <ng-md-icon icon="add" style="fill: #ffffff" size="20" class="prof"></ng-md-icon>
+            <md-button ng-show="group.activesubID" class="md-fab" aria-label="Create Team channel" style="margin-top: 20%;margin-left: 80%;width: 40px;height: 40px" ng-click="group.createTeamsChannelsPage()">
+                <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
             </md-button>
         </md-card>
     </div>

@@ -252,8 +252,8 @@
                 this.users = [];
                 this.currentSubGroup;
                 this.currentSudGroupID;
-                this.showActivity = false;
-                this.showChat = true;
+                this.showActivity = true;
+                this.showChat = false;
                 this.showManualAttendace = false;
                 this.processTeamAttendance = false;
                 this.activePanel = 'activity';

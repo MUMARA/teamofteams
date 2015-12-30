@@ -1,0 +1,20 @@
+<div layout="row" layout-align="space-between start" style="height: 120px;width: 220px;">
+	<div style="width: 72px; height: 120px; overflow: hidden;">
+        <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 120px;width: 120px;" />
+    </div>
+	<div layout="column" flex>
+		<div layout="row" layout-align="space-between center">
+		     <div layout-padding>{{subgroup.title}}</div>
+		     <div> <ng-md-icon icon="more_vert" size="20" class="rightmargin5px"></ng-md-icon> </div>
+		</div>
+      	<div layout="row" layout-align="space-between end" layout-fill style="margin-top: 30px;">
+            <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 40px; height: 40px; border-radius: 50%;" layout-margin/>
+            <div layout="row" layout-align="end center">
+                <img src="img/geoLocation.svg" class="icon20px" layout-margin>
+                <img src="img/notification1.svg" class="icon20px" layout-margin>
+            </div>
+        </div>
+	</div>
+</div>
+
+    
