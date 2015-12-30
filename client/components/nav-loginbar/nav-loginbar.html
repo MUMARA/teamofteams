@@ -1,31 +1,10 @@
-<div>
-    <div class="toolbarBackground backColorSeaGreen"></div>
-    <md-toolbar style="z-index: 99999; padding-top: 5px">
-        <div layout="row" layout-align="center center">
-            <div flex="50" offset="5">
-                <div layout='row' layout-align="start center">
-                    <img src='img/Untitled-3.svg' class="logoPana cursorPointer" ui-sref="home">
-                    <span class="mainPana cursorPointer" ui-sref="home"><strong>TEAM OF TEAMS</strong></span>
-                </div>
-            </div>
-            <div flex style="width: 10px; height: 25px; margin-left: 56px">
-                <p></p>
-            </div>
-            <div flex="10">
-            </div>
-            <div flex="35">
-                <div layout="row">
-                    <div offset="40" flex="30" class="toolbarDrop" style="width:40px">
-                        <md-button ui-sref="signin" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign In</md-button>
-                    </div>
-                    <div flex="35" class="toolbarBell" style="width:40px">
-                        <md-button ui-sref="signup" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign Up</md-button>
-                    </div>
-                </div>
-            </div>
-            <!-- <div flex="5">
-                &lt;!&ndash;<img src='img/Untitled-3.png' class="userImg">&ndash;&gt;
-            </div>-->
-        </div>
-    </md-toolbar>
-</div>
+<md-toolbar class="backColorSeaGreen" layout="row" layout-align="space-between center">
+    <div layout='row' layout-align="start center">
+        <img src='img/Untitled-3.svg' class="icon30px leftmargin10px nooutline cursorPointer" ui-sref="home">
+        <span class="cursorPointer leftmargin10px nooutline" ui-sref="home"><strong>TEAM OF TEAMS</strong></span>
+    </div>
+    <div layout="row" layout-align="end center" layout-margin>
+        <md-button class="nomargin nopadding" ui-sref="signin" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign In</md-button>
+        <md-button class="nomargin nopadding leftmargin20px" ui-sref="signup" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign Up</md-button>
+    </div>
+</md-toolbar>

@@ -1,103 +1,58 @@
-<style>
-body > md-content > div > div.marginContainer > div > form > div > md-input-container.md-default-theme.md-input-has-value.md-input-invalid > div > div {
-    position: relative !important;
-}
-
-.md-input {
-    width: 310px;
-    max-width: 310px;
-    min-width: 310px;
-}
-
-.grayScroller:hover {
-    overflow: hidden;
-}
-</style>
-<div id="signUpPage">
-    <form name="singupForm" ng-submit="signUp._signUp()" style="height:85vh;padding: 20px;background-color: #efefef;" novalidate>
-        <div >
-            <!-- <div flex="10">
-                <a ui-sref="home">
-                    <ng-md-icon icon="close" style="outline: none" size="50" class="fillColorLighGrey" layout-padding></ng-md-icon>
-                </a>
-            </div> -->
-            <!-- <div flex="80"> -->
-            <div layout="row" layout-align="center center">
-                <!--Sign Up User-->
-                <md-content style="max-width:650px; height:85vh;margin: 0px auto">
-                    <md-card style="margin: 0px auto">
-                        <md-card-content style="padding: 50px;">
-                            <div layout="column" layout-align="space-around center" layout-margin>
-                                <div layout="row" layout-align="center center" style="margin-left: 26px;">
-                                    <md-input-container>
-                                        <label>User ID</label>
-                                        <input name="userId" ng-model="signUp.user.userID" ng-pattern="/^([a-zA-Z0-9]){3,20}$/" check-user-id="" required>
-                                        <!-- check-user-id is a directive-->
-                                        <div ng-hide="singupForm.userId.$untouched" ng-messages="singupForm.userId.$error" ng-messages-multiple>
-                                            <div class="invalid_color" ng-message="required">This is required.</div>
-                                            <div layout="row" class="invalid_color id_Error" ng-message="pattern">No Space or Special character | length Only 3 to 20</div>
-                                            <div layout="row" class="invalid_color id_Error" ng-message="checkUserId">This userID is not available.</div>
-                                        </div>
-                                    </md-input-container>
-                                    <!--  <md-menu md-offset="0 0" style="padding-top: 28px;"> -->
-                                    <!-- <md-button  aria-label="Open sample menu"> -->
-                                    <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey" title="Select a unique ID for yourself without spaces or special characters">
-                                    </ng-md-icon>
-                                    <!-- </md-button> -->
-                                    <!--     <md-menu-content>
-                                   <md-menu-item>* Select a unique ID for yourself without spaces & special characters</md-menu-item>
-                                 </md-menu-content>
-                                </md-menu> -->
-                                </div>
-                                <md-input-container>
-                                    <label>Email Address</label>
-                                    <input name="email" ng-model="signUp.user.email" type="email" required>
-                                    <div ng-hide="singupForm.email.$untouched" ng-messages="singupForm.email.$error" ng-messages-multiple>
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
-                                        <div class="invalid_color" ng-message="email">Not valid email</div>
-                                    </div>
-                                </md-input-container>
-                                <md-input-container>
-                                    <label>First Name</label>
-                                    <input name="firstName" ng-model="signUp.user.firstName" required>
-                                    <div ng-hide="singupForm.firstName.$untouched" ng-messages="singupForm.firstName.$error">
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
-                                    </div>
-                                </md-input-container>
-                                <md-input-container>
-                                    <label>Last Name</label>
-                                    <input name="lastName" ng-model="signUp.user.lastName" required>
-                                    <div ng-hide="singupForm.lastName.$untouched" ng-messages="singupForm.lastName.$error">
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
-                                    </div>
-                                </md-input-container>
-                                <md-input-container>
-                                    <label>Password</label>
-                                    <input name="password" ng-model="signUp.user.password" type="password" required minlength="3" maxlength="40">
-                                    <div ng-hide="singupForm.password.$untouched" ng-messages="singupForm.password.$error">
-                                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-                                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
-                                    </div>
-                                </md-input-container>
-                                <md-input-container>
-                                    <label>Confirm Password</label>
-                                    <input name="confirmPassword" ng-model="signUp.user.confirmPassword" compare-to="signUp.user.password" type="password" required minlength="3" maxlength="40">
-                                    <div ng-hide="singupForm.confirmPassword.$untouched" ng-messages="singupForm.confirmPassword.$error">
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
-                                        <div class="invalid_color" ng-message="compareTo">Password does not match.</div>
-                                    </div>
-                                </md-input-container>
-                                <md-progress-circular md-mode="indeterminate" ng-show="signUp.process" md-diameter="30"></md-progress-circular>
-                                <!--For operations where the user is asked to wait a moment while something finishes up, and it’s not necessary to expose what's happening behind the scenes and how long it will take, use an md-mode="indeterminate" indicator.-->
-                                <!-- <md-content style=" margin-left: 0px; font-size: small; "> * Select a unique ID for yourself without spaces</md-content> -->
-                                <md-button ng-click="signUp.signup(singupForm)" class="md-raised backColorSeaGreen foreColorWhite" style="margin-top: 20px;" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId || signUp.process ">Sign up</md-button>
-                            </div>
-                        </md-card-content>
-                    </md-card>
-                </md-content>
-                <!-- End Sign up-->
-            </div>
+<div layout="row" layout-align="center center" layout-padding layout-margin  class="viewHeight80">
+    <form flex="30" name="loginForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll" layout="column" layout-align="center center">
+        <div layout="row" layout-align="center center" style="margin-left: 26px;">
+            <md-input-container>
+                <label>User ID</label>
+                <input name="userId" ng-model="signUp.user.userID" ng-pattern="/^([a-z0-9]){3,20}$/" check-user-id="" required>
+                <div ng-hide="singupForm.userId.$untouched" ng-messages="singupForm.userId.$error" ng-messages-multiple>
+                    <div class="invalid_color" ng-message="required">This is required.</div>
+                    <div class="invalid_color" ng-message="pattern">No Space or Special character | length Only 3 to 20</div>
+                    <div class="invalid_color" ng-message="checkUserId">This userID is not available.</div>
+                </div>
+            </md-input-container>
+            <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey" title="Select a unique ID for yourself without spaces or special characters">
+            </ng-md-icon>
         </div>
+         <md-input-container>
+            <label>Email Address</label>
+            <input name="email" ng-model="signUp.user.email" type="email" required>
+            <div ng-hide="singupForm.email.$untouched" ng-messages="singupForm.email.$error" ng-messages-multiple>
+                <div class="invalid_color" ng-message="required">This is required.</div>
+                <div class="invalid_color" ng-message="email">Not valid email</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <label>First Name</label>
+            <input name="firstName" ng-model="signUp.user.firstName" required>
+            <div ng-hide="singupForm.firstName.$untouched" ng-messages="singupForm.firstName.$error">
+                <div class="invalid_color" ng-message="required">This is required.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <label>Last Name</label>
+            <input name="lastName" ng-model="signUp.user.lastName" required>
+            <div ng-hide="singupForm.lastName.$untouched" ng-messages="singupForm.lastName.$error">
+                <div class="invalid_color" ng-message="required">This is required.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <label>Password</label>
+            <input name="password" ng-model="signUp.user.password" type="password" required minlength="3" maxlength="40">
+            <div ng-hide="singupForm.password.$untouched" ng-messages="singupForm.password.$error">
+                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                <div class="invalid_color" ng-message="required">This is required.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <label>Confirm Password</label>
+            <input name="confirmPassword" ng-model="signUp.user.confirmPassword" compare-to="signUp.user.password" type="password" required minlength="3" maxlength="40">
+            <div ng-hide="singupForm.confirmPassword.$untouched" ng-messages="singupForm.confirmPassword.$error">
+                <div class="invalid_color" ng-message="required">This is required.</div>
+                <div class="invalid_color" ng-message="compareTo">Password does not match.</div>
+            </div>
+        </md-input-container>
+        <md-progress-circular md-mode="indeterminate" ng-show="signUp.process" md-diameter="30"></md-progress-circular>
+        <md-button ng-click="signUp.signup(singupForm)" class="md-raised backColorSeaGreen foreColorWhite" style="margin-top: 20px;" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId || signUp.process ">Sign up</md-button>
     </form>
 </div>

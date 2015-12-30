@@ -25,8 +25,8 @@ angular.module('core', [
     'ui.select',
     'ngSanitize',
     'ui.router',
-    'angular-img-cropper'/*,
-    'md.data.table'*/
+    'angular-img-cropper',
+    'md.data.table'
 
     /*   'customdirectives'*/
 

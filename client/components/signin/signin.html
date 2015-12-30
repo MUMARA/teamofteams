@@ -1,90 +1,18 @@
-<style>
-.forgotPasswordContainer {
-    text-align: center;
-    vertical-align: middle;
-}
-
-a.md-button.md-default-theme.md-primary.md-raised,
-a.md-button.md-default-theme.md-primary.md-fab,
-.md-button.md-default-theme.md-primary.md-raised,
-.md-button.md-default-theme.md-primary.md-fab {
-    color: rgba(255, 255, 255, 0.87);
-    /*background-color: rgb(244,67,54);*/
-    background-color: rgb(21, 156, 195);
-}
-
-body > md-content > div > div.marginContainer > div > form > div > md-input-container.md-default-theme.md-input-has-value.md-input-invalid > div > div {
-    position: relative !important;
-}
-
-.grayScroller:hover {
-    overflow: hidden;
-}
-
-.md-input {
-    width: 310px;
-    max-width: 310px;
-    min-width: 310px;
-}
-
-body > md-content > div > div.marginContainer > div > form > div > div:nth-child(2) {
-    height: 100vh;
-}
-</style>
-<!--style="padding: 20px;background-color: #005DE9;"-->
-<div id="signInView">
-    <form style="padding: 20px;background-color: #efefef;" name="loginForm" novalidate>
-        <div >
-            <!-- <div flex="10">
-                <a ui-sref="home">
-                    <ng-md-icon icon="close" style="outline: none" size="50" layout-padding></ng-md-icon>
-                </a>
-            </div> -->
-            <div layout="row" layout-align="center center">
-                <md-content style="max-width:650px; height:85vh;margin: 0px auto">
-                    <md-card style="margin: 0px auto">
-                        <md-card-content style="padding: 50px;">
-                            <div layout="column" layout-align="space-around center" layout-margin>
-                                <md-input-container md-no-float>
-                                    <div layout="row" layout-align="start center">
-                                        <ng-md-icon icon="email" class="fillColorDarkGrey"></ng-md-icon>
-                                        <span> Email</span>
-                                    </div>
-                                    <input ng-model="loginForm.user.email" type="email" ng-required="true" aria-label="email">
-                                    <div ng-hide="loginForm.userEmail.$pristine" ng-messages="loginForm.userEmail.$error" ng-messages-multiple>
-                                        <!-- <div class="invalid_color" ng-message="required">This is required.</div> -->
-                                        <div class="invalid_color" ng-message="email">Not valid email</div>
-                                    </div>
-                                </md-input-container>
-                                <md-input-container md-no-float>
-                                    <!--<md-icon md-svg-src="img/icons/ic_place_24px.svg" style="display:inline-block;"></md-icon>-->
-                                    <div layout="row" layout-align="start center">
-                                        <ng-md-icon icon="vpn_key" class="fillColorDarkGrey"></ng-md-icon> Password
-                                    </div>
-                                    <input ng-model="loginForm.user.password" type="password" ng-required="true" aria-label="password">
-                                    <div ng-hide="loginForm.userPassword.$pristine" ng-messages="loginForm.userPassword.$error" ng-messages-multiple>
-                                        <!-- <div class="invalid_color" ng-message="required">This is required.</div> -->
-                                    </div>
-                                </md-input-container>
-                                <div flex class="forgotPasswordContainer">
-                                    <!-- <a ui-sref="forgot" class="foreColorSeaGreen">Forgot Password?</a> -->
-                                    <md-button class="foreColorSeaGreen" ui-sref="forgot">Forgot Password?
-                                    </md-button>
-                                    <md-input-container ng-if="signin.submitting" layout="column" layout-align="end center" style="margin-top: 25px;">
-                                        <md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
-                                    </md-input-container>
-                                </div>
-                                <md-text-float label="Password" ng-model="user.password"></md-text-float>
-                                <div flex class="forgotPasswordContainer">
-                                    <md-button class="md-raised backColorSeaGreen foreColorWhite" ng-disabled="loginForm.$invalid && loginForm.$error" style="margin-top: 20px;" ng-click="signin.login(loginForm)">Login
-                                    </md-button>
-                                </div>
-                            </div>
-                        </md-card-content>
-                    </md-card>
-                </md-content>
+<div layout="row" layout-align="center center" layout-padding layout-margin>
+    <form flex="30" name="loginForm" novalidate class="md-whiteframe-z2 backColorWhite" layout="column" layout-align="center center">
+        <md-input-container>
+            <label>Email</label>
+            <input name="userEmail" type="email" ng-model="loginForm.user.email" ng-required="true" aria-label="email">
+            <div ng-hide="loginForm.userEmail.$pristine" ng-messages="loginForm.userEmail.$error" ng-messages-multiple>
+                <div class="invalid_color" ng-message="email">Not valid email</div>
             </div>
-        </div>
+        </md-input-container>
+         <md-input-container>
+            <label>Password</label>
+            <input type="password" ng-model="loginForm.user.password" ng-required="true" aria-label="password">
+        </md-input-container>
+        <md-button class="foreColorSeaGreen" ui-sref="forgot">Forgot Password?</md-button>
+        <md-progress-circular  ng-if="signin.submitting" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+          <md-button class="backColorSeaGreen foreColorWhite" ng-disabled="loginForm.$invalid && loginForm.$error" ng-click="signin.login(loginForm)">Login</md-button>
     </form>
-</div>
 </div>

@@ -1,426 +1,51 @@
-<style>
-.listCardHeading {
-    /*text-align: center;*/
-    /*vertical-align: baseline;*/
-    color: #7dd9e8;
-    font-size: 15px;
-    margin: 19px 18px 0px 100px;
-    /*display:inline-block;*/
-    /*position:absolute;*/
-}
-
-.listCardHeading2 {
-    /*text-align: center;*/
-    /*vertical-align: baseline;*/
-    color: #7dd9e8;
-    font-size: 15px;
-    margin: 19px 18px 0px 100px;
-    /*display:inline-block;*/
-    /*position:absolute;*/
-}
-
-.listCardHeading,
-.listCardHeading2 {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#myItems > div.background > md-content {
-    margin-top: 24px !important;
-}
-
-body > div.md-select-menu-container.ng-scope.md-default-theme.md-active.md-clickable {
-    background-color: white;
-}
-
-#myimg {
-    display: inline-block;
-    position: absolute;
-    width: 33px;
-    height: auto;
-    /* background-color: black; */
-    top: 9px;
-    right: -1px;
-}
-
-md-autocomplete input:not(.md-input) {
-    font-size: 18px !important;
-}
-
-.inputdemoIcons .inputIconDemo {
-    min-height: 48px;
-}
-
-.inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.email {
-    color: green;
-}
-
-.inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.name {
-    color: dodgerblue;
-}
-
-.inputdemoIcons md-input-container.md-input-invalid > md-icon.email,
-.inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
-    color: rgb(239, 239, 239);
-}
-
-#input_3 {
-    /*border-color: rgba(0,0,0,0.12);*/
-    border-color: transparent !important;
-}
-
-#select_label_4 > span:nth-child(1) {
-    font-size: 12px
-}
-
-.fontset {
-    font-size: 16px !important;
-}
-
-.fontset:nth-child(1) {
-    position: relative;
-    left: 20px;
-}
-
-.fontset:nth-child(2) {
-    position: relative;
-    left: 31px;
-}
-
-.fontset:nth-child(3) {
-    position: relative;
-    left: 41px;
-}
-
-.fontset:nth-child(4) {
-    position: relative;
-    left: 26px;
-}
-
-.user_listItems {
-    box-shadow: none;
-    padding: 0;
-    margin: 0px;
-    position: relative;
-    /*top: -83px;*/
-}
-
-body > md-content > div > div.marginContainer > div > div > div.background > div:nth-child(1) > md-card > div > md-toolbar > div {
-    width: 100%;
-    /* padding: 0 16px; */
-    position: relative;
-    top: 23px;
-    margin-left: 50px;
-}
-</style>
-<div id="myItems">
-    <div class="subheaderBar"></div>
-    <div layout="row" layout-margin layout-fill layout-padding class="background" style="height: 100vh">
-        <!-- ================================================================================-->
-        <div flex="55" style="z-index: 9;">
-            <!--<md-card style="width: 723px ;height: 625px"  >-->
-            <md-card style="width: 723px ; height: 85vh">
-                <md-content>
-                    <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
-                        <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="user.setFocus()" layout-margin></ng-md-icon>
-                        <md-input-container md-no-float class="nopadding" flex layout-margin>
-                            <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
-                        </md-input-container>
-                        <md-select class="nopadding" placeholder="Every One" ng-model="user.dropbox" style="overflow: hidden!important;">
-                            <md-option value="0">Everyone</md-option>
-                            <md-option value="1">Online</md-option>
-                            <md-option value="2">Offline</md-option>
-                        </md-select>
-                    </div>
-                    <!-- <md-toolbar class=" md-theme-light" style="background-color: #ffffff">
-                        <h2 class="md-toolbar-tools">
-                            <div flex>
-                                <div style="position: relative;"> -->
-                    <!--<md-input class="serchbox"></md-input>-->
-                    <!--<style>
-                                        md-autocomplete input:not(.md-input){
-                                            font-size: 18px !important;
-                                        }
-                                        .inputdemoIcons .inputIconDemo {
-                                            min-height: 48px; }
-                                        .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.email {
-                                            color: green; }
-                                        .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.name {
-                                            color: dodgerblue; }
-                                        .inputdemoIcons md-input-container.md-input-invalid > md-icon.email, .inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
-                                            color: rgb(239, 239, 239); }
-                                        #input_3{
-                                             /*border-color: rgba(0,0,0,0.12);*/
-                                            border-color: transparent !important;
-                                        }
-                                    </style>-->
-                    <!-- <div class="userListSearchbox" layout="row" layout-align="space-between center"
-                                         style="background-color: rgb(239, 239, 239);"> -->
-                    <!--   <md-input-container class="md-icon-float md-block">
-                                              <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon>
-                                              <input ng-model="user.name" type="text">
-                                            </md-input-container>
-                                         -->
-                    <!-- <md-input-container layout-padding md-no-float>
-                                            <md-icon layout-margin md-svg-src="../../img/search.svg"></md-icon>
-                                            --<input   ng-model="user.searchbox" type="text" ng-change="$root.searchFn(user.searchbox,2)"  placeholder="User Name">--
-                                            <input   ng-model="user.searchbox" type="text" class="serachbox2" placeholder="User Name">
-                                        </md-input-container> -->
-                    <!-- <ng-md-icon icon="search" style="fill: #929497;" class="nooutline"
-                                                    ng-click="user.setFocus()" layout-margin></ng-md-icon>
-                                        <md-input-container md-no-float style="padding-bottom: 0px;" flex>
-                                            <input type="text" id="#UserSearch" ng-model="user.searchbox"
-                                                   aria-label="search dashboard" class="serachbox2"
-                                                   placeholder="Search">
-                                        </md-input-container>
-                                    </div> -->
-                    <!-- <md-autocomplete style="background-color: rgb(239, 239, 239);"   class="searchbox"
-                                                      md-search-text-change="null"
-
-                                                      md-selected-item-change="ctrl.selectedItemChange(item)"
-                                                      md-items="item in ctrl.querySearch(ctrl.searchText)"
-                                                      md-item-text="item.display"
-                                                      placeholder="Use User Name or Group_subgroup">
-
-                                         &lt;!&ndash;<md-item-template>&ndash;&gt;
-                                         &lt;!&ndash;<span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>&ndash;&gt;
-                                         &lt;!&ndash;</md-item-template>&ndash;&gt;
-                                     </md-autocomplete>-->
-                    <!--     <!--<img id="myimg" src="../../img/search.svg" alt="search"/>-->
-                    <!-- </div>
-                            </div>
-                            <div offset="5"> -->
-                    <!--<div layout="column" layout-align="center left" flex>
-                                    <md-select placeholder="EveryOne" ng-model="someVal" class="user">
-                                        <md-option value="1">One</md-option>
-                                        <md-option value="2">Two</md-option>
-                                        <md-option value="3">EveryOne</md-option>
-                                    </md-select>
-                                </div>-->
-                    <!-- <div id="abc_" layout="column" layout-align="center center"
-                                     style=" position: relative; top: 11px;height: 100px;">
-                                    <md-select style="color:black;font-size: 16px;" placeholder="Every One"
-                                               ng-model="user.dropbox">
-                                        <!-- <md-select style="color:black;font-size: 16px;" placeholder="Every One" ng-model="user.dropbox" ng-change="$root.searchFn(user.dropbox,1)" > -->
-                    <!--  <style>
-                                            #select_label_4 > span:nth-child(1){
-                                                font-size: 12px
-                                            }
-                                        </style> -->
-                    <!--<md-select-label style="color:black;font-size: 16px;">SUBGROUPS</md-select-label>-->
-                    <!-- <md-option value="0">Everyone</md-option>
-                                        <md-option value="1">Online</md-option>
-                                        <md-option value="2">Offline</md-option> -->
-                    <!-- <md-option  ng-repeat="(key,groups) in user.userMemData.data.groupSubgroupData">{{key}}</md-option> -->
-                    <!-- </md-select>
-
-                                </div>
-                            </div>
-                        </h2> -->
-                    <md-divider></md-divider>
-                    <div>
-                        <!--<style>
-                        .userGroupSubgroupImg {
-                            background-image: url('../img/people_button.svg');
-                            background-repeat: no-repeat;
-                            background-size: 25px;
-                            background-position: 8px;
-                            width: 40px;
-                            height: 40px;
-                            border-radius: 20px;
-                            background-color: #69B0A2;
-                            position: absolute;
-                            z-index: 9;
-                            /* bottom: inherit; */
-                            margin: 10px 30px;
-                        }
-                        </style>-->
-                        <div class="userGroupSubgroupImg"></div>
-                        <!--   <md-toolbar class="md-theme-light" layout="row" style="background-color: white">
-                                &lt;!&ndash;<div flex="10"></div>&ndash;&gt;
-                                <div layout="row" style="width: 100%;padding: 0 16px">
-                                    &lt;!&ndash;<div layout="row" >&ndash;&gt;
-                                    <div flex="15">
-                                        &lt;!&ndash;<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">&ndash;&gt;
-                                    </div>
-                                    &lt;!&ndash;<style>
-                            .fontset{
-                                font-size: 16px !important;
-                            }
-                            .fontset:nth-child(1) {
-                                position: relative;
-                                left: -16px;
-                            }
-                            .fontset:nth-child(2){
-                                position: relative;
-                                left: -5px;
-                            }
-                            .fontset:nth-child(3){
-                                position: relative;
-                                left: 8px;
-                            }
-                            .fontset:nth-child(4){
-                                position: relative;
-                                left: 16px;
-                            }
-                        </style>&ndash;&gt;
-                                    <div flex="85" class="userToolBar" layout="row">
-                                        <div flex="25" class="listCardHeading fontset"><b>Name</b></div>
-                                        <div flex="25" class="listCardHeading fontset"><b>Phone</b></div>
-                                        <div flex="25" class="listCardHeading fontset"><b>Team</b></div>
-                                        <div flex="25" class="listCardHeading fontset"><b>Last Modified</b></div>
-                                    </div>
-                                </div>
-                            </md-toolbar>
-                            <md-divider></md-divider>-->
-                    </div>
-                    <!--user list code-->
-                    <!--<style>
-                        .user_listItems {
-                            box-shadow: none;
-                            padding: 0;
-                            margin: 0px;
-                            position: relative;
-                            /*top: -83px;*/
-                        }
-                    </style>-->
-                    <md-card class="user_listItems">
-                        <md-toolbar class="md-theme-light" layout="row" style="background-color: white ;padding: 1%;">
-                            <!--<div flex="10"></div>-->
-                            <div layout="row" style="width: 100%;padding: 0 16px">
-                                <!--<div layout="row" >-->
-                                <div flex="15">
-                                    <!--<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">-->
-                                </div>
-                                <div flex="85" class="userToolBar" style="" layout="row">
-                                    <div flex="25" class="listCardHeading fontset"><b>Name</b></div>
-                                    <div flex="20" class="listCardHeading fontset"><b>Phone</b></div>
-                                    <div flex="30" class="listCardHeading fontset"><b>Team</b></div>
-                                    <div flex="25" class="listCardHeading fontset"><b>Last Modified</b></div>
-                                </div>
-                            </div>
-                        </md-toolbar>
-                        <md-divider></md-divider>
-                        <md-content style="overflow-x: hidden">
-                            <md-list>
-                                <md-list-item class="md-2-line">
-                                    <div class="md-list-item-text" style="margin-top: -3%">
-                                        <!--<div flex="10"></div>-->
-                                        <!--<style>
-                            body > md-content > div > div.marginContainer > div > div > div.background > div:nth-child(1) > md-card > div > md-toolbar > div {
-                                width: 100%;
-                                /* padding: 0 16px; */
-                                position: relative;
-                                top: 23px;
-                                margin-left: 50px;
-                            }
-                            .roundShape{
-                                display: block;
-                                margin: auto;
-                                width: 54px;
-                                height: 54px;
-                                border-radius: 27px;
-                                border: 3px solid rgb(197, 25, 3);
-                                margin-left: 10px;
-                            }
-                        </style>-->
-                                        <!-- <div layout="row" ng-repeat="(key, userObj) in user.userMemData.data.flattenedsubGroupsByuser " ng-show="userObj.show"  class="margining " style="margin-bottom: 17px;"> -->
-                                        <div layout="row" ng-repeat="usr in user.users | orderBy: ['firstName', 'lastName', 'groupsubgroup'] | filter: user.searchbox" class="margining " style="margin-bottom: 17px;" ng-hide="usr.duplicate">
-                                            <div flex="10" class="circular">
-                                                <!--<img ng-src="{{userObj['profile-image']}}" class="userCardImg " ng-style="{(userObj.type == 2) && {'border':'green'} ||{'border':'red'} }">-->
-                                                <img ng-src="{{usr.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="roundShape" ng-style="usr.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">
-                                                <!--ng-style="userObj.type == 1 ? 'onlineUser' :'offlineUser' ">-->
-                                                <!--ng-style="userObj.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">-->
-                                            </div>
-                                            <div flex="90" layout="row">
-                                                <div flex="25" class="listCardHeading2" style="color: black;font-size: 13px">{{usr.fullName}}
-                                                </div>
-                                                <div flex="20" class="listCardHeading2" style="color: #909090;font-size: 13px">{{usr.contactNumber || 'No number'}}
-                                                </div>
-                                                <!--<div flex="25" class="listCardHeading2" style="color: #909090">{{userObj.groupID + '>' + userObj.subgroupID}}-->
-                                                <div flex="25" class="listCardHeading2" style="color: #909090;font-size: 13px;">
-                                                    <span>{{usr.groupsubgroupTitle}}</span>
-                                                </div>
-                                                <div flex="30" class="listCardHeading2" style="color: #909090;font-size: 13px">{{usr.timestamp |date:'MM/dd/yyyy'}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </md-list-item>
-                            </md-list>
-                        </md-content>
-                    </md-card>
-                </md-content>
-            </md-card>
+<div class="subheaderBar"></div>
+<div layout="row" layout-align="center start" class="toppadding40px">
+    <md-table-container flex="60" class="md-whiteframe-z2 backColorWhite" style="height: 85vh ;overflow-x: hidden; overflow-y:auto; z-index: 1;">
+        <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
+            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="user.setFocus()"></ng-md-icon>
+            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
+                <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
+            </md-input-container>
+            <md-select class="nopadding nomargin leftmargin20px" placeholder="Every One" ng-model="user.dropbox" style="overflow: hidden!important;">
+                <md-option value="0">Everyone</md-option>
+                <md-option value="1">Online</md-option>
+                <md-option value="2">Offline</md-option>
+            </md-select>
         </div>
-        <div flex="30">
-            <!--<md-content style="height: 628px;width: 473px;overflow-x: hidden;margin-top: 5px;z-index: 1;" class="greenScroller">-->
-            <md-content style="height: 90vh ;width: 473px;overflow-x: hidden;z-index: 1;" class="greenScroller">
-                <div layout="row" style="width: 480px" layout-wrap>
-                    <!--<div layout="column" style="width: 235px;height:285px;color: #676767"
-                         ng-repeat='(key,prop) in user.userObj track by key'>-->
-                    <!-- <div ng-repeat='key in user.groups track by $index'>
-                         {{ key.title}} - {{key.groupID}
-                    </div> -->
-                    <div ng-repeat="group in user.groups">
-                        <groupcard-directive group="group"></groupcard-directive>
-                    </div>
-                    <!--<div layout="column" style="width: 235px;height:285px;color: #676767;margin: -5px;">
-
-                        <md-card style="width: 229px;height: 275px;background-color: #31B4CB;color:#ffffff;" id="profile-card">
-
-                            <md-card-content>
-                                <ng-md-icon icon="clear"  size="20" style="fill:#ffffff;padding-top:20px" id="profile-card-clear-icon"></ng-md-icon>
-                                <md-tabs md-align-tabs="bottom" id="mycustom">
-
-                                    <md-tab label="Info">
-                                        <md-content>
-                                            <div layout="row" layout-wrap id="custom-layout-margin" style="background-color: #31B4CB;color:#ffffff">
-                                                <div ng-repeat="n in [42, 43, 44, 45,46, 47, 48, 49,50]" >
-                                                    <md-list>
-                                                        <md-list-item class="md-3-line" style="height: 48px;">
-                                                            <img ng-src="img/washedout.png" class="md-avatar" alt="" />
-                                                            &lt;!&ndash;<img ng-src="{{'https://s3-us-west-2.amazonaws.com/test2pwow/groupProfileBucket/xyz.jpeg' | trustUrl}}" class="md-avatar" alt="" />&ndash;&gt;
-                                                        </md-list-item>
-                                                        <span style="margin-left: 22%" class="md-caption">Haseeb</span>
-                                                    </md-list>
-                                                </div>
-                                                &lt;!&ndash;<div>
-                                                    <md-list>
-                                                        <md-list-item class="md-3-line" style="border-right: 2px solid #dddddd" ng-repeat="n in [42, 43, 44, 45,46, 47, 48, 49,50]">
-                                                            <img ng-src="img/washedout.png" class="md-avatar" alt="" />
-                                                        </md-list-item>
-                                                    </md-list>
-                                                </div>&ndash;&gt;
-                                            </div>
-                                        </md-content>
-                                    </md-tab>
-                                    <md-tab label="Ofline">
-                                        <md-content>
-                                            <p>This is the Second Tab</p>
-                                        </md-content>
-                                    </md-tab>
-                                    <md-tab label="Online">
-                                        <md-content>
-                                            <p>This is the Third Tab</p>
-                                        </md-content>
-                                    </md-tab>
-                                </md-tabs>
-                            </md-card-content>
-                        </md-card>
-                    </div>-->
-                </div>
-            </md-content>
+        <md-divider md-outset></md-divider>
+        <table md-table>
+            <thead md-head>
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column>Name</th>
+                    <th md-column>Phone</th>
+                    <th md-column>Team</th>
+                    <th md-column>Last Modified</th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row ng-repeat="usr in user.users | orderBy: ['firstName', 'lastName', 'groupsubgroup'] | filter: {fullName: user.searchbox}" class="hoverLightGrey3" >
+                    <td md-cell>
+                        <img ng-src="{{usr.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px" ng-style="usr.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">
+                    </td>
+                    <td md-cell>{{usr.fullName}}</td>
+                    <td md-cell>{{usr.contactNumber}}</td>
+                    <td md-cell>{{usr.groupsubgroupTitle}}</td>
+                    <td md-cell>{{usr.timestamp |date:'MM/dd/yyyy'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-content style="height: 85vh ;overflow-x: hidden;z-index: 1; background-color: transparent;" class="leftpadding20px">
+        <div layout="row" style="width: 480px" layout-wrap>
+            <div ng-repeat="group in user.groups">
+                <groupcard-directive group="group"></groupcard-directive>
+            </div>
         </div>
-        <!--button side-->
-        <div flex="15">
-            <nav style="position:absolute;top: 180px;" mfb-menu position="tr" effect="zoomin" resting-icon="ion-plus-round" toggling-method="click" id="sideCustomNav" label="Team of Teams" class="nooutline">
-                <button mfb-button label="Add" id="sideButtonAdd" ng-click="user.openCreateGroupPage()" class="nooutline"></button>
-                <!-- <button mfb-button label="JoinGroup" id="sideButtonSearch" ui-sref="user.join-group"></button> -->
-                <button mfb-button label="Join" id="sideButtonSearch" ng-click="user.openJoinGroupPage()" class="nooutline"></button>
-                <button mfb-button label="Delete" id="sideButtondelete" class="nooutline"></button>
-            </nav>
-        </div>
-    </div>
-    <!--<md-toast>hELLO</md-toast>-->
+    </md-content>
 </div>
+<nav style="position:absolute;top: 235px;" mfb-menu position="tr" effect="zoomin" resting-icon="ion-plus-round" toggling-method="click" id="sideCustomNav" label="Team of Teams" class="nooutline fillColorWhite">
+    <button mfb-button label="Add" id="sideButtonAdd" ng-click="user.openCreateGroupPage()" class="nooutline fillColorWhite"></button>
+    <button mfb-button label="Join" id="sideButtonSearch" ng-click="user.openJoinGroupPage()" class="nooutline fillColorWhite"></button>
+    <button mfb-button label="Delete" id="sideButtondelete" class="nooutline fillColorWhite"></button>
+</nav>

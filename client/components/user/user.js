@@ -64,6 +64,7 @@
         var userObjUbind;
         this.userObj = [];
 
+
         // function getUserObj() {
         //     var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.pageUserId.userID))
         //         .$loaded()
