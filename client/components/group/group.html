@@ -92,7 +92,7 @@
                 <tbody md-body>
                     <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, firstName: group.searchUser}" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" class="hoverLightGrey3 nooutline" >
                         <td md-cell>
-                            <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon50px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
+                            <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
                         </td>
                         <td md-cell>{{user.fullName}}</td>
                         <td md-cell>{{user.groupTitle}}</td>
@@ -127,7 +127,7 @@
                 <tbody md-body>
                     <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, firstName: group.searchUser}" class="hoverLightGrey3 nooutline">
                         <td md-cell>
-                            <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon50px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
+                            <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
                         </td>
                         <td md-cell>{{user.fullName}}</td>
                         <td md-cell>{{user.contactNumber}}</td>
