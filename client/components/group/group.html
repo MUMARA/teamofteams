@@ -3,7 +3,7 @@
     <div class="viewHeight" layout="column" style="padding-bottom: 60px">
         <md-card style="width: 220px; height: 300px; margin:0px;" class="foreColorDarkGrey" layout="column">
             <div style="margin:auto;">
-                <a ui-sref="user.group({groupID: group.group.groupID})" layout="row" layout-align="center center">
+                <a ng-click="group.GetSubGroupUsers()" layout="row" layout-align="center center">
                     <img ng-src="{{ group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
                 </a>
                 <h4 class="textAlignCenter" layout-margin>
@@ -62,14 +62,14 @@
         </div>
     </div>
     <!-- Team Attendance -->
-    <div class="viewHeight teamAttendance" layout="column" flex ng-show="group.showManualAttendace">
+    <div class="viewHeight teamAttendance" layout="column" flex ng-show="group.showManualAttendace" style="padding-bottom: 60px">
 	    <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite">
 	    	<h4 class="leftmargin20px">Manual Attendance</h4>
 	    	<md-progress-circular md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
 	    	<div layout="row" flex="50">	
-	            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="user.setFocus()"></ng-md-icon>
+	            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
 	            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
-	                <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
+	                <input type="text" id="#UserSearch" ng-model="group.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
 	            </md-input-container>
 	        </div>
 	    </div>
@@ -79,7 +79,7 @@
                 <thead md-head>
                     <tr md-row>
                         <th md-column>
-                            <md-button class="md-fab md-mini backColorOrange" aria-label="checkout" style="line-height: 40px !important;" ng-click="group.checkoutAll()" >
+                            <md-button class="md-fab md-mini backColorOrange" aria-label="checkout" style="line-height: 40px !important;margin: 0px 3px;" ng-click="group.checkoutAll()" >
                                 <md-icon md-svg-icon="../img/people_button.svg" class="nomargin" aria-label="People Group Icon"></md-icon>
                             </md-button>
                         </th>
@@ -90,7 +90,7 @@
                     </tr>
                 </thead>
                 <tbody md-body>
-                    <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, firstName: group.searchUser}" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" class="hoverLightGrey3 nooutline" >
+                    <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, fullName: group.searchbox}" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" class="hoverLightGrey3 nooutline" >
                         <td md-cell>
                             <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
                         </td>
@@ -104,11 +104,11 @@
         </md-table-container>
     </div>
     <!-- Activity -->
-    <div class="viewHeight activity" flex layout="column" ng-show="group.showActivity">
+    <div class="viewHeight activity" flex layout="column" ng-show="group.showActivity" style="padding-bottom: 60px">
         <div layout="row" layout-padding layout-align="space-between center" style="font-size:large;" class="backColorWhite">
-    	    <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="user.setFocus()"></ng-md-icon>
+    	    <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
             <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
-                <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
+                <input type="text" id="#UserSearch" ng-model="group.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
             </md-input-container>
 	    </div>
         <md-table-container flex class="md-whiteframe-z2 backColorWhite viewHeight vscroll">
@@ -125,7 +125,7 @@
                     </tr>
                 </thead>
                 <tbody md-body>
-                    <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, firstName: group.searchUser}" class="hoverLightGrey3 nooutline">
+                    <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, fullName: group.searchbox}" class="hoverLightGrey3 nooutline">
                         <td md-cell>
                             <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}">
                         </td>
@@ -145,9 +145,9 @@
 		    	<h4 class="leftmargin20px">Channel Headlines</h4>
 		    	<md-progress-circular md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
 		    	<div layout="row" flex="50">	
-		            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="user.setFocus()"></ng-md-icon>
+		            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
 		            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
-		                <input type="text" id="#UserSearch" ng-model="user.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
+		                <input type="text" id="#UserSearch" ng-model="group.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
 		            </md-input-container>
 		        </div>
 		    </div>

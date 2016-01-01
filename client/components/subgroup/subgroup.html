@@ -1,120 +1,60 @@
-<!--<form style="background-color: #005DE9;" name="groupForm" ng-submit="cgc.answer( groupForm )" novalidate="" ng-controller="subgroupController as cgc">-->
-<!--<form style="background-color: #005DE9;" name="groupForm"  novalidate="" ng-controller="subgroupController as cgc">-->
-<form name="groupForm" novalidate="">
-    <!-- <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="subgroup.hide()"></ng-md-icon> -->
-    <md-content style="max-width:85%;margin: 0px auto; height:85vh; margin-top:3%">
-        <div layout="row">
-            <div flex>
-                <md-card style=" margin: 0px auto;border-radius:5px;">
-                    <md-card-content style="padding: 0px;">
-                        <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Create Team</h1>
-                        <md-divider md-outset></md-divider>
-                        <div layout="row">
-                            <div flex style="margin-left: 5px;padding: 20px">
-                                <h2>Url <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h2>
-                                <div layout="row">
-                                    <div flex="20" style="padding-top: 1.0%;">
-                                        <span>teamofteams.io/{{subgroup.groupid}}/</span>
-                                    </div>
-                                    <div flex="30">
-                                        <md-input-container md-no-float>
-                                            <input name="groupId" ng-model="subgroup.Subgroup.subgroupID" autocomplete="off" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{subgroup.groupName}}" check-group-existance="" required placeholder="Team URL">
-                                            <!-- check-user-id is a directive-->
-                                            <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
-                                                <div class="invalid_color" ng-message="required">This is required.</div>
-                                                <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
-                                                <div layout="row" class="invalid_color id_Error" ng-message="checkGroupExistance">This name is not available.</div>
-                                            </div>
-                                        </md-input-container>
-                                    </div>
-                                </div>
-                                <md-input-container>
-                                    <label>Name</label>
-                                    <input name="groupTitle" ng-model="subgroup.Subgroup.title" minlength="3" maxlength="40" required>
-                                    <div ng-show="groupForm.$submitted || groupForm.groupTitle.$touched" ng-messages="groupForm.groupTitle.$error">
-                                        <div class="invalid_color" ng-message="required">This is required.</div>
-                                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-                                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
-                                    </div>
-                                </md-input-container>
-                                <md-input-container>
-                                    <label>Description</label>
-                                    <textarea minlength="0" maxlength="40" name="groupDesc" ng-model="subgroup.Subgroup.desc" cols="25" rows="1"></textarea>
-                                    <div ng-show="groupForm.$submitted || groupForm.groupDesc.$touched" ng-messages="groupForm.groupDesc.$error">
-                                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
-                                    </div>
-                                </md-input-container>
-                                <h2>Select Photo</h2>
-                                <div>
-                                    <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                                        <!-- <img ng-src="{{'img/image.svg'}}" alt="team image" class="cropper-main-image" ng-click="subgroup.showAdvanced($event)" /> -->
-                                        <!-- <md-button class="" ng-click="cgc.showAdvanced($event)" flex flex-md="100"> -->
-                                            <md-icon md-svg-src="img/image.svg" class="cropper-main-image nooutline" ng-click="subgroup.showAdvanced($event)"></md-icon>
-                                        <!-- </md-button> -->
-                                    </div>
-                                    <div style="width: 96px; overflow: hidden;">
-                                        <img ng-src="{{$root.newImg}}" alt="" class="cropper-main-button" ng-hide="!$root.newImg" ng-click="subgroup.showAdvanced($event)" />
-                                    </div>
-                                    <!--<image-cropper></image-cropper>-->
-                                    <!--<input ng-model="as3" style="display:none" type="file" id="fileUploadEl"  onchange="angular.element(thi s).scope().cgc.postPicture(this)"/>
-                                    <div class="imgFormat image" onclick="$('#fileUploadEl')[0].click();" >
-                                        <img src="img/image.png" alt=""/>
-                                    </div>-->
-                                </div>
-                                <h2>Team Members</h2>
-                                <md-button  style="background: #60B089" class="md-raised md-hue-1 md-button md-default-theme" ng-click="subgroup.toggleRight();"><span style="color: white;">Add</span></md-button>
-                                <md-chips>
-                                    <md-chip ng-repeat="user in subgroup.selectedMemberArray" style="height:40px">
-                                        <img ng-src="{{user['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 34px; height: 37px;      border-radius: 50%; margin-left: -11px" />
-                                        <span style="margin-left: 10px">{{user.firstName + ' ' + user.lastName +" "}}</span>
-                                    </md-chip>
-                                </md-chips>
-                                <!--
-                                <md-contact-chips ng-model="subgroup.selectedMemberArray"
-                                                  md-contact-name="firstName" md-contact-image="image" >
-                                </md-contact-chips>-->
-                                <div style="margin-top: 10px; ">
-                                    <p style="color: rgb(227, 228, 230);">To allow email addresses from multiple domains,separate them with commas</p>
-                                </div>
-                                <br>
-                                <div layout="row">
-                                    <div flex='20' offset="50">
-                                        <md-progress-circular ng-show="subgroup.abc " md-mode="indeterminate" md-diameter="30"></md-progress-circular>
-                                    </div>
-                                    <div flex>
-                                        <!--<md-button class="md-raised md-primary">Submit</md-button>-->
-                                        <md-button class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" ng-disabled="groupForm.$invalid" ng-click="subgroup.answer( groupForm )"><span style="color: white;">Create Team</span></md-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </md-card-content>
-                </md-card>
+<div flex layout-padding layout-margin>
+		<!-- <div layout="row" class="nopadding md-whiteframe-z2" layout-padding> -->
+        <form autocomplete="off" layout="column" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
+        <h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Create Team</h1>
+        <md-divider md-outset class="nopadding"></md-divider>
+            <div class="backColorWhite md-whiteframe-z1 viewHeight80 vscroll" layout="column" layout-align="start" flex>
+    			<!-- <div> 
+                    <div layout="row" layout-align="start center">
+                        <h3>Url</h3>
+                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon> 
+                    </div>
+                    <div>teamofteams.io/{{subgroup.groupid}}/{{createSubGroup.subgroupData.$id}}</div>
+    			</div> -->
+                <h3>General Information</h3>
+                 <md-input-container flex>
+                    <input name="groupId" ng-model="subgroup.Subgroup.subgroupID" autocomplete="off" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{subgroup.groupName}}" check-group-existance="" required placeholder="Team URL">
+                    <!-- check-user-id is a directive-->
+                    <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
+                        <div layout="row" class="invalid_color id_Error" ng-message="checkGroupExistance">This name is not available.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex>
+		            <label>Name</label>
+		            <input name="groupTitle" ng-model="subgroup.Subgroup.title" minlength="3" maxlength="40" required>
+		            <div ng-show="groupForm.$submitted || groupForm.groupTitle.$touched" ng-messages="groupForm.groupTitle.$error">
+		                <div class="invalid_color" ng-message="required">This is required.</div>
+		                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+		                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+		            </div>
+	        	</md-input-container>
+            	<md-input-container flex>
+                    <label>Description</label>
+                    <textarea minlength="5" maxlength="40" name="groupDesc" ng-model="subgroup.Subgroup.desc" cols="25" rows="1"></textarea>
+                    <div ng-show="groupForm.$submitted || groupForm.groupDesc.$touched" ng-messages="groupForm.groupDesc.$error">
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 5</div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                    </div>
+                </md-input-container>
+                <div>
+                	<div layout="row" layout-align="start center">
+                        <h3>Set Team Photo</h3>
+                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon> 
+                    </div>
+                    <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
+                            <md-icon md-svg-src="img/image.svg" class="cropper-main-image nooutline" ng-click="subgroup.showAdvanced($event)"></md-icon>
+                    </div>
+                    <div style="width: 96px; overflow: hidden;">
+                        <img ng-src="{{$root.newImg}}" alt="" class="cropper-main-button" ng-hide="!$root.newImg" ng-click="subgroup.showAdvanced($event)" />
+                    </div>
+                </div>
+                <div  layout="row" layout-align="end center">
+                    <md-progress-circular class="" ng-show="subgroup.abc"  md-mode="indeterminate"></md-progress-circular>
+                	<md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen"  ng-click="subgroup.answer( groupForm )"><span style="color:white;">Save</span>
+                    </md-button>
+                </div>
             </div>
-        </div>
-        <!--add members sidenav-->
-        <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="background-color: #68C2E8 !important;">
-            <md-content class="grayScroller" style="width:300px; max-height: 500px;min-height: 500px;height: 500px;">
-                <md-list style="padding: 0px 0px 0px 0px;!important;position: relative" ng-class="$index%2==0 ? 'moh' : 'sin'" ng-repeat="member in subgroup.members track by $index">
-                    <md-list-item class="md-3-line selectable" ng-click="subgroup.selectedMember(member.user.profile)" ng-disabled="subgroup.filterUser(member.user.profile.$id)">
-                        <ng-md-icon icon="done" style="fill:red;margin-bottom: -15px; " ng-if="member.membershipType==1">
-                        </ng-md-icon>
-                        <ng-md-icon icon="done" style="fill:green;margin-bottom: -15px; " ng-if="subgroup.filterUser2(member.user.profile.$id)">
-                        </ng-md-icon>
-                        <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" style="width: 34px; height: 37px;      border-radius: 50%;   margin-top: 30px; margin-left: 7px;" />
-                        <div class="md-list-item-text" style="   padding: 24px 0 0 0;">
-                            <h4 style="color:#ffffff; margin: 0px 0px 0px 15px !important;">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}
-
-                            </h4>
-                            <!--   <span style="position:relative; float: right;">
-                              </span>-->
-                        </div>
-                    </md-list-item>
-                </md-list>
-            </md-content>
-            <div style="text-align: center;margin-top:250px;">
-                <md-button class="md-accent  md-button md-default-theme md-whiteframe-z2" style="  width: 150px;background-color: #1EA9E4 !important;" ng-click="subgroup.close( )"><b><span style="color: white;font-size: 16px;">Done</span></b></md-button>
-            </div>
-        </md-sidenav>
-    </md-content>
-</form>
+		</form>
+	</div>

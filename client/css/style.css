@@ -103,6 +103,10 @@
     padding-top: 40px;
 }
 
+.bottompadding50px {
+    padding-bottom: 50px!important;
+}
+
 .leftpadding20px{
     padding-left: 20px;
 }

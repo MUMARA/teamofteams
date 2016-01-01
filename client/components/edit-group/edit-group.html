@@ -1,5 +1,5 @@
 <div layout="row" layout-padding layout-margin>
-	<div layout="column" layout-align="start center" class="nomargin nopadding" style="background-color:rgb(96, 176, 137); max-height: 287px">
+	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1" style="background-color:rgb(96, 176, 137); max-height: 287px">
 		<md-button style="background-color: darkseagreen; margin: 0px; width:100%">
 	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
 	        <div style="color: white;">Group</div>
@@ -17,12 +17,16 @@
 		    <div style="color: white;">Teams</div>
 	    </md-button>
 	</div>
-	<div flex layout-padding class="backColorWhite nomargin nopadding">
+	<!-- <div flex layout-padding class="backColorWhite nomargin nopadding"> -->
+    <form flex layout-padding class="backColorWhite nomargin nopadding" name="groupForm" novalidate>
 		<h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Edit Team of Teams</h1>
         <md-divider md-outset class="nopadding"></md-divider>
 		<div layout="column" class="viewHeight80 vscroll" layout-padding>
-			<div>
-                <h3>Url <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </h3>
+            <div>
+    			<div layout="row" layout-align="start center">
+                    <h3>Url</h3>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon> 
+                </div>
                 <div>teamofteams.io/ {{editGroup.group.$id}} </div>
 			</div>
             <h3>General Information</h3>
@@ -92,10 +96,10 @@
                 <image-cropper></image-cropper>
             </div>
             <div  layout="row" layout-align="end center">
-                <md-progress-circular class="" ng-show="groupForm.$submitted" md-mode="indeterminate"></md-progress-circular>
-            	<md-button ng-disabled="groupForm.$invalid" class="md-accent md-raised md-hue-1 md-button md-default-theme" ng-click="editGroup.answer( groupForm )"><span style="color:white;">Save</span>
+                <md-progress-circular class="" ng-show="editGroup.submitProgress" md-mode="indeterminate"></md-progress-circular>
+            	<md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen" ng-click="editGroup.answer( groupForm )"><span style="color:white;">Save</span>
                 </md-button>
             </div>
 		</div>
-	</div>
+	</form>
 </div>

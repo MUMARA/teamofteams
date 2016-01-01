@@ -256,6 +256,8 @@
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
+                that.abc = false;
+                alert(123)
                 return;
             }
             //if ($rootScope.croppedImage && $rootScope.croppedImage.src) {

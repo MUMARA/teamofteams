@@ -19,6 +19,7 @@
         this.queryUsers = queryUsers;
         this.answer = answer;
         this.hide = hide;
+        this.submitProgress = false;
 
 
 
@@ -119,16 +120,17 @@
         }
         //answers create group modal and sends back some data modal.
         function answer(groupForm) {
+            that.submitProgress = true;
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
                 return;
+                that.submitProgress = false;
             }
             //that.group.members = that.group.membersArray.join();
             if (that.group.domain) {
                 var temp = that.group.domain.split(',');
                 that.group.domain = temp
-
             }
             if ($rootScope.newImg) {
                 var x = utilService.base64ToBlob($rootScope.newImg);
@@ -139,6 +141,7 @@
                     })
                     .catch(function() {
                         groupForm.$submitted = false;
+                        that.submitProgress = false;
                         return messageService.showFailure('picture upload failed')
                     });
 
@@ -147,7 +150,10 @@
 
             } else {
 
-                editGroupService.editGroup(that.group, groupObj, groupForm)
+                editGroupService.editGroup(that.group, groupObj, groupForm, function(){
+                    that.submitProgress = false;
+                })
+                
             }
 
 
