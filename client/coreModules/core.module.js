@@ -26,7 +26,8 @@ angular.module('core', [
     // 'ngSanitize',
     'ui.router',
     'angular-img-cropper',
-    'md.data.table'
+    'md.data.table',
+    'leaflet-directive'
 
     /*   'customdirectives'*/
 

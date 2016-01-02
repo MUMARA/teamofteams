@@ -25,7 +25,7 @@
             <div class="nopadding md-whiteframe-z1 viewHeight80 vscroll" layout="column" layout-align="space-between center">
             <div>
                <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" class="backColorWhite md-whiteframe-z1" style="height:120px;">
-                    <subgroupcard-directive subgroup="subgroup" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" class="nooutline"></subgroupcard-directive>
+                    <subgroupcard-directive subgroup="subgroup" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" class="nooutline cursorPointer"></subgroupcard-directive>
                     <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
                 </div>
             </div>

@@ -1,210 +1,64 @@
-<!--<form style="background-color: #005DE9;" name="groupForm" ng-submit="cgc.answer( groupForm )" novalidate="" ng-controller="CreateGroupController as cgc">-->
-<style>
-a.md-button.md-default-theme.md-hue-1.md-accent.md-raised,
-a.md-button.md-default-theme.md-hue-1.md-accent.md-fab,
-.md-button.md-default-theme.md-hue-1.md-accent.md-raised,
-.md-button.md-default-theme.md-hue-1.md-accent.md-fab {
-    background-color: #60b089;
-}
-
-a.md-button.md-default-theme.md-hue-1.md-accent.md-raised:not([disabled]):hover,
-a.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover,
-.md-button.md-default-theme.md-hue-1.md-accent.md-raised:not([disabled]):hover,
-.md-button.md-default-theme.md-hue-1.md-accent.md-fab:not([disabled]):hover {
-    background-color: #60b089;
-}
-
-.cropper-main-image {
-    height: 100px;
-    width: 114px;
-}
-
-.md-sidenav-backdrop.md-opaque.ng-enter.ng-scope.md-default-theme {
-    background-color: transparent;
-}
-
-.chipsdemoBasicUsage .custom-chips .md-chip {
-    position: relative;
-    padding-right: 35px;
-}
-
-.chipsdemoBasicUsage .custom-chips .md-chip .md-chip-remove-container {
-    position: absolute;
-    right: 4px;
-    top: 4px;
-    margin-right: 0;
-    height: 24px;
-}
-
-.chipsdemoBasicUsage .custom-chips .md-chip .md-chip-remove-container button.vegetablechip {
-    position: relative;
-    height: 24px;
-    width: 24px;
-    line-height: 30px;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    transition: background 0.15s linear;
-    display: block;
-}
-
-.chipsdemoBasicUsage .custom-chips .md-chip .md-chip-remove-container button.vegetablechip md-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate3d(-50%, -50%, 0) scale(0.7);
-    color: white;
-    fill: white;
-}
-
-.chipsdemoBasicUsage .custom-chips .md-chip .md-chip-remove-container button.vegetablechip:hover,
-.chipsdemoBasicUsage .custom-chips .md-chip .md-chip-remove-container button.vegetablechip:focus {
-    background: rgba(255, 0, 0, 0.8);
-}
-</style>
-<form style="background-color: #efefef; width: 1300px;" name="groupForm" novalidate="">
-    <ng-md-icon icon="close" size="50" layout-padding ng-click="$root.newImg=null;geoFencing.hide()" style="outline: none"></ng-md-icon>
-    <md-content style="/*height: calc(100vh - 88px);*//*max-width:70%;*/margin: 0px auto; width: 1080px">
-        <div layout="row">
-            <div flex="6" style=" margin-left:7px;text-align: right; max-height: 375px;height: 340px;min-height: 300px;margin-top: 0px;text-align: center;background-color: rgb(96, 176, 137);">
-                <div style="background-color:rgb(96, 176, 137);width:0px;">
-                    <div layout="column">
-                        <div>
-                            <md-button id="geof" ng-click="geoFencing.openEditGroup()"><img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-                                <br><span style="color: white;">Group</span></md-button>
-                        </div>
-                        <div>
-                            <md-button ng-click="geoFencing.openUserSettingPage()"><img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-                                <br><span style="color: white;">Members</span></md-button>
-                        </div>
-                        <div>
-                            <md-button style="background-color: darkseagreen"><img src="../../img/5sami.svg" style=";width: 33px;height: 33px;margin-bottom: -15px;">
-                                <br><span style="color: white;">Fencing</span></md-button>
-                        </div>
-                        <div>
-                            <md-button ng-click="geoFencing.openCreateSubGroupPage()"><img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-                                <br><span style="color: white;">Teams</span></md-button>
-                        </div>
-                    </div>
+<div layout="row" layout-padding layout-margin>
+	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed" style="background-color:rgb(96, 176, 137); max-height: 287px">
+		<md-button ng-click="geoFencing.openEditGroup()" style="margin: 0px; width:100%">
+	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+	        <div style="color: white;">Group</div>
+        </md-button>
+	    <md-button ng-click="geoFencing.openUserSettingPage()" style="margin: 0px; width:100%">
+	    	<img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+        	<div style="color: white;">Members</div>
+    	</md-button>
+		<md-button style="background-color: darkseagreen; margin: 0px; width:100%">
+			<img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+	        <div style="color: white;">Fencing</div>
+        </md-button>
+		<md-button ng-click="geoFencing.openCreateSubGroupPage()" style="margin: 0px; width:100%">
+			<img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+		    <div style="color: white;">Teams</div>
+	    </md-button>
+	</div>
+	<div flex layout-padding class="nomargin nopadding" style="border: 1px solid white">
+		<h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Geo Fencing</h1>
+        <md-divider md-outset class="nopadding"></md-divider>
+		<!-- <div layout="row" class="nopadding md-whiteframe-z2" layout-padding> -->
+        <div autocomplete="off" layout="row" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
+            <div class="nopadding md-whiteframe-z1 viewHeight80 vscroll" layout="column" layout-align="start center">
+                <div ng-repeat="subgroup in geoFencing.subgroups track by $index" class="backColorWhite md-whiteframe-z1" style="height:120px;">
+                    <subgroupcard-directive subgroup="subgroup" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showPanel = true; geoFencing.showLocationBySubGroup(subgroup.$id); geoFencing.selectedindex = $index" class="nooutline cursorPointer"></subgroupcard-directive>
+                    <ng-md-icon ng-show="geoFencing.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
                 </div>
             </div>
-            <div flex="90" style="height: 85vh; ">
-                <md-card style="margin: 0px auto; border-radius: 5px; overflow-x: hidden; overflow: auto;">
-                    <md-card-content style="padding: 0px;">
-                        <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Geo Fencing</h1>
-                        <md-divider md-outset></md-divider>
-                        <div layout="row">
-                            <div flex="25" style="background-color: #FDF8F8; ">
-                                <md-content class="grayScroller" style="height: 721px;">
-                                    <md-card style="  margin: 1px 3px 0px 3px !important;" class=" md-whiteframe-z2" ng-init="_index={0:true}">
-                                        <md-list style="padding: 0px !important;" ng-repeat="subgroup in geoFencing.subgroups" ng-class="{'md-whiteframe-z5': $parent._index[$index]}" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showLocationBySubGroup(subgroup.$id); geoFencing.showPanel = true;">
-                                            <md-list-item ng-click="geoFencing.veiwSubgroup(subgroup, $index)" class="md-3-line" style="padding: 0px !important;">
-                                                <div style="width: 72px; height: 120px; overflow: hidden;">
-                                                    <img ng-src="{{subgroup['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/team.png'}}" style="height: 120px;width: 120px;" />
-                                                </div>
-                                                <div class="md-list-item-text" style="padding: 0px; margin-top: 2px">
-                                                    <b><p style="text-indent: 0px;margin-left: 10px;">
-                                                        {{subgroup.title}}
-                                                    </p></b>
-                                                    <img ng-src="{{item.face || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" style="width: 40px; height:40px; margin-top: 25px; margin-left: 7px" />
-                                                    <span>
-                                                        <img src="img/geoLocation.svg" width="40px" height="20px" style=" width:40px ; margin-left: 40px;margin-top: 25px;">
-                                                        <img src="img/notification1.svg" style="width: 16px; margin-top: 22px">
-                                                    </span>
-                                                </div>
-                                                <md-divider></md-divider>
-                                            </md-list-item>
-                                        </md-list>
-                                    </md-card>
-                                </md-content>
-                                <div style="text-align: center;margin-top: 50px;">
-                                    <!--md-button
-                                            class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2"
-                                            ng-click="geoFencing.answer( groupForm )"><span
-                                            style="color: white;">+ Create Team</span>
-                                    </md-button>-->
-                                </div>
-                            </div>
-                            <div flex layout="coulumn" style="margin-left: 5px;padding: 20px" layout="row" ng-show="geoFencing.showPanel">
-                                <div flex layout="row">
-
-
-                                    <div class="userListSearchbox" layout="row" layout-align="space-between center" style="background-color: rgb(239, 239, 239);width: 79%;margin-left: 3%">
-                                        <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" layout-margin></ng-md-icon>
-                                        <md-input-container md-no-float style="padding-bottom: 0px;" flex>
-                                            <input type="text" id="#UserSearch" ng-model="geoFencing.address" aria-label="Geofencing Address Box" class="serachbox2" placeholder="Address" style="margin-bottom: 1%">
-                                        </md-input-container>
-                                    </div>
-
-
-                                        <!--<div flex="80" >-->
-
-                                            <!--<md-input-container md-no-float style=" background-color: #EFEFEF;border: none">-->
-                                                <!--<md-icon md-svg-src="../../img/magnify.svg" style="color: #B3B3B3"></md-icon>-->
-                                                <!--<input type="text" ng-model="geoFencing.address" aria-label="Geofencing Address Box" placeholder="Address" style="border: none" />-->
-                                            <!--</md-input-container>-->
-
-                                        <!--</div>-->
-
-
-
-                                    <div flex="20">
-                                         <md-button class="md-raised" ng-click='geoFencing.getLatLngByAddress(geoFencing.address)'><span style="color: #60B089"><b>Find on Map</b></span></md-button>
-                                    </div>
-                                </div>
-
-                                <div layout="row" flex style="  position: absolute;left: 353px;top: 200px;height: 0%">
-                                    <div aria-label="Location">
-                                        <md-content class="mapModel" style="width:700px;height: 400px;">
-                                            <!--<md-subheader class="md-sticky-no-effect" style="background-color: #dcedc8; margin: 0px; margin-left: -24px; margin-right: -24px; margin-top: -24px;">{{ title || "Location" }}</md-subheader>-->
-                                            <leaflet center="$root.mapData.center" markers="$root.mapData.markers" event-broadcast="$root.mapData.events" markers-nested="true" height="400px" width="700px"></leaflet>
-                                            <!--<leaflet ng-if="!showLocation"  height="300px" width="600px"></leaflet>-->
-                                        </md-content>
-
-
-                                        <div style="height: 30px !important;" class="md-actions">
-                                            <!--<md-button ng-click="hide()" class="md-primary">-->
-                                            <!--close-->
-                                            <!--</md-button>-->
-                                            <div flex layout="row" ng-show="$root.mapData.dragable">
-                                                <div flex="80" layout layout="column">
-                                                    <div flex="10" layout layout-align="center center">
-                                                    </div>
-                                                    <md-slider flex class="md-primary" md-discrete ng-model="$root.mapData.radius" step="1" min="1" max="100" aria-label="rating">
-                                                    </md-slider>
-                                                </div>
-                                                <md-button flex="20" layout="column"
-                                                           class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" layout="center"
-                                                           ng-click=" geoFencing.setSubgroupLocation();$root.mapData.dragable = !$root.mapData.dragable">
-                                                    <span style="color: white;">save</span>
-                                                </md-button>
-                                            </div>
-                                            <md-button ng-show="!$root.mapData.dragable"
-                                                       class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2" layout="center"
-                                                       ng-click="$root.mapData.dragable = !$root.mapData.dragable" style="margin-left: 40%;width: 25%">
-                                                <span style="color: white;">+ Add GeoFence</span>
-                                            </md-button>
-                                        </div>
-                                    </div>
-
-
-                                    <!--<div style="text-align: center;margin-top: 50px;">-->
-                                    <!--<md-button-->
-                                    <!--class="md-accent md-raised md-hue-1 md-button md-default-theme md-whiteframe-z2"-->
-                                    <!--ng-click="geoFencing.answer( groupForm )"><span-->
-                                    <!--style="color: white;">+ Create Team</span>-->
-                                    <!--</md-button>-->
-                                    <!--</div>-->
-                                </div>
-                            </div>
-                        </div>
-                    </md-card-content>
-                </md-card>
+            <div ng-show="geoFencing.showPanel" class="backColorWhite md-whiteframe-z1 viewHeight80 vscroll" layout="column" flex>
+                <div layout="row" layout-align="center center">
+                    <div layout="row" flex>
+                        <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="geoFencing.setFocus()"></ng-md-icon>
+                        <form ng-submit="geoFencing.getLatLngByAddress(geoFencing.address)">
+                            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
+                                <input type="text" id="#UserSearch" ng-model="geoFencing.address" aria-label="search dashboard" class="serachbox2" placeholder="Search">
+                            </md-input-container>
+                        </form>
+                    </div>
+        			<div>
+                         <md-button class="md-raised" ng-click='geoFencing.getLatLngByAddress(geoFencing.address)'><span style="color: #60B089"><b>Find on Map</b></span></md-button>
+                    </div>
+                </div>
+                <div layout="column" >
+                    <!-- <leaflet id="leafletmap" center="$root.mapData.center" markers="$root.mapData.markers" event-broadcast="$root.mapData.events" markers-nested="true" height="600px" width="900px"></leaflet> -->
+                    <leaflet id="leafletmap" center="geoFencing.center" markers="geoFencing.markers" height="600px" width="900px"></leaflet>
+                
+                <div layout="row" layout-align="space-between center" ng-show="geoFencing.markers.mark.dragable" flex>
+                    <md-slider flex class="md-primary" md-discrete ng-model="geoFencing.markers.mark.radius" step="1" min="1" max="100" aria-label="fecning"></md-slider>
+                    <md-button class="backColorSeaGreen" ng-click="geoFencing.setSubgroupLocation(); geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable">
+                        <span style="color: white;">save</span>
+                    </md-button>
+                </div>
+                </div>
+                <div layout="row" layout-align="end center">
+                    <md-button ng-show="!geoFencing.markers.mark.dragable" class="backColorSeaGreen" ng-click="geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable">
+                        <span style="color: white;">+ Add GeoFence</span>
+                    </md-button>    
+                </div>
             </div>
-        </div>
-    </md-content>
-</form>
+		</div>
+	</div>
+</div>

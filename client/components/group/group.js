@@ -297,7 +297,11 @@
                     // },9000)
                     
                 this.GetSubGroupUsers = function(subgroupData, index) {
-                    if (!subgroupData) that.users =  dataService.getUserData();
+                    if (!subgroupData) {
+                        that.users =  dataService.getUserData();
+                        that.selectedindex = false;
+                        return;
+                    }
                     that.currentSubGroup = index;
                     that.currentSudGroupID = subgroupData.$id;
                     // that.processTeamAttendance = true;
