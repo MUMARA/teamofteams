@@ -474,6 +474,7 @@
                 return defer.promise;
             },
             addLocationBySubgroup: function(groupID, subgroupID, userID, locationObj, multiple, recordId) {
+
                 var defer = $q.defer();
 
                 var newLocation = {
@@ -488,6 +489,7 @@
                     'defined-by': userID, //only admins or owners can define a office location
                     'timestamp': fireTimeStamp
                 };
+
                 var syncRef;
                 if (!multiple && refs.$currentSubGroupLocations.length) {
                     //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)

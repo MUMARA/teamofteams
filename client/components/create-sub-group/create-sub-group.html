@@ -1,58 +1,58 @@
 <div layout="row" layout-padding layout-margin>
-	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed" style="background-color:rgb(96, 176, 137); max-height: 287px">
-		<md-button ng-click="createSubGroup.openEditGroup()" style="margin: 0px; width:100%">
-	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-	        <div style="color: white;">Group</div>
+    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed" style="background-color:rgb(96, 176, 137); max-height: 287px">
+        <md-button ng-click="createSubGroup.openEditGroup()" style="margin: 0px; width:100%">
+            <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">Group</div>
         </md-button>
-	    <md-button ng-click="createSubGroup.openUserSettingPage()" style="margin: 0px; width:100%">
-	    	<img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-        	<div style="color: white;">Members</div>
-    	</md-button>
-		<md-button ng-click="createSubGroup.openGeoFencingPage()" style="margin: 0px; width:100%">
-			<img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-	        <div style="color: white;">Fencing</div>
+        <md-button ng-click="createSubGroup.openUserSettingPage()" style="margin: 0px; width:100%">
+            <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">Members</div>
         </md-button>
-		<md-button style="background-color: darkseagreen; margin: 0px; width:100%">
-			<img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-		    <div style="color: white;">Teams</div>
-	    </md-button>
-	</div>
-	<div flex layout-padding class="nomargin nopadding" style="border: 1px solid white">
-		<h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Teams Settings</h1>
+        <md-button ng-click="createSubGroup.openGeoFencingPage()" style="margin: 0px; width:100%">
+            <img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Fencing</div>
+        </md-button>
+        <md-button style="background-color: darkseagreen; margin: 0px; width:100%">
+            <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Teams</div>
+        </md-button>
+    </div>
+    <div flex layout-padding class="nomargin nopadding" style="border: 1px solid white">
+        <h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Teams Settings</h1>
         <md-divider md-outset class="nopadding"></md-divider>
-		<!-- <div layout="row" class="nopadding md-whiteframe-z2" layout-padding> -->
+        <!-- <div layout="row" class="nopadding md-whiteframe-z2" layout-padding> -->
         <form autocomplete="off" layout="row" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
             <div class="nopadding md-whiteframe-z1 viewHeight80 vscroll" layout="column" layout-align="space-between center">
-            <div>
-               <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" class="backColorWhite md-whiteframe-z1" style="height:120px;">
-                    <subgroupcard-directive subgroup="subgroup" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" class="nooutline cursorPointer"></subgroupcard-directive>
-                    <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
+                <div>
+                    <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" class="backColorWhite md-whiteframe-z1" style="height:120px;">
+                        <subgroupcard-directive subgroup="subgroup" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" class="nooutline cursorPointer"></subgroupcard-directive>
+                        <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>
+                    </div>
                 </div>
-            </div>
-         
                 <md-button ng-click="createSubGroup.subgroupPage()" class="backColorSeaGreen">
                     <span style="color: #ffffff">Create Team</span>
                 </md-button>
             </div>
+
             <div ng-show="createSubGroup.teamsettingpanel" class="backColorWhite md-whiteframe-z1 viewHeight80 vscroll" layout="column" layout-align="start" flex>
-    			<div> 
+                <div>
                     <div layout="row" layout-align="start center">
                         <h3>Url</h3>
-                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon> 
+                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon>
                     </div>
                     <div>teamofteams.io/{{createSubGroup.groupid}}/{{createSubGroup.subgroupData.$id}}</div>
-    			</div>
+                </div>
                 <h3>General Information</h3>
                 <md-input-container flex>
-		            <label>Name</label>
-		            <input name="groupTitle" ng-model="createSubGroup.subgroupData.title" minlength="3" maxlength="40" required>
-		            <div ng-show="groupForm.$submitted || groupForm.groupTitle.$touched" ng-messages="groupForm.groupTitle.$error">
-		                <div class="invalid_color" ng-message="required">This is required.</div>
-		                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-		                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
-		            </div>
-	        	</md-input-container>
-            	<md-input-container flex>
+                    <label>Name</label>
+                    <input name="groupTitle" ng-model="createSubGroup.subgroupData.title" minlength="3" maxlength="40" required>
+                    <div ng-show="groupForm.$submitted || groupForm.groupTitle.$touched" ng-messages="groupForm.groupTitle.$error">
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex>
                     <label>Description</label>
                     <textarea minlength="5" maxlength="40" name="groupDesc" ng-model="createSubGroup.subgroupData.desc" cols="25" rows="1"></textarea>
                     <div ng-show="groupForm.$submitted || groupForm.groupDesc.$touched" ng-messages="groupForm.groupDesc.$error">
@@ -61,9 +61,9 @@
                     </div>
                 </md-input-container>
                 <div>
-                	<div layout="row" layout-align="start center">
+                    <div layout="row" layout-align="start center">
                         <h3>Set Team Photo</h3>
-                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon> 
+                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon>
                     </div>
                     <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
                         <div style="width: 96px; height: 160px; overflow: hidden;" ng-show="createSubGroup.subgroupData['logo-image'].url">
@@ -82,7 +82,7 @@
                     <h2>Team Admin</h2>
                     <div layout="row">
                         <div flex="10">
-                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.toggleAdmin()"><span style="color: white;font-size: 14px;">Assign</span></md-button>
+                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.ActiveSideNavBar('admin');"><span style="color: white;font-size: 14px;">Assign</span></md-button>
                         </div>
                         <div flex="20">
                         </div>
@@ -90,36 +90,75 @@
                     <md-chips>
                         <md-chip ng-repeat="admin in createSubGroup.selectedAdminArray" style="height:40px" class="backColorDarkGrey">
                             <img ng-src="{{admin['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;;" />
-                                <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{admin.firstName + ' ' + admin.lastName +" "}}
+                            <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{admin.firstName + ' ' + admin.lastName +" "}}
                                 </span>
-                                <span style="position:relative; top:-8px;" class="fillColorWhite">
+                            <span style="position:relative; top:-8px;" class="fillColorWhite">
                                     &nbsp; <ng-md-icon icon="close" size="24" class="nooutline" ng-click="createSubGroup.myAlert()"></ng-md-icon>
                                 </span>
-                                
                         </md-chip>
                     </md-chips>
                 </div>
                 <div>
                     <!--adding team members-->
                     <h2>Team Members</h2>
-                    <md-button  style="background: #60B089" class="backColorSeaGreen" ng-click="createSubGroup.toggleRight();"><span style="color: white;">Add</span>
+                    <md-button style="background: #60B089" class="backColorSeaGreen" ng-click="createSubGroup.ActiveSideNavBar('member');"><span style="color: white;">Add</span>
                     </md-button>
                     <md-chips>
                         <md-chip ng-repeat="mems in createSubGroup.submembers" style="height:40px" class="backColorDarkGrey">
                             <img ng-src="{{mems.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;" />
                             <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{mems.userSyncObj.firstName + ' ' + mems.userSyncObj.lastName +" "}}</span>
-                              <span style="position:relative; top:-8px;" class="fillColorWhite">
+                            <span style="position:relative; top:-8px;" class="fillColorWhite">
                                     &nbsp; <ng-md-icon icon="close" size="24" class="nooutline" ng-click="createSubGroup.myAlert()"></ng-md-icon>
                                 </span>
                         </md-chip>
                     </md-chips>
                 </div>
-                <div  layout="row" layout-align="end center">
+
+                <div layout="row" layout-align="end center">
                     <md-progress-circular class="" ng-show="createSubGroup.abc" md-mode="indeterminate"></md-progress-circular>
-                	<md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen" ng-click="createSubGroup.answer( groupForm )"><span style="color:white;">Save</span>
+                    <md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen" ng-click="createSubGroup.answer( groupForm )"><span style="color:white;">Save</span>
                     </md-button>
                 </div>
             </div>
-		</form>
-	</div>
+
+            <!--add team admin sidenav-->
+            <div ng-hide="createSubGroup.adminSideNav" class="backColorSeaGreen nopadding" style="z-index:1;width: 300px; height:80vh; overflow-y:auto;" layout="column" layout-align="start">
+                <div>
+                    <md-list>
+                        <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline" ng-click="createSubGroup.selectedAdmin(2,member)" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);">
+                            <ng-md-icon icon="done" ng-class="createSubGroup.filterUser2(member.user.profile.email) ? 'fillColorWhite' : 'fillColorDarkGrey' ">
+                                </ng-md-icon>
+                            <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound nooutline" layout-margin alt="user" />
+                            <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
+                        </md-list-item>
+                    </md-list>
+                </div>
+                <p><br></p>
+                <div layout="row" layout-align="center center" style="width:100%">
+                    <md-button class="md-raised" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar();" md-ripple-size="auto">Done</md-button>
+                </div>
+            </div> <!-- add team ng-hide -->
+
+
+            <!--add member sidenav-->
+            <div ng-hide="createSubGroup.memberSideNav" class="backColorSeaGreen nopadding" style="z-index:1;width:300px; height:80vh; overflow-y:auto;" layout="column" layout-align="start">
+                <div>
+                    <md-list>
+                        <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline" ng-click="createSubGroup.selectedMember(member.user.profile,$index)" ng-disabled="createSubGroup.filterUser(member.user.profile.$id);">
+                            <ng-md-icon icon="done" ng-class="createSubGroup.filterUser(member.user.profile.$id) ? 'fillColorWhite' : 'fillColorDarkGrey' ">
+                            </ng-md-icon>
+                            <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound nooutline" layout-margin alt="user" />
+                            <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
+                        </md-list-item>
+                    </md-list>
+                </div>
+                <p><br></p>
+                <div layout="row" layout-align="center center" style="width:100%">
+                    <md-button class="md-raised" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar();" md-ripple-size="auto">Done</md-button>
+                </div>
+            </div> <!-- add member ng-hide -->
+
+        </form>
+    </div>
+
 </div>

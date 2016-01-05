@@ -42,17 +42,18 @@
                          <md-button class="md-raised" ng-click='geoFencing.getLatLngByAddress(geoFencing.address)'><span style="color: #60B089"><b>Find on Map</b></span></md-button>
                     </div>
                 </div>
-                <div layout="column" >
+                <div layout="column" layout-align="center center" >
                     <!-- <leaflet id="leafletmap" center="$root.mapData.center" markers="$root.mapData.markers" event-broadcast="$root.mapData.events" markers-nested="true" height="600px" width="900px"></leaflet> -->
-                    <leaflet id="leafletmap" center="geoFencing.center" markers="geoFencing.markers" height="600px" width="900px"></leaflet>
-                
+                    <leaflet id="leafletmap" defaults="geoFencing.defaults" center="geoFencing.center" markers="geoFencing.markers" height="600px" width="900px" flex paths="geoFencing.paths"></leaflet>
+                </div>
+
                 <div layout="row" layout-align="space-between center" ng-show="geoFencing.markers.mark.dragable" flex>
-                    <md-slider flex class="md-primary" md-discrete ng-model="geoFencing.markers.mark.radius" step="1" min="1" max="100" aria-label="fecning"></md-slider>
+                    <md-slider flex class="md-primary" ng-model="geoFencing.paths.c1.radius" step="1" min="1" max="100" aria-label="fecning"></md-slider>
                     <md-button class="backColorSeaGreen" ng-click="geoFencing.setSubgroupLocation(); geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable">
                         <span style="color: white;">save</span>
                     </md-button>
                 </div>
-                </div>
+                
                 <div layout="row" layout-align="end center">
                     <md-button ng-show="!geoFencing.markers.mark.dragable" class="backColorSeaGreen" ng-click="geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable">
                         <span style="color: white;">+ Add GeoFence</span>

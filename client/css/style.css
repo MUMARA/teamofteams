@@ -293,6 +293,18 @@
     background-color: rgb(240, 240, 240)!important;
 }
 
+#memberSettingTab md-pagination-wrapper{
+    width: 100% !important;
+    flex-direction: row !important;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    display:flex;
+    background-color: rgb(240, 240, 240)!important;
+}
+#memberSettingTab md-tab-item{
+    width: 100% !important;
+}
 /*
 .roundShape {
     display: block;
@@ -1412,7 +1424,7 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 .cardBackground {
     background-color: #FFFFFF;
 }
-
+*/
 .user-setting-tab {
     height: 35px;
     position: relative;
@@ -1443,7 +1455,7 @@ div:after {
     top: 40%;
     right: 0;
 }
-
+/*
 .transparency {
     background-color: #FFFFFF;
     color: black;
@@ -1497,11 +1509,12 @@ div:after {
     width: 100%;
     border: none;
 }
+*/
 
 .buttonHover:hover {
-    background-color: #1EA9E4 !important;
+    background-color: #058b97 !important;
 }
-*/
+
 
 .cropperWindow {
     width: 800px;

@@ -1,387 +1,193 @@
-<!--<form style="background-color: #005DE9;" name="groupForm" ng-submit="cgc.answer( groupForm )" novalidate="" ng-controller="CreateGroupController as cgc">-->
-<div style="bottom: 0;top: 55px;background-color: #efefef;width: 1300px; height: 100vh">
-    <ng-md-icon icon="close" style="outline: none" size="50" layout-padding ng-click="userSetting.hide()"></ng-md-icon>
-    <div style=" max-height: 90%;max-width:83%;margin: 0px auto; margin-top: -52px">
-        <div layout="row">
-            <div flex="6" style=" margin-left:8px;text-align: right; max-height: 375px;height: 340px;min-height: 300px;margin-top: 53px;text-align: center;background-color: rgb(96, 176, 137);">
-                <div style="background-color:rgb(96, 176, 137);width:0px;">
-                    <div>
-                        <md-button ng-click="userSetting.editgroupPage()"><img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-                            <br><span style="color: white;">Group</span></md-button>
+<div layout="row" layout-padding layout-margin>
+    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1" style="background-color:rgb(96, 176, 137); max-height: 287px">
+        <md-button ng-click="userSetting.editgroupPage()" style="margin: 0px; width:100%">
+            <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">Group</div>
+        </md-button>
+        <md-button style="margin: 0px; width:100%">
+            <img src="../../img/3sami.svg" style="background-color: darkseagreen; width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">Members</div>
+        </md-button>
+        <md-button ng-click="userSetting.openGeoFencingPage()" style="margin: 0px; width:100%">
+            <img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Fencing</div>
+        </md-button>
+        <md-button ng-click="userSetting.openCreateSubGroupPage()" style="margin: 0px; width:100%">
+            <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Teams</div>
+        </md-button>
+    </div>
+    <div flex layout-padding class="backColorWhite nomargin nopadding" name="memberSetingDiv" novalidate>
+        <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Members Setting</h1>
+        <md-divider md-outset class="nopadding"></md-divider>
+        <md-content layout="row" >
+            <md-tabs  id="memberSettingTab" md-dynamic-height md-border-bottom flex>
+              <md-tab label="All Members">
+                <md-content class="md-padding viewHeight80" >
+                    <!-- <h1 class="md-display-2">ALL MEMBERS</h1> -->
+                    <div layout="column">
+                       <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
+                        <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="user.setFocus()"></ng-md-icon>
+                        <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
+                            <input type="text" id="#UserSearch" ng-model="userSetting.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
+                        </md-input-container>
+                        <div layout="row" layout-align="center center">
+                            Filter &emsp;
+                            <md-select class="nopadding nomargin leftmargin20px" placeholder="Every One" ng-model="user.dropbox" style="overflow: hidden!important;">
+                                <md-option value="0">Everyone</md-option>
+                                <md-option value="1">Online</md-option>
+                                <md-option value="2">Offline</md-option>
+                            </md-select>
+                        </div>
                     </div>
-                    <div>
-                        <md-button style="background-color:darkseagreen"><img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-                            <br><span style="color: white;">Members</span></md-button>
-                    </div>
-                    <div>
-                        <!--<md-button ng-click="editGroup.openGeoFencingPage()"><img src="../../img/5sami.svg" style="width: 33px;height: 33px;"><br><span style="color: white;">Fencing</span></md-button>-->
-                        <md-button ng-click="userSetting.openGeoFencingPage()"><img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-                            <br><span style="color: white;">Fencing</span></md-button>
-                    </div>
-                    <div>
-                        <md-button ng-click="userSetting.openCreateSubGroupPage()"><img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-                            <br><span style="color: white;">Teams</span></md-button>
-                    </div>
-                </div>
-            </div>
-            <div flex="90" style="max-width: 90%;width: 90% !important;">
-                <div flex style="background-color: white;margin-top: 53px;border-radius: 5px;" tab-custom-style>
-                    <div style="overflow-y:scroll !important; height:80vh !important">
-                        <div>
-                            <h1 style="color: #d3d3d3;"  class="nomargin" layout-padding>&nbsp;&nbsp;&nbsp;Members Settings</h1>
+                    <md-divider md-outset></md-divider>
+                    <table md-table>
+                        <thead md-head>
+                            <tr md-row>
+                                <th md-column></th>
+                                <th md-column>Name</th>
+                                <th md-column>Phone</th>
+                                <th md-column>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" >
+                                <td md-cell>
+                                    <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound" alt="user" layout-margin />
+                                </td>
+                                <td md-cell>
+                                    <div layout="column" layout-align="space-around start">
+                                         <span><strong>{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</strong></span>
+                                        <span>{{member.userSyncObj.email}}</span>
+                                    </div>
+                                </td>
+                                <td md-cell>{{member.userSyncObj.contactNumber}}</td>
+                                <td md-cell style="width:10%">
+                                    <md-select aria-label="userSetting" ng-model="someVal" ng-if="member.membershipType != 1" placeholder="Member">
+                                        <md-option value="1">Member
+                                        </md-option>
+                                        <md-option value="2" ng-click="userSetting.changeMemberRole(2, member)" ng-if="member.membershipType != 2">Block Account
+                                        </md-option>
+                                        <md-option ng-click="userSetting.changeMemberRole(null, member)" value="3">Delete Account
+                                        </md-option>
+                                    </md-select>
+                                    <div ng-if="member.membershipType == 1">
+                                        <ng-md-icon icon="person" style="fill: black;margin-left: 85%" size="20"></ng-md-icon>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </div>
+                </md-content>
+              </md-tab>
+              <md-tab label="INVITATIONS/REQUESTS">
+                <md-content class="md-padding viewHeight80">
+                  <!-- <h1 class="md-display-2">INVITATIONS/REQUESTS</h1> -->
+                    <div layout="column">
+                        <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
+                            <h4>INVITATIONS/REQUESTS</h4>
+                            <div layout="row" layout-align="center center">
+                                Sort By &emsp;
+                                <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
+                                    <md-option value="0">Name</md-option>
+                                    <md-option value="1">Status</md-option>
+                                    <md-option value="2">Action</md-option>
+                                </md-select>    
+                            </div>
                         </div>
                         <md-divider md-outset></md-divider>
-                        <md-toolbar style=" color: #000000;background-color: transparent ;" class="md-whiteframe-z1 customTool" id="mainWrapper">
-                            <md-tabs md-selected="userSetting.currentTab" flex style="min-height: 840px !important;">
-                                <!--<md-tab flex  label="All MEMBERS" class="allMember"  >-->
-                                <md-tab flex>
-
-                                    <md-tab-label style="padding: 0 0 0 0">
-                                        <div class="user-setting-tab" ng-click="userSetting.currentTab = 0">All MEMBERS</div>
-                                    </md-tab-label>
-                                    <md-tab-body>
-                                        <md-toolbar class="md-theme-light "
-                                                    style=" border-radius: 5px; background-color: #ffffff">
-                                            <div class="md-toolbar-tools" class="requestedUser"
-                                                 style="    width: 87%;margin: 0 auto;">
-                                                <div flex style="margin: -40px;">
-                                                    <!--for search bar-->
-                                                    <!--     <div>
-                                                             <span style="position: fixed;padding-top: 8px;padding-left: 20px;background-color: #e4e4e4;height: 42px;border-radius: 10%;z-index: 999;">
-                                                             <ng-md-icon icon="search" style="fill: #6D6E70"></ng-md-icon>
-                                                             </span>
-
-                                                             <md-autocomplete style="background-color: #e4e4e4" class="searchbox ng-isolate-scope md-default-theme" md-selected-item-change="ctrl.selectedItemChange(item)" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" placeholder="Find By name phone or email">
-
-                                                                 <md-autocomplete-wrap layout="row" ng-class="{ 'md-whiteframe-z1': !floatingLabel }" role="listbox" class="md-whiteframe-z1">
-                                                                     &lt;!&ndash; ngIf: !floatingLabel &ndash;&gt;
-                                                                     <input flex="" type="search" id="input-01Q" name="" ng-if="!floatingLabel" autocomplete="off" ng-required="isRequired" ng-disabled="isDisabled" ng-model="$mdAutocompleteCtrl.scope.searchText" ng-keydown="$mdAutocompleteCtrl.keydown($event)" ng-blur="$mdAutocompleteCtrl.blur()" ng-focus="$mdAutocompleteCtrl.focus()" placeholder="Serach" aria-owns="ul-01Q" aria-label="Serach" aria-autocomplete="list" aria-haspopup="true" aria-activedescendant="" aria-expanded="false" class="ng-pristine ng-scope ng-valid ng-valid-required ng-touched" tabindex="0" aria-required="false" aria-invalid="false">&lt;!&ndash; end ngIf: !floatingLabel &ndash;&gt;          &lt;!&ndash; ngIf: $mdAutocompleteCtrl.scope.searchText && !isDisabled &ndash;&gt;          &lt;!&ndash; ngIf: $mdAutocompleteCtrl.loading &ndash;&gt;                  </md-autocomplete-wrap>        <aria-status class="md-visually-hidden" role="status" aria-live="assertive">          &lt;!&ndash; ngRepeat: message in $mdAutocompleteCtrl.messages &ndash;&gt;        </aria-status></md-autocomplete>
-                                                         </div>-->
-                                                    <div class="memberSettingSearchbox" layout="row" layout-align="space-between center" style="background-color: rgb(239, 239, 239);">
-
-                                                        <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" layout-margin></ng-md-icon>
-                                                        <md-input-container md-no-float style="padding-bottom: 0px;" flex>
-                                                            <input type="text"  ng-model="userSetting.searchUser" aria-label="search dashboard" class="serachbox2" placeholder="Find by name, phone or email">
-
-                                                        </md-input-container>
-                                                    </div>
-                                                </div>
-
-                                                <span style="color: #9E9E9E;margin: 19px;font-size: 14px;">Sort by</span>
-
-                                                <div offset="3">
-                                                    <div layout="column" layout-align="center left" flex>
-                                                        <md-select aria-label="userSetting" placeholder="Name"
-                                                                   ng-model="someVal" class="user">
-                                                            <md-option value="1" style="color: black" class="transparency">Name
-                                                            </md-option>
-                                                            <md-option value="2" style="color: black" class="transparency">Phone
-                                                            </md-option>
-                                                            <md-option value="3" style="color: black" class="transparency">Status
-                                                            </md-option>
-                                                        </md-select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </md-toolbar>
-                                        <div class="teamListHeading" style="width: 84%;margin: 0 auto;">
-                                            <md-divider></md-divider>
-                                            <md-toolbar class="md-theme-light md-default-theme" layout="row"
-                                                        style="background-color: white">
-                                                <!--<div flex="10"></div>-->
-                                                <div layout="row"
-                                                     style="width: 100%;padding: 0 16px;    height: 64px;line-height: 68px;">
-                                                    <!--<div layout="row" >-->
-                                                    <div flex="15">
-                                                        <!--<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">-->
-                                                    </div>
-                                                    <div flex class="userToolBar" layout="row">
-                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A">Name</div>
-                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A;margin-left: 5%">Phone</div>
-                                                        <div flex="20" class="listCardHeading" style="color: #79BA9A;margin-left: 7%">Action</div>
-                                                    </div>
-                                                </div>
-                                            </md-toolbar>
-
-                                            <md-divider></md-divider>
-                                            <!---->
-
-
-                                            <div class="teamList" style="margin: 7px;margin-right: 0">
-
-                                                <div layout="row" ng-repeat="member in userSetting.members | filter : userSetting.searchUser"
-                                                     ng-repeat="list in userSetting.userarray" class="margining ">
-                                                    <div flex="15" style="max-width: 8%">
-                                                        <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                                                             class="userCardImg1" alt="user" />
-                                                    </div>
-                                                    <div flex layout="row">
-                                                        <div flex class="listCardHeading2"
-                                                             style="color: black ; margin-top:8px;font-weight: bold;">
-                                                            <span style="font-size: 14px !important;">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span><br/>
-
-                                                            <p style="font-weight: normal;font-size: 13px !important;">
-                                                                {{member.userSyncObj.email}}</p>
-
-                                                        </div>
-                                                        <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;margin-left: 13%">
-                                                            {{member.userSyncObj.contactNumber}}
-                                                        </div>
-                                                        <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;">
-                                                            <div style="margin-left: 60px;">
-                                                                <div layout="column" layout-align="center left" flex>
-                                                                    <md-select aria-label="userSetting" ng-model="someVal"
-                                                                               class="user"
-                                                                               ng-if="member.membershipType != 1" placeholder="Member" style="margin-left: 40%">
-                                                                        <md-option
-                                                                                class="transparency"
-                                                                                value="1"
-                                                                                style="color: black">Member
-                                                                        </md-option>
-                                                                        <md-option value="2"
-                                                                                   ng-click="userSetting.changeMemberRole(2, member)"
-                                                                                   style="color: black"
-                                                                                   class="transparency"
-                                                                                   ng-if="member.membershipType != 2">Block Account
-                                                                        </md-option>
-                                                                        <!-- <md-option value="3" ng-click="userSetting.changeMemberRole(-1, member)"  style="color: black" ng-if="member.membershipType != -1">Blocked Member</md-option>-->
-                                                                        <md-option
-                                                                                ng-click="userSetting.changeMemberRole(null, member)"
-                                                                                class="transparency"
-                                                                                value="3"
-                                                                                style="color: black">Delete Account
-                                                                        </md-option>
-
-                                                                    </md-select>
-                                                                    <div ng-if="member.membershipType == 1">
-                                                                        <ng-md-icon icon="person" style="fill: black;margin-left: 85%"
-                                                                                    size="20"></ng-md-icon>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
+                        <table md-table>
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column></th>
+                                    <th md-column>Name</th>
+                                    <th md-column>Contact</th>
+                                    <th md-column>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="request in userSetting.pendingRequests" class="hoverLightGrey3" >
+                                    <td md-cell style="width:10%">
+                                        <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound"  alt="user" layout-margin/>
+                                    </td>
+                                    <td md-cell>
+                                        <div layout="column" layout-align="space-around start">
+                                            <span><strong>{{request.userSyncObj.firstName + ' ' + request.userSyncObj.lastName}}</strong></span>
+                                            <span>{{request.userSyncObj.email}}</span>
                                         </div>
-                                        <!--mljjiljklj-->
-
-                                        <!---->
-                                    </md-tab-body>
-                                </md-tab>
-                                <!--<md-tab  flex label="Invitations/Requests" style="margin-left: 20px;" class="Invitations">-->
-                                <md-tab flex style="margin-left: 20px;">
-                                    <md-tab-label >
-                                        <div class="user-setting-tab" ng-click="userSetting.currentTab = 1" >Invitations/Requests</div>
-                                    </md-tab-label>
-                                    <md-tab-body>
-
-                                        <md-toolbar class="md-theme-light "
-                                                    style=" border-radius: 5px; background-color: #ffffff">
-                                            <div class="md-toolbar-tools" class="requestedUser"
-                                                 style="    width: 87%;margin: 0 auto;">
-                                                <div flex style="margin: -40px;">
-                                                    <div>
-                                                        <h3 style="color: #A6A8AB; padding-left: 40px">
-                                                            Invitations/Requests</h3>
-                                                    </div>
-                                                </div>
-                                                <span style="color: #9E9E9E;margin: 19px;font-size: 14px;">Sort by</span>
-
-                                                <div offset="3">
-                                                    <div layout="column" layout-align="center left" flex>
-                                                        <md-select aria-label="userSetting" placeholder="Name"
-                                                                   ng-model="someVal" class="user">
-                                                            <md-option value="1" style="color: black" class="transparency">Name
-                                                            </md-option>
-                                                            <md-option value="2" style="color: black" class="transparency">Status
-                                                            </md-option>
-                                                            <md-option value="3" style="color: black" class="transparency">Action
-                                                            </md-option>
-                                                        </md-select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </md-toolbar>
-                                        <div class="teamListHeading" style="width: 84%;margin: 0 auto;">
-                                            <md-divider></md-divider>
-                                            <md-toolbar class="md-theme-light md-default-theme" layout="row"
-                                                        style="background-color: white">
-                                                <!--<div flex="10"></div>-->
-                                                <div layout="row"
-                                                     style="width: 100%;padding: 0 16px;    height: 64px;line-height: 68px;">
-                                                    <!--<div layout="row" >-->
-                                                    <div flex="15">
-                                                        <!--<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">-->
-                                                    </div>
-                                                    <div flex class="userToolBar" layout="row" >
-                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A">Name</div>
-                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A; margin-left: 5%">Status</div>
-                                                        <div flex="20" class="listCardHeading" style="color: #79BA9A; margin-left: 7%">Action</div>
-                                                    </div>
-                                                </div>
-                                            </md-toolbar>
-
-                                            <md-divider></md-divider>
-                                            <!---->
-
-
-                                            <div class="teamList" style="margin: 7px;margin-right: 0">
-                                                <div layout="row" ng-repeat="request in userSetting.pendingRequests"
-                                                     class="margining ">
-                                                    <div flex="15" style="max-width: 8%">
-                                                        <!-- <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                                                             class="md-avatar" alt="user"
-                                                             style="width: 34px; height: 37px;      border-radius: 50%;   margin-top: 9px; margin-left: 7px;"/> -->
-                                                             <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                                                             class="userCardImg1" alt="user" />
-                                                    </div>
-                                                    <div flex layout="row">
-                                                        <div flex class="listCardHeading2" style="color: black ; margin-top:8px;font-weight: bold;">
-                                                            <span style="font-size: 14px !important;">{{request.userSyncObj.firstName + ' ' + request.userSyncObj.lastName}}</span><br/>
-                                                            <!--<p style="font-weight: normal;font-size: 13px !important;">zubair@gmail.com</p>-->
-                                                            <p style="font-weight: normal;font-size: 13px !important;">
-                                                                {{request.userSyncObj.email}}</p>
-
-                                                        </div>
-                                                        <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;margin-left: 13%">
-                                                            {{request.userSyncObj.contactNumber}}
-                                                        </div>
-                                                        <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;">
-                                                            <div style="margin-left: 60px">
-                                                                <div layout="column" layout-align="center left" flex>
-                                                                    <md-select placeholder="Pending" ng-model="someVal"
-                                                                               class="user"
-                                                                               style="font-size: 13px !important;margin-left: 43%">
-                                                                        <md-option value="1" style="color: black"
-                                                                                   class="transparency"
-                                                                                   ng-click="userSetting.approveMembership(request)">
-                                                                            Accept User
-                                                                        </md-option>
-                                                                        <md-option value="2" style="color: black"
-                                                                                   class="transparency"
-                                                                                   ng-click="userSetting.rejectMembership(request)">
-                                                                            Ignore User
-                                                                        </md-option>
-                                                                    </md-select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </md-tab-body>
-                                </md-tab>
-                                <!--<md-tab flex label="Blocked Users"  class="md-whiteframe-z5 Blocked">-->
-                                <md-tab flex class="md-whiteframe-z5">
-                                    <!---->
-                                    <md-tab-label>
-                                        <div class="user-setting-tab" ng-click="userSetting.currentTab = 2">Blocked Users</div>
-                                    </md-tab-label>
-                                    <md-tab-body>
-
-                                        <!--jhj-->
-                                        <md-toolbar class="md-theme-light "
-                                                    style=" border-radius: 5px; background-color: #ffffff">
-                                            <div class="md-toolbar-tools" class="requestedUser"
-                                                 style="    width: 87%;margin: 0 auto;">
-                                                <div flex style="margin: -40px;">
-                                                    <div>
-                                                        <h3 style="color: #A6A8AB;padding-left: 40px">Blocked Users</h3>
-                                                    </div>
-                                                </div>
-                                                <span style="color: #9E9E9E;margin: 19px;font-size: 14px;">Sort by</span>
-
-                                                <div offset="3">
-                                                    <div layout="column" layout-align="center left" flex>
-                                                        <md-select aria-label="userSetting" placeholder="Name"
-                                                                   ng-model="someVal" class="user">
-                                                            <md-option value="1" style="color: black" class="transparency">Name
-                                                            </md-option>
-                                                            <md-option value="2" style="color: black" class="transparency">Phone
-                                                            </md-option>
-                                                            <md-option value="3" style="color: black" class="transparency">Action
-                                                            </md-option>
-                                                        </md-select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </md-toolbar>
-                                        <div class="teamListHeading" style="width: 84%;margin: 0 auto;">
-                                            <md-divider></md-divider>
-                                            <md-toolbar class="md-theme-light md-default-theme" layout="row"
-                                                        style="background-color: white">
-                                                <!--<div flex="10"></div>-->
-                                                <div layout="row"
-                                                     style="width: 100%;padding: 0 16px;    height: 64px;line-height: 68px;">
-                                                    <!--<div layout="row" >-->
-                                                    <div flex="15">
-                                                        <!--<img ng-src='../../img/card.jpg' alt="" class="md-avatar img-circle">-->
-                                                    </div>
-                                                    <div flex class="userToolBar" layout="row">
-                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A">Name</div>
-                                                        <div flex="40" class="listCardHeading" style="color: #79BA9A;margin-left: 5%">Phone</div>
-                                                        <div flex="20" class="listCardHeading" style="color: #79BA9A;margin-left: 7%">Action</div>
-                                                    </div>
-                                                </div>
-                                            </md-toolbar>
-
-                                            <md-divider></md-divider>
-                                            <!---->
-
-
-                                            <div class="teamList" style="margin: 7px;margin-right: 0">
-                                                <div layout="row" ng-repeat="list in userSetting.userarray"
-                                                     class="margining ">
-                                                    <div flex="15" style="max-width: 8%">
-                                                        <img ng-src="{{list.img}}" class="userCardImg1 ">
-                                                    </div>
-                                                    <div flex layout="row">
-                                                        <div flex class="listCardHeading2" style="color: black ; margin-top:8px;font-weight: bold;">
-                                                            <span style="font-size: 14px !important;">{{list.name}}</span><br/>
-
-                                                            <p style="font-weight: normal;font-size: 13px !important;">
-                                                                zubair@gmail.com</p>
-
-                                                        </div>
-                                                        <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;margin-left: 13%">
-                                                            {{list.phone}}
-                                                        </div>
-                                                        <div flex class="listCardHeading2"
-                                                             style="color: #909090;font-size: 14px !important;">
-                                                            <div>
-                                                                <div layout="column" layout-align="center left" flex>
-                                                                    <button class="button1">Unblock</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </md-tab-body>
-                                </md-tab>
-                            </md-tabs>
-
-                        </md-toolbar>
+                                    </td>
+                                    <td md-cell>{{member.userSyncObj.contactNumber}}</td>
+                                    <td md-cell style="width:10%">
+                                       <md-select placeholder="Pending" ng-model="someVal">
+                                            <md-option value="1" ng-click="userSetting.approveMembership(request)">
+                                                Accept User
+                                            </md-option>
+                                            <md-option value="2" ng-click="userSetting.rejectMembership(request)">
+                                                Ignore User
+                                            </md-option>
+                                        </md-select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                </md-content>
+              </md-tab>
+              <md-tab label="Blocked Members">
+                <md-content class="md-padding viewHeight80">
+                  <!-- <h1 class="md-display-2">BLOCK USERS</h1> -->
+                         <div layout="column">
+                        <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
+                            <h4>Blocked Members</h4>
+                            <div layout="row" layout-align="center center">
+                                Sort By &emsp;
+                                <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
+                                    <md-option value="0">Name</md-option>
+                                    <md-option value="1">Status</md-option>
+                                    <md-option value="2">Action</md-option>
+                                </md-select>    
+                            </div>
+                        </div>
+                        <md-divider md-outset></md-divider>
+                        <table md-table>
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column></th>
+                                    <th md-column>Name</th>
+                                    <th md-column>Contact</th>
+                                    <th md-column>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="request in userSetting.pendingRequests" class="hoverLightGrey3" >
+                                    <td md-cell style="width:10%">
+                                        <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound"  alt="user" layout-margin/>
+                                    </td>
+                                    <td md-cell>
+                                        <div layout="column" layout-align="space-around start">
+                                            <span>{{request.userSyncObj.firstName + ' ' + request.userSyncObj.lastName}}</span>
+                                            <span>{{request.userSyncObj.email}}</span>
+                                        </div>
+                                    </td>
+                                    <td md-cell>{{member.userSyncObj.contactNumber}}</td>
+                                    <td md-cell style="width:10%">
+                                       <md-select placeholder="Pending" ng-model="someVal">
+                                            <md-option value="1" ng-click="userSetting.approveMembership(request)">
+                                                Accept User
+                                            </md-option>
+                                            <md-option value="2" ng-click="userSetting.rejectMembership(request)">
+                                                Ignore User
+                                            </md-option>
+                                        </md-select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </md-content>
+              </md-tab>
+            </md-tabs>
+        </md-content>
+    </div> <!-- memberSetingDiv -->
 </div>
-<!--<form style="position: fixed;bottom: 0;top: 55px;/* left: 0; */left: 0;right: 0;/* min-height: 942px; */background-color: #005DE9;" name="groupForm"  novalidate="" ng-controller="userSettingcontroller as sgc">-->
-<!--<ng-md-icon icon="close" size="50" layout-padding ng-click="sgc.hide()"></ng-md-icon>-->
-<!---->
-<!--</form>-->

@@ -16,7 +16,7 @@
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
                     },
 
-                    'editGroup': function(groupInfo, groupRef, form, cb) {
+                    'editGroup': function(groupInfo, groupRef, form) {
                         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                         var dataToSet = {
                             title: groupInfo.title,
@@ -40,13 +40,10 @@
                                     $timeout(function() {
                                         form.$submitted = false
                                     })
-
                                     $rootScope.newImg = null;
                                     messageService.showSuccess('Group Edited Successfully')
-                                    cb();
                                 }, function(group) {
                                     messageService.showFailure("Group not edited");
-                                    cb();
                                 })
 
                         }, function(group) {
@@ -54,7 +51,6 @@
                                 form.$submitted = false
                             })
                             messageService.showFailure("Group not edited");
-                            cb();
                         })
                     },
 

@@ -49,6 +49,23 @@
 
         };
 
+        this.adminSideNav = true;
+        this.memberSideNav = true;
+
+
+        this.ActiveSideNavBar = function(sideNav) {
+            if(sideNav === 'admin') {
+                that.adminSideNav = false;
+                that.memberSideNav = true;
+            } else if(sideNav === 'member') {
+                that.adminSideNav = true;
+                that.memberSideNav = false;
+            } else {
+                this.adminSideNav = true;
+                this.memberSideNav = true;
+            }
+        }
+
         /*VM properties*/
 
         /*   this.Subgroup = {
@@ -240,13 +257,16 @@
             return disableItem;
         }
 
-        function filterUser2(userID) {
+        function filterUser2(email) {
+        	// console.log(that.selectedAdminArray[0].email);
             var disableItem = false;
-            for (var i = 0; i < that.members.length; i++) {
-                if (that.membersArray.indexOf(userID) >= 0) {
-                    disableItem = true;
-                }
+            if(that.selectedAdminArray && that.selectedAdminArray.length > 0) {
+	            for (var i = 0; i < that.selectedAdminArray.length; i++) {
+	                if (email === that.selectedAdminArray[i].email) {
+	                    disableItem = true;
+	                }
 
+	            }
             }
             return disableItem;
         }

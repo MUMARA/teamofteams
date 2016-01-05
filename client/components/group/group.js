@@ -5,8 +5,8 @@
     'use strict';
 
     angular.module('app.group')
-        .controller('GroupController', ['dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$sessionStorage", "$location", "utilService", "$localStorage", "$stateParams",
-            function(dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $sessionStorage, $location, utilService, $localStorage, $stateParams) {
+        .controller('GroupController', ['$mdDialog','dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$sessionStorage", "$location", "utilService", "$localStorage", "$stateParams",
+            function($mdDialog, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $sessionStorage, $location, utilService, $localStorage, $stateParams) {
 
                 // console.log("In Group Controller");
                 var $scope = this;
@@ -378,7 +378,20 @@
                 // End Team Attendance
 
 
-
+                this.showConfirm = function(ev) {
+                    var confirm = $mdDialog.confirm()
+                          .title('Confirmation')
+                          .textContent('Would you checkout all members?')
+                          .ariaLabel('checkoutAllMembers')
+                          .targetEvent(ev)
+                          .ok('Yes!')
+                          .cancel('No');
+                    $mdDialog.show(confirm).then(function() {
+                        that.checkoutAll();
+                    }, function() {
+                        // $scope.status = 'You decided to keep your debt.';
+                    });
+                };
 
 
                 this.checkoutObj = {};
@@ -391,20 +404,19 @@
                     //             lon: location.coords.longitude
                     //         };
                     //that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});                                               
-                    return
                     that.users.forEach(function(val, i) {
-                            if ((val.type === 1 || val.type === true) && (val.id != localStorage.userID)) {
-                                checkinService.createCurrentRefsBySubgroup(val.groupID, val.subgroupID, val.id).then(function() {
-                                    that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
-                                    var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(val.groupID + '/' + val.subgroupID + '/' + val.id);
-                                    userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
-                                        .$loaded(function(snapshot) {
-                                            that.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
-                                            updateAllStatusHelper(val.groupID, val.subgroupID, val.id, 1);
-                                        });
-                                });
-                            } //if
-                        }) //foreach
+                        if ((val.type === 1 || val.type === true) && (val.id != localStorage.userID)) {
+                            checkinService.createCurrentRefsBySubgroup(val.groupID, val.subgroupID, val.id).then(function() {
+                                that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                                var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(val.groupID + '/' + val.subgroupID + '/' + val.id);
+                                userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
+                                    .$loaded(function(snapshot) {
+                                        that.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
+                                        updateAllStatusHelper(val.groupID, val.subgroupID, val.id, 1);
+                                    });
+                            });
+                        } //if
+                    }) //foreach
 
                     // that.checkoutObj.type = 2;
                     // var numberofusers = 0;
@@ -423,13 +435,15 @@
                             };
                             checkinService.updateUserStatusBySubGroup(groupID, subgroupID, userID, that.checkinObj.newStatus, that.definedSubGroupLocations, null)
                                 .then(function(res) {
-                                    //messageService.showSuccess(res);
+                                    messageService.showSuccess(res);
                                     that.processTeamAttendance = false;
                                 }, function(reason) {
-                                    //messageService.showFailure(reason);
+                                    that.processTeamAttendance = false;
+                                    messageService.showFailure(reason);
                                 });
                         }, function(err) {
-                            //messageService.showFailure(err.error.message);
+                            that.processTeamAttendance = false;
+                            messageService.showFailure(err.error.message);
                         });
                 } //updateAllStatusHelper
 
