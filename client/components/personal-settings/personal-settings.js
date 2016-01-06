@@ -16,6 +16,7 @@
                 this.hide = hide;
                 this.loggedInUserData = userService.getCurrentUser();
                 $rootScope.newImg = '';
+                this.isProcessing = false;
                 this.userData = $firebaseObject(firebaseService.getRefUsers().child(this.loggedInUserData.userID))
                 this.userData.$loaded()
                     .then(function(data) {
@@ -29,6 +30,7 @@
 
                 /*VM Functions*/
                 function answer(perSettingForm) {
+                    that.isProcessing = true;
                     var uploadFile, editUser, changePassword, data1, data2, pFlag, eFlag, imgFlag;
                     var promiseArray = [];
                     /*  if (perSettingForm.$invalid) {
@@ -96,9 +98,11 @@
                             // console.log(that.userData)
                             that.userData.$save().then(function(data) {
                                 $location.path('/user/' + userService.getCurrentUser().userID)
-                                perSettingForm.$submitted = false
+                                that.isProcessing = false;
+                                perSettingForm.$submitted = false;
                                 messageService.showSuccess('User profile updated')
                             }, function(err) {
+                                that.isProcessing = false;
                                 perSettingForm.$submitted = false;
                                 messageService.showFailure('Error occurred updating user profile')
                                     //console.log('Error occurred updating user profile')
@@ -106,6 +110,7 @@
 
                         })
                         .catch(function() {
+                            that.isProcessing = false;
                             perSettingForm.$submitted = false;
                             messageService.showFailure('Error occurred updating user profile')
                         });

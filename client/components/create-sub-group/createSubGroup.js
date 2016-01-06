@@ -223,7 +223,7 @@
         this.selectedAdmin = function(newType, member) {
             // console.log(member.userSyncObj.$id);
             // console.log(member.user.profile.firstName);
-            this.selectedAdminArray.push(member.user.profile)
+            // that.selectedAdminArray.push(member.user.profile)
             createSubGroupService.changeMemberRole(newType, member, groupID, that.activeID)
                 .then(function() {
                     messageService.showSuccess("New Admin selected");
@@ -240,7 +240,7 @@
 
         function loadAdminUSers(groupid, subgroupid){
             createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
-                 that.selectedAdminArray = data;
+                that.selectedAdminArray = data;
             })
         }
 

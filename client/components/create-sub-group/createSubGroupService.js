@@ -220,6 +220,7 @@
                     },
 
                     getAdminUsers: function(groupid, subgroupid, cb){
+                        groupAdminUsers = [];
                         firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_added', function(snapshot){
                             firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
 
@@ -232,7 +233,29 @@
 
                             })
                         })
-                    }
+                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_changed', function(snapshot){
+                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
+                                console.log(snapshot.key() + ' ' + JSON.stringify(snapshot.val()) + ' ' + JSON.stringify(userData.val()))
+
+                                if(snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2){
+                                    // console.log(userData.val());
+                                    // console.log(snapshot.val());
+
+                                    groupAdminUsers.forEach(function(val, indx) {
+                                        console.log(val.eamil)
+                                        console.log(userData.val().eamil)
+                                        // if(val.email == userData.val().email) {
+
+                                        // }
+                                    })
+
+                                    groupAdminUsers.push(userData.val());
+                                    cb(groupAdminUsers);    
+                                }
+
+                            })
+                        })
+                    } //groupAdminUsers
                 };
 
                 function Uint8ToString(u8a) {

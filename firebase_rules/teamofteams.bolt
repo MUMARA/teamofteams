@@ -156,7 +156,7 @@ type GroupPrivacyInvitationType extends Number {
 
 type Group{
   title: GroupTitleString,
-  desc: GroupDescString,
+  //desc: GroupDescString,
   timestamp: CurrentTimestamp,
   "members-count": GroupMemberCountNumber,
   "subgroups-count": SubGroupMemberCountNumber,
@@ -170,7 +170,8 @@ type Group{
 path /groups/$groupid is Group {
   read() = isUserGroupMemberShipExists() && isUserGroupMemberShipGreaterZero();
   write() = prior(isGroupMemberinGroupIDwithAuthIdExists()) && prior(isGroupMemberGroupIDAuthIdMemberShipGreaterZero());
-  validate() = this.hasChildren(['members-checked-in', 'logo-image', 'privacy']);
+  //validate() = this.hasChildren(['members-checked-in', 'logo-image', 'privacy']);
+  validate() = this.hasChildren(['members-checked-in', 'privacy']);
 }
 
 path /groups/$groupid/privacy/invitationType {
@@ -302,12 +303,12 @@ type SubGroupMemberCountNumber2 extends Number {
  
  type SubgroupsSubgroupID {
   title: GroupTitleString,
-  desc: GroupDescString,
+  //desc: GroupDescString,
   timestamp: CurrentTimestamp,
   "members-count": GroupMemberCountNumber2,
   "subgroups-count": SubGroupMemberCountNumber2,
   //'members-checked-in': SubGroupMemberschecked_Obj,
-  'logo-image': Logo_image_Obj
+  //'logo-image': Logo_image_Obj
  }
  
  

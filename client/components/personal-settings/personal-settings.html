@@ -121,7 +121,7 @@
                     </div>
                     <div layout="row" layout-align="end center">
                         <div >
-                            <md-progress-circular ng-show="personalSettingForm.$submitted" md-diameter="30" md-mode="indeterminate"></md-progress-circular>
+                            <md-progress-circular ng-show="personalSettings.isProcessing" md-diameter="30" md-mode="indeterminate"></md-progress-circular>
                         </div>
                         <div >
                             <!--<md-button ng-disabled="personalSettingForm.$invalid" class="md-raised" style="background-color: #61B188; color: white;" ng-click="personalSettings.answer( personalSettingForm )">SEND</md-button>-->
