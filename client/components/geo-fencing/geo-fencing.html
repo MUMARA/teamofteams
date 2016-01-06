@@ -55,8 +55,9 @@
                 </div>
                 
                 <div layout="row" layout-align="end center">
-                    <md-button ng-show="!geoFencing.markers.mark.dragable" class="backColorSeaGreen" ng-click="geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable">
-                        <span style="color: white;">+ Add GeoFence</span>
+                    <md-button layout="row" layout-align="center center" ng-show="!geoFencing.markers.mark.dragable" class="backColorSeaGreen" ng-click="geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable" style="display:flex">
+                     <md-progress-circular md-mode="indeterminate" ng-show="geoFencing.isProcessing" md-diameter="30"></md-progress-circular>
+                        <span style="color: white;"> Add GeoFence</span>
                     </md-button>    
                 </div>
             </div>

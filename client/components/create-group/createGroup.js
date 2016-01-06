@@ -109,6 +109,7 @@
             function answer(groupForm) {
                 var allowedDomain = {};
                 var fromDataFlag;
+                 groupForm.$submitted = true;
                 //return if form has invalid model.
                 if (groupForm.$invalid) {
                     return;

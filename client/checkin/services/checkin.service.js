@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by Shahzad on 1/21/2015.
  */
 
@@ -58,6 +58,28 @@
 
                 var userCheckinRecords = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
                 refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+            },
+            hasSubGroupCurrentLocation: function(groupID, subGroupID){
+                var defer = $q.defer();
+                var hasLocation = false;
+                $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID))
+                    .$loaded().then(function(data){
+                        // console.log(data[0].location)
+                        if(data[0] && data[0].location){
+                            hasLocation = true;
+                            defer.resolve(hasLocation);
+                        }
+                    });
+
+                refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID).on('child_changed', function(snapshot){
+                    // console.log(snapshot.val().location);
+                    if(snapshot.val() && snapshot.val().location){
+                        hasLocation = true;
+                        defer.resolve(hasLocation);
+                }
+                })
+
+                return defer.promise;
             },
             createCurrentRefsBySubgroup: function(groupID, subgroupID, userID) {
                 var defer = $q.defer();

@@ -137,13 +137,15 @@
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
                 that.saveFile(x, mimeType, that.group.$id).then(function(data) {
-                        editGroupService.editGroup(that.group, groupObj, groupForm)
-                    })
-                    .catch(function() {
-                        groupForm.$submitted = false;
+                    editGroupService.editGroup(that.group, groupObj, groupForm, function(){
                         that.submitProgress = false;
-                        return messageService.showFailure('picture upload failed')
-                    });
+                    })
+                })
+                .catch(function() {
+                    groupForm.$submitted = false;
+                    that.submitProgress = false;
+                    return messageService.showFailure('picture upload failed')
+                });
 
 
                 //console.log(x);

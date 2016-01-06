@@ -41,8 +41,9 @@
         this.filterUser = filterUser;
         this.filterUser2 = filterUser2;
         this.submembers = 0;
-        this.closeToggleAdmin = closeToggleAdmin
-        this.closeAdminToggler = closeAdminToggler
+        this.closeToggleAdmin = closeToggleAdmin;
+        this.closeAdminToggler = closeAdminToggler;
+        this.processingSave = false;
         this.memberss = {
             memberIDs: "",
             selectedUsersArray: []
@@ -51,6 +52,7 @@
 
         this.adminSideNav = true;
         this.memberSideNav = true;
+        
 
 
         this.ActiveSideNavBar = function(sideNav) {
@@ -272,12 +274,11 @@
         }
 
         function answer(groupForm) {
-            that.abc = true;
+           that.processingSave = true;
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
-                that.abc = false;
-                alert(123)
+                 that.processingSave = false;
                 return;
             }
             //if ($rootScope.croppedImage && $rootScope.croppedImage.src) {
@@ -292,20 +293,24 @@
                         // console.log(3)
                         // console.log(SubgroupObj)
                         SubgroupObj['logo-image'].url = data;
-                        createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
+                        createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
+                            that.processingSave = false;
+                        })
                             // $rootScope.newImg=null;
-                        that.abc = false;
+                        
                     })
                     .catch(function(err) {
                         // return alert('picture upload failed' + err)
-                        that.abc = false;
+                        that.processingSave = false;
                         return messageService.showFailure('picture upload failed' + err)
                     });
                 // console.log(x);
             } else {
                 fromDataFlag = false;
-                createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
-                that.abc = false;
+                createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
+                     that.processingSave = false;
+                } )
+               
             }
         }
 

@@ -32,6 +32,8 @@
             this.showPanel = false;
             var that = this;
 
+            this.isProcessing = false;
+
             this.center = {};
             this.markers = {
                 mark : {}
@@ -297,6 +299,7 @@
             // }
 
             this.showLocationBySubGroup = function(subgroupId, index, b) {
+
                 $timeout(function(){
                     angular.element('#leafletmap').attr('height', '');
                     angular.element('#leafletmap').attr('width', '');
@@ -341,6 +344,8 @@
                                 $timeout(function(){
                                     updatepostion(24.8131137, 67.04971699999999, '34C Stadium Lane 3, Karachi, Pakistan');
                                 }, 500)
+
+                                
                                 // $rootScope.mapData.reset()
                             }
                         })
@@ -377,6 +382,7 @@
             that.setSubgroupLocation = setSubgroupLocation;
 
             function setSubgroupLocation() {
+                that.isProcessing = true;
                 //return
                 var infoObj = {
                     groupID: that.groupId,
@@ -389,10 +395,12 @@
 
                 checkinService['addLocationBySubgroup'](that.groupId, that.subgroupId, that.userId, infoObj, false)
                     .then(function(res) {
+                        that.isProcessing = false;
                         that.submitting = false;
                         messageService.showSuccess(res);
                         $mdDialog.hide();
                     }, function(err) {
+                        that.isProcessing = false;
                         that.submitting = false;
                         messageService.showFailure(err);
                     });

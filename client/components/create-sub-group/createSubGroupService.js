@@ -99,7 +99,8 @@
                         return defer.promise;
 
                     },
-                    'editSubgroup': function(subgroupInfo, subgroupRef, groupID, groupForm) {
+                    // 'editSubgroup': function(subgroupInfo, subgroupRef, groupID, groupForm) {
+                    'editSubgroup': function(subgroupInfo, subgroupRef, groupID, cb) {
                         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                         //  var dataToSet = ;
                         var dataToSet = {
@@ -118,17 +119,17 @@
                             subgroupNameRef.title = subgroupRef.title;
                             subgroupNameRef.$save()
                                 .then(function() {
-                                    groupForm = false;
+                                    cb();
                                     //groupForm.$submitted = false;
                                     //$rootScope.newImg = null;
                                     messageService.showSuccess('SubGroup Edited Successfully')
                                 }, function(group) {
-                                    groupForm = false;
+                                    cb();
                                     messageService.showFailure("SubGroup not edited");
                                 })
 
                         }, function(group) {
-                            groupForm = false;
+                            cb();
                             // groupForm.$submitted = false;
                             messageService.showFailure("SubGroup not edited");
                         })
@@ -235,22 +236,23 @@
                         })
                         firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_changed', function(snapshot){
                             firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
-                                console.log(snapshot.key() + ' ' + JSON.stringify(snapshot.val()) + ' ' + JSON.stringify(userData.val()))
-
                                 if(snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2){
                                     // console.log(userData.val());
                                     // console.log(snapshot.val());
 
+                                    var _flag = false;
                                     groupAdminUsers.forEach(function(val, indx) {
-                                        console.log(val.eamil)
-                                        console.log(userData.val().eamil)
-                                        // if(val.email == userData.val().email) {
+                                        if(val.email == userData.val().email) {
+                                            _flag = true;
+                                        }
+                                    }) //groupAdminUsers.forEach
 
-                                        // }
-                                    })
-
-                                    groupAdminUsers.push(userData.val());
-                                    cb(groupAdminUsers);    
+                                    if(_flag){
+                                        cb(groupAdminUsers);        
+                                    } else{
+                                        groupAdminUsers.push(userData.val());
+                                        cb(groupAdminUsers);        
+                                    }
                                 }
 
                             })
