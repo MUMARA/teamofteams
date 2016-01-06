@@ -99,7 +99,8 @@
                         return defer.promise;
 
                     },
-                    'editSubgroup': function(subgroupInfo, subgroupRef, groupID, groupForm) {
+                    // 'editSubgroup': function(subgroupInfo, subgroupRef, groupID, groupForm) {
+                    'editSubgroup': function(subgroupInfo, subgroupRef, groupID, cb) {
                         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                         //  var dataToSet = ;
                         var dataToSet = {
@@ -118,17 +119,17 @@
                             subgroupNameRef.title = subgroupRef.title;
                             subgroupNameRef.$save()
                                 .then(function() {
-                                    groupForm = false;
+                                    cb();
                                     //groupForm.$submitted = false;
                                     //$rootScope.newImg = null;
                                     messageService.showSuccess('SubGroup Edited Successfully')
                                 }, function(group) {
-                                    groupForm = false;
+                                    cb();
                                     messageService.showFailure("SubGroup not edited");
                                 })
 
                         }, function(group) {
-                            groupForm = false;
+                            cb();
                             // groupForm.$submitted = false;
                             messageService.showFailure("SubGroup not edited");
                         })

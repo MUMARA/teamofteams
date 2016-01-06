@@ -1,3 +1,4 @@
+
 (function() {
     'use strict';
 
@@ -34,7 +35,7 @@
                     /*  if (perSettingForm.$invalid) {
                           return;
                       }*/
-
+                      perSettingForm.$submitted = true;
                     function saveDataToServer() {
                         if (that.userData.firstName != firstName || that.userData.lastName != lastName) {
                             data1 = {
