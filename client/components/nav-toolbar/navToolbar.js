@@ -86,12 +86,14 @@
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
+                    // self.showUrlObj.recordref = '';
                 } else if (snapshot.val() && snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
             })
 
@@ -104,12 +106,14 @@
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
+                    // self.showUrlObj.recordref = '';
                 } else if (snapshot.val() && snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
             })
 

@@ -173,6 +173,7 @@
                         var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupId + '/' + userID);
                         var _ref = new Firebase(userCheckinRecordsRef.toString());
                         var _userCheckinREcordsRef = $firebaseArray(_ref);
+                        console.log(checkinObj)
                         _userCheckinREcordsRef.$add(checkinObj)
                             .then(function(snapShot) {
                                 var temp = $firebaseObject(refs.refSubGroupCheckinCurrentByUser.child(userID))
@@ -185,6 +186,7 @@
                                         snapshot.subgroupID = subgroupId;
                                         snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
                                         snapshot['source-type'] = 1; //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                                        // snapshot['record-ref'] = snapShot.key(); //report manjan
                                         // console.log('after')
                                         // console.log(snapshot)
                                         snapshot.$save().then(function(d) {
@@ -594,7 +596,9 @@
                 var title;
                 refs.main.child('groups').child(GroupID).once('value', function(snapshot){
                     // console.log(snapshot.val().title)
-                    title = snapshot.val().title ? snapshot.val().title : '';
+                    if (snapshot.val()) {
+                        title = snapshot.val().title ? snapshot.val().title : '';                        
+                    }
                 })
                 return title;
             },
@@ -602,7 +606,9 @@
                 var title;
                 refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
                     // console.log(snapshot.val().title)
-                    title = snapshot.val().title ? snapshot.val().title : '';
+                    if (snapshot.val()) {
+                        title = snapshot.val().title ? snapshot.val().title : '';
+                    }
                 })
                 return title;
             }

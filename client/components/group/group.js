@@ -15,7 +15,7 @@
                 var groupID = $stateParams.groupID;
                 //  $scope.groupID = groupID = utilService.trimID(groupID);
                 $scope.showAttemptQuiz = function() {
-                    $location.path('/user/group/' + $scope.groupID + '/quizAttempt');
+                    $location.path('/user/group/' + that.groupID + '/quizAttempt');
                 }
 
                 var isOwner = false;
@@ -23,16 +23,16 @@
                 var isAdmin = false;
                 var localStorage = $localStorage.loggedInUser;
                 var $loggedInUserObj = groupFirebaseService.getSignedinUserObj()
-                $scope.groupID = $stateParams.groupID;
+                this.groupID = $stateParams.groupID;
                 //$scope.userID="zia1";
                 $scope.activeGroup = function() {
-                    $scope.activesubID = null;
-                    $scope.selectedindex = false;
+                    that.activesubID = null;
+                    that.selectedindex = false;
                     that.users =  dataService.getUserData();
 
 
                 }
-                
+
                 this.setFocus = function() {
                     document.getElementById("#UserSearch").focus();
                 }
@@ -200,12 +200,10 @@
 
                 $scope.subgrouppage = function(subgroup1, index) {
                     $scope.selectedindex = index;
-                    if (that.activePanel === 'activity') {
-                        that.GetSubGroupUsers(subgroup1, index)
-                    } else if (that.activePanel === 'chat') {
-                        $scope.activesubID = subgroup1.$id;
+                    $scope.activesubID = subgroup1.$id;
+                    if (that.activePanel === 'chat') {
                         $scope.Teamchannels = chatService.geTeamChannelsSyncArray($scope.groupID, $scope.activesubID);    
-                    } else if (that.activePanel === 'manualAttendace') {                        
+                    } else {                        
                         that.GetSubGroupUsers(subgroup1, index)
                     }
                 }
@@ -236,65 +234,70 @@
                 };
                 // Start Team Attendance
                 //update status when user checked-in or checked-out
-                this.someValue1=  false;
-                this.someValue2=  true;
-                this.someValue3=  true;
-                this.someValue4=  true;
-                this.show = function (showval1,showval2,showval3,showval4 ) {
-                     that.someValue1 = showval1;
-                    that.someValue2 = showval2;
-                    that.someValue3 = showval3;
-                    that.someValue4 = showval4;
-
-                }
-
-
                 this.users = [];
                 this.currentSubGroup;
                 this.currentSudGroupID;
-                this.showActivity = true;
+                this.showActivity = false;
+                this.showReport = true;
                 this.showChat = false;
                 this.showManualAttendace = false;
+                this.showParams = true;
                 this.processTeamAttendance = false;
                 this.activePanel = 'activity';
                 this.showPanel = function(pname) {
+                    if(pname === 'report') {
+                        that.showReport = true; 
+                        that.activePanel = 'report';
+                    } else {
+                        that.showReport = false;
+                    }
                     if(pname === 'activity') {
                         that.showActivity = true; 
                         that.activePanel = 'activity';
-                        that.show(false ,true ,true,true)
                     } else {
                         that.showActivity = false;
                     }
                     if (pname === 'chat') {
                         that.showChat = true; 
                         that.activePanel = 'chat';
-                        that.show(true ,false ,true,true)
                     } else {
                         that.showChat = false;
                     }
                     if (pname === 'manualAttendace') {
                         that.showManualAttendace = true;
                         that.activePanel = 'manualAttendace';
-                        that.show(true ,true ,false,true)
                     } else {
                         that.showManualAttendace = false;
                     }
                 }
-                
 
                 that.users =  dataService.getUserData();                
              
-                    
-                    // $timeout(function(){
-                    //     alert(1)
-                    //     dataService.getUserData().forEach(function(val,indx){
-                    //     alert(indx)
-                    //     if(val.groupID == groupID){
-                    //         that.users.push(val);
-                    //     }
-                    // });
-
-                    // },9000)
+                this.report = [];
+                this.reportParam = {};
+                this.showReportData = function (user) {
+                    this.report = [];
+                    that.showParams = false;
+                    this.count = -1
+                    that.reportParam = {
+                        fullName: user.fullName,
+                        groupsubgroupTitle: user.groupsubgroupTitle,
+                    }
+                    firebaseService.getRefsubgroupCheckinRecords().child(user.groupID).child(user.subgroupID).child(user.id).on('child_added', function(snapshot){
+                        var fullDate = new Date(snapshot.val().timestamp);
+                        var newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), fullDate.getDate());
+                        if (snapshot.val().message == 'Checked-in') {
+                            that.report.push({
+                                checkin: snapshot.val().timestamp,
+                                checkindate: newDate
+                            })
+                            that.count++
+                        } else if (snapshot.val().message == 'Checked-out') {
+                            that.report[that.count].checkout = snapshot.val().timestamp;
+                            that.report[that.count].checkoutdate = newDate;
+                        }
+                    });
+                }
                     
                 this.GetSubGroupUsers = function(subgroupData, index) {
                     if (!subgroupData) {
