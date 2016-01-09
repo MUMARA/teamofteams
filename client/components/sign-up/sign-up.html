@@ -55,7 +55,7 @@
                 </div>
             </md-input-container>
             </md-content>
-            <md-button layout="row" layout-align="center center" ng-click="signUp.signup(singupForm)" class=" backColorSeaGreen foreColorWhite displayFlex" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId || signUp.process || singupForm.$error">
+            <md-button layout="row" layout-align="center center" ng-click="signUp.signup(singupForm)" class=" backColorSeaGreen foreColorWhite displayFlex" ng-disabled="singupForm.$invalid || singupForm.userId.$pending.checkUserId || signUp.process">
                 <md-progress-circular md-mode="indeterminate" ng-show="signUp.process" md-diameter="30"></md-progress-circular>
                 <span> Sign up</span>
             </md-button>
