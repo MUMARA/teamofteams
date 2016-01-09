@@ -11,7 +11,7 @@
                 <div layout="row" layout-align="start center">
                     <div>teamofteams.io/ </div>
                     <md-input-container layout="row" class="nopadding nomargin">
-                        <input type="text" name="groupId" ng-model="createGroup.group.groupID" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true"
+                        <input type="text" name="groupId" ng-model="createGroup.group.groupID" ng-pattern="/^([a-z0-9]){3,20}$/" check-group-existance="" autofocus="true"
                         groupPath="{{createGroup.groupName}}" check-group-existance="" required placeholder="Team URL">
                     </md-input-container>
                     <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
