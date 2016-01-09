@@ -131,7 +131,7 @@
                     var mimeType = temp.split(':')[1].split(';')[0];
                     that.saveFile(x, mimeType, that.group.groupID).then(function(data) {
                             createGroupService.createGroup(that.group, fromDataFlag, groupForm);
-                            $location.path('/user/' + user.userID);
+                            //$location.path('/user/' + user.userID);
                         })
                         .catch(function() {
                             groupForm.$submitted = false;
@@ -140,7 +140,7 @@
                 } else {
                     fromDataFlag = false;
                     createGroupService.createGroup(that.group, fromDataFlag, groupForm)
-                    $location.path('/user/' + user.userID);
+                    //$location.path('/user/' + user.userID);
                 }
 
             }

@@ -1,18 +1,20 @@
-<div layout="row" layout-align="center center" layout-padding layout-margin>
-    <form flex="30" name="loginForm" novalidate class="md-whiteframe-z2 backColorWhite" layout="column" layout-align="center center">
-        <md-input-container>
+<div layout="row" layout-align="center start" layout-padding layout-margin >
+    <form flex-gt-sm="30" name="loginForm" ng-submit="signin.login(loginForm)" novalidate class="md-whiteframe-z2 backColorWhite" layout="column" layout-align="center center" layout-margin >
+    <md-input-container  class="topmargin20px">
             <label>Email</label>
             <input name="userEmail" type="email" ng-model="loginForm.user.email" ng-required="true" aria-label="email">
             <div ng-hide="loginForm.userEmail.$pristine" ng-messages="loginForm.userEmail.$error" ng-messages-multiple>
                 <div class="invalid_color" ng-message="email">Not valid email</div>
             </div>
         </md-input-container>
-         <md-input-container>
+        <md-input-container>
             <label>Password</label>
             <input type="password" ng-model="loginForm.user.password" ng-required="true" aria-label="password">
         </md-input-container>
         <md-button class="foreColorSeaGreen" ui-sref="forgot">Forgot Password?</md-button>
-        <md-progress-circular  ng-if="signin.submitting" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
-          <md-button class="backColorSeaGreen foreColorWhite" ng-disabled="loginForm.$invalid && loginForm.$error" ng-click="signin.login(loginForm)">Login</md-button>
+        <md-button type="submit" layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="loginForm.$invalid && loginForm.$error" ng-click="signin.login(loginForm)"> 
+            <md-progress-circular ng-if="signin.submitting" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+            <span> Login</span>
+        </md-button>
     </form>
 </div>

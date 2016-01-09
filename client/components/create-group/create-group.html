@@ -1,12 +1,12 @@
-<div layout-padding>
-    <form class="backColorWhite" name="groupForm" novalidate>
+<div layout="row" layout-align="center start" layout-padding layout-margin class="viewHeight">
+    <form flex="100" name="groupForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll" layout-margin>
         <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Create Team of Teams</h1>
         <md-divider md-outset class="nopadding"></md-divider>
-        <div layout="column" class="viewHeight80 vscroll" layout-padding>
+        <div layout="column" layout-padding>
             <div>
                 <div layout="row" layout-align="start center">
                     <h3>Url</h3>
-                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="No Space or Special character | length Only 3 to 40"></ng-md-icon>
                 </div>
                 <div layout="row" layout-align="start center">
                     <div>teamofteams.io/ </div>
@@ -64,7 +64,10 @@
                 </div>
             </md-input-container>
             <div>
-                <h3>Sign Up Mode <ng-md-icon icon="info_outline" size="25" class="fillColorLightGrey"></ng-md-icon> </ng-md-icon></h3>
+                <div layout="row" layout-align="start center">
+                    <h3>Sign Up Mode</h3>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please select sign up mode for user"></ng-md-icon>
+                </div>
                 <md-radio-group ng-model="createGroup.group.signupMode">
                     <md-radio-button value="1" ng-disabled="true" class="md-primary">Invitation Only</md-radio-button>
                     <md-radio-button value="2" ng-disabled="true" class="md-primary">Request Support</md-radio-button>
@@ -82,11 +85,12 @@
                 </md-input-container>
             </div>
             <div>
-                <h3>Select Logo <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon></h3>
+                <div layout="row" layout-align="start center">
+                    <h3>Select Logo</h3>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please Select Logo"></ng-md-icon>
+                </div>
                 <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
-                                                    <md-icon style="outline: none;"  md-svg-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)"></md-icon>
-
-                   
+                    <md-icon style="outline: none;"  md-svg-src="img/image.svg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)"></md-icon>
                 </div>
                 <div>
                      <img ng-src="{{$root.newImg || createGroup.group['logo-image'].url}}" ng-hide="!$root.newImg" alt="img/image.svg" class="cropper-main-image" ng-click="createGroup.showAdvanced($event)"
@@ -95,8 +99,9 @@
                 <image-cropper></image-cropper>
             </div>
             <div layout="row" layout-align="end center">
-                <md-progress-circular class="" ng-show="groupForm.$submitted" md-mode="indeterminate"></md-progress-circular>
-                <md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen" ng-click="createGroup.answer( groupForm )"><span style="color:white;">Save</span>
+                <md-button layout="row" layout-align="center center" ng-disabled="groupForm.$invalid ||  groupForm.$submitted" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="createGroup.answer( groupForm )">
+                    <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                    <span> Save</span>
                 </md-button>
             </div>
         </div>

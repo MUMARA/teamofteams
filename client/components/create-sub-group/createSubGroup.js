@@ -56,6 +56,8 @@
 
 
         this.ActiveSideNavBar = function(sideNav) {
+            that.adminSideNav = true;
+            that.memberSideNav = true;
             if(sideNav === 'admin') {
                 that.adminSideNav = false;
                 that.memberSideNav = true;

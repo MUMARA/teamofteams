@@ -16,7 +16,7 @@
             <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
         </md-button>
 		<div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
-			<img ng-src="{{group.owerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px user-iamge" alt="group owner image" />
+			<img ng-src="{{group.owerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image" />
 		</div>
 		<div layout="row" layout-align="start center" layout-margin>
 			<md-progress-circular md-mode="determinate" md-diameter="44" ng-value="((group.membersOnline / group.members) * 100)" class="md-accent userPageGroupProg"></md-progress-circular>

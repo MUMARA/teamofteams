@@ -26,10 +26,12 @@
                                 $rootScope.newImg = null
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
+
                                     messageService.showSuccess("Group creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
                                     messageService.showSuccess("Group creation Successful");
                                 }
+                                $location.path('/user/' + pageUserId);
                             }, function(group) {
                                 form.$submitted = false;
                                 $rootScope.newImg = null;
@@ -39,7 +41,7 @@
                     'cancelGroupCreation': function(userId) {
                         //console.log("Group Creation Cancelled");
                         soundService.playFail();
-                        $location.path('/user/' + userService.getCurrentUser().userID)
+                        $location.path('/user/' + pageUserId)
                     },
                     'uploadPicture': function(file, groupID) {
                         var defer = $q.defer();

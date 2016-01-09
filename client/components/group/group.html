@@ -1,8 +1,8 @@
 <div layout="row" layout-align="center start">
     <!-- Side Nav Bar -->
-    <div class="viewHeight" layout="column" style="padding-bottom: 60px">
+    <div class="viewHeight-64" layout="column">
         <md-card style="width: 220px; height: 300px; margin:0px;" class="foreColorDarkGrey" layout="column">
-            <div style="margin:auto;">
+            <div style="margin:30px auto;">
                 <a ng-click="group.GetSubGroupUsers()" layout="row" layout-align="center center">
                     <img ng-src="{{ group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
                 </a>
@@ -19,7 +19,7 @@
                     <ng-md-icon icon="settings" class="fillColorWhite" size="20"></ng-md-icon>
                 </md-button>
                 <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
-                    <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px user-iamge" alt="group owner image" />
+                    <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound" alt="group owner image" />
                 </div>
                 <div layout="row" layout-align="start center" layout-margin>
                     <md-progress-circular md-mode="determinate" md-diameter="44" ng-value="( group.group['members-checked-in'].count / group.group['members-count'] ) * 100" class="md-accent userPageGroupProg"></md-progress-circular>
@@ -36,7 +36,7 @@
         </div>
     </div>
     <!--navigation side-->
-    <div class="viewHeight gradient" layout="column" layout-align="space-between center">
+    <div class="viewHeight-64 gradient" layout="column" layout-align="space-between center">
         <div class="nopadding nomargin" >
             <img src="img/menu.svg" class="nooutline icon40px" layout-margin id="menu-toggle" />
             <md-divider class="backColorWhite"></md-divider>
@@ -49,7 +49,7 @@
                 <img src="img/1arrow.png" class="showArrow" ng-hide="group.someValue2">
             </div>
         </div>
-        <div ng-show="group.isAdmin()" style="padding-bottom:100%">
+        <div ng-show="group.isAdmin()">
             <md-divider class="backColorWhite"></md-divider>
             <div layout="row">
                 <img src="img/menu.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" />
@@ -62,10 +62,10 @@
         </div>
     </div>
     <!-- Team Attendance -->
-    <div class="viewHeight teamAttendance" layout="column" flex ng-show="group.showManualAttendace" style="padding-bottom: 60px">
+    <div class="viewHeight-64 teamAttendance" layout="column" flex ng-show="group.showManualAttendace">
 	    <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite">
 	    	<h4 class="leftmargin20px">Manual Attendance</h4>
-	    	<md-progress-circular md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
+	    	<md-progress-circular class="cirrcularGrey" md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
 	    	<div layout="row" flex="50">	
 	            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
 	            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
@@ -105,7 +105,7 @@
         </md-table-container>
     </div>
     <!-- Activity -->
-    <div class="viewHeight activity" flex layout="column" ng-show="group.showActivity" style="padding-bottom: 60px">
+    <div class="viewHeight-64 activity" flex layout="column" ng-show="group.showActivity">
         <div layout="row" layout-padding layout-align="space-between center" style="font-size:large;" class="backColorWhite">
     	    <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
             <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
@@ -140,7 +140,7 @@
         </md-table-container>
     </div>
     <!--chat side-->
-    <div class="viewHeight chatSide backColorWhite" layout="column" layout-align="space-between start" flex ng-show="group.showChat">
+    <div class="viewHeight-64 chatSide backColorWhite" layout="column" layout-align="space-between start" flex ng-show="group.showChat">
     	<div style="width: 100%;">
 	        <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite">
 		    	<h4 class="leftmargin20px">Channel Headlines</h4>
@@ -222,7 +222,7 @@
 	            </md-content>
 	        </div>
         </div>
-        <div style="padding-bottom:50px; width: 100%;">
+        <div style="width: 100%;">
 			<!--for group send msg-->
 	        <form ng-hide="group.activesubID" class="backColorWhite" ng-submit="group.SendMsg()" layout="row" layout-align="center center" layout-padding>
 	                <md-input-container flex style="border: 1px solid lightgrey; padding: 0; background-color: #F8F8F8;" layout="row" layout-align="start center">
@@ -246,8 +246,8 @@
         </div>
     </div>
     <!--online side-->
-    <div class="viewHeight onlineSide" ng-show="group.showChat" style="max-width:400px;width:400px;min-width:400px">
-        <md-card class="nomargin" layout-fill style="padding-bottom:50px;">
+    <div class="viewHeight-64 onlineSide" ng-show="group.showChat" style="max-width:400px;width:400px;min-width:400px">
+        <md-card class="nomargin" layout-fill>
             <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
                 <md-tabs style=" background-color: #68C2E8" class="OnlineChat" layout-fill>
                     <!--channel side-->

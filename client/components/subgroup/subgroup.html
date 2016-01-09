@@ -41,7 +41,7 @@
                 <div>
                 	<div layout="row" layout-align="start center">
                         <h3>Set Team Photo</h3>
-                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon> 
+                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please select team photo"></ng-md-icon> 
                     </div>
                     <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
                             <md-icon md-svg-src="img/image.svg" class="cropper-main-image nooutline" ng-click="subgroup.showAdvanced($event)"></md-icon>
@@ -51,8 +51,9 @@
                     </div>
                 </div>
                 <div  layout="row" layout-align="end center">
-                    <md-progress-circular class="" ng-show="subgroup.abc"  md-mode="indeterminate"></md-progress-circular>
-                	<md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen"  ng-click="subgroup.answer( groupForm )"><span style="color:white;">Save</span>
+                	<md-button layout="row" layout-align="center center" ng-disabled="groupForm.$invalid" class="backColorSeaGreen displayFlex"  ng-click="subgroup.answer( groupForm )">
+                        <md-progress-circular class="" ng-show="subgroup.abc"  md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                        <span style="color:white;">Save</span>
                     </md-button>
                 </div>
             </div>

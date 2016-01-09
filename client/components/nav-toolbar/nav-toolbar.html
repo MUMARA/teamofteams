@@ -2,7 +2,7 @@
     <div layout='row' layout-align="start center" layout-margin>
         <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
         <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
-        <md-progress-circular md-diameter="48" ng-show="navToolbar.checkinSending" class="md-hue-2 progressCircularforNavBar" md-mode="indeterminate"></md-progress-circular>
+        <md-progress-circular md-diameter="45" ng-show="navToolbar.checkinSending" class="nomargin" md-mode="indeterminate"></md-progress-circular>
     </div>
     <div layout='row' layout-align="end center">
         <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
@@ -17,27 +17,21 @@
                     </md-input-container>
                     <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()"></ng-md-icon>
                 </md-toolbar>
-                <!-- <div id="test1" layout="row" style="padding-top: 1px;height:78%"> -->
-                    <div layout="column" style="border-right: 1px solid #c2c2c2">
-                        <md-content class="grayScroller ">
-                            <md-list class="nopadding" ng-hide="navToolbar.groupObj1" style="">
-                                <md-list-item style="padding-top:8px" ng-repeat="group in navToolbar.ListGroupSubGroup | filter: navToolbar.search">
-                                    <div class="column" layout-align="start end" style="color: silver;font-size: large; overflow-x: auto;">
-                                        <div layout="row" layout-align="start center">
-                                            <div ><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
-                                            <span>{{group.group}}</span>
-                                        </div>
-                                        <div style="color: #757575;font-size:large;" >
-                                                <div class="nooutline leftmargin40px cursorPointer" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in group.subGroups" layout-padding>{{subgroup.subgroupId}}
-                                                </div>
-                                        </div>
-                                        <md-divider md-outset></md-divider>
-                                    </div>
-                                </md-list-item>
-                            </md-list>
-                        </md-content>
-                    </div>
-                <!-- </div> -->
+                <md-list class="nopadding vscroll" ng-hide="navToolbar.groupObj1">
+                    <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
+                        <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
+                            <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
+                                <div><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
+                                <span>{{group.groupTitle}}</span>
+                            </div>
+                            <div style="font-size:large;" layout-fill>
+                                <div class="nooutline leftpadding40px cursorPointer hoverLightGrey3 foreColorDarkGrey" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in filter = (group.subGroups | filter: navToolbar.search)" layout-padding>{{subgroup.subgroupTitle}}
+                                </div>
+                            </div>
+                            <md-divider md-outset></md-divider>
+                        </div>
+                    </md-list-item>
+                </md-list>
             </md-card>
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">

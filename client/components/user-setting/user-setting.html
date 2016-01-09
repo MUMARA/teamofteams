@@ -1,11 +1,11 @@
-<div layout="row" layout-padding layout-margin>
-    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1" style="background-color:rgb(96, 176, 137); max-height: 287px">
+<div layout="row" layout-padding layout-margin >
+    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1 backColorDarkSeaGreen" style="max-height: 287px">
         <md-button ng-click="userSetting.editgroupPage()" style="margin: 0px; width:100%">
             <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">Group</div>
         </md-button>
-        <md-button style="margin: 0px; width:100%">
-            <img src="../../img/3sami.svg" style="background-color: darkseagreen; width: 33px;height: 33px;margin-bottom: -15px;" />
+        <md-button style="margin: 0px; width:100%" class="backColorSeaGreen">
+            <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">Members</div>
         </md-button>
         <md-button ng-click="userSetting.openGeoFencingPage()" style="margin: 0px; width:100%">
@@ -20,7 +20,7 @@
     <div flex layout-padding class="backColorWhite nomargin nopadding" name="memberSetingDiv" novalidate>
         <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Members Setting</h1>
         <md-divider md-outset class="nopadding"></md-divider>
-        <md-content layout="row" >
+        <md-content layout="row" class="viewHeight-154" >
             <md-tabs  id="memberSettingTab" md-dynamic-height md-border-bottom flex>
               <md-tab label="All Members">
                 <md-content class="md-padding viewHeight80" >
@@ -32,7 +32,7 @@
                             <input type="text" id="#UserSearch" ng-model="userSetting.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
                         </md-input-container>
                         <div layout="row" layout-align="center center">
-                            Filter &emsp;
+                            Sort By &emsp;
                             <md-select class="nopadding nomargin leftmargin20px" placeholder="Every One" ng-model="user.dropbox" style="overflow: hidden!important;">
                                 <md-option value="0">Everyone</md-option>
                                 <md-option value="1">Online</md-option>
@@ -88,7 +88,7 @@
                         <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
                             <h4>INVITATIONS/REQUESTS</h4>
                             <div layout="row" layout-align="center center">
-                                Sort By &emsp;
+                                Filter &emsp;
                                 <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
                                     <md-option value="0">Name</md-option>
                                     <md-option value="1">Status</md-option>

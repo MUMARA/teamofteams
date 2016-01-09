@@ -237,9 +237,6 @@ angular.module('core')
                     });
                     return deferred.promise;
                 }
-
-
-
             };
         }
     ]);

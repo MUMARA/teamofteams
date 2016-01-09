@@ -427,6 +427,7 @@
                 }
 
                 function updateAllStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
+                    console.log(userID + ' ' + groupID + ' ' + subgroupID)
                     checkinService.getCurrentLocation()
                         .then(function(location) {
                             that.checkinObj.newStatus.location = {

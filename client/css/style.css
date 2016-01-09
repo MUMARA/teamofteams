@@ -1,3 +1,34 @@
+md-progress-circular.md-default-theme .md-inner .md-right .md-half-circle, 
+md-progress-circular .md-inner .md-right .md-half-circle {
+    border-right-color: white;
+}
+md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, 
+md-progress-circular .md-inner .md-left .md-half-circle, 
+md-progress-circular.md-default-theme .md-inner .md-right .md-half-circle, 
+md-progress-circular .md-inner .md-right .md-half-circle {
+     border-top-color: white; 
+}
+md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, 
+md-progress-circular .md-inner .md-left .md-half-circle {
+    border-left-color: white;
+}
+
+
+.cirrcularGrey .md-default-theme .md-inner .md-right .md-half-circle, 
+.cirrcularGrey .md-inner .md-right .md-half-circle {
+    border-right-color: rgb(106, 106, 106);
+}
+.cirrcularGrey .md-default-theme .md-inner .md-left .md-half-circle, 
+.cirrcularGrey .md-inner .md-left .md-half-circle, 
+.cirrcularGrey .md-default-theme .md-inner .md-right .md-half-circle, 
+.cirrcularGrey .md-inner .md-right .md-half-circle {
+     border-top-color: rgb(106, 106, 106); 
+}
+.cirrcularGrey .md-default-theme .md-inner .md-left .md-half-circle, 
+.cirrcularGrey .md-inner .md-left .md-half-circle {
+    border-left-color: rgb(106, 106, 106);
+}
+
 /* Start Animation */
 .activity {
     transition: all linear 0.1s;
@@ -102,6 +133,10 @@
     padding-top: 40px;
 }
 
+.topmargin20px {
+    margin-top: 20px;
+}
+
 .bottompadding50px {
     padding-bottom: 50px!important;
 }
@@ -116,6 +151,9 @@
 
 .leftmargin40px {
     margin-left: 40px;
+}
+.leftpadding40px {
+    padding-left: 40px;
 }
 
 .leftmargin20px {
@@ -184,9 +222,14 @@
     cursor: pointer;
 }
 
+.displayFlex {
+    display: flex;
+}
+
+
 .vscroll {
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: auto !important;
 }
 
 .viewHeight80 {
@@ -194,7 +237,15 @@
 }
 
 .viewHeight {
-    height: 100vh;
+    height: calc(100vh - 88px);
+}
+
+.viewHeight-64 {
+    height: calc(100vh - 64px);
+}
+
+.viewHeight-154 {
+    height: calc(100vh - 154px);
 }
 
 .viewWidth {
@@ -275,6 +326,10 @@
 
 .backColorSeaGreen {
     background-color: rgb(50, 180, 202)!important;
+}
+
+.backColorDarkSeaGreen {
+    background-color: rgb(5,139,151)!important;
 }
 
 .backColorPink {

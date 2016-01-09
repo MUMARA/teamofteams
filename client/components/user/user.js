@@ -65,6 +65,10 @@
         this.userObj = [];
 
 
+        that.users = []
+        that.users = dataService.getUserData();
+
+
         // function getUserObj() {
         //     var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.pageUserId.userID))
         //         .$loaded()
@@ -238,8 +242,7 @@
             });
         }
 
-        that.users = []
-        that.users = dataService.getUserData();
+        
         
     }
 

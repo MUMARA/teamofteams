@@ -52,7 +52,9 @@
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
             }
 
-            this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
+            //this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
+
+            $firebaseObject(firebaseService.getRefUsers().child(userID))
                 .$loaded().then(function(data) {
                     //debugger;
                     $rootScope.userImg = data['profile-image'];
@@ -61,7 +63,7 @@
                 .catch(function(error) {
                     console.error("Error:", error);
                     soundService.playFail('Error occurred.');
-                });
+            });
 
             // $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(snapshot) {
             //     if (snapshot.type == 1 && snapshot.groupID && snapshot.subgroupID) {
@@ -289,6 +291,7 @@
                 self.groups.forEach(function(group, groupId) {
                     var tmp = {
                         group: group.$id,
+                        groupTitle: checkinService.getGroupTitle(group.$id),
                         subGroups: []
                     }
                     for (var i in group) {
@@ -296,6 +299,7 @@
                             var temp = {};
                             temp.pId = group.$id; // group Name == pId
                             temp.subgroupId = i;
+                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
                             temp.data = group[i];
                             tmp.subGroups.push(temp)
                         }

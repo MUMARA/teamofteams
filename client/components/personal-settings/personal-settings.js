@@ -96,6 +96,7 @@
                             delete that.userData.newPassword;
                             if (!that.userData['date-created']) that.userData['date-created'] = new Date().getTime();
                             that.userData['status'] = -1;
+                            
                             // console.log(that.userData)
                             that.userData.$save().then(function(data) {
                                 $location.path('/user/' + userService.getCurrentUser().userID)

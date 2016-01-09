@@ -45,6 +45,17 @@ angular.module('core')
                                 }
                             })
                         });
+                        checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
+                           userData.forEach(function(val, indx) {
+                                if (val.id === snapshot.key()) {
+                                    if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
+                                        val.type = snapshot.val().type;
+                                        val.message = snapshot.val().message;
+                                        val.timestamp = snapshot.val().timestamp;
+                                    }
+                                }
+                            })
+                        });
                         $firebaseObject(firebaseService.getRefSubGroups().child(group.key()).child(subgroup.key())).$loaded().then(function(subgroupmasterdata) {
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
                         })
@@ -59,6 +70,24 @@ angular.module('core')
                                 var timestamp = userdata.timestamp;
                                 $firebaseObject(firebaseService.getRefUsers().child(userdata.$id)).$loaded().then(function(usermasterdata) {
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_changed', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                if (snapshot.key() === "profileImage") {
+                                                    val.profileImage = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "firstName") {
+                                                    val.firstName = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "lastName") {
+                                                    val.lastName = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "contactNumber") {
+                                                    val.contactNumber = snapshot.val();
+                                                }
+                                            }
+                                        })
+                                    });
+                                    firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
                                             if (val.id === userdata.$id) {
                                                 if (snapshot.key() === "profileImage") {

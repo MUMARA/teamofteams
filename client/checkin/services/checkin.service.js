@@ -589,6 +589,22 @@
                 });
 
                 return locationID;
+            }, 
+            getGroupTitle: function(GroupID){
+                var title;
+                refs.main.child('groups').child(GroupID).once('value', function(snapshot){
+                    // console.log(snapshot.val().title)
+                    title = snapshot.val().title ? snapshot.val().title : '';
+                })
+                return title;
+            },
+            getSubGroupTitle: function(GroupID, subGroupID){
+                var title;
+                refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
+                    // console.log(snapshot.val().title)
+                    title = snapshot.val().title ? snapshot.val().title : '';
+                })
+                return title;
             }
         }
     }

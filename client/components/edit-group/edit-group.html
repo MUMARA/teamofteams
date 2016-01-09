@@ -1,6 +1,6 @@
 <div layout="row" layout-padding layout-margin>
-	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1" style="background-color:rgb(96, 176, 137); max-height: 287px">
-		<md-button style="background-color: darkseagreen; margin: 0px; width:100%">
+	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1 backColorDarkSeaGreen" style="max-height: 287px">
+		<md-button style="margin: 0px; width:100%" class="backColorSeaGreen">
 	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
 	        <div style="color: white;">Group</div>
         </md-button>
@@ -21,13 +21,13 @@
     <form flex layout-padding class="backColorWhite nomargin nopadding" name="groupForm" novalidate>
 		<h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Edit Team of Teams</h1>
         <md-divider md-outset class="nopadding"></md-divider>
-		<div layout="column" class="viewHeight80 vscroll" layout-padding>
+		<div layout="column" class="viewHeight-154 vscroll" layout-padding>
             <div>
     			<div layout="row" layout-align="start center">
                     <h3>Url</h3>
-                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen"></ng-md-icon> 
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="No Space or Special character | length Only 3 to 40"></ng-md-icon> 
                 </div>
-                <div>teamofteams.io/ {{editGroup.group.$id}} </div>
+                <div>teamofteams.io/{{editGroup.group.$id}} </div>
 			</div>
             <h3>General Information</h3>
             <div layout="row">
@@ -72,7 +72,10 @@
                 </div>
             </md-input-container>
             <div>
-                <h3>Sign Up Mode <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </ng-md-icon></h3>
+                <div layout="row" layout-align="start center">
+                    <h3>Sign Up Mode</h3>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please select sign up mode for user"></ng-md-icon>
+                </div>
                 <md-radio-group ng-model="editGroup.group.signupMode">
                     <md-radio-button value="1" ng-disabled="true" class="md-primary">Invitation Only</md-radio-button>
                     <md-radio-button value="2" ng-disabled="true">Request Support</md-radio-button>
@@ -89,15 +92,19 @@
                 </md-input-container>
             </div>
             <div>
-            	<h3>Select Logo <ng-md-icon icon="info_outline" size="25" style="fill:#4b7497"></ng-md-icon> </ng-md-icon></h3>
+            	<div layout="row" layout-align="start center">
+                    <h3>Select Logo</h3>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please Select Logo"></ng-md-icon>
+                </div>
             	<div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap>
                     <img ng-src="{{$root.newImg || editGroup.group['logo-image'].url}}" alt="img/image.svg" class="cropper-main-image nooutline" ng-click="editGroup.showAdvanced($event)" />
                 </div>
                 <image-cropper></image-cropper>
             </div>
-            <div  layout="row" layout-align="end center">
-                <md-progress-circular class="" ng-show="editGroup.submitProgress" md-mode="indeterminate"></md-progress-circular>
-            	<md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen" ng-click="editGroup.answer( groupForm )"><span style="color:white;">Save</span>
+            <div layout="row" layout-align="end center">
+            	<md-button  layout="row" layout-align="center center" ng-disabled="groupForm.$invalid" class="backColorSeaGreen displayFlex" ng-click="editGroup.answer( groupForm )">
+                   <md-progress-circular class="" ng-show="editGroup.submitProgress" md-mode="indeterminate" md-diameter="30"></md-progress-circular> 
+                   <span style="color:white;">Save</span>
                 </md-button>
             </div>
 		</div>
