@@ -418,7 +418,9 @@
                                         updateAllStatusHelper(val.groupID, val.subgroupID, val.id, 1);
                                     });
                             });
-                        } //if
+                        } else { //if
+                            that.processTeamAttendance = false;
+                        }
                     }) //foreach
 
                     // that.checkoutObj.type = 2;
@@ -430,7 +432,7 @@
                 }
 
                 function updateAllStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
-                    console.log(userID + ' ' + groupID + ' ' + subgroupID)
+                    // console.log(userID + ' ' + groupID + ' ' + subgroupID)
                     checkinService.getCurrentLocation()
                         .then(function(location) {
                             that.checkinObj.newStatus.location = {
