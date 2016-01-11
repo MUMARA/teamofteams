@@ -109,6 +109,7 @@
             function answer(groupForm) {
                 var allowedDomain = {};
                 var fromDataFlag;
+                 groupForm.$submitted = true;
                 //return if form has invalid model.
                 if (groupForm.$invalid) {
                     return;
@@ -130,7 +131,7 @@
                     var mimeType = temp.split(':')[1].split(';')[0];
                     that.saveFile(x, mimeType, that.group.groupID).then(function(data) {
                             createGroupService.createGroup(that.group, fromDataFlag, groupForm);
-                            $location.path('/user/' + user.userID);
+                            //$location.path('/user/' + user.userID);
                         })
                         .catch(function() {
                             groupForm.$submitted = false;
@@ -139,7 +140,7 @@
                 } else {
                     fromDataFlag = false;
                     createGroupService.createGroup(that.group, fromDataFlag, groupForm)
-                    $location.path('/user/' + user.userID);
+                    //$location.path('/user/' + user.userID);
                 }
 
             }
@@ -159,10 +160,13 @@
 
             //Cropper Code start
             this.showAdvanced = function(ev) {
+                $rootScope.tmpImg = $rootScope.newImg;
+                $rootScope.newImg = '';
                 $mdDialog.show({
                     controller: "DialogController as ctrl",
                     templateUrl: 'directives/dilogue1.tmpl.html',
-                    targetEvent: ev
+                    targetEvent: ev,
+                    escapeToClose: false
                 }).then(function(picture) {
                     $rootScope.newImg = picture;
                     // console.log("this is image" + picture)

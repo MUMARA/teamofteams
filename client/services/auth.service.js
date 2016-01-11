@@ -5,9 +5,9 @@
 
 // Create the 'example' controller
 angular.module('core')
-    .factory('authService', ["dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
+    .factory('authService', ["$state", "dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
         "$sessionStorage", "firebaseService",
-        function(dataService, messageService, $q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
+        function($state, dataService, messageService, $q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
             firebaseService) {
 
             return {
@@ -100,7 +100,6 @@ angular.module('core')
                     Firebase.goOffline();
                     //delete $sessionStorage.loggedInUser;
                     delete $localStorage.loggedInUser;
-                    messageService.showFailure("logout successfully");
                 },
                 //to resolve route "/user/:user" confirming is authenticated from firebase
                 resolveUserPage: function() {
@@ -122,13 +121,15 @@ angular.module('core')
                                 }, function(error) {
                                     if (error) {
                                         console.log("Firebase Authentication failed: ", error);
-                                        $location.path("/signin");
+                                        // $location.path("/signin");
+                                        $state.go('signin')
                                     }
                                 });
                         }
                     } else {
                         console.log("No user logged in");
-                        $location.path("/signin");
+                        $state.go('signin')
+                        // $location.path("/signin");
                     }
 
                     return defer.promise;

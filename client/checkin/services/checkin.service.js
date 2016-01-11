@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by Shahzad on 1/21/2015.
  */
 
@@ -6,7 +6,8 @@
     'use strict';
 
     angular
-        .module('checkin')
+        // .module('checkin')
+        .module('core')
         .factory('checkinService', checkinService);
 
     checkinService.$inject = ['$q', '$geolocation', 'firebaseService', "$firebaseObject", '$firebaseArray'];
@@ -57,6 +58,28 @@
 
                 var userCheckinRecords = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
                 refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+            },
+            hasSubGroupCurrentLocation: function(groupID, subGroupID){
+                var defer = $q.defer();
+                var hasLocation = false;
+                $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID))
+                    .$loaded().then(function(data){
+                        // console.log(data[0].location)
+                        if(data[0] && data[0].location){
+                            hasLocation = true;
+                            defer.resolve(hasLocation);
+                        }
+                    });
+
+                refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID).on('child_changed', function(snapshot){
+                    // console.log(snapshot.val().location);
+                    if(snapshot.val() && snapshot.val().location){
+                        hasLocation = true;
+                        defer.resolve(hasLocation);
+                }
+                })
+
+                return defer.promise;
             },
             createCurrentRefsBySubgroup: function(groupID, subgroupID, userID) {
                 var defer = $q.defer();
@@ -150,6 +173,7 @@
                         var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupId + '/' + userID);
                         var _ref = new Firebase(userCheckinRecordsRef.toString());
                         var _userCheckinREcordsRef = $firebaseArray(_ref);
+                        // console.log(checkinObj)
                         _userCheckinREcordsRef.$add(checkinObj)
                             .then(function(snapShot) {
                                 var temp = $firebaseObject(refs.refSubGroupCheckinCurrentByUser.child(userID))
@@ -162,6 +186,7 @@
                                         snapshot.subgroupID = subgroupId;
                                         snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
                                         snapshot['source-type'] = 1; //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                                        // snapshot['record-ref'] = snapShot.key(); //report manjan
                                         // console.log('after')
                                         // console.log(snapshot)
                                         snapshot.$save().then(function(d) {
@@ -473,6 +498,7 @@
                 return defer.promise;
             },
             addLocationBySubgroup: function(groupID, subgroupID, userID, locationObj, multiple, recordId) {
+
                 var defer = $q.defer();
 
                 var newLocation = {
@@ -487,6 +513,7 @@
                     'defined-by': userID, //only admins or owners can define a office location
                     'timestamp': fireTimeStamp
                 };
+
                 var syncRef;
                 if (!multiple && refs.$currentSubGroupLocations.length) {
                     //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
@@ -564,6 +591,26 @@
                 });
 
                 return locationID;
+            }, 
+            getGroupTitle: function(GroupID){
+                var title;
+                refs.main.child('groups').child(GroupID).once('value', function(snapshot){
+                    // console.log(snapshot.val().title)
+                    if (snapshot.val()) {
+                        title = snapshot.val().title ? snapshot.val().title : '';                        
+                    }
+                })
+                return title;
+            },
+            getSubGroupTitle: function(GroupID, subGroupID){
+                var title;
+                refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
+                    // console.log(snapshot.val().title)
+                    if (snapshot.val()) {
+                        title = snapshot.val().title ? snapshot.val().title : '';
+                    }
+                })
+                return title;
             }
         }
     }

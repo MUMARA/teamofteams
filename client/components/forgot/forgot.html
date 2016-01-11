@@ -1,4 +1,4 @@
-<div layout="column" layout-align="space-around center">
+<div layout="column" layout-align="space-around center" layout-padding>
     <md-card>
         <md-card-content>
             <h2 class="md-title">Forgot Password</h2>
@@ -16,11 +16,12 @@
                             <div class="invalid_color" ng-message="required">This is required.</div>
                         </div>
                     </md-input-container>
-                    <md-input-container ng-if="forgot.submitting">
-                        <md-progress-circular class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
-                    </md-input-container>
                     <!--<md-text-float label="Password"  ng-model="user.password"> </md-text-float>-->
-                    <md-button class="md-raised md-primary" ng-disabled="forgetForm.$invalid" style="margin-top: 20px;">Submit</md-button>
+      
+                    <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="forgetForm.$invalid" ng-click="forgot.forgotPassword()" >
+                        <md-progress-circular ng-show="forgot.submitting" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                        <span> Submit</span>
+                    </md-button>
                 </div>
             </form>
         </md-card-content>

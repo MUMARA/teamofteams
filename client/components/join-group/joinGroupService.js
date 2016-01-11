@@ -13,16 +13,18 @@
                     'canActivate': function() {
                         return authService.resolveUserPage();
                     },
-                    'joinGroupRequest': function(groupInfo) {
+                    'joinGroupRequest': function(groupInfo, cb) {
                         groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '')
                             //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
                         userFirebaseService.asyncGroupJoiningRequest($localStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
                             .then(function() {
                                 //console.log("Group join request sent successfully");
+                                cb();
                                 messageService.showSuccess("Group joining request sent successfully");
 
                             }, function(reason) {
                                 //console.log("Unable to send group joining request");
+                                cb();
                                 messageService.showFailure(reason);
                             })
                     },

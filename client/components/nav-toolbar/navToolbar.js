@@ -52,7 +52,9 @@
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
             }
 
-            this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
+            //this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
+
+            $firebaseObject(firebaseService.getRefUsers().child(userID))
                 .$loaded().then(function(data) {
                     //debugger;
                     $rootScope.userImg = data['profile-image'];
@@ -61,7 +63,7 @@
                 .catch(function(error) {
                     console.error("Error:", error);
                     soundService.playFail('Error occurred.');
-                });
+            });
 
             // $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(snapshot) {
             //     if (snapshot.type == 1 && snapshot.groupID && snapshot.subgroupID) {
@@ -84,12 +86,14 @@
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
+                    // self.showUrlObj.recordref = '';
                 } else if (snapshot.val() && snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
             })
 
@@ -102,12 +106,14 @@
                     self.showUrlObj.userID = '';
                     self.showUrlObj.groupID = '';
                     self.showUrlObj.subgroupID = '';
+                    // self.showUrlObj.recordref = '';
                 } else if (snapshot.val() && snapshot.val().type == 1) {
                     self.checkout = true;
                     self.switchCheckIn = true;
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
             })
 
@@ -289,6 +295,7 @@
                 self.groups.forEach(function(group, groupId) {
                     var tmp = {
                         group: group.$id,
+                        groupTitle: checkinService.getGroupTitle(group.$id),
                         subGroups: []
                     }
                     for (var i in group) {
@@ -296,6 +303,7 @@
                             var temp = {};
                             temp.pId = group.$id; // group Name == pId
                             temp.subgroupId = i;
+                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
                             temp.data = group[i];
                             tmp.subGroups.push(temp)
                         }

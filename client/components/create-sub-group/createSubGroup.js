@@ -41,13 +41,34 @@
         this.filterUser = filterUser;
         this.filterUser2 = filterUser2;
         this.submembers = 0;
-        this.closeToggleAdmin = closeToggleAdmin
-        this.closeAdminToggler = closeAdminToggler
+        this.closeToggleAdmin = closeToggleAdmin;
+        this.closeAdminToggler = closeAdminToggler;
+        this.processingSave = false;
         this.memberss = {
             memberIDs: "",
             selectedUsersArray: []
 
         };
+
+        this.adminSideNav = true;
+        this.memberSideNav = true;
+        
+
+
+        this.ActiveSideNavBar = function(sideNav) {
+            that.adminSideNav = true;
+            that.memberSideNav = true;
+            if(sideNav === 'admin') {
+                that.adminSideNav = false;
+                that.memberSideNav = true;
+            } else if(sideNav === 'member') {
+                that.adminSideNav = true;
+                that.memberSideNav = false;
+            } else {
+                this.adminSideNav = true;
+                this.memberSideNav = true;
+            }
+        }
 
         /*VM properties*/
 
@@ -132,7 +153,8 @@
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
-                targetEvent: ev
+                targetEvent: ev,
+                escapeToClose: false
             }).then(function(picture) {
                 $rootScope.newImg = picture;
                 //console.log("this is image" + picture)
@@ -205,7 +227,7 @@
         this.selectedAdmin = function(newType, member) {
             // console.log(member.userSyncObj.$id);
             // console.log(member.user.profile.firstName);
-            this.selectedAdminArray.push(member.user.profile)
+            // that.selectedAdminArray.push(member.user.profile)
             createSubGroupService.changeMemberRole(newType, member, groupID, that.activeID)
                 .then(function() {
                     messageService.showSuccess("New Admin selected");
@@ -222,7 +244,7 @@
 
         function loadAdminUSers(groupid, subgroupid){
             createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
-                 that.selectedAdminArray = data;
+                that.selectedAdminArray = data;
             })
         }
 
@@ -239,22 +261,26 @@
             return disableItem;
         }
 
-        function filterUser2(userID) {
+        function filterUser2(email) {
+        	// console.log(that.selectedAdminArray[0].email);
             var disableItem = false;
-            for (var i = 0; i < that.members.length; i++) {
-                if (that.membersArray.indexOf(userID) >= 0) {
-                    disableItem = true;
-                }
+            if(that.selectedAdminArray && that.selectedAdminArray.length > 0) {
+	            for (var i = 0; i < that.selectedAdminArray.length; i++) {
+	                if (email === that.selectedAdminArray[i].email) {
+	                    disableItem = true;
+	                }
 
+	            }
             }
             return disableItem;
         }
 
         function answer(groupForm) {
-            that.abc = true;
+           that.processingSave = true;
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
+                 that.processingSave = false;
                 return;
             }
             //if ($rootScope.croppedImage && $rootScope.croppedImage.src) {
@@ -269,20 +295,24 @@
                         // console.log(3)
                         // console.log(SubgroupObj)
                         SubgroupObj['logo-image'].url = data;
-                        createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
+                        createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
+                            that.processingSave = false;
+                        })
                             // $rootScope.newImg=null;
-                        that.abc = false;
+                        
                     })
                     .catch(function(err) {
                         // return alert('picture upload failed' + err)
-                        that.abc = false;
+                        that.processingSave = false;
                         return messageService.showFailure('picture upload failed' + err)
                     });
                 // console.log(x);
             } else {
                 fromDataFlag = false;
-                createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID)
-                that.abc = false;
+                createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
+                     that.processingSave = false;
+                } )
+               
             }
         }
 
@@ -312,6 +342,8 @@
 
         //Cropper Code start
         this.showAdvanced = function(ev) {
+            $rootScope.tmpImg = $rootScope.newImg;
+            $rootScope.newImg = '';
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',

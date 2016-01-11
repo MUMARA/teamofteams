@@ -9,23 +9,27 @@
 // Create the 'example' module
 angular.module('core', [
 
-    'angularMoment',
+    // 'angularMoment',
     'ngAudio',
     'ngAnimate',
     'ngAria',
-    'checkin',
+    // 'checkin',
     'ngMdIcons',
     //'ngMaterial',
     'firebase',
     'ngStorage',
     'ngGeolocation',
-    'ui.select',
+    // 'ui.select',
     'ngMessages',
     'ng-mfb',
-    'ui.select',
-    'ngSanitize',
+    // 'ui.select',
+    // 'ngSanitize',
     'ui.router',
-    'angular-img-cropper'
+    'angular-img-cropper',
+    'md.data.table'/*,
+    'leaflet-directive'*/,
+    'ui-leaflet',
+    'angular.filter'
 
     /*   'customdirectives'*/
 
@@ -40,7 +44,8 @@ angular.module('core', [
         //var temp = webkitURL.createObjectURL(url)*/
         return url
     };
-}).filter('emptyString', [
+  })
+.filter('emptyString', [
   function() {
     return function(input, param) {
       if (!param) return input
@@ -62,7 +67,43 @@ angular.module('core', [
     };
   }
 ])
-
+.filter('millSecondsToTimeString', function() {
+    return function(millseconds) {
+        var seconds = Math.floor(millseconds / 1000);
+        var days = Math.floor(seconds / 86400);
+        var hours = Math.floor((seconds % 86400) / 3600);
+        var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
+        var timeString = '';
+        if(days > 0) timeString += (days > 1) ? (days + " days ") : (days + " day ");
+        if(hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (hours + " hour ");
+        if(minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
+        return timeString;
+    }
+})
+.filter('glt', function () {
+    return function ( items, field, maxvalue, minvalue ) {
+        if (maxvalue && minvalue){
+            var filteredItems = []
+            angular.forEach(items, function ( item ) {
+                if (item[field] >= maxvalue &&  item[field] <= minvalue) {
+                    filteredItems.push(item);
+                }
+            });
+            return filteredItems;
+        } else if (maxvalue){
+            var filteredItems = []
+            angular.forEach(items, function ( item ) {
+                if (item[field] >= maxvalue) {
+                    filteredItems.push(item);
+                }
+            });
+            return filteredItems;
+        } else {
+          return items
+        }
+        
+    }
+})
 /* .run(["authService",function(authService){
      //debugger;
      authService.resolveUserPage();

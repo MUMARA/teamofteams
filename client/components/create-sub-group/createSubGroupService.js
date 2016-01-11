@@ -20,7 +20,7 @@
                         groupFirebaseService.asyncCreateSubgroup(userID, group, SubgroupInfo, subgroupList, formDataFlag)
                             .then(function(response) {
                                 //form.$submitted = !form.$submitted
-                                console.log("Group Creation Successful");
+                                // console.log("Group Creation Successful");
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
 
@@ -99,7 +99,8 @@
                         return defer.promise;
 
                     },
-                    'editSubgroup': function(subgroupInfo, subgroupRef, groupID, groupForm) {
+                    // 'editSubgroup': function(subgroupInfo, subgroupRef, groupID, groupForm) {
+                    'editSubgroup': function(subgroupInfo, subgroupRef, groupID, cb) {
                         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                         //  var dataToSet = ;
                         var dataToSet = {
@@ -118,17 +119,17 @@
                             subgroupNameRef.title = subgroupRef.title;
                             subgroupNameRef.$save()
                                 .then(function() {
-                                    groupForm = false;
+                                    cb();
                                     //groupForm.$submitted = false;
                                     //$rootScope.newImg = null;
                                     messageService.showSuccess('SubGroup Edited Successfully')
                                 }, function(group) {
-                                    groupForm = false;
+                                    cb();
                                     messageService.showFailure("SubGroup not edited");
                                 })
 
                         }, function(group) {
-                            groupForm = false;
+                            cb();
                             // groupForm.$submitted = false;
                             messageService.showFailure("SubGroup not edited");
                         })
@@ -220,6 +221,7 @@
                     },
 
                     getAdminUsers: function(groupid, subgroupid, cb){
+                        groupAdminUsers = [];
                         firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_added', function(snapshot){
                             firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
 
@@ -232,7 +234,30 @@
 
                             })
                         })
-                    }
+                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_changed', function(snapshot){
+                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
+                                if(snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2){
+                                    // console.log(userData.val());
+                                    // console.log(snapshot.val());
+
+                                    var _flag = false;
+                                    groupAdminUsers.forEach(function(val, indx) {
+                                        if(val.email == userData.val().email) {
+                                            _flag = true;
+                                        }
+                                    }) //groupAdminUsers.forEach
+
+                                    if(_flag){
+                                        cb(groupAdminUsers);        
+                                    } else{
+                                        groupAdminUsers.push(userData.val());
+                                        cb(groupAdminUsers);        
+                                    }
+                                }
+
+                            })
+                        })
+                    } //groupAdminUsers
                 };
 
                 function Uint8ToString(u8a) {

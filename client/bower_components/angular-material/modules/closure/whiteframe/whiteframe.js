@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v1.0.1
  */
 goog.provide('ng.material.components.whiteframe');
 

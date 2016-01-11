@@ -1,221 +1,59 @@
-<!--<style>
-    body > md-content > div > div.toolbarContainer > div > div > md-toolbar {
-        min-height: 55px !important;
-    }
-</style>-->
-<style>
-.removeBullets {
-    list-style-type: none !important;
-    padding-left: 70px;
-}
-
-.paddingZero {
-    padding: 0 !important;
-}
-
-.positionli {
-    /*font-weight: bold;*/
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 1..1em
-}
-
-.size {
-    /*font-size: 1.02em !important;*/
-    text-transform: uppercase !important;
-    padding: 0;
-    padding-left: 10px !important;
-}
-
-.imgResize {
-    width: 10px;
-    height: 10px;
-}
-</style>
-<div>
-    <div class="toolbarBackground backColorSeaGreen"></div>
-    <md-toolbar class="navToolbar" style="z-index: 99999; ">
-        <div layout="row" layout-align="center center" class="toolbarPage">
-            <div flex="60" offset="5">
-                <div layout='row' layout-align="start center">
-                    <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline logoPana">
-                    <span class="mainPana" ng-click="navToolbar.shiftToUserPage()">Team of Teams</span>
-                    <!--<input type="button" ng-click="navToolbar.testFn()" value="testFn"/>-->
-                    <!--<md-progress-circular ng-show="navToolbar.checkinSending" style=" left:41px;-webkit-transform: scale(.8)!important" class="md-hue-2"-->
-                    <md-progress-circular ng-show="navToolbar.checkinSending" class="md-hue-2 progressCircularforNavBar" md-mode="indeterminate"></md-progress-circular>
-                    <!-- <p ng-if="navToolbar.checkout" style="padding-top: 9px;padding-left:48px; color:rgb(239, 239, 239);"><span style="text-transform: uppercase;">
-                        {{navToolbar.showUrlObj.userID}}</span> checked in from {{navToolbar.showUrlObj.groupID}} / {{navToolbar.showUrlObj.subgroupID}}
-                    </p> -->
-                </div>
-            </div>
-            <div flex style="width: 10px; height: 25px; margin-left: 40px">
-                <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
-            </div>
-            <!-- <md-button ng-click="navToolbar.updateStatus(navToolbar.showUrlObj.group,true)" ng-show="navToolbar.checkout" flex style="width: 10px; height: 25px; margin-left: 40px">
-                <p style="  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 20px;text-transform: none;">
-                    {{navToolbar.checkout ? "Check out": 'Check In'}}
-                </p>
-            </md-button> -->
-            <!-- <div flex="10" ng-show="!navToolbar.checkout"> -->
-            <div flex="10">
-                <div style="position: relative">
-                    <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider">
-                    </md-switch>
-                    <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
-                    <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
-                        <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
-                            <!-- <h2 class="md-toolbar-tools">
-                                <div flex="65" layout-align="center center" style="color: #000000;text-align: initial;">
-                                    <h3>Check In</h3>
-                                </div>
-                                <div style="margin-left: -54px">
-                                    <div layout="column" layout-align="center left">
-                                        <!<input type="text" class="searchbox"/>>
-                                        <md-autocomplete class="NavBarSearchbox"
-                                                         md-search-text-change="null"
-                                                         md-selected-item-change="ctrl.selectedItemChange(item)"
-                                                         md-items="item in ctrl.querySearch(ctrl.searchText)"
-                                                         md-item-text="item.display"
-                                        <md-item-template>
-                                    <span md-highlight-text="ctrl.searchText"
-                                          md-highlight-flags="^i">{{item.display}}</span>
-                                        </md-item-template>
-                                        </md-autocomplete>
-                                        <! <md-input-container aria-label="Description fo your Slider" class="searchbox">
-                                            <input type="text" ng-model="navToolbar.search" ng-change="navToolbar.queryGroups()" class="serachbox2" aria-label="Search Box">
-                                        </md-input-container> -->
-                            <!--<ng-md-icon icon="search" style="fill: #929497;" flex="20"></ng-md-icon>>
-                                    </div>
-                                </div>
-                            </h2> -->
-                            <!-- <div style="color: #000000;text-align: initial;">
-                                <h4>Check In</h4>
-                            </div> -->
-                            <md-input-container md-no-float style="padding-bottom: 0px;">
-                                <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
-                            </md-input-container>
-                            <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()"></ng-md-icon>
-                        </md-toolbar>
-                        <div id="test1" layout="row" style="padding-top: 1px;height:78%">
-                            <div layout="column" flex style="border-right: 1px solid #c2c2c2">
-                                <md-content class="grayScroller ">
-                                    <!--       <md-list ng-hide="navToolbar.groupObj1" style="height: 200%; overflow-x: hidden">
-                                        <!<md-list-item ng-repeat='(key,prop) in navToolbar.groups track by key' ng-mouseover="navToolbar.showSubGroup(key,prop)">>
-                                        <md-list-item ng-repeat='group in navToolbar.groups track by $index' ng-mouseover="navToolbar.showSubGroup(group)">
-                                            <!<md-list-item ng-repeat='group in ["hee","hi","ok"] track by $index' ng-mouseover="navToolbar.showSubGroup(group)">>
-                                            <div class="column" flex="10"><img src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
-                                            <div class="column" layout-align="center center" flex="90" style="color: #757575;font-size: large">
-                                                <div class="groupName">{{group.$id}}</div>
-                                            </div>
-                                        </md-list-item>
-                                    </md-list> -->
-                                    <md-list class="paddingZero" ng-hide="navToolbar.groupObj1" style="">
-                                        <md-list-item class="paddingZero" ng-repeat="group in navToolbar.ListGroupSubGroup | filter: navToolbar.search">
-                                            <div class="column" layout-align="start end" flex style="color: silver;font-size: large">
-                                                <div layout="row">
-                                                    <div flex="10"><img class='imgResize' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
-                                                    <span class="size">{{group.group}}</span> </div>
-                                                <div style="color: #757575;font-size:large;" flex>
-                                                    <ul class="removeBullets">
-                                                        <li class="positionli nooutline" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in group.subGroups">{{subgroup.subgroupId}}</li>
-                                                    </ul>
-                                                </div>
-                                                <md-divider md-outset style="padding-bottom:10px"></md-divider>
-                                            </div>
-                                        </md-list-item>
-                                    </md-list>
-                                    <!-- 
-                                    <md-list ng-hide="navToolbar.groupObj1" style="">
-                                      <md-list-item ng-repeat="group in navToolbar.ListGroupSubGroup | filter: navToolbar.search">
-                                            <div class="column" layout-align="start end" flex style="color: #757575;font-size: large">
-                                                <div layout="row">
-                                                    <div flex="5"><img src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
-                                                    <div flex layout-align="start center" class="groupName textAlignLeft">{{group.group}}</div>   
-                                                </div>
-                                                <md-list>
-                                                  <md-list-item ng-repeat="subgroup in group.subGroups"  ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)">
-                                                    <div style="color: #757575;font-size:large;" flex>
-                                                        <div class="groupName textAlignCenter">{{subgroup.subgroupId}}</div>
-                                                    </div>
-                                                  </md-list-item>
-                                                </md-list>
-                                                <md-divider md-outset style="padding-bottom:10px"></md-divider>  
-
-                                            </div> 
-                                      </md-list-item>
-                                    </md-list>   -->
-                                    <!-- <md-list ng-show="navToolbar.groupObj1" style="height: 200%; overflow-x: hidden">
-                                        <!<md-list-item ng-repeat='(key,prop) in navToolbar.groups track by key' ng-mouseover="navToolbar.showSubGroup(key,prop)">>
-                                        <md-list-item ng-repeat='group1 in navToolbar.groupObj1 track by $index' ng-mouseover="navToolbar.showSubGroup(group1)">
-                                            <md-list-item ng-repeat='group in ["hee","hi","ok"] track by $index' ng-mouseover="navToolbar.showSubGroup(group)">
-                                            <div class="column" flex="10"><img src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
-                                            <div class="column" layout-align="center center" flex="90" style="color: #757575;font-size: large">
-                                                <div class="groupName">{{group1.$id}}</div>
-                                            </div>
-                                        </md-list-item>
-                                    </md-list> -->
-                                </md-content>
+<md-toolbar class="backColorSeaGreen" layout="row" layout-align="space-between center">
+    <div layout='row' layout-align="start center" layout-margin>
+        <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
+        <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
+        <md-progress-circular md-diameter="45" ng-show="navToolbar.checkinSending" class="nomargin" md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <div layout='row' layout-align="end center">
+        <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
+        <div style="position: relative" layout-margin>
+            <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider">
+            </md-switch>
+            <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
+            <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
+                <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
+                    <md-input-container md-no-float style="padding-bottom: 0px;" layout="row" class="nomargin">
+                        <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
+                    </md-input-container>
+                    <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()"></ng-md-icon>
+                </md-toolbar>
+                <md-list class="nopadding vscroll" ng-hide="navToolbar.groupObj1">
+                    <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
+                        <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
+                            <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
+                                <div><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
+                                <span>{{group.groupTitle}}</span>
                             </div>
-                            <!--   <div layout="column" flex>
-                                <md-content class="grayScroller ">
-                                    <md-list>
-                                        <md-list-item style="padding-left: 11px; font-size: large" ng-repeat="subgroup in navToolbar.subgroups track by $index" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)">
-                                            <div class="column" flex style="color: #757575; margin-top: -8px">{{subgroup.subgroupId}}</div>
-                                            <ng-md-icon icon="more_vert" style="fill: #757575"></ng-md-icon>
-                                        </md-list-item>
-                                    </md-list>
-                                </md-content>
-                            </div> -->
+                            <div style="font-size:large;" layout-fill>
+                                <div class="nooutline leftpadding40px cursorPointer hoverLightGrey3 foreColorDarkGrey" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in filter = (group.subGroups | filter: navToolbar.search)" layout-padding>{{subgroup.subgroupTitle}}
+                                </div>
+                            </div>
+                            <md-divider md-outset></md-divider>
                         </div>
-                    </md-card>
-                </div>
-            </div>
-            <div flex="15">
-                <div layout="row" layout-align="space-between center">
-                    <!-- <div class="toolbarQuiz"> -->
-                        <ng-md-icon icon="description" class="fillColorWhite nooutline" ng-click="navToolbar.quizStart()" title="Quiz">
-                        </ng-md-icon>
-                        <!--<img src='img/info2.svg' class="svgImgSize1">-->
-                    <!-- </div> -->
-                    <!-- <div class="toolbarDrop"> -->
-                        <!-- <img src='img/info2.svg' class="icon23px nooutline" title="Chat" > -->
-                        <ng-md-icon icon="hangouts" class="fillColorWhite nooutline" title="Quiz">
-                        </ng-md-icon>
-                    <!-- </div> -->
-                    <!-- <div class="toolbarBell"> -->
-                        <!-- <img src="img/infoB.svg" class="icon23px nooutline" title="Notification"> -->
-                        <ng-md-icon icon="notifications" class="fillColorWhite nooutline" title="Quiz">
-                        </ng-md-icon>
-                    <!-- </div> -->
-                    <div flex ="50">
-                        <md-menu md-offset="0 50">
-                            <!-- Trigger element is a md-button with an icon -->
-                            <img style="border-radius: 50%" ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="userImg nooutline">
-                            <!-- <md-button ng-click="()" class="md-icon-button" aria-label="Open sample menu">
-                           <md-icon md-svg-icon="call:phone"></md-icon>
-                         </md-button> -->
-                            <md-menu-content>
-                                <!-- <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button>
-                           </md-menu-item> -->
-                                <md-menu-item>
-                                    <!-- <md-button ui-sref="user.personalSettings({userID: navToolbar.myUserId })">Personal Setting</md-button> -->
-                                    <md-button ng-click="navToolbar.PersonalSetting()">Personal Setting</md-button>
-                                </md-menu-item>
-                                <md-menu-item>
-                                    <md-button ng-click="navToolbar.logout()">Logout</md-button>
-                                </md-menu-item>
-                            </md-menu-content>
-                        </md-menu>
-                    </div>
-                </div>
-            </div>
-            <!-- <div flex="5" style="position: relative;" ng-click="navToolbar.userImgClickCard = !navToolbar.userImgClickCard" id="navBarImg">
-                <img style="border-radius: 50%" ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  class="userImg">
-                <md-card ng-show="navToolbar.userImgClickCard" class="userImgClick">
-                    <md-button class="md-primary" ui-sref="user.personalSettings" >Personal Setting</md-button>
-                    <md-button class="md-primary" ng-click="navToolbar.logout()">Logout</md-button>
-                </md-card>
-            </div> -->
+                    </md-list-item>
+                </md-list>
+            </md-card>
         </div>
-    </md-toolbar>
-</div>
+        <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
+            <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()" title="Quiz">
+            </ng-md-icon>
+            <ng-md-icon icon="hangouts" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
+            </ng-md-icon>
+            <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
+            </ng-md-icon>
+            <div >
+                <md-menu md-offset="0 50">
+                    <img ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px nooutline leftmargin10px">
+                    <md-menu-content>
+                        <md-menu-item>
+                            <md-button ng-click="navToolbar.PersonalSetting()">Personal Setting</md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="navToolbar.logout()">Logout</md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </div>
+    </div>
+</md-toolbar>

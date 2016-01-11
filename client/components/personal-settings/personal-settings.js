@@ -1,3 +1,4 @@
+
 (function() {
     'use strict';
 
@@ -16,6 +17,7 @@
                 this.hide = hide;
                 this.loggedInUserData = userService.getCurrentUser();
                 $rootScope.newImg = '';
+                this.isProcessing = false;
                 this.userData = $firebaseObject(firebaseService.getRefUsers().child(this.loggedInUserData.userID))
                 this.userData.$loaded()
                     .then(function(data) {
@@ -29,12 +31,13 @@
 
                 /*VM Functions*/
                 function answer(perSettingForm) {
+                    that.isProcessing = true;
                     var uploadFile, editUser, changePassword, data1, data2, pFlag, eFlag, imgFlag;
                     var promiseArray = [];
                     /*  if (perSettingForm.$invalid) {
                           return;
                       }*/
-
+                      perSettingForm.$submitted = true;
                     function saveDataToServer() {
                         if (that.userData.firstName != firstName || that.userData.lastName != lastName) {
                             data1 = {
@@ -93,12 +96,15 @@
                             delete that.userData.newPassword;
                             if (!that.userData['date-created']) that.userData['date-created'] = new Date().getTime();
                             that.userData['status'] = -1;
+                            
                             // console.log(that.userData)
                             that.userData.$save().then(function(data) {
                                 $location.path('/user/' + userService.getCurrentUser().userID)
-                                perSettingForm.$submitted = false
+                                that.isProcessing = false;
+                                perSettingForm.$submitted = false;
                                 messageService.showSuccess('User profile updated')
                             }, function(err) {
+                                that.isProcessing = false;
                                 perSettingForm.$submitted = false;
                                 messageService.showFailure('Error occurred updating user profile')
                                     //console.log('Error occurred updating user profile')
@@ -106,6 +112,7 @@
 
                         })
                         .catch(function() {
+                            that.isProcessing = false;
                             perSettingForm.$submitted = false;
                             messageService.showFailure('Error occurred updating user profile')
                         });
@@ -166,11 +173,13 @@
                 }
 
                 function showAdvanced(ev) {
+                    $rootScope.tmpImg = $rootScope.newImg;
                     $rootScope.newImg = '';
                     $mdDialog.show({
                         controller: "DialogController as ctrl",
                         templateUrl: 'directives/dilogue1.tmpl.html',
-                        targetEvent: ev
+                        targetEvent: ev,
+                        escapeToClose: false
                     }).then(function(picture) {
                         $rootScope.newImg = picture;
                         //console.log("this is image" + picture)

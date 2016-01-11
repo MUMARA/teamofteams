@@ -34,6 +34,7 @@ angular.module('core')
             var microgroupsActivityStreams = null;
             var groupCheckinCurrent = null;
             var groupCheckinRecords = null;
+            var subgroupCheckinRecords = null;
             var groupLocsDefined = null;
             var flattenedGroups = null;
             var loggedUserRef = null;
@@ -52,7 +53,7 @@ angular.module('core')
                             //delete $sessionStorage.loggedInUser;
                             delete $localStorage.loggedInUser;
                             appConfig.firebaseAuth = false;
-                            messageService.showFailure("logged out or session destroyed, please login again.");
+                            messageService.showFailure("User is logged out, Please login again.");
                             //$location.path("/user/login");
                         }
                     });
@@ -133,6 +134,9 @@ angular.module('core')
                 getRefGroupCheckinRecords: function() {
                     return groupCheckinRecords;
                 },
+                getRefsubgroupCheckinRecords: function() {
+                    return subgroupCheckinRecords;
+                },
                 getRefGroupLocsDefined: function() {
                     return groupLocsDefined;
                 },
@@ -182,6 +186,7 @@ angular.module('core')
                                 microgroupsActivityStreams = ref.child("microgroup-activity-streams");
                                 groupCheckinCurrent = ref.child("group-check-in-current");
                                 groupCheckinRecords = ref.child("group-check-in-records");
+                                subgroupCheckinRecords = ref.child("subgroup-check-in-records");
                                 groupLocsDefined = ref.child("group-locations-defined");
                                 flattenedGroups = ref.child("flattened-groups");
 
@@ -237,9 +242,6 @@ angular.module('core')
                     });
                     return deferred.promise;
                 }
-
-
-
             };
         }
     ]);

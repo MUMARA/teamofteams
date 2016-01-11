@@ -124,11 +124,14 @@
 
                 //answers join/subscribe group modal and sends back some data modal.
                 function answer(id) {
+                    that.loadingData = true;
 
                     this.group.groupID = id;
 
 
-                    joinGroupService.joinGroupRequest(this.group);
+                    joinGroupService.joinGroupRequest(this.group, function(){
+                        that.loadingData = false;
+                    });
                 }
 
 /*
