@@ -1,7 +1,7 @@
 <div layout="row" layout-align="center start">
     <!-- Side Nav Bar -->
     <div class="viewHeight-64" layout="column">
-        <md-card style="width: 220px; height: 300px; margin:0px;" class="foreColorDarkGrey" layout="column">
+        <md-card style="width: 220px; margin:0px;" class="foreColorDarkGrey" layout="column">
             <div style="margin:30px auto;">
                 <a ng-click="group.GetSubGroupUsers()" layout="row" layout-align="center center">
                     <img ng-src="{{ group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
@@ -15,9 +15,9 @@
                 </div>
             </div>
             <div flex="25" style="border-top: 2px solid #dddddd; margin:0px" layout="row" layout-align="start center">
-                <md-button class="md-fab " aria-label="Setting" ng-show="group.isAdmin()" ng-click="group.editgroupPage()" style="position: absolute; top: 265px; left: 160px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
+                <md-button class="md-fab " aria-label="Setting" ng-show="group.isAdmin()" ng-click="group.editgroupPage()" style="position: absolute; top: 234px; left: 160px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
                     <ng-md-icon icon="settings" class="fillColorWhite" size="20"></ng-md-icon>
-                </md-button>
+                </md-button>    
                 <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
                     <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound" alt="group owner image" />
                 </div>
