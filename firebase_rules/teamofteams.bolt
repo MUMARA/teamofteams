@@ -155,16 +155,16 @@ type GroupPrivacyInvitationType extends Number {
 
 
 type Group{
-  title: GroupTitleString,
-  //desc: GroupDescString,
-  timestamp: CurrentTimestamp,
-  "members-count": GroupMemberCountNumber,
-  "subgroups-count": SubGroupMemberCountNumber,
-  //'members-checked-in': Members_checked_Obj,
-  address: GroupAddressString,
-  phone: GroupPhoneString,
-  timeZone: GroupDescString,
-  //privacy: Privacy_Obj
+  title: GroupTitleString
+  //,desc: GroupDescString
+  ,timestamp: CurrentTimestamp
+  ,"members-count": GroupMemberCountNumber
+  ,"subgroups-count": SubGroupMemberCountNumber
+  //,'members-checked-in': Members_checked_Obj
+  ,address: GroupAddressString
+  ,phone: GroupPhoneString
+  ,timeZone: GroupDescString
+  //,privacy: Privacy_Obj
 }
 
 path /groups/$groupid is Group {
@@ -188,7 +188,7 @@ path /groups/$groupid/members_checked_in/checked_in/$userid {
   write() = isUser($userid) && prior(isGroupMemberinGroupIDwithAuthIdExists()) && prior(isGroupMemberGroupIDAuthIdMemberShipGreaterZero());
 }
  
- path /groups/logo_image  {
+path /groups/logo_image  {
   validate() = this.hasChildren(['url', 'id', 'bucket-name', 'source', 'mediaType']);
 }
  
