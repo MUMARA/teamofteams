@@ -409,6 +409,14 @@
                     //that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});                                               
                     that.users.forEach(function(val, i) {
                         if ((val.type === 1 || val.type === true) && (val.id != localStorage.userID)) {
+
+                            // checkin type 1 on firebase node subgroup-check-in-current-by-user
+                            // checkout type 2 on firebase node subgroup-check-in-current-by-user
+                            // checkinService.getRefSubgroupCheckinCurrentByUser().child(val.id).once('value', function(snapshot){
+                            //     console.log(snapshot.val());
+                            //     console.log(snapshot.val().type);
+                            // })
+
                             checkinService.createCurrentRefsBySubgroup(val.groupID, val.subgroupID, val.id).then(function() {
                                 that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
                                 var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(val.groupID + '/' + val.subgroupID + '/' + val.id);

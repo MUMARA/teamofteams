@@ -1517,8 +1517,8 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 }
 */
 .showArrow {
-    margin-left: -0.8%;
-    margin-top: 0.2%;
+    margin-left: -15px;
+    margin-top: 5px;
 /*    width: 34px;
     height: 34px;*/
     position:absolute;

@@ -1,5 +1,5 @@
 <div layout="row" layout-align="center start" layout-padding layout-margin  class="viewHeight">
-    <form flex-gt-sm="30" name="singupForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll" layout-margin>
+    <form flex-gt-sm="30" name="singupForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll" layout-margin autocomplete="off">
         <div layout="column" layout-align="center center">
             <md-content  layout="column" layout-align="center start">
             <div layout="row" layout-align="center center">
@@ -8,7 +8,7 @@
                     <input name="userId" ng-model="signUp.user.userID" ng-pattern="/^([a-z0-9]){3,20}$/" check-user-id="" required>
                     <div ng-hide="singupForm.userId.$untouched" ng-messages="singupForm.userId.$error" ng-messages-multiple>
                         <div class="invalid_color" ng-message="required">This is required.</div>
-                        <div class="invalid_color" ng-message="pattern">No Space or Special character | length Only 3 to 20</div>
+                        <div class="invalid_color" ng-message="pattern">No Space or Special character, <br> length Only 3 to 20</div>
                         <div class="invalid_color" ng-message="checkUserId">This userID is not available.</div>
                     </div>
                 </md-input-container>

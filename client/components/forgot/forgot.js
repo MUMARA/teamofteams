@@ -19,6 +19,8 @@
         /*VM functions*/
         this.forgotPassword = forgotPassword;
 
+        this.submitting = false;
+
         /*VM properties*/
         this.user = {
             email: ''

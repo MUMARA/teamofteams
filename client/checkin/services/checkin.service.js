@@ -173,7 +173,7 @@
                         var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupId + '/' + userID);
                         var _ref = new Firebase(userCheckinRecordsRef.toString());
                         var _userCheckinREcordsRef = $firebaseArray(_ref);
-                        console.log(checkinObj)
+                        // console.log(checkinObj)
                         _userCheckinREcordsRef.$add(checkinObj)
                             .then(function(snapShot) {
                                 var temp = $firebaseObject(refs.refSubGroupCheckinCurrentByUser.child(userID))
