@@ -105,10 +105,19 @@ angular.module('core')
                                             }
                                         })
                                     });
+                                    
+                                    var _groupsubgroup = group.key() + ' / ' + subgroup.key();
+
+                                    // userData.forEach(function(val, indx){
+                                    //     if(val.id == userdata.$id && val.groupsubgroup == _groupsubgroup){
+                                    //         return;
+                                    //     }
+                                    // });
+
                                     userData.push({
                                         id: userdata.$id,
                                         type: type,
-                                        groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                        groupsubgroup: _groupsubgroup,
                                         groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
                                         groupID: group.key(),
                                         groupTitle: groupsubgroupTitle[group.key()],
