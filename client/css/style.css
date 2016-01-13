@@ -237,7 +237,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 .displayFlex {
-    display: flex;
+    display: flex!important;
 }
 
 
@@ -256,6 +256,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 
 .viewHeight-64 {
     height: calc(100vh - 64px);
+}
+
+.viewHeight-110 {
+    height: calc(100vh - 110px);
 }
 
 .viewHeight-154 {
@@ -667,8 +671,8 @@ md-autocomplete.md-default-theme {
 }
 */
 .cards-button {
-    position: absolute;
-    top: -35%;
+    position: absolute!important;
+    top: -40%;
     right: 5%;
     width: 40px !important;
     height: 40px !important;
