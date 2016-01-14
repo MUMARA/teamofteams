@@ -19,8 +19,6 @@ angular.module('core')
 
 
             return {
-                getSignedinUserObj: firebaseService.getSignedinUserObj,
-
                 getGroupSyncObjAsync: function(groupID, viewerUserID) {
                     var deferred = $q.defer();
                     var self = this;

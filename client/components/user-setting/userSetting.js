@@ -8,16 +8,16 @@
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
         /* .controller("DialogController", ["$mdDialog", DialogController]);*/
-    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
 
         var that = this;
         var user = userService.getCurrentUser();
         this.hide = hide;
         var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
-        var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
+        // var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
 
         this.approveMembership = approveMembership;
         this.rejectMembership = rejectMembership;
@@ -59,28 +59,28 @@
         }
         //For owner/admin: Approve membership request.
         function approveMembership(requestedMember) {
-            $loggedInUserObj.$loaded().then(function() {
-                $loggedInUserObj.userID = user.userID;
-                groupFirebaseService.approveMembership(groupID, $loggedInUserObj, requestedMember)
+            // $loggedInUserObj.$loaded().then(function() {
+                // $loggedInUserObj.userID = user.userID;
+                groupFirebaseService.approveMembership(groupID, user, requestedMember)
                     .then(function(res) {
                         messageService.showSuccess(res);
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });
-            });
+            // });
         }
 
         //For owner/admin: Rejects membership request.
         function rejectMembership(requestedMember) {
-            $loggedInUserObj.$loaded().then(function() {
-                $loggedInUserObj.userID = user.userID;
-                groupFirebaseService.rejectMembership(groupID, $loggedInUserObj, requestedMember)
+            // $loggedInUserObj.$loaded().then(function() {
+                // $loggedInUserObj.userID = user.userID;
+                groupFirebaseService.rejectMembership(groupID, user, requestedMember)
                     .then(function(res) {
                         messageService.showSuccess(res);
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });
-            });
+            // });
         }
 
         //For owner only: to change membership role of a member

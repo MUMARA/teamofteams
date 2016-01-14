@@ -120,7 +120,7 @@
                                     </td>
                                     <td md-cell>{{member.userSyncObj.contactNumber}}</td>
                                     <td md-cell style="width:10%">
-                                       <md-select placeholder="Pending">
+                                       <md-select ng-model="blockOption" placeholder="Pending">
                                             <md-option value="1" ng-click="userSetting.approveMembership(request)">
                                                 Accept User
                                             </md-option>

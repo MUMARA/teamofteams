@@ -38,10 +38,7 @@ angular.module('core')
             var groupLocsDefined = null;
             var flattenedGroups = null;
             var loggedUserRef = null;
-            var $loggedUserObj = null;
-
-
-
+            
             return {
                 addUpdateHandler: function() {
                     ref.onAuth(function(authData) {
@@ -143,9 +140,6 @@ angular.module('core')
                 getSignedinUserRef: function() {
                     return loggedUserRef
                 },
-                getSignedinUserObj: function() {
-                    return $loggedUserObj
-                },
                 getRefFlattendGroups: function() {
                     return flattenedGroups
                 },
@@ -189,10 +183,6 @@ angular.module('core')
                                 subgroupCheckinRecords = ref.child("subgroup-check-in-records");
                                 groupLocsDefined = ref.child("group-locations-defined");
                                 flattenedGroups = ref.child("flattened-groups");
-
-                                loggedUserRef = refUsers.child(userID);
-
-                                $loggedUserObj = $firebaseObject(loggedUserRef);
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.

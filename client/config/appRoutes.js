@@ -7,6 +7,7 @@
     angular.module("myApp")
         .config(function($stateProvider, $urlRouterProvider) {
             // alert('config')
+            // $locationProvider.html5Mode(true);
             var navLoginbar = {
                 templateUrl: 'components/nav-loginbar/nav-loginbar.html',
                 controller: 'NavLoginbarController',

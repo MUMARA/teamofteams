@@ -23,7 +23,7 @@
 		<!-- <div layout="row" class="nopadding md-whiteframe-z2" layout-padding> -->
         <div autocomplete="off" layout="row" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
             <div class="nopadding md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="start center">
-                <div ng-repeat="subgroup in geoFencing.subgroups track by $index" class="backColorWhite md-whiteframe-z1" style="height:120px;">
+                <div ng-repeat="subgroup in geoFencing.subgroups track by $index" class="backColorWhite md-whiteframe-z1 bottommargin5px">
                     <subgroupcard-directive subgroup="subgroup" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showPanel = true; geoFencing.showLocationBySubGroup(subgroup.$id); geoFencing.selectedindex = $index" class="nooutline cursorPointer"></subgroupcard-directive>
                     <ng-md-icon ng-show="geoFencing.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
                 </div>

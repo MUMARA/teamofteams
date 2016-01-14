@@ -425,7 +425,8 @@
                                         updateAllStatusHelper(val.groupID, val.subgroupID, val.id, 1);
                                     });
                             });
-                        } else { //if
+                        }
+                        if (that.users.length === i) {
                             that.processTeamAttendance = false;
                         }
                     }) //foreach

@@ -25,8 +25,8 @@ angular.module('core')
 
                             //firebaseService.asyncLogin($sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token)
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
-                                .then(function(response) {
-                                    successFn(data, response);
+                                .then(function() {
+                                    successFn(data);
                                     // dataService.loadData();
                                 }, function(error) {
                                     if (error) {
@@ -98,7 +98,7 @@ angular.module('core')
                 },
                 //to resolve route "/user/:user" confirming is authenticated from firebase
                 resolveUserPage: function() {
-                    //alert('inside authService');
+                    // alert('inside authService');
                     var defer = $q.defer();
                     //if ( $sessionStorage.loggedInUser ) {
                     if (userService.getCurrentUser()) {
@@ -108,7 +108,7 @@ angular.module('core')
                         } else {
                             //firebaseService.asyncLogin( $sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token )
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
-                                .then(function(response) {
+                                .then(function() {
                                     //console.info("Firebase Authentication Successful when restarting app");
                                     firebaseService.addUpdateHandler();
                                     dataService.loadData();
