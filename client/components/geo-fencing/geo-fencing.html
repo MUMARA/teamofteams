@@ -2,7 +2,7 @@
 	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed backColorDarkSeaGreen" style="max-height: 287px">
 		<md-button ng-click="geoFencing.openEditGroup()" style="margin: 0px; width:100%">
 	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-	        <div style="color: white;">Group</div>
+	        <div style="color: white;">TEAM OF TEAMS</div>
         </md-button>
 	    <md-button ng-click="geoFencing.openUserSettingPage()" style="margin: 0px; width:100%">
 	    	<img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
@@ -47,16 +47,15 @@
                     <leaflet id="leafletmap" defaults="geoFencing.defaults" center="geoFencing.center" markers="geoFencing.markers" height="600px" width="900px" flex paths="geoFencing.paths"></leaflet>
                 </div>
 
-                <div layout="row" layout-align="space-between center" ng-show="geoFencing.markers.mark.dragable" flex>
+                <div layout="row" layout-align="space-between center" ng-hide="geoFencing.fencing" flex>
                     <md-slider flex class="md-primary" ng-model="geoFencing.paths.c1.radius" step="1" min="1" max="100" aria-label="fecning"></md-slider>
-                    <md-button class="backColorSeaGreen" ng-click="geoFencing.setSubgroupLocation(); geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable">
+                    <md-button layout="row" layout-align="center center" class="backColorSeaGreen displayFlex" ng-click="geoFencing.setSubgroupLocation();">
+                        <md-progress-circular md-mode="indeterminate" ng-show="geoFencing.isProcessing" md-diameter="30"></md-progress-circular>
                         <span style="color: white;">save</span>
                     </md-button>
                 </div>
-                
                 <div layout="row" layout-align="end center">
-                    <md-button layout="row" layout-align="center center" ng-show="!geoFencing.markers.mark.dragable" class="backColorSeaGreen" ng-click="geoFencing.markers.mark.dragable = !geoFencing.markers.mark.dragable" style="display:flex">
-                     <md-progress-circular md-mode="indeterminate" ng-show="geoFencing.isProcessing" md-diameter="30"></md-progress-circular>
+                    <md-button ng-show="geoFencing.fencing" class="backColorSeaGreen" ng-click="geoFencing.fencing = false">
                         <span style="color: white;"> Add GeoFence</span>
                     </md-button>    
                 </div>

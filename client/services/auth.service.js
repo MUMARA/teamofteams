@@ -89,15 +89,12 @@ angular.module('core')
                     });
                 },
                 logout: function() {
-                    // console.info('signing out');
-                    $location.path("/");
                     //empty data in dataservice
                     dataService.unloadData();
                     // for manually sign out from firebase.
                     firebaseService.getRefMain().unauth();
                     Firebase.goOffline();
-                    //delete $sessionStorage.loggedInUser;
-                    userService.removeCurrentUser();
+                    $state.go('signin');
                 },
                 //to resolve route "/user/:user" confirming is authenticated from firebase
                 resolveUserPage: function() {
@@ -126,8 +123,7 @@ angular.module('core')
                         }
                     } else {
                         console.log("No user logged in");
-                        $state.go('signin')
-                        // $location.path("/signin");
+                        $state.go('signin');
                     }
 
                     return defer.promise;

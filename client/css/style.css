@@ -159,6 +159,16 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding-left: 20px;
 }
 
+.leftrightpadding20px {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.leftrightpadding65px {
+    padding-left: 65px;
+    padding-right: 65px;
+}
+
 .automargin {
     margin: auto;
 }
@@ -171,7 +181,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 .leftmargin20px {
-    margin-left: 20px;
+    margin-left: 20px !important;
 }
 
 .rightmargin20px {

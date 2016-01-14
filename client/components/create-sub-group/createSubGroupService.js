@@ -24,15 +24,15 @@
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
 
-                                    messageService.showSuccess("SubGroup creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                    messageService.showSuccess("Team creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
                                     $location.path('/user/group/' + groupID);
-                                    messageService.showSuccess("SubGroup creation Successful...");
+                                    messageService.showSuccess("Team creation Successful...");
                                     $rootScope.newImg = null;
                                 }
                             }, function(group) {
                                 // form.$submitted = !form.$submitted
-                                messageService.showFailure("SubGroup not created, " + SubgroupInfo.groupID + " already exists");
+                                messageService.showFailure("Team not created, " + SubgroupInfo.groupID + " already exists");
                             })
                     },
                     'cancelSubGroupCreation': function(userId) {
@@ -122,16 +122,16 @@
                                     cb();
                                     //groupForm.$submitted = false;
                                     //$rootScope.newImg = null;
-                                    messageService.showSuccess('SubGroup Edited Successfully')
+                                    messageService.showSuccess('Team Edited Successfully')
                                 }, function(group) {
                                     cb();
-                                    messageService.showFailure("SubGroup not edited");
+                                    messageService.showFailure("Team not edited");
                                 })
 
                         }, function(group) {
                             cb();
                             // groupForm.$submitted = false;
-                            messageService.showFailure("SubGroup not edited");
+                            messageService.showFailure("Team not edited");
                         })
 
 

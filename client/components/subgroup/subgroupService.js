@@ -23,15 +23,15 @@
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
 
-                                    messageService.showSuccess("SubGroup creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                    messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
                                     $location.path('/user/group/' + groupID);
 
-                                    messageService.showSuccess("SubGroup creation Successful");
+                                    messageService.showSuccess("Team of Teams creation Successful");
                                 }
                             }, function(group) {
                                 form = false;
-                                messageService.showFailure("SubGroup not created, " + SubgroupInfo.groupID + " already exists");
+                                messageService.showFailure("Team of Teams not created, " + SubgroupInfo.groupID + " already exists");
                             })
                     },
                     'cancelSubGroupCreation': function(userId) {

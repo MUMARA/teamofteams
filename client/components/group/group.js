@@ -236,8 +236,8 @@
                 this.users = [];
                 this.currentSubGroup;
                 this.currentSudGroupID;
-                this.showActivity = false;
-                this.showReport = true;
+                this.showActivity = true;
+                this.showReport = false;
                 this.showChat = false;
                 this.showManualAttendace = false;
                 this.showParams = true;

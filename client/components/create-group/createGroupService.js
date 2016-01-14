@@ -26,15 +26,15 @@
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
 
-                                    messageService.showSuccess("Group creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                    messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
-                                    messageService.showSuccess("Group creation Successful");
+                                    messageService.showSuccess("Team of Teams creation Successful");
                                 }
                                 $location.path('/user/' + pageUserId);
                             }, function(group) {
                                 form.$submitted = false;
                                 $rootScope.newImg = null;
-                                messageService.showFailure("Group not created, " + " already exists");
+                                messageService.showFailure("Team of Teams not created, " + " already exists");
                             })
                     },
                     'cancelGroupCreation': function(userId) {

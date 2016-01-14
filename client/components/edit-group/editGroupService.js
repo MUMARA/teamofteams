@@ -17,6 +17,7 @@
                     },
 
                     'editGroup': function(groupInfo, groupRef, form, cb) {
+                        var groupNameRef = $firebaseObject(firebaseService.getRefGroupsNames().child(groupInfo.$id));
                         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                         var dataToSet = {
                             title: groupInfo.title,
@@ -32,7 +33,7 @@
                         angular.extend(groupRef, dataToSet);
                         groupRef['logo-image'].url = groupInfo['logo-image'].url
                         groupRef.$save().then(function(response) {
-                            var groupNameRef = $firebaseObject(firebaseService.getRefGroupsNames().child(groupInfo.$id));
+                            console.log(groupNameRef);
                             groupNameRef.title = groupInfo.title;
                             groupNameRef.groupImgUrl = groupInfo['logo-image'].url
                             groupNameRef.$save()
@@ -42,10 +43,10 @@
                                     })
                                     $rootScope.newImg = null;
                                     cb();
-                                    messageService.showSuccess('Group Edited Successfully')
+                                    messageService.showSuccess('Team of Teams Edited Successfully')
                                 }, function(group) {
                                     cb();
-                                    messageService.showFailure("Group not edited");
+                                    messageService.showFailure("Team of Teams not edited");
                                 })
 
                         }, function(group) {
@@ -53,7 +54,7 @@
                                 form.$submitted = false
                             })
                             cb();
-                            messageService.showFailure("Group not edited");
+                            messageService.showFailure("Team of Teams not edited");
                         })
                     },
 

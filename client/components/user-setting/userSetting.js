@@ -57,7 +57,7 @@
             $location.path('/user/group/' + groupID);
 
         }
-        //For owner/admin: Rejects membership request.
+        //For owner/admin: Approve membership request.
         function approveMembership(requestedMember) {
             $loggedInUserObj.$loaded().then(function() {
                 $loggedInUserObj.userID = user.userID;
@@ -91,23 +91,6 @@
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });
-        }
-
-
-        //dummy data
-        this.userarray = [];
-        this.name = 'World';
-        this.userImg = ['card.jpg', 'userImg1.svg', 'userImg2.svg', 'userImg3.svg', 'userImg4.svg', 'card.jpg', 'userImg1.svg', 'userImg2.svg', 'userImg3.svg', 'userImg4.svg'];
-
-        for (var i = 1; i < 5; ++i) {
-            this.userarray.push({
-                img: '../../img/' + this.userImg[i],
-                name: 'Salman',
-                phone: '4019654',
-                //                group: 'first',
-                //LastM: 'second'
-                LastM: "yy-mm-dd"
-            })
         }
 
     }

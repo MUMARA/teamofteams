@@ -20,7 +20,7 @@
                             .then(function() {
                                 //console.log("Group join request sent successfully");
                                 cb();
-                                messageService.showSuccess("Group joining request sent successfully");
+                                messageService.showSuccess("Team of Teams joining request sent successfully");
 
                             }, function(reason) {
                                 //console.log("Unable to send group joining request");

@@ -279,10 +279,17 @@
                 $location.path('/user/' + userService.getCurrentUser().userID)
             }
 
-            this.checkinClick = function() {
-
+            this.checkTeamAvailable = function () {
                 if (self.groups.length === 0) {
                     messageService.showFailure('Currently you are not a member of any Team!');
+                    self.switchCheckIn = false;
+                    return
+                }                
+            }
+
+            this.checkinClick = function() {
+                if (self.groups.length === 0) {
+                    return
                 }
                 if (!self.switchMsg) {
                     if (self.checkout) {
@@ -359,3 +366,4 @@
     ]);
 
 })();
+ 
