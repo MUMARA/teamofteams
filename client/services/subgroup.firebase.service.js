@@ -7,9 +7,9 @@
 
 
 angular.module('core')
-    .factory('subgroupFirebaseService', ['checkinService', "$firebaseArray", "firebaseService", "$q", "$timeout", "$sessionStorage", "$firebaseObject", 'userFirebaseService', 'groupFirebaseService', '$localStorage',
+    .factory('subgroupFirebaseService', ['checkinService', "$firebaseArray", "firebaseService", "$q", "$timeout", "$firebaseObject", 'userFirebaseService', 'groupFirebaseService',
         //function(firebaseService, $q, $timeout, $sessionStorage, $route, $firebaseObject,userFirebaseService,groupFirebaseService) {
-        function(checkinService, $firebaseArray, firebaseService, $q, $timeout, $sessionStorage, $firebaseObject, userFirebaseService, groupFirebaseService, $localStorage) {
+        function(checkinService, $firebaseArray, firebaseService, $q, $timeout, $firebaseObject, userFirebaseService, groupFirebaseService) {
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
             return {
                 getSubgroupSyncObjAsync: function(groupID, subgroupID, viewerUserID) {

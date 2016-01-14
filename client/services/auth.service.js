@@ -5,10 +5,8 @@
 
 // Create the 'example' controller
 angular.module('core')
-    .factory('authService', ["$state", "dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
-        "$sessionStorage", "firebaseService",
-        function($state, dataService, messageService, $q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
-            firebaseService) {
+    .factory('authService', ["$state", "dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$location", "firebaseService", "userService",
+        function($state, dataService, messageService, $q, $http, appConfig, $firebaseAuth, $location, firebaseService, userService) {
 
             return {
                 //userData: null,
@@ -22,11 +20,11 @@ angular.module('core')
                         //self.userData = data.user;
                         if (data.statusCode != 0) {
                             //$sessionStorage.loggedInUser = data.user;
-                            $localStorage.loggedInUser = data.user;
+                            userService.setCurrentUser(data.user);
                             //console.log('login response object: ' + JSON.stringify(data));
 
                             //firebaseService.asyncLogin($sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token)
-                            firebaseService.asyncLogin($localStorage.loggedInUser.userID, $localStorage.loggedInUser.token)
+                            firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
                                 .then(function(response) {
                                     successFn(data, response);
                                     // dataService.loadData();
@@ -99,20 +97,20 @@ angular.module('core')
                     firebaseService.getRefMain().unauth();
                     Firebase.goOffline();
                     //delete $sessionStorage.loggedInUser;
-                    delete $localStorage.loggedInUser;
+                    userService.removeCurrentUser();
                 },
                 //to resolve route "/user/:user" confirming is authenticated from firebase
                 resolveUserPage: function() {
                     //alert('inside authService');
                     var defer = $q.defer();
                     //if ( $sessionStorage.loggedInUser ) {
-                    if ($localStorage.loggedInUser) {
+                    if (userService.getCurrentUser()) {
                         if (appConfig.firebaseAuth) {
                             dataService.loadData();
                             defer.resolve();
                         } else {
                             //firebaseService.asyncLogin( $sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token )
-                            firebaseService.asyncLogin($localStorage.loggedInUser.userID, $localStorage.loggedInUser.token)
+                            firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
                                 .then(function(response) {
                                     //console.info("Firebase Authentication Successful when restarting app");
                                     firebaseService.addUpdateHandler();

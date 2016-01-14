@@ -5,10 +5,8 @@
 (function() {
     'use strict';
     angular.module('core')
-        .factory('userHelperService', ["$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location", '$firebaseArray',
-            "$sessionStorage", "firebaseService",
-            function($q, $http, appConfig, $firebaseAuth, $localStorage, $location, $firebaseArray, $sessionStorage,
-                firebaseService) {
+        .factory('userHelperService', ["$q", "$http", "appConfig", "$firebaseAuth", "$location", '$firebaseArray', "firebaseService",
+            function($q, $http, appConfig, $firebaseAuth, $location, $firebaseArray, firebaseService) {
 
 
                 return {

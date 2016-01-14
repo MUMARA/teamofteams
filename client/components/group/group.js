@@ -5,8 +5,8 @@
     'use strict';
 
     angular.module('app.group')
-        .controller('GroupController', ['$mdDialog','dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$sessionStorage", "$location", "utilService", "$localStorage", "$stateParams",
-            function($mdDialog, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $sessionStorage, $location, utilService, $localStorage, $stateParams) {
+        .controller('GroupController', ['$mdDialog','userService', 'dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$stateParams",
+            function($mdDialog, userService, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $stateParams) {
 
                 // console.log("In Group Controller");
                 var $scope = this;
@@ -21,8 +21,7 @@
                 var isOwner = false;
                 var isMember = false;
                 var isAdmin = false;
-                var localStorage = $localStorage.loggedInUser;
-                var $loggedInUserObj = groupFirebaseService.getSignedinUserObj()
+                var user = userService.getCurrentUser();
                 this.groupID = $stateParams.groupID;
                 //$scope.userID="zia1";
                 $scope.activeGroup = function() {
@@ -58,7 +57,7 @@
 
 
 
-                $scope.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync($scope.groupID, localStorage.userID)
+                $scope.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync($scope.groupID, user.userID)
                     .then(function(syncObj) {
                         $scope.groupSyncObj = syncObj;
                         // $rootScope.groupSyncObj2 = syncObj;
@@ -131,7 +130,7 @@
                 /*this is group chatting controller start ----------------------------------------------------------------*/
 
                 $scope.channels = chatService.getGroupChannelsSyncArray($scope.groupID);
-                var $loggedInUserID = firebaseService.getSignedinUserObj();
+                
                 $scope.messagesArray = [];
                 $scope.activeChannelID = null;
                 $scope.activeTittle = null;
@@ -154,7 +153,7 @@
                 $scope.filterchatters = function(chatterID) {
                         var sender = false;
 
-                        if (chatterID === localStorage.userID) {
+                        if (chatterID === user.userID) {
                             sender = true;
                         }
 
@@ -177,7 +176,7 @@
                 $scope.SendMsg = function() {
 
 
-                    chatService.SendMessages($scope.groupID, $scope.activeChannelID, $loggedInUserID, $scope.text).then(function() {
+                    chatService.SendMessages($scope.groupID, $scope.activeChannelID, user.userID, $scope.text).then(function() {
 
 
                         $scope.text.msg = "";
@@ -220,7 +219,7 @@
                 $scope.TeamSendMsg = function() {
 
 
-                    chatService.TeamSendMessages($scope.groupID, $scope.activesubID, $scope.activeTeamChannelID, $loggedInUserID, $scope.text).then(function() {
+                    chatService.TeamSendMessages($scope.groupID, $scope.activesubID, $scope.activeTeamChannelID, user.userID, $scope.text).then(function() {
 
 
                         $scope.text.msg = "";
@@ -325,7 +324,7 @@
 
                 this.CheckInuser = function(grId, sgrId, userID, type) {
                     // Do not change status of self login user
-                    if (localStorage.userID === userID) {
+                    if (user.userID === userID) {
                         messageService.showFailure('To change your status, please use toolbar!');
                         return;
                     }
@@ -408,7 +407,7 @@
                     //         };
                     //that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});                                               
                     that.users.forEach(function(val, i) {
-                        if ((val.type === 1 || val.type === true) && (val.id != localStorage.userID)) {
+                        if ((val.type === 1 || val.type === true) && (val.id != user.userID)) {
 
                             // checkin type 1 on firebase node subgroup-check-in-current-by-user
                             // checkout type 2 on firebase node subgroup-check-in-current-by-user

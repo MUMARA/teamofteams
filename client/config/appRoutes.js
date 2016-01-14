@@ -29,7 +29,7 @@
                 },
                 resolve: {
                     user: function($location, userService) {
-                        var user = userService.getUserPresenceFromLocastorage().then(function(data) {
+                        return userService.getUserPresenceFromLocastorage().then(function(data) {
                             if (data) {
                                 $location.path('/user/' + userService.getCurrentUser().userID)
                                     //$state.go(user.dashboard, userService.getCurrentUser().userID)

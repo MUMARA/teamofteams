@@ -11,17 +11,16 @@
         .controller('CheckinHomeCtrl', CheckinHomeCtrl);
 
     CheckinHomeCtrl.$inject = [
+        'userService',
         '$scope',
-        '$sessionStorage',
         '$location',
         'messageService',
         '$mdDialog',
         'checkinService',
-        'utilService',
-        '$localStorage'
+        'utilService'
     ];
 
-    function CheckinHomeCtrl($scope, $sessionStorage, $location, messageService, $mdDialog, checkinService, utilService, $localStorage) {
+    function CheckinHomeCtrl(userService, $scope, $location, messageService, $mdDialog, checkinService, utilService) {
 
         /*VM binding functions*/
         $scope.showLocation = showLocation;
@@ -31,7 +30,7 @@
         /*VM binding variables*/
         $scope.members = {};
         //$scope.user = $sessionStorage.loggedInUser;
-        $scope.user = $localStorage.loggedInUser;
+        $scope.user = userService.getCurrentUser();
 
         var userID, groupID,
             refGroupCheckinStatus, refUsers, refUserMemberShip;

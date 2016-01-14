@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('core')
-    .factory('firebaseService', ["$firebaseAuth", "$sessionStorage", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", '$localStorage',
-        function($firebaseAuth, $sessionStorage, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, $localStorage) {
+    .factory('firebaseService', ["$firebaseAuth", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", "userService",
+        function($firebaseAuth, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, userService) {
 
             var ref = new Firebase(appConfig.myFirebase);
 
@@ -51,7 +51,7 @@ angular.module('core')
                         } else {
                             //console.info("User is logged out");
                             //delete $sessionStorage.loggedInUser;
-                            delete $localStorage.loggedInUser;
+                            userService.removeCurrentUser();
                             appConfig.firebaseAuth = false;
                             messageService.showFailure("User is logged out, Please login again.");
                             //$location.path("/user/login");

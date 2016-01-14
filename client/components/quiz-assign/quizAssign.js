@@ -8,9 +8,9 @@
         .module('app.quizAssign')
         .controller('QuizAssignController', QuizAssignController);
 
-    QuizAssignController.$inject = ["$firebaseArray", "firebaseService", "$firebaseObject", "$timeout", "$location", "userService", "quizService", "quizAssignService", "groupFirebaseService", "$localStorage"]
+    QuizAssignController.$inject = ["$firebaseArray", "firebaseService", "$firebaseObject", "$timeout", "$location", "userService", "quizService", "quizAssignService", "groupFirebaseService"]
 
-    function QuizAssignController($firebaseArray, firebaseService, $firebaseObject, $timeout, $location, userService, quizService, quizAssignService, groupFirebaseService, $localStorage) {
+    function QuizAssignController($firebaseArray, firebaseService, $firebaseObject, $timeout, $location, userService, quizService, quizAssignService, groupFirebaseService) {
         //Local Variables
         var that = this;
         this.back = back;

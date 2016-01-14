@@ -5,10 +5,10 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -18,7 +18,6 @@
         var user = userService.getCurrentUser();
         $rootScope.newImg = '';
         this.teamsettingpanel = false;
-        var localStorage = $localStorage.loggedInUser;
         var groupID = $stateParams.groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
             /*VM functions*/
@@ -106,7 +105,7 @@
             //load user Admins
             loadAdminUSers(this.groupid, that.activeID);
             
-            var sub = subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, localStorage.userID)
+            var sub = subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, user.userID)
                 .then(function(syncObj) {
                     that.subgroupSyncObj = syncObj;
 
@@ -166,7 +165,7 @@
         };
 
 
-        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, localStorage.userID)
+        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
             .then(function(syncObj) {
                 $timeout(function() {
 
@@ -202,7 +201,7 @@
                 subgroupID: that.activeID
             });
 
-            subgroupFirebaseService.asyncUpdateSubgroupMembers(localStorage, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData)
+            subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData)
                 .then(function(response) {
                     // console.log("Adding Members Successful");
                     var unlistedMembersArray = response.unlistedMembersArray,

@@ -5,8 +5,8 @@
     'use strict';
     angular
         .module('app.quizAddBook', ['core', 'app.quiz'])
-        .factory('quizAddBookService', ['userFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage', '$rootScope',
-            function(userFirebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage, $rootScope) {
+        .factory('quizAddBookService', ['userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$rootScope',
+            function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope) {
 
                 var pageUserId = userService.getCurrentUser().userID;
 
@@ -42,8 +42,7 @@
 
                             var data = new FormData();
                             data.append('userID', pageUserId);
-                            //data.append('token', $sessionStorage.loggedInUser.token);
-                            data.append('token', $localStorage.loggedInUser.token);
+                            data.append('token', userService.getCurrentUser().token);
                             data.append("source", fileBlob, file.name);
 
                             defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {

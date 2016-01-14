@@ -5,15 +5,15 @@
     'use strict';
     angular
         .module('app.subgroup')
-        .controller('SubgroupController', ['$rootScope', 'messageService', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', SubgroupController])
+        .controller('SubgroupController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', SubgroupController])
         //  .controller("DialogController", ["$mdDialog", DialogController]);
-    function SubgroupController($rootScope, messageService, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, SubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function SubgroupController($rootScope, messageService, $stateParams, groupFirebaseService, firebaseService, $location, SubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
         /*private variables*/
         var that = this;
         var user = userService.getCurrentUser();
 
 
-        var localStorage = $localStorage.loggedInUser;
+        var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
         this.groupid = groupID;
         /*VM functions*/
@@ -91,7 +91,7 @@
 
 
 
-        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, localStorage.userID)
+        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
             .then(function(syncObj) {
                 that.groupSyncObj = syncObj;
                 // that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
@@ -121,7 +121,7 @@
         function filterUser(userID) {
             var disableItem = false;
             for (var i = 0; i < that.members.length; i++) {
-                if (userID === localStorage.userID) {
+                if (userID === user.userID) {
                     disableItem = true;
                 } else if (that.Subgroup.membersArray.indexOf(userID) >= 0) {
                     disableItem = true;
@@ -161,7 +161,7 @@
                 var mimeType = temp.split(':')[1].split(';')[0];
                 that.saveFile(x, mimeType, this.Subgroup.subgroupID).then(function(data) {
                         // console.log('subgroup img  uploaded ' + data)
-                        SubGroupService.createSubGroup(localStorage.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
+                        SubGroupService.createSubGroup(user.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
                             //  $location.path('/user/group/'+groupID);
                     })
                     .catch(function() {
@@ -172,7 +172,7 @@
             } else {
                 fromDataFlag = false;
                 // console.log(that.Subgroup);
-                SubGroupService.createSubGroup(localStorage.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
+                SubGroupService.createSubGroup(user.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
                     //$location.path('/user/group/'+groupID);
             }
         }

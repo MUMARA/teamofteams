@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.createSubGroup', ['core', 'ngMdIcons'])
-        .factory('createSubGroupService', ['$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage',
-            function($firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage) {
+        .factory('createSubGroupService', ['$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
+            function($firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                 var groupAdminUsers = [];
 
@@ -58,7 +58,7 @@
                             var data = new FormData();
                             data.append('userID', pageUserId);
                             //data.append('token', $sessionStorage.loggedInUser.token);
-                            data.append('token', $localStorage.loggedInUser.token);
+                            data.append('token', userService.getCurrentUser().token);
                             data.append("source", fileBlob, file.name);
 
                             defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {

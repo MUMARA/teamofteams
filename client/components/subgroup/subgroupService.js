@@ -7,8 +7,8 @@
     'use strict';
     angular
         .module('app.subgroup', ['core', 'ngMdIcons'])
-        .factory('SubGroupService', ['$rootScope', 'groupFirebaseService', 'firebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage',
-            function($rootScope, groupFirebaseService, firebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage) {
+        .factory('SubGroupService', ['$rootScope', 'groupFirebaseService', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
+            function($rootScope, groupFirebaseService, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
 
                 return {
 
@@ -57,7 +57,7 @@
                             var data = new FormData();
                             data.append('userID', pageUserId);
                             //data.append('token', $sessionStorage.loggedInUser.token);
-                            data.append('token', $localStorage.loggedInUser.token);
+                            data.append('token', userService.getCurrentUser().token);
                             data.append("source", fileBlob, file.name);
 
                             defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {

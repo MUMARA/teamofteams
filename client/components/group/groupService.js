@@ -5,7 +5,7 @@
     'use strict';
     angular
         .module('app.group', ['core'])
-        .factory('groupService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$sessionStorage', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $localStorage, $firebaseObject, firebaseService, userFirebaseService) {
+        .factory('groupService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $firebaseObject, firebaseService, userFirebaseService) {
 
             var $scope = this
             return {
@@ -28,8 +28,8 @@
                     reader.onload = function() {
 
                         var data = new FormData();
-                        data.append('userID', $localStorage.loggedInUser.userID);
-                        data.append('token', $localStorage.loggedInUser.token);
+                        data.append('userID', userService.getCurrentUser().userID);
+                        data.append('token', userService.getCurrentUser().token);
 
                         var blobBin = atob(reader.result.split(',')[1]);
                         var array = [];

@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.editGroup', ['core', 'ngMdIcons'])
-        .factory('editGroupService', ['$timeout', '$rootScope', 'userFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage', 'firebaseService', '$firebaseObject', '$stateParams',
-            function($timeout, $rootScope, userFirebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage, firebaseService, $firebaseObject, $stateParams) {
+        .factory('editGroupService', ['$timeout', '$rootScope', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'firebaseService', '$firebaseObject', '$stateParams',
+            function($timeout, $rootScope, userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, firebaseService, $firebaseObject, $stateParams) {
 
                 var pageUserId = userService.getCurrentUser().userID;
 

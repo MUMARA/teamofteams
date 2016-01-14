@@ -6,7 +6,6 @@
     .controller('GeoFencingController', [
 
         '$interval',
-        '$localStorage',
         '$location',
         'messageService',
         '$mdDialog',
@@ -25,7 +24,7 @@
         '$scope',
 
 
-        function($interval, $localStorage, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
+        function($interval, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
 
 
             $rootScope.address = '';

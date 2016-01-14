@@ -8,14 +8,14 @@
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
         /* .controller("DialogController", ["$mdDialog", DialogController]);*/
-    function UserSettingController($rootScope, messageService, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
 
         var that = this;
         var user = userService.getCurrentUser();
         this.hide = hide;
-        var localStorage = $localStorage.loggedInUser;
+        var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
         var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
 
@@ -37,7 +37,7 @@
             $location.path('/user/group/' + groupID + '/geoFencing');
         }
 
-        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, localStorage.userID)
+        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
             .then(function(syncObj) {
                 that.groupSyncObj = syncObj;
                 //that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
@@ -60,7 +60,7 @@
         //For owner/admin: Rejects membership request.
         function approveMembership(requestedMember) {
             $loggedInUserObj.$loaded().then(function() {
-                $loggedInUserObj.userID = localStorage.userID;
+                $loggedInUserObj.userID = user.userID;
                 groupFirebaseService.approveMembership(groupID, $loggedInUserObj, requestedMember)
                     .then(function(res) {
                         messageService.showSuccess(res);
@@ -73,7 +73,7 @@
         //For owner/admin: Rejects membership request.
         function rejectMembership(requestedMember) {
             $loggedInUserObj.$loaded().then(function() {
-                $loggedInUserObj.userID = localStorage.userID;
+                $loggedInUserObj.userID = user.userID;
                 groupFirebaseService.rejectMembership(groupID, $loggedInUserObj, requestedMember)
                     .then(function(res) {
                         messageService.showSuccess(res);

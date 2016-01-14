@@ -5,22 +5,19 @@
 'use strict';
 
 angular.module('core')
-    .factory('userService', ["$q", "$http", "appConfig", "$sessionStorage", '$localStorage', '$firebaseObject', function($q, $http, appConfig, $sessionStorage, $localStorage, $firebaseObject) {
+    .factory('userService', ["$q", "$http", "appConfig", '$localStorage', function($q, $http, appConfig, $localStorage) {
         //.factory('userService',["$http","appConfig","$sessionStorage",'$localStorage','userFirebaseService', function( $http, appConfig,$sessionStorage,$localStorage, userFirebaseService) {
 
+        var user = $localStorage.loggedInUser;
 
         return {
             getUserPresenceFromLocastorage: function() {
                 var deferred = $q.defer();
 
-                var userObj = $localStorage.loggedInUser;
                 var userExit = false;
-
-                if (userObj) {
+                if (user) {
                     var ref = new Firebase(appConfig.myFirebase);
-                    var user = ref.child("users").child(userObj.userID);
-
-                    user.once('value', function(snapshot) {
+                    ref.child("users").child(user.userID).once('value', function(snapshot) {
                         if (snapshot.hasChild('email')) {
                             userExit = true;
                             deferred.resolve(userExit);
@@ -39,7 +36,15 @@ angular.module('core')
 
             },
             getCurrentUser: function() {
-                return $localStorage.loggedInUser;
+                return user;
+            },
+            setCurrentUser: function(newuser) {
+                $localStorage.loggedInUser = newuser;
+                user = newuser;
+            },
+            removeCurrentUser: function() {
+                delete $localStorage.loggedInUser;
+                user = {};
             },
             isUserAccessingOwnHome: function(path, userLoggedInfo) {
                 return true;
