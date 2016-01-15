@@ -8,9 +8,9 @@
         .module('app.quiz')
         .controller('QuizController', QuizController);
 
-    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizCreateService", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$localStorage", "$sce", "authService"];
+    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizCreateService", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
 
-    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizCreateService, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $localStorage, $sce, authService) {
+    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizCreateService, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
 
         /*Private Variables*/
         var $scope = this;
@@ -639,7 +639,7 @@
          })*/
         $scope.assignQuiz = assignQuiz;
         // console.log($localStorage.loggedInUser)
-        $scope.userID = '123654789';
+        //$scope.userID = '123654789';
         /*userService.getCurrentUser()*/
         var groupDataUbind = {}
         var userDataUbind = {}

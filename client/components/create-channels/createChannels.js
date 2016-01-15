@@ -2,9 +2,9 @@
         'use strict';
         angular
             .module('app.createChannels')
-            .controller('CreateChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', 'firebaseService', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateChannelsController]);
+            .controller('CreateChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateChannelsController]);
 
-        function CreateChannelsController(messageService, chatService, $stateParams, $http, $rootScope, firebaseService, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
+        function CreateChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
 
@@ -12,7 +12,7 @@
 
             var $scope = this;
             $scope.groupID = $stateParams.groupID;
-            var $loggedInUserID = firebaseService.getSignedinUserObj();
+            var $loggedInUserID = userService.getCurrentUser();
             $scope.hide = hide;
             $scope.channel = {
                 channelID: "",

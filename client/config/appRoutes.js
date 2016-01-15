@@ -7,6 +7,7 @@
     angular.module("myApp")
         .config(function($stateProvider, $urlRouterProvider) {
             // alert('config')
+            // $locationProvider.html5Mode(true);
             var navLoginbar = {
                 templateUrl: 'components/nav-loginbar/nav-loginbar.html',
                 controller: 'NavLoginbarController',
@@ -29,7 +30,7 @@
                 },
                 resolve: {
                     user: function($location, userService) {
-                        var user = userService.getUserPresenceFromLocastorage().then(function(data) {
+                        return userService.getUserPresenceFromLocastorage().then(function(data) {
                             if (data) {
                                 $location.path('/user/' + userService.getCurrentUser().userID)
                                     //$state.go(user.dashboard, userService.getCurrentUser().userID)

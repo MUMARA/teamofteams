@@ -26,7 +26,7 @@
 
         return {
             // creating channel
-            asyncCreateChannel: function(groupID, channelObj, $loggedInUserObj) {
+            asyncCreateChannel: function(groupID, channelObj, user) {
                 var self = this;
                 var deferred = $q.defer();
 
@@ -41,7 +41,7 @@
                             .set({
                                 title: channelObj.title,
                                 timestamp: fireTimeStamp,
-                                "created-by": $loggedInUserObj.$id,
+                                "created-by": user.$id,
                                 messages: {}
 
                             }, function(error) {
@@ -52,7 +52,7 @@
                                     var chatRef = refs.refGroupChats.child(groupID).child(channelObj.channelID).child("messages")
                                         .push({
 
-                                            from: $loggedInUserObj.$id,
+                                            from: user.$id,
                                             timestamp: fireTimeStamp,
                                             text: "Welcome to " + channelObj.title + " Group"
 
@@ -63,7 +63,7 @@
                                             } else {
 
                                                 //step4 - create an activity for "channel-created" verb.
-                                                self.asyncRecordChannelCreationActivity(channelObj, $loggedInUserObj, groupID).then(
+                                                self.asyncRecordChannelCreationActivity(channelObj, user, groupID).then(
 
                                                     deferred.resolve("channel created successfully and also pushed activity.")
                                                 )
@@ -91,12 +91,12 @@
                 return deferred.promise;
             },
             // sending msgs
-            SendMessages: function(groupID, channelID, $loggedInUserObj, text) {
+            SendMessages: function(groupID, channelID, user, text) {
 
                 var deferred = $q.defer();
                 var msgRef = refs.refGroupChats.child(groupID + '/' + channelID + '/messages').push({
 
-                    from: $loggedInUserObj.$id,
+                    from: user.$id,
                     timestamp: fireTimeStamp,
                     text: text.msg
 
@@ -215,7 +215,7 @@
 
             //    creating team channels
 
-            CreateTeamChannel: function(groupID, channelObj, TeamID, $loggedInUserObj) {
+            CreateTeamChannel: function(groupID, channelObj, TeamID, user) {
                 var self = this;
                 var deferred = $q.defer();
 
@@ -231,7 +231,7 @@
                     .set({
                         title: channelObj.title,
                         timestamp: fireTimeStamp,
-                        "created-by": $loggedInUserObj.$id,
+                        "created-by": user.$id,
                         messages: {}
 
                     }, function(error) {
@@ -242,7 +242,7 @@
                             var chatRef = refs.refTeamChats.child(groupID).child(TeamID).child(channelObj.channelID).child("messages")
                                 .push({
 
-                                    from: $loggedInUserObj.$id,
+                                    from: user.$id,
                                     timestamp: fireTimeStamp,
                                     text: "Welcome to " + channelObj.title + " Group"
 
@@ -253,7 +253,7 @@
                                     } else {
                                         deferred.resolve("channel created successfully and also pushed activity.")
                                             /*//step4 - create an activity for "channel-created" verb.
-                                            self.asyncRecordChannelCreationActivity(channelObj,$loggedInUserObj,groupID ).then(
+                                            self.asyncRecordChannelCreationActivity(channelObj,user,groupID ).then(
                                                 deferred.resolve("channel created successfully and also pushed activity.")
                                             )*/
                                     }
@@ -288,12 +288,12 @@
                 return Firebase.getAsArray(ref);
             },
 
-            TeamSendMessages: function(groupID, teamID, channelID, $loggedInUserObj, text) {
+            TeamSendMessages: function(groupID, teamID, channelID, user, text) {
 
                 var deferred = $q.defer();
                 var msgRef = refs.refTeamChats.child(groupID + '/' + teamID + '/' + channelID + '/messages').push({
 
-                    from: $loggedInUserObj.$id,
+                    from: user.$id,
                     timestamp: fireTimeStamp,
                     text: text.msg
 

@@ -6,7 +6,6 @@
     .controller('GeoFencingController', [
 
         '$interval',
-        '$localStorage',
         '$location',
         'messageService',
         '$mdDialog',
@@ -25,7 +24,7 @@
         '$scope',
 
 
-        function($interval, $localStorage, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
+        function($interval, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
 
 
             $rootScope.address = '';
@@ -33,7 +32,7 @@
             var that = this;
 
             this.isProcessing = false;
-
+            that.fencing = true;
             this.center = {};
             this.markers = {
                 mark : {}
@@ -397,11 +396,13 @@
                     .then(function(res) {
                         that.isProcessing = false;
                         that.submitting = false;
+                        that.fencing = true;
                         messageService.showSuccess(res);
                         $mdDialog.hide();
                     }, function(err) {
                         that.isProcessing = false;
                         that.submitting = false;
+                        that.fencing = true;
                         messageService.showFailure(err);
                     });
             }

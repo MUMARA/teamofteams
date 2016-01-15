@@ -147,10 +147,6 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding-top: 40px;
 }
 
-.topmargin20px {
-    margin-top: 20px;
-}
-
 .bottompadding50px {
     padding-bottom: 50px!important;
 }
@@ -159,8 +155,26 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding-left: 20px;
 }
 
+.leftrightpadding20px {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.leftrightpadding65px {
+    padding-left: 65px;
+    padding-right: 65px;
+}
+
 .automargin {
     margin: auto;
+}
+
+.topmargin20px {
+    margin-top: 20px;
+}
+
+.bottommargin5px {
+    margin-bottom: 5px;
 }
 
 .leftmargin40px {
@@ -171,7 +185,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 .leftmargin20px {
-    margin-left: 20px;
+    margin-left: 20px !important;
 }
 
 .rightmargin20px {

@@ -2,7 +2,7 @@
     <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed backColorDarkSeaGreen" style="max-height: 287px">
         <md-button ng-click="createSubGroup.openEditGroup()" style="margin: 0px; width:100%">
             <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-            <div style="color: white;">Group</div>
+            <div style="color: white;">TEAM OF TEAMS</div>
         </md-button>
         <md-button ng-click="createSubGroup.openUserSettingPage()" style="margin: 0px; width:100%">
             <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
@@ -22,9 +22,9 @@
         <md-divider md-outset class="nopadding"></md-divider>
         <!-- <div layout="row" class="nopadding md-whiteframe-z2" layout-padding> -->
         <form autocomplete="off" layout="row" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
-            <div class="nopadding md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="space-between center">
+            <div class="nopadding md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="space-between center" style="width: 220px">
                 <div>
-                    <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" class="backColorWhite md-whiteframe-z1" style="height:120px;">
+                    <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" class="backColorWhite md-whiteframe-z2 bottommargin5px">
                         <subgroupcard-directive subgroup="subgroup" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" class="nooutline cursorPointer"></subgroupcard-directive>
                         <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>
                     </div>
@@ -115,9 +115,11 @@
                 </div>
 
                 <div layout="row" layout-align="end center">
-                    <md-progress-circular class="" ng-show="createSubGroup.processingSave"  md-mode="indeterminate" md-daimeter="30"></md-progress-circular>
-                    <md-button ng-disabled="groupForm.$invalid" class="backColorSeaGreen" ng-click="createSubGroup.answer( groupForm )"><span style="color:white;">Save</span>
-                    </md-button>
+                    <!-- <md-progress-circular class="" ng-show="createSubGroup.processingSave"  md-mode="indeterminate" md-daimeter="30"></md-progress-circular> -->
+                    <md-button layout="row" layout-align="center center" ng-disabled="groupForm.$invalid ||  groupForm.$submitted" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="createSubGroup.answer( groupForm )">
+                    <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                    <span> Save</span>
+                </md-button>
                 </div>
             </div>
 

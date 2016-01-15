@@ -5,7 +5,7 @@
     'use strict';
     angular
         .module('app.createTeamsChannels', ['core'])
-        .factory('createTeamsChannelsService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$sessionStorage', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $localStorage, $firebaseObject, firebaseService, userFirebaseService) {
+        .factory('createTeamsChannelsService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $firebaseObject, firebaseService, userFirebaseService) {
 
             return {}
         }])

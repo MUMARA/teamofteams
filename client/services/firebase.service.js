@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('core')
-    .factory('firebaseService', ["$firebaseAuth", "$sessionStorage", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", '$localStorage',
-        function($firebaseAuth, $sessionStorage, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, $localStorage) {
+    .factory('firebaseService', ["$firebaseAuth", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", "userService",
+        function($firebaseAuth, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, userService) {
 
             var ref = new Firebase(appConfig.myFirebase);
 
@@ -38,10 +38,7 @@ angular.module('core')
             var groupLocsDefined = null;
             var flattenedGroups = null;
             var loggedUserRef = null;
-            var $loggedUserObj = null;
-
-
-
+            
             return {
                 addUpdateHandler: function() {
                     ref.onAuth(function(authData) {
@@ -51,7 +48,7 @@ angular.module('core')
                         } else {
                             //console.info("User is logged out");
                             //delete $sessionStorage.loggedInUser;
-                            delete $localStorage.loggedInUser;
+                            userService.removeCurrentUser();
                             appConfig.firebaseAuth = false;
                             messageService.showFailure("User is logged out, Please login again.");
                             //$location.path("/user/login");
@@ -143,9 +140,6 @@ angular.module('core')
                 getSignedinUserRef: function() {
                     return loggedUserRef
                 },
-                getSignedinUserObj: function() {
-                    return $loggedUserObj
-                },
                 getRefFlattendGroups: function() {
                     return flattenedGroups
                 },
@@ -189,10 +183,6 @@ angular.module('core')
                                 subgroupCheckinRecords = ref.child("subgroup-check-in-records");
                                 groupLocsDefined = ref.child("group-locations-defined");
                                 flattenedGroups = ref.child("flattened-groups");
-
-                                loggedUserRef = refUsers.child(userID);
-
-                                $loggedUserObj = $firebaseObject(loggedUserRef);
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.
