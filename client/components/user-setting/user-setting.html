@@ -51,13 +51,13 @@
                             </tr>
                         </thead>
                         <tbody md-body>
-                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" >
+                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== 4">
                                 <td md-cell>
                                     <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound" alt="user" layout-margin />
                                 </td>
                                 <td md-cell>
                                     <div layout="column" layout-align="space-around start">
-                                        <span><strong>{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</strong></span>
+                                        <span><strong>{{member.userSyncObj.firstName + ' ' + member.userSyncObj.lastName}}</strong></span>
                                         <span>{{member.userSyncObj.email}}</span>
                                     </div>
                                 </td>
@@ -159,8 +159,7 @@
                                 </tr>
                             </thead>
                             <tbody md-body>
-                                <!-- <tr md-row ng-repeat="request in userSetting.pendingRequests | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" > -->
-                                <tr md-row ng-repeat="request in [] | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" >
+                                <tr md-row ng-repeat="request in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="request.membershipType == 4">
                                     <td md-cell style="width:10%">
                                         <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound"  alt="user" layout-margin/>
                                     </td>
@@ -172,12 +171,12 @@
                                     </td>
                                     <td md-cell>{{member.userSyncObj.contactNumber}}</td>
                                     <td md-cell style="width:10%">
-                                       <md-select placeholder="Pending" ng-model="someVal">
-                                            <md-option value="1" ng-click="userSetting.approveMembership(request)">
-                                                Accept User
+                                       <md-select placeholder="Blocked" ng-model="someVal">
+                                            <md-option value="1" ng-click="userSetting.changeMemberRole(3, request)">
+                                                Allow User
                                             </md-option>
-                                            <md-option value="2" ng-click="userSetting.rejectMembership(request)">
-                                                Ignore User
+                                            <md-option value="2" ng-click="userSetting.changeMemberRole(null, request)">
+                                                Delete User
                                             </md-option>
                                         </md-select>
                                     </td>

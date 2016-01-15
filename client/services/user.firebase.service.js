@@ -313,7 +313,7 @@ angular.module('core')
                     var ref = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
                     var actor = {
                         "type": "user",
-                        "id": userObj.$id, //this is the userID, and an index should be set on this
+                        "id": userObj.userID, //this is the userID, and an index should be set on this
                         "email": userObj.email,
                         "displayName": userObj.firstName + " " + userObj.lastName
                     };
@@ -694,10 +694,9 @@ angular.module('core')
                 asyncRecordMembershipChangeActivity: function(prevType, newType, user, groupObj, loggedInUser) {
                     var deferred = $q.defer();
                     var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
-
                     var actor = {
                         "type": "user",
-                        "id": loggedInUser.$id, //this is the userID, and an index should be set on this
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
                         "email": loggedInUser.email,
                         "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
                     };
@@ -762,7 +761,7 @@ angular.module('core')
 
                     var actor = {
                         "type": "user",
-                        "id": loggedInUser.$id, //this is the userID, and an index should be set on this
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
                         "email": loggedInUser.email,
                         "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
                     };
