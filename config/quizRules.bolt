@@ -1,0 +1,275 @@
+
+//-----------------------------------------------------------
+// Options Type Radio Button , CheckBox And question Set
+//---------------------------------------------------------
+
+optionsTypeShouldBe(that , num) { that == num }
+type OptionType extends Number{
+   validate() {
+   optionsTypeShouldBe(this , 1 ) || optionsTypeShouldBe(this , 2 ) || optionsTypeShouldBe(this , 3 );
+   }
+}
+
+//-----------------------------------------------------------------------------------
+//       MemberType type extends globally and MemberType Number Validations Should Be
+//-----------------------------------------------------------------------------------
+function memberTypeShouldBe(that , num){ 
+    return that  == num;
+}
+
+type QuestionBankMemberType extends Number{
+
+    validate(){
+        memberTypeShouldBe(this , 1) || memberTypeShouldBe(this , 2);// Owner = 1, Admin = 2
+    }
+	
+}
+
+//---------------------------------------
+//      Timestamp type extends globally
+//---------------------------------------
+
+type Timestamp extends Number{
+    validate(){
+        this <= Date.now;
+    }
+
+}
+
+//----------------------------------
+//      question-bank
+//----------------------------------
+
+path /question-bank/{questionBankUniqueID} is QuestionBank{ }
+
+type QuestionBank {
+
+    timestamp  : Timestamp,                   //Timestamp type extends globally
+      title    : String,
+      desc     : String
+
+}
+
+//----------------------------------
+//      question-bank-memberships
+//----------------------------------
+
+path /question_bank_memberships/{questionBankUniqueID}/{UserID} is QuestionBankUserID {  }
+
+type QuestionBankUserID {
+    "member-type" : QuestionBankMemberType                      //MemberType type extends globally
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------------------
+//      user_question_banks
+//---------------------------
+
+path /user_question_banks/{userid}/{questionBankUniqueID} is Quiz{  }
+
+type Quiz {
+ "member-type" : MemberType          //MemberType type extends globally
+
+}
+
+
+
+
+//----------------------------------
+//      question-bank-topics
+//----------------------------------
+
+path /question_bank_topics/{questionBankUniqueID}/{autotopicid1} is QuestionBankInfo{
+}
+
+type QuestionBankInfo {
+
+        timestamp  : Timestamp,                   //Timestamp type extends globally
+        title      : String,
+        desc       : String,
+        subtopics  : SubTopicID,                  //subtopics has a child Autosubtopicid1
+        question   : Questions
+
+}
+//subtopics child
+type SubTopicID {
+    validate() {this.hasChildren(['autoSubTopicID']);}
+    $autoSubTopicID :  Autosubtopicid1
+}
+type Autosubtopicid1{
+          timestamp  : Timestamp,                   //Timestamp type extends globally
+          title      : String,
+          desc       : String,
+          questions  : SubTopicQuestionsID          //questions has a child QuestionsID
+
+}
+//Autosubtopicid1 child
+
+type SubTopicQuestionsID{
+       $questionID  : Boolean
+}
+//question child
+
+ type Questions{
+       $questionID  : Boolean
+
+
+ }
+
+//----------------------------------
+//      Questions
+//----------------------------------
+/*
+path /questions/{questionBankUniqueID} is QuestionID { }
+
+type QuestionID {
+   $questionID1 : QuestionID1Info                   //questionID1 has a child QuestionID1Info
+}
+
+type QuestionID1Info {
+        title              :  String,
+        desc               :  String,
+        type               :  OptionType,
+        "discussion-html"  :  String
+        //options          :  OptionsID           //options has a child OptionsID
+}
+
+type OptionsID{
+
+
+}
+*/
+
+//----------------------------------
+//      Question Bank Quizes
+//----------------------------------
+
+path /question_bank_quizes/{questionBankID} is QuestionBankQuiz {  }
+
+type QuestionBankQuiz{
+
+    validate(){this.hasChildren(['quizID'])}
+    $quizID : Boolean
+}
+
+//----------------------------------
+//      Group Quizes
+//----------------------------------
+
+path /group_quizes/{groupID} is QuestionBankQuiz { }
+
+//----------------------------------
+//      Quizes
+//----------------------------------
+
+path /quizes/{quizID}  is QuizDesc { }
+
+type QuizDesc {
+    title           : String,
+    desc            : String,
+    duration        : Number,
+    'num-questions' : Number
+
+}
+
+//----------------------------------
+//      Quiz Topics
+//----------------------------------
+
+path /quiz-topics/{quizID}/{autotopicID} is QuizTopic{ }
+
+type QuizTopic{
+     timestamp  : Timestamp,                   //Timestamp type extends globally
+     title      : String,
+     desc       : String,
+     subtopics  : SubTopicID
+
+
+}
+
+
+
+
+//----------------------------------
+//      Quiz Questions
+//----------------------------------
+
+path /quiz_questions/{quizID}/{questionID} is QuizQuestionDesc { }
+
+type QuizQuestionDesc {
+
+   title   : String,
+   type    : OptionType,
+   desc    : String,
+   options : QuestionOptions
+}
+
+type QuestionOptions {
+ validate(){ this.hasChildren(['optionID'])}
+   $optionID : Object
+}
+
+
+//----------------------------------
+//      Quiz Answers
+//----------------------------------
+
+
+path /quiz_answers/{quizID}/{questionID} is QuizAnswerDesc { }
+
+type QuizAnswerDesc {
+   title              : String,
+   type               : OptionType,
+   'desc-html'        :  String,
+   'discussion-html'  : String,
+   options            : AnswerOptions
+}
+
+type AnswerOptions {
+    validate() {this.hasChildren(['optionID'])}
+    $optionID   : OptionsDetail
+}
+
+ type OptionsDetail {
+    html              : String,
+    correct           : Boolean,
+    'discussion-html' : String
+ }
+
+
+
+//----------------------------------
+//      Quiz Answer Sheet
+//----------------------------------
+
+path /quiz_answer_sheet/{groupid}/{quizid}/{userid}/{questionID} is  CorrectAnswer { }
+
+ type CorrectAnswer {
+   optionID : Boolean,
+   correct  :  Boolean
+  }
+
+
+
+
+
+
+
+
+
+
+
