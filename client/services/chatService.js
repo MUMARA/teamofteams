@@ -7,9 +7,9 @@
         .module('core')
         .factory('chatService', chatService);
 
-    chatService.$inject = ['$q', 'firebaseService', '$firebaseObject'];
+    chatService.$inject = ['$q', 'firebaseService', '$firebaseObject', '$firebaseArray'];
 
-    function chatService($q, firebaseService, $firebaseObject) {
+    function chatService($q, firebaseService, $firebaseObject, $firebaseArray) {
 
         // private variables
         var refs, fireTimeStamp;
@@ -130,7 +130,8 @@
             getChannelMessagesArray: function(groupID, channelID) {
 
             var ref = refs.refGroupChats.child(groupID + '/' + channelID + '/messages');
-                return Firebase.getAsArray(ref);
+                // return Firebase.getAsArray(ref);
+                return $firebaseArray(ref);
             },
             // creating channel Activity
             asyncRecordChannelCreationActivity: function(channel, user, group) {
@@ -277,7 +278,7 @@
             getTeamChannelMessagesArray: function(groupID, teamID, channelID) {
 
                 var ref = refs.refTeamChats.child(groupID + '/' + teamID + '/' + channelID + '/messages');
-                return Firebase.getAsArray(ref);
+                return $firebaseArray(ref);
             },
 
             TeamSendMessages: function(groupID, teamID, channelID, user, text) {

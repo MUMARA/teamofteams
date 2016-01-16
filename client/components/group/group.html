@@ -62,7 +62,7 @@
         </div>
     </div>
     <!-- Team Attendance -->
-    <div class="viewHeight-64 teamAttendance" layout="column" flex ng-show="group.showManualAttendace">
+    <div class="viewHeight-64 teamAttendance" layout="column" flex ng-if="group.showManualAttendace">
 	    <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite">
 	    	<h4 class="leftmargin20px">Manual Attendance</h4>
 	    	<md-progress-circular class="cirrcularGrey" md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
@@ -105,7 +105,7 @@
         </md-table-container>
     </div>
     <!-- Activity -->
-    <div class="viewHeight-64 activity" flex layout="column" ng-show="group.showActivity">
+    <div class="viewHeight-64 activity" flex layout="column" ng-if="group.showActivity">
         <div layout="row" layout-padding layout-align="space-between center" style="font-size:large;" class="backColorWhite">
     	    <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
             <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
@@ -140,7 +140,7 @@
         </md-table-container>
     </div>
     <!-- Report -->
-    <div class="viewHeight-64 animation" flex layout="column" ng-show="group.showReport">
+    <div class="viewHeight-64 animation" flex layout="column" ng-if="group.showReport">
         <div ng-show="group.showParams">
             <div layout="row" layout-padding layout-align="space-between center" style="font-size:large;" class="backColorWhite">
                 <h4 class="leftmargin20px">Report Parameters</h4>
@@ -223,69 +223,79 @@
         </div>
     </div>
     <!--chat side-->
-    <div class="viewHeight-64 chatSide backColorWhite" layout="column" layout-align="space-between start" flex ng-show="group.showChat">
+    <div class="viewHeight-64 chatSide backColorWhite" layout="column" layout-align="space-between start" flex ng-if="group.showChat">
     	<div style="width: 100%;">
-	        <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite">
+	        <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
 		    	<h4 class="leftmargin20px">{{group.activeTitle | uppercase}}</h4>
 		    	<md-progress-circular md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
 		    	<div layout="row" flex="50">	
-		            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
-		            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
-		                <input type="text" id="#UserSearch" ng-model="group.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
-		            </md-input-container>
+                    <md-input-container md-no-float class="nopadding nomargin" flex layout="row" layout-align="center">
+                        <input type="text" id="#UserSearch" ng-model="group.searchbox" aria-label="search dashboard" class="serachbox2">
+                    </md-input-container>
+		            <ng-md-icon icon="search" size="36" class="nooutline fillColorLightGrey rightmargin20px" ng-click="group.setFocus()"></ng-md-icon>
 		        </div>
 		    </div>
 		    <md-divider md-outset></md-divider>
-	        <div layout="column" class="backColorWhite">
-	            <md-content flex class="backColorWhite viewHeight-250 vscroll">
-	                <div>
-	                    <md-list style="position: relative; padding: 0px !important;" ng-repeat="message in group.messagesArray">
-	                        <md-list-item class="md-3-line listContainer" ng-if="group.filterchatters(message.from)">
-	                            <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="md-avatar listImage" />
-	                            <div class="md-list-item-text">
-	                                <div id="headingDiv" class="md-whiteframe-z2">
-	                                    <h3 class="headingDiv">
-	                                                    <span>{{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}</span>
-	                                                    <span class="timeSpan">10:30AM</span></h3>
-	                                </div>
-	                                <p class="listPara md-whiteframe-z2">{{ message.text }}</p>
-	                            </div>
-	                        </md-list-item>
-	                        <md-list-item class="md-3-line listContainer" ng-if="!group.filterchatters(message.from)">
-	                            <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="md-avatar listImg" />
-	                            <div class="md-list-item-text " style="  padding: 16px 24px 16px 0 ;">
-	                                <div id="headingDiv2" class="" style="float:right">
-	                                    <h3 class="headingDiv2">
-	                                                    <span class="timeSpan2">10:30AM</span>
-	                                                    {{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}
+	        <div layout="column" class="backColorWhite viewHeight-250 vscroll" >
+                <div class="leftrightpadding20px" ng-repeat="message in group.messagesArray">
+                    <div class="chatheader" layout="row">
+                        <div class="chatheaderClear"></div>
+                        <div class="chatheaderTitle backColorLightSeaGreen" >
+                            {{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName + ' ' + group.filterchatters(message.from)}}
+                        </div>
+                        <div class="chatheaderTime backColorDarkSeaGreen">
+                            {{message.timestamp | date: 'shortTime'}}
+                        </div>
+                    </div>
+                    <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="icon40px imageRound chatuserimg"/>
+                    <div class="backColorSeaGreen chatmsg padding10px" flex-gt-sm="50">
+                        {{ message.text }}
+                    </div>
+                </div>
+                <!-- <md-list style="position: relative; padding: 0px !important;" ng-repeat="message in group.messagesArray">
+                    <md-list-item class="md-3-line listContainer" ng-if="group.filterchatters(message.from)">
+                        <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="icon40px imageRound"/>
+                        <div class="md-list-item-text">
+                            <div id="headingDiv" class="md-whiteframe-z2">
+                                <h3 class="headingDiv">
+                                <span>{{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}</span>
+                                <span class="timeSpan">{{message.timestamp | date}}</span></h3>
+                            </div>
+                            <p class="listPara md-whiteframe-z2">{{ message.text }}</p>
+                        </div>
+                    </md-list-item>
+                    <md-list-item class="md-3-line listContainer" ng-if="!group.filterchatters(message.from)">
+                        <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="md-avatar listImg" />
+                        <div class="md-list-item-text " style="  padding: 16px 24px 16px 0 ;">
+                            <div id="headingDiv2" class="" style="float:right">
+                                <h3 class="headingDiv2">
+                                                <span class="timeSpan2">{{message.timestamp | date}}</span>
+                                                {{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}
 
-	                                                </h3>
-	                                </div>
-	                                <br>
-	                                <p class="listPara md-whiteframe-z3 " style="margin-top: 4px;background-color: #0072FF !important;float: right;position: absolute;right: 56px;">
-	                                    {{ message.text }}</p>
-	                            </div>
-	                        </md-list-item>
-	                    </md-list>
-	                </div>
-	            </md-content>
+                                            </h3>
+                            </div>
+                            <br>
+                            <p class="listPara md-whiteframe-z3 " style="margin-top: 4px;background-color: #0072FF !important;float: right;position: absolute;right: 56px;">
+                                {{ message.text }}</p>
+                        </div>
+                    </md-list-item>
+                </md-list> -->
 	        </div>
         </div>
         <div style="width: 100%;">
-			<!--for group send msg-->
-	        <form name="chatForm" novalidate ng-submit="group.activesubID ? group.TeamSendMsg() : group.SendMsg()" class="backColorWhite" layout="row" layout-align="center center" layout-padding>
-                <md-input-container flex style="border: 1px solid lightgrey; padding: 0; background-color: #F8F8F8;" layout="row" layout-align="start center">
+	        <form name="chatForm" novalidate ng-submit="group.activesubID ? group.TeamSendMsg() : group.SendMsg()" layout="row" layout-align="center center" layout-padding>
+                <md-input-container flex style="border: 1px solid lightgrey;" class="backColorLightGrey2 nopadding" layout="row" layout-align="start center">
                     <div style="border-right: 1px solid lightgrey;">
                         <img src="img/arrow.svg" class="icon20px padding10px">
                     </div>
 	                <input type="text" name="msg" ng-model="group.text.msg" aria-label="Group Text Msg Box" class="serachbox2" required>
                 </md-input-container>
-                <md-button type="submit" ng-disabled="chatForm.msg.$invalid || !group.activeTitle" class="backColorSeaGreen foreColorWhite">SEND</md-button>
+                <md-button type="submit" ng-disabled="chatForm.msg.$invalid || !group.activeChannelID" class="backColorSeaGreen foreColorWhite">SEND</md-button>
 	        </form>
         </div>
     </div>
     <!--online side-->
-    <div class="viewHeight-64 onlineSide" ng-show="group.showChat" style="max-width:400px;width:400px;min-width:400px">
+    <div class="viewHeight-64 onlineSide" ng-if="group.showChat" style="max-width:400px;width:400px;min-width:400px">
         <md-card class="nomargin" layout-fill>
             <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
                 <md-tabs style=" background-color: #68C2E8" class="OnlineChat" layout-fill>

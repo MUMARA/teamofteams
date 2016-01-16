@@ -39,18 +39,8 @@
                         }
                     });
                 
-                $firebaseObject(firebaseService.getRefGroups().child(that.groupID))
-                    .$loaded()
-                    .then(function(groupData) {
-                        if (groupData['group-owner-id']) {
-                            that.picRef = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']))
-                                .$loaded()
-                                .then(function(userData) {
-                                    that.userObj = userData;
-                                })
-                        }
-                    });
-
+                this.userObj = groupService.getOwnerImg(that.groupID);
+                
                 this.isOwner = function() {
                     return isOwner;
                 };
@@ -201,9 +191,9 @@
                 // Start Team Attendance
                 //update status when user checked-in or checked-out
                 this.users = [];
-                this.showActivity = true;
+                this.showActivity = false;
                 this.showReport = false;
-                this.showChat = false;
+                this.showChat = true;
                 this.showManualAttendace = false;
                 this.showParams = true;
                 this.processTeamAttendance = false;
