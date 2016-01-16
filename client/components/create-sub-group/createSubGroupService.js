@@ -105,34 +105,45 @@
                         //  var dataToSet = ;
                         var dataToSet = {
                             title: subgroupInfo.title,
-                            desc: subgroupInfo.desc,
+                            desc: (subgroupInfo.desc ? subgroupInfo.desc : ''),
                             timestamp: firebaseTimeStamp
 
 
                         };
+                        if (subgroupRef) {
+                            // var $subgroupRef = firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id);
+                            angular.extend(subgroupRef, dataToSet);
 
-                        // var $subgroupRef = firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id);
-                        angular.extend(subgroupRef, dataToSet);
-
-                        subgroupRef.$save().then(function(response) {
-                            var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
-                            subgroupNameRef.title = subgroupRef.title;
-                            subgroupNameRef.$save()
-                                .then(function() {
-                                    cb();
-                                    //groupForm.$submitted = false;
-                                    //$rootScope.newImg = null;
-                                    messageService.showSuccess('Team Edited Successfully')
+                            subgroupRef.$save().then(function(response) {
+                                var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
+                                subgroupNameRef.title = subgroupRef.title;
+                                subgroupNameRef.$save()
+                                    .then(function() {
+                                        cb();
+                                        //groupForm.$submitted = false;
+                                        //$rootScope.newImg = null;
+                                        messageService.showSuccess('Team Edited Successfully')
+                                    }, function(group) {
+                                        cb();
+                                        messageService.showFailure("Team not edited");
+                                    })    
                                 }, function(group) {
                                     cb();
+                                    // groupForm.$submitted = false;
                                     messageService.showFailure("Team not edited");
                                 })
+                        } else {
+                            firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id).set({title: subgroupInfo.title, timestamp: firebaseTimeStamp}, function(error){
+                                if(error){
+                                    messageService.showFailure("Team not created");
+                                } else {
+                                    messageService.showSuccess('Team Created Successfully')
+                                }
+                            });
+                        }
+                        
 
-                        }, function(group) {
-                            cb();
-                            // groupForm.$submitted = false;
-                            messageService.showFailure("Team not edited");
-                        })
+                        
 
 
                         /*                        $subgroupRef.update({

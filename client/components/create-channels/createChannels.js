@@ -11,16 +11,15 @@
             
 
             var $scope = this;
+            var user = userService.getCurrentUser();
             $scope.groupID = $stateParams.groupID;
-            var $loggedInUserID = userService.getCurrentUser();
-            $scope.hide = hide;
             $scope.channel = {
                 channelID: "",
                 title: ""
             };
 
             // for creating channels
-            function hide() {
+            $scope.hide = function() {
                 /*   createGroupService.cancelGroupCreation();*/
                 /* $mdDialog.cancel();*/
                 //$rootScope.newImg=null;
@@ -36,7 +35,7 @@
                 }
                 // groupForm.channelID = groupForm.channelID.toLowerCase();
                 //groupForm.channelID = groupForm.channelID.replace(/[^a-z0-9]/g, '');
-                chatService.asyncCreateChannel($scope.groupID, $scope.channel, $loggedInUserID)
+                chatService.asyncCreateChannel($scope.groupID, $scope.channel, user)
                     .then(function() {
 
                         console.log("channel Creation Successful");

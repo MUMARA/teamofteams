@@ -284,6 +284,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     height: calc(100vh - 170px);
 }
 
+.viewHeight-250 {
+    height: calc(100vh - 250px);
+}
+
 .viewWidth {
     width: 100vw;
 }

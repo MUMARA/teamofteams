@@ -5,9 +5,9 @@
 (function() {
     'use strict';
     angular.module("myApp")
-        .config(function($stateProvider, $urlRouterProvider) {
+        .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
             // alert('config')
-            // $locationProvider.html5Mode(true);
+            // $locationProvider.html5Mode(true).hashPrefix('!');
             var navLoginbar = {
                 templateUrl: 'components/nav-loginbar/nav-loginbar.html',
                 controller: 'NavLoginbarController',
@@ -163,7 +163,7 @@
                 controllerAs: 'createChannels'
             });
             $stateProvider.state('user.create-teams-channels', {
-                url: '/group/:groupID/create-teams-channels',
+                url: '/group/:groupID/:teamID/create-teams-channels',
                 templateUrl: 'components/create-teams-channels/create-teams-channels.html',
                 controller: 'CreateTeamsChannelsController',
                 controllerAs: 'createTeamsChannels'

@@ -69,6 +69,11 @@
             }
         }
 
+        this.createTeam = function(){
+            that.subgroupData = {}
+            that.teamsettingpanel = true;
+        }
+
         /*VM properties*/
 
         /*   this.Subgroup = {

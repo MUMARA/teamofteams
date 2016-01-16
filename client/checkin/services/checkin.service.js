@@ -412,7 +412,7 @@
 
                 var actor = {
                     type: 'user',
-                    id: userID, //this is the userID, and an index should be set on this
+                    id: currentUser.userID, //this is the userID, and an index should be set on this
                     email: currentUser.email,
                     displayName: currentUser.firstName + ' ' + currentUser.lastName,
                     image: null

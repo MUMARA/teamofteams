@@ -24,23 +24,31 @@
         <form autocomplete="off" layout="row" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
             <div class="nopadding md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="space-between center" style="width: 220px">
                 <div>
-                    <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" class="backColorWhite md-whiteframe-z2 bottommargin5px">
+                    <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" layout="row" class="backColorWhite md-whiteframe-z2 bottommargin5px">
                         <subgroupcard-directive subgroup="subgroup" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" class="nooutline cursorPointer"></subgroupcard-directive>
                         <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>
                     </div>
                 </div>
-                <md-button ng-click="createSubGroup.subgroupPage()" class="backColorSeaGreen">
+                <md-button ng-click="createSubGroup.createTeam()" class="backColorSeaGreen">
                     <span style="color: #ffffff">Create Team</span>
                 </md-button>
             </div>
 
             <div ng-show="createSubGroup.teamsettingpanel" class="backColorWhite md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="start" flex>
-                <div>
-                    <div layout="row" layout-align="start center">
-                        <h3>Url</h3>
-                        <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="No Space or Special character | length Only 3 to 40"></ng-md-icon>
-                    </div>
-                    <div>teamofteams.io/{{createSubGroup.groupid}}/{{createSubGroup.subgroupData.$id}}</div>
+                <div layout="row" layout-align="start center">
+                    <h3>Url</h3>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="No Space or Special character | length Only 3 to 40"></ng-md-icon>
+                </div>
+                <div layout="row" layout-align="start center">
+                    <div>teamofteams.io/{{createSubGroup.groupid}}/</div>
+                    <md-input-container>
+                        <input name="groupId" ng-model="createSubGroup.subgroupData.$id" autocomplete="off" ng-pattern="/^([a-z0-9]){3,20}$/" autofocus="true" groupPath="{{createSubGroup.groupID}}" check-group-existance="" required placeholder="Team URL" ng-disabled="createSubGroup.activeID">
+                        <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.groupId.$error" ng-messages-multiple>
+                            <div class="invalid_color" ng-message="required">This is required.</div>
+                            <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
+                            <div layout="row" class="invalid_color id_Error" ng-message="checkGroupExistance">This name is not available.</div>
+                        </div>
+                    </md-input-container>
                 </div>
                 <h3>General Information</h3>
                 <md-input-container flex>

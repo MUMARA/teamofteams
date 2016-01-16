@@ -63,7 +63,7 @@
                 // $loggedInUserObj.userID = user.userID;
                 groupFirebaseService.approveMembership(groupID, user, requestedMember)
                     .then(function(res) {
-                        messageService.showSuccess(res);
+                        messageService.showSuccess("Approved Request Successfullt");
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });
@@ -76,7 +76,7 @@
                 // $loggedInUserObj.userID = user.userID;
                 groupFirebaseService.rejectMembership(groupID, user, requestedMember)
                     .then(function(res) {
-                        messageService.showSuccess(res);
+                        messageService.showSuccess("Ignored Request Successfully");
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });
@@ -85,9 +85,9 @@
 
         //For owner only: to change membership role of a member
         function changeMemberRole(newType, member) {
-            groupFirebaseService.changeMemberRole(newType, member, that.group, $loggedInUserObj)
+            groupFirebaseService.changeMemberRole(newType, member, that.group, user)
                 .then(function(res) {
-                    messageService.showSuccess(res);
+                    messageService.showSuccess("Changed Role Successfully");
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });

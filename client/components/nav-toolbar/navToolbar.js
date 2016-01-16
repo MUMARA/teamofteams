@@ -358,7 +358,7 @@
             }
 
             function PersonalSetting() {
-                $location.path('/' + userID + '/personalSettings')
+                $location.path('/user/' + userID + '/personalSettings')
             }
 
 
