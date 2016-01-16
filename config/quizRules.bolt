@@ -1,14 +1,30 @@
-
-//-----------------------------------------------------------
-// Options Type Radio Button , CheckBox And question Set
-//---------------------------------------------------------
-
-optionsTypeShouldBe(that , num) { that == num }
-type OptionType extends Number{
-   validate() {
-   optionsTypeShouldBe(this , 1 ) || optionsTypeShouldBe(this , 2 ) || optionsTypeShouldBe(this , 3 );
-   }
+function isSignedIn() { 
+    return auth != null 
 }
+
+//----------------------------------
+// Define isCurrentUser() function to test if the given user id
+// matches the currently signed-in user.
+//----------------------------------
+
+function isCurrentUser(uid) { 
+    return isSignedIn() && auth.uid == uid 
+}
+
+type CurrentTimestamp extends Number {
+  validate() { this == now }
+}
+
+//----------------------------------
+// Define createOnly() function to test if it is being created for the first time
+//----------------------------------
+function createOnly(value) { 
+    return prior(value) == null && value != null 
+}
+
+
+
+
 
 //-----------------------------------------------------------------------------------
 //       MemberType type extends globally and MemberType Number Validations Should Be
@@ -25,6 +41,91 @@ type QuestionBankMemberType extends Number{
 	
 }
 
+function isQuestionBankOwner(questionBankMemberType) {
+    return memberTypeShouldBe(questionBankMemberType , 1)
+}
+
+function isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, value){
+   return isSignedIn() && isCurrentUserQuestionBankOwner(questionBankUniqueID) && memberTypeShouldBe(value["member-type"], 2);
+}
+
+function isCurrentUserQuestionBankOwner(questionBankUniqueID) {
+    return isCurrentUserQuestionBankMember(questionBankUniqueID) && 
+    prior(memberTypeShouldBe(root.question_bank_memberships[questionBankUniqueID][auth.uid]["member-type"], 1));
+}
+
+function isCurrentUserQuestionBankMember(questionBankUniqueID) {
+    prior(root.question_bank_memberships[questionBankUniqueID][auth.uid] != null)
+} 
+
+
+
+//----------------------------------
+// Define function to test if the Question Bank Owner himself creating it for the first time
+//----------------------------------
+
+function isQuestionBankOwnerCreating(pathUserID, value) {
+    return isQuestionBankOwner(value.member-type) && createOnly(value) && isCurrentUser(pathUserID);
+}
+
+//----------------------------------
+//      question-bank-memberships (Before creating a QuestionBank, create a owner membership first)
+//----------------------------------
+
+path /question_bank_memberships/{questionBankUniqueID}/{UserID} is QuestionBankMembership {  
+    read() { true }
+    write() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+}
+
+type QuestionBankMembership {
+    "member-type" : QuestionBankMemberType                      //MemberType type extends globally
+}
+
+
+//----------------------------------
+//      question-bank (Before creating a QuestionBank, create a owner membership first)
+//----------------------------------
+
+path /question-bank/{questionBankUniqueID} is QuestionBank { 
+    read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+    write() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+}
+
+type QuestionBank {
+
+    timestamp  : CurrentTimestamp,                   //Timestamp type extends globally
+      title    : String,
+      desc     : String
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Work in progress, not reviewed yet
+
 //---------------------------------------
 //      Timestamp type extends globally
 //---------------------------------------
@@ -36,43 +137,19 @@ type Timestamp extends Number{
 
 }
 
-//----------------------------------
-//      question-bank
-//----------------------------------
+//-----------------------------------------------------------
+// Options Type Radio Button , CheckBox And question Set
+//---------------------------------------------------------
 
-path /question-bank/{questionBankUniqueID} is QuestionBank{ }
-
-type QuestionBank {
-
-    timestamp  : Timestamp,                   //Timestamp type extends globally
-      title    : String,
-      desc     : String
-
+function optionsTypeShouldBe(that , num) { 
+    return that == num 
 }
 
-//----------------------------------
-//      question-bank-memberships
-//----------------------------------
-
-path /question_bank_memberships/{questionBankUniqueID}/{UserID} is QuestionBankUserID {  }
-
-type QuestionBankUserID {
-    "member-type" : QuestionBankMemberType                      //MemberType type extends globally
+type OptionType extends Number{
+   validate() {
+   optionsTypeShouldBe(this , 1 ) || optionsTypeShouldBe(this , 2 ) || optionsTypeShouldBe(this , 3 );
+   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //---------------------------
@@ -82,7 +159,7 @@ type QuestionBankUserID {
 path /user_question_banks/{userid}/{questionBankUniqueID} is Quiz{  }
 
 type Quiz {
- "member-type" : MemberType          //MemberType type extends globally
+ "member-type" : QuestionBankMemberType          //MemberType type extends globally
 
 }
 
