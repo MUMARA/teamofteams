@@ -229,6 +229,7 @@ subgroups-names
 
 Geo Fencing of teamofteams
 --------------------------------------
+## On Add ##
 subgroup-locations-defined
 	team1
  		subteam1
@@ -244,6 +245,7 @@ subgroup-locations-defined
  			type: 1
 
 
+## On Edit ##
 subgroup-locations-defined
 	team1
  		subteam1
