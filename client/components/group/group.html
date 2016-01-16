@@ -3,7 +3,7 @@
     <div class="viewHeight-64" layout="column">
         <md-card style="width: 220px; margin:0px;" class="foreColorDarkGrey" layout="column">
             <div style="margin:30px auto;">
-                <a ng-click="group.GetSubGroupUsers()" layout="row" layout-align="center center">
+                <a class="cursorPointer" ng-click="group.GetSubGroupUsers()" layout="row" layout-align="center center">
                     <img ng-src="{{ group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
                 </a>
                 <h4 class="textAlignCenter" layout-margin>
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div flex="25" style="border-top: 2px solid #dddddd; margin:0px" layout="row" layout-align="start center">
-                <md-button class="md-fab " aria-label="Setting" ng-show="group.isAdmin()" ng-click="group.editgroupPage()" style="position: absolute; top: 234px; left: 220px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
+                <md-button class="md-fab " aria-label="Setting" ng-show="group.isAdmin()" ui-sref="user.edit-group({groupID: group.groupID})" style="position: absolute; top: 234px; left: 220px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
                     <ng-md-icon icon="settings" class="fillColorWhite" size="20"></ng-md-icon>
                 </md-button>    
                 <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
@@ -30,7 +30,7 @@
         <div style="border-bottom: 5px solid green; width:220px"></div>
         <div style="overflow-x: hidden; overflow-y: auto;">
             <div ng-repeat="subgroup in group.subgroups track by $index" class="bottommargin5px" layout="column">
-                <subgroupcard-directive subgroup="subgroup" ng-click="group.subgrouppage(subgroup,$index)" class="nooutline backColorWhite md-whiteframe-z2"></subgroupcard-directive>
+                <subgroupcard-directive subgroup="subgroup" ng-click="group.subgrouppage(subgroup,$index)" class="nooutline backColorWhite md-whiteframe-z2 cursorPointer"></subgroupcard-directive>
                 <ng-md-icon ng-show="group.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
             </div>
         </div>
@@ -226,7 +226,7 @@
     <div class="viewHeight-64 chatSide backColorWhite" layout="column" layout-align="space-between start" flex ng-show="group.showChat">
     	<div style="width: 100%;">
 	        <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite">
-		    	<h4 class="leftmargin20px">Channel Headlines</h4>
+		    	<h4 class="leftmargin20px">{{group.activeTitle | uppercase}}</h4>
 		    	<md-progress-circular md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
 		    	<div layout="row" flex="50">	
 		            <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
@@ -237,43 +237,9 @@
 		    </div>
 		    <md-divider md-outset></md-divider>
 	        <div layout="column" class="backColorWhite">
-	            <!--for group chats-->
-	            <md-content flex ng-hide="group.activesubID" class="backColorWhite greenScroller">
+	            <md-content flex class="backColorWhite viewHeight-250 vscroll">
 	                <div>
 	                    <md-list style="position: relative; padding: 0px !important;" ng-repeat="message in group.messagesArray">
-	                        <md-list-item class="md-3-line listContainer" ng-if="group.filterchatters(message.from)">
-	                            <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="md-avatar listImage" />
-	                            <div class="md-list-item-text">
-	                                <div id="headingDiv" class="md-whiteframe-z2">
-	                                    <h3 class="headingDiv">
-	                                                    <span>{{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}</span>
-	                                                    <span class="timeSpan">10:30AM</span></h3>
-	                                </div>
-	                                <p class="listPara md-whiteframe-z2">{{ message.text }}</p>
-	                            </div>
-	                        </md-list-item>
-	                        <md-list-item class="md-3-line listContainer" ng-if="!group.filterchatters(message.from)">
-	                            <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="md-avatar listImg" />
-	                            <div class="md-list-item-text " style="  padding: 16px 24px 16px 0 ;">
-	                                <div id="headingDiv2" class="" style="float:right">
-	                                    <h3 class="headingDiv2">
-	                                                    <span class="timeSpan2">10:30AM</span>
-	                                                    {{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}
-
-	                                                </h3>
-	                                </div>
-	                                <br>
-	                                <p class="listPara md-whiteframe-z3 " style="margin-top: 4px;background-color: #0072FF !important;float: right;position: absolute;right: 56px;">
-	                                    {{ message.text }}</p>
-	                            </div>
-	                        </md-list-item>
-	                    </md-list>
-	                </div>
-	            </md-content>
-	            <!--for teams chats-->
-	            <md-content flex ng-show="group.activesubID" class="backColorWhite greenScroller">
-	                <div>
-	                    <md-list style="position: relative; padding: 0px !important;" ng-repeat="message in group.TeammessagesArray">
 	                        <md-list-item class="md-3-line listContainer" ng-if="group.filterchatters(message.from)">
 	                            <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="md-avatar listImage" />
 	                            <div class="md-list-item-text">
@@ -307,24 +273,14 @@
         </div>
         <div style="width: 100%;">
 			<!--for group send msg-->
-	        <form ng-hide="group.activesubID" class="backColorWhite" ng-submit="group.SendMsg()" layout="row" layout-align="center center" layout-padding>
-	                <md-input-container flex style="border: 1px solid lightgrey; padding: 0; background-color: #F8F8F8;" layout="row" layout-align="start center">
-	                    <div style="  border-right: 1px solid lightgrey;">
-	                        <img src="img/arrow.svg" class="icon20px padding10px">
-	                    </div>
-		                <input class="serachbox2" type="text" ng-model="group.text.msg" aria-label="Group Text Msg Box" >
-	                </md-input-container>
-	                <md-button ng-click="group.updateScroll()" ng-disabled="!group.messagesArray.length" class="backColorSeaGreen foreColorWhite">SEND</md-button>
-	        </form>
-	        <!--for team send msg-->
-	        <form ng-show="group.activesubID" class="backColorWhite" ng-submit="group.TeamSendMsg()" layout="row" layout-align="center center" layout-padding>
-	        	<md-input-container flex style="border: 1px solid lightgrey; padding: 0; background-color: #F8F8F8;" layout="row" layout-align="start center">
-	                <div style="  border-right: 1px solid lightgrey;">
-	                    <img src="img/arrow.svg" class="icon20px padding10px">
-	                </div>
-	                <input class="serachbox2" type="text" ng-model="group.text.msg" aria-label="Group Text Msg Box" >
-	            </md-input-container>
-	            <md-button ng-click="group.updateScroll()" ng-disabled="!group.TeammessagesArray.length" class="backColorSeaGreen foreColorWhite">SEND</md-button>
+	        <form name="chatForm" novalidate ng-submit="group.activesubID ? group.TeamSendMsg() : group.SendMsg()" class="backColorWhite" layout="row" layout-align="center center" layout-padding>
+                <md-input-container flex style="border: 1px solid lightgrey; padding: 0; background-color: #F8F8F8;" layout="row" layout-align="start center">
+                    <div style="border-right: 1px solid lightgrey;">
+                        <img src="img/arrow.svg" class="icon20px padding10px">
+                    </div>
+	                <input type="text" name="msg" ng-model="group.text.msg" aria-label="Group Text Msg Box" class="serachbox2" required>
+                </md-input-container>
+                <md-button type="submit" ng-disabled="chatForm.msg.$invalid || !group.activeTitle" class="backColorSeaGreen foreColorWhite">SEND</md-button>
 	        </form>
         </div>
     </div>
@@ -335,33 +291,22 @@
                 <md-tabs style=" background-color: #68C2E8" class="OnlineChat" layout-fill>
                     <!--channel side-->
                     <md-tab label="channels" class="rightTbs">
-                        <md-content ng-hide="group.activesubID" ng-repeat="channel in group.channels track by $index">
-                            <md-list ng-class="$index%2==0 ? 'moh' : 'sin'">
-                                <md-list-item class="md-3-line selectable" ng-click="group.viewChannelMessages(channel)" style="padding-left: 10px">
+                        <md-content ng-repeat="channel in group.channels track by $index">
+                            <md-list class="nopadding" ng-class="$index%2==0 ? 'moh' : 'sin'">
+                                <md-list-item class="md-3-line selectable" ng-click="group.viewChannelMessages(channel)">
                                     <div class="md-list-item-text" style="padding:0px;">
                                         <ng-md-icon icon="more_vert" style="float: right;padding-top: 18px;fill: #FFFFFF;"></ng-md-icon>
-                                        <span style="font-size: 13px; color: #1F7396;">{{channel.title}}</span>
+                                        <span style="font-size: 13px; color: #ffffff;">{{channel.title | uppercase}}</span>
                                         <p style="font-size: 10px;margin-top: -12px;color: #ffffff">
-                                            <!--{{ channel.desc }}-->this is private channel not to distrub it again</p>
+                                            {{ channel.desc }}
+                                        </p>
                                         <div style="float:right; padding-right: 20px; font-size: 12px; color:#3b637a">
-                                            <span style="color: #1F7396">Members : <span style="color:#ffffff"> 256 </span> </span>
-                                            cd <span style="color: #1F7396">Online : <span style="color:#ffffff"> 30 </span></span>
-                                        </div>
-                                    </div>
-                                </md-list-item>
-                            </md-list>
-                        </md-content>
-                        <md-content ng-show="group.activesubID" ng-repeat="channelt in group.Teamchannels track by $index">
-                            <md-list ng-class="$index%2==0 ? 'moh' : 'sin'">
-                                <md-list-item class="md-3-line selectable" ng-click="group.viewTeamChannelMessages(channelt)" style="padding-left: 10px">
-                                    <div class="md-list-item-text" style="padding:0px;">
-                                        <ng-md-icon icon="more_vert" style="float: right;padding-top: 18px;fill: #FFFFFF;"></ng-md-icon>
-                                        <span style="font-size: 13px; color: #1F7396;">{{channelt.title}}</span>
-                                        <p style="font-size: 10px;margin-top: -12px;color: #ffffff">
-                                            <!--{{ channelt.desc }}-->this is private channel not to distrub it again</p>
-                                        <div style="float:right; padding-right: 20px; font-size: 12px; color:#3b637a">
-                                            <span style="color: #1F7396">Members : <span style="color:#ffffff"> 256 </span> </span>
-                                            <span style="color: #1F7396">Online : <span style="color:#ffffff"> 30 </span></span>
+                                            <span style="color: #1F7396">
+                                                Members : <span style="color:#ffffff">{{ channel.members }}</span>
+                                            </span>
+                                            <span style="color: #1F7396">
+                                                Online : <span style="color:#ffffff">{{ channel.online }}</span>
+                                            </span>
                                         </div>
                                     </div>
                                 </md-list-item>
@@ -397,12 +342,7 @@
                         </md-content>
                     </md-tab>
                 </md-tabs>
-            <!-- </md-toolbar> -->
-            <!--<md-button class="md-raised"><ng-md-icon icon="add_circle"></ng-md-icon></md-button>-->
-            <md-button ng-hide="group.activesubID" class="md-fab" aria-label="Create Group channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="group.createChannelsPage()">
-                <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
-            </md-button>
-            <md-button ng-show="group.activesubID" class="md-fab" aria-label="Create Team channel" style="margin-top: 20%;margin-left: 80%;width: 40px;height: 40px" ng-click="group.createTeamsChannelsPage()">
+            <md-button class="md-fab" aria-label="Create Group channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="group.showNewChannel()">
                 <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
             </md-button>
         </md-card>

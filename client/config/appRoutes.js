@@ -163,7 +163,7 @@
                 controllerAs: 'createChannels'
             });
             $stateProvider.state('user.create-teams-channels', {
-                url: '/group/:groupID/create-teams-channels',
+                url: '/group/:groupID/:teamID/create-teams-channels',
                 templateUrl: 'components/create-teams-channels/create-teams-channels.html',
                 controller: 'CreateTeamsChannelsController',
                 controllerAs: 'createTeamsChannels'

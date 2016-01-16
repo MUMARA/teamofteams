@@ -41,23 +41,23 @@
                             .set({
                                 title: channelObj.title,
                                 timestamp: fireTimeStamp,
-                                "created-by": user.$id,
-                                messages: {}
+                                "created-by": user.userID//,
+                                // messages: {}
 
                             }, function(error) {
                                 if (error) {
-                                    deferred.reject("error occurred in creating channel");
+                                    deferred.reject("error occurred in creating channel====");
                                 } else {
                                     //step 3: add to messages
-                                    var chatRef = refs.refGroupChats.child(groupID).child(channelObj.channelID).child("messages")
-                                        .push({
+                                    // var chatRef = refs.refGroupChats.child(groupID).child(channelObj.channelID).child("messages")
+                                        // .push({
 
-                                            from: user.$id,
-                                            timestamp: fireTimeStamp,
-                                            text: "Welcome to " + channelObj.title + " Group"
+                                            // from: user.userID,
+                                            // timestamp: fireTimeStamp,
+                                            // text: "Welcome to " + channelObj.title + " Group"
 
 
-                                        }, function(error) {
+                                        // }, function(error) {
                                             if (error) {
                                                 deferred.reject("error occurred in creating channel");
                                             } else {
@@ -70,15 +70,7 @@
                                             }
 
 
-                                        });
-
-
-
-
-
-
-
-
+                                        // });
                                 }
                             });
 
@@ -96,7 +88,7 @@
                 var deferred = $q.defer();
                 var msgRef = refs.refGroupChats.child(groupID + '/' + channelID + '/messages').push({
 
-                    from: user.$id,
+                    from: user.userID,
                     timestamp: fireTimeStamp,
                     text: text.msg
 
@@ -137,7 +129,7 @@
             //getting channels msg array
             getChannelMessagesArray: function(groupID, channelID) {
 
-                var ref = refs.refGroupChats.child(groupID + '/' + channelID + '/messages');
+            var ref = refs.refGroupChats.child(groupID + '/' + channelID + '/messages');
                 return Firebase.getAsArray(ref);
             },
             // creating channel Activity
@@ -146,7 +138,7 @@
                 var ref = firebaseService.getRefGroupsActivityStreams().child(group);
                 var actor = {
                     "type": "user",
-                    "id": user.$id, //this is the userID, and an index should be set on this
+                    "id": user.userID, //this is the userID, and an index should be set on this
                     "email": user.email,
                     "displayName": user.firstName + " " + user.lastName
                 };
@@ -231,7 +223,7 @@
                     .set({
                         title: channelObj.title,
                         timestamp: fireTimeStamp,
-                        "created-by": user.$id,
+                        "created-by": user.userID,
                         messages: {}
 
                     }, function(error) {
@@ -242,7 +234,7 @@
                             var chatRef = refs.refTeamChats.child(groupID).child(TeamID).child(channelObj.channelID).child("messages")
                                 .push({
 
-                                    from: user.$id,
+                                    from: user.userID,
                                     timestamp: fireTimeStamp,
                                     text: "Welcome to " + channelObj.title + " Group"
 
@@ -293,7 +285,7 @@
                 var deferred = $q.defer();
                 var msgRef = refs.refTeamChats.child(groupID + '/' + teamID + '/' + channelID + '/messages').push({
 
-                    from: user.$id,
+                    from: user.userID,
                     timestamp: fireTimeStamp,
                     text: text.msg
 
