@@ -324,28 +324,24 @@
             });
         }
 
+        this.deleteAdminMember = function(admin){
+           var adminMemberId = '';
+           that.submembers.forEach(function(val,indx){
+                if(val.userSyncObj.email == admin.email && val.membershipType != 1){
+                    createSubGroupService.DeleteUserMemberShip(val.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
+                }
+           })
+
+           that.selectedAdminArray.forEach(function(val, indx){
+                if(val.email == admin.email && val.membershipType != 1){
+                    that.selectedAdminArray.splice(indx, 1);
+                }
+           })
+
+        }
 
         this.deleteMember = function(userID){
-            alert('Delete Functionality will be implemented soon');
-
-            var deleteUserMemberShip = {};
-            deleteUserMemberShip["user-subgroup-memberships/"+userID+"/"+groupID+"/"+that.activeID+"/"] = {};
-            deleteUserMemberShip["subgroup-members/groupid/subgroupid/"+userID+"/"] = {};
-            deleteUserMemberShip["subgroups/groupid/subgroupid/"] = { 
-                "members-count": 2
-            };
-            // Do a deep-path update
-            ref.update(deleteUserMemberShip, function(error) {
-              if (error) {
-                console.log("Error updating data:", error);
-              }
-            });
-
-
-
-
-
-
+            createSubGroupService.DeleteUserMemberShip(userID,groupID,that.activeID,that.submembers.length);
         }
 
         function loadAdminUSers(groupid, subgroupid){

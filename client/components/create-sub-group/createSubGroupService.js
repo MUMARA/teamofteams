@@ -268,7 +268,44 @@
 
                             })
                         })
-                    } //groupAdminUsers
+                    }, //groupAdminUsers
+
+                    DeleteUserMemberShip: function(userID, groupID, subgroupID, submembers){
+                        // var deleteUserMemberShip = {};
+                        // deleteUserMemberShip["user-subgroup-memberships/"+userID+"/"+groupID+"/"+subgroupID+"/"] = null;
+                        // deleteUserMemberShip["subgroup-members/"+groupID+"/"+subgroupID+"/"+userID+"/"] = null;
+                        // deleteUserMemberShip["subgroups/"+groupID+"/"+subgroupID+"/"] = { 
+                        //     "members-count": submembers-1
+                        // };
+
+                        // for(var x in deleteUserMemberShip){
+                        //     console.log(x);
+                        // }
+                        // // Do a deep-path update
+                        // firebaseService.getRefMain().update(deleteUserMemberShip, function(error) {
+                        //     if (error) {
+                        //         console.log("Error updating data:", error);
+                        //     }
+                        // });
+
+                        firebaseService.getRefMain().child("user-subgroup-memberships/"+userID+"/"+groupID+"/"+subgroupID+"/").remove(function(err){
+                            console.log(err);
+
+                            firebaseService.getRefMain().child("subgroup-members/"+groupID+"/"+subgroupID+"/"+userID+"/").remove(function(err){
+                                console.log(err);
+
+                                firebaseService.getRefMain().child("subgroups/"+groupID+"/"+subgroupID+"/members-count").set(submembers-1, function(err){
+                                    console.log(err);
+                                })
+
+
+
+                            });
+                        });
+                        
+
+
+                    } //DeleteUserMemberShip
                 };
 
                 function Uint8ToString(u8a) {
