@@ -22,6 +22,19 @@
                 'canActivate': function() {
                     return authService.resolveUserPage();
                 },
+                'getOwnerImg': function(groupID){
+                    $firebaseObject(firebaseService.getRefGroups().child(groupID))
+                        .$loaded()
+                        .then(function(groupData) {
+                            if (groupData['group-owner-id']) {
+                                $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']))
+                                    .$loaded()
+                                    .then(function(userData) {
+                                        return userData;
+                                    })
+                            }
+                        });
+                },
                 'uploadPicture': function(file) {
                     var defer = $q.defer();
                     var reader = new FileReader();
