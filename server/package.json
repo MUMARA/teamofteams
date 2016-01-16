@@ -21,6 +21,7 @@
     "multipart": "^0.1.5",
     "node-gcm": "^0.9.15",
     "node-uuid": "^1.4.2",
+    "postmark": "^1.2.1",
     "q": "^1.2.0",
     "sendgrid": "^1.4.0"
   },
