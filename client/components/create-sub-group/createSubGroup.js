@@ -43,6 +43,8 @@
         this.closeToggleAdmin = closeToggleAdmin;
         this.closeAdminToggler = closeAdminToggler;
         this.processingSave = false;
+        this.becomeMember = [];
+        this.becomeAdmin = [];
         this.memberss = {
             memberIDs: "",
             selectedUsersArray: []
@@ -52,6 +54,7 @@
         this.adminSideNav = true;
         this.memberSideNav = true;
         
+
 
 
         this.ActiveSideNavBar = function(sideNav) {
@@ -70,7 +73,15 @@
         }
 
         this.createTeam = function(){
-            that.subgroupData = {}
+            that.subgroupData = {
+                // subgroupID: "",
+                // title: "",
+                desc: "",
+                members: "",
+                membersArray: []
+            };
+            that.activeID = '';
+            SubgroupObj = '';
             that.teamsettingpanel = true;
         }
 
@@ -106,6 +117,10 @@
             // that.showTeamAttendace = false;
             that.selectedindex = index;
             that.activeID = subgroupData.$id;
+
+            //will become a member array, for use on Save button
+            that.becomeMemmber = [];
+            that.becomeAdmin = [];
 
             //load user Admins
             loadAdminUSers(this.groupid, that.activeID);
@@ -170,7 +185,7 @@
         };
 
 
-        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
+        groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
             .then(function(syncObj) {
                 $timeout(function() {
 
@@ -188,62 +203,149 @@
 
             });
 
-
+        
         this.selectedMember = function(userObj, index) {
+            console.log(userObj)
+            that.becomeMember.push(userObj);
             that.selectedindex2 = index;
-            // console.log(userObj);
-            // console.log("-----------------------------------");
-            //this.selectedMemberArray.push(userObj)
-            // that.membersArray.push(userObj.$id);
-            //that.subgroupData.members=that.membersArray;
-            // that.subgroupData.members =that.membersArray.join();
-            that.memberss.selectedUsersArray.push(userObj.$id)
-            that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
-            var membersArray = that.memberss.memberIDs.split(',');
+            var _flag = true;
+            if(that.memberss.length > 0) {
+                that.becomeMember.forEach(function(val, i){
+                    if(val == userObj){
+                        _flag = false;
+                    }
+                });
+            } //checking if userobj is exists or not
 
-            var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
-                groupID: groupID,
-                subgroupID: that.activeID
+            if(that.submembers.length > 0){
+                that.submembers.forEach(function(val, inx){
+                    if(val.userID == userObj.$id){
+                        _flag = false;   
+                    }
+                })
+            }
+
+            if(_flag) {
+                that.becomeMember.push(userObj);
+                that.memberss.selectedUsersArray.push(userObj.$id);
+                that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
+                var membersArray = that.memberss.memberIDs.split(',');
+            }
+        };
+
+        this.selectedMemberSave = function(){
+            if(that.becomeMember.length > 0){
+                that.becomeMember.forEach(function(userObj,index){
+                    
+                    var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
+                        groupID: groupID,
+                        subgroupID: that.activeID
+                    });
+
+                    //for coluser checking
+                    saveMemberToFirebase(user, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData);
+                    
+                }) //that.becomeMember.forEach
+            } //if
+        } //this.selectedMemberSave 
+
+        function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
+            subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
+                    .then(function(response) {
+                        // console.log("Adding Members Successful");
+                        var unlistedMembersArray = response.unlistedMembersArray,
+                            notificationString;
+
+                        if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                            notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                            messageService.showFailure(notificationString);
+                        } else if (unlistedMembersArray.length) {
+                            notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                            messageService.showSuccess(notificationString);
+                        } else {
+                            notificationString = 'Adding Members Successful.';
+                            messageService.showFailure(notificationString);
+                        }
+                    }, function(reason) {
+                        messageService.showFailure(reason);
+                    }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+        }
+
+        this.selectedAdmin = function(newType, member) {
+            console.log(member.user.profile.email);
+            var obj = {type: newType, member: member};
+            
+            var _flag = true;
+            if(that.memberss.length > 0) {
+                that.becomeAdmin.forEach(function(val, i){
+                    if(val.member == member){
+                        _flag = false;
+                    }
+                });
+            } //checking if admin is exists or not
+
+
+            if(that.selectedAdminArray.length > 0) {
+                that.selectedAdminArray.forEach(function(val,i){
+                    console.log(val.email)
+                    if(val == member.user.profile.email){
+                        _flag = false;
+                    }
+                });
+            }
+
+            if(_flag) {
+                this.becomeAdmin.push(obj);
+            }
+
+            
+        };
+
+        this.selectedAdminSave = function(){
+            if(that.becomeAdmin.length > 0){
+                that.becomeAdmin.forEach(function(val,index){
+                    
+                    var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
+                        groupID: groupID,
+                        subgroupID: that.activeID
+                    });
+
+                    //for coluser checking
+                    saveAdminToFirebase(val.type, val.member, groupID, that.activeID);
+                }) //that.becomeMember.forEach
+            } //if
+        }; //selectedAdminSave
+
+        function saveAdminToFirebase(newType, member, groupID, activeID){
+            createSubGroupService.changeMemberRole(newType, member, groupID, activeID).then(function() {
+                messageService.showSuccess("New Admin selected");
+            }, function(reason) {
+                messageService.showFailure(reason);
+            });
+        }
+
+
+        this.deleteMember = function(userID){
+            alert('Delete Functionality will be implemented soon');
+
+            var deleteUserMemberShip = {};
+            deleteUserMemberShip["user-subgroup-memberships/"+userID+"/"+groupID+"/"+that.activeID+"/"] = {};
+            deleteUserMemberShip["subgroup-members/groupid/subgroupid/"+userID+"/"] = {};
+            deleteUserMemberShip["subgroups/groupid/subgroupid/"] = { 
+                "members-count": 2
+            };
+            // Do a deep-path update
+            ref.update(deleteUserMemberShip, function(error) {
+              if (error) {
+                console.log("Error updating data:", error);
+              }
             });
 
-            subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData)
-                .then(function(response) {
-                    // console.log("Adding Members Successful");
-                    var unlistedMembersArray = response.unlistedMembersArray,
-                        notificationString;
-
-                    if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
-                        notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
-                        messageService.showFailure(notificationString);
-                    } else if (unlistedMembersArray.length) {
-                        notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
-                        messageService.showSuccess(notificationString);
-                    } else {
-                        notificationString = 'Adding Members Successful.';
-                        messageService.showFailure(notificationString);
-                    }
-                }, function(reason) {
-                    messageService.showFailure(reason);
-                });
 
 
-        };
-        this.selectedAdmin = function(newType, member) {
-            // console.log(member.userSyncObj.$id);
-            // console.log(member.user.profile.firstName);
-            // that.selectedAdminArray.push(member.user.profile)
-            createSubGroupService.changeMemberRole(newType, member, groupID, that.activeID)
-                .then(function() {
-                    messageService.showSuccess("New Admin selected");
-                }, function(reason) {
-                    messageService.showFailure(reason);
-                });
 
 
-        };
 
-        this.myAlert = function(){
-            alert('Delete Functionality will be implemented soon');
         }
 
         function loadAdminUSers(groupid, subgroupid){
@@ -289,21 +391,29 @@
             }
             //if ($rootScope.croppedImage && $rootScope.croppedImage.src) {
             if ($rootScope.newImg) {
-
                 var x = utilService.base64ToBlob($rootScope.newImg);
-
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
                 that.saveFile(x, mimeType, that.subgroupData.$id).then(function(data) {
                         // console.log('subgroup img  uploaded ' + data)
                         // console.log(3)
-                        // console.log(SubgroupObj)
-                        SubgroupObj['logo-image'].url = data;
-                        createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
-                            that.processingSave = false;
-                        })
-                            // $rootScope.newImg=null;
+                        //console.log(SubgroupObj)
                         
+                        if(SubgroupObj) {
+                            //edit team
+                            SubgroupObj['logo-image'].url = data;
+                            that.selectedMemberSave();
+                            that.selectedAdminSave();
+                            createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
+                                that.processingSave = false;
+                            })
+                        } else {
+                            //create team
+                            that.subgroupData.imgLogoUrl = data;
+                            createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID);
+                            that.processingSave = false;
+                        }
+                            // $rootScope.newImg=null;
                     })
                     .catch(function(err) {
                         // return alert('picture upload failed' + err)
@@ -313,10 +423,18 @@
                 // console.log(x);
             } else {
                 fromDataFlag = false;
-                createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
-                     that.processingSave = false;
-                } )
-               
+                if(SubgroupObj) {
+                    //edit team
+                    that.selectedMemberSave();
+                    that.selectedAdminSave();
+                    createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
+                        that.processingSave = false;
+                    });
+                } else {
+                    //create team
+                    createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID);
+                    that.processingSave = false;
+                }
             }
         }
 

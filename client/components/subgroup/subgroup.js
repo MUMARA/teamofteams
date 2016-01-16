@@ -163,11 +163,11 @@
                         // console.log('subgroup img  uploaded ' + data)
                         SubGroupService.createSubGroup(user.userID, that.group, that.Subgroup, that.subgroups, fromDataFlag, groupID)
                             //  $location.path('/user/group/'+groupID);
-                    })
-                    .catch(function() {
+                })
+                .catch(function() {
 
-                        return alert('picture upload failed')
-                    });
+                    return alert('picture upload failed')
+                });
                 // console.log(x);
             } else {
                 fromDataFlag = false;
