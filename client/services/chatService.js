@@ -7,9 +7,9 @@
         .module('core')
         .factory('chatService', chatService);
 
-    chatService.$inject = ['$q', 'firebaseService', '$firebaseObject'];
+    chatService.$inject = ['$q', 'firebaseService', '$firebaseObject', '$firebaseArray'];
 
-    function chatService($q, firebaseService, $firebaseObject) {
+    function chatService($q, firebaseService, $firebaseObject, $firebaseArray) {
 
         // private variables
         var refs, fireTimeStamp;
@@ -26,7 +26,7 @@
 
         return {
             // creating channel
-            asyncCreateChannel: function(groupID, channelObj, $loggedInUserObj) {
+            asyncCreateChannel: function(groupID, channelObj, user) {
                 var self = this;
                 var deferred = $q.defer();
 
@@ -41,44 +41,36 @@
                             .set({
                                 title: channelObj.title,
                                 timestamp: fireTimeStamp,
-                                "created-by": $loggedInUserObj.$id,
-                                messages: {}
+                                "created-by": user.userID//,
+                                // messages: {}
 
                             }, function(error) {
                                 if (error) {
-                                    deferred.reject("error occurred in creating channel");
+                                    deferred.reject("error occurred in creating channel====");
                                 } else {
                                     //step 3: add to messages
-                                    var chatRef = refs.refGroupChats.child(groupID).child(channelObj.channelID).child("messages")
-                                        .push({
+                                    // var chatRef = refs.refGroupChats.child(groupID).child(channelObj.channelID).child("messages")
+                                        // .push({
 
-                                            from: $loggedInUserObj.$id,
-                                            timestamp: fireTimeStamp,
-                                            text: "Welcome to " + channelObj.title + " Group"
+                                            // from: user.userID,
+                                            // timestamp: fireTimeStamp,
+                                            // text: "Welcome to " + channelObj.title + " Group"
 
 
-                                        }, function(error) {
+                                        // }, function(error) {
                                             if (error) {
                                                 deferred.reject("error occurred in creating channel");
                                             } else {
 
                                                 //step4 - create an activity for "channel-created" verb.
-                                                self.asyncRecordChannelCreationActivity(channelObj, $loggedInUserObj, groupID).then(
+                                                self.asyncRecordChannelCreationActivity(channelObj, user, groupID).then(
 
                                                     deferred.resolve("channel created successfully and also pushed activity.")
                                                 )
                                             }
 
 
-                                        });
-
-
-
-
-
-
-
-
+                                        // });
                                 }
                             });
 
@@ -91,12 +83,12 @@
                 return deferred.promise;
             },
             // sending msgs
-            SendMessages: function(groupID, channelID, $loggedInUserObj, text) {
+            SendMessages: function(groupID, channelID, user, text) {
 
                 var deferred = $q.defer();
                 var msgRef = refs.refGroupChats.child(groupID + '/' + channelID + '/messages').push({
 
-                    from: $loggedInUserObj.$id,
+                    from: user.userID,
                     timestamp: fireTimeStamp,
                     text: text.msg
 
@@ -137,8 +129,9 @@
             //getting channels msg array
             getChannelMessagesArray: function(groupID, channelID) {
 
-                var ref = refs.refGroupChats.child(groupID + '/' + channelID + '/messages');
-                return Firebase.getAsArray(ref);
+            var ref = refs.refGroupChats.child(groupID + '/' + channelID + '/messages');
+                // return Firebase.getAsArray(ref);
+                return $firebaseArray(ref);
             },
             // creating channel Activity
             asyncRecordChannelCreationActivity: function(channel, user, group) {
@@ -146,7 +139,7 @@
                 var ref = firebaseService.getRefGroupsActivityStreams().child(group);
                 var actor = {
                     "type": "user",
-                    "id": user.$id, //this is the userID, and an index should be set on this
+                    "id": user.userID, //this is the userID, and an index should be set on this
                     "email": user.email,
                     "displayName": user.firstName + " " + user.lastName
                 };
@@ -215,7 +208,7 @@
 
             //    creating team channels
 
-            CreateTeamChannel: function(groupID, channelObj, TeamID, $loggedInUserObj) {
+            CreateTeamChannel: function(groupID, channelObj, TeamID, user) {
                 var self = this;
                 var deferred = $q.defer();
 
@@ -231,7 +224,7 @@
                     .set({
                         title: channelObj.title,
                         timestamp: fireTimeStamp,
-                        "created-by": $loggedInUserObj.$id,
+                        "created-by": user.userID,
                         messages: {}
 
                     }, function(error) {
@@ -242,7 +235,7 @@
                             var chatRef = refs.refTeamChats.child(groupID).child(TeamID).child(channelObj.channelID).child("messages")
                                 .push({
 
-                                    from: $loggedInUserObj.$id,
+                                    from: user.userID,
                                     timestamp: fireTimeStamp,
                                     text: "Welcome to " + channelObj.title + " Group"
 
@@ -253,7 +246,7 @@
                                     } else {
                                         deferred.resolve("channel created successfully and also pushed activity.")
                                             /*//step4 - create an activity for "channel-created" verb.
-                                            self.asyncRecordChannelCreationActivity(channelObj,$loggedInUserObj,groupID ).then(
+                                            self.asyncRecordChannelCreationActivity(channelObj,user,groupID ).then(
                                                 deferred.resolve("channel created successfully and also pushed activity.")
                                             )*/
                                     }
@@ -285,15 +278,15 @@
             getTeamChannelMessagesArray: function(groupID, teamID, channelID) {
 
                 var ref = refs.refTeamChats.child(groupID + '/' + teamID + '/' + channelID + '/messages');
-                return Firebase.getAsArray(ref);
+                return $firebaseArray(ref);
             },
 
-            TeamSendMessages: function(groupID, teamID, channelID, $loggedInUserObj, text) {
+            TeamSendMessages: function(groupID, teamID, channelID, user, text) {
 
                 var deferred = $q.defer();
                 var msgRef = refs.refTeamChats.child(groupID + '/' + teamID + '/' + channelID + '/messages').push({
 
-                    from: $loggedInUserObj.$id,
+                    from: user.userID,
                     timestamp: fireTimeStamp,
                     text: text.msg
 

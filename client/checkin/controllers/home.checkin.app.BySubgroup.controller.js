@@ -11,17 +11,16 @@
         .controller('CheckinBySubgroupHomeCtrl', CheckinBySubgroupHomeCtrl);
 
     CheckinBySubgroupHomeCtrl.$inject = [
+        'userService',
         '$scope',
-        '$sessionStorage',
         '$location',
         'messageService',
         '$mdDialog',
         'checkinService',
-        'utilService',
-        '$localStorage'
+        'utilService'
     ];
 
-    function CheckinBySubgroupHomeCtrl($scope, $sessionStorage, $location, messageService, $mdDialog, checkinService, utilService, $localStorage) {
+    function CheckinBySubgroupHomeCtrl(userService, $scope, $location, messageService, $mdDialog, checkinService, utilService) {
 
         /*VM binding functions*/
         $scope.showLocation = showLocation;
@@ -31,13 +30,12 @@
 
         /*VM binding variables*/
         $scope.members = {};
-        //$scope.user = $sessionStorage.loggedInUser;
-        $scope.user = $localStorage.loggedInUser;
+        $scope.user = userService.getCurrentUser();
 
         var userID, groupID, subgroupID,
             refSubGroupCheckinStatus, refUsers, refUserMemberShip;
 
-        userID = $scope.user.userID;
+        userID = userService.getCurrentUser().userID;
         groupID = $location.path().split('/')[1];
         subgroupID = $location.path().split('/')[2];
         //groupID = utilService.trimID( groupID );

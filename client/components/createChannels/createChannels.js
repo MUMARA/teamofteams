@@ -24,14 +24,14 @@
                             channelInfo.channelID = channelInfo.channelID.replace(/[^a-z0-9]/g, '');
                             chatService.asyncCreateChannel($scope.groupID, channelInfo, $loggedInUserID)
                                 .then(function() {
-                                    console.log("channel Creation Successful");
+                                    // console.log("channel Creation Successful");
                                     messageService.showSuccess("channel creation Successful");
                                 }, function(reason) {
                                     messageService.showFailure(reason);
                                 })
                         }, function() {
-                            console.log("Group Creation Cancelled");
-                            messageService.showFailure("Group Creation Cancelled");
+                            // console.log("channel Creation Cancelled");
+                            messageService.showFailure("channel Creation Cancelled");
                         });
                 };
 

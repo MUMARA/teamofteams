@@ -11,7 +11,7 @@
                 'login': function(user, location) {
 
                     var defer = $q.defer();
-                    authService.login(user, function(data, firebaseData) {
+                    authService.login(user, function(data) {
                         messageService.showSuccess('Login successful');
                         //firebaseService.addUpdateHandler();
                         $location.path(location + data.user.userID);

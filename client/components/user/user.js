@@ -2,9 +2,9 @@
     'use strict';
 
     angular.module('app.user')
-        .controller('UserController', ['dataService', '$q', '$location', 'checkinService', '$rootScope', '$sessionStorage', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
+        .controller('UserController', ['dataService', '$q', '$location', 'checkinService', '$rootScope', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
 
-    function UserController(dataService, $q, $location, checkinService, $rootScope, $sessionStorage, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
+    function UserController(dataService, $q, $location, checkinService, $rootScope, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
 
         //$rootScope.fl= 'hello'
         var $scope = this;

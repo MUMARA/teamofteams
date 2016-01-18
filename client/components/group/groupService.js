@@ -5,7 +5,7 @@
     'use strict';
     angular
         .module('app.group', ['core'])
-        .factory('groupService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$sessionStorage', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $localStorage, $firebaseObject, firebaseService, userFirebaseService) {
+        .factory('groupService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $firebaseObject, firebaseService, userFirebaseService) {
 
             var $scope = this
             return {
@@ -22,14 +22,27 @@
                 'canActivate': function() {
                     return authService.resolveUserPage();
                 },
+                'getOwnerImg': function(groupID){
+                    $firebaseObject(firebaseService.getRefGroups().child(groupID))
+                        .$loaded()
+                        .then(function(groupData) {
+                            if (groupData['group-owner-id']) {
+                                $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']))
+                                    .$loaded()
+                                    .then(function(userData) {
+                                        return userData;
+                                    })
+                            }
+                        });
+                },
                 'uploadPicture': function(file) {
                     var defer = $q.defer();
                     var reader = new FileReader();
                     reader.onload = function() {
 
                         var data = new FormData();
-                        data.append('userID', $localStorage.loggedInUser.userID);
-                        data.append('token', $localStorage.loggedInUser.token);
+                        data.append('userID', userService.getCurrentUser().userID);
+                        data.append('token', userService.getCurrentUser().token);
 
                         var blobBin = atob(reader.result.split(',')[1]);
                         var array = [];

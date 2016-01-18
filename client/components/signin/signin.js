@@ -14,7 +14,7 @@
     function SigninController(singInService, $mdToast, authService) {
         /*Private Variables*/
         var that = this;
-        var pageToRoutAfterLoginSuccess = "user/";
+        var pageToRoutAfterLoginSuccess = "/";
         /* VM variables*/
         this.user = {
             email: "",

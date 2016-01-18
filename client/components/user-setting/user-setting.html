@@ -1,18 +1,18 @@
 <div layout="row" layout-padding layout-margin >
-    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1 backColorDarkSeaGreen" style="max-height: 287px">
-        <md-button ng-click="userSetting.editgroupPage()" style="margin: 0px; width:100%">
+    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1">
+        <md-button ng-click="userSetting.editgroupPage()" style="margin: 0px; width:100%; border-radius:0px;"  class="backColorDarkSeaGreen">
             <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
-            <div style="color: white;">Group</div>
+            <div style="color: white;">TEAM OF TEAMS</div>
         </md-button>
-        <md-button style="margin: 0px; width:100%" class="backColorSeaGreen">
+        <md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen">
             <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">Members</div>
         </md-button>
-        <md-button ng-click="userSetting.openGeoFencingPage()" style="margin: 0px; width:100%">
+        <md-button ng-click="userSetting.openGeoFencingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
             <img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
             <div style="color: white;">Fencing</div>
         </md-button>
-        <md-button ng-click="userSetting.openCreateSubGroupPage()" style="margin: 0px; width:100%">
+        <md-button ng-click="userSetting.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
             <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
             <div style="color: white;">Teams</div>
         </md-button>
@@ -32,7 +32,7 @@
                             <input type="text" id="#UserSearch" ng-model="userSetting.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
                         </md-input-container>
                         <div layout="row" layout-align="center center">
-                            Sort By &emsp;
+                            Sort By
                             <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
                                 <md-option value="0">Name</md-option>
                                 <!-- <md-option value="1">Online</md-option>
@@ -51,29 +51,32 @@
                             </tr>
                         </thead>
                         <tbody md-body>
-                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" >
+                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== 4">
                                 <td md-cell>
                                     <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound" alt="user" layout-margin />
                                 </td>
                                 <td md-cell>
                                     <div layout="column" layout-align="space-around start">
-                                         <span><strong>{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</strong></span>
+                                        <span><strong>{{member.userSyncObj.firstName + ' ' + member.userSyncObj.lastName}}</strong></span>
                                         <span>{{member.userSyncObj.email}}</span>
                                     </div>
                                 </td>
                                 <td md-cell>{{member.userSyncObj.contactNumber}}</td>
                                 <td md-cell style="width:10%">
-                                    <md-select aria-label="userSetting" ng-model="someVal" ng-if="member.membershipType != 1" placeholder="Member">
-                                        <md-option value="1">Member
+                                    <md-select aria-label="userSetting" ng-model="member.membershipType" ng-disabled="member.membershipType == 1">
+                                        <md-option value="1" ng-if="member.membershipType == 1">
+                                            <span>Owner</span>
+                                            <ng-md-icon icon="person" class="leftmargin10px" size="20"></ng-md-icon>
                                         </md-option>
-                                        <md-option value="2" ng-click="userSetting.changeMemberRole(2, member)" ng-if="member.membershipType != 2">Block Account
+                                        <md-option value="2" ng-click="userSetting.changeMemberRole(2, member)">Admin
                                         </md-option>
-                                        <md-option ng-click="userSetting.changeMemberRole(null, member)" value="3">Delete Account
+                                        <md-option value="3" ng-click="userSetting.changeMemberRole(3, member)">Member
+                                        </md-option>
+                                        <md-option value="4" ng-click="userSetting.changeMemberRole(4, member)" >Block Account
+                                        </md-option>
+                                        <md-option ng-click="userSetting.changeMemberRole(null, member)" value="5">Delete Account
                                         </md-option>
                                     </md-select>
-                                    <div ng-if="member.membershipType == 1">
-                                        <ng-md-icon icon="person" style="fill: black;margin-left: 85%" size="20"></ng-md-icon>
-                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -88,11 +91,9 @@
                         <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
                             <h4>INVITATIONS/REQUESTS</h4>
                             <div layout="row" layout-align="center center">
-                                Filter &emsp;
+                                Sort By
                                 <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
                                     <md-option value="0">Name</md-option>
-                                    <md-option value="1">Status</md-option>
-                                    <md-option value="2">Action</md-option>
                                 </md-select>    
                             </div>
                         </div>
@@ -107,7 +108,7 @@
                                 </tr>
                             </thead>
                             <tbody md-body>
-                                <tr md-row ng-repeat="request in userSetting.pendingRequests" class="hoverLightGrey3" >
+                                <tr md-row ng-repeat="request in userSetting.pendingRequests | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" >
                                     <td md-cell style="width:10%">
                                         <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound"  alt="user" layout-margin/>
                                     </td>
@@ -119,7 +120,7 @@
                                     </td>
                                     <td md-cell>{{member.userSyncObj.contactNumber}}</td>
                                     <td md-cell style="width:10%">
-                                       <md-select placeholder="Pending" ng-model="someVal">
+                                       <md-select ng-model="blockOption" placeholder="Pending">
                                             <md-option value="1" ng-click="userSetting.approveMembership(request)">
                                                 Accept User
                                             </md-option>
@@ -141,11 +142,9 @@
                         <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
                             <h4>Blocked Members</h4>
                             <div layout="row" layout-align="center center">
-                                Sort By &emsp;
+                                Sort By
                                 <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
                                     <md-option value="0">Name</md-option>
-                                    <md-option value="1">Status</md-option>
-                                    <md-option value="2">Action</md-option>
                                 </md-select>    
                             </div>
                         </div>
@@ -160,7 +159,7 @@
                                 </tr>
                             </thead>
                             <tbody md-body>
-                                <tr md-row ng-repeat="request in userSetting.pendingRequests" class="hoverLightGrey3" >
+                                <tr md-row ng-repeat="request in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="request.membershipType == 4">
                                     <td md-cell style="width:10%">
                                         <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound"  alt="user" layout-margin/>
                                     </td>
@@ -172,12 +171,12 @@
                                     </td>
                                     <td md-cell>{{member.userSyncObj.contactNumber}}</td>
                                     <td md-cell style="width:10%">
-                                       <md-select placeholder="Pending" ng-model="someVal">
-                                            <md-option value="1" ng-click="userSetting.approveMembership(request)">
-                                                Accept User
+                                       <md-select placeholder="Blocked" ng-model="someVal">
+                                            <md-option value="1" ng-click="userSetting.changeMemberRole(3, request)">
+                                                Allow User
                                             </md-option>
-                                            <md-option value="2" ng-click="userSetting.rejectMembership(request)">
-                                                Ignore User
+                                            <md-option value="2" ng-click="userSetting.changeMemberRole(null, request)">
+                                                Delete User
                                             </md-option>
                                         </md-select>
                                     </td>

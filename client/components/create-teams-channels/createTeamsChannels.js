@@ -10,18 +10,18 @@
         'use strict';
         angular
             .module('app.createTeamsChannels')
-            .controller('CreateTeamsChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', 'firebaseService', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateTeamsChannelsController]);
+            .controller('CreateTeamsChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateTeamsChannelsController]);
 
-        function CreateTeamsChannelsController(messageService, chatService, $stateParams, $http, $rootScope, firebaseService, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
+        function CreateTeamsChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
 
-            console.log('team channels controller')
+            // console.log('team channels controller')
 
             var $scope = this;
             $scope.groupID = $stateParams.groupID;
             $scope.teamID = $stateParams.teamID;
-            var $loggedInUserID = firebaseService.getSignedinUserObj();
+            var user = userService.getCurrentUser();
             $scope.hide = hide;
             $scope.channel = {
                 channelID: "",
@@ -45,9 +45,9 @@
                 }
                 // groupForm.channelID = groupForm.channelID.toLowerCase();
                 //groupForm.channelID = groupForm.channelID.replace(/[^a-z0-9]/g, '');
-                chatService.CreateTeamChannel($scope.groupID, $scope.channel, $scope.teamID, $loggedInUserID)
+                chatService.CreateTeamChannel($scope.groupID, $scope.channel, $scope.teamID, user)
                     .then(function() {
-                        console.log("channel Creation Successful");
+                        // console.log("channel Creation Successful");
                         $location.path('/user/group/' + $scope.groupID);
                         messageService.showSuccess("channel creation Successful");
                     }, function(reason) {

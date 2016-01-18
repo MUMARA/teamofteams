@@ -5,8 +5,9 @@
 (function() {
     'use strict';
     angular.module("myApp")
-        .config(function($stateProvider, $urlRouterProvider) {
+        .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
             // alert('config')
+            // $locationProvider.html5Mode(true).hashPrefix('!');
             var navLoginbar = {
                 templateUrl: 'components/nav-loginbar/nav-loginbar.html',
                 controller: 'NavLoginbarController',
@@ -29,7 +30,7 @@
                 },
                 resolve: {
                     user: function($location, userService) {
-                        var user = userService.getUserPresenceFromLocastorage().then(function(data) {
+                        return userService.getUserPresenceFromLocastorage().then(function(data) {
                             if (data) {
                                 $location.path('/user/' + userService.getCurrentUser().userID)
                                     //$state.go(user.dashboard, userService.getCurrentUser().userID)
@@ -162,7 +163,7 @@
                 controllerAs: 'createChannels'
             });
             $stateProvider.state('user.create-teams-channels', {
-                url: '/group/:groupID/create-teams-channels',
+                url: '/group/:groupID/:teamID/create-teams-channels',
                 templateUrl: 'components/create-teams-channels/create-teams-channels.html',
                 controller: 'CreateTeamsChannelsController',
                 controllerAs: 'createTeamsChannels'

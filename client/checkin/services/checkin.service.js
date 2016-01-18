@@ -10,9 +10,9 @@
         .module('core')
         .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['$q', '$geolocation', 'firebaseService', "$firebaseObject", '$firebaseArray'];
+    checkinService.$inject = ['$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
 
-    function checkinService($q, $geolocation, firebaseService, $firebaseObject, $firebaseArray) {
+    function checkinService($q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
 
         /*private variables*/
         var refs, fireTimeStamp;
@@ -337,7 +337,7 @@
             asyncRecordUserCheckGroupActivity: function(checkinObj, userID, groupID, groupObj, definedLocations) {
                 var deferred = $q.defer();
 
-                var currentUser = firebaseService.getSignedinUserObj();
+                var currentUser = userService.getCurrentUser();
                 var locationName = this.getLocationName(checkinObj, definedLocations);
                 var groupActivityRef = firebaseService.getRefGroupsActivityStreams().child(groupID);
 
@@ -406,13 +406,13 @@
             asyncRecordUserCheckSubGroupActivity: function(checkinObj, userID, groupID, subgroupID, groupObj, definedLocations) {
                 var deferred = $q.defer();
 
-                var currentUser = firebaseService.getSignedinUserObj();
+                var currentUser = userService.getCurrentUser();
                 var locationName = this.getLocationName(checkinObj, definedLocations);
                 var subGroupActivityRef = firebaseService.getRefSubGroupsActivityStreams().child(groupID + "/" + subgroupID); //"subgroup-activity-streams"
 
                 var actor = {
                     type: 'user',
-                    id: userID, //this is the userID, and an index should be set on this
+                    id: currentUser.userID, //this is the userID, and an index should be set on this
                     email: currentUser.email,
                     displayName: currentUser.firstName + ' ' + currentUser.lastName,
                     image: null

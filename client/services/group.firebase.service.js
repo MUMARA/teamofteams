@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by ZiaKhan on 03/02/15.
  */
 
@@ -6,8 +6,8 @@
 
 
 angular.module('core')
-    .factory('groupFirebaseService', ["firebaseService", "$q", "$timeout", '$sessionStorage', 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService", "$localStorage",
-        function(firebaseService, $q, $timeout, $sessionStorage, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService, $localStorage) {
+    .factory('groupFirebaseService', ["firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
+        function(firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -19,8 +19,6 @@ angular.module('core')
 
 
             return {
-                getSignedinUserObj: firebaseService.getSignedinUserObj,
-
                 getGroupSyncObjAsync: function(groupID, viewerUserID) {
                     var deferred = $q.defer();
                     var self = this;

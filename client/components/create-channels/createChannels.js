@@ -2,25 +2,24 @@
         'use strict';
         angular
             .module('app.createChannels')
-            .controller('CreateChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', 'firebaseService', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateChannelsController]);
+            .controller('CreateChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateChannelsController]);
 
-        function CreateChannelsController(messageService, chatService, $stateParams, $http, $rootScope, firebaseService, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
+        function CreateChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
 
             
 
             var $scope = this;
+            var user = userService.getCurrentUser();
             $scope.groupID = $stateParams.groupID;
-            var $loggedInUserID = firebaseService.getSignedinUserObj();
-            $scope.hide = hide;
             $scope.channel = {
                 channelID: "",
                 title: ""
             };
 
             // for creating channels
-            function hide() {
+            $scope.hide = function() {
                 /*   createGroupService.cancelGroupCreation();*/
                 /* $mdDialog.cancel();*/
                 //$rootScope.newImg=null;
@@ -36,7 +35,7 @@
                 }
                 // groupForm.channelID = groupForm.channelID.toLowerCase();
                 //groupForm.channelID = groupForm.channelID.replace(/[^a-z0-9]/g, '');
-                chatService.asyncCreateChannel($scope.groupID, $scope.channel, $loggedInUserID)
+                chatService.asyncCreateChannel($scope.groupID, $scope.channel, user)
                     .then(function() {
 
                         console.log("channel Creation Successful");

@@ -5,10 +5,8 @@
 
 // Create the 'example' controller
 angular.module('core')
-    .factory('authService', ["$state", "dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$localStorage", "$location",
-        "$sessionStorage", "firebaseService",
-        function($state, dataService, messageService, $q, $http, appConfig, $firebaseAuth, $localStorage, $location, $sessionStorage,
-            firebaseService) {
+    .factory('authService', ["$state", "dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$location", "firebaseService", "userService",
+        function($state, dataService, messageService, $q, $http, appConfig, $firebaseAuth, $location, firebaseService, userService) {
 
             return {
                 //userData: null,
@@ -22,13 +20,13 @@ angular.module('core')
                         //self.userData = data.user;
                         if (data.statusCode != 0) {
                             //$sessionStorage.loggedInUser = data.user;
-                            $localStorage.loggedInUser = data.user;
+                            userService.setCurrentUser(data.user);
                             //console.log('login response object: ' + JSON.stringify(data));
 
                             //firebaseService.asyncLogin($sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token)
-                            firebaseService.asyncLogin($localStorage.loggedInUser.userID, $localStorage.loggedInUser.token)
-                                .then(function(response) {
-                                    successFn(data, response);
+                            firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
+                                .then(function() {
+                                    successFn(data);
                                     // dataService.loadData();
                                 }, function(error) {
                                     if (error) {
@@ -91,29 +89,26 @@ angular.module('core')
                     });
                 },
                 logout: function() {
-                    // console.info('signing out');
-                    $location.path("/");
                     //empty data in dataservice
                     dataService.unloadData();
                     // for manually sign out from firebase.
                     firebaseService.getRefMain().unauth();
                     Firebase.goOffline();
-                    //delete $sessionStorage.loggedInUser;
-                    delete $localStorage.loggedInUser;
+                    $state.go('signin');
                 },
                 //to resolve route "/user/:user" confirming is authenticated from firebase
                 resolveUserPage: function() {
-                    //alert('inside authService');
+                    // alert('inside authService');
                     var defer = $q.defer();
                     //if ( $sessionStorage.loggedInUser ) {
-                    if ($localStorage.loggedInUser) {
+                    if (userService.getCurrentUser()) {
                         if (appConfig.firebaseAuth) {
                             dataService.loadData();
                             defer.resolve();
                         } else {
                             //firebaseService.asyncLogin( $sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token )
-                            firebaseService.asyncLogin($localStorage.loggedInUser.userID, $localStorage.loggedInUser.token)
-                                .then(function(response) {
+                            firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
+                                .then(function() {
                                     //console.info("Firebase Authentication Successful when restarting app");
                                     firebaseService.addUpdateHandler();
                                     dataService.loadData();
@@ -128,8 +123,7 @@ angular.module('core')
                         }
                     } else {
                         console.log("No user logged in");
-                        $state.go('signin')
-                        // $location.path("/signin");
+                        $state.go('signin');
                     }
 
                     return defer.promise;

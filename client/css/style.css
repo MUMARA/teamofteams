@@ -147,10 +147,6 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding-top: 40px;
 }
 
-.topmargin20px {
-    margin-top: 20px;
-}
-
 .bottompadding50px {
     padding-bottom: 50px!important;
 }
@@ -159,8 +155,35 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding-left: 20px;
 }
 
+.leftrightpadding10px {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.leftrightpadding20px {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.leftrightpadding65px {
+    padding-left: 65px;
+    padding-right: 65px;
+}
+
 .automargin {
     margin: auto;
+}
+
+.topmargin20px {
+    margin-top: 20px;
+}
+
+.topmargin30px {
+    margin-top: 30px;
+}
+
+.bottommargin5px {
+    margin-bottom: 5px;
 }
 
 .leftmargin40px {
@@ -172,7 +195,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 .leftmargin20px {
-    margin-left: 20px;
+    margin-left: 20px !important;
 }
 
 .rightmargin20px {
@@ -229,6 +252,11 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     height: 50px;
 }
 
+.img120px {
+    width: 120px;
+    height: 120px;
+}
+
 .imageRound {
     border-radius: 50% !important;
 }
@@ -238,7 +266,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 .displayFlex {
-    display: flex !important;
+    display: flex!important;
 }
 
 
@@ -269,6 +297,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 
 .viewHeight-170 {
     height: calc(100vh - 170px);
+}
+
+.viewHeight-250 {
+    height: calc(100vh - 250px);
 }
 
 .viewWidth {
@@ -345,6 +377,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 
 .backColorLightGrey2 {
     background-color: rgb(240, 240, 240)!important;
+}
+
+.backColorLightSeaGreen {
+    background-color: rgb(177, 231, 222)!important;
 }
 
 .backColorSeaGreen {
@@ -674,7 +710,7 @@ md-autocomplete.md-default-theme {
 .cards-button {
     position: absolute!important;
     top: -40%;
-    right: 0%;
+    right: 5%;
     width: 40px !important;
     height: 40px !important;
     background-color: #31B4CB !important;
@@ -1074,21 +1110,11 @@ md-autocomplete input:not(.md-input) {
     border: 3px solid white;
 }
 
+
 .headingDiv {
     color: #000000 !important;
     font-size: 14px !important;
     padding: 7px 5px 0 0;
-}
-
-#headingDiv {
-    border-top-right-radius: 100px;
-    radius: 100px;
-    width: 195px;
-    height: 24px;
-    color: red;
-    padding-left: 35px;
-    margin-left: 22px;
-    background-color: #E0FFFF;
 }
 
 .listPara {
@@ -1111,7 +1137,7 @@ md-autocomplete input:not(.md-input) {
     border-top-right-radius: 20px;
     color: #E0FFFF;
 }
-
+/*
 .rightTbs {
     font-size: x-small;
     padding: 12px 7px !important;
@@ -1130,6 +1156,88 @@ md-autocomplete input:not(.md-input) {
     float: left;
     font-weight: 500;
 }*/
+
+.chatheader {
+    font-size: x-small;
+}
+
+.chatheaderClear {
+    border-top-right-radius: 100px;
+    background-color: white;
+    width: 43px;
+    height: 20px;
+    position: relative;
+    /*top: 20px;*/
+}
+
+.chatheaderTitle{
+    width: 150px;
+    margin-left: -15px;
+    padding-left: 20px;
+    padding-top: 5px;
+}
+
+.chatheaderTime {
+    padding-top: 5px;
+    width: 50px;
+    padding-left: 5px;
+    border-top-right-radius: 100px;
+}
+.chatuserimg {
+    position: relative;
+    top: -17px;
+}
+
+.chatmsg {
+    position: relative;
+    top: -45px;
+    min-height: 40px;
+    margin-left: 43px;
+    margin-top: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.chatheaderRight {
+    font-size: x-small;
+}
+
+.chatheaderClearRight {
+    border-top-right-radius: 100px;
+    background-color: white;
+    width: 43px;
+    height: 20px;
+    position: relative;
+    /*top: 20px;*/
+}
+
+.chatheaderTitleRight {
+    width: 150px;
+    margin-left: -15px;
+    padding-left: 20px;
+    padding-top: 5px;
+}
+
+.chatheaderTimeRight {
+    padding-top: 5px;
+    width: 50px;
+    padding-left: 5px;
+    border-top-right-radius: 100px;
+}
+.chatuserimgRight {
+    position: relative;
+    top: -17px;
+}
+
+.chatmsgRight {
+    position: relative;
+    top: -45px;
+    min-height: 40px;
+    margin-left: 43px;
+    margin-top: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 
 .moh {
     background-color: #86CEED;
@@ -1645,4 +1753,16 @@ div:after {
 .cropper-main-image {
     width: 160px;
     height: 160px;
+}
+
+
+.subgroupcard {
+    width: 220px;
+    height: 120px
+}
+
+.subgrouplogo {
+    width: 72px; 
+    height: 120px; 
+    overflow: hidden;"
 }

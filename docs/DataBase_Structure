@@ -1,0 +1,619 @@
+Firebase Nodes of Attendence System-------------------------------
+
+
+Signup
+-------------------------------------
+users
+	userid (uqutub)
+		date-created: 1452766698780
+ 		email: "usuf@gmail.com"
+ 		firstName: "usuf"
+ 		lastName: "qutub"
+ 		status: 0
+--------------------------------------
+
+
+Signin
+--------------------------------------
+users-presence
+ 	userid (uqutub)
+ 		connections
+ 			-K7zejSAZQYPPcIqyfLD  
+ 				started: 1452767115404
+ 				type: 1
+ 		last-modified: 1452766925029
+--------------------------------------
+
+
+Signout
+--------------------------------------
+users-presence  
+	userid (uqutub)
+ 		last-modified: 1452766986235
+--------------------------------------
+
+
+Personal Setting on Save (status has been changed from 0 to -1)
+--------------------------------------
+users
+ 	userid (uqutub)
+ 		contactNumber: 1234561235
+ 		date-created: 1452766698780
+ 		desc: "MySelf"
+ 		email: "usuf@gmail.com"
+ 		firstName: "usuf"
+ 		lastName: "qutub"
+ 		profession: "IT"
+ 		profile-image: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+		status: -1
+--------------------------------------
+
+Create Group (teams)
+--------------------------------------
+ user-group-memberships
+ 	uqutub
+ 		groupid (team1)
+ 			membership-type: 1
+ 			timestamp: 1452767752126
+
+
+group-members
+ 	groupid (team1)
+ 		uqutub
+ 			membership-type: 1
+ 			timestamp: 1452767752756
+
+
+groups
+ 	groupid (team1)
+ 		address: "jhjkh"
+ 		address-title: "Karachi title"
+ 		desc: "werwerw"
+ 		group-owner-id: "uqutub"
+ 		logo-image
+ 			bucket-name: "test2pwow"
+ 			id: "team1"
+ 			mediaType: "image/png"
+ 			source: 1
+ 			url: "https://totsgroupimg.s3.amazonaws.com/team1.png..."
+ 		members-checked-in
+ 			count: 0
+ 		members-count: 1
+ 		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+ 		phone: "82172189372189719"
+ 		privacy
+ 			 invitationType: 2
+ 		subgroups-count: 0
+ 		timeZone: " +5:00"
+ 		timestamp: 1452770633068
+ 		title: "NAME 1"
+
+
+groups-names
+ 	groupid (team1)
+ 		groupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png..."
+ 		ownerImgUrl: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+ 		title: "Name Team1"
+
+
+group-activity-streams
+ 	groupid (team1)
+ 		-K7zhAMvfIVM7xw02zT8
+	 		actor
+	 			displayName: "usuf qutub"
+	 			email: "usuf@gmail.com"
+	 			id: "uqutub"
+	 			type: "user"
+		displayName: "usuf qutub created Name Team1"
+ 		language: "en" 
+ 		object
+ 			displayName: "Name Team1"
+ 			id: "team1"
+ 			type: "group"
+ 			url: "team1"
+ 		published: 1452767754045
+ 		verb: "group-creation"
+--------------------------------------
+
+
+Edit Groups (teams)
+--------------------------------------
+groups
+ 	team1
+ 		address: "Pakistan Karachi"
+ 		address-title: "Karachi title2"
+ 		desc: "Descrtipionnnnnnnnnn"
+ 		group-owner-id: "uqutub"
+ 		logo-image
+ 			bucket-name: "test2pwow"
+ 			id: "team1"
+ 			mediaType: 	"image/png"
+ 			source: 1
+ 			url: "https://totsgroupimg.s3.amazonaws.com/team1.png"
+ 		members-checked-in
+ 			count: 0
+ 		members-count: 1
+ 		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+ 		phone: "821721893720000000"
+ 	privacy
+ 		invitationType: 2
+ 		signupMode: "2"
+ 		subgroups-count: 0
+ 		timeZone: " +5:00"
+ 		timestamp: 1452771508721					//change timespan on edit...
+ 		title: "Title Name 2"
+
+
+groups-names										//onEdit remove ownerImgUrl
+ 	team1
+ 		groupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png"
+ 		title: "Title Name 2"
+--------------------------------------
+
+
+Create SubGroup (teamofteams)
+--------------------------------------
+subgroup-members  
+	team1
+ 		subteam1
+ 			uqutub
+ 				membership-type: 1
+ 				timestamp: 1452772505220
+
+
+subgroups-names  
+	team1
+ 		subteam1: "Sub Team Name 1"
+
+
+flattened-groups
+	uqutub
+ 		team1_subteam1
+ 			uqutub
+ 				checkedin: false
+
+
+user-subgroup-memberships  
+	uqutub
+ 		team1
+ 			subteam1
+ 				membership-type: 1
+ 				timestamp: 1452772505902
+
+
+subgroups
+	team1
+ 		subteam1
+ 			desc: "subteam descripiton"
+ 			logo-image
+ 				bucket-name: "test2pwow"
+ 				id: "subteam1"
+ 				mediaType: "image/png"
+ 				source: 1
+ 				url: "https://totsgroupimg.s3.amazonaws.com/subteam1.png"
+ 			members-checked-in
+ 				count: 0
+ 			members-count: 1
+ 			microgroups-count: 0
+ 			timestamp: 1452772505957
+ 			title: "Sub Team Name 1"
+--------------------------------------
+
+
+Edit SubGroups (teamofteams)
+--------------------------------------
+subgroups
+ 	team1
+ 		subteam1
+ 			desc: "subteam descripiton 2222"
+		logo-image
+			bucket-name: "test2pwow"
+ 			id: "subteam1"
+ 			mediaType: "image/png"
+ 			source: 1
+ 			url: "https://totsgroupimg.s3.amazonaws.com/subteam1...."
+ 		members-checked-in
+ 			count: 0
+ 		members-count: 1
+ 		microgroups-count: 0
+ 		timestamp: 1452773847392
+ 		title: "Sub Team Name 2222"
+
+
+subgroups-names
+	team1
+ 		subteam1
+ 			title: "Sub Team Name 2222"
+--------------------------------------
+
+
+Geo Fencing of teamofteams
+--------------------------------------
+## On Add ##
+subgroup-locations-defined
+	team1
+ 		subteam1
+ 			-K8-5aFX9mJuPLXXcdPP
+ 				defined-by: "uqutub"
+ 				location
+ 					lat: 24.8131137
+ 					lon: 67.04971699999999
+ 					radius: 20
+ 			subgroup-url: "team1/subteam1"
+ 			timestamp: 1452774417818
+ 			title: "34C Stadium Lane 3, Karachi, Pakistan"
+ 			type: 1
+
+
+## On Edit ##
+subgroup-locations-defined
+	team1
+ 		subteam1
+ 			-K8-5aFX9mJuPLXXcdPP
+ 				defined-by: "uqutub"
+ 				location
+ 					lat: 24.8531846
+ 					lon: 67.01667250000003
+ 					radius: 20
+ 					subgroup-url: "team1/subteam1"
+ 					timestamp: 1452774535689
+ 					title: "Saddar Town, Karachi, Pakistan"
+ 					type: 1
+--------------------------------------
+
+
+Join Group Request (teamofteams)
+--------------------------------------
+group-membership-requests
+ 	team1 (groupid)
+ 		w3w (userid)
+ 			message: "Please add me in your group."
+ 			timestamp: 1452774907046
+ 
+
+ group-membership-requests-by-user
+ 	w3w (userid)
+ 		team1 (groupid)
+ 			timestamp: 1452774907046
+--------------------------------------
+
+
+Add user Memberip Request of Join Group
+--------------------------------------
+group-members
+	team1
+		uqutub
+ 		w3w		(add user id)
+ 			membership-type: 3
+ 			timestamp: 1452775114887
+
+user-group-memberships
+	uqutub
+ 	w3w
+ 		team1
+ 			membership-type: 3
+ 			timestamp: 1452775115223
+
+
+group-membership-requests
+ 	team1 (groupid)
+ 		w3w (userid)     	(this node will be remove after accept the membership request)
+ 			message: "Please add me in your group."
+ 			timestamp: 1452774907046
+
+
+user-group-memberships
+	uqutub
+ 	w3w  
+ 		team1
+ 			membership-type: 3
+ 			timestamp: 1452775115223
+
+groups
+	team1
+  		members-count: 2 					//this will be updates on add membershiop request 		
+		timestamp: 1452771796373 
+
+
+group-activity-streams
+	team1
+ 		-K8-8Flvfs-anhUVjEn5
+ 			actor
+ 				displayName: "usuf qutub"
+ 				email: "usuf@gmail.com"
+ 				id: "uqutub"
+ 				type: "user"
+			displayName: "usuf qutub approved w3w w3w as a member in Titl..."
+ 			language: "en"
+ 		object
+	 		displayName: "w3w w3w"
+ 			email: "w3w@w3w.w3w"
+ 			id: "w3w"
+ 			type: "user"
+ 		published: 1452775116218
+ 		target
+	 		displayName: "Title Name 4"
+ 			id: "team1"
+ 			type: "group"
+ 			url: "team1"
+ 		verb: "group-approve-member"
+--------------------------------------
+
+
+Ignore user membership request
+--------------------------------------
+group-activity-streams
+	team1
+ 		-K8-J8KQw-U0bz8BOwSx
+ 			actor
+ 				displayName: "usuf qutub"
+ 				email: "usuf@gmail.com"
+ 				id: "uqutub"
+ 				type: "user"
+ 			displayName: "usuf qutub approved w4w w4w as a member in Titl..."
+ 			language: "en"
+ 			object
+ 				displayName: "w4w w4w"
+ 				email: "w4w@w4w.w4w"
+ 				id: "w4w"
+ 				type: "user"
+ 			published: 1452777969305
+ 			target
+ 				displayName: "Title Name 4"
+ 				id: "team1"
+ 				type: "group"
+ 				url: "team1"
+ 			verb: "group-reject-member"
+
+
+group-membership-requests
+ 	team1 (groupid)
+ 		w4w (userid)     	(this node will be remove after reject/ignore the membership request)
+ 			message: "Please add me in your group."
+ 			timestamp: 1452774907046
+--------------------------------------
+
+
+Delete User Membership Request
+--------------------------------------
+groups
+	team1
+		members-count: 2 			(change count)
+		timestamp: 1452771796373
+
+group-members
+	team1
+		uqutub
+ 		w3w					(delete userid)
+ 			membership-type: 3
+ 			timestamp: 1452775114887
+
+user-group-memberships
+	uqutub
+ 	w3w   					(delete userid)
+ 		team1
+ 			membership-type: 3
+ 			timestamp: 1452775115223
+
+group-activity-streams
+ 	team1
+ 		-K8-LwxWUHSCN59sjVLm
+ 			actor
+ 			displayName: "usuf qutub removed w3w w3w from \"Title Name 4\" ..."
+ 			from: "member"
+ 			language: "en"
+ 			object
+ 			published: 1452778705060
+ 			target 
+ 			verb: "group-member-removed"
+--------------------------------------
+
+
+Add Admin of a Group (teamofteams) from User Request after adding a Member
+----------------------------------------------------------------------
+user-group-memberships  
+ 	uqutub
+ 	w4w
+ 		team1
+ 			membership-type: 2
+ 			timestamp: 1452778394820
+
+group-members
+	team1
+ 		uqutub
+ 			membership-type: 1
+ 			timestamp: 1452770632403
+ 		w4w
+ 			membership-type: 2
+ 			timestamp: 1452779947663
+
+group-activity-streams
+	team1
+ 		-K8-QgQcNkpj0mlsoOhO
+ 			actor
+ 			displayName: "usuf qutub changed w4w w4w's membership from \"member\" to \"admin\" for Title Name 4 group."
+ 			language: "en"
+ 			object
+ 			published: 1452779948071
+ 			target
+ 			verb: "user-membership-change"
+--------------------------------------
+
+
+Add Member in SubGroup
+--------------------------------------
+user-subgroup-memberships
+	uqutub
+ 	w3w
+ 		team1
+ 			subteam1
+ 				membership-type: 3
+ 				timestamp: 1452776261337
+
+subgroup-members
+	team1
+ 		subteam1
+ 			uqutub
+ 			w3w
+ 				membership-type: 3
+ 				timestamp: 1452776261348
+
+subgroups
+	team1
+ 		subteam1
+ 			members-count: 2 			//this will be updates on add member in subgroup (teamofteams)
+ 			timestamp: 1452773847392
+--------------------------------------
+
+
+Add in Admin Members in SubGroup after adding a member of a group
+--------------------------------------------------------------
+user-subgroup-memberships
+	uqutub  
+ 	w3w
+ 		team1
+ 			subteam1
+ 				membership-type: 2
+ 				timestamp: 1452776261348
+
+subgroup-members
+	team1
+ 		subteam1
+ 			uqutub
+ 			w3w
+ 				membership-type: 2
+ 				timestamp: 1452776598948
+--------------------------------------
+
+
+Direct Add user as Admin into Subgroup (without adding user/member)
+--------------------------------------
+user-subgroup-memberships
+	uqutub
+	w3w
+ 	w4w
+ 		team1
+ 			subteam1
+ 				membership-type: 2
+ 				timestamp: 1452778408302
+
+subgroup-members
+	team1
+ 		subteam1
+ 			uqutub
+ 			w3w
+ 			w4w
+ 				membership-type: 2
+ 				timestamp: 1452778408632
+--------------------------------------
+
+
+
+
+Checkin
+--------------------------------------
+subgroup-check-in-records
+	team1
+ 		subteam1
+ 			uqutub
+ 				-K8-Ewy9ptGOIfrDHHwO
+ 					identified-location-id: "Other"
+ 					location
+ 						lat: 24.8137062
+ 						lon: 67.0482815
+ 					message: "Checked-in"
+ 					source-device-type: 1
+ 					source-type: 1
+ 					subgroup-url: "team1/subteam1"
+ 					timestamp: 1452776870089
+ 					type: 1
+
+
+subgroup-check-in-current-by-user
+	uqutub
+ 		groupID: "team1"
+ 		source-device-type: 1
+ 		source-type: 1
+ 		subgroupID: "subteam1"
+ 		timestamp: 1452776870472
+ 		type: 1
+
+
+subgroup-check-in-current
+	team1
+ 		subteam1
+ 			uqutub
+ 				identified-location-id: "Other"
+ 				location
+ 					lat: 24.8137062
+ 					lon: 67.0482815
+ 				message: "Checked-in"
+ 				record-ref: "-K8-Ewy9ptGOIfrDHHwO"
+ 				source-device-type: 1
+ 				source-type: 1
+ 				subgroup-url: "team1/subteam1"
+ 				timestamp: 1452776870799
+ 				type: 1
+
+
+groups
+	team1
+		members-checked-in
+			count: 1 				//update count
+--------------------------------------
+
+
+Checkout
+--------------------------------------
+subgroup-check-in-records
+	team1
+ 		subteam1
+ 			uqutub
+ 				-K8-Ewy9ptGOIfrDHHwO
+ 				-K8-GWsoiBH_qNLgnwye
+ 					identified-location-id: "Other"
+ 					location
+ 						lat: 24.813689999999998
+ 						lon: 67.0482741
+ 					message: "Checked-out"
+ 					source-device-type: 1
+ 					source-type: 1
+ 					subgroup-url: "team1/subteam1"
+ 					timestamp: 1452777283438
+ 					type: 2
+
+subgroup-check-in-current-by-user
+	uqutub
+ 		groupID: "team1"
+ 		source-device-type: 1
+ 		source-type: 1
+ 		subgroupID: "subteam1"
+ 		timestamp: 1452777301633
+ 		type: 2
+
+subgroup-check-in-current
+	team1
+ 		subteam1
+ 			uqutub
+ 				identified-location-id: "Other"
+ 				location
+ 					lat: 24.813689999999998
+ 					lon: 67.0482741
+ 				message: "Checked-out"
+ 				record-ref: "-K8-GaE2N-Yo6RwvUbsm"
+ 				source-device-type: 1
+ 				source-type: 1
+ 				subgroup-url: "team1/subteam1"
+ 				timestamp: 1452777301961
+ 				type: 2
+
+groups
+	team1
+		members-checked-in
+			count: 0
+		timestamp: 1452771796373
+--------------------------------------
+
+--------------------------------------
+--------------------------------------
+

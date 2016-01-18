@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('core')
-    .factory('userFirebaseService', ["firebaseService", "$q", "$timeout", '$http', "$sessionStorage", "$firebaseObject", 'appConfig', '$localStorage', 'userService',
-        function(firebaseService, $q, $timeout, $http, $sessionStorage, $firebaseObject, appConfig, $localStorage, userService) {
+    .factory('userFirebaseService', ["firebaseService", "$q", "$timeout", '$http', "$firebaseObject", 'appConfig', 'userService',
+        function(firebaseService, $q, $timeout, $http, $firebaseObject, appConfig, userService) {
 
             //Firebase timeStamp object.
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
@@ -172,7 +172,7 @@ angular.module('core')
                                                                         });
                                                                         $q.all(promises).then(function() {
                                                                             //self.asyncRecordGroupCreationActivity(groupObj, $sessionStorage.loggedInUser).then(function () {
-                                                                            self.asyncRecordGroupCreationActivity(groupObj, $localStorage.loggedInUser).then(function() {
+                                                                            self.asyncRecordGroupCreationActivity(groupObj, userService.getCurrentUser()).then(function() {
                                                                                 var memberCountRef = firebaseService.getRefGroups().child(groupObj.groupID).child("members-count");
                                                                                 if (memArray.length > 0) {
                                                                                     memberCountRef.transaction(function(current_value) {
@@ -182,7 +182,7 @@ angular.module('core')
 
                                                                                 if (memArray.length == 1) {
                                                                                     //self.asyncRecordGroupMemberAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members[0])
-                                                                                    self.asyncRecordGroupMemberAdditionActivity(groupObj, $localStorage.loggedInUser, response.members[0])
+                                                                                    self.asyncRecordGroupMemberAdditionActivity(groupObj, userService.getCurrentUser(), response.members[0])
                                                                                         .then(function() {
                                                                                             deferred.resolve({
                                                                                                 unlistedMembersArray: response.unlisted
@@ -190,7 +190,7 @@ angular.module('core')
                                                                                         })
                                                                                 } else if (memArray.length > 1) {
                                                                                     //self.asyncRecordManyGroupMembersAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members)
-                                                                                    self.asyncRecordManyGroupMembersAdditionActivity(groupObj, $localStorage.loggedInUser, response.members)
+                                                                                    self.asyncRecordManyGroupMembersAdditionActivity(groupObj, userService.getCurrentUser(), response.members)
                                                                                         .then(function() {
                                                                                             deferred.resolve({
                                                                                                 unlistedMembersArray: response.unlisted
@@ -313,7 +313,7 @@ angular.module('core')
                     var ref = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
                     var actor = {
                         "type": "user",
-                        "id": userObj.$id, //this is the userID, and an index should be set on this
+                        "id": userObj.userID, //this is the userID, and an index should be set on this
                         "email": userObj.email,
                         "displayName": userObj.firstName + " " + userObj.lastName
                     };
@@ -694,10 +694,9 @@ angular.module('core')
                 asyncRecordMembershipChangeActivity: function(prevType, newType, user, groupObj, loggedInUser) {
                     var deferred = $q.defer();
                     var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
-
                     var actor = {
                         "type": "user",
-                        "id": loggedInUser.$id, //this is the userID, and an index should be set on this
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
                         "email": loggedInUser.email,
                         "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
                     };
@@ -762,7 +761,7 @@ angular.module('core')
 
                     var actor = {
                         "type": "user",
-                        "id": loggedInUser.$id, //this is the userID, and an index should be set on this
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
                         "email": loggedInUser.email,
                         "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
                     };

@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.createGroup', ['core', 'ngMdIcons'])
-        .factory('createGroupService', ['userFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage', '$rootScope',
-            function(userFirebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage, $rootScope) {
+        .factory('createGroupService', ['userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$rootScope',
+            function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope) {
 
                 var pageUserId = userService.getCurrentUser().userID;
 
@@ -16,7 +16,6 @@
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
                     },
                     'createGroup': function(groupInfo, formDataFlag, form) {
-                        //var pageUserId = userService.getCurrentUser().userID;
                         groupInfo.groupID = groupInfo.groupID.toLowerCase();
                         groupInfo.groupID = groupInfo.groupID.replace(/[^a-z0-9]/g, '');
                         userFirebaseService.asyncCreateGroup(pageUserId, groupInfo, this.userData(pageUserId), formDataFlag)
@@ -27,15 +26,15 @@
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
 
-                                    messageService.showSuccess("Group creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                    messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
-                                    messageService.showSuccess("Group creation Successful");
+                                    messageService.showSuccess("Team of Teams creation Successful");
                                 }
                                 $location.path('/user/' + pageUserId);
                             }, function(group) {
                                 form.$submitted = false;
                                 $rootScope.newImg = null;
-                                messageService.showFailure("Group not created, " + " already exists");
+                                messageService.showFailure("Team of Teams not created, " + " already exists");
                             })
                     },
                     'cancelGroupCreation': function(userId) {
@@ -60,8 +59,7 @@
 
                             var data = new FormData();
                             data.append('userID', pageUserId);
-                            //data.append('token', $sessionStorage.loggedInUser.token);
-                            data.append('token', $localStorage.loggedInUser.token);
+                            data.append('token', userService.getCurrentUser().token);
                             data.append("source", fileBlob, file.name);
 
                             defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {
