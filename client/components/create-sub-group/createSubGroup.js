@@ -205,17 +205,14 @@
 
         
         this.selectedMember = function(userObj, index) {
-            console.log(userObj)
-            that.becomeMember.push(userObj);
-            that.selectedindex2 = index;
             var _flag = true;
-            if(that.memberss.length > 0) {
-                that.becomeMember.forEach(function(val, i){
-                    if(val == userObj){
-                        _flag = false;
-                    }
-                });
-            } //checking if userobj is exists or not
+            //if(that.memberss.length > 0) {
+            that.becomeMember.forEach(function(val, i){
+                if(val == userObj){
+                    _flag = false;
+                }
+            });//checking if userobj is exists or not
+            //} 
 
             if(that.submembers.length > 0){
                 that.submembers.forEach(function(val, inx){
@@ -272,22 +269,20 @@
         }
 
         this.selectedAdmin = function(newType, member) {
-            console.log(member.user.profile.email);
             var obj = {type: newType, member: member};
-            
-            var _flag = true;
-            if(that.memberss.length > 0) {
-                that.becomeAdmin.forEach(function(val, i){
-                    if(val.member == member){
-                        _flag = false;
-                    }
-                });
-            } //checking if admin is exists or not
 
+            var _flag = true;
+
+            //if(that.memberss.length > 0) {
+            that.becomeAdmin.forEach(function(val, i){
+                if(val.member == member){
+                    _flag = false;
+                }
+            }); //checking if admin is exists or not
+            //} 
 
             if(that.selectedAdminArray.length > 0) {
                 that.selectedAdminArray.forEach(function(val,i){
-                    console.log(val.email)
                     if(val == member.user.profile.email){
                         _flag = false;
                     }
@@ -295,7 +290,7 @@
             }
 
             if(_flag) {
-                this.becomeAdmin.push(obj);
+                that.becomeAdmin.push(obj);
             }
 
             
