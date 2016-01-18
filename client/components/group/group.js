@@ -13,6 +13,7 @@
                 var isMember = false;
                 var isAdmin = false;
                 var user = userService.getCurrentUser();
+                this.adminOf = '';
                 this.groupID = $stateParams.groupID;
                 this.selectedindex = false;
                 that.activesubID = false;
@@ -21,7 +22,31 @@
                     document.getElementById("#UserSearch").focus();
                 }
 
-                groupFirebaseService.getGroupSyncObjAsync(that.groupID, user.userID)
+                this.openSetting = function() {
+                    if (that.adminOf === 'Group') {
+                        $location.path('user/group/' + that.groupID + '/edit-group');
+                    } else if (that.adminOf === 'Subgroup') {
+                        $location.path('/user/group/' + that.groupID + '/geoFencing');
+                    }
+                }
+
+                firebaseService.getRefUserSubGroupMemberships().child(user.userID).child(this.groupID).once('value', function(subgroups){
+                    for (var subgroup in subgroups.val()) {
+                        if (subgroups.val()[subgroup]['membership-type'] == 1) {
+                            isOwner = true;
+                            isAdmin = true;
+                            isMember = true;
+                            that.adminOf = 'Subgroup'
+                        } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
+                            isAdmin = true;
+                            isMember = true;
+                            that.adminOf = 'Subgroup'
+                        } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
+                            isMember = true;
+                        }
+                    }
+
+                    groupFirebaseService.getGroupSyncObjAsync(that.groupID, user.userID)
                     .then(function(syncObj) {
                         that.groupSyncObj = syncObj;
                         that.group = that.groupSyncObj.groupSyncObj;
@@ -31,13 +56,16 @@
                             isOwner = true;
                             isAdmin = true;
                             isMember = true;
+                            that.adminOf = 'Group'
                         } else if (that.groupSyncObj.membershipType == 2) {
                             isAdmin = true;
                             isMember = true;
+                            that.adminOf = 'Group'
                         } else if (that.groupSyncObj.membershipType == 3) {
                             isMember = true;
-                        }
+                        } 
                     });
+                })
                 
                 this.userObj = groupService.getOwnerImg(that.groupID);
                 

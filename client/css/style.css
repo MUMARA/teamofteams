@@ -178,6 +178,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     margin-top: 20px;
 }
 
+.topmargin30px {
+    margin-top: 30px;
+}
+
 .bottommargin5px {
     margin-bottom: 5px;
 }
@@ -245,6 +249,11 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 .icon50px {
     width: 50px;
     height: 50px;
+}
+
+.img120px {
+    width: 120px;
+    height: 120px;
 }
 
 .imageRound {
@@ -1743,4 +1752,16 @@ div:after {
 .cropper-main-image {
     width: 160px;
     height: 160px;
+}
+
+
+.subgroupcard {
+    width: 220px;
+    height: 120px
+}
+
+.subgrouplogo {
+    width: 72px; 
+    height: 120px; 
+    overflow: hidden;"
 }

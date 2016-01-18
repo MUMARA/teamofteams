@@ -1,18 +1,18 @@
 <div layout="row" layout-padding layout-margin>
-    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed backColorDarkSeaGreen" style="max-height: 287px">
-        <md-button ng-click="createSubGroup.openEditGroup()" style="margin: 0px; width:100%">
+    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed">
+        <md-button ng-click="createSubGroup.openEditGroup()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
             <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">TEAM OF TEAMS</div>
         </md-button>
-        <md-button ng-click="createSubGroup.openUserSettingPage()" style="margin: 0px; width:100%">
+        <md-button ng-click="createSubGroup.openUserSettingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
             <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">Members</div>
         </md-button>
-        <md-button ng-click="createSubGroup.openGeoFencingPage()" style="margin: 0px; width:100%">
+        <md-button ng-click="createSubGroup.openGeoFencingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
             <img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
             <div style="color: white;">Fencing</div>
         </md-button>
-        <md-button style="margin: 0px; width:100%" class="backColorSeaGreen">
+        <md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen">
             <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
             <div style="color: white;">Teams</div>
         </md-button>
@@ -24,9 +24,9 @@
         <form autocomplete="off" layout="row" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
             <div class="nopadding md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="space-between center" style="width: 220px">
                 <div>
-                    <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" layout="row" class="backColorWhite md-whiteframe-z2 bottommargin5px">
+                    <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" layout="row" class="backColorWhite md-whiteframe-z2 bottommargin5px subgroupcard">
                         <subgroupcard-directive subgroup="subgroup" ng-click="createSubGroup.veiwSubgroup(subgroup,$index)" class="nooutline cursorPointer"></subgroupcard-directive>
-                        <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>
+                        <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right" style="position: relative; left: -30px; top: 50px;"></ng-md-icon>
                     </div>
                 </div>
                 <md-button ng-click="createSubGroup.createTeam()" class="backColorSeaGreen">
@@ -98,7 +98,7 @@
                     <md-chips>
                         <md-chip ng-repeat="admin in createSubGroup.selectedAdminArray" style="height:40px" class="backColorDarkGrey">
                             <img ng-src="{{admin['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;;" />
-                            <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{admin.firstName + ' ' + admin.lastName +" "}} {{admin | json}}</span>
+                            <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{admin.firstName + ' ' + admin.lastName +" "}}</span>
                             <span style="position:relative; top:-8px;" class="fillColorWhite">
                                     &nbsp; <ng-md-icon icon="close" size="24" class="nooutline" ng-click="createSubGroup.deleteAdminMember(admin)"></ng-md-icon>
                                 </span>

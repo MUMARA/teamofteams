@@ -296,6 +296,14 @@
             //     $location.path('/user/group/' + groupId);
 
             // }
+            that.groupAdmin = false
+            firebaseService.getRefUserGroupMemberships().child(userId).child(groupId).once('value', function(group){
+                if (group.val()['membership-type'] == 1) {
+                    that.groupAdmin = true;
+                } else if (group.val()['membership-type'] == 2) {
+                    that.groupAdmin = true;
+                }
+            })
 
             this.showLocationBySubGroup = function(subgroupId, index, b) {
 
@@ -309,6 +317,7 @@
             groupFirebaseService.getGroupSyncObjAsync(groupId, userId)
                 .then(function(syncObj) {
                     that.subgroups = syncObj.subgroupsSyncArray;
+                    // console.log(that.subgroups)
                     // $firebaseArray(syncObj.subgroupRef).$loaded().then(function(data) {
                     //     if (data.length > 0) {
                     //         subgroupId = that.subgroups[0].$id;

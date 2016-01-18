@@ -11503,7 +11503,7 @@ fb.core.PersistentConnection = goog.defineClass(null, {constructor:function(repo
     this.securityDebugCallback_(body);
   } else {
     if ("msg" in body && typeof console !== "undefined") {
-      console.log("FIREBASE: " + body["msg"].replace("\n", "\nFIREBASE: "));
+      // console.log("FIREBASE: " + body["msg"].replace("\n", "\nFIREBASE: "));
     }
   }
 }, restoreState_:function() {

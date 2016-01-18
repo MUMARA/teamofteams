@@ -2,7 +2,7 @@
     <!-- Side Nav Bar -->
     <div class="viewHeight-64" layout="column">
         <md-card style="width: 220px; margin:0px;" class="foreColorDarkGrey" layout="column">
-            <div style="margin:30px auto;">
+            <div style="margin: auto;margin-top: 30px;margin-bottom: 0px;">
                 <a class="cursorPointer" ng-click="group.GetSubGroupUsers()" layout="row" layout-align="center center">
                     <img ng-src="{{ group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
                 </a>
@@ -14,10 +14,10 @@
                     <div>{{group.group['address-title']}}</div>
                 </div>
             </div>
+            <md-button class="md-fab " aria-label="Setting" ng-show="group.isAdmin()" ng-click="group.openSetting()" style="position: relative; top: 30px; left: 150px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
+                <ng-md-icon icon="settings" class="fillColorWhite" size="20"></ng-md-icon>
+            </md-button>
             <div flex="25" style="border-top: 2px solid #dddddd; margin:0px" layout="row" layout-align="start center">
-                <md-button class="md-fab " aria-label="Setting" ng-show="group.isAdmin()" ui-sref="user.edit-group({groupID: group.groupID})" style="position: absolute; top: 234px; left: 220px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
-                    <ng-md-icon icon="settings" class="fillColorWhite" size="20"></ng-md-icon>
-                </md-button>    
                 <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
                     <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound" alt="group owner image" />
                 </div>
@@ -29,7 +29,7 @@
         </md-card>
         <div style="border-bottom: 5px solid green; width:220px"></div>
         <div style="overflow-x: hidden; overflow-y: auto;">
-            <div ng-repeat="subgroup in group.subgroups track by $index" class="bottommargin5px" layout="column">
+            <div ng-repeat="subgroup in group.subgroups track by $index" class="bottommargin5px subgroupcard" layout="column">
                 <subgroupcard-directive subgroup="subgroup" ng-click="group.subgrouppage(subgroup,$index)" class="nooutline backColorWhite md-whiteframe-z2 cursorPointer"></subgroupcard-directive>
                 <ng-md-icon ng-show="group.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
             </div>
