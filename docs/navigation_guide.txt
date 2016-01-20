@@ -1,0 +1,25 @@
+Please note the following about url navigation:
+
+1. User page:
+http://www.teamofteams.io/user/userid
+
+It will have three views:
+1a. User is logged-in and viewing his/her own page i.e. user dashboard
+1b. User is logged-in and viewing someone else’s page
+1c. User is not logged-in and viewing a profile
+
+
+2. Team of Teams (ToT’s) page:
+http://www.teamofteams.io/teamofteamsid
+2a. User is logged-in and viewing a team of teams page for which he/she is a admin i.e. admin dashboard
+2b. User is logged-in and viewing a team of teams page for which he/she is a member i.e. member dashboard
+2c. User is logged-in and viewing a team of teams page for which he/she is not a member i.e. membership application dashboard
+2d. User is not logged-in and viewing a team of teams page i.e. membership application dashboard, before applying he/she will be asked to sign-in or signup
+
+
+3. Team page:
+http://www.teamofteams.io/teamofteamsid/teamid
+3a. User is logged-in and viewing a team page for which he/she is a admin or the admin of the team of teams i.e. admin dashboard
+3b. User is logged-in and viewing a team page for which he/she is a member i.e. member dashboard
+3c. User is logged-in and viewing a team page for which he/she is a member of team of teams i.e. membership application dashboard
+3d. (may be not) User is not logged-in and viewing a teams page i.e. membership application dashboard, before applying he/she will be asked to sign-in or signup
