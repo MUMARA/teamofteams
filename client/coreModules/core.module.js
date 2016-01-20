@@ -67,7 +67,7 @@ angular.module('core', [
     };
   }
 ])
-.filter('millSecondsToTimeString', function() {
+.filter('millSecondsToTimeString', [function() {
     return function(millseconds) {
         var seconds = Math.floor(millseconds / 1000);
         var days = Math.floor(seconds / 86400);
@@ -79,8 +79,8 @@ angular.module('core', [
         if(minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
         return timeString;
     }
-})
-.filter('glt', function () {
+}])
+.filter('glt', [function () {
     return function ( items, field, maxvalue, minvalue ) {
         if (maxvalue && minvalue){
             var filteredItems = []
@@ -103,7 +103,12 @@ angular.module('core', [
         }
         
     }
-})
+}])
+.filter('multilineFilter', ['$sce', function ($sce) {
+    return function (text) {
+        if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g, '<br />'));
+    }
+}])
 /* .run(["authService",function(authService){
      //debugger;
      authService.resolveUserPage();

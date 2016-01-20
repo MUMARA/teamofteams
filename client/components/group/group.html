@@ -238,18 +238,38 @@
 		    <md-divider md-outset></md-divider>
 	        <div layout="column" class="backColorWhite viewHeight-250 vscroll" >
                 <div class="leftrightpadding20px" ng-repeat="message in group.messagesArray">
-                    <div class="chatheader" layout="row">
-                        <div class="chatheaderClear"></div>
-                        <div class="chatheaderTitle backColorLightSeaGreen" >
-                            {{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName + ' ' + group.filterchatters(message.from)}}
+                    <!-- Msg To -->
+                    <div ng-if="!group.filterchatters(message.from)">
+                        <div class="chatheader" layout="row">
+                            <div class="chatheaderClear"></div>
+                            <div class="chatheaderTitle backColorLightSeaGreen" >
+                                {{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}
+                            </div>
+                            <div class="chatheaderTime backColorDarkSeaGreen">
+                                {{message.timestamp | date: 'shortTime'}}
+                            </div>
                         </div>
-                        <div class="chatheaderTime backColorDarkSeaGreen">
-                            {{message.timestamp | date: 'shortTime'}}
+                        <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="icon40px imageRound chatuserimg"/>
+                        <div class="backColorSeaGreen chatmsg padding10px">
+                            <span ng-bind-html="message.text | multilineFilter"></span>
                         </div>
                     </div>
-                    <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="icon40px imageRound chatuserimg"/>
-                    <div class="backColorSeaGreen chatmsg padding10px" flex-gt-sm="50">
-                        {{ message.text }}
+                    <!-- Msg From  -->
+                    <div ng-if="group.filterchatters(message.from)" layout="column" layout-align="end end">
+                        <div class="chatheaderRight" layout="row">
+                            <div class="chatheaderTimeRight backColorDarkSeaGreen">
+                                {{message.timestamp | date: 'shortTime'}}
+                            </div>
+                            <div class="chatheaderTitleRight backColorLightSeaGreen" >
+                                {{group.getUserProfile(message.from).firstName + ' '+ group.getUserProfile(message.from).lastName}}
+                            </div>
+                            <div class="chatheaderClearRight"></div>
+
+                        </div>
+                        <img ng-src="{{group.getUserProfile(message.from)['profile-image']}}" class="icon40px imageRound chatuserimgRight"/>
+                        <div class="backColorSeaGreen chatmsgRight padding10px">
+                            <span ng-bind-html="message.text | multilineFilter"></span>
+                        </div>
                     </div>
                 </div>
                 <!-- <md-list style="position: relative; padding: 0px !important;" ng-repeat="message in group.messagesArray">
@@ -288,7 +308,7 @@
                     <div style="border-right: 1px solid lightgrey;">
                         <img src="img/arrow.svg" class="icon20px padding10px">
                     </div>
-	                <input type="text" name="msg" ng-model="group.text.msg" aria-label="Group Text Msg Box" class="serachbox2" required>
+	                <textarea type="text" name="msg" ng-model="group.text.msg" aria-label="Group Text Msg Box" class="serachbox2" required></textarea>
                 </md-input-container>
                 <md-button type="submit" ng-disabled="chatForm.msg.$invalid || !group.activeChannelID" class="backColorSeaGreen foreColorWhite">SEND</md-button>
 	        </form>

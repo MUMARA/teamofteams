@@ -1160,6 +1160,12 @@ md-autocomplete input:not(.md-input) {
     font-size: x-small;
 }
 
+.chatheaderRight {
+    font-size: x-small;
+    position: relative;
+    left: 35px;
+}
+
 .chatheaderClear {
     border-top-right-radius: 100px;
     background-color: white;
@@ -1169,6 +1175,15 @@ md-autocomplete input:not(.md-input) {
     /*top: 20px;*/
 }
 
+.chatheaderClearRight {
+    border-top-left-radius: 100px;
+    background-color: white;
+    width: 43px;
+    height: 20px;
+    position: relative;
+    left: -26px;
+}
+
 .chatheaderTitle{
     width: 150px;
     margin-left: -15px;
@@ -1176,15 +1191,38 @@ md-autocomplete input:not(.md-input) {
     padding-top: 5px;
 }
 
+.chatheaderTitleRight{
+    width: 140px;
+    margin-left: -15px;
+    padding-right: 40px;
+    padding-top: 5px;
+    text-align: right;
+}
+
 .chatheaderTime {
     padding-top: 5px;
     width: 50px;
-    padding-left: 5px;
+    padding-left: 10px;
     border-top-right-radius: 100px;
 }
+
+.chatheaderTimeRight {
+    padding-top: 5px;
+    width: 50px;
+    padding-left: 15px;
+    padding-right: 10px;
+    border-top-left-radius: 100px;
+}
+
 .chatuserimg {
     position: relative;
     top: -17px;
+}
+
+.chatuserimgRight {
+    position: relative;
+    top: -17px;
+    left: 10px;
 }
 
 .chatmsg {
@@ -1192,50 +1230,25 @@ md-autocomplete input:not(.md-input) {
     top: -45px;
     min-height: 40px;
     margin-left: 43px;
-    margin-top: 5px;
+    margin-top: 1px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-}
-
-.chatheaderRight {
-    font-size: x-small;
-}
-
-.chatheaderClearRight {
-    border-top-right-radius: 100px;
-    background-color: white;
-    width: 43px;
-    height: 20px;
-    position: relative;
-    /*top: 20px;*/
-}
-
-.chatheaderTitleRight {
-    width: 150px;
-    margin-left: -15px;
-    padding-left: 20px;
-    padding-top: 5px;
-}
-
-.chatheaderTimeRight {
-    padding-top: 5px;
-    width: 50px;
-    padding-left: 5px;
-    border-top-right-radius: 100px;
-}
-.chatuserimgRight {
-    position: relative;
-    top: -17px;
+    min-width: 50%;
+    max-width: 50%;
+    word-wrap: break-word;
 }
 
 .chatmsgRight {
     position: relative;
-    top: -45px;
+    top: -35px;
+    left: -34px;
     min-height: 40px;
-    margin-left: 43px;
-    margin-top: 5px;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    margin-top: -5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    min-width: 50%;
+    max-width: 50%;
+    word-wrap: break-word;
 }
 
 .moh {

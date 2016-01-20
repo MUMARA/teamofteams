@@ -54,7 +54,14 @@
         this.adminSideNav = true;
         this.memberSideNav = true;
         
-
+        that.groupAdmin = false
+        firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
+            if (group.val()['membership-type'] == 1) {
+                that.groupAdmin = true;
+            } else if (group.val()['membership-type'] == 2) {
+                that.groupAdmin = true;
+            }
+        })
 
 
         this.ActiveSideNavBar = function(sideNav) {
