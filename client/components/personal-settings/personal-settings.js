@@ -3,9 +3,9 @@
     'use strict';
 
     angular.module('app.personalSettings')
-        .controller('PersonalSettingsController', ['dataService', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
+        .controller('PersonalSettingsController', ['dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
 
-            function(dataService, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
+            function(dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
 
                 /*Private Variables*/
                 var that = this;
@@ -102,7 +102,8 @@
                             
                             // console.log(that.userData)
                             that.userData.$save().then(function(data) {
-                                $location.path('/user/' + userService.getCurrentUser().userID)
+                                // $location.path('/user/' + userService.getCurrentUser().userID)
+                                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
                                 that.isProcessing = false;
                                 perSettingForm.$submitted = false;
                                 messageService.showSuccess('User profile updated')

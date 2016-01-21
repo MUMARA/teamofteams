@@ -24,9 +24,11 @@
 
                 this.openSetting = function() {
                     if (that.adminOf === 'Group') {
-                        $location.path('user/group/' + that.groupID + '/edit-group');
+                        // $location.path('user/group/' + that.groupID + '/edit-group');
+                        $state.go('user.edit-group', {groupID: that.groupID})
                     } else if (that.adminOf === 'Subgroup') {
-                        $location.path('/user/group/' + that.groupID + '/geoFencing');
+                        // $location.path('/user/group/' + that.groupID + '/geoFencing');
+                        $state.go('user.geo-fencing', {groupID: that.groupID})
                     }
                 }
 

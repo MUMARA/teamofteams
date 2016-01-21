@@ -10,9 +10,9 @@
         'use strict';
         angular
             .module('app.createTeamsChannels')
-            .controller('CreateTeamsChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateTeamsChannelsController]);
+            .controller('CreateTeamsChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$state', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateTeamsChannelsController]);
 
-        function CreateTeamsChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
+        function CreateTeamsChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $state, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
 
@@ -33,7 +33,8 @@
                 /*   createGroupService.cancelGroupCreation();*/
                 /* $mdDialog.cancel();*/
                 //$rootScope.newImg=null;
-                $location.path('/user/group/' + $scope.groupID);
+                // $location.path('/user/group/' + $scope.groupID);
+                $state.go('user.group', {groupID: $scope.groupID})
 
             }
             $scope.createChannel = function(groupForm) {
@@ -48,7 +49,8 @@
                 chatService.CreateTeamChannel($scope.groupID, $scope.channel, $scope.teamID, user)
                     .then(function() {
                         // console.log("channel Creation Successful");
-                        $location.path('/user/group/' + $scope.groupID);
+                        // $location.path('/user/group/' + $scope.groupID);
+                        $state.go('user.group', {groupID: $scope.groupID})
                         messageService.showSuccess("channel creation Successful");
                     }, function(reason) {
                         messageService.showFailure(reason);
