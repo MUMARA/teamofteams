@@ -9,106 +9,110 @@
 // Create the 'example' module
 angular.module('core', [
 
-        // 'angularMoment',
-        'ngAudio',
-        'ngAnimate',
-        'ngAria',
-        // 'checkin',
-        'ngMdIcons',
-        //'ngMaterial',
-        'firebase',
-        'ngStorage',
-        'ngGeolocation',
-        // 'ui.select',
-        'ngMessages',
-        'ng-mfb',
-        // 'ui.select',
-        // 'ngSanitize',
-        'ui.router',
-        'angular-img-cropper',
-        'md.data.table'
-        /*,
-            'leaflet-directive'*/
-        ,
-        'ui-leaflet',
-        'angular.filter'
+    // 'angularMoment',
+    'ngAudio',
+    'ngAnimate',
+    'ngAria',
+    // 'checkin',
+    'ngMdIcons',
+    //'ngMaterial',
+    'firebase',
+    'ngStorage',
+    'ngGeolocation',
+    // 'ui.select',
+    'ngMessages',
+    'ng-mfb',
+    // 'ui.select',
+    // 'ngSanitize',
+    'ui.router',
+    'angular-img-cropper',
+    'md.data.table'/*,
+    'leaflet-directive'*/,
+    'ui-leaflet',
+    'angular.filter'
 
-        /*   'customdirectives'*/
+    /*   'customdirectives'*/
 
-        //'angularCharts'
-    ]).filter('trustUrl', [function($sce) {
-        return function(url) {
-            /*var temp;
-            $.get(url).success(function(data){
-                temp = 'data:image/jpeg;base64' + data;
+    //'angularCharts'
+]).filter('trustUrl', ['$sce', function($sce) {
+    return function(url) {
+        /*var temp;
+        $.get(url).success(function(data){
+            temp = 'data:image/jpeg;base64' + data;
+        });
+
+        //var temp = webkitURL.createObjectURL(url)*/
+        return url
+    };
+  }])
+.filter('emptyString', [
+  function() {
+    return function(input, param) {
+      if (!param) return input
+
+      var ret = [];
+      if (!angular.isDefined(param)) param = true;
+
+
+      if (param) {
+        angular.forEach(input, function(v) {
+          if (angular.isDefined(v.comment) && v.comment) {
+            v.comment = v.comment.replace(/^\s*/g, '');
+            ret.push(v);
+          }
+
+        });
+      }
+      return ret;
+    };
+  }
+])
+.filter('millSecondsToTimeString', [function() {
+    return function(millseconds) {
+        var seconds = Math.floor(millseconds / 1000);
+        var days = Math.floor(seconds / 86400);
+        var hours = Math.floor((seconds % 86400) / 3600);
+        var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
+        var timeString = '';
+        if(days > 0) timeString += (days > 1) ? (days + " days ") : (days + " day ");
+        if(hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (hours + " hour ");
+        if(minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
+        return timeString;
+    }
+}])
+.filter('glt', [function () {
+    return function ( items, field, maxvalue, minvalue ) {
+        if (maxvalue && minvalue){
+            var filteredItems = []
+            angular.forEach(items, function ( item ) {
+                if (item[field] >= maxvalue &&  item[field] <= minvalue) {
+                    filteredItems.push(item);
+                }
             });
-
-            //var temp = webkitURL.createObjectURL(url)*/
-            return url
-        };
-    }])
-    .filter('emptyString', [function() {
-        return function(input, param) {
-            if (!param) return input
-
-            var ret = [];
-            if (!angular.isDefined(param)) param = true;
-
-
-            if (param) {
-                angular.forEach(input, function(v) {
-                    if (angular.isDefined(v.comment) && v.comment) {
-                        v.comment = v.comment.replace(/^\s*/g, '');
-                        ret.push(v);
-                    }
-
-                });
-            }
-            return ret;
-        };
-    }])
-    .filter('millSecondsToTimeString', [function() {
-        return function(millseconds) {
-            var seconds = Math.floor(millseconds / 1000);
-            var days = Math.floor(seconds / 86400);
-            var hours = Math.floor((seconds % 86400) / 3600);
-            var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
-            var timeString = '';
-            if (days > 0) timeString += (days > 1) ? (days + " days ") : (days + " day ");
-            if (hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (hours + " hour ");
-            if (minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
-            return timeString;
+            return filteredItems;
+        } else if (maxvalue){
+            var filteredItems = []
+            angular.forEach(items, function ( item ) {
+                if (item[field] >= maxvalue) {
+                    filteredItems.push(item);
+                }
+            });
+            return filteredItems;
+        } else {
+          return items
         }
-    }])
-    .filter('glt', [function() {
-        return function(items, field, maxvalue, minvalue) {
-            if (maxvalue && minvalue) {
-                var filteredItems = []
-                angular.forEach(items, function(item) {
-                    if (item[field] >= maxvalue && item[field] <= minvalue) {
-                        filteredItems.push(item);
-                    }
-                });
-                return filteredItems;
-            } else if (maxvalue) {
-                var filteredItems = []
-                angular.forEach(items, function(item) {
-                    if (item[field] >= maxvalue) {
-                        filteredItems.push(item);
-                    }
-                });
-                return filteredItems;
-            } else {
-                return items
-            }
-
-        }
-    }]);
-    /* .run(["authService",function(authService){
-         //debugger;
-         authService.resolveUserPage();
-     }]);*/
-
+        
+    }
+}])
+.filter('multilineFilter', ['$sce', function ($sce) {
+    return function (text) {
+        if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g, '<br />'));
+    }
+}]);
+/* .run(["authService",function(authService){
+     //debugger;
+     authService.resolveUserPage();
+ }]);*/
 /*! Firebase.getAsArray - v0.1.0 - 2014-04-21
 * Copyright (c) 2014 Kato
 * MIT LICENSE */
@@ -479,9 +483,9 @@ angular.module('core', [
     'use strict';
 
     angular.module('app.user')
-        .controller('UserController', ['dataService', '$q', '$location', 'checkinService', '$rootScope', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
+        .controller('UserController', ['dataService', '$q', '$state', '$location', 'checkinService', '$rootScope', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
 
-    function UserController(dataService, $q, $location, checkinService, $rootScope, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
+    function UserController(dataService, $q, $state, $location, checkinService, $rootScope, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
 
         //$rootScope.fl= 'hello'
         var $scope = this;
@@ -489,7 +493,8 @@ angular.module('core', [
         //window.userScope = this;
         this.pageUserId = userService.getCurrentUser();
         this.createGroup = function() {
-            $location.path('/user/:userID/create-group');
+            // $location.path('/user/:userID/create-group');
+            $state.go('user.create-group', {userID: userService.getCurrentUser().userID})
         }
         var userData;
         this.groupMembers;
@@ -827,8 +832,8 @@ angular.module('core', [
     'use strict';
 
     angular.module('app.group')
-        .controller('GroupController', ['$mdDialog','userService', 'dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$state", "$stateParams",
-            function($mdDialog, userService, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $state, $stateParams) {
+        .controller('GroupController', ['$sce', '$mdDialog','userService', 'dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$state", "$stateParams",
+            function($sce, $mdDialog, userService, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $state, $stateParams) {
 
                 var that = this;
                 var isOwner = false;
@@ -846,9 +851,11 @@ angular.module('core', [
 
                 this.openSetting = function() {
                     if (that.adminOf === 'Group') {
-                        $location.path('user/group/' + that.groupID + '/edit-group');
+                        // $location.path('user/group/' + that.groupID + '/edit-group');
+                        $state.go('user.edit-group', {groupID: that.groupID})
                     } else if (that.adminOf === 'Subgroup') {
-                        $location.path('/user/group/' + that.groupID + '/geoFencing');
+                        // $location.path('/user/group/' + that.groupID + '/geoFencing');
+                        $state.go('user.geo-fencing', {groupID: that.groupID})
                     }
                 }
 
@@ -973,6 +980,7 @@ angular.module('core', [
 
                 };
 
+                
                 this.filterchatters = function(chatterID) {
                         var sender = false;
 
@@ -1041,9 +1049,9 @@ angular.module('core', [
                 // Start Team Attendance
                 //update status when user checked-in or checked-out
                 this.users = [];
-                this.showActivity = false;
+                this.showActivity = true;
                 this.showReport = false;
-                this.showChat = true;
+                this.showChat = false;
                 this.showManualAttendace = false;
                 this.showParams = true;
                 this.processTeamAttendance = false;
@@ -1329,8 +1337,8 @@ angular.module('core', [
 
     angular.module('app.navToolbar')
 
-    .controller('NavToolbarController', ['$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$location', 'checkinService',
-        function($rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $location, checkinService) {
+    .controller('NavToolbarController', ['$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function($rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
 
             /*private variables*/
             // alert('inside controller');
@@ -1375,7 +1383,8 @@ angular.module('core', [
 
             function quizStart() {
                 // console.log('done')
-                $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
+                // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
+                $state.go('user.quiz', {userID: userService.getCurrentUser().userID})
             }
 
             //this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
@@ -1602,7 +1611,8 @@ angular.module('core', [
             }
 
             function shiftToUserPage() {
-                $location.path('/user/' + userService.getCurrentUser().userID)
+                // $location.path('/user/' + userService.getCurrentUser().userID)
+                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
             }
 
             this.checkTeamAvailable = function () {
@@ -1684,7 +1694,8 @@ angular.module('core', [
             }
 
             function PersonalSetting() {
-                $location.path('/user/' + userID + '/personalSettings')
+                // $location.path('/user/' + userID + '/personalSettings')
+                $state.go('user.personal-settings', {userID: userService.getCurrentUser().userID})
             }
 
 
@@ -2377,9 +2388,9 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.editGroup')
-        .controller('EditGroupController', ['messageService', '$http', '$rootScope', 'firebaseService', '$location', 'editGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', '$firebaseObject', '$stateParams', EditGroupController]);
+        .controller('EditGroupController', ['messageService', '$http', '$rootScope', 'firebaseService', '$state', '$location', 'editGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', '$firebaseObject', '$stateParams', EditGroupController]);
 
-    function EditGroupController(messageService, $http, $rootScope, firebaseService, $location, editGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q, $firebaseObject, $stateParams) {
+    function EditGroupController(messageService, $http, $rootScope, firebaseService, $state, $location, editGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q, $firebaseObject, $stateParams) {
 
 
         $rootScope.croppedImage = {};
@@ -2415,17 +2426,21 @@ angular.module('core', [
         })
 
         this.openCreateSubGroupPage = function() {
-            $location.path('/user/group/' + groupId + '/create-subgroup');
+            // $location.path('/user/group/' + groupId + '/create-subgroup');
+            $state.go('user.create-subgroup', {groupID: groupId})
         }
         this.openUserSettingPage = function() {
-            $location.path('/user/group/' + groupId + '/user-setting');
+            // $location.path('/user/group/' + groupId + '/user-setting');
+            $state.go('user.user-setting', {groupID: groupId})
         };
         this.subgroupPage = function() {
-            $location.path('user/group/' + groupId + '/subgroup');
+            // $location.path('user/group/' + groupId + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupId})
         }
 
         this.openGeoFencingPage = function() {
-            $location.path('/user/group/' + groupId + '/geoFencing');
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupId})
         }
 
         //query for users names list
@@ -3334,10 +3349,10 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -3383,7 +3398,14 @@ angular.module('core', [
         this.adminSideNav = true;
         this.memberSideNav = true;
         
-
+        that.groupAdmin = false
+        firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
+            if (group.val()['membership-type'] == 1) {
+                that.groupAdmin = true;
+            } else if (group.val()['membership-type'] == 2) {
+                that.groupAdmin = true;
+            }
+        })
 
 
         this.ActiveSideNavBar = function(sideNav) {
@@ -3427,16 +3449,20 @@ angular.module('core', [
 
 
         this.openUserSettingPage = function() {
-            $location.path('/user/group/' + groupID + '/user-setting');
+            // $location.path('/user/group/' + groupID + '/user-setting');
+            $state.go('user.user-setting', {groupID: groupID})
         };
         this.openEditGroup = function() {
-            $location.path('user/group/' + groupID + '/edit-group');
+            // $location.path('user/group/' + groupID + '/edit-group');
+            $state.go('user.edit-group', {groupID: groupID})
         }
         this.openGeoFencingPage = function() {
-            $location.path('/user/group/' + groupID + '/geoFencing');
+            // $location.path('/user/group/' + groupID + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupID})
         };
         this.subgroupPage = function() {
-            $location.path('user/group/' + this.groupid + '/subgroup');
+            // $location.path('user/group/' + this.groupid + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupId})
         }
 
         this.veiwSubgroup = function(subgroupData, index) {
@@ -3492,7 +3518,8 @@ angular.module('core', [
             /*   createGroupService.cancelGroupCreation();*/
             /* $mdDialog.cancel();*/
             $rootScope.newImg = null;
-            $location.path('/user/group/' + groupID);
+            // $location.path('/user/group/' + groupID);
+            $state.go('user.group', {groupID: groupID})
 
         }
 
@@ -4147,9 +4174,9 @@ angular.module('core', [
     'use strict';
 
     angular.module('app.personalSettings')
-        .controller('PersonalSettingsController', ['dataService', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
+        .controller('PersonalSettingsController', ['dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
 
-            function(dataService, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
+            function(dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
 
                 /*Private Variables*/
                 var that = this;
@@ -4246,7 +4273,8 @@ angular.module('core', [
                             
                             // console.log(that.userData)
                             that.userData.$save().then(function(data) {
-                                $location.path('/user/' + userService.getCurrentUser().userID)
+                                // $location.path('/user/' + userService.getCurrentUser().userID)
+                                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
                                 that.isProcessing = false;
                                 perSettingForm.$submitted = false;
                                 messageService.showSuccess('User profile updated')
@@ -4477,9 +4505,9 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
         /* .controller("DialogController", ["$mdDialog", DialogController]);*/
-    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
 
         var that = this;
         var user = userService.getCurrentUser();
@@ -4493,17 +4521,21 @@ angular.module('core', [
         this.changeMemberRole = changeMemberRole;
 
         this.openCreateSubGroupPage = function() {
-            $location.path('/user/group/' + groupID + '/create-subgroup');
+            // $location.path('/user/group/' + groupID + '/create-subgroup');
+            $state.go('user.create-subgroup', {groupID: groupID})
         }
 
         this.subgroupPage = function() {
-            $location.path('user/group/' + groupID + '/subgroup');
+            // $location.path('user/group/' + groupID + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupID})
         }
         this.editgroupPage = function() {
-            $location.path('user/group/' + groupID + '/edit-group');
+            // $location.path('user/group/' + groupID + '/edit-group');
+            $state.go('user.edit-group', {groupID: groupID})
         }
         this.openGeoFencingPage = function() {
-            $location.path('/user/group/' + groupID + '/geoFencing');
+            // $location.path('/user/group/' + groupID + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupID})
         }
 
         this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
@@ -4523,7 +4555,8 @@ angular.module('core', [
         function hide() {
             /*   createGroupService.cancelGroupCreation();*/
             /* $mdDialog.cancel();*/
-            $location.path('/user/group/' + groupID);
+            // $location.path('/user/group/' + groupID);
+            $state.go('user.group', {groupID: groupID})
 
         }
         //For owner/admin: Approve membership request.
@@ -4576,6 +4609,7 @@ angular.module('core', [
     .controller('GeoFencingController', [
 
         '$interval',
+        '$state',
         '$location',
         'messageService',
         '$mdDialog',
@@ -4594,7 +4628,7 @@ angular.module('core', [
         '$scope',
 
 
-        function($interval, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
+        function($interval, $state, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
 
 
             $rootScope.address = '';
@@ -4853,13 +4887,16 @@ angular.module('core', [
             // that.getLatLng = getLatLngByAddress;
 
             this.openCreateSubGroupPage = function() {
-                $location.path('/user/group/' + groupId + '/create-subgroup');
+                // $location.path('/user/group/' + groupId + '/create-subgroup');
+                $state.go('user.create-subgroup', {groupID: groupId})
             }
             this.openUserSettingPage = function() {
-                $location.path('/user/group/' + groupId + '/user-setting');
+                // $location.path('/user/group/' + groupId + '/user-setting');
+                $state.go('user.user-setting', {groupID: groupId})
             };
             this.openEditGroup = function() {
-                $location.path('user/group/' + groupId + '/edit-group');
+                // $location.path('user/group/' + groupId + '/edit-group');
+                $state.go('user.edit-group', {groupID: groupId})
             };
             // this.hide = function() {
 
@@ -5027,9 +5064,9 @@ angular.module('core', [
         'use strict';
         angular
             .module('app.createChannels')
-            .controller('CreateChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateChannelsController]);
+            .controller('CreateChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$state', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateChannelsController]);
 
-        function CreateChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
+        function CreateChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $state, location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
 
@@ -5048,7 +5085,8 @@ angular.module('core', [
                 /*   createGroupService.cancelGroupCreation();*/
                 /* $mdDialog.cancel();*/
                 //$rootScope.newImg=null;
-                $location.path('/user/group/' + $scope.groupID);
+                // $location.path('/user/group/' + $scope.groupID);
+                $state.go('user.group', {groupID: $scope.groupID})
 
             }
             $scope.createChannel = function(groupForm) {
@@ -5064,7 +5102,8 @@ angular.module('core', [
                     .then(function() {
 
                         console.log("channel Creation Successful");
-                        $location.path('/user/group/' + $scope.groupID);
+                        // $location.path('/user/group/' + $scope.groupID);
+                        $state.go('user.group', {groupID: $scope.groupID})
                         messageService.showSuccess("channel creation Successful");
                     }, function(reason) {
                         messageService.showFailure(reason);
@@ -5104,9 +5143,9 @@ angular.module('core', [
         'use strict';
         angular
             .module('app.createTeamsChannels')
-            .controller('CreateTeamsChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateTeamsChannelsController]);
+            .controller('CreateTeamsChannelsController', ['messageService', 'chatService', "$stateParams", '$http', '$rootScope', '$firebaseObject', '$state', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateTeamsChannelsController]);
 
-        function CreateTeamsChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
+        function CreateTeamsChannelsController(messageService, chatService, $stateParams, $http, $rootScope, $firebaseObject, $state, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
 
 
 
@@ -5127,7 +5166,8 @@ angular.module('core', [
                 /*   createGroupService.cancelGroupCreation();*/
                 /* $mdDialog.cancel();*/
                 //$rootScope.newImg=null;
-                $location.path('/user/group/' + $scope.groupID);
+                // $location.path('/user/group/' + $scope.groupID);
+                $state.go('user.group', {groupID: $scope.groupID})
 
             }
             $scope.createChannel = function(groupForm) {
@@ -5142,7 +5182,8 @@ angular.module('core', [
                 chatService.CreateTeamChannel($scope.groupID, $scope.channel, $scope.teamID, user)
                     .then(function() {
                         // console.log("channel Creation Successful");
-                        $location.path('/user/group/' + $scope.groupID);
+                        // $location.path('/user/group/' + $scope.groupID);
+                        $state.go('user.group', {groupID: $scope.groupID})
                         messageService.showSuccess("channel creation Successful");
                     }, function(reason) {
                         messageService.showFailure(reason);
@@ -7570,7 +7611,7 @@ angular.module('core')
 'use strict';
 
 angular.module('core')
-    .factory('userService', ["$q", "$http", "appConfig", '$localStorage', function($q, $http, appConfig, $localStorage) {
+    .factory('userService', ["$state", "$q", "$http", "appConfig", '$localStorage', function($state, $q, $http, appConfig, $localStorage) {
         //.factory('userService',["$http","appConfig","$sessionStorage",'$localStorage','userFirebaseService', function( $http, appConfig,$sessionStorage,$localStorage, userFirebaseService) {
 
         var user = $localStorage.loggedInUser;
@@ -7579,22 +7620,19 @@ angular.module('core')
             getUserPresenceFromLocastorage: function() {
                 var deferred = $q.defer();
 
-                var userExit = false;
                 if (user) {
                     var ref = new Firebase(appConfig.myFirebase);
                     ref.child("users").child(user.userID).once('value', function(snapshot) {
                         if (snapshot.hasChild('email')) {
-                            userExit = true;
-                            deferred.resolve(userExit);
+                            $state.go('user.dashboard', {userID: user.userID})
                         } else {
-                            userExit = false;
-                            deferred.resolve(userExit);
+                            deferred.resolve();
                         }
                         //console.log(snapshot)
                     }); //user once
                 } // if userObj
                 else {
-                    deferred.resolve(false);
+                    deferred.resolve();
                 }
 
                 return deferred.promise;
@@ -12336,7 +12374,7 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
     angular.module("myApp")
         .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
             // alert('config')
-            // $locationProvider.html5Mode(true).hashPrefix('!');
+            $locationProvider.html5Mode(true).hashPrefix('!');
             var navLoginbar = {
                 templateUrl: 'components/nav-loginbar/nav-loginbar.html',
                 controller: 'NavLoginbarController',
@@ -12356,7 +12394,7 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
                         controller: 'HomeController',
                         controllerAs: 'home'
                     }
-                },
+                }/*,
                 resolve: {
                     user: function($location, userService) {
                         return userService.getUserPresenceFromLocastorage().then(function(data) {
@@ -12368,7 +12406,7 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
 
 
                     }
-                }
+                }*/
             });
             $stateProvider.state('signin', {
                 url: '/signin',
@@ -12379,6 +12417,9 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
                         controller: 'SigninController',
                         controllerAs: 'signin'
                     }
+                },
+                onEnter: function($state, userService){
+                    return userService.getUserPresenceFromLocastorage()
                 }
             });
             $stateProvider.state('forgot', {
@@ -12404,7 +12445,7 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
                 }
             });
             $stateProvider.state('user', {
-                url: '/user',
+                // url: '/user',
                 abstract: true,
                 views: {
                     'nav': navToolbar,
@@ -12450,31 +12491,31 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
                 controllerAs: 'createGroup'
             });
             $stateProvider.state('user.edit-group', {
-                url: '/group/:groupID/edit-group',
+                url: '/:groupID/edit-group',
                 templateUrl: 'components/edit-group/edit-group.html',
                 controller: 'EditGroupController',
                 controllerAs: 'editGroup'
             });
             $stateProvider.state('user.group', {
-                url: '/group/:groupID',
+                url: '/:groupID',
                 templateUrl: 'components/group/group.html',
                 controller: 'GroupController',
                 controllerAs: 'group'
             });
             $stateProvider.state('user.create-subgroup', {
-                url: '/group/:groupID/create-subgroup',
+                url: '/:groupID/create-subgroup',
                 templateUrl: 'components/create-sub-group/create-sub-group.html',
                 controller: 'CreateSubGroupController',
                 controllerAs: 'createSubGroup'
             });
-            $stateProvider.state('user.subgroup', {
-                url: '/group/:groupID/subgroup',
+            /*$stateProvider.state('user.subgroup', {
+                url: '/:groupID/subgroup',
                 templateUrl: 'components/subgroup/subgroup.html',
                 controller: 'SubgroupController',
                 controllerAs: 'subgroup'
-            });
-            $stateProvider.state('user.geoFencing', {
-                url: '/group/:groupID/geoFencing',
+            });*/
+            $stateProvider.state('user.geo-fencing', {
+                url: '/:groupID/geoFencing',
                 templateUrl: 'components/geo-fencing/geo-fencing.html',
                 controller: 'GeoFencingController',
                 controllerAs: 'geoFencing'
@@ -12486,25 +12527,25 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
                 controllerAs: 'joinGroup'
             });
             $stateProvider.state('user.create-channels', {
-                url: '/group/:groupID/create-channels',
+                url: '/:groupID/create-channels',
                 templateUrl: 'components/create-channels/create-channels.html',
                 controller: 'CreateChannelsController',
                 controllerAs: 'createChannels'
             });
             $stateProvider.state('user.create-teams-channels', {
-                url: '/group/:groupID/:teamID/create-teams-channels',
+                url: '/:groupID/:teamID/create-teams-channels',
                 templateUrl: 'components/create-teams-channels/create-teams-channels.html',
                 controller: 'CreateTeamsChannelsController',
                 controllerAs: 'createTeamsChannels'
             });
-            $stateProvider.state('user.personalSettings', {
+            $stateProvider.state('user.personal-settings', {
                 url: '/:userID/personalSettings',
                 templateUrl: 'components/personal-settings/personal-settings.html',
                 controller: 'PersonalSettingsController',
                 controllerAs: 'personalSettings'
             });
             $stateProvider.state('user.user-setting', {
-                url: '/group/:groupID/user-setting',
+                url: '/:groupID/user-setting',
                 templateUrl: 'components/user-setting/user-setting.html',
                 controller: 'UserSettingController',
                 controllerAs: 'userSetting'
