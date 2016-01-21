@@ -3,9 +3,11 @@
  */
 
 var gulp = require('gulp'),
+    url = require('url')
     concat = require('gulp-concat'),
     // minify = require('gulp-minify');
     uglify = require('gulp-uglify');
+    fs = require('fs')
 
 var webserver = require('gulp-webserver');
 
@@ -106,7 +108,16 @@ gulp.task('webserver', function() {
                 path: '/index.html'
             },
             open: true,
-            port: 7000
+            port: 7000,
+            middleware: function(req, res, next) {
+                var fileName = url.parse(req.url);
+                fileName = fileName.href.split(fileName.search).join("");
+                var fileExists = fs.existsSync("./" + fileName);
+                if (!fileExists) {
+                    req.url = "/index.html";
+                }
+                return next();
+            }
         }));
 });
 

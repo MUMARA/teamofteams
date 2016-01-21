@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('core')
-    .factory('userService', ["$q", "$http", "appConfig", '$localStorage', function($q, $http, appConfig, $localStorage) {
+    .factory('userService', ["$state", "$q", "$http", "appConfig", '$localStorage', function($state, $q, $http, appConfig, $localStorage) {
         //.factory('userService',["$http","appConfig","$sessionStorage",'$localStorage','userFirebaseService', function( $http, appConfig,$sessionStorage,$localStorage, userFirebaseService) {
 
         var user = $localStorage.loggedInUser;
@@ -14,22 +14,19 @@ angular.module('core')
             getUserPresenceFromLocastorage: function() {
                 var deferred = $q.defer();
 
-                var userExit = false;
                 if (user) {
                     var ref = new Firebase(appConfig.myFirebase);
                     ref.child("users").child(user.userID).once('value', function(snapshot) {
                         if (snapshot.hasChild('email')) {
-                            userExit = true;
-                            deferred.resolve(userExit);
+                            $state.go('user.dashboard', {userID: user.userID})
                         } else {
-                            userExit = false;
-                            deferred.resolve(userExit);
+                            deferred.resolve();
                         }
                         //console.log(snapshot)
                     }); //user once
                 } // if userObj
                 else {
-                    deferred.resolve(false);
+                    deferred.resolve();
                 }
 
                 return deferred.promise;

@@ -6,6 +6,7 @@
     .controller('GeoFencingController', [
 
         '$interval',
+        '$state',
         '$location',
         'messageService',
         '$mdDialog',
@@ -24,7 +25,7 @@
         '$scope',
 
 
-        function($interval, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
+        function($interval, $state, $location, messageService, $mdDialog, checkinService, utilService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, dateFilter, $rootScope, leafletData, $scope) {
 
 
             $rootScope.address = '';
@@ -283,13 +284,16 @@
             // that.getLatLng = getLatLngByAddress;
 
             this.openCreateSubGroupPage = function() {
-                $location.path('/user/group/' + groupId + '/create-subgroup');
+                // $location.path('/user/group/' + groupId + '/create-subgroup');
+                $state.go('user.create-subgroup', {groupID: groupId})
             }
             this.openUserSettingPage = function() {
-                $location.path('/user/group/' + groupId + '/user-setting');
+                // $location.path('/user/group/' + groupId + '/user-setting');
+                $state.go('user.user-setting', {groupID: groupId})
             };
             this.openEditGroup = function() {
-                $location.path('user/group/' + groupId + '/edit-group');
+                // $location.path('user/group/' + groupId + '/edit-group');
+                $state.go('user.edit-group', {groupID: groupId})
             };
             // this.hide = function() {
 

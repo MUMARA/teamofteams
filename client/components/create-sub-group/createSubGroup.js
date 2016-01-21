@@ -5,10 +5,10 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -54,7 +54,14 @@
         this.adminSideNav = true;
         this.memberSideNav = true;
         
-
+        that.groupAdmin = false
+        firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
+            if (group.val()['membership-type'] == 1) {
+                that.groupAdmin = true;
+            } else if (group.val()['membership-type'] == 2) {
+                that.groupAdmin = true;
+            }
+        })
 
 
         this.ActiveSideNavBar = function(sideNav) {
@@ -98,16 +105,20 @@
 
 
         this.openUserSettingPage = function() {
-            $location.path('/user/group/' + groupID + '/user-setting');
+            // $location.path('/user/group/' + groupID + '/user-setting');
+            $state.go('user.user-setting', {groupID: groupID})
         };
         this.openEditGroup = function() {
-            $location.path('user/group/' + groupID + '/edit-group');
+            // $location.path('user/group/' + groupID + '/edit-group');
+            $state.go('user.edit-group', {groupID: groupID})
         }
         this.openGeoFencingPage = function() {
-            $location.path('/user/group/' + groupID + '/geoFencing');
+            // $location.path('/user/group/' + groupID + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupID})
         };
         this.subgroupPage = function() {
-            $location.path('user/group/' + this.groupid + '/subgroup');
+            // $location.path('user/group/' + this.groupid + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupId})
         }
 
         this.veiwSubgroup = function(subgroupData, index) {
@@ -163,7 +174,8 @@
             /*   createGroupService.cancelGroupCreation();*/
             /* $mdDialog.cancel();*/
             $rootScope.newImg = null;
-            $location.path('/user/group/' + groupID);
+            // $location.path('/user/group/' + groupID);
+            $state.go('user.group', {groupID: groupID})
 
         }
 

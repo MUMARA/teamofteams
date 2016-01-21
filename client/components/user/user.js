@@ -2,9 +2,9 @@
     'use strict';
 
     angular.module('app.user')
-        .controller('UserController', ['dataService', '$q', '$location', 'checkinService', '$rootScope', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
+        .controller('UserController', ['dataService', '$q', '$state', '$location', 'checkinService', '$rootScope', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
 
-    function UserController(dataService, $q, $location, checkinService, $rootScope, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
+    function UserController(dataService, $q, $state, $location, checkinService, $rootScope, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
 
         //$rootScope.fl= 'hello'
         var $scope = this;
@@ -12,7 +12,8 @@
         //window.userScope = this;
         this.pageUserId = userService.getCurrentUser();
         this.createGroup = function() {
-            $location.path('/user/:userID/create-group');
+            // $location.path('/user/:userID/create-group');
+            $state.go('user.create-group', {userID: userService.getCurrentUser().userID})
         }
         var userData;
         this.groupMembers;

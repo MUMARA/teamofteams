@@ -3,8 +3,8 @@
 
     angular.module('app.navToolbar')
 
-    .controller('NavToolbarController', ['$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$location', 'checkinService',
-        function($rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $location, checkinService) {
+    .controller('NavToolbarController', ['$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function($rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
 
             /*private variables*/
             // alert('inside controller');
@@ -49,7 +49,8 @@
 
             function quizStart() {
                 // console.log('done')
-                $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
+                // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
+                $state.go('user.quiz', {userID: userService.getCurrentUser().userID})
             }
 
             //this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
@@ -276,7 +277,8 @@
             }
 
             function shiftToUserPage() {
-                $location.path('/user/' + userService.getCurrentUser().userID)
+                // $location.path('/user/' + userService.getCurrentUser().userID)
+                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
             }
 
             this.checkTeamAvailable = function () {
@@ -358,7 +360,8 @@
             }
 
             function PersonalSetting() {
-                $location.path('/user/' + userID + '/personalSettings')
+                // $location.path('/user/' + userID + '/personalSettings')
+                $state.go('user.personal-settings', {userID: userService.getCurrentUser().userID})
             }
 
 

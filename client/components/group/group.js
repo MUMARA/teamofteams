@@ -5,8 +5,8 @@
     'use strict';
 
     angular.module('app.group')
-        .controller('GroupController', ['$mdDialog','userService', 'dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$state", "$stateParams",
-            function($mdDialog, userService, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $state, $stateParams) {
+        .controller('GroupController', ['$sce', '$mdDialog','userService', 'dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$state", "$stateParams",
+            function($sce, $mdDialog, userService, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $state, $stateParams) {
 
                 var that = this;
                 var isOwner = false;
@@ -24,9 +24,11 @@
 
                 this.openSetting = function() {
                     if (that.adminOf === 'Group') {
-                        $location.path('user/group/' + that.groupID + '/edit-group');
+                        // $location.path('user/group/' + that.groupID + '/edit-group');
+                        $state.go('user.edit-group', {groupID: that.groupID})
                     } else if (that.adminOf === 'Subgroup') {
-                        $location.path('/user/group/' + that.groupID + '/geoFencing');
+                        // $location.path('/user/group/' + that.groupID + '/geoFencing');
+                        $state.go('user.geo-fencing', {groupID: that.groupID})
                     }
                 }
 
@@ -151,6 +153,7 @@
 
                 };
 
+                
                 this.filterchatters = function(chatterID) {
                         var sender = false;
 
@@ -219,9 +222,9 @@
                 // Start Team Attendance
                 //update status when user checked-in or checked-out
                 this.users = [];
-                this.showActivity = false;
+                this.showActivity = true;
                 this.showReport = false;
-                this.showChat = true;
+                this.showChat = false;
                 this.showManualAttendace = false;
                 this.showParams = true;
                 this.processTeamAttendance = false;
