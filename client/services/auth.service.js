@@ -92,6 +92,7 @@ angular.module('core')
                     //empty data in dataservice
                     dataService.unloadData();
                     // for manually sign out from firebase.
+                    
                     firebaseService.getRefMain().unauth();
                     Firebase.goOffline();
                     $state.go('signin');
@@ -100,11 +101,13 @@ angular.module('core')
                 resolveUserPage: function() {
                     // alert('inside authService');
                     var defer = $q.defer();
-                    //if ( $sessionStorage.loggedInUser ) {
-                    if (userService.getCurrentUser()) {
+                    // console.log('1')
+                    if (userService.getCurrentUser() && userService.getCurrentUser().userID) {
+                        // console.log('2')
                         if (appConfig.firebaseAuth) {
                             dataService.loadData();
                             defer.resolve();
+                            // console.log('3')
                         } else {
                             //firebaseService.asyncLogin( $sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token )
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
@@ -113,25 +116,34 @@ angular.module('core')
                                     firebaseService.addUpdateHandler();
                                     dataService.loadData();
                                     defer.resolve();
+                                    // console.log('4')
                                 }, function(error) {
                                     if (error) {
                                         console.log("Firebase Authentication failed: ", error);
-                                        // $location.path("/signin");
-                                        $state.go('signin')
+                                        $location.path('/signin')
+                                        // console.log('5')
                                     }
                                 });
                         }
                     } else {
                         console.log("No user logged in");
-                        $state.go('signin');
+                        $location.path('/signin')
+                        // console.log('6')
                     }
-
+                    // console.log('7')
                     return defer.promise;
                 },
-                test: function() {
+                resolveDashboard: function(userID){
                     var defer = $q.defer();
-
-                    // alert('inside authService');
+                    // console.log('a1')
+                    if (userService.getCurrentUser() && userID !== userService.getCurrentUser().userID) {
+                        $location.path('/profile/' + userID)
+                        // console.log('a2')
+                        // $state.go('user.dashboard', {userID: user.userID})
+                    } else {
+                        defer.resolve();
+                        // console.log('a3')
+                    }
                     return defer.promise;
                 }
             };

@@ -108,7 +108,7 @@ angular.module('core', [
     return function (text) {
         if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g, '<br />'));
     }
-}])
+}]);
 /* .run(["authService",function(authService){
      //debugger;
      authService.resolveUserPage();

@@ -14,7 +14,7 @@ angular.module('core')
             getUserPresenceFromLocastorage: function() {
                 var deferred = $q.defer();
 
-                if (user) {
+                if (user && user.userID) {
                     var ref = new Firebase(appConfig.myFirebase);
                     ref.child("users").child(user.userID).once('value', function(snapshot) {
                         if (snapshot.hasChild('email')) {

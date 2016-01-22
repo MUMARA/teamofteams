@@ -145,7 +145,6 @@ angular.module('core')
                 },
                 asyncLogin: function(userID, token) {
                     var deferred = $q.defer();
-
                     if (token) { // means user logged in from web server
                         Firebase.goOnline(); // if previously manually signed out from firebase.
                         var auth = $firebaseAuth(ref);
@@ -201,7 +200,7 @@ angular.module('core')
                                 deferred.reject();
                             }
                         }).catch(function(error) {
-                            console.error("Firebase Authentication failed: ", error);
+                            // console.error("Firebase Authentication failed: ", error);
                             deferred.reject(error);
                         });
                     } else {

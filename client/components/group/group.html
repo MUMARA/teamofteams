@@ -44,7 +44,7 @@
                 <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('activity')" />
                 <img src="img/1arrow.png" ng-show="group.showActivity" class="showArrow animation">
             </div>
-            <div layout="row">
+            <div layout="row" ng-if="group.isMember()">
                 <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('chat')" />
                 <img src="img/1arrow.png" ng-show="group.showChat" class="showArrow animation">
             </div>
