@@ -19,7 +19,8 @@ function isAuthenticated() {
 //=================================== 
 
 path /users/{userid} is UserType {
- write() { isAuthenticatedUser($userid) }
+ create() { isAuthenticatedUser($userid) }
+ update() { isAuthenticatedUser($userid)}
  read() { isAuthenticatedUser($userid) }
 }
 
@@ -30,11 +31,11 @@ path /users/{userid} is UserType {
 //===================================
 
 type UserType {
- "email"        : String ;
- "firstName"    : NameLengthGreaterThanThree;
- "lastName"     : NameLengthGreaterThanThree;
- "date-created" : CurrentTimeStamp;
- "status"       : StatusType;
+ "email"        : String,
+ "firstName"    : NameLengthGreaterThanThree,
+ "lastName"     : NameLengthGreaterThanThree,
+ "date-created" : CurrentTimeStamp,
+ "status"       : StatusType,
 }
 
 type NameLengthGreaterThanThree extends String{
@@ -76,7 +77,7 @@ type ConnectionIDStatus{
       "type"     : Number,                               //  1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens  
       "started"  : CurrentTimeStamp
 }
-
+/*
 //===================================
 //          Personal Setting 
 //===================================
@@ -104,10 +105,7 @@ type UserPersonalSetting {
 		'status'          : Number                                               // Discuss
 }                                                                           //--------------------- 
 
-type DescLenght extends String {
-  validate() { 
-  this.length >=4 && this.length <=40 }
-} 
+
 
 type ContactNumberLength extends Number {
   validate() {  
@@ -115,7 +113,11 @@ type ContactNumberLength extends Number {
   }
 }
 
-
+*/
+type DescLenght extends String {
+  validate() { 
+  this.length >=4 && this.length <=40 }
+} 
 //===================================
 // user-group-memberships Start Here
 //===================================
@@ -1243,5 +1245,4 @@ path /tasks/{groupid} {
 
 //===========================================================  23/1/16  ===================================================================== 
  
-
 
