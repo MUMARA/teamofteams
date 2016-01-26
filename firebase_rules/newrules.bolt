@@ -39,7 +39,7 @@ type UserType {
 }
 
 type NameLengthGreaterThanThree extends String{
-     validate() { this >= 3 }
+     validate() { this.length >= 3 }
 }
 
 type CurrentTimeStamp extends Number{
