@@ -331,6 +331,15 @@ angular.module('core')
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
 
+                                                    firebaseService.getRefGroups().child(group.$id).child('subgroups-count').once('value', function(snapshot){
+                                                        var subgroupcount = snapshot.val() + 1
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(subgroupcount, function(){
+                                                            if (error) {
+                                                                errorHandler();
+                                                            }
+                                                        })
+                                                    })
+
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
                                                     subgroupRef.set({
@@ -355,6 +364,7 @@ angular.module('core')
                                                             errorHandler();
                                                         } else {
                                                             // creating flattened-groups data in firebase
+
                                                             var qArray = [];
                                                             var qArray2 = [];
                                                             var deffer = $q.defer();

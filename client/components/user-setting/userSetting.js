@@ -68,7 +68,7 @@
                 // $loggedInUserObj.userID = user.userID;
                 groupFirebaseService.approveMembership(groupID, user, requestedMember)
                     .then(function(res) {
-                        messageService.showSuccess("Approved Request Successfullt");
+                        messageService.showSuccess("Approved Request Successfully");
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });

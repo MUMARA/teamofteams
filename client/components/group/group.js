@@ -310,6 +310,7 @@
                     // Do not change status of self login user
                     if (user.userID === userID) {
                         messageService.showFailure('To change your status, please use toolbar!');
+                        dataService.setUserCheckInOut(grId, sgrId, userID, type)
                         return;
                     }
                     that.processTeamAttendance = true;
@@ -319,9 +320,11 @@
                         // console.log(userdata[5]);
                         // console.log(type)
                         if (!type) {
+                            console.log(userdata)
                             if (userdata[5] && userdata[5].$value === 1) {
                                 messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
                                 that.processTeamAttendance = false;
+                                dataService.setUserCheckInOut(grId, sgrId, userID, true)
                                 return;
                             }
                         }
@@ -332,7 +335,7 @@
                             userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
                                 .$loaded(function(snapshot) {
                                     that.checkinObj.newStatus.type = !snapshot || snapshot.type == 1 ? 2 : 1;
-                                    updateStatusHelper(grId, sgrId, userID, type);
+                                    updateStatusHelper(grId, sgrId, userID, true);
                                 });
 
                         });

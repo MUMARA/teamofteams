@@ -251,9 +251,9 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     height: 50px;
 }
 
-.img120px {
-    width: 120px;
-    height: 120px;
+.img90px {
+    width: 90px;
+    height: 90px;
 }
 
 .imageRound {
@@ -485,7 +485,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     background-color: #95d5e1;
 }
 
-.check-in-slider.md-default-theme.md-checked .md-thumb {
+.check-in-slider .md-checked .md-container .md-thumb-container .md-thumb{
     background-image: url("../img/corrects.svg");
     background-repeat: no-repeat;
     background-color: #ffffff;
@@ -1770,11 +1770,11 @@ div:after {
 
 .subgroupcard {
     width: 220px;
-    height: 120px
+    height: 90px
 }
 
 .subgrouplogo {
-    width: 72px; 
-    height: 120px; 
+    width: 70px; 
+    height: 90px; 
     overflow: hidden;"
 }

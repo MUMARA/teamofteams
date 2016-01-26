@@ -298,7 +298,7 @@
             updateAllSubGroupCount: function(groupID, subgroupID, numberofuser) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
                 var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
@@ -317,7 +317,7 @@
             updateSubGroupCount: function(groupID, subgroupID, checkinType) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
                 var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
