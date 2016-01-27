@@ -9,7 +9,8 @@
     "last-modified" : 431793523128,
     "connections": {
       "-asd212as564d56a4sd" : {
-       "type": 3,               // 1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
+       // "type": 3,               // 1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
+       "type": 3,               1 = web, 2 = ios, 3 = andriod  (changed as per sir zia's instruction, issue # 92)
        "started": "1431793742026"
        },
        "-asd212as564d56a4sd" : {

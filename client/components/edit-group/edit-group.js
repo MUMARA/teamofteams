@@ -13,6 +13,7 @@
         var that = this;
         var user = userService.getCurrentUser();
         var groupId = $stateParams.groupID;
+        this.groupId = groupId;
         $rootScope.newImg = '';
         /*VM functions*/
         this.groupPath = '';

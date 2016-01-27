@@ -13,7 +13,6 @@ angular.module('core')
         return {
             getUserPresenceFromLocastorage: function() {
                 var deferred = $q.defer();
-
                 if (user && user.userID) {
                     if ((user.expiry*1000) < Date.now()) {
                         deferred.resolve();

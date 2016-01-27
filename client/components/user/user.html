@@ -17,15 +17,16 @@
             <thead md-head>
                 <tr md-row>
                     <th md-column></th>
-                    <th md-column>Name</th>
-                    <th md-column>Phone</th>
-                    <th md-column>Team</th>
-                    <th md-column>Last Modified</th>
+                    <th md-column class="foreColorSeaGreen">Name</th>
+                    <th md-column class="foreColorSeaGreen">Phone</th>
+                    <th md-column class="foreColorSeaGreen">Team</th>
+                    <th md-column class="foreColorSeaGreen">Last Modified</th>
                 </tr>
             </thead>
             <tbody md-body>
-                <tr md-row ng-repeat="usr in user.users | orderBy: ['firstName', 'lastName', 'groupsubgroup'] | filter: {fullName: user.searchbox, type: user.filterUserType }" class="hoverLightGrey3" >
+                <tr md-row ng-repeat="usr in user.users | orderBy: ['firstName', 'lastName', 'groupsubgroup'] | filter: {fullName: user.searchbox, type: user.filterUserType }" class="hoverLightGrey3">
                     <td md-cell>
+                        <ng-md-icon icon="lens" size="10" ng-class="usr.onlinestatus ? 'fillColorDarkSeaGreen' : 'fillColorDarkGrey'"></ng-md-icon>
                         <img ng-src="{{usr.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px" ng-style="usr.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">
                     </td>
                     <td md-cell>{{usr.fullName}}</td>

@@ -19,6 +19,7 @@
         $rootScope.newImg = '';
         this.teamsettingpanel = false;
         var groupID = $stateParams.groupID;
+        this.groupId = groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
             /*VM functions*/
             // this.searchUser = '';
@@ -122,8 +123,6 @@
         }
 
         this.veiwSubgroup = function(subgroupData, index) {
-
-            that.teamsettingpanel = true;
             // this.showEditSubGroup = true;
             // that.showTeamAttendace = false;
             that.selectedindex = index;
@@ -134,38 +133,33 @@
             that.becomeAdmin = [];
 
             //load user Admins
-            loadAdminUSers(this.groupid, that.activeID);
-            
-            var sub = subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, user.userID)
-                .then(function(syncObj) {
-                    that.subgroupSyncObj = syncObj;
-
-                    //console.log(data === obj); // true
-                    // $scope.subgroupSyncObj.subgroupSyncObj.$bindTo($scope, "subgroup");
-
-
-                    that.submembers = that.subgroupSyncObj.membersSyncArray;
-                    // $scope.subgroups = $scope.subgroupSyncObj.subgroupsSyncArray;
-                    //$scope.pendingRequests = $scope.subgroupSyncObj.pendingMembershipSyncArray;
-                    //$scope.activities = $scope.subgroupSyncObj.activitiesSyncArray;
-                    //$scope.groupMembersSyncArray = $scope.subgroupSyncObj.groupMembersSyncArray;
-
-                })
-            SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
-            // console.log(1)
-            // console.log(SubgroupObj)
-            SubgroupObj.$loaded().then(function(data) {
-                $timeout(function() {
-                        that.subgroupData = data;
-                        //that.group.groupID = data.$id;
-                        that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
-
+            loadAdminUSers(this.groupid, that.activeID, function(){
+                subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, user.userID)
+                    .then(function(syncObj) {
+                        that.subgroupSyncObj = syncObj;
+                        // console.log(syncObj);
+                        //console.log(data === obj); // true
+                        // $scope.subgroupSyncObj.subgroupSyncObj.$bindTo($scope, "subgroup");
+                        that.submembers = that.subgroupSyncObj.membersSyncArray;
+                        // $timeout(function() {
+                            // $scope.subgroups = $scope.subgroupSyncObj.subgroupsSyncArray;
+                            //$scope.pendingRequests = $scope.subgroupSyncObj.pendingMembershipSyncArray;
+                            //$scope.activities = $scope.subgroupSyncObj.activitiesSyncArray;
+                            //$scope.groupMembersSyncArray = $scope.subgroupSyncObj.groupMembersSyncArray;
+                            SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
+                            // console.log(1)
+                            // console.log(SubgroupObj)
+                            SubgroupObj.$loaded().then(function(data) {
+                                    that.subgroupData = data;
+                                    //that.group.groupID = data.$id;
+                                    that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
+                                    that.teamsettingpanel = true;
+                        // },50000)   
+                            // console.log(2)
+                            // console.log(SubgroupObj)
+                        })
                     })
-                    // console.log(2)
-                    // console.log(SubgroupObj)
-            })
-
-
+            });
         };
 
 
@@ -351,9 +345,10 @@
             createSubGroupService.DeleteUserMemberShip(userID,groupID,that.activeID,that.submembers.length);
         }
 
-        function loadAdminUSers(groupid, subgroupid){
+        function loadAdminUSers(groupid, subgroupid, cb){
             createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
                 that.selectedAdminArray = data;
+                cb();
             })
         }
 

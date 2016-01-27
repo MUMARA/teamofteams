@@ -17,6 +17,7 @@
         this.hide = hide;
         var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
+        this.groupId = groupID
         // var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
 
         this.approveMembership = approveMembership;

@@ -3,8 +3,8 @@
 
     angular
         .module('app.JoinGroup')
-        .controller('JoinGroupController', ['dataService', 'joinGroupService', 'firebaseService', 'authService', '$firebaseObject', '$firebaseArray',
-            function(dataService, joinGroupService, firebaseService, authService, $firebaseObject, $firebaseArray) {
+        .controller('JoinGroupController', ['dataService', 'userService', 'joinGroupService', 'firebaseService', 'authService', '$firebaseObject', '$firebaseArray',
+            function(dataService, userService, joinGroupService, firebaseService, authService, $firebaseObject, $firebaseArray) {
                 // var $scope = this;
                 //https://github.com/angular/material/issues/547#issuecomment65620808
 
@@ -12,6 +12,7 @@
                 var that = this;
                 this.filteredGroups = [];
                 this.loadingData = true;
+                this.user = userService.getCurrentUser();
 
                 // firebaseService.getRefGroups().on('child_added', function (snapshot) {
                 //     that.filteredGroups.push(snapshot.val());
