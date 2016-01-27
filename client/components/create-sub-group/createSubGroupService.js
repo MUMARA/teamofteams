@@ -116,8 +116,11 @@
                             angular.extend(subgroupRef, dataToSet);
 
                             subgroupRef.$save().then(function(response) {
+                                //var subgroupNames_ = firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id);
+                                ///subgroupNames_.set(subgroupInfo.title, function(error) { console.log(error); });
+
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
-                                subgroupNameRef.title = subgroupRef.title;
+                                subgroupNameRef = subgroupRef.title;
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();

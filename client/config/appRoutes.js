@@ -106,6 +106,12 @@
                 controller: 'GroupController',
                 controllerAs: 'group'
             });
+            $stateProvider.state('user.policy', {
+                url: '/:groupID/policy',
+                templateUrl: 'components/policy/policy.html',
+                controller: 'PolicyController',
+                controllerAs: 'policy',
+            });
             $stateProvider.state('user.create-group', {
                 url: '/:userID/create-group',
                 templateUrl: 'components/create-group/create-group.html',

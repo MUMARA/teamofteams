@@ -144,9 +144,10 @@ groups
  		title: "Title Name 2"
 
 
-groups-names										//onEdit remove ownerImgUrl
+groups-names										
  	team1
  		groupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png"
+ 		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		title: "Title Name 2"
 --------------------------------------
 
@@ -197,6 +198,10 @@ subgroups
  			microgroups-count: 0
  			timestamp: 1452772505957
  			title: "Sub Team Name 1"
+
+groups
+ 	team1
+		subgroups-count: 1
 --------------------------------------
 
 
