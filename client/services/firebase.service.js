@@ -161,6 +161,7 @@ angular.module('core')
 
                                 //authenticated
                                 appConfig.firebaseAuth = true;
+                                userService.setExpiry(authData.expires)
 
                                 /*storing references*/
                                 currentAuthData = authData;

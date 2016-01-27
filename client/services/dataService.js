@@ -38,7 +38,11 @@ angular.module('core')
                             userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
                                     if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
-                                        val.type = snapshot.val().type;
+                                        if (snapshot.val().type === 1) {
+                                            val.type = true;
+                                        } else {
+                                            val.type = false;
+                                        }
                                         val.message = snapshot.val().message;
                                         val.timestamp = snapshot.val().timestamp;
                                     }
@@ -49,7 +53,11 @@ angular.module('core')
                            userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
                                     if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
-                                        val.type = snapshot.val().type;
+                                        if (snapshot.val().type === 1) {
+                                            val.type = true;
+                                        } else {
+                                            val.type = false;
+                                        }
                                         val.message = snapshot.val().message;
                                         val.timestamp = snapshot.val().timestamp;
                                     }
@@ -262,11 +270,26 @@ angular.module('core')
                 return userGroups;
             }
 
+            function setUserCheckInOut (grId, sgrId, userID, type) {
+                userData.forEach(function(val, indx) {
+                    if (val.groupsubgroup === (grId + ' / ' + sgrId)) {
+                        if (val.id === userID) {
+                            if (type) {
+                                val.type = false;
+                            } else {
+                                val.type = true;
+                            }
+                        }
+                    }
+                })
+            }
+
             return {
                 loadData: loadData,
                 unloadData: unloadData,
                 getUserData: getUserData,
-                getUserGroups: getUserGroups
+                getUserGroups: getUserGroups,
+                setUserCheckInOut: setUserCheckInOut
             }
         }
     ]);

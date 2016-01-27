@@ -17,7 +17,6 @@
                         //var pageUserId = userService.getCurrentUser().userID;
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
-                        debugger
                         groupFirebaseService.asyncCreateSubgroup(userID, group, SubgroupInfo, subgroupList, formDataFlag)
                             .then(function(response) {
                                 //form.$submitted = !form.$submitted
@@ -27,7 +26,7 @@
 
                                     messageService.showSuccess("Team creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
-                                    $location.path('/user/group/' + groupID);
+                                    $location.path('/' + groupID);
                                     messageService.showSuccess("Team creation Successful...");
                                     $rootScope.newImg = null;
                                 }

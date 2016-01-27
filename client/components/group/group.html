@@ -79,26 +79,29 @@
                 <thead md-head>
                     <tr md-row>
                         <th md-column>
-                            <md-button class="md-fab md-mini backColorOrange" aria-label="checkout" style="line-height: 40px !important;margin: 0px 10px;" ng-click="group.showConfirm($event)" layout-margin>
-                            <!-- height: 40px !important;margin: 0px 3px;" ng-click="group.checkoutAll()" > -->
+                            <md-button class="md-fab md-mini backColorOrange" aria-label="checkout all" style="line-height: 40px !important;margin: 0px 10px;" ng-click="group.showConfirm($event)" layout-margin>
                                 <md-icon md-svg-icon="../img/people_button.svg" class="nomargin" aria-label="People Group Icon"></md-icon>
                             </md-button>
                         </th>
                         <th md-column>Name</th>
                         <th md-column>Team of Teams</th>
                         <th md-column>Team</th>
+                        <th md-column>Last Modified</th>
                         <th md-column>Message</th>
                     </tr>
                 </thead>
                 <tbody md-body>
-                    <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, fullName: group.searchbox}" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" class="hoverLightGrey3 nooutline" >
+                    <tr md-row ng-repeat="user in group.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: group.groupID, fullName: group.searchbox}"  class="hoverLightGrey3 nooutline" >
                         <td md-cell>
-                            <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'}" layout-margin>
+                            <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type ? {'border':'3px solid #8BC53F'} : {'border':'3px solid #c51903'}" layout-margin>
                         </td>
                         <td md-cell>{{user.fullName}}</td>
                         <td md-cell>{{user.groupTitle}}</td>
                         <td md-cell>{{user.subgroupTitle}}</td>
-                        <td md-cell>{{user.message}}</td>
+                        <td md-cell>{{user.timestamp | date:'MM/dd/yyyy hh:mm a'}}</td>
+                        <td md-cell class="check-in-slider">
+                            <md-switch ng-model="user.type" ng-click="group.CheckInuser(user.groupID, user.subgroupID, user.id, user.type)" aria-label="Check In"></md-switch>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -133,7 +136,7 @@
                         <td md-cell>{{user.fullName}}</td>
                         <td md-cell>{{user.contactNumber}}</td>
                         <td md-cell>{{user.groupsubgroupTitle}}</td>
-                        <td md-cell>{{user.timestamp | date:'MM/dd/yyyy'}}</td>
+                        <td md-cell>{{user.timestamp | date:'MM/dd/yyyy hh:mm a'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -172,7 +175,7 @@
                             <td md-cell>{{user.fullName}}</td>
                             <td md-cell>{{user.contactNumber}}</td>
                             <td md-cell>{{user.groupsubgroupTitle}}</td>
-                            <td md-cell>{{user.timestamp | date:'MM/dd/yyyy'}}</td>
+                            <td md-cell>{{user.timestamp | date:'MM/dd/yyyy hh:mm a'}}</td>
                         </tr>
                     </tbody>
                 </table>
