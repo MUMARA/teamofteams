@@ -521,6 +521,10 @@
     "policies": {
       ".read": "true",
       ".write": "true"
+    },
+    "user-policies": {
+      ".read": "true",
+      ".write": "true"
     }
   }
 }
