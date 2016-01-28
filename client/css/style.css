@@ -126,6 +126,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     font-weight: bold;
 }
 
+.textJustify {
+    text-align: justify!important;
+}
+
 .noborder {
     border: 0px;
 }
@@ -142,6 +146,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding: 0px!important;
 }
 
+.padding5px {
+    padding: 5px;
+}
+
 .padding10px {
     padding: 10px;
 }
@@ -150,6 +158,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding: 20px;
 }
 
+.topbottompadding5px {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
 .toppadding40px {
     padding-top: 40px;
 }
@@ -193,6 +205,11 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     margin-bottom: 5px;
 }
 
+.topbottommargin5px {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .leftmargin40px {
     margin-left: 40px;
 }
@@ -202,6 +219,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 
 .leftmargin20px {
     margin-left: 20px !important;
+}
+
+.rightmargin100px {
+    margin-right: 100px;
 }
 
 .rightmargin20px {

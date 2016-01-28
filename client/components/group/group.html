@@ -50,15 +50,15 @@
             </div>
         </div>
         <div ng-show="group.isAdmin()">
-            <md-divider class="backColorWhite"></md-divider>
+            <md-divider class="backColorWhite topbottommargin5px"></md-divider>
             <div layout="row">
                 <!-- <img src="img/menu.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" /> -->
-                <ng-md-icon icon="alarm_on" size="40" class="nooutline cursorPointer fillColorWhite" ng-click="group.showPanel('manualAttendace')"></ng-md-icon>
+                <ng-md-icon icon="alarm_on" size="50" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('manualAttendace')"></ng-md-icon>
                 <img src="img/1arrow.png" ng-show="group.showManualAttendace" class="showArrow animation">
             </div>
             <div layout="row" layout-align="center center">
                 <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('report'); group.showParams=true;" /> -->
-                <ng-md-icon icon="equalizer" size="40" class="nooutline cursorPointer fillColorWhite" ng-click="group.showPanel('report'); group.showParams=true;"></ng-md-icon>
+                <ng-md-icon icon="equalizer" size="50" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('report'); group.showParams=true;"></ng-md-icon>
                 <img src="img/1arrow.png" ng-show="group.showReport" class="showArrow animation">
             </div>
         </div>
