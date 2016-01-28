@@ -38,6 +38,8 @@ angular.module('core')
             var groupLocsDefined = null;
             var flattenedGroups = null;
             var loggedUserRef = null;
+            var policies = null;
+            var userPolicies = null;
             
             return {
                 addUpdateHandler: function() {
@@ -143,6 +145,12 @@ angular.module('core')
                 getRefFlattendGroups: function() {
                     return flattenedGroups
                 },
+                getRefPolicies: function() {
+                    return policies;
+                },
+                getRefUserPolicies: function() {
+                    return userPolicies;
+                },
                 asyncLogin: function(userID, token) {
                     var deferred = $q.defer();
                     if (token) { // means user logged in from web server
@@ -183,6 +191,8 @@ angular.module('core')
                                 subgroupCheckinRecords = ref.child("subgroup-check-in-records");
                                 groupLocsDefined = ref.child("group-locations-defined");
                                 flattenedGroups = ref.child("flattened-groups");
+                                policies = ref.child("policies");
+                                userPolicies = ref.child("user-policies");
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.
