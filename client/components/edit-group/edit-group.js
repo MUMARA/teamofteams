@@ -57,6 +57,10 @@
             // $location.path('/user/group/' + groupId + '/geoFencing');
             $state.go('user.geo-fencing', {groupID: groupId})
         }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupId})
+        }
 
         //query for users names list
         function queryUsers(val) {

@@ -45,6 +45,7 @@
 			//Getting Policies by given GroupID --START --
 			var groupPolicies = [];
 			function setGroupPolicies(groupID) {
+                groupPolicies = [];
                 firebaseService.getRefPolicies().child(groupID).on('child_added', function(subGroups, prevChildKey) {
                     console.log(subGroups.key());
                     console.log(subGroups.val());

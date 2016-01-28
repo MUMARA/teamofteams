@@ -64,7 +64,7 @@
         </div>
     </div>
     <!-- Team Attendance -->
-    <div class="viewHeight-64 teamAttendance md-whiteframe-z2" layout="column" flex ng-if="group.showManualAttendace">
+    <div class="viewHeight-64 anifade md-whiteframe-z2" layout="column" flex ng-if="group.showManualAttendace">
 	    <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite">
 	    	<h4 class="leftmargin20px">Manual Attendance</h4>
 	    	<md-progress-circular class="cirrcularGrey" md-mode="indeterminate" ng-show="group.processTeamAttendance" md-diameter="30"></md-progress-circular>
@@ -111,7 +111,7 @@
         </md-table-container>
     </div>
     <!-- Activity -->
-    <div class="viewHeight-64 activity md-whiteframe-z2" flex layout="column" ng-if="group.showActivity">
+    <div class="viewHeight-64 anifade md-whiteframe-z2" flex layout="column" ng-if="group.showActivity">
         <div layout="row" layout-padding layout-align="space-between center" style="font-size:large;" class="backColorWhite">
     	    <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="group.setFocus()"></ng-md-icon>
             <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
@@ -147,7 +147,7 @@
         </md-table-container>
     </div>
     <!-- Report -->
-    <div class="viewHeight-64 animation md-whiteframe-z2" flex layout="column" ng-if="group.showReport">
+    <div class="viewHeight-64 anifade md-whiteframe-z2" flex layout="column" ng-if="group.showReport">
         <div ng-show="group.showParams">
             <div layout="row" layout-padding layout-align="space-between center" style="font-size:large;" class="backColorWhite">
                 <h4 class="leftmargin20px">Report Parameters</h4>
@@ -235,7 +235,7 @@
         </div>
     </div>
     <!--chat side-->
-    <div class="viewHeight-64 chatSide backColorWhite md-whiteframe-z2" layout="column" layout-align="space-between start" flex ng-if="group.showChat">
+    <div class="viewHeight-64 anifade backColorWhite md-whiteframe-z2" layout="column" layout-align="space-between start" flex ng-if="group.showChat">
     	<div style="width: 100%;">
 	        <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
 		    	<h4 class="leftmargin20px">{{group.activeTitle | uppercase}}</h4>
@@ -327,7 +327,7 @@
         </div>
     </div>
     <!--online side-->
-    <div class="viewHeight-64 onlineSide" ng-if="group.showChat" style="max-width:400px;width:400px;min-width:400px">
+    <div class="viewHeight-64 anifade" ng-if="group.showChat" style="max-width:400px;width:400px;min-width:400px">
         <md-card class="nomargin" layout-fill>
             <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
                 <md-tabs style=" background-color: #68C2E8" class="OnlineChat" layout-fill>

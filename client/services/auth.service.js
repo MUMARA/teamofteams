@@ -27,7 +27,7 @@ angular.module('core')
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
                                 .then(function() {
                                     successFn(data);
-                                    // dataService.loadData();
+                                    dataService.loadData();
                                 }, function(error) {
                                     if (error) {
                                         console.error("Firebase Authentication failed: ", error);

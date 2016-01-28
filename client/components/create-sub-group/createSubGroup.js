@@ -119,8 +119,13 @@
         };
         this.subgroupPage = function() {
             // $location.path('user/group/' + this.groupid + '/subgroup');
-            $state.go('user.subgroup', {groupID: groupId})
+            $state.go('user.subgroup', {groupID: groupID})
         }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupID})
+        }
+
 
         this.veiwSubgroup = function(subgroupData, index) {
             // this.showEditSubGroup = true;
@@ -404,11 +409,14 @@
                             that.selectedAdminSave();
                             createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
                                 that.processingSave = false;
+                                that.teamsettingpanel = false;
                             })
                         } else {
                             //create team
                             that.subgroupData.imgLogoUrl = data;
-                            createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID);
+                            createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID,function(){
+                                that.teamsettingpanel = false;    
+                            });
                             that.processingSave = false;
                         }
                             // $rootScope.newImg=null;
@@ -427,10 +435,14 @@
                     that.selectedAdminSave();
                     createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
                         that.processingSave = false;
+                        that.teamsettingpanel = false;
+
                     });
                 } else {
                     //create team
-                    createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID);
+                    createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
+                        that.teamsettingpanel = false;   
+                    });
                     that.processingSave = false;
                 }
             }

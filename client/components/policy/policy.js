@@ -17,7 +17,7 @@
         "policyService",
         function($state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
 
-            this.showPanel = false;
+            this.showPanel = true;
             var that = this;
 
             this.isLocationbased = false;
@@ -76,11 +76,19 @@
 
 
             //Load Group Policies from given GroupID
+            this.groupPolicies = [];
             this.groupPolicies = policyService.getGroupPolicies(that.groupId);
 
             //Load SubgroupNames from Given GroupID
             this.subGroupNames = policyService.getSubGroupNames(that.groupId)
 
+
+            
+            this.openEditGroupPage = function() {
+                $state.go('user.edit-group', {
+                    groupID: groupId
+                })
+            }
 
             this.openCreateSubGroupPage = function() {
                 $state.go('user.create-subgroup', {
@@ -211,9 +219,9 @@
 
             //New Work POLICY 
 
-            this.subgroupSideNavBar = true;
-            this.closeSideNavBar = function() {
-                that.subgroupSideNavBar = false;
+            this.subgroupSideNavBar = false;
+            this.toggleSideNavBar = function() {
+                that.subgroupSideNavBar = !that.subgroupSideNavBar;
             }
 
             //scheduler for time base -- START --
@@ -300,6 +308,17 @@
                 } //selectedTeam
                 //Selected SubGroup for Assign Policies
 
+            //on create policy
+            this.newPolicy = function() {
+                //load initial page
+                init();
+
+                //chnage subgroup names hasPolicy false onload
+
+                subGroupNamesPolicyFalse();
+                that.showPanel = true;
+            } //this.newPolicy
+
             //onclick save button
             this.onSave = function() {
 
@@ -344,7 +363,7 @@
                             console.log('that.isTimebased', obj)
                         } else {
                             //nothing have to do....
-                            alert("nothing have to do....");
+                            messageService.showFailure('Please Select your Criteria!');
                             return false;
                         }
 
@@ -359,17 +378,23 @@
                         policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, function(){
                            //Load Group Policies from given GroupID
                            //that.groupPolicies = policyService.getGroupPolicies(that.groupId); 
-                           if(that.activePolicyId) {  //if edit
+                            if(that.activePolicyId) {  //if edit
                                 that.groupPolicies.forEach(function(val,index){
                                     if(val.policyID == that.activePolicyId) {
                                         that.groupPolicies[index] = obj;
                                     }
                                 }); 
-                           }
-                           
+                                messageService.showSuccess('Policy Successfully Updated!');
+                            } else{
+                                messageService.showSuccess('Policy Successfully Created!');  
+                                //after created reload initial page 
+                                that.newPolicy();
+                            }
                         }, that.activePolicyId);
 
-                    } //if that.title exists
+                    } else {//if that.title exists
+                        messageService.showFailure('Please Write Policy Name');
+                    }
                 } //onSave
 
 
@@ -379,6 +404,7 @@
                     that.policyTitle = policy.title;                //show title
                     that.isLocationbased = policy.locationBased;    //show if locationBased is True
                     that.isTimebased = policy.timeBased;            //show if timebased is true
+                    that.showPanel = true;
 
                     //Clear calender .. (run scheduler)
                     loadSchaduler();
@@ -434,13 +460,6 @@
                 });
             }
 
-            this.newPolicy = function() {
-                    //load initial page
-                    init();
-
-                    //chnage subgroup names hasPolicy false onload
-                    subGroupNamesPolicyFalse();
-                } //this.newPolicy
 
 
             //load constructor

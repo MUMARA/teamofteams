@@ -1,5 +1,5 @@
 <ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group({groupID : editGroup.groupId })"></ng-md-icon>
-<div layout="row" layout-padding layout-margin class="leftrightpadding65px viewHeight-170">
+<div layout="row" layout-padding layout-margin class="leftrightpadding65px">
 	<div layout="column" layout-align="start center" class="nomargin nopadding" >
 		<md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen md-whiteframe-z1">
 	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
@@ -9,14 +9,14 @@
 	    	<img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
         	<div style="color: white;">Members</div>
     	</md-button>
-		<md-button ng-click="editGroup.openGeoFencingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
-			<img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-	        <div style="color: white;">Fencing</div>
+        <md-button ng-click="editGroup.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
+            <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Teams</div>
         </md-button>
-		<md-button ng-click="editGroup.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
-			<img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-		    <div style="color: white;">Teams</div>
-	    </md-button>
+		<md-button ng-click="editGroup.openPolicyPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
+			<img src="../../img/verified_user.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+	        <div style="color: white;">Policy</div>
+        </md-button>
 	</div>
 	<!-- <div flex layout-padding class="backColorWhite nomargin nopadding"> -->
     <form flex layout-padding class="backColorWhite nomargin nopadding md-whiteframe-z2" name="groupForm" novalidate>

@@ -41,6 +41,11 @@
             // $location.path('/user/group/' + groupID + '/geoFencing');
             $state.go('user.geo-fencing', {groupID: groupID})
         }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupID})
+        }
+
 
         this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
             .then(function(syncObj) {
