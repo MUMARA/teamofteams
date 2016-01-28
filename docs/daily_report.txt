@@ -4,7 +4,7 @@ Example Implementation: http://www.teamreporterapp.com/
 
 Our Implementation:
 Every time a team member checks-out from the web app he/she will be asked to submit a daily progress report which will contain the following three fields/questions on this url 
-http://www.teamofteams.io/user/zia/panacloud/team2/submit-daily-report/auto-generated-id-for-date :
+http://www.teamofteams.io/user/zia/panacloud/team2/submit-progress-report/auto-generated-id-for-date :
 
 What did you accomplish today?
 
@@ -22,15 +22,60 @@ Hi Zia Khan!
 
 Please file your report for team Panacloud Team2. Filing the report usually takes less than 2 minutes.
 
-http://www.teamofteams.io/user/zia/panacloud/team2/submit-daily-report/auto-generated-id-for-date
+http://www.teamofteams.io/user/zia/panacloud/team2/submit-progress-report/auto-generated-id-for-date
 
 Thank you.
 
 //*************
 
 
-If a team member does not check-in for a particular data no report will be due that data. 
+If a team member does not check-in for a particular data no report will be due that day. 
 
 
-These reports will be able to be viewed by all the team members, this will tell the team members what everyone is doing. 
+These reports will be able to be viewed by all the team members, this will tell the team members what everyone is doing thus avoiding unnecessary meetings and better coordination. 
+
+The reports will be organised by date and by team member. It will also contain the checked-in hrs for the day.
+
+We will finalise the UI for this feature report and forms after discussing with each other and Asif Bhai. 
+
+
+
+Firebase Database Schema (It allows for team admin defined questions as well):
+
+path progress-reports/{tot-id}/{team-id}/ {
+	read() = isCurrentUserTeamMember(tot-id, team-id, auth.uid);
+}
+
+
+path progress-reports/{tot-id}/{team-id}/{user-id}/$id is ProgressReport {
+	create() = isCurrentUserTeamMemberAndSame(tot-id, team-id, auth.uid, user-id);
+}
+
+type ProgressReport {
+	submited: CurrentTimestamp
+  	question-anwswer: [QuestionAnswer]
+} 
+
+type CurrentTimestamp extends Number {
+  validate() { this == now }
+}
+
+type Question {
+	question: String
+}
+
+
+type QuestionAnswer extends Question {
+	answer: String
+}
+
+
+path progress-reports-defined-questions/{tot-id}/{team-id}/$id is Question {
+	read = isCurrentUserTeamMember(tot-id, team-id, auth.uid);
+	write() = isCurrentUserTeamOrToTAdmin(tot-id, team-id, auth.uid);
+}
+
+
+
+
 
