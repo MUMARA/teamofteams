@@ -13,8 +13,10 @@ angular.module('core')
         return {
             getUserPresenceFromLocastorage: function() {
                 var deferred = $q.defer();
-
-                if (user) {
+                if (user && user.userID) {
+                    if ((user.expiry*1000) < Date.now()) {
+                        deferred.resolve();
+                    }
                     var ref = new Firebase(appConfig.myFirebase);
                     ref.child("users").child(user.userID).once('value', function(snapshot) {
                         if (snapshot.hasChild('email')) {
@@ -35,6 +37,9 @@ angular.module('core')
             getCurrentUser: function() {
                 return user;
             },
+            getCurrentUserID: function() {
+                return user.userID;
+            },
             setCurrentUser: function(newuser) {
                 $localStorage.loggedInUser = newuser;
                 user = newuser;
@@ -42,6 +47,13 @@ angular.module('core')
             removeCurrentUser: function() {
                 delete $localStorage.loggedInUser;
                 user = {};
+            },
+            setExpiry: function(timestamp) {
+                $localStorage.loggedInUser.expiry = timestamp;
+                user.expiry = timestamp;
+            },
+            getExpire: function() {
+                return user.expiry
             },
             isUserAccessingOwnHome: function(path, userLoggedInfo) {
                 return true;

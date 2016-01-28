@@ -17,6 +17,7 @@
         this.hide = hide;
         var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
+        this.groupId = groupID
         // var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
 
         this.approveMembership = approveMembership;
@@ -40,6 +41,11 @@
             // $location.path('/user/group/' + groupID + '/geoFencing');
             $state.go('user.geo-fencing', {groupID: groupID})
         }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupID})
+        }
+
 
         this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
             .then(function(syncObj) {
@@ -68,7 +74,7 @@
                 // $loggedInUserObj.userID = user.userID;
                 groupFirebaseService.approveMembership(groupID, user, requestedMember)
                     .then(function(res) {
-                        messageService.showSuccess("Approved Request Successfullt");
+                        messageService.showSuccess("Approved Request Successfully");
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });

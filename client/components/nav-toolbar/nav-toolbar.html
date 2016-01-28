@@ -1,4 +1,4 @@
-<md-toolbar class="backColorSeaGreen leftrightpadding20px" layout="row" layout-align="space-between center">
+<md-toolbar class="backColorSeaGreen leftrightpadding20px md-whiteframe-z2" layout="row" layout-align="space-between center">
     <div layout='row' layout-align="start center" layout-margin>
         <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
         <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
@@ -6,8 +6,8 @@
     </div>
     <div layout='row' layout-align="end center">
         <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
-        <div style="position: relative" layout-margin>
-            <md-switch ng-model="navToolbar.switchCheckIn" ng-change="navToolbar.checkTeamAvailable()" ng-click="navToolbar.checkinClick()" aria-label="Check In" class="check-in-slider">
+        <div style="position: relative" layout-margin class="check-in-slider">
+            <md-switch ng-model="navToolbar.switchCheckIn" ng-change="navToolbar.checkTeamAvailable()" ng-click="navToolbar.checkinClick()" aria-label="Check In">
             </md-switch>
             <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
             <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">

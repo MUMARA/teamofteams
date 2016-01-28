@@ -13,6 +13,13 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     border-left-color: white;
 }
 
+.md-chips {
+    display: inline-block;
+    /*border-bottom: rgb(106, 106, 106);*/
+}
+.md-chips:after {
+    display: inline-block;
+}
 
 .cirrcularGrey .md-default-theme .md-inner .md-right .md-half-circle, 
 .cirrcularGrey .md-inner .md-right .md-half-circle {
@@ -30,76 +37,41 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 /* Start Animation */
-.animation {
+/*
+.anifade {
     transition: all linear 0.1s;
     opacity: 1;
 }
 
-.animation.ng-hide-remove {
-    transition: all linear 0.1s;
+.anifade.ng-hide-remove {
+    transition: all linear 0.2s;
     opacity: 0;
 }
 
-.animation.ng-hide-add {
-    transition: all linear 0s;
-}
-
-.activity {
+.anifade.ng-hide-add {
     transition: all linear 0.1s;
     opacity: 1;
 }
-
-.activity.ng-hide-remove {
+*/
+/*.anifade.ng-hide {
     transition: all linear 0.1s;
     opacity: 0;
+}*/
+
+.anifade.ng-enter, .animate-if.ng-leave {
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
 }
 
-.activity.ng-hide-add {
-    transition: all linear 0s;
+.anifade.ng-enter,
+.anifade.ng-leave.ng-leave-active {
+  transition: all linear 0.2s;
+  opacity:0;
 }
 
-.teamAttendance {
-    transition: all linear 0.1s;
-    opacity: 1;
+.anifade.ng-leave,
+.anifade.ng-enter.ng-enter-active {
+  opacity:1;
 }
-
-.teamAttendance.ng-hide-remove {
-    transition: all linear 0.1s;
-    opacity: 0;
-}
-
-.teamAttendance.ng-hide-add {
-    transition: all linear 0s;
-}
-
-.chatSide {
-    transition: all linear 0.1s;
-    opacity: 1;
-}
-
-.chatSide.ng-hide-remove {
-    transition: all linear 0.1s;
-    opacity: 0;
-}
-
-.chatSide.ng-hide-add {
-    transition: all linear 0s;
-}
-
-.onlineSide {
-    transition: all linear 0.1s;
-    opacity: 1;
-}
-
-.onlineSide.ng-hide-remove {
-    transition: all linear 0.1s;
-    opacity: 0;
-}
-
-.onlineSide.ng-hide-add {
-    transition: all linear 0s;
-}
-
 
 /*End Animation*/
 
@@ -119,6 +91,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     font-weight: bold;
 }
 
+.textJustify {
+    text-align: justify!important;
+}
+
 .noborder {
     border: 0px;
 }
@@ -135,6 +111,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding: 0px!important;
 }
 
+.padding5px {
+    padding: 5px;
+}
+
 .padding10px {
     padding: 10px;
 }
@@ -143,6 +123,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     padding: 20px;
 }
 
+.topbottompadding5px {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
 .toppadding40px {
     padding-top: 40px;
 }
@@ -186,6 +170,11 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     margin-bottom: 5px;
 }
 
+.topbottommargin5px {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .leftmargin40px {
     margin-left: 40px;
 }
@@ -196,6 +185,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 
 .leftmargin20px {
     margin-left: 20px !important;
+}
+
+.rightmargin100px {
+    margin-right: 100px;
 }
 
 .rightmargin20px {
@@ -252,9 +245,9 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     height: 50px;
 }
 
-.img120px {
-    width: 120px;
-    height: 120px;
+.img90px {
+    width: 90px;
+    height: 90px;
 }
 
 .imageRound {
@@ -300,7 +293,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 .viewHeight-250 {
-    height: calc(100vh - 250px);
+    height: calc(100vh - 240px);
 }
 
 .viewWidth {
@@ -335,6 +328,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     fill: rgb(50, 180, 202)!important;
 }
 
+.fillColorDarkSeaGreen {
+    fill: rgb(5,139,151)!important;
+}
+
 .foreColorBlack {
     color: black!important;
 }
@@ -357,6 +354,10 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 
 .foreColorSeaGreen {
     color: rgb(50, 180, 202)!important;
+}
+
+.foreColorDarkSeaGreen {
+    color: rgb(5,139,151)!important;
 }
 
 .backColorBlack {
@@ -419,6 +420,13 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 #memberSettingTab md-tab-item{
     width: 100% !important;
 }
+
+.backButton {
+    position: relative;
+    top: 20px;
+    left: 20px;
+}
+
 /*
 .roundShape {
     display: block;
@@ -486,7 +494,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
     background-color: #95d5e1;
 }
 
-.check-in-slider.md-default-theme.md-checked .md-thumb {
+.check-in-slider .md-checked .md-container .md-thumb-container .md-thumb{
     background-image: url("../img/corrects.svg");
     background-repeat: no-repeat;
     background-color: #ffffff;
@@ -1771,11 +1779,11 @@ div:after {
 
 .subgroupcard {
     width: 220px;
-    height: 120px
+    height: 90px
 }
 
 .subgrouplogo {
-    width: 72px; 
-    height: 120px; 
+    width: 70px; 
+    height: 90px; 
     overflow: hidden;"
 }

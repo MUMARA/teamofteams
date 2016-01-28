@@ -62,7 +62,7 @@
             this.paths.c1.radius = 20;
 
             function updatepostion (lat, lng, msg) {
-                that.paths.c1.latlngs = {lat, lng};
+                that.paths.c1.latlngs = { lat: lat, lng: lng };
                 that.markers.mark.lat = lat;
                 that.markers.mark.lng = lng;
                 that.markers.mark.focus = true;

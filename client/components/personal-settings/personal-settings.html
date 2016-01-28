@@ -1,4 +1,5 @@
-<div layout="row" layout-align="center start" layout-padding layout-margin class="viewHeight">
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.dashboard ({userID : personalSettings.loggedInUserData.userID })"></ng-md-icon>
+<div layout="row" layout-align="center start" layout-padding layout-margin class="viewHeight-170 leftrightpadding65px">
     <form flex="100" name="personalSettingForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll" layout-margin>
         <h1 style="color: #d3d3d3;">Personal Settings</h1>
         <md-divider md-outset></md-divider>
@@ -71,7 +72,7 @@
         <div layout="row">
             <md-input-container flex>
                 <label>Mobile Number</label>
-                <input name="contactNumber" type="number" ng-model="personalSettings.userData.contactNumber">
+                <input name="contactNumber" type="text" ng-model="personalSettings.userData.contactNumber">
             </md-input-container>
             <md-input-container flex>
                 <label>Profession</label>

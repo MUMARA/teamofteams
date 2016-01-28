@@ -27,19 +27,7 @@
                         controller: 'HomeController',
                         controllerAs: 'home'
                     }
-                }/*,
-                resolve: {
-                    user: function($location, userService) {
-                        return userService.getUserPresenceFromLocastorage().then(function(data) {
-                            if (data) {
-                                $location.path('/user/' + userService.getCurrentUser().userID)
-                                    //$state.go(user.dashboard, userService.getCurrentUser().userID)
-                            }
-                        });
-
-
-                    }
-                }*/
+                }
             });
             $stateProvider.state('signin', {
                 url: '/signin',
@@ -51,8 +39,10 @@
                         controllerAs: 'signin'
                     }
                 },
-                onEnter: function($state, userService){
-                    return userService.getUserPresenceFromLocastorage()
+                resolve: {
+                    user: function($state, userService){
+                        // return userService.getUserPresenceFromLocastorage()
+                    }
                 }
             });
             $stateProvider.state('forgot', {
@@ -87,35 +77,46 @@
                     }
                 },
                 resolve: {
-                    // user: function(authService, $q, $timeout){
-                    user: function(authService) {
-                        // alert('inside router');
-                        return authService.resolveUserPage(); //.then(function(){
-                        // alert('call authService');
-                        // var defer = $q.defer();
-                        // $timeout(function(){
-                        //     alert('inside timeout');
-                        //     defer.resolve();
-                        //     alert('after defer resolve');
-                        // },1000);
-                        // alert('outside timeout');
-                        // return defer.promise;
-                        // });
+                    resolveuser: function(authService) {
+                        return authService.resolveUserPage();
                     }
                 }
             });
             $stateProvider.state('user.dashboard', {
-                url: '/:userID',
+                url: '/user/:userID',
                 templateUrl: 'components/user/user.html',
                 controller: 'UserController',
                 controllerAs: 'user',
                 resolve: {
-                    user: function($state, $stateParams, userService) {
-                        if ($stateParams.userID !== userService.getCurrentUser().userID) {
-                            $state.go(user.dashboard, userService.getCurrentUser().userID)
-                        }
+                    resolvedashboard: function(authService, $stateParams) {
+                        return authService.resolveDashboard($stateParams.userID);
                     }
                 }
+            });
+            $stateProvider.state('user.profile', {
+                url: '/profile/:userID',
+                // templateUrl: 'components/user/user.html',
+                template: '<h1>Profile</h1>'
+                // controller: 'UserController',
+                // controllerAs: 'user',
+            });
+            $stateProvider.state('user.join-group', {
+                url: '/join-group',
+                templateUrl: 'components/join-group/join-group.html',
+                controller: 'JoinGroupController',
+                controllerAs: 'joinGroup'
+            });
+            $stateProvider.state('user.group', {
+                url: '/:groupID',
+                templateUrl: 'components/group/group.html',
+                controller: 'GroupController',
+                controllerAs: 'group'
+            });
+            $stateProvider.state('user.policy', {
+                url: '/:groupID/policy',
+                templateUrl: 'components/policy/policy.html',
+                controller: 'PolicyController',
+                controllerAs: 'policy',
             });
             $stateProvider.state('user.create-group', {
                 url: '/:userID/create-group',
@@ -128,12 +129,6 @@
                 templateUrl: 'components/edit-group/edit-group.html',
                 controller: 'EditGroupController',
                 controllerAs: 'editGroup'
-            });
-            $stateProvider.state('user.group', {
-                url: '/:groupID',
-                templateUrl: 'components/group/group.html',
-                controller: 'GroupController',
-                controllerAs: 'group'
             });
             $stateProvider.state('user.create-subgroup', {
                 url: '/:groupID/create-subgroup',
@@ -148,16 +143,10 @@
                 controllerAs: 'subgroup'
             });*/
             $stateProvider.state('user.geo-fencing', {
-                url: '/:groupID/geoFencing',
+                url: '/:groupID/geo-fencing',
                 templateUrl: 'components/geo-fencing/geo-fencing.html',
                 controller: 'GeoFencingController',
                 controllerAs: 'geoFencing'
-            });
-            $stateProvider.state('user.join-group', {
-                url: '/:userID/join-group',
-                templateUrl: 'components/join-group/join-group.html',
-                controller: 'JoinGroupController',
-                controllerAs: 'joinGroup'
             });
             $stateProvider.state('user.create-channels', {
                 url: '/:groupID/create-channels',
@@ -171,17 +160,17 @@
                 controller: 'CreateTeamsChannelsController',
                 controllerAs: 'createTeamsChannels'
             });
-            $stateProvider.state('user.personal-settings', {
-                url: '/:userID/personalSettings',
-                templateUrl: 'components/personal-settings/personal-settings.html',
-                controller: 'PersonalSettingsController',
-                controllerAs: 'personalSettings'
-            });
             $stateProvider.state('user.user-setting', {
                 url: '/:groupID/user-setting',
                 templateUrl: 'components/user-setting/user-setting.html',
                 controller: 'UserSettingController',
                 controllerAs: 'userSetting'
+            });
+            $stateProvider.state('user.personal-settings', {
+                url: '/:userID/personal-settings',
+                templateUrl: 'components/personal-settings/personal-settings.html',
+                controller: 'PersonalSettingsController',
+                controllerAs: 'personalSettings',
             });
             $stateProvider.state('user.quiz', {
                 url: '/:userID/quiz',

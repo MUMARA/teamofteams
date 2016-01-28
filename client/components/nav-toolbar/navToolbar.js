@@ -30,7 +30,7 @@
             this.filteredGroups;
             this.groupObj1;
             //this.userObj2;
-            this.switchCheckIn = false
+            this.switchCheckIn = false;
                 /*VM function ref*/
 
             this.logout = logout;
@@ -280,8 +280,8 @@
                 // $location.path('/user/' + userService.getCurrentUser().userID)
                 $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
             }
-
-            this.checkTeamAvailable = function () {
+            
+            this.checkTeamAvailable = function () {                
                 if (self.groups.length === 0) {
                     messageService.showFailure('Currently you are not a member of any Team!');
                     self.switchCheckIn = false;
@@ -290,6 +290,10 @@
             }
 
             this.checkinClick = function() {
+                if (self.checkinSending) {
+                    self.switchCheckIn = !self.switchCheckIn;
+                    return
+                }
                 if (self.groups.length === 0) {
                     return
                 }

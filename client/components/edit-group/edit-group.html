@@ -1,27 +1,28 @@
-<div layout="row" layout-padding layout-margin>
-	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1" >
-		<md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen">
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group({groupID : editGroup.groupId })"></ng-md-icon>
+<div layout="row" layout-padding layout-margin class="leftrightpadding65px">
+	<div layout="column" layout-align="start center" class="nomargin nopadding" >
+		<md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen md-whiteframe-z1">
 	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
 	        <div style="color: white;">TEAM OF TEAMS</div>
         </md-button>
-	    <md-button ng-click="editGroup.openUserSettingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
+	    <md-button ng-click="editGroup.openUserSettingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
 	    	<img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
         	<div style="color: white;">Members</div>
     	</md-button>
-		<md-button ng-click="editGroup.openGeoFencingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
-			<img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-	        <div style="color: white;">Fencing</div>
+        <md-button ng-click="editGroup.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
+            <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Teams</div>
         </md-button>
-		<md-button ng-click="editGroup.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
-			<img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
-		    <div style="color: white;">Teams</div>
-	    </md-button>
+		<md-button ng-click="editGroup.openPolicyPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
+			<img src="../../img/verified_user.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+	        <div style="color: white;">Policy</div>
+        </md-button>
 	</div>
 	<!-- <div flex layout-padding class="backColorWhite nomargin nopadding"> -->
-    <form flex layout-padding class="backColorWhite nomargin nopadding" name="groupForm" novalidate>
+    <form flex layout-padding class="backColorWhite nomargin nopadding md-whiteframe-z2" name="groupForm" novalidate>
 		<h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Edit Team of Teams</h1>
         <md-divider md-outset class="nopadding"></md-divider>
-		<div layout="column" class="viewHeight-154 vscroll" layout-padding>
+		<div layout="column" class="viewHeight-250 vscroll" layout-padding>
             <div>
     			<div layout="row" layout-align="start center">
                     <h3>Url</h3>

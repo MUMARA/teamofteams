@@ -13,6 +13,7 @@
 
             var that = this;
             var user = userService.getCurrentUser();
+            this.user = user;
             var fileUrl;
             var ownerImg;
             $firebaseObject(firebaseService.getRefUsers().child(userService.getCurrentUser().userID).child('profile-image'))

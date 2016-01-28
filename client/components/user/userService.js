@@ -127,6 +127,7 @@
                     'openCreateGroupPage': function() {
 
                         $location.path('/user/' + userService.getCurrentUser().userID + '/create-group');
+                        
 
                     },
                     'openJoinGroupPage': function() {

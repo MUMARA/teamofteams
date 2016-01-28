@@ -2,6 +2,7 @@
   // "firebase": "luminous-torch-4640",
   "firebase": "panacloud",
   "public": "client",
+  "rules": "firebase_rules/securityrules.bolt",
   "ignore": [
     "firebase.json",
     "**/.*",

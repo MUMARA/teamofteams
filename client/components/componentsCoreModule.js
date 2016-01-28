@@ -24,6 +24,7 @@
         'app.userSetting',
         'app.geoFencing',
         'app.quiz',
+        'app.policy',
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',

@@ -331,6 +331,14 @@ angular.module('core')
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
 
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
+                                                        snapshot.val()["subgroup-count"] = snapshot.val()["subgroup-count"] + 1
+                                                        firebaseService.getRefGroups().child(group.$id).set(snapshot.val(), function(){
+                                                            if (error) {
+                                                                errorHandler();
+                                                            }
+                                                        })
+                                                    })
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
                                                     subgroupRef.set({
@@ -340,7 +348,8 @@ angular.module('core')
                                                         "members-count": response.membersCount,
                                                         "microgroups-count": 0,
                                                         "members-checked-in": {
-                                                            count: 0
+                                                            "count": 0,
+                                                            "checked-in": 0
                                                         },
                                                         'logo-image': {
                                                             url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
@@ -355,6 +364,7 @@ angular.module('core')
                                                             errorHandler();
                                                         } else {
                                                             // creating flattened-groups data in firebase
+
                                                             var qArray = [];
                                                             var qArray2 = [];
                                                             var deffer = $q.defer();

@@ -5,7 +5,7 @@
     'use strict';
     angular
         .module('app.signin', ['core'])
-        .factory('singInService', ['$q', 'authService', "$location", "messageService", function($q, authService, $location, messageService) {
+        .factory('singInService', ['$state', '$q', 'authService', "$location", "messageService", function($state, $q, authService, $location, messageService) {
 
             return {
                 'login': function(user, location) {
@@ -14,8 +14,8 @@
                     authService.login(user, function(data) {
                         messageService.showSuccess('Login successful');
                         //firebaseService.addUpdateHandler();
-                        $location.path(location + data.user.userID);
-
+                        // $location.path(location + data.user.userID);
+                        $state.go('user.dashboard', {userID: data.user.userID})
                         defer.resolve()
 
                     }, function(data) {

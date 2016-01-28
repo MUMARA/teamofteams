@@ -1,0 +1,156 @@
+<style>
+.checkbox-icon md-checkbox.md-checked .md-icon:after {
+    display: none;
+}
+
+.checkbox-icon md-checkbox .md-icon {
+    height: 30px;
+    width: 30px;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    background: rgb(181, 181, 181);
+    border: none;
+}
+
+.checkbox-icon md-checkbox.md-default-theme.md-checked .md-icon, md-checkbox.md-checked .md-icon {
+    background: #008000;
+}
+</style>
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group({groupID : policy.groupId })"></ng-md-icon>
+<div layout="row" layout-padding layout-margin class="leftrightpadding65px">
+    <div layout="column" layout-align="start center" class="nomargin nopadding">
+        <md-button ng-click="policy.openEditGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z2">
+            <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">TEAM OF TEAMS</div>
+        </md-button>
+        <md-button ng-click="policy.openUserSettingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z2">
+            <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">Members</div>
+        </md-button>
+        <md-button ng-click="policy.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z2">
+            <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Teams</div>
+        </md-button>
+        <md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen md-whiteframe-z2">
+            <img src="../../img/verified_user.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Policy</div>
+        </md-button>
+    </div>
+    <div flex layout-padding class="nomargin nopadding md-whiteframe-z2">
+        <h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Team of Teams Polices</h1>
+        <md-divider md-outset class="nopadding"></md-divider>
+        <div autocomplete="off" layout="row" class="nopadding viewHeight-250" name="groupForm" novalidate>
+            <div class="nopadding" layout="column" layout-align="space-between center" style="min-width: 220px; border-right: 1px solid grey">
+                <div class="vscroll">
+                    <div ng-repeat="p in policy.groupPolicies track by $index" class="backColorWhite  bottommargin5px subgroupcard nooutline cursorPointer" layout="column" layout-align="center center" ng-click="policy.selectedindex = $index; policy.selectedPolicy(p);" ng-class="(policy.selectedindex === $index) ? 'md-whiteframe-z4' : 'md-whiteframe-z1'">
+                        <strong>{{p.title}}</strong>
+                    </div>
+                </div>
+                <md-button ng-click="policy.newPolicy()" layout-padding class="backColorSeaGreen">
+                    <span style="color: #ffffff">Create Policy</span>
+                </md-button>
+            </div>
+            <!-- <div ng-show="policy.showPanel" class="backColorWhite md-whiteframe-z1 viewHeight-154 vscroll" layout="column" -->
+            <div ng-show="true" class="backColorWhite " layout="row" layout-align="space-between" flex ng-if="policy.showPanel">
+                <div class="viewHeight-250 vscroll" layout="column" layout-padding flex>
+                    <div layout="row" layout-align="start center">
+                         <md-input-container flex>
+                            <label>Policy Name</label>
+                            <input name="policyTitle" ng-model="policy.policyTitle" minlength="3" maxlength="40" required>
+                            <div ng-show="policy.$submitted || policy.policyTitle.$touched" ng-messages="policyForm.policyTitle.$error">
+                                <div class="invalid_color" ng-message="required">This is required.</div>
+                                <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                                <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                        <span class="foreColorDarkGrey">Please Select your Criteria</span>
+                        <br>
+                        <div>
+                            <md-checkbox ng-model="policy.isLocationbased" aria-label="locationBased">
+                                <h4>Location Based</h4>
+                            </md-checkbox>
+                            <!-- locationBasediv    START -->
+                            <div id="locationBasediv" ng-if="policy.isLocationbased">
+                                <div layout="row" layout-align="center center">
+                                    <div layout="row" flex>
+                                        <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="policy.setFocus()"></ng-md-icon>
+                                        <form ng-submit="policy.getLatLngByAddress(policy.address)" flex>
+                                            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
+                                                <input type="text" style="font-size:x-large;" id="#UserSearch" ng-model="policy.address" aria-label="search dashboard" class="serachbox2" placeholder="Search">
+                                            </md-input-container>
+                                        </form>
+                                    </div>
+                                    <div>
+                                        <md-button class="md-raised" ng-click='policy.getLatLngByAddress(policy.address)'><span style="color: #60B089"><b>Find on Map</b></span></md-button>
+                                    </div>
+                                </div>
+                                <div layout="column" layout-align="center center" layout-padding layout-margin>
+                                    <leaflet id="leafletmap" defaults="policy.defaults" center="policy.center" markers="policy.markers" height="600px" width="900px" flex paths="policy.paths"></leaflet>
+                                    <div layout="row" layout-align="center center" style="width:900px">
+                                        <span>
+                                            Fencing: 
+                                        </span>
+                                        <md-slider style="width:900px;height:44px" md-discrete class="md-primary" ng-model="policy.paths.c1.radius" step="1" min="1" max="100" aria-label="fecning"></md-slider>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- locationBasediv    END -->
+                    <div>
+                        <md-checkbox ng-model="policy.isTimebased" aria-label="locationBased">
+                            <h4>Time Based</h4>
+                        </md-checkbox>
+                        <!-- timeBasediv    START -->
+                        <div id="timeBasediv" ng-show="policy.isTimebased">
+
+                            <div  layout="row" layout-wrap flex>
+                                <span flex="10">Days</span>
+
+                                <span flex ng-repeat="time in policy.times">{{time}}</span>
+                            </div>
+
+                            <div layout="column" ng-repeat="row in policy.schCalender track by $index">
+                                <div layout="row" layout-wrap flex layout-align="center center">
+                                    <span flex="10">{{policy.day[$index]}}</span>
+                                    <span flex ng-repeat="itm in row track by $index" class="checkbox-icon">
+                                        <md-checkbox ng-model="itm" ng-change="policy.ontimeClick($index,$parent.$index)" aria-label="chkbox">
+                                         </md-checkbox>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- timeBasediv    END -->
+                    </div>
+                    <div layout="row" layout-align="space-between center">
+                        <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
+                            <span>Assign</span>
+                        </md-button>
+                        <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
+                                <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                                <span> Save</span>
+                        </md-button>
+                    </div>
+                </div>
+                <!--SubGroups sidenav-->
+                <div ng-if="policy.subgroupSideNavBar" class="backColorSeaGreen nopadding viewHeight-250 anifade" style="width: 300px; position: absolute; right: 73px; overflow-y: scroll" layout="column" layout-align="space-between">
+                    <div>
+                        <md-list class="nopadding">
+                            <md-list-item layout="row" layout-align="start center" ng-repeat="subgroup in policy.subGroupNames track by $index" class="buttonHover nooutline" ng-click="policy.selectedTeam(subgroup)">
+                                <ng-md-icon size="24" icon="done" ng-class="subgroup.hasPolicy ? 'fillColorWhite' : 'fillColorDarkGrey' " style="margin-top: 10px">
+                                    </ng-md-icon>
+                                <span class="leftmargin10px foreColorWhite">{{subgroup.subgroupTitle}}</span>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                    <p><br></p>
+                    <div layout="row" layout-align="center center">
+                        <md-button class="md-raised" aria-label="description" ng-click="policy.toggleSideNavBar();" md-ripple-size="auto">Done</md-button>
+                    </div>
+                </div> 
+                <!--SubGroups sidenav-->
+            </div>
+        </div>
+    </div>
+</div>

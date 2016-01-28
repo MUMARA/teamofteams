@@ -1,34 +1,35 @@
-<div layout="row" layout-padding layout-margin>
-	<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed">
-		<md-button ng-if="geoFencing.groupAdmin" ng-click="geoFencing.openEditGroup()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group({groupID : geoFencing.groupId })"></ng-md-icon>
+<div layout="row" layout-padding layout-margin class="leftrightpadding65px">
+	<div layout="column" layout-align="start center" class="nomargin nopadding">
+		<md-button ng-if="geoFencing.groupAdmin" ng-click="geoFencing.openEditGroup()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
 	        <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
 	        <div style="color: white;">TEAM OF TEAMS</div>
         </md-button>
-	    <md-button ng-if="geoFencing.groupAdmin" ng-click="geoFencing.openUserSettingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
+	    <md-button ng-if="geoFencing.groupAdmin" ng-click="geoFencing.openUserSettingPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
 	    	<img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
         	<div style="color: white;">Members</div>
     	</md-button>
-		<md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen">
+		<md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen md-whiteframe-z1">
 			<img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
 	        <div style="color: white;">Fencing</div>
         </md-button>
-		<md-button ng-click="geoFencing.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
+		<md-button ng-click="geoFencing.openCreateSubGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
 			<img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
 		    <div style="color: white;">Teams</div>
 	    </md-button>
 	</div>
-	<div flex layout-padding class="nomargin nopadding" style="border: 1px solid white">
+	<div flex layout-padding class="nomargin nopadding md-whiteframe-z2" >
 		<h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Geo Fencing</h1>
         <md-divider md-outset class="nopadding"></md-divider>
 		<!-- <div layout="row" class="nopadding md-whiteframe-z2" layout-padding> -->
-        <div autocomplete="off" layout="row" class="nopadding md-whiteframe-z2" layout-padding name="groupForm" novalidate>
-            <div class="nopadding md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="start center">
-                <div ng-repeat="subgroup in geoFencing.subgroups track by $index" class="backColorWhite md-whiteframe-z1 bottommargin5px subgroupcard">
+        <div autocomplete="off" layout="row" class="nopadding" layout-padding name="groupForm" novalidate>
+            <div class="nopadding viewHeight-250 vscroll" layout="column" layout-align="start center" style="border-right: 1px solid grey">
+                <div ng-repeat="subgroup in geoFencing.subgroups track by $index" class="backColorWhite bottommargin5px md-whiteframe-z2 subgroupcard">
                     <subgroupcard-directive subgroup="subgroup" ng-click="$parent._index={};$parent._index[$index]=true; geoFencing.showPanel = true; geoFencing.showLocationBySubGroup(subgroup.$id); geoFencing.selectedindex = $index" class="nooutline cursorPointer"></subgroupcard-directive>
-                    <ng-md-icon ng-show="geoFencing.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -73px;"></ng-md-icon>   
+                    <ng-md-icon ng-show="geoFencing.selectedindex===$index" icon="chevron_right" style="position: relative; left: 195px; top: -60px;"></ng-md-icon>   
                 </div>
             </div>
-            <div ng-show="geoFencing.showPanel" class="backColorWhite md-whiteframe-z1 viewHeight-154 vscroll" layout="column" layout-align="space-between" flex>
+            <div ng-show="geoFencing.showPanel" class="backColorWhite  viewHeight-250 vscroll" layout="column" layout-align="space-between" flex>
                 <div layout="row" layout-align="center center">
                     <div layout="row" flex>
                         <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="geoFencing.setFocus()"></ng-md-icon>
