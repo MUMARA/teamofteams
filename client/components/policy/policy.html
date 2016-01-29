@@ -17,7 +17,25 @@
 }
 </style>
 <div layout="row" layout-padding layout-margin class="leftrightpadding65px">
-    <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1">
+<div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1ed">
+        <md-button  ui-sref='user.edit-group({groupID: policy.groupId})' style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen" ng-if="policy.groupAdmin">
+            <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">TEAM OF TEAMS</div>
+        </md-button>
+        <md-button style="margin: 0px; width:100%; border-radius:0px;" ui-sref='user.create-subgroup({groupID: policy.groupId})' class="backColorDarkSeaGreen">
+            <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Teams</div>
+        </md-button>
+        <md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen">
+            <img src="../../img/5sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
+            <div style="color: white;">Policies</div>
+        </md-button>
+        <md-button ui-sref='user.user-setting({groupID: policy.groupId})' style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen" ng-if="policy.groupAdmin">
+            <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
+            <div style="color: white;">Members</div>
+        </md-button>
+    </div>
+  <!--   <div layout="column" layout-align="start center" class="nomargin nopadding md-whiteframe-z1">
         <md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen">
             <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">TEAM OF TEAMS</div>
@@ -34,7 +52,7 @@
             <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">Members</div>
         </md-button>
-    </div>
+    </div> -->
     <div flex layout-padding class="nomargin nopadding" style="border: 1px solid white">
         <h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Team of Teams Polices</h1>
         <md-divider md-outset class="nopadding"></md-divider>

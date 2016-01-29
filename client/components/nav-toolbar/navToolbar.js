@@ -3,8 +3,8 @@
 
     angular.module('app.navToolbar')
 
-    .controller('NavToolbarController', ['$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function($rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function($q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
 
             /*private variables*/
             // alert('inside controller');
@@ -166,7 +166,31 @@
                 return dist;
             };
 
+
+            var subGroupHasPolicy = false;
+            var subGroupPolicy = {};
+            function checkingHasPolicy(groupID, subgroupID) {
+                //var defer = $q.defer(); 
+
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
+                    subGroupHasPolicy = (snapshot.val() && snapshot.val().hasPolicy) ? snapshot.val().hasPolicy : false;
+                    console.log('subGroupHasPolicy', subGroupHasPolicy);
+
+                    if(subGroupHasPolicy) {
+                        firebaseService.getRefPolicies().child(groupID).child(snapshot.val().policyID).once('value', function(policy){
+                            subGroupPolicy = policy.val();
+                            console.log('policy key', policy.key());
+                            console.log('policy val', policy.val());
+                        });
+                    }
+                });
+
+
+            } //subgroupHasPolicy
+
             function updateStatus(group, checkoutFlag) {
+                if(group) { checkingHasPolicy(group.pId, group.subgroupId); } else { subGroupHasPolicy = false; subGroupPolicy = {}; }
+
                 var grId = group && group.pId || self.showUrlObj.groupID;
                 var sgrId = group && group.subgroupId || self.showUrlObj.subgroupID;
                 if (self.checkinSending) return;
@@ -174,7 +198,8 @@
                 self.showUrlObj.group = group;
                 // self.checkout = false;
                 checkinService.createCurrentRefsBySubgroup(grId, sgrId, userID).then(function() {
-                    self.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                    self.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations();
+                    console.log('self.definedSubGroupLocations ', self.definedSubGroupLocations)
                     self.definedSubGroupLocationsObject = checkinService.getFireCurrentSubGroupLocationsObject();
                     //console.log(self.definedSubGroupLocationsObject)
                     //var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(grId + '/' + sgrId + '/' + userID);

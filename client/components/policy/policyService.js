@@ -46,8 +46,8 @@
 			var groupPolicies = [];
 			function setGroupPolicies(groupID) {
                 firebaseService.getRefPolicies().child(groupID).on('child_added', function(subGroups, prevChildKey) {
-                    console.log(subGroups.key());
-                    console.log(subGroups.val());
+                    // console.log(subGroups.key());
+                    // console.log(subGroups.val());
                     groupPolicies.push(subGroups.val());
                 });
                 // firebaseService.getRefPolicies().child(groupID).on('value', function(subGroups, prevChildKey) {
@@ -97,8 +97,22 @@
                     //add property hasPolicy in subgroupNames..
                     multiPathUpdate["subgroups-names/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
                     multiPathUpdate["subgroups-names/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+
+                    //add policy into subgroup-locations-defined
+                    if(obj.locationBased){
+                        var tmpObj = obj;
+                        tmpObj["location"] = obj.locationObj;
+                        tmpObj["title"] = obj.locationObj.title;
+                        tmpObj["subgroup-url"] = groupID+"/"+val.subgroupID;
+                        tmpObj["type"] = 1
+                        delete tmpObj["location"];
+                        delete tmpObj["timeObj"];
+                        delete tmpObj["timeBased"];
+                        multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey] = tmpObj;
+                    }
                 }); //selectedTeams.forEach
 
                 //getting subgroup Members...
