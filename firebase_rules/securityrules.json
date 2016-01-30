@@ -18,6 +18,9 @@
         "status": {
           ".validate": "newData.isNumber() && (newData.val() == 0 || newData.val() == 1)"
         },
+        "profile-image": {
+          ".validate": "newData.isString() || newData.val() == null"
+        },
         "$other": {
           ".validate": "false"
         },
@@ -122,30 +125,30 @@
             }
           }
         },
-        ".validate": "newData.hasChildren(['title', 'timestamp', 'members-count', 'subgroups-count', 'timeZone', 'group-owner-id', 'owner-img-url', 'privacy', 'members-checked-in'])",
+        ".validate": "newData.hasChildren()",
         "title": {
-          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 40"
+          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 40 || newData.val() == null"
         },
         "desc": {
           ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 4 && newData.val().length <= 100) || newData.val() == null"
         },
         "timestamp": {
-          ".validate": "newData.isNumber() && newData.val() <= now"
+          ".validate": "newData.isNumber() && newData.val() <= now || newData.val() == null"
         },
         "members-count": {
-          ".validate": "newData.isNumber() && newData.val() >= 1"
+          ".validate": "newData.isNumber() && newData.val() >= 1 || newData.val() == null"
         },
         "subgroups-count": {
-          ".validate": "newData.isNumber() && newData.val() >= 0"
+          ".validate": "newData.isNumber() && newData.val() >= 0 || newData.val() == null"
         },
         "address-title": {
           ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 3 && newData.val().length <= 40) || newData.val() == null"
         },
         "phone": {
-          ".validate": "newData.val() == null || newData.isString() && (newData.val().length == 0 || newData.val().length >= 11 && newData.val().length <= 100)"
+          ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 11 && newData.val().length <= 100) || newData.val() == null"
         },
         "timeZone": {
-          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 100"
+          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 100 || newData.val() == null"
         },
         "logo-image": {
           ".validate": "newData.hasChildren(['url', 'id', 'bucket-name', 'source', 'mediaType']) || newData.val() == null"
@@ -154,15 +157,18 @@
           ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 4 && newData.val().length <= 200) || newData.val() == null"
         },
         "group-owner-id": {
-          ".validate": "newData.isString()"
+          ".validate": "newData.isString() || newData.val() == null"
         },
         "owner-img-url": {
-          ".validate": "newData.isString()"
+          ".validate": "newData.isString() || newData.val() == null"
+        },
+        "signupMode": {
+          ".validate": "newData.isString() || newData.val() == null"
         },
         "$other": {
           ".validate": "false"
         },
-        ".write": "data.val() == null && auth != null || data.val() != null && newData.val() != null && (root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1)",
+        ".write": "data.val() == null && auth != null && newData.hasChildren(['title', 'timestamp', 'members-count', 'subgroups-count', 'timeZone', 'group-owner-id', 'owner-img-url', 'privacy', 'members-checked-in']) || data.val() != null && newData.val() != null && (root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2)",
         ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).val() != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
       }
     },
@@ -239,21 +245,21 @@
     "subgroups": {
       "$groupid": {
         "$subgroupid": {
-          ".validate": "newData.hasChildren(['title', 'timestamp', 'members-count', 'microgroups-count', 'members-checked-in'])",
+          ".validate": "newData.hasChildren(['members-checked-in'])",
           "title": {
-            ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 40"
+            ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 40 || newData.val() == null"
           },
           "desc": {
             ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 4 && newData.val().length <= 100) || newData.val() == null"
           },
           "timestamp": {
-            ".validate": "newData.isNumber() && newData.val() <= now"
+            ".validate": "newData.isNumber() && newData.val() <= now || newData.val() == null"
           },
           "members-count": {
-            ".validate": "newData.isNumber() && newData.val().length >= 0"
+            ".validate": "newData.isNumber() && newData.val() >= 0 || newData.val() == null"
           },
           "microgroups-count": {
-            ".validate": "newData.isNumber() && newData.val() >= 0"
+            ".validate": "newData.isNumber() && newData.val() >= 0 || newData.val() == null"
           },
           "logo-image": {
             ".validate": "newData.hasChildren(['url', 'id', 'bucket-name', 'source', 'mediaType']) || newData.val() == null"
@@ -261,8 +267,8 @@
           "$other": {
             ".validate": "false"
           },
+          ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
           ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
-          ".write": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2",
           "policyID": {
             ".validate": "newData.isString()"
           },
