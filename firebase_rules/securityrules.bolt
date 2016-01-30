@@ -15,21 +15,14 @@ function isAuthenticated() {
 //  Root path
 //=================================== 
 
-path / { 
- write() { isAuthenticated() }
-}
 
 //===================================
 // User Started Here
 //===================================
 //  User path
 //=================================== 
-path / { 
- write() { isAuthenticated() }
-}
 
 path /users/{userid} is UserType {
- create() { isAuthenticatedUser($userid) }
  update() { isAuthenticatedUser($userid)}
  read()   { isAuthenticated() }
 } 
@@ -39,8 +32,8 @@ path /users/{userid} is UserType {
 
 type UserType {
  "email"         : String,
- "first-name"    : NameLengthGreaterThanThree,
- "last-name"     : NameLengthGreaterThanThree,
+ "firstName"    : NameLengthGreaterThanThree,
+ "lastName"     : NameLengthGreaterThanThree,
  "date-created"  : CurrentTimeStamp,
  "status"        : StatusType,
 }
@@ -260,7 +253,7 @@ function isCurrentUserGroupMembersOwner () {
 
 /*
  function groupMemberTypeShoudBe() {
-    return prior(root['group-members'][$groupid][auth.uid].val() != null && 
+    return prior(root['group-members'][$groupid][auth.uid].val() != null     && 
      root['group-members'][$groupid][auth.uid]['membership-type'].val() == 1 || 
      root['group-members'][$groupid][auth.uid]['membership-type'].val() ==2 )
  }*/
@@ -291,7 +284,7 @@ function isCurrentUserGroupMembersOwner () {
               isCurrentUserGroupMembersOwner()
    }
 
-  validate() { this.hasChildren(['privacy','members-checked-in']) }
+ validate() { this.hasChildren(['privacy','members-checked-in']) }
  
   //update() { }
   
@@ -303,7 +296,9 @@ function isCurrentUserGroupMembersOwner () {
    // path for /groups/groupid/members-checked-in 
   //--------------------------------------------------
   
-  /members-checked-in is MembersCheckInInfo { }
+  /members-checked-in is MembersCheckInInfo { 
+   update() { isGroupMembersIdExist()}
+   }
   
   
    // path for /group/groupid/members-checked-in/checked-in/$userid
@@ -324,25 +319,33 @@ function isUserUSerIDExist() {
 
 type GroupInfo {
  'title'            :  TitleLength,
- 'desc'             :  DescLenght | Null,
+ 'desc'             :  String | Null,
  'timestamp'        :  CurrentTimeStamp,
  'members-count'    :  MemberCountGreaterThanEqualToOne,
- 'subgroup-count'   :  SubgroupCountGreaterThanEqualToZero,
- 'address'          :  AddressLength  | Null,
+ 'subgroups-count'  :  SubgroupCountGreaterThanEqualToZero,
+ 'address-title'    :  String | Null,
  'phone'            :  PhoneNumLength | Null,
- 'timezone'         :  TimeZoneLength,
- 'logo-image'       :  LogoImageRequirement | Null
-}
+ 'timeZone'         :  TimeZoneLength,
+ 'logo-image'       :  LogoImageRequirement | Null,
+  'address'         :  String | Null,
+  "group-owner-id"  :  String,
+  "owner-img-url"   : String
+  }
 
 
 type TitleLength extends String {
-   validate() { this.length >= 3 && this.length <= 40 }
+   //validate() { this.length >= 3 && this.length <= 40  }
+   validate() { checkLength(this)  }
  }
  
+ function checkLength(that) {
+    return ((that.length >= 3 && that.length <= 40) || that == null) ? true : false 
+ }
+/* 
 type AddressLength extends String { 
  validate() { this.length >= 4 && this.length <= 200 }
 }
-
+*/
 type PhoneNumLength extends String { 
    validate() {  this.length >= 11 && this.length <= 100  }
 }
@@ -362,7 +365,7 @@ type SubgroupCountGreaterThanEqualToZero extends Number {
   }
 
 type MembersCheckInInfo {
-   validate() { this.hasChildren(['checked-in']) }
+//  validate() { this.hasChildren(['checked-in']) }
    count : Count
 }
 
