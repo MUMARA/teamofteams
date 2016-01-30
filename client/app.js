@@ -58,7 +58,7 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
 */
 
 // mainApplicationModule.constant('angularMomentConfig', {
-//     preprocess: 'unix'; // optional https://github.com/urish/angular-moment
+//     preprocess: 'unix' // optional https://github.com/urish/angular-moment
 // });
 
 // Fix Facebook's OAuth bug
