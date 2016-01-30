@@ -14,7 +14,10 @@ function isAuthenticated() {
 
 //  Root path
 //=================================== 
-
+path / {
+  read()  {false}
+  write() {false}
+}
 
 //===================================
 // User Started Here
@@ -32,10 +35,10 @@ path /users/{userid} is UserType {
 
 type UserType {
  "email"         : String,
- "firstName"    : NameLengthGreaterThanThree,
- "lastName"     : NameLengthGreaterThanThree,
+ "firstName"     : NameLengthGreaterThanThree,
+ "lastName"      : NameLengthGreaterThanThree,
  "date-created"  : CurrentTimeStamp,
- "status"        : StatusType,
+ "status"        : StatusType,                            //plaese donot change this in your code it will change only from zero to one when email is varified
 }
 
 type NameLengthGreaterThanThree extends String{
@@ -47,7 +50,7 @@ type CurrentTimeStamp extends Number{
 }
 
 type StatusType extends Number {
-  validate() { this == -1 || this == 0 || this == 1 }
+  validate() { this == 0 || this == 1 }        // 0 = unverified || 1 = verified
 }
 
 //===================================
@@ -55,7 +58,7 @@ type StatusType extends Number {
 //===================================
 
 path /users-presence/{userid} is UserPresence {
-   read()     {     isAuthenticated()          }
+   read()     {     isAuthenticated()      }
    create()   {  isAuthenticatedUser($userid)  }
    update()   {  isAuthenticatedUser($userid)  }
    
@@ -67,14 +70,14 @@ path /users-presence/{userid} is UserPresence {
 }
 
 type UserPresence {
-      "last-modified"   :  CurrentTimeStamp | Null,
-      "defined-status"  :  Number   | Null                     // 1 = online, 2 = away, 3 = busy. if no connection that means it's offline    
+      "last-modified"   :  CurrentTimeStamp | Null,            // when ever there is a state change it should be updated
+      "defined-status"  :  Number   | Null                     // 1 = availableWhenConnected, 2 = away, 3 = busy. if no connection that means it's offline    
 }
 
 type ConnectionIDStatus{
       delete()   {  isAuthenticatedUser($userid) }
-      "type"     : Number | Null,                               //  1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens  
-      "started"  : CurrentTimeStamp | Null
+      "type"     :  Number,                               //  1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens  
+      "started"  : CurrentTimeStamp
 }
 
 
@@ -95,11 +98,11 @@ path /users/{userid} is UserPersonalSetting {
 
 type UserPersonalSetting {
 
-        'contactNumber'   : ContactNumberLength,
+    'contactNumber'   : ContactNumberLength,
     'date-created'    : CurrentTimeStamp,
     'desc'            : DescLenght,
     'email'           : String,
-      'firstName'       : NameLengthGreaterThanThree,
+    'firstName'       : NameLengthGreaterThanThree,
     'lastName'        : NameLengthGreaterThanThree,
     'profession'      : String,          
     'profile-image'   : String,                                               //  ----------------------------------
@@ -118,7 +121,7 @@ type ContactNumberLength extends Number {
 
 type DescLenght extends String {
   validate() { 
-  this.length >=4 && this.length <= 100 }
+     this.length == 0 || this.length >= 4 && this.length <= 100 }
 } 
 
 
@@ -127,19 +130,21 @@ type DescLenght extends String {
 //===================================
 
 path /user-group-memberships/{userid} {
-   read()     {      isAuthenticatedUser($userid)              }
-   validate() {  prior(root['users'][$userid]).val() != null   }
+   read()     {      isAuthenticatedUser($userid)    }
+   validate() {    doesUserExist($userid)   && isAuthenticatedUser($userid) }
 }
 
 //sir we left the checking here
 
+function doesUserExist(userid) {
+    return prior(root['users'][userid]).val() != null
+}
 
 path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipType {
 
  //read() { isGroupIdExist() && isCurrentUserGroupOwner() || isCurrentUserGroupAdmin() } 
  
- create() {    authAdminForWriteOnce(this)           &&
-               isAuthenticatedUser($userid)     }
+ create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1  }
  update() {
                  isGroupIdExist()                    &&         
                  isCurrentUserGroupOwner()           ||
@@ -206,6 +211,7 @@ function isCurrentUserGroupOwner () {
 //===================================
 // User-Group-Membership End
 //===================================
+
 
 //Group-member Start Here
 //===================================
@@ -276,9 +282,7 @@ function isCurrentUserGroupMembersOwner () {
               userGroupMembershipAnyType() 
   }
               
-  create() {  isGroupMembersIdExist()   &&
-              groupMemberShipAnyType() 
-  }
+  create() {  isAuthenticated() }
             
   update() { isGroupMembersIdExist() && isCurrentUserGroupMembersAdmin() ||
               isCurrentUserGroupMembersOwner()
@@ -319,35 +323,37 @@ function isUserUSerIDExist() {
 
 type GroupInfo {
  'title'            :  TitleLength,
- 'desc'             :  String | Null,
+ 'desc'             :  DescLenght | Null,
  'timestamp'        :  CurrentTimeStamp,
  'members-count'    :  MemberCountGreaterThanEqualToOne,
  'subgroups-count'  :  SubgroupCountGreaterThanEqualToZero,
- 'address-title'    :  String | Null,
- 'phone'            :  PhoneNumLength | Null,
+ 'address-title'    :  AddressTitleLength | Null,
+ 'phone'            :  Null | PhoneNumLength,
  'timeZone'         :  TimeZoneLength,
  'logo-image'       :  LogoImageRequirement | Null,
-  'address'         :  String | Null,
+  'address'         :  AddressLength | Null,
   "group-owner-id"  :  String,
-  "owner-img-url"   : String
+  "owner-img-url"   :  String
   }
 
 
 type TitleLength extends String {
-   //validate() { this.length >= 3 && this.length <= 40  }
-   validate() { checkLength(this)  }
+ validate() { this.length >= 3 && this.length <= 40  }
+
  }
  
- function checkLength(that) {
-    return ((that.length >= 3 && that.length <= 40) || that == null) ? true : false 
+
+type AddressTitleLength extends String {
+ validate() {this.length == 0  || this.length >= 3 && this.length <= 40  }
+
  }
-/* 
+ 
 type AddressLength extends String { 
- validate() { this.length >= 4 && this.length <= 200 }
+ validate() {this.length == 0 ||  this.length >= 4 && this.length <= 200 }
 }
-*/
+
 type PhoneNumLength extends String { 
-   validate() {  this.length >= 11 && this.length <= 100  }
+   validate() {this.length == 0 || this.length >= 11 && this.length <= 100  }
 }
 
 
@@ -399,13 +405,11 @@ type LogoImageRequirement {
     
     
     //Path for /groups-names/groupid
-    //---------------------
+    //---------------------------
                                      
       /{groupid} is GroupsNameInfo {
             
-          create() { isGroupMembersIdExist()            &&
-                     this['membership-type'].val() == 1 
-          } //Final  
+          create() { isAuthenticated()  }   
                      
           update() { isGroupMembersIdExist()            && 
                      isCurrentUserGroupMembersOwner()   || 
@@ -416,17 +420,19 @@ type LogoImageRequirement {
  
  type GroupsNameInfo {
           groupImgUrl  : String | Null,
-      ownerImgUrl  : String | Null,
-      title        : String
+          ownerImgUrl  : String | Null,
+          title        : String
  
  }
 
  
  //===================================
- //   Group Activity Streams        Removed hasChildren
+ //   Group Activity Streams       
  //====================================
+ //Please note when creating group using Multi path update donot add group creation activity seprately
  
- path /group-activity-streams/{groupid}{
+ 
+ path /group-activity-streams/{groupid}{        
         read()     {    isGroupMembersIdExist()       && 
                         groupMemberShipAnyType() }
                   
@@ -848,7 +854,7 @@ path /subgroup-check-in-current/{groupid} {
 path /subgroup-check-in-current-by-user/{userid} {
     read() {
           isAuthenticatedUser($userid) ||
-          isUser$USerIDExist()
+          ifUserUserIDExist()
     }
     
     write() {
@@ -860,7 +866,7 @@ path /subgroup-check-in-current-by-user/{userid} {
     }
 
 }
-function isUser$USerIDExist() { 
+function ifUserUserIDExist() { 
          return prior(root['users'][$userid] != null)
  }
  
@@ -1007,10 +1013,10 @@ path /subgroup-locations-defined/{groupid} {
 
 path /user-subgroup-memberships/{userid} {
     read() {
-        isAuthenticatedUser($userid) || (isAuthenticated() && isUser$USerIDExist()) 
+        isAuthenticatedUser($userid) || (isAuthenticated() && ifUserUserIDExist()) 
     }
     
-    validate() {  isUser$USerIDExist() }
+    validate() {  ifUserUserIDExist() }
  // path for  /user-subgroup-memberships/{userid}/{groupid}
    //-------------------------------------------------------------
    
@@ -1102,7 +1108,7 @@ path /subgroup-membership-requests/{groupid} {
     }
 }
 type SubGroupMembershipRequest { 
-   validate() { isUser$USerIDExist() }
+   validate() { ifUserUserIDExist() }
    'message'    : MessageLength,
    'timestamp'  :  CurrentTimeStamp
 }
@@ -1120,7 +1126,7 @@ type SubGroupMembershipRequest {
  path /subgroup-membership-requests-by-user/{userid} { 
  
   read()     { isAuthenticatedUser($userid) }
-  validate() {    isUser$USerIDExist()       }
+  validate() {    ifUserUserIDExist()       }
   
      // path for   /subgroup-membership-requests-by-user/{userid}/{groupid}
    //----------------------------------------------------------------------
