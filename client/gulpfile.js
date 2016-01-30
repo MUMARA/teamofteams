@@ -41,6 +41,8 @@ gulp.task("minifying", function() {
             "./components/join-group/joinGroup.js",
             "./components/personal-settings/personal-settingsService.js",
             "./components/personal-settings/personal-settings.js",
+            "./components/policy/policyService.js",
+            "./components/policy/policy.js",
             "./components/user-setting/userSettingService.js",
             "./components/user-setting/userSetting.js",
             "./components/geo-fencing/geo-fencing.js", //not working in minifying
