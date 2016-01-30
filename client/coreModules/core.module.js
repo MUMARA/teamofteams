@@ -34,7 +34,7 @@ angular.module('core', [
     /*   'customdirectives'*/
 
     //'angularCharts'
-]).filter('trustUrl', function($sce) {
+]).filter('trustUrl', ['$sce', function($sce) {
     return function(url) {
         /*var temp;
         $.get(url).success(function(data){
@@ -44,7 +44,7 @@ angular.module('core', [
         //var temp = webkitURL.createObjectURL(url)*/
         return url
     };
-  })
+  }])
 .filter('emptyString', [
   function() {
     return function(input, param) {
