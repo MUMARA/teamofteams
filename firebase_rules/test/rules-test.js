@@ -10,7 +10,7 @@ rulesSuite("My Test", function(test) {
  test("User Write Tests", function(rules){
      rules
         .as('zia')
-        .at('/users' + uid('zia'))
+        .at('/users/' + uid('zia'))
         .write({
             email         : "zia@panacloud.com",
             firstName    : "Zia",
