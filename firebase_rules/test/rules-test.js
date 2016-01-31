@@ -4,9 +4,26 @@ var rulesSuite = bolt.rulesSuite;
 rulesSuite("My Test", function(test) {
   var uid = test.uid;
   test.database("multi-test", "V4pRxvp12zTpi0wRRbYuPYvlopSudm5YX6qGiU1y");
-  test.rules("rules");
+  test.rules("securityrules");
   //...<your tests here>...
-  
+ 
+ test("User Write Tests", function(rules){
+     rules
+        .as('zia')
+        .at('/users' + uid('zia'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .fails("User cannot create a User even himself")
+        
+        
+ })
+ 
+ /** 
     test("Inbox tests.", function(rules) {
     rules
       .as('tom')
@@ -142,5 +159,5 @@ rulesSuite("My Test", function(test) {
       .at('/users/' + uid('bill') + '/outbox/1')
       .read()
       .fails("Can't read Bills outbox.");
-  });
+  });*/ 
 })
