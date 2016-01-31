@@ -9,7 +9,7 @@ rulesSuite("My Test", function(test) {
  
  test("User Write Tests", function(rules){
      rules
-        .as('zia')
+        .as('admin')
         .at('/users/' + uid('zia'))
         .write({
             email         : "zia@panacloud.com",
@@ -18,8 +18,21 @@ rulesSuite("My Test", function(test) {
             "date-created"  : test.TIMESTAMP,
              status        : 0
         })
-        .fails("User cannot create a User even himself")
-        
+        .succeeds("Only admin can write in /users")
+        .as('arsalan')
+        .at('/users/' + uid('arsalan'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .fails("No one else can write in /users")
+        .as('arsalan')
+        .at('/users/' + uid('zia'))
+        .read()
+        .succeeds("Any authenticated user can read user data")
         
  })
  
