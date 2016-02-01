@@ -31,6 +31,41 @@ rulesSuite("User Tests", function(test) {
              status        : 0
         })
         .succeeds("Only admins can create /users")
+        
+ });
+ 
+ 
+ test("User Read Tests", function(rules){
+     rules
+        .as('admin')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .succeeds("Only admins can create /users")
+        .as('arsalan')
+        .at('/users/' + uid('zia'))
+        .read()
+        .succeeds("Any authenticated user can read user data")
+ }); 
+ 
+ 
+ test("User Update Tests", function(rules){
+     rules
+        .as('admin')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .succeeds("Only admins can create /users")
         .as('zia')
         .at('/users/' + uid('zia'))
         .write({
@@ -51,24 +86,6 @@ rulesSuite("User Tests", function(test) {
              status        : 0
         })
         .fails("A user cannot update anyone elses profile")
- });
- 
- 
- test("User Read Tests", function(rules){
-     rules
-        .as('admin')
-        .at('/users/' + uid('zia'))
-        .write({
-            email         : "zia@panacloud.com",
-            firstName    : "Zia",
-            lastName     : "Khan",
-            "date-created"  : test.TIMESTAMP,
-             status        : 0
-        })
-        .as('arsalan')
-        .at('/users/' + uid('zia'))
-        .read()
-        .succeeds("Any authenticated user can read user data")
  }); 
  
  
@@ -89,7 +106,7 @@ rulesSuite("User Tests", function(test) {
         .fails("A user cannot delete even its own data")
  });
  
- test("All User Delete Tests", function(rules){
+ test("All Users Delete Tests", function(rules){
      rules
         .as('admin')
         .at('/users/' + uid('zia'))
