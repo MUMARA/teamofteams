@@ -1,0 +1,16 @@
+{
+  "name": "bolttest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rules-test.js",
+  "scripts": {
+    "test": "mocha --ui tdd"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^3.5.0",
+    "firebase-bolt": "^0.8.0",
+    "mocha": "^2.4.5"
+  }
+}

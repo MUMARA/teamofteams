@@ -5,8 +5,8 @@
     'use strict';
 
     angular.module('app.group')
-        .controller('GroupController', ['$sce', '$mdDialog','userService', 'dataService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$state", "$stateParams",
-            function($sce, $mdDialog, userService, dataService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $state, $stateParams) {
+        .controller('GroupController', ['$sce', '$mdDialog','userService', 'dataService', 'joinGroupService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$state", "$stateParams",
+            function($sce, $mdDialog, userService, dataService, joinGroupService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $state, $stateParams) {
 
                 var that = this;
                 var isOwner = false;
@@ -15,6 +15,11 @@
                 var user = userService.getCurrentUser();
                 this.adminOf = '';
                 this.groupID = $stateParams.groupID;
+                this.subgroupID = $stateParams.subgroupID
+                this.reqObj = {
+                    groupID: that.groupID,
+                    message: "Please add me in your group."
+                };
                 this.selectedindex = false;
                 that.activesubID = false;
                 
@@ -32,6 +37,20 @@
                     }
                 }
 
+                function activate(){
+                    that.userObj = groupService.getOwnerImg(that.groupID);
+                    that.channels = chatService.getGroupChannelsSyncArray(that.groupID);
+                    that.users =  dataService.getUserData();
+                }
+
+                if (this.subgroupID) {
+                    firebaseService.getRefSubGroupsNames().child(that.groupID).child(this.subgroupID).once('value', function(subg){
+                        if (subg.val()) {
+                            that.reqObj['subgroupID'] = subg.key();
+                            that.reqObj['subgrouptitle'] = (subg.val() && subg.val().title) ? subg.val().title : false;
+                        }
+                    })
+                }
                 firebaseService.getRefUserSubGroupMemberships().child(user.userID).child(this.groupID).once('value', function(subgroups){
                     for (var subgroup in subgroups.val()) {
                         if (subgroups.val()[subgroup]['membership-type'] == 1) {
@@ -65,11 +84,16 @@
                             that.adminOf = 'Group'
                         } else if (that.groupSyncObj.membershipType == 3) {
                             isMember = true;
-                        } 
+                        }
+                        if (isMember) {
+                            activate();
+                        }
                     });
                 })
-                
-                this.userObj = groupService.getOwnerImg(that.groupID);
+
+                this.sendRequest = function(){
+                    joinGroupService.joinGroupRequest(that.reqObj, function(){});
+                }
                 
                 this.isOwner = function() {
                     return isOwner;
@@ -133,7 +157,7 @@
                     });
                 };
 
-                this.channels = chatService.getGroupChannelsSyncArray(that.groupID);
+                
 
                 this.text = {
                     msg: ""
@@ -256,7 +280,7 @@
                     }
                 }
 
-                that.users =  dataService.getUserData();                
+                
              
                 this.report = [];
                 this.reportParam = {};

@@ -150,8 +150,8 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 }
 
 .leftrightpadding65px {
-    padding-left: 65px;
-    padding-right: 65px;
+    padding-left: 65px!important;
+    padding-right: 65px!important;
 }
 
 .automargin {
@@ -178,6 +178,7 @@ md-progress-circular .md-inner .md-left .md-half-circle {
 .leftmargin40px {
     margin-left: 40px;
 }
+
 .leftpadding40px {
     padding-left: 40px;
 }

@@ -46,7 +46,7 @@
 
         function removeCurrentConRef(){
             currentConRef.remove();
-            userPresRef.child('last-modified').onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+            userPresRef.child('last-modified').set(Firebase.ServerValue.TIMESTAMP);
         }
 
         //to set user presence
