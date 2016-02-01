@@ -1,0 +1,20 @@
+{ provider: 'custom', token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkZWJ1ZyI6dHJ1ZSwidiI6MCwiZCI6eyJ1aWQiOiJ0YWltb29yIiwiZGF0YSI6eyJlbWFpbCI6InRhaW1vb3JfdEB5YWhvby5jb20iLCJmaXJzdE5hbWUiOiJUYWltb29yIiwibGFzdE5hbWUiOiJUYXJpcSIsInN0YXR1cyI6MCwidXNlcklEIjoidGFpbW9vciJ9fSwiaWF0IjoxNDU0MTM5NDY0fQ.8JR4xYOLgaUiKRMiYIq_gfUmrN8D3iQAeLuYYQvvUoA' }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{"email":"taimoor_t@yahoo.com","firstName":"Taimoor","lastName":"Tariq","lastLogin":"2016-01-30T07:37:44.936Z","status":0,"userID":"taimoor","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkZWJ1ZyI6dHJ1ZSwidiI6MCwiZCI6eyJ1aWQiOiJ0YWltb29yIiwiZGF0YSI6eyJlbWFpbCI6InRhaW1vb3JfdEB5YWhvby5jb20iLCJmaXJzdE5hbWUiOiJUYWltb29yIiwibGFzdE5hbWUiOiJUYXJpcSIsInN0YXR1cyI6MCwidXNlcklEIjoidGFpbW9vciJ9fSwiaWF0IjoxNDU0MTM5NDY0fQ.8JR4xYOLgaUiKRMiYIq_gfUmrN8D3iQAeLuYYQvvUoA"}
