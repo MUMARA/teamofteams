@@ -1,4 +1,4 @@
-var bolt = require('firebase-bolt');
+var bolt       = require('firebase-bolt');
 var rulesSuite = bolt.rulesSuite;
 
 rulesSuite("Team Tests", function(test) {
@@ -8,7 +8,29 @@ rulesSuite("Team Tests", function(test) {
   //...<your tests here>...
  
  test("Team Write Tests", function(rules){
-     
+     rules
+          .as("taimoor")
+          .at('/users/' + uid('taimoor'))
+          .write({
+            email       : "taimoor@panacloud.com",
+            firstName   : "taimoor",
+            lastName    : "tariq",
+            "date-created" : test.TIMESTAMP,
+            status      : 0
+        
+          })
+          
+     .fails("No one else can create users even himself")
+          .as("admin")
+          .at('/users/' + uid('taimoor'))
+          .write({
+            email       : "taimoor@panacloud.com",
+            firstName   : "taimoor",
+            lastName    : "tariq",
+            "date-created" : test.TIMESTAMP,
+            status      : 0
+        
+          }) 
         
  });
  
