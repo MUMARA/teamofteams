@@ -31,20 +31,10 @@ rulesSuite("User Tests", function(test) {
              status        : 0
         })
         .succeeds("Only admins can create /users")
-        .as('zia')
-        .at('/users/' + uid('zia'))
-        .write({
-            email         : "zia1@panacloud.com",
-            firstName    : "Zia",
-            lastName     : "Khan",
-            "date-created"  : test.TIMESTAMP,
-             status        : 0
-        })
-        .succeeds("No one else can write in other /users except for himself")
         
  });
  
- /*
+ 
  test("User Read Tests", function(rules){
      rules
         .as('admin')
@@ -56,11 +46,82 @@ rulesSuite("User Tests", function(test) {
             "date-created"  : test.TIMESTAMP,
              status        : 0
         })
-        //.as('arsalan')
+        .succeeds("Only admins can create /users")
+        .as('arsalan')
         .at('/users/' + uid('zia'))
         .read()
         .succeeds("Any authenticated user can read user data")
- });   */ 
+ }); 
+ 
+ 
+ test("User Update Tests", function(rules){
+     rules
+        .as('admin')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .succeeds("Only admins can create /users")
+        .as('zia')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia1@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .succeeds("A user can only update himself")
+        .as('arsalan')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia12@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .fails("A user cannot update anyone elses profile")
+ }); 
+ 
+ 
+ test("User Delete Tests", function(rules){
+     rules
+        .as('admin')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .as('arsalan')
+        .at('/users/' + uid('zia'))
+        .write(null)
+        .fails("A user cannot delete even its own data")
+ });
+ 
+ test("All Users Delete Tests", function(rules){
+     rules
+        .as('admin')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .as('arsalan')
+        .at('/users/')
+        .write(null)
+        .fails("A user cannot delete all users")
+ });        
  
  
  /** 
