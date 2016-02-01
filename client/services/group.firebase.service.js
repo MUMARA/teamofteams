@@ -263,6 +263,7 @@ angular.module('core')
                             userID: snapshot.key(),
                             message: snapshot.val()["message"],
                             timestamp: snapshot.val()["timestamp"],
+                            "teamrequest": snapshot.val()["team-request"],
                             userSyncObj: userSyncObj
                         });
                     });
@@ -888,6 +889,32 @@ angular.module('core')
                         });
 
                     return deferred.promise;
+                },
+                addsubgroupmember: function(userID, groupID, subgroupID){
+                    var defer = $q.defer();
+                    var count = 0;
+                    firebaseService.getRefMain().child('subgroups').child(groupID).child(subgroupID).child('members-count').once('value', function(snapshot){
+                        count = snapshot.val();
+                    })
+                    var multipath = {};
+                    multipath["user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID] = {
+                        "membership-type": 3,
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    };
+                    multipath["subgroup-members/" + groupID + "/" + subgroupID + "/" + userID] = {
+                        "membership-type": 3,
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    }
+                    multipath["subgroups/" + groupID + "/" + subgroupID + "/members-count"] = count + 1;
+                    multipath["subgroups/" + groupID + "/" + subgroupID + "/timestamp"] = Firebase.ServerValue.TIMESTAMP;
+                    firebaseService.getRefMain().update(multipath, function(err){
+                        if (err) {
+                            defer.reject(err);
+                        } else {
+                            defer.resolve();
+                        }
+                    })
+                    return defer.promise;
                 },
                 approveMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID, membershipType,
