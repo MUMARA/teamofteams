@@ -8,7 +8,8 @@ rulesSuite("Team of Teams Tests", function(test) {
   test.rules("securityrules");
   //...<your tests here>...
   var groupid = "panacloud";
- test("Team of Teams Write Tests", function(rules){
+ 
+ test("Team of Teams Write Tests As Admin", function(rules){
      rules
           .as("admin")
           .at("/users/" + uid( "arsalan"))
@@ -18,9 +19,12 @@ rulesSuite("Team of Teams Tests", function(test) {
               lastName        : "Rajput",
               "date-created"  : test.TIMESTAMP,
               status          :0
-         }).succeeds("User successfully Created")
+         })
+         .succeeds("User successfully Created")
+         
          .as("arsalan")
          .at("/groups/" + groupid)
+         
          .write({
              privacy : { 
                  invitationType : 1 
@@ -32,12 +36,44 @@ rulesSuite("Team of Teams Tests", function(test) {
              timestamp : test.TIMESTAMP,
              "members-count" : 1,
              "subgroups-count" : 0,
-             timeZone :  12345,
+             timeZone : "12345",
+             phone    : "124542124612225",
              "owner-img-url" : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
              signupMode    :    "1"
              
-         }).succeeds("Group Created")
- })
+         })
+         .succeeds("Group Created failed")
+ });
+ 
+ test("Team of Teams Read Tests As Admin", function(rules){
+     rules
+          .as("admin")
+          .at("/users/" + uid("arsalan"))
+         
+          .write({
+              email           : "arsalan@panacloud.com",
+              firstName       : "Arsalan",
+              lastName        : "Rajput",
+              "date-created"  : test.TIMESTAMP,
+              status          : 0
+         })
+         .succeeds("User successfully Created")
+         
+         .as("arsalan")
+         .at( "/user-group-memberships/" +uid("arsalan") + "/"+ groupid)
+          .write({
+            "membership-type" : 1,
+            "timestamp"       : test.TIMESTAMP
+          })
+
+         .as("arsalan")
+         .at("/groups/" + groupid)
+         
+         .read()
+         .succeeds("Group Created failed")
+ });
+//-----------------------------------------------------------------------
+ 
  
  /*
  test("User Read Tests", function(rules){
