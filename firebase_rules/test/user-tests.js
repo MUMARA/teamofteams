@@ -1,3 +1,5 @@
+//For documentation please read https://github.com/firebase/bolt/issues/80
+
 var bolt = require('firebase-bolt');
 var rulesSuite = bolt.rulesSuite;
 
