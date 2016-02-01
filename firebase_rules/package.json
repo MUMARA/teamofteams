@@ -2,7 +2,7 @@
   "name": "bolttest",
   "version": "1.0.0",
   "description": "",
-  "main": "rules-test.js",
+  "main": "test/rules-test.js",
   "scripts": {
     "test": "mocha --ui tdd"
   },

@@ -1,7 +1,7 @@
 var bolt = require('firebase-bolt');
 var rulesSuite = bolt.rulesSuite;
 
-rulesSuite("My Test", function(test) {
+rulesSuite("User Tests", function(test) {
   var uid = test.uid;
   test.database("multi-test", "V4pRxvp12zTpi0wRRbYuPYvlopSudm5YX6qGiU1y");
   test.rules("securityrules");
