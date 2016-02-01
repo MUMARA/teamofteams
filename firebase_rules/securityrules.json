@@ -109,7 +109,7 @@
           }
         },
         "members-checked-in": {
-          ".validate": "newData.hasChildren(['count', 'checked-in'])",
+          ".validate": "newData.hasChildren(['count'])",
           "count": {
             ".validate": "newData.isNumber() && newData.val() >= 0",
             ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"

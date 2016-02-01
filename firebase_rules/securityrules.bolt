@@ -373,7 +373,7 @@ type SubgroupCountGreaterThanEqualToZero extends Number {
   }
 
 type MembersCheckInInfo {
-  validate() { this.hasChildren(['checked-in']) }
+ // validate() { this.hasChildren(['checked-in']) }
    count : Count
 }
 
