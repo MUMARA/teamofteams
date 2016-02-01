@@ -3,14 +3,41 @@ var rulesSuite = bolt.rulesSuite;
 
 rulesSuite("Team of Teams Tests", function(test) {
   var uid = test.uid;
+  //var groupid = test.groupid;
   test.database("multi-test", "V4pRxvp12zTpi0wRRbYuPYvlopSudm5YX6qGiU1y");
   test.rules("securityrules");
   //...<your tests here>...
- 
+  var groupid = "panacloud";
  test("Team of Teams Write Tests", function(rules){
-     
-        
- });
+     rules
+          .as("admin")
+          .at("/users/" + uid( "arsalan"))
+          .write({
+              email           : "arsalan@panacloud.com",
+              firstName       : "Arsalan",
+              lastName        : "Rajput",
+              "date-created"  : test.TIMESTAMP,
+              status          :0
+         }).succeeds("User successfully Created")
+         .as("arsalan")
+         .at("/groups/" + groupid)
+         .write({
+             privacy : { 
+                 invitationType : 1 
+             },
+             "members-checked-in" : { 
+                 count    : 0
+             },
+             title : "Hello",
+             timestamp : test.TIMESTAMP,
+             "members-count" : 1,
+             "subgroups-count" : 0,
+             timeZone :  12345,
+             "owner-img-url" : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode    :    "1"
+             
+         }).succeeds("Group Created")
+ })
  
  /*
  test("User Read Tests", function(rules){
