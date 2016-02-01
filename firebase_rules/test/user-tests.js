@@ -48,10 +48,17 @@ rulesSuite("User Tests", function(test) {
              status        : 0
         })
         .succeeds("Only admins can create /users")
+        
         .as('arsalan')
         .at('/users/' + uid('zia'))
         .read()
         .succeeds("Any authenticated user can read user data")
+        
+        .as('anon')
+        .at('/users/' + uid('zia'))
+        .read()
+        .fails("An unauthenticated user cannot read user data")
+        
  }); 
  
  
@@ -67,6 +74,7 @@ rulesSuite("User Tests", function(test) {
              status        : 0
         })
         .succeeds("Only admins can create /users")
+        
         .as('zia')
         .at('/users/' + uid('zia'))
         .write({
@@ -77,6 +85,7 @@ rulesSuite("User Tests", function(test) {
              status        : 0
         })
         .succeeds("A user can only update himself")
+        
         .as('arsalan')
         .at('/users/' + uid('zia'))
         
