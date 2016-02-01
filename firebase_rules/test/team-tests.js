@@ -30,8 +30,19 @@ rulesSuite("Team Tests", function(test) {
             "date-created" : test.TIMESTAMP,
             status      : 0
         
-          }) 
-        
+          })
+           
+     .succeeds("Only admins can create /users")
+        .as('taimoor')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia1@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .succeeds("No one else can write in other /users except for himself")
  });
  
  /*
