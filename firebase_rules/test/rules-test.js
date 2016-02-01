@@ -9,6 +9,16 @@ rulesSuite("My Test", function(test) {
  
  test("User Write Tests", function(rules){
      rules
+        .as('zia')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .fails("No one else can create users even himself")
         .as('admin')
         .at('/users/' + uid('zia'))
         .write({
@@ -18,9 +28,25 @@ rulesSuite("My Test", function(test) {
             "date-created"  : test.TIMESTAMP,
              status        : 0
         })
-        .succeeds("Only admin can write in /users")
-        .as('arsalan')
-        .at('/users/' + uid('arsalan'))
+        .succeeds("Only admins can create /users")
+        .as('zia')
+        .at('/users/' + uid('zia'))
+        .write({
+            email         : "zia1@panacloud.com",
+            firstName    : "Zia",
+            lastName     : "Khan",
+            "date-created"  : test.TIMESTAMP,
+             status        : 0
+        })
+        .succeeds("No one else can write in other /users except for himself")
+        
+ });
+ 
+ /*
+ test("User Read Tests", function(rules){
+     rules
+        .as('admin')
+        .at('/users/' + uid('zia'))
         .write({
             email         : "zia@panacloud.com",
             firstName    : "Zia",
@@ -28,13 +54,12 @@ rulesSuite("My Test", function(test) {
             "date-created"  : test.TIMESTAMP,
              status        : 0
         })
-        .fails("No one else can write in /users")
-        .as('arsalan')
+        //.as('arsalan')
         .at('/users/' + uid('zia'))
         .read()
         .succeeds("Any authenticated user can read user data")
-        
- })
+ });   */ 
+ 
  
  /** 
     test("Inbox tests.", function(rules) {
