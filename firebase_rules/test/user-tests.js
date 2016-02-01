@@ -21,6 +21,7 @@ rulesSuite("User Tests", function(test) {
              status        : 0
         })
         .fails("No one else can create users even himself")
+        
         .as('admin')
         .at('/users/' + uid('zia'))
         .write({
@@ -78,6 +79,7 @@ rulesSuite("User Tests", function(test) {
         .succeeds("A user can only update himself")
         .as('arsalan')
         .at('/users/' + uid('zia'))
+        
         .write({
             email         : "zia12@panacloud.com",
             firstName    : "Zia",
@@ -100,7 +102,13 @@ rulesSuite("User Tests", function(test) {
             "date-created"  : test.TIMESTAMP,
              status        : 0
         })
+        
         .as('arsalan')
+        .at('/users/' + uid('zia'))
+        .write(null)
+        .fails("A user cannot delete any other user data")
+        
+        .as('zia')
         .at('/users/' + uid('zia'))
         .write(null)
         .fails("A user cannot delete even its own data")
@@ -117,6 +125,7 @@ rulesSuite("User Tests", function(test) {
             "date-created"  : test.TIMESTAMP,
              status        : 0
         })
+        
         .as('arsalan')
         .at('/users/')
         .write(null)
