@@ -35,12 +35,14 @@ url: '/:groupID',		//Due to this route need to reserve below keywords
 	/signin
 	/signup
 	/forgot
-	/tots
-	/tot
+	/search
+	/create
 
 url: '/:groupID/:subgroupID',	//Due to this route need to reserve below keywords
 
-	/user/:userid
+	/pages/signin
+    
+    /user/:userid
 	/profile/:userid
 	/tot/:groupid 						#suggestion		/:groupid/setting/tot
 	/members/:groupid 					#suggestion		/:groupid/setting/members
@@ -49,7 +51,7 @@ url: '/:groupID/:subgroupID',	//Due to this route need to reserve below keywords
 
 	/:groupID/attendance				#suggestion		/:groupid/tab/attendanxw
 	/:groupID/chat						#suggestion		/:groupid/tab/chat
-	/:groupID/firepad					#suggestion		/:groupid/tab/firepad
+	/:groupID/collaborator				#suggestion		/:groupid/tab/collaborator
 	/:groupID/progressreport			#suggestion		/:groupid/tab/progressreport
 	/:groupID/manualattendance			#suggestion		/:groupid/tab/manualattendance
 	/:groupID/reports					#suggestion		/:groupid/tab/reports
@@ -61,19 +63,22 @@ So below keyword will be reserve
 	signin
 	signup
 	forgot
-	tots
-	tot
+	search
+	create
 	setting
 	tab
+    user
+    profile
+    pages
 
 =========================================================
 
-	/:groupID/:subgroupID/attendance
-	/:groupID/:subgroupID/chat
-	/:groupID/:subgroupID/firepad
-	/:groupID/:subgroupID/progressreport
-	/:groupID/:subgroupID/manualattendance
-	/:groupID/:subgroupID/reports
+	/:groupID/:subgroupID/tab/attendance
+	/:groupID/:subgroupID/tab/chat
+	/:groupID/:subgroupID/tab/collaborator
+	/:groupID/:subgroupID/tab/progressreport
+	/:groupID/:subgroupID/tab/manualattendance
+	/:groupID/:subgroupID/tab/reports
 
 =========================================================
 
