@@ -93,18 +93,23 @@
                     }
                 }
             });
-            $stateProvider.state('user.profile', {
+            $stateProvider.state('user.personal-settings', {
                 url: '/profile/:userID',
-                // templateUrl: 'components/user/user.html',
-                template: '<h1>Profile</h1>'
-                // controller: 'UserController',
-                // controllerAs: 'user',
+                templateUrl: 'components/personal-settings/personal-settings.html',
+                controller: 'PersonalSettingsController',
+                controllerAs: 'personalSettings',
             });
             $stateProvider.state('user.join-group', {
-                url: '/join-group',
+                url: '/tots',
                 templateUrl: 'components/join-group/join-group.html',
                 controller: 'JoinGroupController',
                 controllerAs: 'joinGroup'
+            });
+            $stateProvider.state('user.create-group', {
+                url: '/tot',
+                templateUrl: 'components/create-group/create-group.html',
+                controller: 'CreateGroupController',
+                controllerAs: 'createGroup'
             });
             $stateProvider.state('user.group', {
                 url: '/:groupID',
@@ -112,29 +117,29 @@
                 controller: 'GroupController',
                 controllerAs: 'group'
             });
-            $stateProvider.state('user.policy', {
-                url: '/:groupID/policy',
-                templateUrl: 'components/policy/policy.html',
-                controller: 'PolicyController',
-                controllerAs: 'policy',
-            });
-            $stateProvider.state('user.create-group', {
-                url: '/:userID/create-group',
-                templateUrl: 'components/create-group/create-group.html',
-                controller: 'CreateGroupController',
-                controllerAs: 'createGroup'
-            });
             $stateProvider.state('user.edit-group', {
-                url: '/:groupID/edit-group',
+                url: '/tot/:groupID',
                 templateUrl: 'components/edit-group/edit-group.html',
                 controller: 'EditGroupController',
                 controllerAs: 'editGroup'
             });
+            $stateProvider.state('user.user-setting', {
+                url: '/members/:groupID',
+                templateUrl: 'components/user-setting/user-setting.html',
+                controller: 'UserSettingController',
+                controllerAs: 'userSetting'
+            });
             $stateProvider.state('user.create-subgroup', {
-                url: '/:groupID/create-subgroup',
+                url: '/teams/:groupID',
                 templateUrl: 'components/create-sub-group/create-sub-group.html',
                 controller: 'CreateSubGroupController',
                 controllerAs: 'createSubGroup'
+            });
+            $stateProvider.state('user.policy', {
+                url: '/policies/:groupID',
+                templateUrl: 'components/policy/policy.html',
+                controller: 'PolicyController',
+                controllerAs: 'policy',
             });
             /*$stateProvider.state('user.subgroup', {
                 url: '/:groupID/subgroup',
@@ -142,12 +147,12 @@
                 controller: 'SubgroupController',
                 controllerAs: 'subgroup'
             });*/
-            $stateProvider.state('user.geo-fencing', {
+            /*$stateProvider.state('user.geo-fencing', {
                 url: '/:groupID/geo-fencing',
                 templateUrl: 'components/geo-fencing/geo-fencing.html',
                 controller: 'GeoFencingController',
                 controllerAs: 'geoFencing'
-            });
+            });*/
             $stateProvider.state('user.create-channels', {
                 url: '/:groupID/create-channels',
                 templateUrl: 'components/create-channels/create-channels.html',
@@ -160,23 +165,17 @@
                 controller: 'CreateTeamsChannelsController',
                 controllerAs: 'createTeamsChannels'
             });
-            $stateProvider.state('user.user-setting', {
-                url: '/:groupID/user-setting',
-                templateUrl: 'components/user-setting/user-setting.html',
-                controller: 'UserSettingController',
-                controllerAs: 'userSetting'
-            });
-            $stateProvider.state('user.personal-settings', {
-                url: '/:userID/personal-settings',
-                templateUrl: 'components/personal-settings/personal-settings.html',
-                controller: 'PersonalSettingsController',
-                controllerAs: 'personalSettings',
-            });
             $stateProvider.state('user.quiz', {
                 url: '/:userID/quiz',
                 templateUrl: 'components/quiz/quiz.html',
                 controller: 'QuizController',
                 controllerAs: 'quiz'
+            });
+            $stateProvider.state('user.group-subgroup', {
+                url: '/:groupID/:subgroupID',
+                templateUrl: 'components/group/group.html',
+                controller: 'GroupController',
+                controllerAs: 'group'
             });
             $urlRouterProvider.otherwise('/');
         })

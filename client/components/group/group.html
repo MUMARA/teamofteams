@@ -1,4 +1,4 @@
-<div layout="row" layout-align="center start">
+<div layout="row" layout-align="center start" ng-if="group.isMember()">
     <!-- Side Nav Bar -->
     <div class="viewHeight-64 md-whiteframe-z2" layout="column">
         <md-card style="width: 220px; margin:0px;" class="foreColorDarkGrey" layout="column">
@@ -389,4 +389,45 @@
             </md-button>
         </md-card>
     </div>
+</div>
+<div ng-if="!group.isMember()" layout="column" layout-align="center center" class="viewHeight">
+    <md-card layout-padding class="foreColorDarkGrey" ng-if="!group.group.title">
+        <h3>Requested Team of Teams not found!</h3>
+    </md-card>
+    <md-card layout-padding class="foreColorDarkGrey" ng-if="group.group.title">
+        <h3>You have to be member before accessing Team of Teams!</h3>
+    </md-card>
+    <md-card style="width: 220px; height: 320px; margin:0px 5px 5px 5px;" class="foreColorDarkGrey" layout="column" ng-if="group.group.title">
+        <div style="margin:auto;">
+            <span layout="row" layout-align="center center">
+                <img ng-src="{{ group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px; padding-top:10px">
+            </span>    
+            <h4 class="textAlignCenter" layout-margin>
+                {{ group.group.title }}
+            </h4>
+            <div layout="row" layout-align="center center" ng-if="group.group['address-title']">
+                <md-icon md-svg-src="img/location.svg" class="nomargin"></md-icon>
+                <div>{{group.group['address-title']}}</div>
+            </div>
+        </div>
+        <div flex="25" style="border-top: 2px solid #dddddd; margin:0px; margin-top: 5px" layout="row" layout-align="center center">
+            <div ng-if="group.reqObj.subgroupID">
+                Team: <strong>{{group.reqObj.subgrouptitle}}</strong>
+            </div>
+            <div ng-if="!group.reqObj.subgroupID">
+                <h4>Requested Team not found!</h4>
+            </div>
+        </div>
+
+        <div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
+            <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
+                <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image"/>
+            </div>
+            <div layout="row" layout-align="start center" layout-margin>
+                <md-button class="md-button backColorSeaGreen" ng-click="group.sendRequest()">
+                    <span style="color:white;">REQUEST</span>
+                </md-button>
+            </div>
+        </div>
+    </md-card>
 </div>
