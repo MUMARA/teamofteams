@@ -283,7 +283,7 @@ function isCurrentUserGroupMembersOwner($groupid) {
               userGroupMembershipAnyType(groupid) 
   }
               
-  create() {  isAuthenticated()}
+  create() {  isAuthenticated() }
             
   update() { isGroupMembersIdExist(groupid) && isCurrentUserGroupMembersOwner(groupid) || isCurrentUserGroupMembersAdmin(groupid) 
               
@@ -329,7 +329,7 @@ type GroupInfo {
  'members-count'    :  MemberCountGreaterThanEqualToOne ,
  'subgroups-count'  :  SubgroupCountGreaterThanEqualToZero,
  'address-title'    :  AddressTitleLength   | Null,
- 'phone'            :  PhoneNumLength ,
+ 'phone'            :  PhoneNumLength  | Null ,
  'timeZone'         :  TimeZoneLength,                      
  'logo-image'       :  LogoImageRequirement | Null,
   'address'         :  AddressLength        | Null,

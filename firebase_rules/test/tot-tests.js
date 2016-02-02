@@ -8,8 +8,8 @@ rulesSuite("Team of Teams Tests", function(test) {
   test.rules("securityrules");
   //...<your tests here>...
   var groupid = "panacloud";
- 
- test("Team of Teams Write Tests As Admin", function(rules){
+ /*
+ test("User Team of Teams write Test ", function(rules){
      rules
           .as("admin")
           .at("/users/" + uid( "arsalan"))
@@ -42,10 +42,10 @@ rulesSuite("Team of Teams Tests", function(test) {
              signupMode    :    "1"
              
          })
-         .succeeds("Group Created failed")
+         .succeeds("Any authanticated user can create group")
  });
  
- test("Team of Teams Read Tests As Admin", function(rules){
+ test("Team of Teams Read Tests As User", function(rules){
      rules
           .as("admin")
           .at("/users/" + uid("arsalan"))
@@ -66,12 +66,204 @@ rulesSuite("Team of Teams Tests", function(test) {
             "timestamp"       : test.TIMESTAMP
           })
 
+        //.as("arsalan")
+         .at("/groups/" + groupid)
+         .read()
+         .succeeds("user group members can read data")
+ });
+ */
+ /*
+ test("team of Teams update by User" ,function(rules){
+     rules
+          .as("admin")
+          .at("/users/" + uid("arsalan"))
+          
+          .write({
+              email          : "arsalan@panacloud.com",
+              firstName      : "Arsalan",
+              lastName       : "Rajput",
+              "date-created" : test.TIMESTAMP,
+              status         :  0
+          }).succeeds("Only admin can create user")
+     
          .as("arsalan")
          .at("/groups/" + groupid)
+         .write({
+             privacy : {
+                invitationType : 1 
+             },
+             "members-checked-in" : {
+                 count    :   0 
+             },
+             title        :   "Arsalan Rajput",
+             timestamp    :   test.TIMESTAMP,
+             "members-count"   :   1,
+             "subgroups-count" :   0,
+             timeZone          :  "1234556",
+             "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode   : "1"
+             
+         }).succeeds("Any authanticated user can create group")
+         .as("arsalan")
+         .at("/group-members/" + groupid + uid("/arsalan"))
+         .write({
+             "membership-type"  : 1
+         })
+         .as("arsalan")
+         .at("/groups/" + groupid)
+         .write({
+              privacy : {
+                invitationType : 3 
+             },
+             "members-checked-in" : {
+                 count         :   4 
+             },
+             title             :   "Captain Rajput",
+             timestamp         :   test.TIMESTAMP,
+             "members-count"   :   1,
+             "subgroups-count" : 0,
+             timeZone          : "1234556",
+             "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode   : "1"
+             
+         }).fails("Only admin can update group")
+ })
+ 
+ */
+ /*
+ test("team of teams update by admin" ,function(rules){
+     rules  
+         .as("admin")
+         .at("/users/" + uid("arsalan"))
+         .write({
+             email  : "arsalan@panacloud.com",
+             firstName : "Arsalan Rajput",
+             lastName : "Rajput",
+             "date-created" : test.TIMESTAMP,
+             status :    0
+         }).succeeds("admin can only create users")
          
-         .read()
-         .succeeds("Group Created failed")
- });
+       .at("/groups/" + groupid)
+       .write({
+            privacy : {
+                invitationType : 1
+             },
+             "members-checked-in" : {
+                 count         :   2 
+             },
+             title             :   "Arsalan Rajput",
+             timestamp         :   test.TIMESTAMP,
+             "members-count"   :   1,
+             "subgroups-count" :   0,
+             timeZone          :  "1234556",
+             "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode   : "1"
+       }).succeeds("Group Created")
+       
+       .at("/group-members/" + groupid + uid("/arsalan"))
+         .write({
+              "membership-type"  : 1
+         })
+        .as("admin")
+        
+        .at("/groups/" + groupid)
+        .write({
+             privacy : {
+                invitationType : 1
+             },
+             "members-checked-in" : {
+                 count         :   2 
+             },
+             title             :   "Captain Rajput",
+             timestamp         :   test.TIMESTAMP,
+             "members-count"   :   1,
+             "subgroups-count" :   0,
+             timeZone          :  "12345568989809898",
+             "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode   : "1"
+        }).succeeds("Only admin can update group");
+       
+       
+ })
+ */
+//Group Name Read test with unAuth
+   test("Group Name Read Test with unAuth user" ,function(rules){
+       rules   
+           .as("anon")
+           .at("/groups-names/")
+           .read()
+           .fails("Un auth user cannot read group  names")
+   })
+   
+ //Group Name Read  test with Auth
+   test("Group Name read Test with Auth user" ,function(rules){
+      rules
+          .as("admin")
+          .at("/users/" + uid("arsalan"))
+          .write({
+              email           : "arsalanRajput@panacloud.com",
+              firstName       : "Arsalan",
+              lastName        : "Rajput",
+              "date-created"  : test.TIMESTAMP,
+              status          :   0
+          }).succeeds("Only admin can create User")
+          .as("arsalan")
+          .at("/groups-names")
+          .read()
+          .succeeds("only Auth user can read Groups name")
+   })
+   
+   
+    //Group Name create  test with Auth 
+   test("group name write test" ,function(rules){
+      rules
+      .as("admin")
+      .at("/users/" + uid("arsalan"))
+      .write({
+          email : "arsalan@panacloud.com",
+          firstName : "Arsalan",
+          lastName : "Rajput",
+          "date-created"  :  test.TIMESTAMP,
+          status : 0
+      }).succeeds("Admin can create users")
+      
+      .as("arsalan")
+      .at("/groups-names/" + groupid)
+      .write({
+          title : "Rajput"
+      }).succeeds("Authenticated user can write on group name")
+     //Group Name update  test with Auth  
+    
+    test("group name update test" , function(rules){
+        rules  
+            .as("admin")
+            .at("/users/" + uid("arsalan"))
+            .write({
+                 email : "arsalan@panacloud.com",
+                 firstName : "Arsalan",
+                 lastName : "Rajput",
+                 "date-created"  :  test.TIMESTAMP,
+                 status : 0
+            }).succeeds("Only admin can create users")
+      .as("arsalan")
+      .at("/groups-names/" + groupid)
+      .write({
+          title:  "Arsalan Testing rules"
+      }).succeeds("Any auth user can create groups")
+     .as("arsalan")
+     .at("/group-members/" + groupid + "/" + uid("arsalan"))
+     .write({
+        'membership-type'   : 3
+       })
+       .as("arsalan")
+       .at("/groups-names/" + groupid)
+       .write({
+           title : "Arsalan Rajput",
+           groupImgUrl  : "http://www.google.com"
+       }).succeeds("onlu admin can update group")
+    })  
+})
+ 
 //-----------------------------------------------------------------------
  
  
