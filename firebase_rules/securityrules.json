@@ -125,7 +125,7 @@
             }
           }
         },
-        ".validate": "newData.hasChildren(['title', 'timestamp', 'members-count', 'subgroups-count', 'phone', 'timeZone', 'owner-img-url', 'signupMode', 'privacy', 'members-checked-in'])",
+        ".validate": "newData.hasChildren(['title', 'timestamp', 'members-count', 'subgroups-count', 'timeZone', 'owner-img-url', 'signupMode', 'privacy', 'members-checked-in'])",
         "title": {
           ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 40"
         },
@@ -145,7 +145,7 @@
           ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 3 && newData.val().length <= 40) || newData.val() == null"
         },
         "phone": {
-          ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 11 && newData.val().length <= 100)"
+          ".validate": "newData.isString() && (newData.val().length == 0 || newData.val().length >= 11 && newData.val().length <= 100) || newData.val() == null"
         },
         "timeZone": {
           ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 100"
