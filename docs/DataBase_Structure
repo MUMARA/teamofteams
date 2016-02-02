@@ -135,8 +135,8 @@ groups
  		members-count: 1
  		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		phone: "821721893720000000"
- 	privacy
- 		invitationType: 2
+ 		privacy
+ 			invitationType: 2
  		signupMode: "2"
  		subgroups-count: 0
  		timeZone: " +5:00"
@@ -244,10 +244,10 @@ subgroup-locations-defined
  					lat: 24.8131137
  					lon: 67.04971699999999
  					radius: 20
- 			subgroup-url: "team1/subteam1"
- 			timestamp: 1452774417818
- 			title: "34C Stadium Lane 3, Karachi, Pakistan"
- 			type: 1
+	 			subgroup-url: "team1/subteam1"
+	 			timestamp: 1452774417818
+	 			title: "34C Stadium Lane 3, Karachi, Pakistan"
+	 			type: 1
 
 
 ## On Edit ##
@@ -260,10 +260,10 @@ subgroup-locations-defined
  					lat: 24.8531846
  					lon: 67.01667250000003
  					radius: 20
- 					subgroup-url: "team1/subteam1"
- 					timestamp: 1452774535689
- 					title: "Saddar Town, Karachi, Pakistan"
- 					type: 1
+				subgroup-url: "team1/subteam1"
+				timestamp: 1452774535689
+				title: "Saddar Town, Karachi, Pakistan"
+				type: 1
 --------------------------------------
 
 

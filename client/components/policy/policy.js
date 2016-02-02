@@ -22,6 +22,7 @@
 
             this.isLocationbased = false;
             this.isTimebased = false;
+            this.isDailyReport = false;
             this.isProcessing = false;
             that.fencing = true;
             this.center = {};
@@ -35,15 +36,47 @@
                 scrollWheelZoom: false
             };
             this.policyTitle = '';
-            this.activePolicyId = '';
+            this.activePolicyId = false;
 
+            var groupId = that.groupId = $stateParams.groupID;
+            var SubgroupObj, userId = that.userId = userService.getCurrentUser().userID;
+            var subgroupId = that.subgroupId = undefined;
+
+            //checking is admin or not -- START
+            that.groupAdmin = false
+            firebaseService.getRefUserGroupMemberships().child(that.userId).child(that.groupId).once('value', function(group){
+                if (group.val()['membership-type'] == 1) {
+                    that.groupAdmin = true;
+                } else if (group.val()['membership-type'] == 2) {
+                    that.groupAdmin = true;
+                }
+            });
+            //checking is admin or not -- END
+
+            //Geo Fecning Default Location
             function defaultGeoLocation() {
-                that.center.lat = 24.8131137;
-                that.center.lng = 67.04971699999999;
+                
+                // for creating default geo fencing variables and define default lng, lat with marker
+                setLocationMarker(67.04971699999999, 24.8131137);
+
+                //getting user current location
+                checkinService.getCurrentLocation().then(function(location) {
+                    if (location) { //if location found
+                        getLatLngByAddress(location.coords.latitude +', '+ location.coords.longitude);
+                    } 
+                }, function(err) {
+                    //messageService.showFailure(err.error.message);
+                });
+            } //defaultGeoLocation
+
+            //setting location and its marker
+            function setLocationMarker(lng, lat) {
+                that.center.lat = lat;
+                that.center.lng = lng;
                 that.center.zoom = 20
 
-                that.markers.mark.lat = that.center.lat;
-                that.markers.mark.lng = that.center.lng;
+                that.markers.mark.lat = lat;
+                that.markers.mark.lng = lng;
                 that.markers.mark.draggable = true;
                 that.markers.mark.focus = true;
                 that.markers.mark.message = '34C Stadium Lane 3, Karachi, Pakistan';
@@ -53,7 +86,7 @@
                 that.paths.c1.color = 'green';
                 that.paths.c1.latlngs = that.center;
                 that.paths.c1.radius = 20;
-            }
+            } //setLocationMarker
 
             function updatepostion(lat, lng, msg) {
                 that.paths.c1.latlngs = {
@@ -67,13 +100,10 @@
                 that.center.lat = lat;
                 that.center.lng = lng;
             }
-
             that.getLatLngByAddress = getLatLngByAddress;
 
-            var groupId = that.groupId = $stateParams.groupID;
-            var SubgroupObj, userId = that.userId = userService.getCurrentUser().userID;
-            var subgroupId = that.subgroupId = undefined;
 
+            //on controller load...... START
 
             //Load Group Policies from given GroupID
             this.groupPolicies = [];
@@ -81,6 +111,8 @@
 
             //Load SubgroupNames from Given GroupID
             this.subGroupNames = policyService.getSubGroupNames(that.groupId)
+
+            //on controller load...... END
 
 
             
@@ -184,7 +216,7 @@
                     subgroupID: that.subgroupId,
                     userID: that.userId,
                     title: that.markers.mark.message,
-                    locationObj: {
+                    location: {
                         lat: that.center.lat,
                         lng: that.center.lng,
                         radius: that.paths.c1.radius
@@ -243,70 +275,70 @@
                 }
             } //loadSchaduler
 
-            //on time (checkbox) click create object
-            this.ontimeClick = function(index, parentIndex) {
-                    that.schCalender[parentIndex][index] = !that.schCalender[parentIndex][index];
-                    // console.log(that.day[parentIndex], that.times[index], that.schCalender[parentIndex][index]);
+            //on click schedule (checkbox) click create object
+            this.onScheduleClick = function(index, parentIndex) {
+                that.schCalender[parentIndex][index] = !that.schCalender[parentIndex][index];
+                // console.log(that.day[parentIndex], that.times[index], that.schCalender[parentIndex][index]);
 
-                    if (that.selectedTimesForAllow.hasOwnProperty(that.day[parentIndex])) {
-                        that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
-                            // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
-                    } else {
-                        that.selectedTimesForAllow[that.day[parentIndex]] = {};
-                        that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
-                            // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
-                    }
-                    // console.log(that.selectedTimesForAllow);
+                if (that.selectedTimesForAllow.hasOwnProperty(that.day[parentIndex])) {
+                    that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
+                    // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
+                } else {
+                    that.selectedTimesForAllow[that.day[parentIndex]] = {};
+                    that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
+                    // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
                 }
-                //scheduler for time base -- END --
+                // console.log(that.selectedTimesForAllow);
+            }
+            //scheduler for time base -- END --
 
 
             //Selected SubGroup Members for Assigning Policies
             this.selectedTeamMembers = {};
             this.LoadSubGroupUsers = function(groupID, subgroupID) {
-                    that.selectedTeamMembers[subgroupID] = policyService.getSubGroupMembers(groupID, subgroupID);
-                    //that.selectedTeamMembers = policyService.getSubGroupMembers(that.groupId, 'hotemail');
-                }
-                //Selected SubGroup Members for Assigning Policies
+                that.selectedTeamMembers[subgroupID] = policyService.getSubGroupMembers(groupID, subgroupID);
+                //that.selectedTeamMembers = policyService.getSubGroupMembers(that.groupId, 'hotemail');
+            }
+            //Selected SubGroup Members for Assigning Policies
 
             //Selected SubGroup for Assign Policies
             this.selectedTeams = [];
             this.selectedTeam = function(subgroup, onEditPolicy) {
-                    var _flag = true;
-                    that.selectedTeams.forEach(function(val, indx) {
-                        if (val.subgroupID == subgroup.subgroupID) {
-                            _flag = false;
-                        }
-                    });
-                    if (_flag) {
+                var _flag = true;
+                that.selectedTeams.forEach(function(val, indx) {
+                    if (val.subgroupID == subgroup.subgroupID) {
+                        _flag = false;
+                    }
+                });
+                if (_flag) {
 
-                        //Add SubGroups    //-K91WU-ZDR8kujgvU9gZ
-                        that.selectedTeams.push(subgroup);
+                    //Add SubGroups    //-K91WU-ZDR8kujgvU9gZ
+                    that.selectedTeams.push(subgroup);
 
-                        if (onEditPolicy) { //on click policy (edit mode)
-                            //after add in local selected team array chnage hasPolicy true in firebase team array
-                            that.subGroupNames.forEach(function(val, indx) {
-                                // console.log(val)
-                                if (val.subgroupID == subgroup.subgroupID && val.policyID == that.activePolicyId) {
-                                    that.subGroupNames[indx].hasPolicy = true;
-                                } 
-                            });
-                        } else {
-                            //after add in local selected team array chnage hasPolicy true in firebase team array
-                            that.subGroupNames.forEach(function(val, indx) {
-                                if (val.subgroupID == subgroup.subgroupID) {
-                                    that.subGroupNames[indx].hasPolicy = true;
-                                } //else {
-                                //     that.subGroupNames[indx].hasPolicy = false;
-                                // }
-                            });
-                        }
+                    if (onEditPolicy) { //on click policy (edit mode)
+                        //after add in local selected team array chnage hasPolicy true in firebase team array
+                        that.subGroupNames.forEach(function(val, indx) {
+                            // console.log(val)
+                            if (val.subgroupID == subgroup.subgroupID && val.policyID == that.activePolicyId) {
+                                that.subGroupNames[indx].hasPolicy = true;
+                            } 
+                        });
+                    } else {
+                        //after add in local selected team array chnage hasPolicy true in firebase team array
+                        that.subGroupNames.forEach(function(val, indx) {
+                            if (val.subgroupID == subgroup.subgroupID) {
+                                that.subGroupNames[indx].hasPolicy = true;
+                            } //else {
+                            //     that.subGroupNames[indx].hasPolicy = false;
+                            // }
+                        });
+                    }
 
-                        //Load SubGropMemebrs
-                        that.LoadSubGroupUsers(that.groupId, subgroup.subgroupID);
-                    } //_flag
-                } //selectedTeam
-                //Selected SubGroup for Assign Policies
+                    //Load SubGropMemebrs
+                    that.LoadSubGroupUsers(that.groupId, subgroup.subgroupID);
+                } //_flag
+            } //selectedTeam
+            //Selected SubGroup for Assign Policies
 
             //on create policy
             this.newPolicy = function() {
@@ -314,162 +346,231 @@
                 init();
 
                 //chnage subgroup names hasPolicy false onload
-
                 subGroupNamesPolicyFalse();
+
+                //On New/Create Policy Show Panel
                 that.showPanel = true;
             } //this.newPolicy
 
-            //onclick save button
-            this.onSave = function() {
-
-                    if (that.policyTitle) {
-
-                        var obj = {};
-
-                        if (that.isLocationbased && that.isTimebased) {
-                            obj = {
-                                locationBased: true,
-                                timeBased: true,
-                                locationObj: {
-                                    lat: that.center.lat,
-                                    lng: that.center.lng,
-                                    radius: that.paths.c1.radius
-                                },
-                                timeObj: that.selectedTimesForAllow
-                            };
-                            console.log('that.isLocationbased && that.isTimebased', obj)
-
-                        } else if (that.isLocationbased) {
-                            //isLocationbased
-                            obj = {
-                                locationBased: true,
-                                timeBased: false,
-                                locationObj: {
-                                    lat: that.center.lat,
-                                    lng: that.center.lng,
-                                    radius: that.paths.c1.radius
-                                },
-                                timeObj: ""
-                            };
-                            console.log('that.isLocationbased', obj)
-                        } else if (that.isTimebased) {
-                            //isTimebased
-                            obj = {
-                                locationBased: false,
-                                timeBased: true,
-                                locationObj: "",
-                                timeObj: that.selectedTimesForAllow
-                            };
-                            console.log('that.isTimebased', obj)
-                        } else {
-                            //nothing have to do....
-                            messageService.showFailure('Please Select your Criteria!');
-                            return false;
-                        }
-
-                        //setting obj title name
-                        obj.title = that.policyTitle;
-
-                        // console.log('team', that.selectedTeams);
-                        // console.log('members', that.selectedTeamMembers);
-
-
-                        //calling policy service function to add in firebase
-                        policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, function(){
-                           //Load Group Policies from given GroupID
-                           //that.groupPolicies = policyService.getGroupPolicies(that.groupId); 
-                            if(that.activePolicyId) {  //if edit
-                                that.groupPolicies.forEach(function(val,index){
-                                    if(val.policyID == that.activePolicyId) {
-                                        that.groupPolicies[index] = obj;
-                                    }
-                                }); 
-                                messageService.showSuccess('Policy Successfully Updated!');
-                            } else{
-                                messageService.showSuccess('Policy Successfully Created!');  
-                                //after created reload initial page 
-                                that.newPolicy();
-                            }
-                        }, that.activePolicyId);
-
-                    } else {//if that.title exists
-                        messageService.showFailure('Please Write Policy Name');
-                    }
-                } //onSave
-
 
             this.selectedPolicy = function(policy) {
-                    console.log(policy);
-                    that.activePolicyId = policy.policyID;          //set active PolicyID
-                    that.policyTitle = policy.title;                //show title
-                    that.isLocationbased = policy.locationBased;    //show if locationBased is True
-                    that.isTimebased = policy.timeBased;            //show if timebased is true
-                    that.showPanel = true;
+                that.activePolicyId = policy.policyID;          //set active PolicyID
+                that.policyTitle = policy.title;                //show title
+                that.isLocationbased = policy.locationBased;    //show if locationBased is True
+                
+                that.isTimebased = policy.timeBased;            //show if timebased is true
+                that.selectedTimesForAllow = {};
+                
+                that.isDailyReport = policy.dailyReport
+                that.dailyReportQuestions = {};
+                that.showPanel = true;
 
-                    //Clear calender .. (run scheduler)
-                    loadSchaduler();
+                //Clear calender .. (run scheduler)
+                loadSchaduler();
 
-                    if (policy.locationBased) {
-                        that.center.lat = policy.locationObj.lat;
-                        that.center.lng = policy.locationObj.lng;
-                        that.paths.c1.radius = policy.locationObj.radius;
-                    } //policy.locationBased true
+                if (that.isLocationbased) {
+                    getLatLngByAddress(policy.location.lat +', '+ policy.location.lng);
+                    that.paths.c1.radius = policy.location.radius;
+                    //that.center.lat = policy.locationObj.lat;
+                    //that.center.lng = policy.locationObj.lng;
+                } //policy.locationBased true
 
-                    if (policy.timeBased) {
-                        that.selectedTimesForAllow = {};
-                        // console.log("Sunday", that.day.indexOf("Sunday"));
-                        for (var day in policy.timeObj) {
-                            // console.log(day);
-                            // console.log(policy.timeObj[day]);
-                            for (var hour in policy.timeObj[day]) {
-                                // console.log(hour);
-                                // console.log(policy.timeObj[day][hour]);
-                                that.schCalender[that.day.indexOf(day)][hour] = policy.timeObj[day][hour];
+                if (that.isTimebased) {
+                    for (var day in policy.schedule) {
+                        // console.log(day); // console.log(policy.timeObj[day]);
+                        for (var hour in policy.schedule[day]) {
+                            // console.log(hour);  // console.log(policy.timeObj[day][hour]);
+                            that.schCalender[that.day.indexOf(day)][hour] = policy.schedule[day][hour];
 
-                                if (that.selectedTimesForAllow.hasOwnProperty(day)) {
-                                    that.selectedTimesForAllow[day][hour] = policy.timeObj[day][hour];
-                                } else {
-                                    that.selectedTimesForAllow[day] = {};
-                                    that.selectedTimesForAllow[day][hour] = policy.timeObj[day][hour]
-                                }
-                            } // for hour    policy.timeObj[day]
-                            // console.log(that.selectedTimesForAllow);
-                        } //for day    policy.timeObj
-                    } //policy.timeBased true
+                            if (that.selectedTimesForAllow.hasOwnProperty(day)) {
+                                that.selectedTimesForAllow[day][hour] = policy.schedule[day][hour];
+                            } else {
+                                that.selectedTimesForAllow[day] = {};
+                                that.selectedTimesForAllow[day][hour] = policy.schedule[day][hour]
+                            }
+                        } // for hour    policy.timeObj[day]
+                        // console.log(that.selectedTimesForAllow);
+                    } //for day    policy.timeObj
+                } //policy.timeBased true
 
-                    //now getting subgroup ids where this policy has implemented
-                    that.selectedTeams = []; //on edit policy clear selectedTeams Array  before reload
-                    that.selectedTeamMembers = {}; //on edit policy clear selectedTeamMembers object before reload
+                if(that.isDailyReport) {
+                     that.dailyReportQuestions = arrayToObject(policy.dailyReportQuestions);        //when comes from firebase our question change into array from object.
+                     // console.log('[]', policy.dailyReportQuestions);
+                     // console.log('{}', arrayToObject(policy.dailyReportQuestions));  
 
-                    //before selectedTeam first hasPolicy = false... 
-                    subGroupNamesPolicyFalse();
+                     isQuestionExists();  //checking if questions exists
+                } //that.isDailyReport true
 
-                    //if active policy is match from subgroup object of policyID then hasPolicy true
-                    that.subGroupNames.forEach(function(val, indx) {
-                        if (val.policyID && val.policyID == policy.policyID) {
-                            that.selectedTeam(val, true); //creating selected teams array
-                        }
-                    });
+                //now getting subgroup ids where this policy has implemented
+                that.selectedTeams = []; //on edit policy clear selectedTeams Array  before reload
+                that.selectedTeamMembers = {}; //on edit policy clear selectedTeamMembers object before reload
 
-                } //this.selectedPolicy
+                //before selectedTeam first hasPolicy = false... 
+                subGroupNamesPolicyFalse();
+
+                //if active policy is match from subgroup object of policyID then hasPolicy true
+                that.subGroupNames.forEach(function(val, indx) {
+                    if (val.policyID && val.policyID == policy.policyID) {
+                        that.selectedTeam(val, true); //creating selected teams array
+                    }
+                }); //subGroupNames.forEach
+            } //this.selectedPolicy
+
+
 
             function subGroupNamesPolicyFalse() {
                 //before selectedTeam first hasPolicy = false... 
                 that.subGroupNames.forEach(function(val, indx) {
                     that.subGroupNames[indx].hasPolicy = false;
                 });
+            } // subGroupNamesPolicyFalse
+
+            //Daily Report -- START --
+            this.showQuestionList = false;      //for showing table
+            this.dailyReportQuestions = {};
+            // var dailyReportQuestionsLength = gettingQuestionsLength();
+            this.addQuestion = function() {
+                if(that.question) {
+                    
+                    var sr = 0;
+                    for(var i in that.dailyReportQuestions) {
+                        that.dailyReportQuestions[sr.toString()] = that.dailyReportQuestions[i];
+                        sr++;
+                    }
+
+                    that.dailyReportQuestions[sr.toString()] = that.question;
+                    that.question = '';
+
+                    //Show Table of Question if question exists
+                    isQuestionExists();
+                }
+            };
+
+            function isQuestionExists(){
+                if(Object.keys(that.dailyReportQuestions).length > 0) {
+                    that.showQuestionList = true;
+                } else {
+                    that.showQuestionList = false;
+                }   
             }
+            this.deleteQuestion = function(id) {
+                delete that.dailyReportQuestions[id.toString()];
+                
+                //Show Table of Question if question exists
+                isQuestionExists();
+            };
+            function gettingQuestionsLength(){      //getting current question object length
+                return Object.keys(that.dailyReportQuestions).length; 
+            }
+            //when comes from firebase our question change into array from object.
+            function arrayToObject(arr) {
+                if(arr instanceof Array){
+                    var rv = {};
+                    for (var i = 0; i < arr.length; ++i)
+                      if (arr[i] !== undefined) rv[i] = arr[i];
+                    return rv;
+                } else {
+                    return arr;
+                }
+            }
+            //Daily Report -- END --
+
+            //onclick save button
+            this.onSave = function() {
+
+                if (that.policyTitle) {
+
+                    if(!that.isDailyReport && !that.isTimebased && !that.isLocationbased) {
+                        //nothing have to do....
+                        messageService.showFailure('Please Select your Criteria');
+                        return false;
+                    }
+
+                    //default Object
+                    var obj = {};
+                    obj["title"] = that.policyTitle;    //setting policy title name
+                    obj["locationBased"] = false;
+                    obj["timeBased"] = false;         
+                    obj["location"] = "";
+                    obj["schedule"] = "";
+                    obj["defined-by"] = that.userId;
+                    obj["timestamp"] = Date.now();
+                    obj["dailyReport"] = false;
+                    obj["dailyReportQuestions"] = "";
 
 
+                    //if locationBased is selected
+                    if (that.isLocationbased) {
+                        //isLocationbased
+                        obj["locationBased"] = true;
+                        obj["location"] = {
+                            lat: that.center.lat,
+                            lng: that.center.lng,
+                            radius: that.paths.c1.radius,
+                            title: that.markers.mark.message
+                        }
+                    }
+
+                    //if timeBased is selected
+                    if (that.isTimebased) {
+                        //isTimebased
+                        if(Object.keys(that.selectedTimesForAllow).length > 0) {
+                            obj["timeBased"] = true;
+                            obj["schedule"] = that.selectedTimesForAllow;
+                        } else {
+                            messageService.showFailure('Please add schedule/time slot!');
+                            return false;
+                        }
+                    } 
+
+                    //if dailyBased is selected
+                    if(that.isDailyReport) {
+                        //isDailyReport
+                        if(Object.keys(that.dailyReportQuestions).length > 0) {
+                            obj["dailyReport"] = true;         
+                            obj["dailyReportQuestions"] = that.dailyReportQuestions;
+                        } else {
+                            messageService.showFailure('Please add some Questions for Daily Report!');
+                            return false;
+                        }
+                    } 
+
+                    // console.log('team', that.selectedTeams);
+                    // console.log('members', that.selectedTeamMembers);
+
+                    //calling policy service function to add in firebase
+                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(){
+                       //Load Group Policies from given GroupID
+                       //that.groupPolicies = policyService.getGroupPolicies(that.groupId); 
+                        if(that.activePolicyId) {  //if edit
+                            that.groupPolicies.forEach(function(val,index){
+                                if(val.policyID == that.activePolicyId) {
+                                    that.groupPolicies[index] = obj;
+                                }
+                            }); 
+                            messageService.showSuccess('Policy Successfully Updated!');
+                        } else{
+                            messageService.showSuccess('Policy Successfully Created!');  
+                            //after created reload initial page 
+                            that.newPolicy();
+                        }
+                    });
+
+                } else {//if that.title exists
+                    messageService.showFailure('Please Write Policy Name');
+                }
+            } //onSave
 
             //load constructor
             function init() {
-                that.activePolicyId = ''; //at initial no policy has selected
+                that.activePolicyId = false; //at initial no policy has selected
                 that.policyTitle = ''; //clear policy title (not required on load)
                 that.isLocationbased = false; //unchek default location based
                 that.isTimebased = false; //unchek default time based
                 that.selectedTeams = []; //onLoad or create empty selectedTeams array
                 that.selectedTeamMembers = {}; //onLoad or create empty selectedTeamMembers obj
+                that.isDailyReport = false;
+                that.dailyReportQuestions = {}; //onLoad clear daily Report Questions obj
 
                 //set default location
                 defaultGeoLocation();
@@ -479,8 +580,6 @@
             }
             //run when controller load
             init();
-
-
 
         } // controller function
     ]); //contoller

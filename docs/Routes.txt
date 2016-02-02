@@ -1,0 +1,85 @@
+url: '/',							//Home Page
+
+url: '/signin',						//Signin Page
+
+url: '/forgot',						//Forgort Pasword Page
+
+url: '/signup',						//Signup Page
+
+url: '/user/:userID',				//User Dashboard
+
+url: '/profile/:userID',			//Profile setting if user own, else public profile
+
+url: '/tots',						//join team of teams
+
+url: '/tot',						//create team of teams
+		
+url: '/:groupID',					//team of teams dashboard
+
+url: '/tot/:groupID',				//edit team of teams
+
+url: '/members/:groupID',			//memeber management
+	
+url: '/teams/:groupID',				//teams management
+
+url: '/policies/:groupID',			//policies
+
+url: '/:groupID/:subgroupID',		//team Dashboard
+                
+=========================================================
+
+Required single keyword to replace these multiple keywords.
+
+url: '/:groupID',		//Due to this route need to reserve below keywords
+
+	/signin
+	/signup
+	/forgot
+	/tots
+	/tot
+
+url: '/:groupID/:subgroupID',	//Due to this route need to reserve below keywords
+
+	/user/:userid
+	/profile/:userid
+	/tot/:groupid 						#suggestion		/:groupid/setting/tot
+	/members/:groupid 					#suggestion		/:groupid/setting/members
+	/teams/:groupid 					#suggestion		/:groupid/setting/teams
+	/polices/:groupid 					#suggestion		/:groupid/setting/polices
+
+	/:groupID/attendance				#suggestion		/:groupid/tab/attendanxw
+	/:groupID/chat						#suggestion		/:groupid/tab/chat
+	/:groupID/firepad					#suggestion		/:groupid/tab/firepad
+	/:groupID/progressreport			#suggestion		/:groupid/tab/progressreport
+	/:groupID/manualattendance			#suggestion		/:groupid/tab/manualattendance
+	/:groupID/reports					#suggestion		/:groupid/tab/reports
+
+=========================================================
+
+So below keyword will be reserve
+
+	signin
+	signup
+	forgot
+	tots
+	tot
+	setting
+	tab
+
+=========================================================
+
+	/:groupID/:subgroupID/attendance
+	/:groupID/:subgroupID/chat
+	/:groupID/:subgroupID/firepad
+	/:groupID/:subgroupID/progressreport
+	/:groupID/:subgroupID/manualattendance
+	/:groupID/:subgroupID/reports
+
+=========================================================
+
+# yesterday discussed
+
+	/totid/
+	/totid/cmd/setting
+	/totid/tid
+	/totid/tid/cmd/setting
