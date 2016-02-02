@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by Mehmood on 5/21/2015.
  */
 (function() {
@@ -45,6 +45,7 @@
 			//Getting Policies by given GroupID --START --
 			var groupPolicies = [];
 			function setGroupPolicies(groupID) {
+                groupPolicies = [];
                 firebaseService.getRefPolicies().child(groupID).on('child_added', function(subGroups, prevChildKey) {
                     // console.log(subGroups.key());
                     // console.log(subGroups.val());
@@ -66,7 +67,7 @@
 			//Getting Policies by given GroupID --END --
 
 			//Save data in firebase using Multi-Path 	-- START --
-			function answer(obj, groupID, selectedTeams, selectedTeamMembers, cb, policyID) {
+			function answer(obj, groupID, selectedTeams, selectedTeamMembers, policyID, cb) {
 				//refernce Object
                 var refNodes = { ref: firebaseService.getRefMain(),
                                  policies: firebaseService.getRefPolicies()
@@ -102,24 +103,25 @@
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
 
                     //add policy into subgroup-locations-defined
-                    if(obj.locationBased){
-                        var tmpObj = obj;
-                        tmpObj["location"] = obj.locationObj;
-                        tmpObj["title"] = obj.locationObj.title;
-                        tmpObj["subgroup-url"] = groupID+"/"+val.subgroupID;
-                        tmpObj["type"] = 1
-                        delete tmpObj["location"];
-                        delete tmpObj["timeObj"];
-                        delete tmpObj["timeBased"];
-                        multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey] = tmpObj;
-                    }
+                    // if(obj.locationBased){
+                    //     var tmpObj = obj;
+                    //     tmpObj["location"] = obj.location;
+                    //     tmpObj["subgroup-url"] = groupID+"/"+val.subgroupID;
+                    //     tmpObj["type"] = 1
+                    //     delete tmpObj["location"];
+                    //     delete tmpObj["schedule"];
+                    //     delete tmpObj["timeBased"];
+                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey] = tmpObj;
+                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey+"/title"] = obj.location.title || '';
+                    // }
                 }); //selectedTeams.forEach
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
-                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
+                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = newPolicyKey;
+                        //multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
 

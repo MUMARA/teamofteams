@@ -5,8 +5,8 @@
 
 // Create the 'example' controller
 angular.module('core')
-    .factory('authService', ["$state", "dataService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$location", "firebaseService", "userService",
-        function($state, dataService, messageService, $q, $http, appConfig, $firebaseAuth, $location, firebaseService, userService) {
+    .factory('authService', ["$state", "dataService", "userPresenceService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$location", "firebaseService", "userService",
+        function($state, dataService, userPresenceService, messageService, $q, $http, appConfig, $firebaseAuth, $location, firebaseService, userService) {
 
             return {
                 //userData: null,
@@ -27,7 +27,7 @@ angular.module('core')
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
                                 .then(function() {
                                     successFn(data);
-                                    // dataService.loadData();
+                                    dataService.loadData();
                                 }, function(error) {
                                     if (error) {
                                         console.error("Firebase Authentication failed: ", error);
@@ -91,6 +91,7 @@ angular.module('core')
                 logout: function() {
                     //empty data in dataservice
                     dataService.unloadData();
+                    userPresenceService.removeCurrentConRef();
                     // for manually sign out from firebase.
                     
                     firebaseService.getRefMain().unauth();

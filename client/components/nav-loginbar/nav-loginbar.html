@@ -1,10 +1,19 @@
-<md-toolbar class="backColorSeaGreen" layout="row" layout-align="space-between center">
-    <div layout='row' layout-align="start center">
-        <img src='img/Untitled-3.svg' class="icon30px leftmargin10px nooutline cursorPointer" ui-sref="home">
-        <span class="cursorPointer leftmargin10px nooutline" ui-sref="home"><strong>TEAM OF TEAMS</strong></span>
-    </div>
-    <div layout="row" layout-align="end center" layout-margin>
-        <md-button class="nomargin nopadding" ui-sref="signin" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign In</md-button>
-        <md-button class="nomargin nopadding leftmargin20px" ui-sref="signup" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign Up</md-button>
-    </div>
+<md-toolbar class="backColorSeaGreen md-whiteframe-z2" layout="column" layout-align="center space-between">
+	<div layout="row" layout-align="space-between center">
+	    <div layout='row' layout-align="start center">
+	        <img src='img/Untitled-3.svg' class="icon30px leftmargin10px nooutline cursorPointer" ui-sref="home">
+	        <span class="cursorPointer leftmargin10px nooutline" ui-sref="home"><strong>TEAM OF TEAMS</strong></span>
+	    </div>
+	    <div layout="row" layout-align="end center" layout-margin hide show-gt-xs>
+	        <md-button class="nomargin nopadding" ui-sref="signin" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign In</md-button>
+	        <md-button class="nomargin nopadding leftmargin20px" ui-sref="signup" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign Up</md-button>
+	    </div>
+	    <div layout="row" layout-align="end center" layout-margin hide-gt-xs>
+	    	<ng-md-icon icon="menu" class="fillColorWhite nooutline cursorPointer" size="40" ng-click="navloginbar.showmenu = !navloginbar.showmenu"></md-ng-icon>
+	    </div>
+	</div>
+	<div layout="row" layout-align="space-around center" ng-if="navloginbar.showmenu" layout-padding>
+		<md-button class="nomargin nopadding" ui-sref="signin" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign In</md-button>
+		<md-button class="nomargin nopadding leftmargin20px" ui-sref="signup" ui-sref-active="backColorLightGrey2 foreColorDarkGrey">Sign Up</md-button>
+	</div>
 </md-toolbar>

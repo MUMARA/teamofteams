@@ -41,7 +41,7 @@
                 },
                 resolve: {
                     user: function($state, userService){
-                        return userService.getUserPresenceFromLocastorage()
+                        // return userService.getUserPresenceFromLocastorage()
                     }
                 }
             });
@@ -100,6 +100,12 @@
                 // controller: 'UserController',
                 // controllerAs: 'user',
             });
+            $stateProvider.state('user.join-group', {
+                url: '/join-group',
+                templateUrl: 'components/join-group/join-group.html',
+                controller: 'JoinGroupController',
+                controllerAs: 'joinGroup'
+            });
             $stateProvider.state('user.group', {
                 url: '/:groupID',
                 templateUrl: 'components/group/group.html',
@@ -123,12 +129,6 @@
                 templateUrl: 'components/edit-group/edit-group.html',
                 controller: 'EditGroupController',
                 controllerAs: 'editGroup'
-            });
-            $stateProvider.state('user.join-group', {
-                url: '/:userID/join-group',
-                templateUrl: 'components/join-group/join-group.html',
-                controller: 'JoinGroupController',
-                controllerAs: 'joinGroup'
             });
             $stateProvider.state('user.create-subgroup', {
                 url: '/:groupID/create-subgroup',

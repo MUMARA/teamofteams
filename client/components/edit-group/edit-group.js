@@ -13,6 +13,7 @@
         var that = this;
         var user = userService.getCurrentUser();
         var groupId = $stateParams.groupID;
+        this.groupId = groupId;
         $rootScope.newImg = '';
         /*VM functions*/
         this.groupPath = '';
@@ -55,6 +56,10 @@
         this.openGeoFencingPage = function() {
             // $location.path('/user/group/' + groupId + '/geoFencing');
             $state.go('user.geo-fencing', {groupID: groupId})
+        }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupId})
         }
 
         //query for users names list

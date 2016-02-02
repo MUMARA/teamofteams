@@ -135,8 +135,8 @@ groups
  		members-count: 1
  		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		phone: "821721893720000000"
- 	privacy
- 		invitationType: 2
+ 		privacy
+ 			invitationType: 2
  		signupMode: "2"
  		subgroups-count: 0
  		timeZone: " +5:00"

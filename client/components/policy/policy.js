@@ -17,11 +17,12 @@
         "policyService",
         function($state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
 
-            this.showPanel = false;
+            this.showPanel = true;
             var that = this;
 
             this.isLocationbased = false;
             this.isTimebased = false;
+            this.isDailyReport = false;
             this.isProcessing = false;
             that.fencing = true;
             this.center = {};
@@ -35,7 +36,7 @@
                 scrollWheelZoom: false
             };
             this.policyTitle = '';
-            this.activePolicyId = '';
+            this.activePolicyId = false;
 
             var groupId = that.groupId = $stateParams.groupID;
             var SubgroupObj, userId = that.userId = userService.getCurrentUser().userID;
@@ -105,6 +106,7 @@
             //on controller load...... START
 
             //Load Group Policies from given GroupID
+            this.groupPolicies = [];
             this.groupPolicies = policyService.getGroupPolicies(that.groupId);
 
             //Load SubgroupNames from Given GroupID
@@ -112,6 +114,13 @@
 
             //on controller load...... END
 
+
+            
+            this.openEditGroupPage = function() {
+                $state.go('user.edit-group', {
+                    groupID: groupId
+                })
+            }
 
             this.openCreateSubGroupPage = function() {
                 $state.go('user.create-subgroup', {
@@ -207,7 +216,7 @@
                     subgroupID: that.subgroupId,
                     userID: that.userId,
                     title: that.markers.mark.message,
-                    locationObj: {
+                    location: {
                         lat: that.center.lat,
                         lng: that.center.lng,
                         radius: that.paths.c1.radius
@@ -242,9 +251,9 @@
 
             //New Work POLICY 
 
-            this.subgroupSideNavBar = true;
-            this.closeSideNavBar = function() {
-                that.subgroupSideNavBar = false;
+            this.subgroupSideNavBar = false;
+            this.toggleSideNavBar = function() {
+                that.subgroupSideNavBar = !that.subgroupSideNavBar;
             }
 
             //scheduler for time base -- START --
@@ -266,18 +275,18 @@
                 }
             } //loadSchaduler
 
-            //on time (checkbox) click create object
-            this.ontimeClick = function(index, parentIndex) {
+            //on click schedule (checkbox) click create object
+            this.onScheduleClick = function(index, parentIndex) {
                 that.schCalender[parentIndex][index] = !that.schCalender[parentIndex][index];
                 // console.log(that.day[parentIndex], that.times[index], that.schCalender[parentIndex][index]);
 
                 if (that.selectedTimesForAllow.hasOwnProperty(that.day[parentIndex])) {
                     that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
-                        // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
+                    // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
                 } else {
                     that.selectedTimesForAllow[that.day[parentIndex]] = {};
                     that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
-                        // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
+                    // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
                 }
                 // console.log(that.selectedTimesForAllow);
             }
@@ -331,114 +340,66 @@
             } //selectedTeam
             //Selected SubGroup for Assign Policies
 
-            //onclick save button
-            this.onSave = function() {
+            //on create policy
+            this.newPolicy = function() {
+                //load initial page
+                init();
 
-                if (that.policyTitle) {
+                //chnage subgroup names hasPolicy false onload
+                subGroupNamesPolicyFalse();
 
-                    var obj = {};
-                    obj["locationBased"] = false;
-                    obj["timeBased"] = false;
-                    obj["locationObj"] = "";
-                    obj["timeObj"] = "";
-                    obj["defined-by"] = that.userId;
-                    obj["timestamp"] = Date.now();
-
-
-                    if (that.isLocationbased && that.isTimebased) {
-                        obj["locationBased"] = true;
-                        obj["timeBased"] = true;
-                        obj["locationObj"] = {
-                            lat: that.center.lat,
-                            lng: that.center.lng,
-                            radius: that.paths.c1.radius,
-                            title: that.markers.mark.message
-                        };
-                        obj["timeObj"] = that.selectedTimesForAllow;
-                    } else if (that.isLocationbased) {
-                        //isLocationbased
-                        obj["locationBased"] = true;
-                        obj["timeBased"] = false;
-                        obj["locationObj"] = {
-                            lat: that.center.lat,
-                            lng: that.center.lng,
-                            radius: that.paths.c1.radius,
-                            title: that.markers.mark.message
-                        };
-                        obj["timeObj"] = "";
-                    } else if (that.isTimebased) {
-                        //isTimebased
-                        obj["locationBased"] = false;
-                        obj["timeBased"] = true;
-                        obj["locationObj"] = "";
-                        obj["timeObj"] = that.selectedTimesForAllow;
-                    } else {
-                        //nothing have to do....
-                        alert("nothing have to do....");
-                        return false;
-                    }
-
-                    //setting obj title name
-                    obj.title = that.policyTitle;
-
-                    // console.log('team', that.selectedTeams);
-                    // console.log('members', that.selectedTeamMembers);
-
-
-                    //calling policy service function to add in firebase
-                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, function(){
-                        //callback function on edit change object of that policy (instead of getting data from firebase)
-                        if(that.activePolicyId) {  //if edit
-                            that.groupPolicies.forEach(function(val,index){
-                                if(val.policyID == that.activePolicyId) {
-                                    that.groupPolicies[index] = obj;
-                                }
-                            }); 
-                        } //if policy edit
-                    }, that.activePolicyId); //policyService.answer
-
-                } //if that.title exists
-            } //onSave
+                //On New/Create Policy Show Panel
+                that.showPanel = true;
+            } //this.newPolicy
 
 
             this.selectedPolicy = function(policy) {
-                console.log(policy);
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
                 that.isLocationbased = policy.locationBased;    //show if locationBased is True
+                
                 that.isTimebased = policy.timeBased;            //show if timebased is true
+                that.selectedTimesForAllow = {};
+                
+                that.isDailyReport = policy.dailyReport
+                that.dailyReportQuestions = {};
+                that.showPanel = true;
 
                 //Clear calender .. (run scheduler)
                 loadSchaduler();
 
-                if (policy.locationBased) {
-                    getLatLngByAddress(policy.locationObj.lat +', '+ policy.locationObj.lng);
+                if (that.isLocationbased) {
+                    getLatLngByAddress(policy.location.lat +', '+ policy.location.lng);
+                    that.paths.c1.radius = policy.location.radius;
                     //that.center.lat = policy.locationObj.lat;
                     //that.center.lng = policy.locationObj.lng;
-                    that.paths.c1.radius = policy.locationObj.radius;
                 } //policy.locationBased true
 
-                if (policy.timeBased) {
-                    that.selectedTimesForAllow = {};
-                    // console.log("Sunday", that.day.indexOf("Sunday"));
-                    for (var day in policy.timeObj) {
-                        // console.log(day);
-                        // console.log(policy.timeObj[day]);
-                        for (var hour in policy.timeObj[day]) {
-                            // console.log(hour);
-                            // console.log(policy.timeObj[day][hour]);
-                            that.schCalender[that.day.indexOf(day)][hour] = policy.timeObj[day][hour];
+                if (that.isTimebased) {
+                    for (var day in policy.schedule) {
+                        // console.log(day); // console.log(policy.timeObj[day]);
+                        for (var hour in policy.schedule[day]) {
+                            // console.log(hour);  // console.log(policy.timeObj[day][hour]);
+                            that.schCalender[that.day.indexOf(day)][hour] = policy.schedule[day][hour];
 
                             if (that.selectedTimesForAllow.hasOwnProperty(day)) {
-                                that.selectedTimesForAllow[day][hour] = policy.timeObj[day][hour];
+                                that.selectedTimesForAllow[day][hour] = policy.schedule[day][hour];
                             } else {
                                 that.selectedTimesForAllow[day] = {};
-                                that.selectedTimesForAllow[day][hour] = policy.timeObj[day][hour]
+                                that.selectedTimesForAllow[day][hour] = policy.schedule[day][hour]
                             }
                         } // for hour    policy.timeObj[day]
                         // console.log(that.selectedTimesForAllow);
                     } //for day    policy.timeObj
                 } //policy.timeBased true
+
+                if(that.isDailyReport) {
+                     that.dailyReportQuestions = arrayToObject(policy.dailyReportQuestions);        //when comes from firebase our question change into array from object.
+                     // console.log('[]', policy.dailyReportQuestions);
+                     // console.log('{}', arrayToObject(policy.dailyReportQuestions));  
+
+                     isQuestionExists();  //checking if questions exists
+                } //that.isDailyReport true
 
                 //now getting subgroup ids where this policy has implemented
                 that.selectedTeams = []; //on edit policy clear selectedTeams Array  before reload
@@ -452,34 +413,164 @@
                     if (val.policyID && val.policyID == policy.policyID) {
                         that.selectedTeam(val, true); //creating selected teams array
                     }
-                });
-
+                }); //subGroupNames.forEach
             } //this.selectedPolicy
+
+
 
             function subGroupNamesPolicyFalse() {
                 //before selectedTeam first hasPolicy = false... 
                 that.subGroupNames.forEach(function(val, indx) {
                     that.subGroupNames[indx].hasPolicy = false;
                 });
+            } // subGroupNamesPolicyFalse
+
+            //Daily Report -- START --
+            this.showQuestionList = false;      //for showing table
+            this.dailyReportQuestions = {};
+            // var dailyReportQuestionsLength = gettingQuestionsLength();
+            this.addQuestion = function() {
+                if(that.question) {
+                    
+                    var sr = 0;
+                    for(var i in that.dailyReportQuestions) {
+                        that.dailyReportQuestions[sr.toString()] = that.dailyReportQuestions[i];
+                        sr++;
+                    }
+
+                    that.dailyReportQuestions[sr.toString()] = that.question;
+                    that.question = '';
+
+                    //Show Table of Question if question exists
+                    isQuestionExists();
+                }
+            };
+
+            function isQuestionExists(){
+                if(Object.keys(that.dailyReportQuestions).length > 0) {
+                    that.showQuestionList = true;
+                } else {
+                    that.showQuestionList = false;
+                }   
             }
+            this.deleteQuestion = function(id) {
+                delete that.dailyReportQuestions[id.toString()];
+                
+                //Show Table of Question if question exists
+                isQuestionExists();
+            };
+            function gettingQuestionsLength(){      //getting current question object length
+                return Object.keys(that.dailyReportQuestions).length; 
+            }
+            //when comes from firebase our question change into array from object.
+            function arrayToObject(arr) {
+                if(arr instanceof Array){
+                    var rv = {};
+                    for (var i = 0; i < arr.length; ++i)
+                      if (arr[i] !== undefined) rv[i] = arr[i];
+                    return rv;
+                } else {
+                    return arr;
+                }
+            }
+            //Daily Report -- END --
 
-            this.newPolicy = function() {
-                    //load initial page
-                    init();
+            //onclick save button
+            this.onSave = function() {
 
-                    //chnage subgroup names hasPolicy false onload
-                    subGroupNamesPolicyFalse();
-                } //this.newPolicy
+                if (that.policyTitle) {
 
+                    if(!that.isDailyReport && !that.isTimebased && !that.isLocationbased) {
+                        //nothing have to do....
+                        messageService.showFailure('Please Select your Criteria');
+                        return false;
+                    }
+
+                    //default Object
+                    var obj = {};
+                    obj["title"] = that.policyTitle;    //setting policy title name
+                    obj["locationBased"] = false;
+                    obj["timeBased"] = false;         
+                    obj["location"] = "";
+                    obj["schedule"] = "";
+                    obj["defined-by"] = that.userId;
+                    obj["timestamp"] = Date.now();
+                    obj["dailyReport"] = false;
+                    obj["dailyReportQuestions"] = "";
+
+
+                    //if locationBased is selected
+                    if (that.isLocationbased) {
+                        //isLocationbased
+                        obj["locationBased"] = true;
+                        obj["location"] = {
+                            lat: that.center.lat,
+                            lng: that.center.lng,
+                            radius: that.paths.c1.radius,
+                            title: that.markers.mark.message
+                        }
+                    }
+
+                    //if timeBased is selected
+                    if (that.isTimebased) {
+                        //isTimebased
+                        if(Object.keys(that.selectedTimesForAllow).length > 0) {
+                            obj["timeBased"] = true;
+                            obj["schedule"] = that.selectedTimesForAllow;
+                        } else {
+                            messageService.showFailure('Please add schedule/time slot!');
+                            return false;
+                        }
+                    } 
+
+                    //if dailyBased is selected
+                    if(that.isDailyReport) {
+                        //isDailyReport
+                        if(Object.keys(that.dailyReportQuestions).length > 0) {
+                            obj["dailyReport"] = true;         
+                            obj["dailyReportQuestions"] = that.dailyReportQuestions;
+                        } else {
+                            messageService.showFailure('Please add some Questions for Daily Report!');
+                            return false;
+                        }
+                    } 
+
+                    // console.log('team', that.selectedTeams);
+                    // console.log('members', that.selectedTeamMembers);
+
+                    //calling policy service function to add in firebase
+                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(){
+                       //Load Group Policies from given GroupID
+                       //that.groupPolicies = policyService.getGroupPolicies(that.groupId); 
+                        if(that.activePolicyId) {  //if edit
+                            that.groupPolicies.forEach(function(val,index){
+                                if(val.policyID == that.activePolicyId) {
+                                    that.groupPolicies[index] = obj;
+                                }
+                            }); 
+                            messageService.showSuccess('Policy Successfully Updated!');
+                        } else{
+                            messageService.showSuccess('Policy Successfully Created!');  
+                            //after created reload initial page 
+                            that.newPolicy();
+                        }
+                    });
+
+                } else {//if that.title exists
+                    messageService.showFailure('Please Write Policy Name');
+                }
+            } //onSave
 
             //load constructor
             function init() {
-                that.activePolicyId = ''; //at initial no policy has selected
+                that.activePolicyId = false; //at initial no policy has selected
                 that.policyTitle = ''; //clear policy title (not required on load)
                 that.isLocationbased = false; //unchek default location based
                 that.isTimebased = false; //unchek default time based
                 that.selectedTeams = []; //onLoad or create empty selectedTeams array
                 that.selectedTeamMembers = {}; //onLoad or create empty selectedTeamMembers obj
+                that.isDailyReport = false;
+                that.dailyReportQuestions = {}; //onLoad clear daily Report Questions obj
 
                 //set default location
                 defaultGeoLocation();
@@ -489,8 +580,6 @@
             }
             //run when controller load
             init();
-
-
 
         } // controller function
     ]); //contoller

@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('core')
-    .factory('dataService', ['$firebaseObject', 'firebaseService', 'checkinService', 'userService',
-        function($firebaseObject, firebaseService, checkinService, userService) {
+    .factory('dataService', ['$firebaseObject', 'firebaseService', 'checkinService', 'userService', 'userPresenceService',
+        function($firebaseObject, firebaseService, checkinService, userService, userPresenceService) {
 
             var userData = [];
             var userGroups = [];
@@ -113,25 +113,51 @@ angular.module('core')
                                             }
                                         })
                                     });
-                                    
-                                    var _groupsubgroup = group.key() + ' / ' + subgroup.key();
-
-                                    // userData.forEach(function(val, indx){
-                                    //     if(val.id == userdata.$id && val.groupsubgroup == _groupsubgroup){
-                                    //         return;
-                                    //     }
-                                    // });
-
+                                    /*userPresenceService.getRefUsersPresense().child(userdata.$id).child('defined-status').on('value', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                val.onlinestatus = snapshot.val();
+                                            }
+                                        })
+                                    });*/
+                                    userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(snapshot, prevChildKey) {
+                                        /*if (userdata.$id === 'abv') {
+                                            console.log(snapshot.key())
+                                            console.log(snapshot.val())
+                                        }*/
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                if (snapshot.val()) {
+                                                    /*for (var key in snapshot.val()) {
+                                                        if (snapshot.val()[key].type === 1) {
+                                                            val.onlineweb = 1;
+                                                        } else if (snapshot.val()[key].type === 2) {
+                                                            val.onlineios = 1;
+                                                        } else if (snapshot.val()[key].type === 3) {
+                                                            val.onlineandroid = 1;
+                                                        }
+                                                    }*/
+                                                    val.onlinestatus = true;
+                                                } else {
+                                                    val.onlinestatus = false;
+                                                }
+                                            }
+                                        })
+                                    });
                                     userData.push({
                                         id: userdata.$id,
                                         type: type,
-                                        groupsubgroup: _groupsubgroup,
+                                        groupsubgroup: group.key() + ' / ' + subgroup.key(),
                                         groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
                                         groupID: group.key(),
                                         groupTitle: groupsubgroupTitle[group.key()],
                                         subgroupID: subgroup.key(),
                                         subgroupTitle: groupsubgroupTitle[subgroup.key()],
                                         contactNumber: usermasterdata.contactNumber || '',
+                                        onlinestatus: 0,
+                                        /*onlineweb: 0,
+                                        onlineios: 0,
+                                        onlineandroid: 0,*/
                                         timestamp: timestamp,
                                         message: message,
                                         profileImage: usermasterdata['profile-image'] || '',
