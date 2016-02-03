@@ -9,12 +9,9 @@
             /*private variables*/
             // alert('inside controller');
 
-            var userData;
             var self = this;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
-            var userCurrentCheckinRefBySubgroup;
-
             /*VM properties*/
 
             this.checkinObj = {
@@ -398,14 +395,6 @@
 
             } //updateHelper
 
-            function isDailyReportSubmit(){
-
-            }
-            function isDailyReportExists(){
-                
-            }
-
-            
 
             function updateStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
                 checkinService.getCurrentLocation().then(function(location) {

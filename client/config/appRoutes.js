@@ -117,6 +117,42 @@
                 controller: 'GroupController',
                 controllerAs: 'group'
             });
+            $stateProvider.state('user.group.activity', {
+                url: '/tab/activity',
+                templateUrl: 'components/activity/activity.html',
+                controller: 'ActivityController',
+                controllerAs: 'activity',
+            });
+               $stateProvider.state('user.group.subgroup-activity', {
+                url: '/:subgroupID/tab/activity',
+                templateUrl: 'components/activity/activity.html',
+                controller: 'ActivityController',
+                controllerAs: 'activity',
+            });
+            $stateProvider.state('user.group.report', {
+                url: '/tab/report',
+                templateUrl: 'components/report/report.html',
+                controller: 'ReportController',
+                controllerAs: 'report',
+            });
+            $stateProvider.state('user.group.subgroup-report', {
+                url: '/:subgroupID/tab/report',
+                templateUrl: 'components/report/report.html',
+                controller: 'ReportController',
+                controllerAs: 'report',
+            });
+            $stateProvider.state('user.group.manualattendace', {
+                url: '/tab/manualattendace',
+                templateUrl: 'components/manualattendace/manualattendace.html',
+                controller: 'ManualAttendaceController',
+                controllerAs: 'manualattendace',
+            });
+            $stateProvider.state('user.group.subgroup-manualattendace', {
+                url: '/:subgroupID/tab/manualattendace',
+                templateUrl: 'components/manualattendace/manualattendace.html',
+                controller: 'ManualAttendaceController',
+                controllerAs: 'manualattendace',
+            });
             $stateProvider.state('user.edit-group', {
                 url: '/tot/:groupID',
                 templateUrl: 'components/edit-group/edit-group.html',

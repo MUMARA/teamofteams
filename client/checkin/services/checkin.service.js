@@ -611,7 +611,21 @@
                     }
                 })
                 return title;
-            }
-        }
-    }
+            }, //getSubGroupTitle
+            subgroupHasPolicy: function(groupID, subgroupID, cb){
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
+                    var subGroupHasPolicy = (snapshot.val() && snapshot.val().hasPolicy) ? snapshot.val().hasPolicy : false;
+                    // console.log('subGroupHasPolicy', self.subGroupHasPolicy);
+                    if(subGroupHasPolicy) {
+                        firebaseService.getRefPolicies().child(groupID).child(snapshot.val().policyID).once('value', function(policy){
+                            self.subGroupPolicy = policy.val();
+                            cb(true);
+                        }); //getting policy
+                    } else {//self.subGroupHasPolicy if true
+                        cb(false);
+                    }
+                }); //firebaseService.getRefSubGroupsNames()
+            } //subgroupHasPolicy
+        } //return 
+    } //checkin service function
 })();

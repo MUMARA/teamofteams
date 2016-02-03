@@ -7,7 +7,6 @@
     angular.module('app.group')
         .controller('GroupController', ['$sce', '$mdDialog','userService', 'dataService', 'joinGroupService', '$timeout', 'subgroupFirebaseService', 'checkinService', 'messageService', 'authService', 'chatService', 'firebaseService', '$firebaseArray', '$firebaseObject', '$rootScope', 'groupService', "groupFirebaseService", "$location", "utilService", "$state", "$stateParams",
             function($sce, $mdDialog, userService, dataService, joinGroupService, $timeout, subgroupFirebaseService, checkinService, messageService, authService, chatService, firebaseService, $firebaseArray, $firebaseObject, $rootScope, groupService, groupFirebaseService, $location, utilService, $state, $stateParams) {
-
                 var that = this;
                 var isOwner = false;
                 var isMember = false;
@@ -118,13 +117,16 @@
                 this.messagesArray = [];
                 
                 this.subgrouppage = function(subgroup1, index) {
-                    that.selectedindex = index;
-                    that.activesubID = subgroup1.$id;
-                    if (that.activePanel === 'chat') {
-                        that.channels = chatService.geTeamChannelsSyncArray(that.groupID, that.activesubID);    
-                    } else {                        
-                        that.GetSubGroupUsers(subgroup1, index)
-                    }
+                    $state.go('user.group.subgroup-' + that.activePanel, {groupID: that.groupID, subgroupID: subgroup1.$id});
+                    that.showPanel(that.activePanel);
+
+                    // that.selectedindex = index;
+                    // that.activesubID = subgroup1.$id;
+                    // if (that.activePanel === 'chat') {
+                    //     that.channels = chatService.geTeamChannelsSyncArray(that.groupID, that.activesubID);    
+                    // } else {                        
+                    //     that.GetSubGroupUsers(subgroup1, index)
+                    // }
                 }
 
                 /*this is group chatting controller start ----------------------------------------------------------------*/
@@ -246,14 +248,15 @@
                 // Start Team Attendance
                 //update status when user checked-in or checked-out
                 this.users = [];
-                this.showActivity = true;
+                this.showActivity = false;
                 this.showReport = false;
                 this.showChat = false;
                 this.showManualAttendace = false;
                 this.showParams = true;
                 this.processTeamAttendance = false;
                 this.activePanel = 'activity';
-                this.showPanel = function(pname) {
+                this.activesubgroupID = '';
+                this.showPanel = function(pname, subgroupID) {
                     if(pname === 'report') {
                         that.showReport = true; 
                         that.activePanel = 'report';
@@ -272,11 +275,17 @@
                     } else {
                         that.showChat = false;
                     }
-                    if (pname === 'manualAttendace') {
+                    if (pname === 'manualattendace') {
                         that.showManualAttendace = true;
-                        that.activePanel = 'manualAttendace';
+                        that.activePanel = 'manualattendace';
                     } else {
                         that.showManualAttendace = false;
+                    }
+                    that.activesubgroupID = subgroupID;
+                    if(that.activesubgroupID){                         
+                        $state.go('user.group.subgroup-' + that.activePanel, {groupID: that.groupID, subgroupID: that.activesubgroupID});
+                    } else {
+                        $state.go('user.group.' + that.activePanel, {groupID: that.groupID});
                     }
                 }
 
@@ -307,22 +316,25 @@
                         }
                     });
                 }
+                
                     
                 this.GetSubGroupUsers = function(subgroupData, index) {
-                    if (!subgroupData) {
-                        that.users = [];
-                        that.users =  dataService.getUserData();
-                        that.selectedindex = false;
-                        that.activesubID = false;
-                        this.channels = chatService.getGroupChannelsSyncArray(that.groupID);
-                        return;
-                    }
-                    that.users = [];
-                    dataService.getUserData().forEach(function(val,indx){
-                        if(val.groupID == that.groupID && val.subgroupID == subgroupData.$id){
-                            that.users.push(val);
-                        }
-                    });
+                    $state.go('user.group.' + that.activePanel, {groupID: that.groupID});
+                    that.showPanel(that.activePanel);
+                    // if (!subgroupData) {
+                    //     that.users = [];
+                    //     that.users =  dataService.getUserData();
+                    //     that.selectedindex = false;
+                    //     that.activesubID = false;
+                    //     this.channels = chatService.getGroupChannelsSyncArray(that.groupID);
+                    //     return;
+                    // }
+                    // that.users = [];
+                    // dataService.getUserData().forEach(function(val,indx){
+                    //     if(val.groupID == that.groupID && val.subgroupID == subgroupData.$id){
+                    //         that.users.push(val);
+                    //     }
+                    // });
                 }
 
                 var userCurrentCheckinRefBySubgroup;
