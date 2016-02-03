@@ -1,31 +1,51 @@
-url: '/',							//Home Page
+url: '/',											//Home Page
 
-url: '/signin',						//Signin Page
+url: '/signin',										//Signin Page
 
-url: '/forgot',						//Forgort Pasword Page
+url: '/forgot',										//Forgort Pasword Page
 
-url: '/signup',						//Signup Page
+url: '/signup',										//Signup Page
 
-url: '/user/:userID',				//User Dashboard
+url: '/user/:userID',								//User Dashboard
 
-url: '/profile/:userID',			//Profile setting if user own, else public profile
+url: '/profile/:userID',							//Profile setting if user own, else public profile
 
-url: '/tots',						//join team of teams
+url: '/search',										//join team of teams
 
-url: '/tot',						//create team of teams
-		
-url: '/:groupID',					//team of teams dashboard
+url: '/create',										//create team of teams
 
-url: '/tot/:groupID',				//edit team of teams
+url: '/:groupID',									//team of teams dashboard
 
-url: '/members/:groupID',			//memeber management
-	
-url: '/teams/:groupID',				//teams management
+url: '/:groupID/setting/edit',						//edit team of teams
 
-url: '/policies/:groupID',			//policies
+url: '/:groupID/setting//members',					//memeber management
 
-url: '/:groupID/:subgroupID',		//team Dashboard
-                
+url: '/:groupID/setting/teams',						//teams management
+
+url: '/:groupID/setting/policies',					//policies
+
+url: '/:groupID/tab/activity'						// Group Activity
+
+url: '/:groupID/:subgroupID/tab/activity'			// Subgroup Activity
+
+url: '/:groupID/tab/chat'							// Group Chat
+
+url: '/:groupID/:subgroupID/tab/chat'				// Subgroup Chat
+
+url: '/:groupID/tab/progressreport'					// Group Progress Report
+
+url: '/:groupID/:subgroupID/tab/progressreport'		// Subgroup Progress Report
+
+url: '/:groupID/tab/manualattendace'				// Group Manual Attendace
+
+url: '/:groupID/:subgroupID/tab/manualattendace'	// Subgroup Manual Attendace
+
+url: '/:groupID/tab/report'							// Group Report
+
+url: '/:groupID/:subgroupID/tab/report'				// Subgroup Report
+
+url: '/:groupID/:subgroupID',						//team Dashboard
+
 =========================================================
 
 Required single keyword to replace these multiple keywords.
@@ -40,11 +60,9 @@ url: '/:groupID',		//Due to this route need to reserve below keywords
 
 url: '/:groupID/:subgroupID',	//Due to this route need to reserve below keywords
 
-	/pages/signin
-    
     /user/:userid
 	/profile/:userid
-	/tot/:groupid 						#suggestion		/:groupid/setting/tot
+	/tot/:groupid 						#suggestion		/:groupid/setting/edit
 	/members/:groupid 					#suggestion		/:groupid/setting/members
 	/teams/:groupid 					#suggestion		/:groupid/setting/teams
 	/polices/:groupid 					#suggestion		/:groupid/setting/polices
