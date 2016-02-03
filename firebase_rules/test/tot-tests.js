@@ -26,7 +26,7 @@ rulesSuite("Team of Teams Tests", function(test) {
               firstName       : "Arsalan",
               lastName        : "Rajput",
               "date-created"  : test.TIMESTAMP,
-              status          :0
+              status          : 0
          })
          .succeeds("User successfully Created")
          //user Group Memberships
@@ -102,6 +102,8 @@ test("User Team of Teams write Test ", function(rules){
          .fails("Any authanticated user can create group")
           
  });
+ 
+ 
 
 //Read Team of Teams test User
  test("Team of Teams Read Tests As User", function(rules){
@@ -130,7 +132,59 @@ test("User Team of Teams write Test ", function(rules){
          .read()
          .succeeds("user group members can read data")
  });
+//Team of teams update test with unauth user
 
+
+test("team of teams update test with unauth" ,function(rules){
+    rules
+       // un auth create group test
+       .as("anon")
+       .at(pathforGroupGroupID)
+       .write({
+        privacy : { 
+                 invitationType : 1 
+             },
+             "members-checked-in" : { 
+                 count    : 0
+             },
+             title : "un Auth user try to create group but i could not",
+             timestamp : test.TIMESTAMP,
+             "members-count" : 1,
+             "subgroups-count" : 0,
+             timeZone : "12345",
+             phone    : "124542124612225",
+             "owner-img-url" : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode    :    "1"
+             
+       }).fails("Any authanticated user can create group")
+        
+        // un auth update group test
+       
+      .as("anon")
+      .at(pathforGroupGroupID)
+      .write({
+         privacy : { 
+                 invitationType : 1 
+             },
+             "members-checked-in" : { 
+                 count    : 0
+             },
+             title     : "un Auth user try to create group but it cann't create and update",
+             timestamp : test.TIMESTAMP,
+             "members-count" : 1,
+             "subgroups-count" : 0,
+             timeZone : "12345",
+             phone    : "124542124612225",
+             "owner-img-url" : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode    :    "1"
+             
+      }).fails("un Auth user try to create group but it cann't create and update")
+       
+  
+})
+
+
+//Team of teams update test with auth user
  test("team of Teams update by User" ,function(rules){
      rules
           .as("admin")
@@ -143,7 +197,30 @@ test("User Team of Teams write Test ", function(rules){
               "date-created" : test.TIMESTAMP,
               status         :  0
           }).succeeds("Only admin can create user")
-     
+       
+        //user Group Memberships
+         .as("arsalan")
+         .at("/user-group-memberships/" + uid("arsalan") + "/" + groupid)
+         .write({
+             "membership-type": 0,
+             "timestamp": test.TIMESTAMP
+         })
+         
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+        
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+         .write({
+                  'membership-type': 0,
+                  timestamp: 1452767752756
+         })
+         //Create Group 
          .as("arsalan")
          .at("/groups/" + groupid)
          .write({
@@ -162,11 +239,14 @@ test("User Team of Teams write Test ", function(rules){
              signupMode   : "1"
              
          }).succeeds("Any authanticated user can create group")
+         
+          //Groups Members 
          .as("arsalan")
          .at(pathforGroupMembersGroupidUid)
          .write({
-             "membership-type"  : 1
+             "membership-type"  : 0
          })
+           //update Group 
          .as("arsalan")
          .at(pathforGroupGroupID)
          .write({
@@ -176,31 +256,54 @@ test("User Team of Teams write Test ", function(rules){
              "members-checked-in" : {
                  count         :   4 
              },
-             title             :   "Captain Rajput",
+             title             :   "Mohammad Arsalan Rajput fail",
              timestamp         :   test.TIMESTAMP,
              "members-count"   :   1,
-             "subgroups-count" : 0,
-             timeZone          : "1234556",
+             "subgroups-count" :   0,
+             timeZone          :   "1234556",
              "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
              signupMode   : "1"
              
          }).fails("Only admin can update group")
  })
  
-
+//Team of teams update by Admin 
  test("team of teams update by admin" ,function(rules){
      rules  
          .as("admin")
          .at(pathforUserUserID)
          .write({
-             email  : "arsalan@panacloud.com",
+             email     : "arsalan@panacloud.com",
              firstName : "Arsalan Rajput",
-             lastName : "Rajput",
+             lastName  : "Rajput",
              "date-created" : test.TIMESTAMP,
              status :    0
          }).succeeds("admin can only create users")
          
-       .at(pathforGroupGroupID)
+          //user Group Memberships
+         .as("arsalan")
+         .at("/user-group-memberships/" + uid("arsalan") + "/" + groupid)
+         .write({
+             "membership-type": 1,
+             "timestamp": test.TIMESTAMP
+         })
+         
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+        
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         })
+         //create group 
+        .at(pathforGroupGroupID)
        .write({
             privacy : {
                 invitationType : 1
@@ -216,12 +319,16 @@ test("User Team of Teams write Test ", function(rules){
              "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
              signupMode   : "1"
        }).succeeds("Group Created")
+       //update Group 
        
-       .at(pathforGroupMembersGroupidUid)
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
          .write({
-              "membership-type"  : 1
+                  'membership-type': 2,
+                  timestamp: 1452767752756
          })
-        .as("admin")
+        .as("arsalan")
         
         .at(pathforGroupGroupID)
         .write({
@@ -231,7 +338,7 @@ test("User Team of Teams write Test ", function(rules){
              "members-checked-in" : {
                  count         :   2 
              },
-             title             :   "Captain Rajput",
+             title             :   "Mohammad Arsalan Rajput succeeds",
              timestamp         :   test.TIMESTAMP,
              "members-count"   :   1,
              "subgroups-count" :   0,
@@ -240,8 +347,92 @@ test("User Team of Teams write Test ", function(rules){
              signupMode   : "1"
         }).succeeds("admin update group 22 ");
        
+      
+ })
+//team of teams update test with owner
+
+ test("team of teams update by owner" ,function(rules){
+     rules  
+         .as("admin")
+         .at(pathforUserUserID)
+         .write({
+             email     : "arsalan@panacloud.com",
+             firstName : "Arsalan Rajput",
+             lastName  : "Rajput",
+             "date-created" : test.TIMESTAMP,
+             status :    0
+         }).succeeds("admin can only create users")
+         
+          //user Group Memberships
+         .as("arsalan")
+         .at("/user-group-memberships/" + uid("arsalan") + "/" + groupid)
+         .write({
+             "membership-type": 1,
+             "timestamp": test.TIMESTAMP
+         })
+         
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+        
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         })
+         //create group 
+        .at(pathforGroupGroupID)
+       .write({
+            privacy : {
+                invitationType : 1
+             },
+             "members-checked-in" : {
+                 count         :   2 
+             },
+             title             :   "Group update test with owner",
+             timestamp         :   test.TIMESTAMP,
+             "members-count"   :   1,
+             "subgroups-count" :   0,
+             timeZone          :  "1234556",
+             "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode   : "1"
+       }).succeeds("Group Created")
+       //update Group 
+       
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         })
+        .as("arsalan")
+        
+        .at(pathforGroupGroupID)
+        .write({
+             privacy : {
+                invitationType : 1
+             },
+             "members-checked-in" : {
+                 count         :   2 
+             },
+             title             :   "Group update test with owner succeeds",
+             timestamp         :   test.TIMESTAMP,
+             "members-count"   :   1,
+             "subgroups-count" :   0,
+             timeZone          :  "12345568989809898",
+             "owner-img-url"   :  "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode   : "1"
+        }).succeeds("owner update group 22 ");
+       
        
  })
+
 
 //Group Name Read test with unAuth
    test("Group Name Read Test with unAuth user" ,function(rules){
@@ -251,7 +442,7 @@ test("User Team of Teams write Test ", function(rules){
            .read()
            .fails("Un auth user cannot read group  names")
    })
-   
+  
  //Group Name Read  test with Auth
    test("Group Name read Test with Auth user" ,function(rules){
       rules
@@ -270,8 +461,7 @@ test("User Team of Teams write Test ", function(rules){
           .succeeds("only Auth user can read Groups name")
    })
    
-   
-    //Group Name create  test with Auth 
+   //Group Name create  test with Auth 
    test("group name write test" ,function(rules){
       rules
       .as("admin")
@@ -291,7 +481,7 @@ test("User Team of Teams write Test ", function(rules){
       }).succeeds("Authenticated user can write on group name")
    
 })
- 
+/*  
    //Group Name update  test with Auth  
     
     test("group name update test" ,function(rules){
@@ -324,7 +514,7 @@ test("User Team of Teams write Test ", function(rules){
                   title: "Arsalan Rajput",
                   groupImgUrl: "http://www.google.com"
               }).fails("only admin can update group")
-      })  
+      })*/  
 //-----------------------------------------------------------------------
  
  
