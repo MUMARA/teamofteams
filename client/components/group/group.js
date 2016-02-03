@@ -254,6 +254,7 @@
                 this.showManualAttendace = false;
                 this.showParams = true;
                 this.processTeamAttendance = false;
+                this.showProgressReport = false;
                 this.activePanel = 'activity';
                 this.activesubgroupID = '';
                 this.showPanel = function(pname, subgroupID) {
@@ -281,6 +282,8 @@
                     } else {
                         that.showManualAttendace = false;
                     }
+                    if(pname === 'progressreport') { that.activePanel = 'progressreport'; that.showProgressReport = true; } else { that.showProgressReport = false; }
+
                     that.activesubgroupID = subgroupID;
                     if(that.activesubgroupID){                         
                         $state.go('user.group.subgroup-' + that.activePanel, {groupID: that.groupID, subgroupID: that.activesubgroupID});

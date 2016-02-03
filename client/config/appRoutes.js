@@ -153,6 +153,18 @@
                 controller: 'ManualAttendaceController',
                 controllerAs: 'manualattendace',
             });
+            $stateProvider.state('user.group.progressreport', {
+                url: '/tab/progressreport',
+                templateUrl: 'components/progressreport/progressreport.html',
+                controller: 'ProgressReportController',
+                controllerAs: 'progressreport',
+            });
+            $stateProvider.state('user.group.subgroup-progressreport', {
+                url: '/:subgroupID/tab/progressreport',
+                templateUrl: 'components/progressreport/progressreport.html',
+                controller: 'ProgressReportController',
+                controllerAs: 'progressreport',
+            });
             $stateProvider.state('user.edit-group', {
                 url: '/tot/:groupID',
                 templateUrl: 'components/edit-group/edit-group.html',

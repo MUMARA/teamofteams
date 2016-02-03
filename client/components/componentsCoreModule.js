@@ -27,7 +27,8 @@
         'app.policy',
         'app.activity',
         'app.report',
-        'app.manualattendace'
+        'app.manualattendace',
+        'app.progressreport'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',

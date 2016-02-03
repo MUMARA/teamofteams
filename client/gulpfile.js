@@ -19,6 +19,7 @@ gulp.task("minifying", function() {
             "./components/activity/activity.js",
             "./components/report/report.js",
             "./components/manualattendace/manualattendace.js",
+            "./components/progressreport/progressreport.js",
             "./components/user/user.js",
             "./components/group/groupService.js",
             "./components/group/group.js",

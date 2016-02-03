@@ -1,0 +1,37 @@
+<!-- Activity -->
+    <div layout="row" layout-align="space-between start" style="font-size:large;" class="backColorWhite viewHeight-64">
+		<div  layout-padding layout-fill flex>
+			<h1>Progress Report</h1>
+			<pre>{{progressreport.dailyProgressReport[0].questions | json}}</pre>
+			<div ng-if="progressreport.dailyProgressReport">
+				<md-list>
+				  <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: date" layout="column" layout-align="center start">
+					<div layout="row" layout-fill layout-align="center center">
+						<md-divider md-outset flex></md-divider>
+					  		{{report.date | date: 'dd-MMM-yyyy'}}
+					  	<md-divider md-outset flex></md-divider>
+					</div>
+					<div layout="row" layout-align="center center" layout-fill>
+						<img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{report.fullName}}</span>
+
+					  <md-input-container flex class="leftmargin20px" layout="row">
+					  	<label>Answer</label>
+					  	<textarea ng-model="report.answers" ng-disabled="progressreport.user.userID != report.userID"></textarea>
+					  </md-input-container>
+
+					  <md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID" ng-click="progressreport.update(report)">Update</md-button>		
+					</div>
+				  
+
+				  </md-list-item>
+				</md-list>	
+			</div>
+		</div>
+		<div style="width:400px;" layout-fill class="backColorSeaGreen">
+		<md-list>
+		  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in progressreport.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: progressreport.groupID, subgroupID: progressreport.subgroupID}">
+			    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
+			  </md-list-item>
+			</md-list>
+		</div>
+    </div>

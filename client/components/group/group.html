@@ -48,6 +48,10 @@
                 <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('chat', group.activesubgroupID)" />
                 <img src="img/1arrow.png" ng-show="group.showChat" class="showArrow anifade">
             </div>
+            <div layout="row">
+                <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('progressreport', group.activesubgroupID)" />
+                <img src="img/1arrow.png" ng-show="group.showProgressReport" class="showArrow anifade">
+            </div>
         </div>
         <div ng-show="group.isAdmin()">
             <md-divider class="backColorWhite topbottommargin5px"></md-divider>
