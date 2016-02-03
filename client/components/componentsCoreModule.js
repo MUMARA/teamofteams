@@ -29,6 +29,7 @@
         'app.report',
         'app.manualattendace',
         'app.progressreport'
+        'app.chat'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',

@@ -1,12 +1,12 @@
-    
+
 /**
  * on 2/02/2016.
  */
 (function() {
     'use strict';
-    angular.module('app.manualattendace', ['core']).controller('ManualAttendaceController', ['checkinService', '$firebaseArray', 'messageService', 'dataService', 'userService', '$stateParams', ManualAttendaceController]);
+    angular.module('app.manualattendace', ['core']).controller('ManualAttendaceController', ['groupService', 'checkinService', '$firebaseArray', 'messageService', 'dataService', 'userService', '$stateParams', ManualAttendaceController]);
     
-    function ManualAttendaceController(checkinService, $firebaseArray, messageService, dataService, userService, $stateParams) {
+    function ManualAttendaceController(groupService, checkinService, $firebaseArray, messageService, dataService, userService, $stateParams) {
         var that = this;
         var userCurrentCheckinRefBySubgroup;
         var user = userService.getCurrentUser();
@@ -52,8 +52,9 @@
                 });
             });
         }
-
         function init(){
+            groupService.setActivePanel('manualattendace');
+            groupService.setSubgroupIDPanel($stateParams.subgroupID)
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             that.processTeamAttendance = false;
@@ -61,7 +62,7 @@
                 newStatus: {}
             };
             that.users = dataService.getUserData();         //load users
-        }        
+        }
         init();
 
     } // ActivityController

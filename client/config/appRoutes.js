@@ -100,13 +100,13 @@
                 controllerAs: 'personalSettings',
             });
             $stateProvider.state('user.join-group', {
-                url: '/tots',
+                url: '/search',
                 templateUrl: 'components/join-group/join-group.html',
                 controller: 'JoinGroupController',
                 controllerAs: 'joinGroup'
             });
             $stateProvider.state('user.create-group', {
-                url: '/tot',
+                url: '/create',
                 templateUrl: 'components/create-group/create-group.html',
                 controller: 'CreateGroupController',
                 controllerAs: 'createGroup'
@@ -123,7 +123,7 @@
                 controller: 'ActivityController',
                 controllerAs: 'activity',
             });
-               $stateProvider.state('user.group.subgroup-activity', {
+           $stateProvider.state('user.group.subgroup-activity', {
                 url: '/:subgroupID/tab/activity',
                 templateUrl: 'components/activity/activity.html',
                 controller: 'ActivityController',
@@ -164,27 +164,38 @@
                 templateUrl: 'components/progressreport/progressreport.html',
                 controller: 'ProgressReportController',
                 controllerAs: 'progressreport',
+            $stateProvider.state('user.group.chat', {
+                url: '/tab/chat',
+                templateUrl: 'components/chat/chat.html',
+                controller: 'ChatController',
+                controllerAs: 'chat',
+            });
+            $stateProvider.state('user.group.subgroup-chat', {
+                url: '/:subgroupID/tab/chat',
+                templateUrl: 'components/chat/chat.html',
+                controller: 'ChatController',
+                controllerAs: 'chat',
             });
             $stateProvider.state('user.edit-group', {
-                url: '/tot/:groupID',
+                url: '/:groupID/setting/edit',
                 templateUrl: 'components/edit-group/edit-group.html',
                 controller: 'EditGroupController',
                 controllerAs: 'editGroup'
             });
             $stateProvider.state('user.user-setting', {
-                url: '/members/:groupID',
+                url: '/:groupID/setting/members',
                 templateUrl: 'components/user-setting/user-setting.html',
                 controller: 'UserSettingController',
                 controllerAs: 'userSetting'
             });
             $stateProvider.state('user.create-subgroup', {
-                url: '/teams/:groupID',
+                url: '/:groupID/setting/teams',
                 templateUrl: 'components/create-sub-group/create-sub-group.html',
                 controller: 'CreateSubGroupController',
                 controllerAs: 'createSubGroup'
             });
             $stateProvider.state('user.policy', {
-                url: '/policies/:groupID',
+                url: '/:groupID/setting/policies',
                 templateUrl: 'components/policy/policy.html',
                 controller: 'PolicyController',
                 controllerAs: 'policy',

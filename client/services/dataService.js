@@ -2,7 +2,7 @@
  * Created by Mkamran on 31/12/14.
  */
 
-'use strict';
+"use strict";
 
 angular.module('core')
     .factory('dataService', ['$firebaseObject', 'firebaseService', 'checkinService', 'userService', 'userPresenceService',
@@ -20,11 +20,11 @@ angular.module('core')
 
             function loadData () {
                 unloadData();
-                userID = userService.getCurrentUser().userID;                
+                userID = userService.getCurrentUser().userID;
                 setUserData();
                 setUserGroups();
             }
-            
+
             function setUserData () {
                 var groupTitle = '';
                 var subgroupTitle = '';
@@ -32,7 +32,7 @@ angular.module('core')
                 firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
                     $firebaseObject(firebaseService.getRefGroups().child(group.key())).$loaded().then(function(groupmasterdata) {
                         groupsubgroupTitle[group.key()] = groupmasterdata.title;
-                    })
+                    });
                     firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_added', function(subgroup, prevChildKey) {
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
                             userData.forEach(function(val, indx) {
@@ -47,7 +47,7 @@ angular.module('core')
                                         val.timestamp = snapshot.val().timestamp;
                                     }
                                 }
-                            })
+                            });
                         });
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
                            userData.forEach(function(val, indx) {
@@ -62,11 +62,11 @@ angular.module('core')
                                         val.timestamp = snapshot.val().timestamp;
                                     }
                                 }
-                            })
+                            });
                         });
                         $firebaseObject(firebaseService.getRefSubGroups().child(group.key()).child(subgroup.key())).$loaded().then(function(subgroupmasterdata) {
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
-                        })
+                        });
                         firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
                             $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
                                 if (userdata.type === 1) {
@@ -93,7 +93,7 @@ angular.module('core')
                                                     val.contactNumber = snapshot.val();
                                                 }
                                             }
-                                        })
+                                        });
                                     });
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
@@ -111,7 +111,7 @@ angular.module('core')
                                                     val.contactNumber = snapshot.val();
                                                 }
                                             }
-                                        })
+                                        });
                                     });
                                     /*userPresenceService.getRefUsersPresense().child(userdata.$id).child('defined-status').on('value', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
@@ -142,7 +142,7 @@ angular.module('core')
                                                     val.onlinestatus = false;
                                                 }
                                             }
-                                        })
+                                        });
                                     });
                                     userData.push({
                                         id: userdata.$id,
@@ -165,13 +165,13 @@ angular.module('core')
                                         lastName: usermasterdata.lastName,
                                         fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
                                     });
-                                })
+                                });
                             });
-                        })
+                        });
                     });
                 });
             }
-            
+
             function getUserData () {
                 return userData;
             }
@@ -197,8 +197,8 @@ angular.module('core')
                                 val.members = groupmasterdata["members-count"];
                                 eflag = false;
                             }
-                        })
-                        
+                        });
+
                         if(eflag){
                             if(snapshot.hasChildren()) {
                                 userGroups.push({
@@ -218,13 +218,13 @@ angular.module('core')
                                     userGroups.forEach(function(item, index){
                                         if (item.groupID === group.key()) {
                                             if (snapshot.key() === "title") {
-                                                item['title'] = snapshot.val()
+                                                item.title = snapshot.val();
                                             }
                                             if (snapshot.key() === "members-checked-in") {
-                                                item.membersOnline = snapshot.val().count
+                                                item.membersOnline = snapshot.val().count;
                                             }
                                             if (snapshot.key() === "members-count") {
-                                                item.members = snapshot.val()
+                                                item.members = snapshot.val();
                                             }
                                             if (snapshot.key() === "address-title") {
                                                 item.addressTitle = snapshot.val();
@@ -288,8 +288,8 @@ angular.module('core')
                         //         }//if closing
                         //     }//else closing
                         // })
-                    })
-                })
+                    });
+                });
             }
 
             function getUserGroups () {
@@ -307,7 +307,7 @@ angular.module('core')
                             }
                         }
                     }
-                })
+                });
             }
 
             return {
@@ -316,6 +316,6 @@ angular.module('core')
                 getUserData: getUserData,
                 getUserGroups: getUserGroups,
                 setUserCheckInOut: setUserCheckInOut
-            }
+            };
         }
     ]);

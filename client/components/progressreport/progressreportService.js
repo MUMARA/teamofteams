@@ -73,14 +73,6 @@
 
     			}
 
-
-    		
-
-    			
-    			
-    			
-    			
-    			
     		});
     	}
     	function getDailyProgressReport(userArray, groupID, subgroupID) {

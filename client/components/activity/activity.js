@@ -3,19 +3,21 @@
  */
 (function() {
     'use strict';
-    angular.module('app.activity', ['core']).controller('ActivityController', ['dataService', 'userService', '$stateParams', ActivityController]);
-    
-    function ActivityController(dataService, userService, $stateParams) {
+    angular.module('app.activity', ['core']).controller('ActivityController', ['groupService', 'dataService', 'userService', '$stateParams', ActivityController]);
+
+    function ActivityController(groupService, dataService, userService, $stateParams) {
         var that = this;
-        
+
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         }
         function init(){
+            groupService.setActivePanel('activity');
+            groupService.setSubgroupIDPanel($stateParams.subgroupID)
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             that.users = dataService.getUserData();         //load users
-        }        
+        }
         init();
 
     } // ActivityController
