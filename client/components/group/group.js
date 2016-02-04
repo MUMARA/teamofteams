@@ -265,10 +265,7 @@
                         groupService.setActivePanel('manualattendace');
                     }
                     if(pname === 'progressreport') { 
-                        that.activePanel = 'progressreport'; 
-                        that.showProgressReport = true; 
-                    } else { 
-                        that.showProgressReport = false; 
+                        groupService.setActivePanel('progressreport');
                     }
                     that.panel.subgroupID = subgroupID;
                     if(that.panel.subgroupID){

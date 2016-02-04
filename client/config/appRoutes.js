@@ -160,10 +160,11 @@
                 controllerAs: 'progressreport',
             });
             $stateProvider.state('user.group.subgroup-progressreport', {
-                url: '/:subgroupID/tab/progressreport',
+                url: '/:subgroupID/tab/progressreport?u',
                 templateUrl: 'components/progressreport/progressreport.html',
                 controller: 'ProgressReportController',
                 controllerAs: 'progressreport',
+            });
             $stateProvider.state('user.group.chat', {
                 url: '/tab/chat',
                 templateUrl: 'components/chat/chat.html',

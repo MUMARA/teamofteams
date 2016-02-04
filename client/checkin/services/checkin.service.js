@@ -45,7 +45,56 @@
             });
             return defer.promise;
         }
+
+
+        //step 1 (calling from Controller)
+        function ChekinUpdateSatatus(group, userId, checkoutFlag, cb){
+            //var groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userId};
+            $geolocation.getCurrentPosition({
+                timeout: 60000,
+                maximumAge: 250,
+                enableHighAccuracy: true
+            }).then(function(location){
+                // console.log('location', location)
+                 if(location.coords) {
+                    var locationObj = {lat: location.coords.latitude, lng: location.coords.longitude};
+                     subgroupHasPolicy(group.groupId, group.subgroupId, function(hasPolicy, Policy){
+                        if(hasPolicy) {
+                            //hasPolicy true
+                            checkinPolicy(Policy, locationObj, function(result, msg){
+                                if(result){
+                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, function(result, cbMsg, reportMsg){
+                                        cb(result, cbMsg, reportMsg);
+                                    });        
+                                } else {
+                                    cb(false, msg);
+                                }
+                            })
+                        } else {
+                            //hasPolicy false
+                            saveFirebaseCheckInOut(group, checkoutFlag,  locationObj, Policy, function(result, cbMsg, reportMsg){
+                                cb(result, cbMsg, null);
+                            });
+                        }
+                     })
+                 } else {
+                     cb(false, 'Please allow your location (not getting current location)!');
+                 }
+            })
+        };
         
+        function subgroupHasPolicy(groupID, subgroupID, cb){
+            firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
+                if(snapshot.val() && snapshot.val().hasPolicy) {
+                    firebaseService.getRefPolicies().child(groupID).child(snapshot.val().policyID).once('value', function(policy){
+                        cb(true, policy.val());
+                    }); //getting policy
+                } else {//self.subGroupHasPolicy if true
+                    cb(false, false);
+                }
+            }); //firebaseService.getRefSubGroupsNames()
+        }; //subgroupHasPolicy
+
         //calculating Distance
         function CalculateDistance(lat1, lon1, lat2, lon2, unit) {
             //:::    unit = the unit you desire for results                               :::
@@ -70,18 +119,6 @@
             }
             return dist;
         };
-        
-        function subgroupHasPolicy(groupID, subgroupID, cb){
-            firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
-                if(snapshot.val() && snapshot.val().hasPolicy) {
-                    firebaseService.getRefPolicies().child(groupID).child(snapshot.val().policyID).once('value', function(policy){
-                        cb(true, policy.val());
-                    }); //getting policy
-                } else {//self.subGroupHasPolicy if true
-                    cb(false, false);
-                }
-            }); //firebaseService.getRefSubGroupsNames()
-        }; //subgroupHasPolicy
         
         //checking Policy is Subgroup Has Policy (is that timebased or locationbased)
         function checkinPolicy(Policy, currentLocationObj, callback) {
@@ -130,42 +167,44 @@
                 callback(true, '');    //if not timebased then return true....
             }
         }; //checkinTimeBased
-        
-        //step 1 (calling from Controller)
-        function ChekinUpdateSatatus(group, userId, checkoutFlag, cb){
-            //var groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userId};
-            $geolocation.getCurrentPosition({
-                timeout: 60000,
-                maximumAge: 250,
-                enableHighAccuracy: true
-            }).then(function(location){
-                // console.log('location', location)
-                 if(location.coords) {
-                    var locationObj = {lat: location.coords.latitude, lng: location.coords.longitude};
-                     subgroupHasPolicy(group.groupId, group.subgroupId, function(hasPolicy, Policy){
-                        if(hasPolicy) {
-                            //hasPolicy true
-                            checkinPolicy(Policy, locationObj, function(result, msg){
-                                if(result){
-                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, function(result, cbMsg){
-                                        cb(result, cbMsg);
-                                    });        
-                                } else {
-                                    cb(false, msg);
-                                }
-                            })
-                        } else {
-                            //hasPolicy false
-                            saveFirebaseCheckInOut(group, checkoutFlag,  locationObj, Policy, function(result, cbMsg){
-                                cb(result, cbMsg);
-                            });
+
+        //checkinDailyProgress
+        function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb){
+
+               if(Policy && Policy.dailyReport) {
+                //checking daily progress report is exists or not -- START --
+                firebaseService.getRefMain().child('daily-progress-report-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
+                .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
+                    if(snapshot.val() == null) { //if null then create daily report dummy
+                        //cerating Dummy Report Object on Checkin....
+                        firebaseService.getRefMain().child('daily-progress-report-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
+                            date: new Date().setHours(0,0,0,0), 
+                            questions: JSON.stringify(Policy.dailyReportQuestions), 
+                            answers: ''
+                        });
+                    } else {
+                        for(var obj in snapshot.val()) {
+                            //console.log(snapshot.val()[obj])
+                            if(snapshot.val()[obj].answers == "" && checkoutFlag == true) {  //now checking if answers has given or not on checkout
+                                //if not submited report then show msg
+                                cb(false, 'notSubmitted')
+                            } else {
+                                //if submited report then nuthing
+                                cb(true, null)
+                            }
                         }
-                     })
-                 } else {
-                     cb(false, 'Please allow your location (not getting current location)!');
-                 }
-            })
-        };
+                        
+                    }
+                });
+                //checking daily progress report is exists or not -- END -- 
+            } else {//if(Policy && Policy.dailyReport)
+                //if not assign any daily report policy (Daily Report policy has false)
+                cb(true, '');
+            }
+
+        }//checkinDailyProgress
+        
+    
         
         function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, cb){
             // groupObj = {groupId: '', subgroupId: '', userId: ''}
@@ -223,32 +262,19 @@
                 multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
                 ref.update(multipath, function(err){
                     if(err) {
-                        console.log('err', err);
-                        cb(false, 'Please contact to your administrator');
+                        // console.log('err', err);
+                        cb(false, 'Please contact to your administrator', null);
                     }
-                    //calling callbAck....
-                    cb(true, checkinResultMsg);
 
-                    if(Policy && Policy.dailyReport) {
-                        //checking daily progress report is exists or not -- START --
-                        ref.child('daily-progress-report-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
-                        .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
-                            // console.log(snapshot.val());            
-                            if(snapshot.val() == null) { //if null then create daily report dummy
-                                //cerating Dummy Report Object on Checkin....
-                                ref.child('daily-progress-report-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
-                                    date: new Date().setHours(0,0,0,0), 
-                                    questions: JSON.stringify(Policy.dailyReportQuestions), 
-                                    answers: ''
-                                });
-                            } else {
-                                if(snapshot.val().answers != "" && checkoutFlag == true) {  //now checking if answers has given or not on checkout
-                                    alert('please submit your daily progress report');
-                                }
-                            }
-                        });
-                        //checking daily progress report is exists or not -- END -- 
-                    } //if(Policy && Policy.dailyReport)
+                    //checking Daily Progress Report
+                    checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes){
+                        if(rst) {
+                            //calling callbAck....
+                            cb(true, checkinResultMsg, null);        
+                        } else {
+                            cb(true, checkinResultMsg, mes);        
+                        }
+                    })
 
                 }); //ref update
             }); //getting and update members-checked-in count

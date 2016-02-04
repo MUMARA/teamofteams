@@ -39,6 +39,11 @@
             this.shiftToUserPage = shiftToUserPage;
             //this.doChange = doChange;
             this.updateStatus = updateStatus;
+
+            //if report not submitted show switchMsg
+            this.isDailyProgessSubmit = false;
+            this.todayDate = Date.now();
+
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
@@ -231,12 +236,18 @@
                     }
                 }
                 
-                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg){
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted){
                     if(result){
                         self.checkinSending = false;
                         if(checkoutFlag){
                             messageService.showSuccess('Checkout Successfully!');    
+                            if(isSubmitted){
+                                self.switchCheckIn = true;
+                                self.switchMsg = true;
+                                self.isDailyProgessSubmit = true;
+                            } 
                         } else {
+                            self.checkinSending = false;
                             messageService.showSuccess('Checkin Successfully!');
                         }
                     } else {
@@ -332,6 +343,24 @@
                     }
                 }); //checkinService.getCurrentLocation()
             } // updateStatus
+
+            this.laterReport = function(){
+                self.checkout = false;
+                self.checkinSending = false;
+                self.switchMsg = false;
+                self.isDailyProgessSubmit = false;
+                self.switchCheckIn = false;
+            }
+            this.submitReport = function(){
+                //self.showUrlObj.userID 
+                //self.showUrlObj.groupID
+                //self.showUrlObj.subgroupID
+                //$location
+                self.switchCheckIn = false;
+                self.switchMsg = false;
+                self.isDailyProgessSubmit = false;
+                $state.go('user.group.subgroup-progressreport', {groupID: 'hotmaill', subgroupID: 'hotemail', u: true});
+            }
 
             function checkinPolicy(callback) {
                 if(self.subGroupPolicy.locationBased) {  //checking if location Based

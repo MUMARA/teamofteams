@@ -74,14 +74,17 @@
                 // $loggedInUserObj.userID = user.userID;
                 groupFirebaseService.approveMembership(groupID, user, requestedMember)
                     .then(function(res) {
-                        requestedMember.teamrequest.forEach(function(val, indx){
-                            groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
-                                messageService.showSuccess("Approved Request Successfully");
-                            }, function(err){
-                                messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
+                        if(requestedMember.teamrequest){
+                            requestedMember.teamrequest.forEach(function(val, indx){
+                                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
+                                    messageService.showSuccess("Approved Request Successfully");
+                                }, function(err){
+                                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
+                                })
                             })
-                        })
-                        
+                        } else{
+                            messageService.showSuccess("Approved Request Successfully");
+                        }
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });

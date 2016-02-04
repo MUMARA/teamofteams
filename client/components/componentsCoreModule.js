@@ -28,7 +28,7 @@
         'app.activity',
         'app.report',
         'app.manualattendace',
-        'app.progressreport'
+        'app.progressreport',
         'app.chat'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',

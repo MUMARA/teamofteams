@@ -16,27 +16,35 @@
             </md-switch>
             <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
             <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
-                <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
-                    <md-input-container md-no-float style="padding-bottom: 0px;" layout="row" class="nomargin">
-                        <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
-                    </md-input-container>
-                    <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()"></ng-md-icon>
-                </md-toolbar>
-                <md-list class="nopadding vscroll" ng-hide="navToolbar.groupObj1">
-                    <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
-                        <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
-                            <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
-                                <div><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
-                                <span>{{group.groupTitle}}</span>
-                            </div>
-                            <div style="font-size:large;" layout-fill>
-                                <div class="nooutline leftpadding40px cursorPointer hoverLightGrey3 foreColorDarkGrey" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in filter = (group.subGroups | filter: navToolbar.search)" layout-padding>{{subgroup.subgroupTitle}}
-                                </div>
-                            </div>
-                            <md-divider md-outset></md-divider>
+            <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
+                <md-input-container md-no-float style="padding-bottom: 0px;" layout="row" class="nomargin" ng-hide="navToolbar.isDailyProgessSubmit">
+                    <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
+                </md-input-container>
+                <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()" ng-hide="navToolbar.isDailyProgessSubmit"></ng-md-icon>
+                <span layout-padding class="foreColorDarkGrey" ng-show="navToolbar.isDailyProgessSubmit">Today: {{navToolbar.todayDate | date: 'dd-MMM-yyyy'}}</span>
+            </md-toolbar>
+            <md-list class="nopadding vscroll" ng-hide="navToolbar.groupObj1 || navToolbar.isDailyProgessSubmit">
+                <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
+                    <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
+                        <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
+                            <div><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
+                            <span>{{group.groupTitle}}</span>
                         </div>
-                    </md-list-item>
-                </md-list>
+                        <div style="font-size:large;" layout-fill>
+                            <div class="nooutline leftpadding40px cursorPointer hoverLightGrey3 foreColorDarkGrey" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in filter = (group.subGroups | filter: navToolbar.search)" layout-padding>{{subgroup.subgroupTitle}}
+                            </div>
+                        </div>
+                        <md-divider md-outset></md-divider>
+                    </div>
+                </md-list-item>
+            </md-list>
+            <div ng-show="navToolbar.isDailyProgessSubmit" layout="column">
+                <span layout-padding class="foreColorDarkGrey">Please Submit your Daily Progress Report.</span>
+                <div layout="row" layout-align="space-between center">
+                    <md-button class="backColorLightGrey" aria-label="Report Later" ng-click="navToolbar.laterReport()">Later</md-button>
+                    <md-button class="backColorSeaGreen" aria-label="Submit Report" ng-click="navToolbar.submitReport()">Submit</md-button>
+                </div>
+            </div>
             </md-card>
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
