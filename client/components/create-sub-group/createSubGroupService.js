@@ -119,7 +119,7 @@
                                 ///subgroupNames_.set(subgroupInfo.title, function(error) { console.log(error); });
 
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
-                                subgroupNameRef = subgroupRef.title;
+                                subgroupNameRef.title = subgroupRef.title;
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();

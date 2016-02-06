@@ -139,12 +139,68 @@
 			}
 			//Save data in firebase using Multi-Path	-- END --
 
+            //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
+
+            //Step1 checking Subgroup has Policy
+            function checkingTeamHasPolicy(groupID, subgroupID, cb){
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot){
+                    if(snapshot.val() && snapshot.val().hasPolicy && snapshot.val().hasPolicy == true){
+                        cb(snapshot.val().hasPolicy, snapshot.val().policyID);
+                    } else {
+                        cb(false, null);
+                    }
+                });
+
+            } //checkingTeamHasPolicy
+            //Step2 if has policy then assign policy to single member else nuthing
+            function assignTeamPolicyToMember(memeberID, groupID, subgroupID, cb) {
+                checkingTeamHasPolicy(groupID, subgroupID, function(hasPolicy, policyID) {
+                    if(hasPolicy){
+                        //set policy to member
+                        firebaseService.getRefMain().child('user-policies').child(memeberID).child(groupID).child(subgroupID).set(policy.val(),function(err){
+                            if(err){
+                                cb(false, err);
+                            }
+                            cb(true, null);
+                        });
+                    } else {
+                        cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
+                    }
+                });
+            }//assignTeamPolicyToMember
+            //Step2 if has policy then assign policy to multiple members else nuthing
+            function assignTeamPolicyToMultipleMembers(memeberIDarray, groupID, subgroupID, cb) {
+                checkingTeamHasPolicy(groupID, subgroupID, function(hasPolicy, policyID) {
+                    if(hasPolicy){
+                        var multiPathUpdate = {};
+                        memeberIDarray.forEach(function(val, index){
+
+                            multiPathUpdate["user-policies/"+val+"/"+groupID+"/"+subgroupID] = policyID;
+                            
+                            if(memeberIDarray.length == index+1){
+                                firebaseService.getRefMain().update(multiPathUpdate, function(err){
+                                     if(err){
+                                        cb(false, err);
+                                    }
+                                    cb(true, null);
+                                });
+                            }   //array length is equal to foreach index
+                        }); //memeberIDarray.forEach
+                    } else {
+                        cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
+                    }
+                });
+            }//assignTeamPolicyToMultipleMembers
+            //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
+
 
             return {
                 getSubGroupNames: 	getSubGroupNames,
                 getSubGroupMembers: getSubGroupMembers,
                 getGroupPolicies: 	getGroupPolicies,
-                answer: 			answer
+                answer: 			answer,
+                assignTeamPolicyToMember: assignTeamPolicyToMember,
+                assignTeamPolicyToMultipleMembers: assignTeamPolicyToMultipleMembers
             }
         }]);
 
