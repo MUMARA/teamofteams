@@ -14,7 +14,7 @@ Specification for Material Design data tables can be found [here](http://www.goo
 
 ## License
 
-This software is provided free of change and without restriction under the [MIT License](LICENSE.md)
+This software is provided free of charge and without restriction under the [MIT License](LICENSE.md)
 
 ## Demo
 
@@ -138,11 +138,87 @@ angular.module('demoApp').controller('sampleController', ['$nutrition', '$scope'
   </table>
 </md-table-container>
 
-<md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{desserts.count}}" md-on-paginate="onPaginate" md-page-select></md-data-table-pagination>
+<md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{desserts.count}}" md-on-paginate="onPaginate" md-page-select></md-table-pagination>
 
 ```
 
 ## Change Log
+
+#### Version 0.9.10
+
+* Fix select menu styles for Angular Material v1.0.4
+* Renamed md-data-table directory to src and moved it outside the demo app
+* Changed main files to unminified source
+* Added comment banner to source
+
+#### Version 0.9.9
+###### January 19, 2016
+
+* The `md.table.templates` module is now defined before the `md.data.table` module to fix issue [#252](https://github.com/daniel-nagy/md-data-table/issues/252).
+* Minor changes to selection logic concerning disabled rows.
+
+#### Version 0.9.8
+###### January 14, 2016
+
+People with large datasets have been reporting that the pagination page selector negatively effects performance even when not enabled. This patch uses `ng-if` instead of `ng-show` to add or remove the page selector from the template. This should improve performance when the page selector is not enabled.
+
+#### Version 0.9.7
+###### January 8, 2016
+
+Fix for issue [#237](https://github.com/daniel-nagy/md-data-table/issues/237).
+
+#### Version 0.9.6
+###### January 6, 2016
+
+Removing the restriction that all rows must be selectable when row selection is enabled. There are some valid use cases for this. An empty cell will be prepended to a row that is not selectable to offset the checkbox.
+
+#### Version 0.9.5
+###### January 4, 2016
+
+Merge pull request #230 from [@pdore-netfore](https://github.com/pdore-netfore) to use `currentTarget` instead of `target`.
+
+#### Version 0.9.4
+###### December 30, 2015
+
+So I kinda changed row selection again... we're back to using arrays :stuck_out_tongue_closed_eyes:. The `mdTable` directive now has a hash table and will watch the model for changes. The `mdSelect` directive will register a callback to the `mdTable` directive for when items are added or removed. The `mdTable` directive will notify the `mdSelect` directive and the `mdSelect` directive will update the hash table in the `mdTable` directive. You can now add and remove items with unique identifiers to the model and the directive will pick up on these changes.
+
+Another benefit is the `mdSelect` directive can now update the `mdTable` model if its own model is not a reference to the selected item. Therefore, what the user sees in the table will always be the same as the selected item.
+
+#### Version 0.9.3
+###### December 29, 2015
+
+* A little bit of validation in the pagination directive to avoid things like divide by zero.
+
+#### Version 0.9.2
+###### December 28, 2015
+
+* Wrap module in self executing function to prevent polluting the global namespace.
+* Pagination will now calculate the closest multiple when the limit changes.
+
+```javascript
+let page  = 5;
+let limit = 5;
+let min   = page * limit - limit; // 20
+```
+
+Now say the user changes the limit from `5` to `10`, then the new page will be `3` and the new min will `20`. Same as the old min. This is because `5` and `10` are both multiples of `20`.
+
+```javascript
+let oldMin   = 20;
+let newLimit = 10;
+let newPage  = Math.floor(oldMin + newLimit) / newLimit; // 3
+```
+
+Now suppose the user changes the limit from `10` to `15`. Observe that `15` is not a multiple of `20`. Therefore we will end up with the closest multiple. The new page will be `2` and the new min will be `15`.
+
+#### Version 0.9.1
+###### December 28, 2015
+
+The way the row ID feature was implemented made it difficult for the developer to manipulate the selected items from within their controller. In addition, the deselect event wasn't ideal because it would be impossible to communicate directly with one table if you had many tables that all shared a parent scope.
+
+* The `md.table.deselect` event has been removed.
+* If you specify a row ID using the `md-select-id` attribute then you must use an object model. When an item is selected, a new property will be defined on the model where the property name is the value of the `md-select-id` attribute and the value is the selected item.
+* I've added a deselect event to the `md-row` element.
 
 #### Version 0.9.0
 ###### December 27, 2015
@@ -340,7 +416,7 @@ $mdEditDialog.large(options);
 | `focusOnOpen`         | `bool`     | `true`     | Will search the template for an `md-autofocus` element. |
 | `messages`            | `object`   | `null`     | Error messages to display corresponding to errors on the `ngModelController`. |
 | `modelValue`          | `string`   | `null`     | The initial value of the input element. |
-| `ok`                  | `string`   | `Save`     | Text to submit and dismiss the dialog. |
+| `ok`                  | `string`   | `"Save"`   | Text to submit and dismiss the dialog. |
 | `placeholder`         | `string`   | `null`     | Placeholder text for input element. |
 | `save`                | `function` | `null`     | A callback function for when the use clicks the save button. The callback will receive the `ngModelController`. The dialog will close unless the callback returns a rejected promise. |
 | `targetEvent`         | `event`    | `null`     | The event object. This must be provided and it must be from a table cell. |
@@ -376,7 +452,7 @@ $mdEditDialog.show(options);
 | `template`            | `string`          | `null`  | The template for your dialog. |
 | `templateUrl`         | `string`          | `null`  | A URL to fetch your template from. |
 
-The `show` method will return a `promise` that will resolve to the controller instance.
+The `show` method will return a `promise` that will resolve with the controller instance.
 
 Table cells have a `md-placeholder` CSS class that you can use for placeholder text.
 
@@ -428,7 +504,7 @@ You may use Angular's [number](https://docs.angularjs.org/api/ng/filter/number) 
 | `mdBoundaryLinks` | `null|expression` | Displays first and last page navigation links |
 | `mdLabel`         | `object`          | Change the pagination label. See more below. |
 | `mdLimit`         | `integer`         | A row limit. |
-| `mdPage`          | `integer`         | Page number. The page number starts at one; not zero. |
+| `mdPage`          | `integer`         | Page number. Pages are not zero indexed. The directive assumes the first page is one. |
 | `mdOnPaginate`    | `function`        | A callback function for when the page or limit changes. The page is passed as the first argument and the limit is passed as the second argument. |
 | `mdOptions`       | `array`           | Row limit options. The default is `[5, 10, 15]` |
 | `mdTotal`         | `integer`         | Total number of items. |
@@ -462,15 +538,18 @@ I used Google translate so if the translations are wrong please fix them and mak
 <md-table-pagination md-limit="myLimit" md-page="myPage" md-total="{{array.length}}"></md-table-pagination>
 ```
 
+**My Pagination Isn't Working?!**
+
+* Make sure you pass `md-page`, `md-limit`, and `md-total` to the directive and that they are finite numbers.
+* Pages are not zero indexed. The directive will assume pages start at one. If your query language expects pages to be zero indexed then just subtract one before making the query.
+
 > It is important to know that the call back expression will be executed before the next digest cycle, meaning your local scope variables will still have the old values.
 
 ### Row Selection
 
-It has been largely debated how row selection should work. I decided the only option was to please everybody. The only thing you can't do is select the entire collection at once unless you display the entire collection at once.
-
 By default, selected items will persist even on pagination change. For this to work with items being fetch from the server you will need to provide a unique identifier to the directive, probably the primary key of your data set.
 
-I know that not everybody will like this so I also provided a way to clear selected items. The directive will be listening for the `md.table.deselect` event. You can broadcast this event at anytime to clear selected items.
+If at anytime you want to add or remove items from the model in your controller you may do so.
 
 | Attribute      | Element   | Type              | Description |
 | :------------- | :-------- | :---------------- | :---------- |
@@ -479,7 +558,8 @@ I know that not everybody will like this so I also provided a way to clear selec
 | `mdSelect`     | `mdRow`   | `any`             | The item to be selected. |
 | `mdSelectId`   | `mdRow`   | `string`          | A unique identifier for the selected item. This is necessary to match items that may not be strictly equal. For example, if items are swapped from the server. |
 | `mdAutoSelect` | `mdRow`   | `null|expression` | Select a row by clicking anywhere in the row. |
-| `mdOnSelect`   | `mdRow`   | `function`        | A callback function for when an item is selected. The callback will receive the item as the first argument and the key as the second argument. |
+| `mdOnSelect`   | `mdRow`   | `function`        | A callback function for when an item is selected. The item will be passed as an argument to the callback. |
+| `mdOnDeselect` | `mdRow`   | `function`        | A callback function for when an item is deselected. The item will be passed as an argument to the callback. |
 | `ngDisabled`   | `mdRow`   | `expression`      | Conditionally disable row selection. |
 
 **Example: Row Selection From The Live Demo.**
@@ -487,22 +567,14 @@ I know that not everybody will like this so I also provided a way to clear selec
 ```html
 <tr md-row md-select="dessert" md-select-id="{{dessert.name}}" md-auto-select ng-repeat="dessert in desserts.data">
 ```
-By default the `md.table.deselect` event will clear all selected items. 
 
 **Example: Clearing Selected Items On Pagination**
 
 ```javascript
 $scope.onPaginate = function () {
-  $scope.$broadcast('md.table.deselect');
+  $scope.selected = [];
 }
 ```
-
-You can also deselect a specific item by providing it as an argument to the `md.table.deselect` event. If you are using keys you will want to pass the key as well.
-
-```javascript
-$scope.$broadcast('md.table.deselect', item, key);
-```
-
 
 ### Table Progress
 

@@ -41,7 +41,7 @@
                 },
                 resolve: {
                     user: function($state, userService){
-                        // return userService.getUserPresenceFromLocastorage()
+                        return userService.getUserPresenceFromLocastorage();
                     }
                 }
             });
