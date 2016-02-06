@@ -18,7 +18,7 @@ rulesSuite("Team of Teams Tests", function(test) {
   var pathforUserGroupMembershipUIDGroupId = '/user-group-memberships/' + uId + "/" + groupid
   
  //Create Team of Teams with User
-/*
+
  test("Team of Teams write Test with User", function(rules){
      rules
           .as("admin")
@@ -1303,7 +1303,7 @@ test("group members read test with different user", function(rules) {
       
 })
 
-*/
+
 
 //group members write test with unauth user
 
@@ -1320,35 +1320,15 @@ test("group members write test with unauth user", function(rules) {
      }).succeeds("group members read admin created")
      
       //Group Members
-     .as("arsalan")
+     .as("anon")
      .at(pathforGroupMembersGroupidUid)
      .write({
        'membership-type' : 1,
        timestamp        : test.TIMESTAMP
      })
-     .succeeds("Group Members succeesfully created")
+     .fails("Group Members succeesfully created")
      
-     //user group members created for updating group Members membership-type
-     .as("arsalan")
-     .at(pathforUserGroupMembershipUIDGroupId)
-     .write({
-       'membership-type' : 1,
-       timestamp         : test.TIMESTAMP
-     
-     })
-     .succeeds("User Group Membership Created")
-     
-     //Membership type in Group Members update 1 to 3 for testing as admin
-     .as("arsalan")
-     .at(pathforGroupMembersGroupidUid)
-     .write({
-       "membership-type" : 2,
-       timestamp         : test.TIMESTAMP
-       
-     })
-     .succeeds("membership type update successfully")
-    
-
+});
 
 
 
