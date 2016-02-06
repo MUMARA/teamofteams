@@ -3,9 +3,9 @@
  */
 (function() {
     'use strict';
-    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdDialog', '$stateParams', '$state', ChatController]);
+    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$anchorScroll', '$location', '$mdDialog', '$stateParams', '$state', ChatController]);
 
-    function ChatController(messageService, groupService, chatService, userService, $mdDialog, $stateParams, $state) {
+    function ChatController(messageService, groupService, chatService, userService, $anchorScroll, $location, $mdDialog, $stateParams, $state) {
         var that = this;
         var user = userService.getCurrentUser();
         this.setFocus = function() {
@@ -18,25 +18,36 @@
                 $state.go('user.create-channels', {groupID: that.groupID});
             }
         };
-        this.viewChannelMessages = function(channel) {
-            that.activeChannelID = channel.$id;
-            that.activeTitle = channel.title;
+        this.gotoChannel = function(channel){
             if (that.subgroupID) {
-                that.messagesArray = chatService.getTeamChannelMessagesArray(that.groupID, that.subgroupID, channel.$id);
+                $state.go('user.group.subgroup-chat', {channelID : channel.$id, channelTitle: channel.title});
             } else {
-                that.messagesArray = chatService.getChannelMessagesArray(that.groupID, channel.$id);
+                $state.go('user.group.chat', {channelID : channel.$id, channelTitle: channel.title});
             }
+        };
+        this.viewChannelMessages = function(channelID) {
+            if (that.subgroupID) {
+                that.messagesArray = chatService.getTeamChannelMessagesArray(that.groupID, that.subgroupID, channelID);
+            } else {
+                that.messagesArray = chatService.getChannelMessagesArray(that.groupID, channelID);
+            }
+        };
+        this.ScrollToMessage = function() {
+            var element = document.getElementById('messagebox');
+            element.scrollTop = element.scrollHeight - element.clientHeight;
         };
         this.SendMsg = function() {
             if (that.subgroupID) {
                 chatService.TeamSendMessages(that.groupID, that.subgroupID, that.activeChannelID, user, that.text).then(function() {
                     that.text.msg = "";
+                    that.ScrollToMessage();
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });
             } else {
                 chatService.SendMessages(that.groupID, that.activeChannelID, user, that.text).then(function() {
                     that.text.msg = "";
+                    that.ScrollToMessage();
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });
@@ -61,7 +72,7 @@
         };
         function init(){
             groupService.setActivePanel('chat');
-            groupService.setSubgroupIDPanel($stateParams.subgroupID)
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             if (that.subgroupID) {
@@ -75,6 +86,12 @@
             that.messagesArray = [];
             that.profilesCacheObj = {};
             that.text = { msg: "" };
+            that.activeChannelID = $stateParams.channelID;
+            that.activeTitle = $stateParams.channelTitle;
+            if (that.activeChannelID) {
+                that.viewChannelMessages(that.activeChannelID);
+            }
+            that.ScrollToMessage();
         }
         init();
 

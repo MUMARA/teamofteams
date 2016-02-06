@@ -73,7 +73,7 @@
                 views: {
                     'nav': navToolbar,
                     'main': {
-                        template: '<div ui-view></div>'
+                        template: '<ui-view></ui-view>'
                     }
                 },
                 resolve: {
@@ -166,13 +166,13 @@
                 controllerAs: 'progressreport',
             });
             $stateProvider.state('user.group.chat', {
-                url: '/tab/chat',
+                url: '/tab/chat?channelID?channelTitle',
                 templateUrl: 'components/chat/chat.html',
                 controller: 'ChatController',
                 controllerAs: 'chat',
             });
             $stateProvider.state('user.group.subgroup-chat', {
-                url: '/:subgroupID/tab/chat',
+                url: '/:subgroupID/tab/chat?channelID?channelTitle',
                 templateUrl: 'components/chat/chat.html',
                 controller: 'ChatController',
                 controllerAs: 'chat',
