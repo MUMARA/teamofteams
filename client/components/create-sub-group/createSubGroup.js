@@ -5,10 +5,10 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController($firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController(policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -243,6 +243,7 @@
 
         this.selectedMemberSave = function(){
             if(that.becomeMember.length > 0){
+                var membersIDarray = [];    //for policy
                 that.becomeMember.forEach(function(userObj,index){
                     
                     var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
@@ -252,6 +253,14 @@
 
                     //for coluser checking
                     saveMemberToFirebase(user, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData);
+
+                    membersIDarray.push(userObj.$id);
+                    //checking if team has policy then assigned policy to member
+                    if(that.becomeMember.length == index+1){
+                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg){
+
+                        })
+                    }
                     
                 }) //that.becomeMember.forEach
             } //if
@@ -281,7 +290,7 @@
 
         this.selectedAdmin = function(newType, member) {
             var obj = {type: newType, member: member};
-
+            console.log('admin',obj);
             var _flag = true;
 
             //if(that.memberss.length > 0) {
@@ -309,6 +318,7 @@
 
         this.selectedAdminSave = function(){
             if(that.becomeAdmin.length > 0){
+                var membersIDarray = [];    //for policy
                 that.becomeAdmin.forEach(function(val,index){
                     
                     var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
@@ -318,6 +328,14 @@
 
                     //for coluser checking
                     saveAdminToFirebase(val.type, val.member, groupID, that.activeID);
+
+                    membersIDarray.push(val.member.userID);
+                    //checking if team has policy then assigned policy to member
+                    if(that.becomeMember.length == index+1){
+                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg){
+
+                        })
+                    }
                 }) //that.becomeMember.forEach
             } //if
         }; //selectedAdminSave

@@ -40,6 +40,7 @@ angular.module('core')
             var loggedUserRef = null;
             var policies = null;
             var userPolicies = null;
+            var dailyProgressReport = null;
             
             return {
                 addUpdateHandler: function() {
@@ -151,6 +152,9 @@ angular.module('core')
                 getRefUserPolicies: function() {
                     return userPolicies;
                 },
+                getRefDailyProgressReport: function() {
+                    return dailyProgressReport;
+                },
                 asyncLogin: function(userID, token) {
                     var deferred = $q.defer();
                     if (token) { // means user logged in from web server
@@ -193,6 +197,7 @@ angular.module('core')
                                 flattenedGroups = ref.child("flattened-groups");
                                 policies = ref.child("policies");
                                 userPolicies = ref.child("user-policies");
+                                dailyProgressReport = ref.child('daily-progress-report-by-users');
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.

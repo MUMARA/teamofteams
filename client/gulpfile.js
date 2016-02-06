@@ -16,6 +16,12 @@ gulp.task("minifying", function() {
             "./coreModules/core.module.js",
             "./coreModules/firebase-as-array.js",
             "./components/user/userService.js",
+            "./components/activity/activity.js",
+            "./components/report/report.js",
+            "./components/chat/chat.js",
+            "./components/manualattendace/manualattendace.js",
+            "./components/progressreport/progressreport.js",
+            "./components/progressreport/progressreportService.js",
             "./components/user/user.js",
             "./components/group/groupService.js",
             "./components/group/group.js",
@@ -84,12 +90,12 @@ gulp.task("minifying", function() {
 
 
 // gulp.task("minifying", function(){
-//     gulp.src([  "./checkin/**/*.js", 
-//                 "./components/**/*.js", 
-//                 //"./config/**/*.js", 
-//                 "./coreModules/**/*.js", 
-//                 "./directives/**/*.js", 
-//                 "./services/**/*.js", 
+//     gulp.src([  "./checkin/**/*.js",
+//                 "./components/**/*.js",
+//                 //"./config/**/*.js",
+//                 "./coreModules/**/*.js",
+//                 "./directives/**/*.js",
+//                 "./services/**/*.js",
 //                 "./app-dev.js", "./router.es5.js"
 //                 ])
 //     .pipe(concat('all.js'))

@@ -24,7 +24,12 @@
         'app.userSetting',
         'app.geoFencing',
         'app.quiz',
-        'app.policy'
+        'app.policy',
+        'app.activity',
+        'app.report',
+        'app.manualattendace',
+        'app.progressreport',
+        'app.chat'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',

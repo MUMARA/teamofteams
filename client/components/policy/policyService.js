@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by Mehmood on 5/21/2015.
  */
 (function() {
@@ -47,8 +47,8 @@
 			function setGroupPolicies(groupID) {
                 groupPolicies = [];
                 firebaseService.getRefPolicies().child(groupID).on('child_added', function(subGroups, prevChildKey) {
-                    console.log(subGroups.key());
-                    console.log(subGroups.val());
+                    // console.log(subGroups.key());
+                    // console.log(subGroups.val());
                     groupPolicies.push(subGroups.val());
                 });
                 // firebaseService.getRefPolicies().child(groupID).on('value', function(subGroups, prevChildKey) {
@@ -67,7 +67,7 @@
 			//Getting Policies by given GroupID --END --
 
 			//Save data in firebase using Multi-Path 	-- START --
-			function answer(obj, groupID, selectedTeams, selectedTeamMembers, cb, policyID) {
+			function answer(obj, groupID, selectedTeams, selectedTeamMembers, policyID, cb) {
 				//refernce Object
                 var refNodes = { ref: firebaseService.getRefMain(),
                                  policies: firebaseService.getRefPolicies()
@@ -98,15 +98,30 @@
                     //add property hasPolicy in subgroupNames..
                     multiPathUpdate["subgroups-names/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
                     multiPathUpdate["subgroups-names/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+
+                    //add policy into subgroup-locations-defined
+                    // if(obj.locationBased){
+                    //     var tmpObj = obj;
+                    //     tmpObj["location"] = obj.location;
+                    //     tmpObj["subgroup-url"] = groupID+"/"+val.subgroupID;
+                    //     tmpObj["type"] = 1
+                    //     delete tmpObj["location"];
+                    //     delete tmpObj["schedule"];
+                    //     delete tmpObj["timeBased"];
+                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey] = tmpObj;
+                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey+"/title"] = obj.location.title || '';
+                    // }
                 }); //selectedTeams.forEach
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
-                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
+                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = newPolicyKey;
+                        //multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
 
@@ -124,12 +139,68 @@
 			}
 			//Save data in firebase using Multi-Path	-- END --
 
+            //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
+
+            //Step1 checking Subgroup has Policy
+            function checkingTeamHasPolicy(groupID, subgroupID, cb){
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot){
+                    if(snapshot.val() && snapshot.val().hasPolicy && snapshot.val().hasPolicy == true){
+                        cb(snapshot.val().hasPolicy, snapshot.val().policyID);
+                    } else {
+                        cb(false, null);
+                    }
+                });
+
+            } //checkingTeamHasPolicy
+            //Step2 if has policy then assign policy to single member else nuthing
+            function assignTeamPolicyToMember(memeberID, groupID, subgroupID, cb) {
+                checkingTeamHasPolicy(groupID, subgroupID, function(hasPolicy, policyID) {
+                    if(hasPolicy){
+                        //set policy to member
+                        firebaseService.getRefMain().child('user-policies').child(memeberID).child(groupID).child(subgroupID).set(policy.val(),function(err){
+                            if(err){
+                                cb(false, err);
+                            }
+                            cb(true, null);
+                        });
+                    } else {
+                        cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
+                    }
+                });
+            }//assignTeamPolicyToMember
+            //Step2 if has policy then assign policy to multiple members else nuthing
+            function assignTeamPolicyToMultipleMembers(memeberIDarray, groupID, subgroupID, cb) {
+                checkingTeamHasPolicy(groupID, subgroupID, function(hasPolicy, policyID) {
+                    if(hasPolicy){
+                        var multiPathUpdate = {};
+                        memeberIDarray.forEach(function(val, index){
+
+                            multiPathUpdate["user-policies/"+val+"/"+groupID+"/"+subgroupID] = policyID;
+                            
+                            if(memeberIDarray.length == index+1){
+                                firebaseService.getRefMain().update(multiPathUpdate, function(err){
+                                     if(err){
+                                        cb(false, err);
+                                    }
+                                    cb(true, null);
+                                });
+                            }   //array length is equal to foreach index
+                        }); //memeberIDarray.forEach
+                    } else {
+                        cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
+                    }
+                });
+            }//assignTeamPolicyToMultipleMembers
+            //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
+
 
             return {
                 getSubGroupNames: 	getSubGroupNames,
                 getSubGroupMembers: getSubGroupMembers,
                 getGroupPolicies: 	getGroupPolicies,
-                answer: 			answer
+                answer: 			answer,
+                assignTeamPolicyToMember: assignTeamPolicyToMember,
+                assignTeamPolicyToMultipleMembers: assignTeamPolicyToMultipleMembers
             }
         }]);
 

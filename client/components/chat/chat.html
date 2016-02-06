@@ -1,0 +1,123 @@
+<div layout="row">
+    <!--chat side-->
+    <div class="viewHeight-64 backColorWhite md-whiteframe-z2" layout="column" layout-align="space-between start" flex>
+        <div style="width: 100%;">
+            <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
+                <h4 class="leftmargin20px">{{chat.activeTitle | uppercase}}</h4>
+                <div layout="row" flex="50">
+                    <md-input-container md-no-float class="nopadding nomargin" flex layout="row" layout-align="center">
+                        <input type="text" id="#UserSearch" ng-model="chat.searchbox" aria-label="search dashboard" class="serachbox2">
+                    </md-input-container>
+                    <ng-md-icon icon="search" size="36" class="nooutline fillColorLightGrey rightmargin20px" ng-click="chat.setFocus()"></ng-md-icon>
+                </div>
+            </div>
+            <md-divider md-outset></md-divider>
+            <div layout="column" class="backColorWhite viewHeight-250 vscroll" id="messagebox">
+                <div class="leftrightpadding20px" ng-repeat="message in chat.messagesArray">
+                    <!-- Msg To -->
+                    <div ng-if="!chat.filterchatters(message.from)">
+                        <div class="chatheader" layout="row">
+                            <div class="chatheaderClear"></div>
+                            <div class="chatheaderTitle backColorLightSeaGreen">
+                                {{chat.getUserProfile(message.from).firstName + ' '+ chat.getUserProfile(message.from).lastName}}
+                            </div>
+                            <div class="chatheaderTime backColorDarkSeaGreen">
+                                {{message.timestamp | date: 'shortTime'}}
+                            </div>
+                        </div>
+                        <img ng-src="{{chat.getUserProfile(message.from)['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound chatuserimg" />
+                        <div class="backColorSeaGreen chatmsg padding10px">
+                            <span ng-bind-html="message.text | multilineFilter"></span>
+                        </div>
+                    </div>
+                    <!-- Msg From  -->
+                    <div ng-if="chat.filterchatters(message.from)" layout="column" layout-align="end end">
+                        <div class="chatheaderRight" layout="row">
+                            <div class="chatheaderTimeRight backColorDarkSeaGreen">
+                                {{message.timestamp | date: 'shortTime'}}
+                            </div>
+                            <div class="chatheaderTitleRight backColorLightSeaGreen">
+                                {{chat.getUserProfile(message.from).firstName + ' '+ chat.getUserProfile(message.from).lastName}}
+                            </div>
+                            <div class="chatheaderClearRight"></div>
+
+                        </div>
+                        <img ng-src="{{chat.getUserProfile(message.from)['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound chatuserimgRight" />
+                        <div class="backColorSeaGreen chatmsgRight padding10px">
+                            <span ng-bind-html="message.text | multilineFilter"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%;">
+            <form name="chatForm" novalidate ng-submit="chat.SendMsg()" layout="row" layout-align="center center"
+            layout-padding>
+                <md-input-container flex style="border: 1px solid lightgrey;" class="backColorLightGrey2 nopadding" layout="row" layout-align="start center">
+                    <div style="border-right: 1px solid lightgrey;">
+                        <img src="img/arrow.svg" class="icon20px padding10px">
+                    </div>
+                    <textarea type="text" name="msg" ng-model="chat.text.msg" aria-label="Team of Teams Text Msg Box" class="serachbox2" required></textarea>
+                </md-input-container>
+                <md-button type="submit" ng-disabled="chatForm.msg.$invalid || !chat.activeChannelID" class="backColorSeaGreen foreColorWhite">SEND</md-button>
+            </form>
+        </div>
+    </div>
+    <!--online side-->
+    <div class="viewHeight-64" style="max-width:400px;width:400px;min-width:400px">
+        <md-card class="nomargin" layout-fill>
+            <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
+            <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
+                <!--channel side-->
+                <md-tab label="channels" class="rightTbs">
+                    <md-content ng-repeat="channel in chat.channels track by $index">
+                        <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+                            <md-list-item class="md-3-line selectable" ng-click="chat.gotoChannel(channel)">
+                                <div class="md-list-item-text" style="padding:0px;">
+                                    <ng-md-icon icon="more_vert" style="float: right;padding-top: 18px;fill: #FFFFFF;"></ng-md-icon>
+                                    <span style="font-size: 13px; color: #ffffff;">{{channel.title | uppercase}}</span>
+                                    <p style="font-size: 10px;margin-top: -12px;color: #ffffff">
+                                        {{ channel.desc }}
+                                    </p>
+                                    <!-- <div style="float:right; padding-right: 20px; font-size: 12px; color:#3b637a">
+                                        <span style="color: #1F7396">
+                                                Members : <span style="color:#ffffff">{{ channel.members }}</span>
+                                        </span>
+                                        <span style="color: #1F7396">
+                                                Online : <span style="color:#ffffff">{{ channel.online }}</span>
+                                        </span>
+                                    </div> -->
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </md-content>
+                </md-tab>
+                <!--Private group side-->
+                <md-tab label="Private groups" class="rightTbs">
+                    <md-content>
+                    </md-content>
+                </md-tab>
+                <!--direct message side-->
+                <md-tab label="Direct Messages" class="rightTbs">
+                    <md-content class="grayScroller">
+                        <md-list style="padding: 0px 0px 5px 0px;!important;position: relative" ng-class="$index%2==0 ? 'moh' : 'sin'" ng-repeat="member in chat.members track by $index">
+                            <span ng-class="$index%3==0 ? 'statusOnline' : 'statusOffline'"></span>
+                            <md-list-item class="md-1-line selectable" layout-align="space-between center">
+                                <div layout="row" layout-align="space-between center">
+                                    <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar leftmargin10px"/>
+                                    <h4 style="color:#ffffff;">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</h4>
+                                </div>
+                                <md-button class="md-icon-button" aria-label="More">
+                                    <md-icon md-svg-icon="img/ring.svg" class="fillColorWhite"></md-icon>
+                                </md-button>
+                            </md-list-item>
+                        </md-list>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+            <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="chat.showNewChannel($event)" layout-align="center center">
+                <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
+            </md-button>
+        </md-card>
+    </div>
+</div>
