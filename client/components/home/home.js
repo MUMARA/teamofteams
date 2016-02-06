@@ -9,7 +9,7 @@
         .module('app.home', [])
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['authService', 'userService', "$state"]
+    HomeController.$inject = ['authService', 'userService', "$state"];
 
     function HomeController(authService, userService, $state) {
 

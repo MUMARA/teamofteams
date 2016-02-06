@@ -26,7 +26,7 @@
 
                                     messageService.showSuccess("Team creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
-                                    $location.path('/' + groupID);
+                                    // $location.path('/' + groupID);
                                     messageService.showSuccess("Team creation Successful...");
                                     $rootScope.newImg = null;
                                 }
@@ -119,7 +119,7 @@
                                 ///subgroupNames_.set(subgroupInfo.title, function(error) { console.log(error); });
 
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
-                                subgroupNameRef = subgroupRef.title;
+                                subgroupNameRef.title = subgroupRef.title;
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();
@@ -129,7 +129,7 @@
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");
-                                    })    
+                                    })
                                 }, function(group) {
                                     cb();
                                     // groupForm.$submitted = false;
@@ -144,9 +144,9 @@
                                 }
                             });
                         }
-                        
 
-                        
+
+
 
 
                         /*                        $subgroupRef.update({
@@ -243,7 +243,7 @@
                                     // console.log(userData.val());
                                     // console.log(snapshot.val());
                                     groupAdminUsers.push(userData.val());
-                                    cb(groupAdminUsers);    
+                                    cb(groupAdminUsers);
                                 }
 
                             })
@@ -262,10 +262,10 @@
                                     }) //groupAdminUsers.forEach
 
                                     if(_flag){
-                                        cb(groupAdminUsers);        
+                                        cb(groupAdminUsers);
                                     } else{
                                         groupAdminUsers.push(userData.val());
-                                        cb(groupAdminUsers);        
+                                        cb(groupAdminUsers);
                                     }
                                 }
 
@@ -277,7 +277,7 @@
                         // var deleteUserMemberShip = {};
                         // deleteUserMemberShip["user-subgroup-memberships/"+userID+"/"+groupID+"/"+subgroupID+"/"] = null;
                         // deleteUserMemberShip["subgroup-members/"+groupID+"/"+subgroupID+"/"+userID+"/"] = null;
-                        // deleteUserMemberShip["subgroups/"+groupID+"/"+subgroupID+"/"] = { 
+                        // deleteUserMemberShip["subgroups/"+groupID+"/"+subgroupID+"/"] = {
                         //     "members-count": submembers-1
                         // };
 
@@ -305,7 +305,7 @@
 
                             });
                         });
-                        
+
 
 
                     } //DeleteUserMemberShip

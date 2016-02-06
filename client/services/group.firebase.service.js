@@ -321,9 +321,10 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
+                                    var subgroupNames = {title: subgroupInfo.title, hasPolicy: false};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
-                                    groupNameRef.set(subgroupInfo.title, function(error) {
+                                    groupNameRef.set(subgroupNames,  function(error) {
                                         if (error) {
                                             deferred.reject();
                                             //role back previous
