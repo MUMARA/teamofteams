@@ -18,7 +18,7 @@ rulesSuite("Team of Teams Tests", function(test) {
   var pathforUserGroupMembershipUIDGroupId = '/user-group-memberships/' + uId + "/" + groupid
   
  //Create Team of Teams with User
-
+/*
  test("Team of Teams write Test with User", function(rules){
      rules
           .as("admin")
@@ -1845,6 +1845,223 @@ test("Group Members read test with unauth" ,function(rules){
             .read()
             .fails("other Auth User cannot read other group member")
           })
+
+//group-activity-streams read with auth user
+
+test("group-activity-streams read with auth user", function(rules) {
+  
+   rules
+          .as("admin")
+          .at(pathforUserUserID)
+          .write({
+              email           : "arsalan@panacloud.com",
+              firstName       : "Arsalan",
+              lastName        : "Rajput",
+              "date-created"  : test.TIMESTAMP,
+              status          : 0
+         })
+         .succeeds("User successfully Created")
+         //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+         .write({
+             "membership-type": 1,
+             "timestamp": test.TIMESTAMP
+         })
+         
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+        
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         }).succeeds("Group Members Created")
+              
+         .as("arsalan")
+         .at(pathforGroupGroupID)
+         
+         .write({
+             privacy : { 
+                 invitationType : 1 
+             },
+             "members-checked-in" : { 
+                 count    : 0
+             },
+             title : "Hello",
+             timestamp : test.TIMESTAMP,
+             "members-count" : 1,
+             "subgroups-count" : 0,
+             timeZone : "12345",
+             phone    : "124542124612225",
+             "owner-img-url" : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode    :    "1"
+             
+         })
+         .succeeds("Any authanticated user can create group")
+          
+          .as('arsalan')
+          .at('/group-activity-streams/' +groupid)
+          .read()
+          .succeeds("group-activity-streams read with auth user")
+ 
+})
+*/
+
+//group-activity-streams read with unauth user
+
+test("group-activity-streams read with unauth user", function(rules) {
+  
+   rules
+          .as("admin")
+          .at(pathforUserUserID)
+          .write({
+              email           : "arsalan@panacloud.com",
+              firstName       : "Arsalan",
+              lastName        : "Rajput",
+              "date-created"  : test.TIMESTAMP,
+              status          : 0
+         })
+         .succeeds("User successfully Created")
+         //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+         .write({
+             "membership-type": 1,
+             "timestamp": test.TIMESTAMP
+         })
+         
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+        
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         }).succeeds("Group Members Created")
+              
+         .as("arsalan")
+         .at(pathforGroupGroupID)
+         
+         .write({
+             privacy : { 
+                 invitationType : 1 
+             },
+             "members-checked-in" : { 
+                 count    : 0
+             },
+             title : "Hello",
+             timestamp : test.TIMESTAMP,
+             "members-count" : 1,
+             "subgroups-count" : 0,
+             timeZone : "12345",
+             phone    : "124542124612225",
+             "owner-img-url" : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode    :    "1"
+             
+         })
+         .succeeds("Any authanticated user can create group")
+          
+          .as('anon')
+          .at('/group-activity-streams/' +groupid)
+          .read()
+          .fails("group-activity-streams read with unauth user")
+ 
+})
+
+
+
+//group-activity-streams read with unauth user
+
+test("group-activity-streams read with unauth user", function(rules) {
+  
+   rules  
+          .as("admin")
+          .at(pathforUserUserID)
+          .write({
+              email           : "arsalan@panacloud.com",
+              firstName       : "Arsalan",
+              lastName        : "Rajput",
+              "date-created"  : test.TIMESTAMP,
+              status          : 0
+         })
+         .succeeds("User successfully Created")
+         
+          .as("admin")
+          .at(pathforUserUserID)
+          .write({
+              email           : "arsalan@panacloud.com",
+              firstName       : "Arsalan",
+              lastName        : "Rajput",
+              "date-created"  : test.TIMESTAMP,
+              status          : 0
+         })
+         .succeeds("User successfully Created")
+         
+         //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+         .write({
+             "membership-type": 1,
+             "timestamp": test.TIMESTAMP
+         })
+         
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+        
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         }).succeeds("Group Members Created")
+              
+         .as("arsalan")
+         .at(pathforGroupGroupID)
+         
+         .write({
+             privacy : { 
+                 invitationType : 1 
+             },
+             "members-checked-in" : { 
+                 count    : 0
+             },
+             title : "Hello",
+             timestamp : test.TIMESTAMP,
+             "members-count" : 1,
+             "subgroups-count" : 0,
+             timeZone : "12345",
+             phone    : "124542124612225",
+             "owner-img-url" : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
+             signupMode    :    "1"
+             
+         })
+         .succeeds("Any authanticated user can create group")
+          
+          .as('anon')
+          .at('/group-activity-streams/' +groupid)
+          .read()
+          .fails("group-activity-streams read with unauth user")
+ 
+})
+
 
 
 
