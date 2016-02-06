@@ -39,6 +39,11 @@
             this.shiftToUserPage = shiftToUserPage;
             //this.doChange = doChange;
             this.updateStatus = updateStatus;
+
+            //if report not submitted show switchMsg
+            this.isDailyProgessSubmit = false;
+            this.todayDate = Date.now();
+
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
@@ -217,9 +222,42 @@
               };
             }
             //Show Dailogue Box for Daily Report Questions -- END --
-
-
+            
             function updateStatus(group, checkoutFlag, event) {
+                var groupObj = {};
+                self.checkinSending = true;
+                if(group){
+                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID};
+                } else {
+                     groupObj = {
+                        groupId: self.showUrlObj.groupID,
+                        subgroupId: self.showUrlObj.subgroupID,
+                        userId: self.showUrlObj.userID
+                    }
+                }
+                
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted){
+                    if(result){
+                        self.checkinSending = false;
+                        if(checkoutFlag){
+                            messageService.showSuccess('Checkout Successfully!');    
+                            if(isSubmitted){
+                                self.switchCheckIn = true;
+                                self.switchMsg = true;
+                                self.isDailyProgessSubmit = true;
+                            } 
+                        } else {
+                            self.checkinSending = false;
+                            messageService.showSuccess('Checkin Successfully!');
+                        }
+                    } else {
+                        self.checkinSending = false;
+                        messageService.showFailure(msg);
+                    }  
+                });
+            }
+
+            function updateStatus1(group, checkoutFlag, event) {
                 // console.log('group', group)
                 // console.log('checkoutFlag', checkoutFlag)
                 self.checkinSending = true;
@@ -232,8 +270,8 @@
                         self.currentLocation = { lat: location.coords.latitude, lng: location.coords.longitude };
 
                         if(group) { //if group (on checkin)
-                            checkingHasPolicy(group.pId, group.subgroupId, function(result) {
-                                if(result){ //if has policy
+                            checkinService.subgroupHasPolicy(group.pId, group.subgroupId, function(hasPolicy, Policy) {
+                                if(hasPolicy){ //if has policy
                                     // console.log('hasPolicy', true)
                                     checkinPolicy(function(){
                                         updateHelper(group, false, event, function(bool){
@@ -256,7 +294,32 @@
                                         }
                                     });
                                 }
-                            }); // checkingHasPolicy 
+                            })
+                            // checkingHasPolicy(group.pId, group.subgroupId, function(result) {
+                            //     if(hasPolicy){ //if has policy
+                            //         // console.log('hasPolicy', true)
+                            //         checkinPolicy(function(){
+                            //             updateHelper(group, false, event, function(bool){
+                            //                 if(bool) {
+                            //                     chekinSwitch(group, false);
+                            //                     messageService.showSuccess('Checkin Successfully!');    
+                            //                 } else {
+                            //                     messageService.showFailure('Please contact to your administrator');
+                            //                 }
+                            //             });
+                            //         });
+                            //     } else {    //if no policy
+                            //         // console.log('hasPolicy', false)
+                            //         updateHelper(group, false, event, function(bool){
+                            //             if(bool){
+                            //                 chekinSwitch(group, false);
+                            //                 messageService.showSuccess('Checkin Successfully!');    
+                            //             } else {
+                            //                 messageService.showFailure('Please contact to your administrator');
+                            //             }
+                            //         });
+                            //     }
+                            // }); // checkingHasPolicy 
                         } else {    //if no group (on checkout)
                             // console.log('Checkout', true)
                             updateHelper(false, true, event, function(bool){
@@ -280,6 +343,24 @@
                     }
                 }); //checkinService.getCurrentLocation()
             } // updateStatus
+
+            this.laterReport = function(){
+                self.checkout = false;
+                self.checkinSending = false;
+                self.switchMsg = false;
+                self.isDailyProgessSubmit = false;
+                self.switchCheckIn = false;
+            }
+            this.submitReport = function(){
+                //self.showUrlObj.userID 
+                //self.showUrlObj.groupID
+                //self.showUrlObj.subgroupID
+                //$location
+                self.switchCheckIn = false;
+                self.switchMsg = false;
+                self.isDailyProgessSubmit = false;
+                $state.go('user.group.subgroup-progressreport', {groupID: 'hotmaill', subgroupID: 'hotemail', u: true});
+            }
 
             function checkinPolicy(callback) {
                 if(self.subGroupPolicy.locationBased) {  //checking if location Based
@@ -374,23 +455,26 @@
                     }
                 }
 
-                //checking daily progress report is exists or not -- START --
-                firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').orderByChild('date')
-                .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
-                    console.log(snapshot.val());            
-                    if(snapshot.val() == null){
-                        //if null then show alert for add daily progress report
-                        self.showAdvanced(event); //show dailogue box for getting progress report
-                        //add/updatcde in firebase...
-                        updateFirebase(groupObj, checkoutFlag, cb);
-                    } else {
-                        //add/update in firebase...
-                        updateFirebase(groupObj, checkoutFlag, cb);
-                    }
-                });
-                //checking daily progress report is exists or not -- END -- 
+                // //checking daily progress report is exists or not -- START --
+                // firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').orderByChild('date')
+                // .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
+                //     console.log(snapshot.val());            
+                //     if(snapshot.val() == null){
+                //         //if null then show alert for add daily progress report
+                //         self.showAdvanced(event); //show dailogue box for getting progress report
+                //         //add/updatcde in firebase...
+                //         checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, cb);
+                //         //updateFirebase(groupObj, checkoutFlag, cb);
+                //     } else {
+                //         //add/update in firebase...
+                //         //updateFirebase(groupObj, checkoutFlag, cb);
+                //         checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, cb);
+                //     }
+                // });
+                // //checking daily progress report is exists or not -- END -- 
 
                 //add/update in firebase...
+                checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, self.currentLocation, cb);
                 //updateFirebase(groupObj, checkoutFlag, cb);
 
             } //updateHelper

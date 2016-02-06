@@ -14,27 +14,27 @@
                 var user = userService.getCurrentUser();
                 this.adminOf = '';
                 this.groupID = $stateParams.groupID;
-                this.subgroupID = $stateParams.subgroupID
+                this.subgroupID = $stateParams.subgroupID;
                 this.reqObj = {
                     groupID: that.groupID,
                     message: "Please add me in your group."
                 };
                 this.selectedindex = false;
                 that.activesubID = false;
-                
+
                 this.setFocus = function() {
                     document.getElementById("#UserSearch").focus();
-                }
+                };
 
                 this.openSetting = function() {
                     if (that.adminOf === 'Group') {
                         // $location.path('user/group/' + that.groupID + '/edit-group');
-                        $state.go('user.edit-group', {groupID: that.groupID})
+                        $state.go('user.edit-group', {groupID: that.groupID});
                     } else if (that.adminOf === 'Subgroup') {
                         // $location.path('/user/group/' + that.groupID + '/geoFencing');
-                        $state.go('user.geo-fencing', {groupID: that.groupID})
+                        $state.go('user.geo-fencing', {groupID: that.groupID});
                     }
-                }
+                };
 
                 function activate(){
                     that.userObj = groupService.getOwnerImg(that.groupID);
@@ -45,10 +45,10 @@
                 if (this.subgroupID) {
                     firebaseService.getRefSubGroupsNames().child(that.groupID).child(this.subgroupID).once('value', function(subg){
                         if (subg.val()) {
-                            that.reqObj['subgroupID'] = subg.key();
-                            that.reqObj['subgrouptitle'] = (subg.val() && subg.val().title) ? subg.val().title : false;
+                            that.reqObj.subgroupID = subg.key();
+                            that.reqObj.subgrouptitle = (subg.val() && subg.val().title) ? subg.val().title : false;
                         }
-                    })
+                    });
                 }
                 firebaseService.getRefUserSubGroupMemberships().child(user.userID).child(this.groupID).once('value', function(subgroups){
                     for (var subgroup in subgroups.val()) {
@@ -56,11 +56,11 @@
                             isOwner = true;
                             isAdmin = true;
                             isMember = true;
-                            that.adminOf = 'Subgroup'
+                            that.adminOf = 'Subgroup';
                         } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
                             isAdmin = true;
                             isMember = true;
-                            that.adminOf = 'Subgroup'
+                            that.adminOf = 'Subgroup';
                         } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
                             isMember = true;
                         }
@@ -76,11 +76,11 @@
                             isOwner = true;
                             isAdmin = true;
                             isMember = true;
-                            that.adminOf = 'Group'
+                            that.adminOf = 'Group';
                         } else if (that.groupSyncObj.membershipType == 2) {
                             isAdmin = true;
                             isMember = true;
-                            that.adminOf = 'Group'
+                            that.adminOf = 'Group';
                         } else if (that.groupSyncObj.membershipType == 3) {
                             isMember = true;
                         }
@@ -88,12 +88,12 @@
                             activate();
                         }
                     });
-                })
+                });
 
                 this.sendRequest = function(){
                     joinGroupService.joinGroupRequest(that.reqObj, function(){});
-                }
-                
+                };
+
                 this.isOwner = function() {
                     return isOwner;
                 };
@@ -113,21 +113,21 @@
 
                 this.activeTitle = 'Select Channel to Start Chat';
                 this.activeChannelID = null;
-                that.activeTeamChannelID;
+                this.activeTeamChannelID = null;
                 this.messagesArray = [];
-                
+
                 this.subgrouppage = function(subgroup1, index) {
-                    $state.go('user.group.subgroup-' + that.activePanel, {groupID: that.groupID, subgroupID: subgroup1.$id});
-                    that.showPanel(that.activePanel);
+                    $state.go('user.group.subgroup-' + that.panel.active, {groupID: that.groupID, subgroupID: subgroup1.$id});
+                    that.showPanel(that.panel.active);
 
                     // that.selectedindex = index;
                     // that.activesubID = subgroup1.$id;
                     // if (that.activePanel === 'chat') {
-                    //     that.channels = chatService.geTeamChannelsSyncArray(that.groupID, that.activesubID);    
-                    // } else {                        
+                    //     that.channels = chatService.geTeamChannelsSyncArray(that.groupID, that.activesubID);
+                    // } else {
                     //     that.GetSubGroupUsers(subgroup1, index)
                     // }
-                }
+                };
 
                 /*this is group chatting controller start ----------------------------------------------------------------*/
 
@@ -141,7 +141,7 @@
                           .cancel('Team of Teams');
                     $mdDialog.show(confirm).then(function() {
                         if (that.activesubID) {
-                            $state.go('user.create-teams-channels', {groupID: that.groupID, teamID: that.activesubID})
+                            $state.go('user.create-teams-channels', {groupID: that.groupID, teamID: that.activesubID});
                         } else {
                             $mdDialog.show(
                               $mdDialog.alert()
@@ -155,15 +155,15 @@
                             );
                         }
                     }, function() {
-                        $state.go('user.create-channels', {groupID: that.groupID})
+                        $state.go('user.create-channels', {groupID: that.groupID});
                     });
                 };
 
-                
+
 
                 this.text = {
                     msg: ""
-                }
+                };
                 this.profilesCacheObj = {};
 
                 // for viewing channel msgs
@@ -179,7 +179,7 @@
 
                 };
 
-                
+
                 this.filterchatters = function(chatterID) {
                         var sender = false;
 
@@ -188,7 +188,7 @@
                         }
 
                         return sender;
-                    }
+                    };
                     // for getting user obj
                 this.getUserProfile = function(userID) {
                     var profileObj;
@@ -215,7 +215,7 @@
 
                     }, function(reason) {
                         messageService.showFailure(reason);
-                    })
+                    });
 
                 };
 
@@ -242,65 +242,51 @@
 
                     }, function(reason) {
                         //  messageService.showFailure(reason);
-                    })
+                    });
 
                 };
                 // Start Team Attendance
                 //update status when user checked-in or checked-out
                 this.users = [];
-                this.showActivity = false;
-                this.showReport = false;
-                this.showChat = false;
-                this.showManualAttendace = false;
                 this.showParams = true;
                 this.processTeamAttendance = false;
-                this.activePanel = 'activity';
-                this.activesubgroupID = '';
+                this.panel = groupService.getPanelInfo();
                 this.showPanel = function(pname, subgroupID) {
                     if(pname === 'report') {
-                        that.showReport = true; 
-                        that.activePanel = 'report';
-                    } else {
-                        that.showReport = false;
+                        groupService.setActivePanel('report');
                     }
                     if(pname === 'activity') {
-                        that.showActivity = true; 
-                        that.activePanel = 'activity';
-                    } else {
-                        that.showActivity = false;
+                        groupService.setActivePanel('activity');
                     }
                     if (pname === 'chat') {
-                        that.showChat = true; 
-                        that.activePanel = 'chat';
-                    } else {
-                        that.showChat = false;
+                        groupService.setActivePanel('chat');
                     }
                     if (pname === 'manualattendace') {
-                        that.showManualAttendace = true;
-                        that.activePanel = 'manualattendace';
-                    } else {
-                        that.showManualAttendace = false;
+                        groupService.setActivePanel('manualattendace');
                     }
-                    that.activesubgroupID = subgroupID;
-                    if(that.activesubgroupID){                         
-                        $state.go('user.group.subgroup-' + that.activePanel, {groupID: that.groupID, subgroupID: that.activesubgroupID});
-                    } else {
-                        $state.go('user.group.' + that.activePanel, {groupID: that.groupID});
+                    if(pname === 'progressreport') { 
+                        groupService.setActivePanel('progressreport');
                     }
-                }
+                    that.panel.subgroupID = subgroupID;
+                    if(that.panel.subgroupID){
+                        $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {groupID: that.groupID, subgroupID: that.panel.subgroupID});
+                    } else {
+                        $state.go('user.group.' + (that.panel.active || 'activity'), {groupID: that.groupID});
+                    }
+                };
 
-                
-             
+
+
                 this.report = [];
                 this.reportParam = {};
                 this.showReportData = function (user) {
                     this.report = [];
                     that.showParams = false;
-                    this.count = -1
+                    this.count = -1;
                     that.reportParam = {
                         fullName: user.fullName,
                         groupsubgroupTitle: user.groupsubgroupTitle,
-                    }
+                    };
                     firebaseService.getRefsubgroupCheckinRecords().child(user.groupID).child(user.subgroupID).child(user.id).on('child_added', function(snapshot){
                         var fullDate = new Date(snapshot.val().timestamp);
                         var newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), fullDate.getDate());
@@ -308,19 +294,19 @@
                             that.report.push({
                                 checkin: snapshot.val().timestamp,
                                 checkindate: newDate
-                            })
-                            that.count++
+                            });
+                            that.count++;
                         } else if (snapshot.val().message == 'Checked-out') {
                             that.report[that.count].checkout = snapshot.val().timestamp;
                             that.report[that.count].checkoutdate = newDate;
                         }
                     });
-                }
-                
-                    
+                };
+
+
                 this.GetSubGroupUsers = function(subgroupData, index) {
-                    $state.go('user.group.' + that.activePanel, {groupID: that.groupID});
-                    that.showPanel(that.activePanel);
+                    $state.go('user.group.' + that.panel.active, {groupID: that.groupID});
+                    that.showPanel(that.panel.active);
                     // if (!subgroupData) {
                     //     that.users = [];
                     //     that.users =  dataService.getUserData();
@@ -335,7 +321,7 @@
                     //         that.users.push(val);
                     //     }
                     // });
-                }
+                };
 
                 var userCurrentCheckinRefBySubgroup;
                 this.checkinObj = {
@@ -346,7 +332,7 @@
                     // Do not change status of self login user
                     if (user.userID === userID) {
                         messageService.showFailure('To change your status, please use toolbar!');
-                        dataService.setUserCheckInOut(grId, sgrId, userID, type)
+                        dataService.setUserCheckInOut(grId, sgrId, userID, type);
                         return;
                     }
                     that.processTeamAttendance = true;
@@ -356,17 +342,17 @@
                         // console.log(userdata[5]);
                         // console.log(type)
                         if (!type) {
-                            console.log(userdata)
+                            console.log(userdata);
                             if (userdata[5] && userdata[5].$value === 1) {
                                 messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
                                 that.processTeamAttendance = false;
-                                dataService.setUserCheckInOut(grId, sgrId, userID, true)
+                                dataService.setUserCheckInOut(grId, sgrId, userID, true);
                                 return;
                             }
                         }
                         // check in the user
                         checkinService.createCurrentRefsBySubgroup(grId, sgrId, userID).then(function() {
-                            that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                            that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations();
                             var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(grId + '/' + sgrId + '/' + userID);
                             userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
                                 .$loaded(function(snapshot) {
@@ -378,7 +364,7 @@
                     });
 
 
-                }
+                };
 
                 function updateStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
                     checkinService.getCurrentLocation()
@@ -428,7 +414,7 @@
                     //             lat: location.coords.latitude,
                     //             lon: location.coords.longitude
                     //         };
-                    //that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});                                               
+                    //that.users.push({id: userdata.$id, type: type, message: userdata.message, groupID: groupID, subgroupID: subgroupData.$id, profileImage: profileImage});
                     that.users.forEach(function(val, i) {
                         if ((val.type === 1 || val.type === true) && (val.id != user.userID)) {
 
@@ -440,7 +426,7 @@
                             // })
 
                             checkinService.createCurrentRefsBySubgroup(val.groupID, val.subgroupID, val.id).then(function() {
-                                that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
+                                that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations();
                                 var tempRef = checkinService.getRefCheckinCurrentBySubgroup().child(val.groupID + '/' + val.subgroupID + '/' + val.id);
                                 userCurrentCheckinRefBySubgroup = $firebaseObject(tempRef)
                                     .$loaded(function(snapshot) {
@@ -452,7 +438,7 @@
                         if (that.users.length === i) {
                             that.processTeamAttendance = false;
                         }
-                    }) //foreach
+                    }); //foreach
 
                     // that.checkoutObj.type = 2;
                     // var numberofusers = 0;
@@ -460,7 +446,7 @@
                     // }, function (err) {
                     //     messageService.showFailure(err.error.message);
                     // });
-                }
+                };
 
                 function updateAllStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
                     // console.log(userID + ' ' + groupID + ' ' + subgroupID)

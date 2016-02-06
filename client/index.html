@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body ng-app="myApp" ng-controller="AppController as app">
-    <div ui-view="nav"></div>
-    <div ui-view="main"></div>
+    <ui-view name="nav"></ui-view>
+    <ui-view name="main"></ui-view>
     <!-- jQuery -->
     <script src="lib/jquery.js"></script>
     <!-- Angular -->
@@ -36,7 +36,7 @@
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
     <!-- Angular Geo Location -->
     <script src="bower_components/ngGeolocation/ngGeolocation.min.js"></script>
-    
+
     <!-- Material Floating Buttin Start -->
     <script src="bower_components/ng-mfb/src/mfb-directive.js"></script>
     <link rel="stylesheet" href="bower_components/ng-mfb/mfb/dist/mfb.css">
@@ -47,7 +47,7 @@
 
     <!-- Angular Material Data Table Start -->
     <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.css">
-    <script src="bower_components/angular-material-data-table/dist/md-data-table.js"></script>    
+    <script src="bower_components/angular-material-data-table/dist/md-data-table.js"></script>
     <!-- Angular Material Data Table End -->
 
     <!-- Google Api for search map Start -->
@@ -69,8 +69,11 @@
     <script src="components/user/userService.js"></script>
     <script src="components/user/user.js"></script>
     <script src="components/activity/activity.js"></script>
+    <script src="components/chat/chat.js"></script>
     <script src="components/report/report.js"></script>
     <script src="components/manualattendace/manualattendace.js"></script>
+    <script src="components/progressreport/progressreportService.js"></script>
+    <script src="components/progressreport/progressreport.js"></script>
     <script src="components/group/groupService.js"></script>
     <script src="components/group/group.js"></script>
     <script src="components/home/home.js"></script>
@@ -135,4 +138,3 @@
 
 </body>
 </html>
-

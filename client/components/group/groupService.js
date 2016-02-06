@@ -7,16 +7,26 @@
         .module('app.group', ['core'])
         .factory('groupService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $firebaseObject, firebaseService, userFirebaseService) {
 
-            var $scope = this
+            var $scope = this;
+            var panel = { active: '', subgroupID: ''};
             return {
+                'getPanelInfo': function(){
+                        return panel;
+                },
+                'setActivePanel': function(pname){
+                        panel.active = pname;
+                },
+                'setSubgroupIDPanel': function(subgroupID){
+                        panel.subgroupID = subgroupID;
+                },
                 'openCreateSubGroupPage': function() {
 
-                    $location.path('/user/group/create-subgroup')
+                    $location.path('/user/group/create-subgroup');
 
                 },
                 'openJoinGroupPage': function() {
 
-                    $location.path('/user/joinGroup')
+                    $location.path('/user/joinGroup');
 
                 },
                 'canActivate': function() {
@@ -31,7 +41,7 @@
                                     .$loaded()
                                     .then(function(userData) {
                                         return userData;
-                                    })
+                                    });
                             }
                         });
                 },
@@ -84,9 +94,9 @@
                      });*/
                 }
 
-            }
+            };
 
 
-        }])
+        }]);
 
 })();
