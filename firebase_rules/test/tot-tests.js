@@ -21,6 +21,7 @@ rulesSuite("Team of Teams Tests", function(test) {
   var pathforGroupMembershipRequestsGroupIdUid =   "/group-membership-requests/" + groupid + "/" +  uId;
   var pathforGroupMembershipRequestsByUser     =   "/group-membership-requests-by-user/" + uId + "/" + groupid;
   var pathforGroupChannelGroupIdChannelID      =   "/group-channel/" + groupid + "/panachat";
+  var pathforGroupMessagesGroupIdChannelIdmessagesid = "/group-messages/" + groupid + "/panachat" + "/message01";
    //---------------------------------------------------
   //User And Group Data
   var usersData = { email           : "arsalan@panacloud.com",
@@ -96,6 +97,12 @@ var GroupActivityStreamsData = {
 var  GroupChannelData =  { "created-by" : "Arsalan" ,
                             timestamp   : test.TIMESTAMP,
                             title       : "Panachat" };
+
+var GroupMessagesData = {
+                  from       :   uId,
+                  text       :   "hello World",
+                  timestamp  :   test.TIMESTAMP
+};
     //Testing Start from here
 //==============================================================================================
 //Create Team of Teams with User
@@ -2874,6 +2881,248 @@ test("group channel write test with auth user" ,function(rules){
       .succeeds("authenticated user can write Group channel Chat");
 
 });
+
+//Group Messages start here
+//group-messages read test with un auth user
+
+test("group-messages read test with un auth user" ,function(rules){
+  rules
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        .as("anon")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .read()
+        .fails("Un authenticated user can not read Group messages");
+
+});
+
+//group-messages read test with  auth user
+
+test("group-messages read test with un auth user" ,function(rules){
+  rules
+        .as("admin")
+        .at(pathforUserUserID)
+        .write(usersData)
+        .succeeds("Only admin can create user")
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .read()
+        .succeeds("authenticated user can read Group messages");
+
+});
+//group-messages read test with  Block user
+
+test("group-messages read test with Block user" ,function(rules){
+  rules
+        .as("admin")
+        .at(pathforUserUserID)
+        .write(usersData)
+        .succeeds("Only admin can create user")
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": -1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .read()
+        .fails("block authenticated user can read Group messages");
+
+});
+
+//group-messages write test with un auth user
+
+test("group-messages write test with un auth user" ,function(rules){
+  rules
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        .as("anon")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(GroupMessagesData)
+        .fails("Un authenticated user can not write Group messages");
+
+});
+
+//group-messages write test with  auth user
+
+test("group-messages write test with un auth user" ,function(rules){
+  rules
+        .as("admin")
+        .at(pathforUserUserID)
+        .write(usersData)
+        .succeeds("Only admin can create user")
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(GroupMessagesData)
+        .succeeds("authenticated user can write Group messages");
+
+});
+
+//group-messages update test with  unauth user
+
+test("group-messages update test with un auth user" ,function(rules){
+  rules
+        .as("admin")
+        .at(pathforUserUserID)
+        .write(usersData)
+        .succeeds("Only admin can create user")
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        // Group Message write
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(GroupMessagesData)
+        .succeeds("authenticated user can write Group messages")
+
+        // Group Message update test with un auth
+        .as("anon")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write({from :  uId , timestamp  : test.TIMESTAMP , text : "Message update successfully"})
+        .fails("un authenticated user cannot  update Group messages");
+});
+
+//group-messages update test with  auth user
+
+test("group-messages update test with auth user" ,function(rules){
+  rules
+        .as("admin")
+        .at(pathforUserUserID)
+        .write(usersData)
+        .succeeds("Only admin can create user")
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        // Group Message write
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(GroupMessagesData)
+        .succeeds("authenticated user can write Group messages")
+
+        // Group Message update test with auth
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write({from :  uId , timestamp  : test.TIMESTAMP , text : "Message update successfully"})
+        .succeeds("authenticated user can update Group messages");
+});
+
+//group-messages delete test with  unauth user
+
+test("group-messages update test with unauth user" ,function(rules){
+  rules
+        .as("admin")
+        .at(pathforUserUserID)
+        .write(usersData)
+        .succeeds("Only admin can create user")
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        // Group Message write
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(GroupMessagesData)
+        .succeeds("authenticated user can write Group messages")
+
+        // Group Message delete test with unauth
+        .as("anon")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(null)
+        .fails("un authenticated user cannot delete Group messages");
+});
+
+
+//group-messages delete test with  auth user
+
+test("group-messages delete test with auth user" ,function(rules){
+  rules
+        .as("admin")
+        .at(pathforUserUserID)
+        .write(usersData)
+        .succeeds("Only admin can create user")
+
+        //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp"      : test.TIMESTAMP
+         }).succeeds("user-group-memberships created")
+
+        // Group Message write
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(GroupMessagesData)
+        .succeeds("authenticated user can write Group messages")
+
+        // Group Message delete test with auth
+        .as("arsalan")
+        .at(pathforGroupMessagesGroupIdChannelIdmessagesid)
+        .write(null)
+        .succeeds("authenticated user can delete Group messages");
+});
+
 //-----------------------------------------------------------------------
 
 
