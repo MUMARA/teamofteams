@@ -18,7 +18,7 @@ rulesSuite("Team of Teams Tests", function(test) {
   var pathforUserGroupMembershipUIDGroupId = '/user-group-memberships/' + uId + "/" + groupid
   
  //Create Team of Teams with User
-/*
+
  test("Team of Teams write Test with User", function(rules){
      rules
           .as("admin")
@@ -1912,7 +1912,7 @@ test("group-activity-streams read with auth user", function(rules) {
           .succeeds("group-activity-streams read with auth user")
  
 })
-*/
+
 
 //group-activity-streams read with unauth user
 
