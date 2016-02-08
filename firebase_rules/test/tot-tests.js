@@ -9,17 +9,18 @@ rulesSuite("Team of Teams Tests", function(test) {
   //...<your tests here>...
 
   //Path  for nodes
-  var uId =  uid( "arsalan");
-  var groupid = "panacloud";
-  var pathforGroupGroupID = "/groups/" + groupid;
-  var pathforUserUserID = "/users/" + uId;
-  var pathforGroupNameGroupID = "/groups-names/" + groupid;
-  var pathforGroupMembersGroupidUid = "/group-members/" + groupid + "/" +  uId;
-  var pathforUserGroupMembershipUIDGroupId = '/user-group-memberships/' + uId + "/" + groupid;
-  var pathforGroupCheckInCurrent = "/group-check-in-current/" + groupid + "/" +  uId;
-  var pathforGroupCheckInRecords = "/group-check-in-records/" +  groupid + "/" +  uId;
-  var pathforGroupMembershipRequestsGroupIdUid = "/group-membership-requests/" + groupid + "/" +  uId;
-  var pathforGroupMembershipRequestsByUser = "/group-membership-requests-by-user/" + uId + "/" + groupid;
+  var uId                                      =   uid( "arsalan");
+  var groupid                                  =   "panacloud";
+  var pathforGroupGroupID                      =   "/groups/" + groupid;
+  var pathforUserUserID                        =   "/users/" + uId;
+  var pathforGroupNameGroupID                  =   "/groups-names/" + groupid;
+  var pathforGroupMembersGroupidUid            =   "/group-members/" + groupid + "/" +  uId;
+  var pathforUserGroupMembershipUIDGroupId     =   '/user-group-memberships/' + uId + "/" + groupid;
+  var pathforGroupCheckInCurrent               =   "/group-check-in-current/" + groupid + "/" +  uId;
+  var pathforGroupCheckInRecords               =   "/group-check-in-records/" +  groupid + "/" +  uId;
+  var pathforGroupMembershipRequestsGroupIdUid =   "/group-membership-requests/" + groupid + "/" +  uId;
+  var pathforGroupMembershipRequestsByUser     =   "/group-membership-requests-by-user/" + uId + "/" + groupid;
+  var pathforGroupChannelGroupIdChannelID      =   "/group-channel/" + groupid + "/panachat";
    //---------------------------------------------------
   //User And Group Data
   var usersData = { email           : "arsalan@panacloud.com",
@@ -71,10 +72,36 @@ var GroupCheckInRecordData = {
                    timestamp            : test.TIMESTAMP,
                    type                 : 1
 };
- //Create Team of Teams with User
+
+var GroupActivityStreamsData = {
+                       actor    :   {
+                         displayName   :   "Arsalan",
+                         email         :   "a4arshi@yahoo.com",
+                         id            :   '123445',
+                         type          :    "user"
+                     },
+                     displayName       :   "Arsalan Create this group",
+                     language          :   "en",
+                     object            :   {
+                          displayName  :   "rajput",
+                          id           :   "panacloud",
+                          type         :   "group",
+                          url          :   "http://www.google.com"
+                     },
+                     published         :   1233445566666,
+                     verb              :   "group-creation"
+};
+
+
+var  GroupChannelData =  { "created-by" : "Arsalan" ,
+                            timestamp   : test.TIMESTAMP,
+                            title       : "Panachat" };
+    //Testing Start from here
+//==============================================================================================
+//Create Team of Teams with User
 
 var GroupMembershipsRequestData = { message : "Please Add me in this group" , timestamp : test.TIMESTAMP };
-
+/*
  test("Team of Teams write Test with User", function(rules){
      rules
           .as("admin")
@@ -1619,10 +1646,106 @@ test("group-activity-streams read with unauth user", function(rules) {
           .fails("group-activity-streams read with unauth user");
 
 });
+*/
+//group-activity-streams write with auth user
+
+test("group-activity-streams write with auth user", function(rules) {
+
+   rules
+          .as("admin")
+          .at(pathforUserUserID)
+          .write(usersData)
+         .succeeds("User successfully Created")
+
+         //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp": test.TIMESTAMP
+         })
+
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         }).succeeds("Group Members Created")
+
+         .as("arsalan")
+         .at(pathforGroupGroupID)
+
+         .write(groupData)
+         .succeeds("Any authanticated user can create group")
+
+          .as('arsalan')
+          .at('/group-activity-streams/' +groupid)
+          .write(GroupActivityStreamsData)
+          .succeeds("auth user can write group-activity-streams");
+
+});
+//group-activity-streams write with unauth user
+
+test("group-activity-streams write with unauth user", function(rules) {
+
+   rules
+          .as("admin")
+          .at(pathforUserUserID)
+          .write(usersData)
+         .succeeds("User successfully Created")
+
+         //user Group Memberships
+         .as("arsalan")
+         .at(pathforUserGroupMembershipUIDGroupId)
+
+         .write({
+             "membership-type": 1,
+             "timestamp": test.TIMESTAMP
+         })
+
+         //Groups Names
+         .as("arsalan")
+         .at(pathforGroupNameGroupID)
+         .write({
+             title: "Rajput"
+         }).succeeds("Authenticated user can write on group name")
+
+        //Groups Members
+        .as("arsalan")
+         .at(pathforGroupMembersGroupidUid)
+
+         .write({
+                  'membership-type': 1,
+                  timestamp: 1452767752756
+         }).succeeds("Group Members Created")
+
+         .as("arsalan")
+         .at(pathforGroupGroupID)
+
+         .write(groupData)
+         .succeeds("Any authanticated user can create group")
+
+          .as('anon')
+          .at('/group-activity-streams/' +groupid)
+          .write(GroupActivityStreamsData)
+          .fails("unauth user cannot write group-activity-streams");
+
+});
+
 //----------------------------------------------------------
 //Group Check In Current
 //group-check-in-current read test with unauth user
-
+/*
 test("group-check-in-current read test with unauth user" ,function(rules){
     rules
          .as("admin")
@@ -2595,10 +2718,162 @@ test("Group Membership requests-by-user write test with different Owner",functio
  //Group Membership requests-by-user read test with different owner
    .as("taimoor")
    .at(pathforGroupMembershipRequestsByUser)
-   .write({ timestamp         : test.TIMESTAMP })
+   .write({ timestamp : test.TIMESTAMP })
    .fails("different Owner can not write Group Membership requests-by-user of other Group memberships requests-by-user");
 });
+*/
 
+//Group channel  start here
+//group channel read test with un auth user
+test("group channel read test with un auth user" ,function(rules){
+  rules
+      .as("admin")
+      .at(pathforUserUserID)
+      .write(usersData)
+      .succeeds("Only admin can create user")
+
+      //user Group Memberships
+       .as("arsalan")
+       .at(pathforUserGroupMembershipUIDGroupId)
+
+       .write({
+           "membership-type": 1,
+           "timestamp"      : test.TIMESTAMP
+       }).succeeds("user-group-memberships created")
+
+     //Group channel read test with unauth
+      .as("anon")
+      .at(pathforGroupChannelGroupIdChannelID)
+      .read()
+      .fails("Un authenticated user cannot read Group channel Chat");
+
+});
+
+//group channel read test with block  user
+test("group channel read test with un auth user" ,function(rules){
+  rules
+      .as("admin")
+      .at(pathforUserUserID)
+      .write(usersData)
+      .succeeds("Only admin can create user")
+
+      //user Group Memberships
+       .as("arsalan")
+       .at(pathforUserGroupMembershipUIDGroupId)
+
+       .write({
+           "membership-type": -1,
+           "timestamp"      : test.TIMESTAMP
+       }).succeeds("user-group-memberships created")
+
+     //Group channel read test with unauth
+      .as("arsalan")
+      .at(pathforGroupChannelGroupIdChannelID)
+      .read()
+      .fails("block user cannot read Group channel Chat");
+
+});
+
+//group channel read test with  auth user
+test("group channel read test with auth user" ,function(rules){
+  rules
+      .as("admin")
+      .at(pathforUserUserID)
+      .write(usersData)
+      .succeeds("Only admin can create user")
+
+      //user Group Memberships
+       .as("arsalan")
+       .at(pathforUserGroupMembershipUIDGroupId)
+
+       .write({
+           "membership-type": 1,
+           "timestamp"      : test.TIMESTAMP
+       }).succeeds("user-group-memberships created")
+
+     //Group channel read test with auth
+      .as("arsalan")
+      .at(pathforGroupChannelGroupIdChannelID)
+      .read()
+      .succeeds("authenticated user can read Group channel Chat");
+
+});
+
+
+//group channel write test with un auth user
+test("group channel write test with un auth user" ,function(rules){
+  rules
+      .as("admin")
+      .at(pathforUserUserID)
+      .write(usersData)
+      .succeeds("Only admin can create user")
+
+      //user Group Memberships
+       .as("arsalan")
+       .at(pathforUserGroupMembershipUIDGroupId)
+
+       .write({
+           "membership-type": 1,
+           "timestamp"      : test.TIMESTAMP
+       }).succeeds("user-group-memberships created")
+
+     //Group channel write test with unauth
+      .as("anon")
+      .at(pathforGroupChannelGroupIdChannelID)
+      .write(GroupChannelData)
+      .fails("Un authenticated user cannot write Group channel Chat");
+
+});
+
+//group channel write test with block user
+test("group channel write test with un auth user" ,function(rules){
+  rules
+      .as("admin")
+      .at(pathforUserUserID)
+      .write(usersData)
+      .succeeds("Only admin can create user")
+
+      //user Group Memberships
+       .as("arsalan")
+       .at(pathforUserGroupMembershipUIDGroupId)
+
+       .write({
+           "membership-type": -1,
+           "timestamp"      : test.TIMESTAMP
+       }).succeeds("user-group-memberships created")
+
+     //Group channel write test with block user
+      .as("arsalan")
+      .at(pathforGroupChannelGroupIdChannelID)
+      .write(GroupChannelData)
+      .fails("block user cannot write Group channel Chat");
+
+});
+
+//group channel write test with auth user
+test("group channel write test with auth user" ,function(rules){
+  rules
+      .as("admin")
+      .at(pathforUserUserID)
+      .write(usersData)
+      .succeeds("Only admin can create user")
+
+      //user Group Memberships
+       .as("arsalan")
+       .at(pathforUserGroupMembershipUIDGroupId)
+
+       .write({
+           "membership-type": 1,
+           "timestamp"      : test.TIMESTAMP
+       }).succeeds("user-group-memberships created")
+
+     //Group channel write test with auth
+      .as("arsalan")
+      .at(pathforGroupChannelGroupIdChannelID)
+      .write(GroupChannelData)
+      .succeeds("authenticated user can write Group channel Chat");
+
+});
 //-----------------------------------------------------------------------
 
 
