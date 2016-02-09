@@ -41,7 +41,10 @@ type UserType {
  "lastName"      : NameLengthGreaterThanThree,
  "date-created"  : CurrentTimeStamp,
  "status"        : StatusType,                            //plaese donot change this in your code it will change only from zero to one when email is varified
- 'profile-image' : String | Null
+ 'profile-image' : String | Null,
+ 'contactNumber' : ContactNumberLength | Null,
+'profession'     : String | Null,
+desc             : DescLenght | Null
 }
 
 type NameLengthGreaterThanThree extends String{
@@ -114,13 +117,13 @@ type UserPersonalSetting {
 
 
 
+*/
+
 type ContactNumberLength extends Number {
   validate() {
-    this.length >= 5
+    this >= 5
   }
 }
-
-*/
 
 type DescLenght extends String {
   validate() {
@@ -145,7 +148,10 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
 
  //read() { isGroupIdExist(groupid) && isCurrentUserGroupOwner(groupid) || isCurrentUserGroupAdmin(groupid) }
 
- create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1  }
+ create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1 ||
+                  isCurrentUserGroupOwner(groupid)           &&        this['membership-type'].val() >= 2     ||
+                  isCurrentUserGroupAdmin(groupid)           &&        this['membership-type'].val() >= 2
+                  }
  update() {
                  isGroupIdExist(groupid)                    &&
                  isCurrentUserGroupOwner(groupid)           ||
