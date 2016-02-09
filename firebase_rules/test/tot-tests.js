@@ -23,13 +23,13 @@ rulesSuite("Team of Teams Tests", function(test) {
   var pathforGroupChannelGroupIdChannelID      =   "/group-channel/" + groupid + "/panachat";
   var pathforGroupMessagesGroupIdChannelIdmessagesid = "/group-messages/" + groupid + "/panachat" + "/message01";
    //---------------------------------------------------
-  //User And Group Data
+  //User Data
   var usersData = { email           : "arsalan@panacloud.com",
                     firstName       : "Arsalan",
                     lastName        : "Rajput",
                     "date-created"  : test.TIMESTAMP,
                     status          : 0      };
-
+//Group Data
   var groupData = {
                     privacy : {
                         invitationType : 1
@@ -47,6 +47,7 @@ rulesSuite("Team of Teams Tests", function(test) {
                     signupMode        :    "1"
 
   };
+  //Group Check In Current Data
  var GroupCheckInCurrentData = {
                   'group-url'           : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
                    id                   : "K8nI4WqFq6BTiXZkEqn",
@@ -60,7 +61,7 @@ rulesSuite("Team of Teams Tests", function(test) {
                    timestamp            : test.TIMESTAMP,
                    type                 : 1
 };
-
+//Group CheckIn Record Data
 var GroupCheckInRecordData = {
                   'group-url'           : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
                    location             :  {
@@ -73,7 +74,7 @@ var GroupCheckInRecordData = {
                    timestamp            : test.TIMESTAMP,
                    type                 : 1
 };
-
+//Group Activity Streams Data
 var GroupActivityStreamsData = {
                        actor    :   {
                          displayName   :   "Arsalan",
@@ -93,11 +94,11 @@ var GroupActivityStreamsData = {
                      verb              :   "group-creation"
 };
 
-
+//Group Channel Data
 var  GroupChannelData =  { "created-by" : "Arsalan" ,
                             timestamp   : test.TIMESTAMP,
                             title       : "Panachat" };
-
+//Group Messages Data
 var GroupMessagesData = {
                   from       :   uId,
                   text       :   "hello World",
@@ -108,13 +109,13 @@ var GroupMessagesData = {
 //Create Team of Teams with User
 
 var GroupMembershipsRequestData = { message : "Please Add me in this group" , timestamp : test.TIMESTAMP };
-/*
  test("Team of Teams write Test with User", function(rules){
      rules
           .as("admin")
           .at(pathforUserUserID)
           .write(usersData)
           .succeeds("User successfully Created")
+
          //user Group Memberships
          .as("arsalan")
          .at(pathforUserGroupMembershipUIDGroupId)
@@ -138,11 +139,18 @@ var GroupMembershipsRequestData = { message : "Please Add me in this group" , ti
                   timestamp: 1452767752756
          }).succeeds("Group Members Created")
 
+          //Group Create
          .as("arsalan")
          .at(pathforGroupGroupID)
 
          .write(groupData)
-         .succeeds("Any authanticated user can create group");
+         .succeeds("Any authanticated user can create group")
+
+         //Group Activity Streams create
+         .as('arsalan')
+         .at('/group-activity-streams/' +groupid)
+         .write(GroupActivityStreamsData)
+         .succeeds("auth user can write group-activity-streams");
 
  });
 
@@ -243,14 +251,20 @@ test("team of teams update test with unauth" ,function(rules){
 
          .write(groupData)
          .succeeds("Any authanticated user can create group")
-              //update Group
 
-             //user Group Memberships
+         //Group Activity Streams create
+         .as('arsalan')
+         .at('/group-activity-streams/' +groupid)
+         .write(GroupActivityStreamsData)
+         .succeeds("auth user can write group-activity-streams")
+
+        //update Group
+       //user Group Memberships  type update from 1 to 3 for testing as members
 
          .as("arsalan")
          .at(pathforUserGroupMembershipUIDGroupId)
          .write({
-             "membership-type": 0,
+             "membership-type": 3,
              "timestamp"      : test.TIMESTAMP
            }).succeeds("user-group-memberships created")
 
@@ -272,11 +286,11 @@ test("team of teams update test with unauth" ,function(rules){
          }).succeeds("Groups Members created with membershiptype 0")
 
 
-
+     //Group members can not update Group
          .as("arsalan")
          .at(pathforGroupGroupID)
          .write(groupData)
-         .fails("Only Admin and Ownercan update group");
+         .fails("Only Admin and Owner can update group");
  });
 
 //Team of teams update by Admin
@@ -319,6 +333,12 @@ test("team of teams update test with unauth" ,function(rules){
         .write(groupData)
         .succeeds("Group Created")
 
+        //Group Activity Streams create
+        .as('arsalan')
+        .at('/group-activity-streams/' +groupid)
+        .write(GroupActivityStreamsData)
+        .succeeds("auth user can write group-activity-streams")
+
        //update Group
 
         //Groups Members
@@ -329,13 +349,11 @@ test("team of teams update test with unauth" ,function(rules){
                   timestamp: 1452767752756
          }).succeeds("Group Memebers Created")
 
+       //Group Admin can update Group
         .as("arsalan")
         .at(pathforGroupGroupID)
-
         .write(groupData)
         .succeeds("admin can also update group");
-
-
  });
 
 //team of teams update test with owner
@@ -377,6 +395,12 @@ test("team of teams update test with unauth" ,function(rules){
         .write(groupData)
         .succeeds("Group Created")
 
+        //Group Activity Streams create
+        .as('arsalan')
+        .at('/group-activity-streams/' +groupid)
+        .write(GroupActivityStreamsData)
+        .succeeds("auth user can write group-activity-streams")
+
         //update Group
 
         //Groups Members
@@ -387,7 +411,7 @@ test("team of teams update test with unauth" ,function(rules){
                   'membership-type': 1,
                   timestamp: 1452767752756
          }).succeeds("Group Member create")
-
+        //Owner can update group
         .as("arsalan")
         .at(pathforGroupGroupID)
 
@@ -1653,7 +1677,7 @@ test("group-activity-streams read with unauth user", function(rules) {
           .fails("group-activity-streams read with unauth user");
 
 });
-*/
+
 //group-activity-streams write with auth user
 
 test("group-activity-streams write with auth user", function(rules) {
@@ -1741,7 +1765,7 @@ test("group-activity-streams write with unauth user", function(rules) {
 
          .write(groupData)
          .succeeds("Any authanticated user can create group")
-
+          //UnAuthenticated user can not create group Activity Streams
           .as('anon')
           .at('/group-activity-streams/' +groupid)
           .write(GroupActivityStreamsData)
@@ -1752,7 +1776,7 @@ test("group-activity-streams write with unauth user", function(rules) {
 //----------------------------------------------------------
 //Group Check In Current
 //group-check-in-current read test with unauth user
-/*
+
 test("group-check-in-current read test with unauth user" ,function(rules){
     rules
          .as("admin")
@@ -2728,7 +2752,7 @@ test("Group Membership requests-by-user write test with different Owner",functio
    .write({ timestamp : test.TIMESTAMP })
    .fails("different Owner can not write Group Membership requests-by-user of other Group memberships requests-by-user");
 });
-*/
+
 
 //Group channel  start here
 //group channel read test with un auth user
