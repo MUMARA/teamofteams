@@ -43,8 +43,8 @@ type UserType {
  "status"        : StatusType,                            //plaese donot change this in your code it will change only from zero to one when email is varified
  'profile-image' : String | Null,
  'contactNumber' : ContactNumberLength | Null,
-'profession'     : String | Null,
-desc             : DescLenght | Null
+ 'profession'    : String | Null,
+ 'desc'          : DescLenght | Null
 }
 
 type NameLengthGreaterThanThree extends String{
