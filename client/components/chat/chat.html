@@ -53,7 +53,7 @@
         <div style="width: 100%;">
             <form name="chatForm" novalidate ng-submit="chat.SendMsg()" layout="row" layout-align="center center"
             layout-padding>
-                <md-input-container flex style="border: 1px solid lightgrey;" class="backColorLightGrey2 nopadding" layout="row" layout-align="start center">
+                <md-input-container layout flex style="border: 1px solid lightgrey;" class="backColorLightGrey2 nopadding" layout="row" layout-align="start center">
                     <div style="border-right: 1px solid lightgrey;">
                         <img src="img/arrow.svg" class="icon20px padding10px">
                     </div>
@@ -64,7 +64,7 @@
         </div>
     </div>
     <!--online side-->
-    <div class="viewHeight-64" style="max-width:400px;width:400px;min-width:400px">
+    <div class="viewHeight-64 online" style="max-width:400px;width:400px;min-width:400px">
         <md-card class="nomargin" layout-fill>
             <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
             <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
@@ -115,9 +115,17 @@
                     </md-content>
                 </md-tab>
             </md-tabs>
-            <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="chat.showNewChannel($event)" layout-align="center center">
+            <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="chat.showChannelBottomSheet()" layout-align="center center" ng-if="!chat.channelBottomSheet">
                 <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
             </md-button>
         </md-card>
+        <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="chat.channelBottomSheet">
+            <h3 class="foreColorDarkGrey">New Channel</h3>
+            <md-input-container>
+                <label>Channel Title</label>
+                <input type="text" ng-model="chat.channelTitle">
+            </md-input-container>
+            <md-button class="backColorSeaGreen" ng-disabled="!chat.channelTitle" aria-label="new channel" ng-click="chat.createChannel()">Create</md-button>
+        </div>
     </div>
 </div>
