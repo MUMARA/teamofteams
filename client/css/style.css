@@ -62,6 +62,24 @@ md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, md-pro
     opacity: 1;
 }
 
+.channelBottomSheet.ng-enter {
+    transition:0.2s linear all;
+    height: 0px;
+}
+
+.channelBottomSheet.ng-enter.ng-enter-active {
+    height: 200px;
+}
+
+.channelBottomSheet.ng-leave {
+    transition:0.2s linear all;
+    height: 200px;
+}
+
+.channelBottomSheet.ng-leave.ng-leave-active {
+    height: 0px;
+}
+
 /*End Animation*/
 
 .textAlignLeft {
@@ -344,6 +362,13 @@ md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, md-pro
     position: relative;
     top: 20px;
     left: 20px;
+}
+
+.channelBottomSheet {
+    position: absolute;
+    bottom: 0;
+    width: 400px;
+    padding: 20px;
 }
 
 /*

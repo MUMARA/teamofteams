@@ -23,9 +23,53 @@
         // group chat reference
         refs.refGroupChats = refs.main.child('group-chats');
         refs.refTeamChats = refs.main.child('subgroup-chats')
+        refs.refgroupchannel = refs.main.child('group-channel');
+        refs.refgroupmessages = refs.main.child('group-messages');
+        refs.refsubgroupchannel = refs.main.child('subgroup-channel');
+        refs.refsubgroupmessages = refs.main.child('subgroup-messages');
 
         return {
+            checkGroupChannelExists: function (groupID, channelTitle) {
+                var deferred = $q.defer();
+                refs.refgroupchannel.child(groupID).orderByChild('title').equalTo(channelTitle).on('value', function(snapshot){
+                    deferred.resolve(snapshot.val());
+                })
+                return deferred.promise;
+            },
+            checkSubGroupChannelExists: function (groupID, subgroupID, channelTitle) {
+                var deferred = $q.defer();
+                refs.refsubgroupchannel.child(groupID).child(subgroupID).orderByChild('title').equalTo(channelTitle).on('value', function(snapshot){
+                    deferred.resolve(snapshot.val());
+                })
+                return deferred.promise;
+            },
             // creating channel
+            createGroupChannel: function(groupID, channelTitle, userID, cb){
+                var newChannel = {
+                    'created-by': userID,
+                    timestamp   : fireTimeStamp,
+                    title       : channelTitle
+                }
+                var request = refs.refgroupchannel.child(groupID).push(newChannel, function(err){
+                    cb(err);
+                })
+            },
+            createSubGroupChannel: function(groupID, subgroupID, channelTitle, userID, cb){
+                var newChannel = {
+                    'created-by': userID,
+                    timestamp   : fireTimeStamp,
+                    title       : channelTitle
+                }
+                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push(newChannel, function(err){
+                    cb(err);
+                })
+            },
+            getGroupChannel: function(groupID){
+                return $firebaseArray(refs.refgroupchannel.child(groupID))
+            },
+            getSubGroupChannel: function(groupID, subgroupID){
+                return $firebaseArray(refs.refsubgroupchannel.child(groupID).child(subgroupID))
+            },
             asyncCreateChannel: function(groupID, channelObj, user) {
                 var self = this;
                 var deferred = $q.defer();
@@ -66,7 +110,7 @@
                                                 self.asyncRecordChannelCreationActivity(channelObj, user, groupID).then(
 
                                                     deferred.resolve("channel created successfully and also pushed activity.")
-                                                )
+                                                );
                                             }
 
 
@@ -86,18 +130,15 @@
             SendMessages: function(groupID, channelID, user, text) {
 
                 var deferred = $q.defer();
-                var msgRef = refs.refGroupChats.child(groupID + '/' + channelID + '/messages').push({
-
+                var msgRef = refs.refgroupmessages.child(groupID + '/' + channelID).push({
                     from: user.userID,
                     timestamp: fireTimeStamp,
                     text: text.msg
-
-
                 }, function(error) {
                     if (error) {
                         deferred.reject("error occurred in sending msg");
                     } else {
-                        deferred.resolve("msg sucessfully sent")
+                        deferred.resolve("msg sucessfully sent");
                     }
 
 
@@ -124,12 +165,12 @@
             },
             // getting channel Array
             getGroupChannelsSyncArray: function(groupID) {
-                return Firebase.getAsArray(refs.refGroupChats.child(groupID));
+                return Firebase.getAsArray(refs.refsubgroupchannel.child(groupID));
             },
             //getting channels msg array
             getChannelMessagesArray: function(groupID, channelID) {
 
-            var ref = refs.refGroupChats.child(groupID + '/' + channelID + '/messages');
+            var ref = refs.refgroupmessages.child(groupID + '/' + channelID);
                 // return Firebase.getAsArray(ref);
                 return $firebaseArray(ref);
             },
@@ -149,7 +190,7 @@
                     id: group
                         //url:"",
                         //displayName:""
-                }
+                };
 
                 var object = {
                     "type": "channel",
@@ -244,7 +285,7 @@
                                     if (error) {
                                         deferred.reject("error occurred in creating channel");
                                     } else {
-                                        deferred.resolve("channel created successfully and also pushed activity.")
+                                        deferred.resolve("channel created successfully and also pushed activity.");
                                             /*//step4 - create an activity for "channel-created" verb.
                                             self.asyncRecordChannelCreationActivity(channelObj,user,groupID ).then(
                                                 deferred.resolve("channel created successfully and also pushed activity.")
@@ -273,18 +314,18 @@
                 return deferred.promise;
             },
             geTeamChannelsSyncArray: function(groupID, TeamID) {
-                return Firebase.getAsArray(refs.refTeamChats.child(groupID).child(TeamID));
+                return Firebase.getAsArray(refs.refsubgroupchannel.child(groupID).child(TeamID));
             },
             getTeamChannelMessagesArray: function(groupID, teamID, channelID) {
 
-                var ref = refs.refTeamChats.child(groupID + '/' + teamID + '/' + channelID + '/messages');
+                var ref = refs.refsubgroupmessages.child(groupID + '/' + teamID + '/' + channelID);
                 return $firebaseArray(ref);
             },
 
             TeamSendMessages: function(groupID, teamID, channelID, user, text) {
 
                 var deferred = $q.defer();
-                var msgRef = refs.refTeamChats.child(groupID + '/' + teamID + '/' + channelID + '/messages').push({
+                var msgRef = refs.refsubgroupmessages.child(groupID + '/' + teamID + '/' + channelID).push({
 
                     from: user.userID,
                     timestamp: fireTimeStamp,
@@ -295,7 +336,7 @@
                     if (error) {
                         deferred.reject("error occurred in sending msg");
                     } else {
-                        deferred.resolve("msg sucessfully sent")
+                        deferred.resolve("msg sucessfully sent");
                     }
 
 
@@ -306,6 +347,6 @@
                 return deferred.promise;
 
             }
-        }
+        };
     }
 })();
