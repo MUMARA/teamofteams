@@ -8929,7 +8929,7 @@ fb.core.SparseSnapshotTree.prototype.forEachChild = function(func) {
   }
 };
 goog.provide("fb.login.Constants");
-fb.login.Constants = {SESSION_PERSISTENCE_KEY_PREFIX:"session", DEFAULT_SERVER_HOST:"auth.firebase.com", SERVER_HOST:"auth.firebase.com", API_VERSION:"v2", POPUP_PATH_TO_CHANNEL:"/auth/channel", POPUP_RELAY_FRAME_NAME:"__winchan_relay_frame", POPUP_CLOSE_CMD:"die", JSONP_CALLBACK_NAMESPACE:"__firebase_auth_jsonp", REDIR_REQUEST_ID_KEY:"redirect_request_id", REDIR_REQUEST_COMPLETION_KEY:"__firebase_request_key", REDIR_CLIENT_OPTIONS_KEY:"redirect_client_options", INTERNAL_REDIRECT_SENTINAL_PATH:"/blank/page.html", 
+fb.login.Constants = {SESSION_PERSISTENCE_KEY_PREFIX:"session", DEFAULT_SERVER_HOST:"auth.firebase.com", SERVER_HOST:"auth.firebase.com", API_VERSION:"v2", POPUP_PATH_TO_CHANNEL:"/auth/channel", POPUP_RELAY_FRAME_NAME:"__winchan_relay_frame", POPUP_CLOSE_CMD:"die", JSONP_CALLBACK_NAMESPACE:"__firebase_auth_jsonp", REDIR_REQUEST_ID_KEY:"redirect_request_id", REDIR_REQUEST_COMPLETION_KEY:"__firebase_request_key", REDIR_CLIENT_OPTIONS_KEY:"redirect_client_options", INTERNAL_REDIRECT_SENTINAL_PATH:"/blank/page.html",
 CLIENT_OPTION_SESSION_PERSISTENCE:"remember", CLIENT_OPTION_REDIRECT_TO:"redirectTo"};
 goog.provide("fb.login.RequestInfo");
 goog.require("fb.login.Constants");
@@ -11503,7 +11503,7 @@ fb.core.PersistentConnection = goog.defineClass(null, {constructor:function(repo
     this.securityDebugCallback_(body);
   } else {
     if ("msg" in body && typeof console !== "undefined") {
-       // console.log("FIREBASE: " + body["msg"].replace("\n", "\nFIREBASE: "));
+      console.log("FIREBASE: " + body["msg"].replace("\n", "\nFIREBASE: "));
     }
   }
 }, restoreState_:function() {
@@ -13008,4 +13008,3 @@ if (NODE_CLIENT) {
   }
   ns.wrapper(ns.goog, ns.fb);
 }({goog:{}, fb:{}}));
-

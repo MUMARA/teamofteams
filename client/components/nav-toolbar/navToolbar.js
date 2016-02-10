@@ -236,7 +236,7 @@
                     }
                 }
                 
-                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted){
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
                     if(result){
                         self.checkinSending = false;
                         if(checkoutFlag){
@@ -244,8 +244,10 @@
                             if(isSubmitted){
                                 self.switchCheckIn = true;
                                 self.switchMsg = true;
-                                self.isDailyProgessSubmit = true;
-                            } 
+                                self.isDailyProgessSubmit = true
+                                self.isDailyProgessgroupID = groupObject.groupId;                             
+                                self.isDailyProgesssubgroupID = groupObject.subgroupId;
+                            }
                         } else {
                             self.checkinSending = false;
                             messageService.showSuccess('Checkin Successfully!');
@@ -359,7 +361,7 @@
                 self.switchCheckIn = false;
                 self.switchMsg = false;
                 self.isDailyProgessSubmit = false;
-                $state.go('user.group.subgroup-progressreport', {groupID: 'hotmaill', subgroupID: 'hotemail', u: true});
+                $state.go('user.group.subgroup-progressreport', {groupID: self.isDailyProgessgroupID, subgroupID: self.isDailyProgesssubgroupID, u: true});
             }
 
             function checkinPolicy(callback) {

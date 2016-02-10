@@ -1248,13 +1248,13 @@ path /policies/{groupid}/{policyid} is PolicyType {
             isCurrentUserGroupOwner(groupid)    ||
             isCurrentUserGroupAdmin(groupid)      }
 
-  /dailyReportQuestions/{questionSetId} is QuesitonType { }
+  /progressReportQuestions/{questionSetId} is QuesitonType { }
 }
 
 
 type PolicyType {
    dailyReport : Boolean | Null,
-  // dailyReportQuestions : [String] | Null,
+  // progressReportQuestions : [String] | Null,
    "defined-by" : String,
    location       : LocationType | Null,
    locationBased  : Boolean | Null,
@@ -1325,7 +1325,7 @@ type AppliedPolicyType {
                isSubGroupGroupIDAdmin(this)  }
    }
 
-path /progress-report/{userid}/{groupid}/{subgroupid}/{reportid} is ProgressType {
+path /progress-reports-by-users/{userid}/{groupid}/{subgroupid}/{reportid} is ProgressType {
    read() {   isAuthenticated() &&
               isCurrentUserGroupOwner(groupid)    ||
               isCurrentUserGroupAdmin(groupid) ||
