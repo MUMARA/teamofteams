@@ -41,7 +41,10 @@ type UserType {
  "lastName"      : NameLengthGreaterThanThree,
  "date-created"  : CurrentTimeStamp,
  "status"        : StatusType,                            //plaese donot change this in your code it will change only from zero to one when email is varified
- 'profile-image' : String | Null
+ 'profile-image' : String | Null,
+ 'contactNumber' : ContactNumberLength | Null,
+ 'profession'    : String | Null,
+ 'desc'          : DescLenght | Null
 }
 
 type NameLengthGreaterThanThree extends String{
@@ -114,13 +117,13 @@ type UserPersonalSetting {
 
 
 
+*/
+
 type ContactNumberLength extends Number {
   validate() {
-    this.length >= 5
+    this >= 5
   }
 }
-
-*/
 
 type DescLenght extends String {
   validate() {
@@ -145,7 +148,10 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
 
  //read() { isGroupIdExist(groupid) && isCurrentUserGroupOwner(groupid) || isCurrentUserGroupAdmin(groupid) }
 
- create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1  }
+ create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1 ||
+                  isCurrentUserGroupOwner(groupid)           &&        this['membership-type'].val() >= 2     ||
+                  isCurrentUserGroupAdmin(groupid)           &&        this['membership-type'].val() >= 2
+                  }
  update() {
                  isGroupIdExist(groupid)                    &&
                  isCurrentUserGroupOwner(groupid)           ||
@@ -333,9 +339,8 @@ type GroupInfo {
  'timeZone'         :  TimeZoneLength,
  'logo-image'       :  LogoImageRequirement | Null,
   'address'         :  AddressLength        | Null,
-  "group-owner-id"  :  String |Null,
-  "owner-img-url"   :  String,
-  "signupMode"      :  String
+  "group-owner-id"  :  String,
+  "owner-img-url"   :  String | Null
   }
 
 
@@ -494,18 +499,6 @@ path /group-check-in-records/{groupid} {
     }
 }
 
- //====================================
- //   Group Check In Record
- //====================================
-path /group-locations-defined/{groupid} {
-    read()  { isGroupMembersIdExist(groupid) &&
-              groupMemberShipAnyType(groupid) }
-
-    write() {  isGroupMembersIdExist(groupid)          &&
-               isCurrentUserGroupMembersOwner(groupid) ||
-               isCurrentUserGroupMembersAdmin(groupid)
-            }
-}
 
 
  //====================================
@@ -722,16 +715,6 @@ path /subgroup-members/{groupid} {
 }
 
 
-//===================================
-//        flattened-groups
-//===================================           -------------flattened-groups under discussion
-
-path /flattened-groups {
-    read()  {true}
-    write() {true}
-}
-
-
 //==================================
 //      subgroup-activity-streams
 //==================================
@@ -911,62 +894,6 @@ path /subgroup-check-in-records/{groupid} {
       }
    }
 }
-
-/*
-//==================================
-//      Subgroup  Locations  Defined
-//==================================
-
-path /subgroup-locations-defined/{groupid} {
-    read() {
-            isAuthenticated()                &&
-            isGroupMembersIdExist(groupid)          &&
-            isCurrentUserGroupMembersOwner(groupid) ||
-            groupMemberShipAnyType(groupid)  }
-
-    write() {
-            isAuthenticated()                &&
-            isGroupMembersIdExist(groupid)          &&
-            isCurrentUserGroupMembersOwner(groupid) ||
-            isCurrentUserGroupMembersAdmin(groupid) }
-
-     // path for  /subgroup-locations-defined/{groupid}/{subgroupid}/{userid}
-   //-------------------------------------------------------------
-     /{subgroupid} {
-        read() {
-               isAuthenticated()                        &&
-               isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
-               isCurrentSubUserGroupMembersOwner(groupid,subgroupid)      ||
-               isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)     }
-
-      write() {
-               isAuthenticated()                        &&
-               isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
-               isCurrentSubUserGroupMembersOwner(groupid,subgroupid)      ||
-               isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)    }
-
-    // path for  /subgroup-locations-defined/{groupid}/{subgroupid}/{locid}
-   //-------------------------------------------------------------
-     /{locid} {
-      read() {
-               isAuthenticated()                        &&
-               isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
-               subGroupMembersMemberShipAnyType(groupid,subgroupid)   }
-
-        write() {
-              isAuthenticated()                        &&
-              isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
-              subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
-
-    validate() {
-              this.hasChildren(['defined-by', 'location', 'subgroup-url', 'title', 'timestamp', 'type']) }
-
-    }
-  }
-}
-
-
-*/
 //==================================
 //     user-subgroup-memberships
 //==================================
