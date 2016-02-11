@@ -494,7 +494,7 @@
     "policies": {
       "$groupid": {
         "$policyid": {
-          "dailyReportQuestions": {
+          "progressReportQuestions": {
             "$questionSetId": {
               ".validate": "newData.hasChildren(['timestamp'])",
               "questions": {
@@ -644,7 +644,7 @@
         }
       }
     },
-    "progress-report": {
+    "progress-reports-by-users": {
       "$userid": {
         "$groupid": {
           "$subgroupid": {
