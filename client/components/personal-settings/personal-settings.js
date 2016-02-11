@@ -98,8 +98,8 @@
                             delete that.userData.oldPassword;
                             delete that.userData.newPassword;
                             if (!that.userData['date-created']) that.userData['date-created'] = new Date().getTime();
-                            that.userData['status'] = -1;
-                            
+                            that.userData['status'] = 0;
+
                             // console.log(that.userData)
                             that.userData.$save().then(function(data) {
                                 // $location.path('/user/' + userService.getCurrentUser().userID)
@@ -187,7 +187,7 @@
                     })
                     return defer.promise;
                 }
-                
+
                 function showAdvanced(ev) {
                     $rootScope.tmpImg = $rootScope.newImg;
                     $rootScope.newImg = '';

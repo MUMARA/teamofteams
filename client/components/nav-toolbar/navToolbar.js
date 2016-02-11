@@ -31,7 +31,7 @@
             this.switchCheckIn = false;
             this.isProgressReport = false;
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;     //Firebase TimeStamp
-            
+
             /*VM function ref*/
             this.logout = logout;
             this.PersonalSetting = PersonalSetting;
@@ -82,7 +82,7 @@
             // }, function(e) {
             //     console.log(e)
             // });
-        
+
         //using multipath -- START --
 
             self.subGroupHasPolicy = false;
@@ -178,7 +178,7 @@
                 return dist;
             };
 
-            //Show Dailogue Box for Daily Report Questions -- START -- 
+            //Show Dailogue Box for Daily Report Questions -- START --
             var html = "<md-dialog aria-label=\"Daily Report\" ng-cloak> <form> <md-toolbar> <div class=\"md-toolbar-tools\"> <h2>Daily Progress Report</h2> <span flex></span> </div> </md-toolbar> <md-dialog-content> <div class=\"md-dialog-content\"> <h2>Questions List</h2> <p ng-repeat=\"(id, name) in questions\"> <strong>*</strong> {{name}} </p> <div layout=\"row\"> <md-input-container flex> <label>Please write...</label><textarea ng-model=\"reportText\"></textarea></md-input-container> </div> </div> </md-dialog-content> <md-dialog-actions layout=\"row\"> <span flex></span> <md-button ng-click=\"cancel('not useful')\"> Later </md-button> &nbsp; <md-button ng-click=\"report()\" style=\"margin-right:20px;\"> Submit </md-button> </md-dialog-actions> </form> </md-dialog>";
             self.showAdvanced = function(ev) {
                 //var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
@@ -197,7 +197,7 @@
                     //save report in firebase
                     firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').push({
                         date: firebaseTimeStamp,
-                        answer: reportAnswer, 
+                        answer: reportAnswer,
                         questions: self.subGroupPolicy.dailyReportQuestions
                     })
 
@@ -222,7 +222,7 @@
               };
             }
             //Show Dailogue Box for Daily Report Questions -- END --
-            
+
             function updateStatus(group, checkoutFlag, event) {
                 var groupObj = {};
                 self.checkinSending = true;
@@ -235,17 +235,17 @@
                         userId: self.showUrlObj.userID
                     }
                 }
-                
+
                 checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
                     if(result){
                         self.checkinSending = false;
                         if(checkoutFlag){
-                            messageService.showSuccess('Checkout Successfully!');    
+                            messageService.showSuccess('Checkout Successfully!');
                             if(isSubmitted){
                                 self.switchCheckIn = true;
                                 self.switchMsg = true;
                                 self.isDailyProgessSubmit = true
-                                self.isDailyProgessgroupID = groupObject.groupId;                             
+                                self.isDailyProgessgroupID = groupObject.groupId;
                                 self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {
@@ -255,7 +255,7 @@
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
-                    }  
+                    }
                 });
             }
 
@@ -265,7 +265,7 @@
                 self.checkinSending = true;
 
                  //getting Current Location
-                checkinService.getCurrentLocation().then(function(location) {    
+                checkinService.getCurrentLocation().then(function(location) {
                     // console.log('current location', location.coords);
 
                     if(location.coords) {
@@ -279,7 +279,7 @@
                                         updateHelper(group, false, event, function(bool){
                                             if(bool) {
                                                 chekinSwitch(group, false);
-                                                messageService.showSuccess('Checkin Successfully!');    
+                                                messageService.showSuccess('Checkin Successfully!');
                                             } else {
                                                 messageService.showFailure('Please contact to your administrator');
                                             }
@@ -290,7 +290,7 @@
                                     updateHelper(group, false, event, function(bool){
                                         if(bool){
                                             chekinSwitch(group, false);
-                                            messageService.showSuccess('Checkin Successfully!');    
+                                            messageService.showSuccess('Checkin Successfully!');
                                         } else {
                                             messageService.showFailure('Please contact to your administrator');
                                         }
@@ -304,7 +304,7 @@
                             //             updateHelper(group, false, event, function(bool){
                             //                 if(bool) {
                             //                     chekinSwitch(group, false);
-                            //                     messageService.showSuccess('Checkin Successfully!');    
+                            //                     messageService.showSuccess('Checkin Successfully!');
                             //                 } else {
                             //                     messageService.showFailure('Please contact to your administrator');
                             //                 }
@@ -315,26 +315,26 @@
                             //         updateHelper(group, false, event, function(bool){
                             //             if(bool){
                             //                 chekinSwitch(group, false);
-                            //                 messageService.showSuccess('Checkin Successfully!');    
+                            //                 messageService.showSuccess('Checkin Successfully!');
                             //             } else {
                             //                 messageService.showFailure('Please contact to your administrator');
                             //             }
                             //         });
                             //     }
-                            // }); // checkingHasPolicy 
+                            // }); // checkingHasPolicy
                         } else {    //if no group (on checkout)
                             // console.log('Checkout', true)
                             updateHelper(false, true, event, function(bool){
                                 if(bool){
                                     self.showAdvanced(event); //show dailogue box to take progress report
                                     //chekinSwitch(false, true);    //checkinswitch(group, checkoutFlag)
-                                    messageService.showSuccess('Checkout Successfully!');    
+                                    messageService.showSuccess('Checkout Successfully!');
                                     self.subGroupHasPolicy = false; self.subGroupPolicy = {};
                                  } else {
                                     messageService.showFailure('Please contact to your administrator');
                                 }
                             }); // update data on firebase
-                            
+
                         } //else group
 
                     } else { //if not location.coords
@@ -354,7 +354,7 @@
                 self.switchCheckIn = false;
             }
             this.submitReport = function(){
-                //self.showUrlObj.userID 
+                //self.showUrlObj.userID
                 //self.showUrlObj.groupID
                 //self.showUrlObj.subgroupID
                 //$location
@@ -371,18 +371,18 @@
                     var distance = self.CalculateDistance(self.subGroupPolicy.location.lat, self.subGroupPolicy.location.lng, self.currentLocation.lat, self.currentLocation.lng, 'K');
                     // console.log('distance:' + distance);
                     // console.log('distance in meter:' + distance * 1000);
-                    
+
                     if ((distance * 1000) > self.subGroupPolicy.location.radius) {  //checking lcoation radius
                         chekinSwitch(false, true);
                         self.switchCheckIn = false;
                         messageService.showFailure('Current Location does not near to the Team Location');
                         return false;
                     } else { // if within radius
-                        
+
                         checkinTimeBased(function(d) {  //policy has also timeBased
                             if(d) {
                                 callback();     //if result true (checkin allow)
-                            } 
+                            }
                         }); //checking if time based
                     } //if within radius
 
@@ -390,7 +390,7 @@
                     checkinTimeBased(function(d) {
                         if(d) {
                             callback();      //if result true (checkin allow)
-                        } 
+                        }
                     }); //checking if time based
                 } else {    //checking others like if dailyReport
                     callback();      //result true (checkin allow) (might be only dailyReport has checked)
@@ -404,10 +404,10 @@
                 if(self.subGroupPolicy.timeBased) {
                     var today = new Date();
                     var Schduleday = days[today.getDay()];
-                    
+
                     //(self.subGroupPolicy.schedule[Schduleday] && self.subGroupPolicy.schedule[Schduleday][today.getHours()]) ?  console.log('t') : console.log('f');
                     if(self.subGroupPolicy.schedule[Schduleday] && self.subGroupPolicy.schedule[Schduleday][today.getHours()]) {
-                        //if allow then checkin 
+                        //if allow then checkin
                         callback(true);
                     } else {   //checking allow in days with hours
                         chekinSwitch(false, true);
@@ -460,7 +460,7 @@
                 // //checking daily progress report is exists or not -- START --
                 // firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').orderByChild('date')
                 // .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
-                //     console.log(snapshot.val());            
+                //     console.log(snapshot.val());
                 //     if(snapshot.val() == null){
                 //         //if null then show alert for add daily progress report
                 //         self.showAdvanced(event); //show dailogue box for getting progress report
@@ -473,7 +473,7 @@
                 //         checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, cb);
                 //     }
                 // });
-                // //checking daily progress report is exists or not -- END -- 
+                // //checking daily progress report is exists or not -- END --
 
                 //add/update in firebase...
                 checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, self.currentLocation, cb);
@@ -526,7 +526,7 @@
 
             //update firebase on checkin or checkout
             function updateFirebase(groupObj, checkoutFlag, cb) { //on checkout checkoutFlag is true, on checkin checkoutFlag is false
-                
+
                 var multipath = {};
                 var dated = Date.now();
                 var ref = firebaseService.getRefMain();         //firebase main reference
@@ -535,7 +535,7 @@
                 //generate key
                 var newPostRef = firebaseService.getRefsubgroupCheckinRecords().child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push();
                 var newPostKey = newPostRef.key();
-                
+
                 var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
                 var statusType = (checkoutFlag) ? 2 : 1;
 
@@ -574,9 +574,9 @@
                     "timestamp": dated,
                     "type": statusType
                 }
-                //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
-                refGroup.child(groupObj.groupId).child('members-checked-in').child('count').once('value', function(snapshot){
-                    multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+                //multipath["groups/"+groupObj.groupId+"/members-checked-in-count"] = 0;
+                refGroup.child(groupObj.groupId).child('members-checked-in-count').once('value', function(snapshot){
+                    multipath["groups/"+groupObj.groupId+"/members-checked-in-count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
                     ref.update(multipath, function(err){
                         if(err) {
                             console.log('err', err);
@@ -589,7 +589,7 @@
             } //updateFirebase
 
 
-            
+
 
 
 
@@ -602,13 +602,13 @@
                 // $location.path('/user/' + userService.getCurrentUser().userID)
                 $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
             }
-            
-            this.checkTeamAvailable = function () {                
+
+            this.checkTeamAvailable = function () {
                 if (self.groups.length === 0) {
                     messageService.showFailure('Currently you are not a member of any Team!');
                     self.switchCheckIn = false;
                     return
-                }                
+                }
             }
 
             this.checkinClick = function(event) {
@@ -696,4 +696,3 @@
     ]);
 
 })();
- 

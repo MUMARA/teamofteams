@@ -294,14 +294,12 @@ function isCurrentUserGroupMembersOwner($groupid) {
 
   update() { isGroupMembersIdExist(groupid) && isCurrentUserGroupMembersOwner(groupid) || isCurrentUserGroupMembersAdmin(groupid) }
 
- validate() { this.hasChildren(['privacy']) }
-
   //update() { }
 
    // path for /groups/groupid/privacy
   //--------------------------------------------
 
-  /privacy is PrivacyType { }
+  //privacy is PrivacyType { }
 
 
   //--------------------------------------------------
@@ -342,7 +340,8 @@ type GroupInfo {
   'address'         :  AddressLength        | Null,
   "group-owner-id"  :  String,
   "owner-img-url"   :  String | Null,
-  'members-checked-in-count' : Number
+  'members-checked-in-count' : Number,
+  "privacy"                  : InvitationPrivacyType
   }
 
 
@@ -388,11 +387,12 @@ type Count extends Number {
   validate() { this >= 0 }
   write()    { isGroupMembersIdExist(groupid) && groupMemberShipAnyType(groupid) }
 }
-*/
+
 type PrivacyType {
   invitationType : InvitationPrivacyType
 
 }
+*/
  type InvitationPrivacyType extends Number {
   validate() { this == 1 || this == 2 || this == 3}
  }
@@ -1183,13 +1183,13 @@ path /policies/{groupid}/{policyid} is PolicyType {
             isCurrentUserGroupOwner(groupid)    ||
             isCurrentUserGroupAdmin(groupid)      }
 
-  /progressReportQuestions/{questionSetId} is QuesitonType { }
+  /dailyReportQuestions/{questionSetId} is QuesitonType { }
 }
 
 
 type PolicyType {
    dailyReport : Boolean | Null,
-  // progressReportQuestions : [String] | Null,
+  // dailyReportQuestions : [String] | Null,
    "defined-by" : String,
    location       : LocationType | Null,
    locationBased  : Boolean | Null,
@@ -1240,7 +1240,8 @@ path /subgroup-policies/{groupid}/{subgroupid} is AppliedPolicyType {
 
 type AppliedPolicyType {
    hasPolicy   :  Boolean,
-   policyID :    String
+   policyID    :    String,
+   title       : String
 
 }
 
@@ -1260,26 +1261,43 @@ type AppliedPolicyType {
                isSubGroupGroupIDAdmin(this)  }
    }
 
-path /progress-reports-by-users/{userid}/{groupid}/{subgroupid}/{reportid} is ProgressType {
-   read() {   isAuthenticated() &&
-              isCurrentUserGroupOwner(groupid)    ||
-              isCurrentUserGroupAdmin(groupid) ||
-                 subGroupMembersMemberShipAnyType(groupid,subgroupid) }
-   write() {  isAuthenticatedUser(userid) }
+path /progress-reports-by-users/{userid} {
 
+  read() { isAuthenticated() }
+
+  /{groupid} {
+
+    index()  {  "date" }
+    /{subgroupid}{
+
+      /{reportid} is ProgressType {
+          read() {   isAuthenticated() &&
+                     isCurrentUserGroupOwner(groupid)    ||
+                     isCurrentUserGroupAdmin(groupid) ||
+                     subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+          write() {  isAuthenticatedUser(userid) }
+
+        }
+      }
+       index()  {  "date" }
+  }
 }
 
  type ProgressType {
   answers : String[],
   date    : CurrentTimeStamp,
-  questionSetId : String
+  questionID : String
 
  }
 
-path /group-channel/{groupid}/{channelid} is ChatChannelType {
-   read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
-   write() { isAuthenticated() && userGroupMembershipAnyType(groupid) }
+path /group-channel/{groupid} {
 
+    /{channelid} is ChatChannelType  {
+      read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
+      write() { isAuthenticated() && userGroupMembershipAnyType(groupid) }
+    }
+
+   index() { "title" }
 
 }
 path /group-messages/{groupid}/{channelid}/{messageid} is ChatChannelMessageType {

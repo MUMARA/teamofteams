@@ -31,9 +31,7 @@ rulesSuite("Team of Teams Tests", function(test) {
                     status          : 0      };
 //Group Data
   var groupData = {
-                    privacy : {
-                        invitationType : 1
-                    },
+                    privacy :  1,
                     "members-checked-in-count" : 0,
                     title             : "Hello",
                     timestamp         : test.TIMESTAMP,
@@ -103,7 +101,7 @@ var GroupMessagesData = {
     //Testing Start from here
 //==============================================================================================
 //Create Team of Teams with User
-/*
+
 var GroupMembershipsRequestData = { message : "Please Add me in this group" , timestamp : test.TIMESTAMP };
  test("Team of Teams write Test with User", function(rules){
      rules
@@ -205,7 +203,7 @@ test("team of teams update test with unauth" ,function(rules){
 
 
 });
-*/
+/*
 //Team of teams update test with auth user
  test("team of Teams update by User" ,function(rules){
      rules
@@ -287,7 +285,7 @@ test("team of teams update test with unauth" ,function(rules){
          .write(groupData)
          .fails("Only Admin and Owner can update group");
  });
-/*
+
 //Team of teams update by Admin
  test("team of teams update by admin" ,function(rules){
      rules

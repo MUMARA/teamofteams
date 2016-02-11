@@ -105,7 +105,7 @@
                 $scope.chartGroupActive = true;
 
                 $scope.totalMembers = groupMetaDataObj['members-count'];
-                $scope.checkedInUsers = groupMetaDataObj['members-checked-in'].count;
+                $scope.checkedInUsers = groupMetaDataObj['members-checked-in-count'];
                 $scope.checkedOutUsers = $scope.totalMembers - $scope.checkedInUsers;
 
                 $scope.chartGroupData = {

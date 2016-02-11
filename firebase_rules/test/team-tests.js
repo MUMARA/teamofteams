@@ -39,9 +39,7 @@ var subgroupData = {
 };
 //Group Data
   var groupData = {
-                    privacy : {
-                        invitationType : 1
-                    },
+                    privacy :  1,
                     "members-checked-in-count" : 0,
                     title             : "Hello",
                     timestamp         : test.TIMESTAMP,
@@ -260,7 +258,7 @@ var subgroupData = {
         }).succeeds("User Group Memberships Created")
 
         //Groups Members update 1 to 3 for testing as members
-        
+
          //Groups Members
           .as("arsalan")
           .at(pathforGroupMembersGroupidUid)

@@ -106,13 +106,9 @@ angular.module('core')
                                                 timestamp: firebaseTimeStamp,
                                                 "members-count": 1,
                                                 "subgroups-count": 0,
-                                                "members-checked-in": {
-                                                    count: 0
-                                                },
+                                                "members-checked-in-count": 0,
 
-                                                privacy: {
-                                                    invitationType: +groupObj.signupMode
-                                                },
+                                                privacy: +groupObj.signupMode,
                                                 'logo-image': {
                                                     url: groupObj.imgLogoUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png', // pID is going to be changed with userID for single profile picture only
                                                     id: groupObj.groupID,

@@ -108,15 +108,6 @@
     },
     "groups": {
       "$groupid": {
-        "privacy": {
-          ".validate": "newData.hasChildren(['invitationType'])",
-          "invitationType": {
-            ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
-          },
-          "$other": {
-            ".validate": "false"
-          }
-        },
         ".validate": "newData.hasChildren(['title', 'timestamp', 'members-count', 'subgroups-count', 'timeZone', 'group-owner-id', 'members-checked-in-count', 'privacy'])",
         "title": {
           ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 40"
@@ -156,6 +147,9 @@
         },
         "members-checked-in-count": {
           ".validate": "newData.isNumber()"
+        },
+        "privacy": {
+          ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
         },
         "$other": {
           ".validate": "false"
@@ -494,7 +488,7 @@
     "policies": {
       "$groupid": {
         "$policyid": {
-          "progressReportQuestions": {
+          "dailyReportQuestions": {
             "$questionSetId": {
               ".validate": "newData.hasChildren(['timestamp'])",
               "questions": {
@@ -609,11 +603,14 @@
     "subgroup-policies": {
       "$groupid": {
         "$subgroupid": {
-          ".validate": "newData.hasChildren(['hasPolicy', 'policyID'])",
+          ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'title'])",
           "hasPolicy": {
             ".validate": "newData.isBoolean()"
           },
           "policyID": {
+            ".validate": "newData.isString()"
+          },
+          "title": {
             ".validate": "newData.isString()"
           },
           "$other": {
@@ -628,11 +625,14 @@
       "$userid": {
         "$groupid": {
           "$subgroupid": {
-            ".validate": "newData.hasChildren(['hasPolicy', 'policyID'])",
+            ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'title'])",
             "hasPolicy": {
               ".validate": "newData.isBoolean()"
             },
             "policyID": {
+              ".validate": "newData.isString()"
+            },
+            "title": {
               ".validate": "newData.isString()"
             },
             "$other": {
@@ -649,7 +649,7 @@
         "$groupid": {
           "$subgroupid": {
             "$reportid": {
-              ".validate": "newData.hasChildren(['date', 'questionSetId'])",
+              ".validate": "newData.hasChildren(['date', 'questionID'])",
               "answers": {
                 "$key1": {
                   ".validate": "newData.isString()"
@@ -658,7 +658,7 @@
               "date": {
                 ".validate": "newData.isNumber() && newData.val() <= now"
               },
-              "questionSetId": {
+              "questionID": {
                 ".validate": "newData.isString()"
               },
               "$other": {
@@ -666,9 +666,13 @@
               },
               ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
               ".write": "auth != null && auth.uid == $userid"
-            }
+            },
+            ".indexOn": [
+              "date"
+            ]
           }
-        }
+        },
+        ".read": "auth != null"
       }
     },
     "group-channel": {
@@ -689,7 +693,10 @@
           },
           ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
           ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
-        }
+        },
+        ".indexOn": [
+          "title"
+        ]
       }
     },
     "group-messages": {

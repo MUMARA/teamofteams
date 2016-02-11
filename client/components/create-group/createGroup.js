@@ -38,7 +38,7 @@
                 desc: "",
                 members: "",
                 membersArray: [],
-                signupMode: "2",
+                //signupMode: "2",
                 address: '',
                 phone: ''
             };

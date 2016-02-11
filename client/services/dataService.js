@@ -193,7 +193,7 @@ angular.module('core')
                                 val.ownerID = groupmasterdata["group-owner-id"];
                                 val.owerImgUrl = groupmasterdata["owner-img-url"];
                                 val.imgUrl = (groupmasterdata["logo-image"] ? groupmasterdata["logo-image"].url : '' );
-                                val.membersOnline = (groupmasterdata["members-checked-in"] ? groupmasterdata["members-checked-in"].count : 0);
+                                val.membersOnline = (groupmasterdata["members-checked-in-count"] ? groupmasterdata["members-checked-in-count"].count : 0);
                                 val.members = groupmasterdata["members-count"];
                                 eflag = false;
                             }
@@ -211,7 +211,7 @@ angular.module('core')
                                     ownerID: groupmasterdata["group-owner-id"],
                                     owerImgUrl: groupmasterdata["owner-img-url"],
                                     imgUrl: (groupmasterdata["logo-image"] ? groupmasterdata["logo-image"].url : '' ),
-                                    membersOnline: (groupmasterdata["members-checked-in"] ? groupmasterdata["members-checked-in"].count : 0),
+                                    membersOnline: (groupmasterdata["members-checked-in-count"] ? groupmasterdata["members-checked-in-count"] : 0),
                                     members: groupmasterdata["members-count"]
                                 }); //userGroups Push
                                 firebaseService.getRefGroups().child(group.key()).on('child_changed', function(snapshot, prevChildKey) {
@@ -220,7 +220,7 @@ angular.module('core')
                                             if (snapshot.key() === "title") {
                                                 item.title = snapshot.val();
                                             }
-                                            if (snapshot.key() === "members-checked-in") {
+                                            if (snapshot.key() === "members-checked-in-count") {
                                                 item.membersOnline = snapshot.val().count;
                                             }
                                             if (snapshot.key() === "members-count") {
