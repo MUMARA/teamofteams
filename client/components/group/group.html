@@ -52,6 +52,11 @@
                 <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('progressreport', group.panel.subgroupID)" />
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'progressreport'" class="showArrow anifade">
             </div>
+            <!-- firepad tab -->
+            <div layout="row" ng-if="group.isMember()">
+                <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('collaborator', group.panel.subgroupID)" />
+                <img src="img/1arrow.png" ng-if="group.panel.active === 'collaborator'" class="showArrow anifade">
+            </div>
         </div>
         <div ng-if="group.isAdmin()">
             <md-divider class="backColorWhite topbottommargin5px"></md-divider>
@@ -80,7 +85,7 @@
         <div style="margin:auto;">
             <span layout="row" layout-align="center center">
                 <img ng-src="{{ group.group['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px; padding-top:10px">
-            </span>    
+            </span>
             <h4 class="textAlignCenter" layout-margin>
                 {{ group.group.title }}
             </h4>

@@ -11,12 +11,36 @@
         	var subGroupNames = [];
     	    function setSubGroupNames(groupID) {
                 subGroupNames = [];
-                firebaseService.getRefSubGroupsNames().child(groupID).on('child_added', function(subGroups, prevChildKey) {
-                     // console.log(subGroups.key());
-                     // console.log(subGroups.val());
-                    //subGroupNames.push({subgroupID: subGroups.key(), subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(), hasPolicy: (subGroups.val().hasPolicy) ? subGroups.val().hasPolicy : false });
-                    subGroupNames.push({subgroupID: subGroups.key(), subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(), hasPolicy: false, policyID: (subGroups.val().policyID) ? subGroups.val().policyID : '' });
+
+                firebaseService.getRefSubgroupPolicies().child(groupID).on('child_added',function(subGroups, prevChildKey){
+                    //after getting names checking subgroup has policy or nothing
+                    subGroupNames.push({
+                        subgroupID: subGroups.key(),
+                        subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(),
+                        hasPolicy: false,
+                        policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
+                    });
+                }); //getRefSubgroupPolicies
+
+                firebaseService.getRefSubgroupPolicies().child(groupID).on('child_changed', function(snapshot){
+                        subGroupNames.forEach(function(value, index){
+                            if(value.subgroupID == snapshot.key()){
+                                subGroupNames[index]['policyID'] = snapshot.val().policyID;
+                            }
+                        });
                 });
+
+                // //getting subgroup names
+                // firebaseService.getRefSubGroupsNames().child(groupID).on('child_added', function(subGroups, prevChildKey) {
+                //     //subGroupNames.push({subgroupID: subGroups.key(), subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(), hasPolicy: (subGroups.val().hasPolicy) ? subGroups.val().hasPolicy : false });
+                //     subGroupNames.push({
+                //         subgroupID: subGroups.key(),
+                //         subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(),
+                //         hasPolicy: false,
+                //         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
+                //     });
+                //     console.log('subGroupNames.length', subGroupNames.length);
+                // }); //getRefSubGroupsNames
             }
             function getSubGroupNames(groupID) {
             	setSubGroupNames(groupID);
@@ -25,7 +49,7 @@
             //Getting SubGroup Names of given GroupID -- END --
 
 
-			//Getting Members of Given GroupID and SubGroupID -- START --            
+			//Getting Members of Given GroupID and SubGroupID -- START --
 			var subGroupMembers = [];
 			function setSubGroupMembers(groupID, subgroupID) {
                 subGroupMembers = [];
@@ -35,12 +59,12 @@
                     subGroupMembers.push({groupID: groupID, subgroupID: subgroupID, userID: subGroups.key()});
                 });
             }
-            
+
             function getSubGroupMembers(groupID, subgroupID) {
             	setSubGroupMembers(groupID, subgroupID);
             	return subGroupMembers;
             }
-			//Getting Members of Given GroupID and SubGroupID -- END --   
+			//Getting Members of Given GroupID and SubGroupID -- END --
 
 			//Getting Policies by given GroupID --START --
 			var groupPolicies = [];
@@ -58,7 +82,6 @@
                 //     }
                 //     console.log('groupPolicies ',groupPolicies);
                 // });
-                
 			}
 			function getGroupPolicies(groupID) {
 				setGroupPolicies(groupID);
@@ -68,6 +91,8 @@
 
 			//Save data in firebase using Multi-Path 	-- START --
 			function answer(obj, groupID, selectedTeams, selectedTeamMembers, policyID, cb) {
+                //var firebaseTimestamp = Firebase.ServerValue.TIMESTAMP;
+
 				//refernce Object
                 var refNodes = { ref: firebaseService.getRefMain(),
                                  policies: firebaseService.getRefPolicies()
@@ -78,7 +103,6 @@
 	                // Generate a new push ID for the new policy
 	                var newPolicyRef = refNodes.policies.push();
 	                newPolicyKey = newPolicyRef.key();
-	                
                 } else {
                 	//on Edit
                 	newPolicyKey = policyID;
@@ -87,8 +111,24 @@
                 //set policyID
                 obj.policyID = newPolicyKey;
 
+                var questionObj = obj["progressReportQuestions"];   //setting progressReportQuestions from 'obj'
+                delete obj["progressReportQuestions"];              //delete progressReportQuestions from 'obj'
+
                 //Saving on firebase by using multi path update
                 var multiPathUpdate = {};
+
+                //add policy in policies node
+                //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey] = obj;
+
+                //for daily progress questions
+                if(obj['progressReport']){
+                    var newQuestionRef = refNodes.ref.child("policies").child(groupID).child(newPolicyKey).child('progressReportQuestions').push();
+                    var newQuestionID = newQuestionRef.key();
+                    //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = questionObj;
+                    obj['progressReportQuestions'] = {};
+                    obj['progressReportQuestions'][newQuestionID] = questionObj;
+                    obj['latestProgressReportQuestionID'] = newQuestionID;
+                }
 
                 //add policy in policies node
                 multiPathUpdate["policies/"+groupID+"/"+newPolicyKey] = obj;
@@ -96,8 +136,9 @@
                 //getting subgroups which are selected....
                 selectedTeams.forEach(function(val, indx){
                     //add property hasPolicy in subgroupNames..
-                    multiPathUpdate["subgroups-names/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
-                    multiPathUpdate["subgroups-names/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+                    // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
+                    // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
@@ -120,7 +161,7 @@
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
-                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = newPolicyKey;
+                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey };
                         //multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
@@ -144,7 +185,7 @@
             //Step1 checking Subgroup has Policy
             function checkingTeamHasPolicy(groupID, subgroupID, cb){
                 firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot){
-                    if(snapshot.val() && snapshot.val().hasPolicy && snapshot.val().hasPolicy == true){
+                    if(snapshot.val() && snapshot.val().hasPolicy && snapshot.val().hasPolicy === true){
                         cb(snapshot.val().hasPolicy, snapshot.val().policyID);
                     } else {
                         cb(false, null);
@@ -176,7 +217,7 @@
                         memeberIDarray.forEach(function(val, index){
 
                             multiPathUpdate["user-policies/"+val+"/"+groupID+"/"+subgroupID] = policyID;
-                            
+
                             if(memeberIDarray.length == index+1){
                                 firebaseService.getRefMain().update(multiPathUpdate, function(err){
                                      if(err){
@@ -201,7 +242,7 @@
                 answer: 			answer,
                 assignTeamPolicyToMember: assignTeamPolicyToMember,
                 assignTeamPolicyToMultipleMembers: assignTeamPolicyToMultipleMembers
-            }
+            };
         }]);
 
 })();

@@ -9,10 +9,19 @@
     <title>Team of Teams</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <link href="img/favico/favicon.ico" rel="icon" type="image/x-icon" />
+
+
+    <!-- Collaborator CSS -->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="lib/collaborator/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="lib/collaborator/firepad/dist/firepad.css">
+    <link rel="stylesheet" href="css/collaborator.css">
+
+    <!-- Style CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body ng-app="myApp" ng-controller="AppController as app">
-    <ui-view name="nav"></ui-view>
+    <ui-view name="nav" ></ui-view>
     <ui-view name="main"></ui-view>
     <!-- jQuery -->
     <script src="lib/jquery.js"></script>
@@ -63,6 +72,12 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-filter/0.4.7/angular-filter.js"></script>
 
+
+    <!-- Collaborator -->
+    <script src="lib/collaborator/codemirror/lib/codemirror.js"></script>
+    <script src="lib/collaborator/firepad/dist/firepad.js"></script>
+    <script src="lib/collaborator/bower_components/angular-file-saver/dist/angular-file-saver.bundle.min.js"></script>
+
     <!-- Custom Libraries Start -->
     <script src="coreModules/core.module.js"></script>
     <script src="coreModules/firebase-as-array.js"></script>
@@ -74,6 +89,8 @@
     <script src="components/manualattendace/manualattendace.js"></script>
     <script src="components/progressreport/progressreportService.js"></script>
     <script src="components/progressreport/progressreport.js"></script>
+    <script src="components/collaborator/collaboratorService.js"></script>
+    <script src="components/collaborator/collaborator.js"></script>
     <script src="components/group/groupService.js"></script>
     <script src="components/group/group.js"></script>
     <script src="components/home/home.js"></script>

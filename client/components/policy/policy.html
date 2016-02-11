@@ -18,7 +18,7 @@ md-checkbox.md-checked .md-icon {
 }
 
 /*table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2), table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
-     padding: 0 20px 0 0 !important; 
+     padding: 0 20px 0 0 !important;
 }*/
 
 </style>
@@ -88,14 +88,14 @@ md-checkbox.md-checked .md-icon {
                                     </form>
                                 </div>
                                 <div>
-                                    <md-button class="md-raised" ng-click='policy.getLatLngByAddress(policy.address)'><span style="color: #60B089"><b>Find on Map</b></span></md-button>
+                                    <md-button class="md-raised" ng-click="policy.getLatLngByAddress(policy.address)"><span style="color: #60B089"><b>Find on Map</b></span></md-button>
                                 </div>
                             </div>
                             <div layout="column" layout-align="center center" layout-padding layout-margin>
                                 <leaflet id="leafletmap" defaults="policy.defaults" center="policy.center" markers="policy.markers" height="600px" width="900px" flex paths="policy.paths"></leaflet>
                                 <div layout="row" layout-align="center center" style="width:900px">
                                     <span>
-                                            Fencing: 
+                                            Fencing:
                                         </span>
                                     <md-slider style="width:900px;height:44px" md-discrete class="md-primary" ng-model="policy.paths.c1.radius" step="1" min="1" max="100" aria-label="fecning"></md-slider>
                                 </div>
@@ -149,10 +149,10 @@ md-checkbox.md-checked .md-icon {
                     <!-- timeBasediv    END -->
                     <!-- DailyReport div    START -->
                     <div>
-                        <md-checkbox ng-model="policy.isDailyReport" aria-label="Daily Report">
+                        <md-checkbox ng-model="policy.isProgressReport" aria-label="Daily Report">
                             <h4>Daily Report</h4>
                         </md-checkbox>
-                        <div id="dailyReportdiv" ng-show="policy.isDailyReport">
+                        <div id="dailyReportdiv" ng-show="policy.isProgressReport">
                             <div layout="row" layout-align="start center">
                                 <md-input-container flex="50">
                                     <label>Question</label>
@@ -175,7 +175,7 @@ md-checkbox.md-checked .md-icon {
                                     </tr>
                                 </thead>
                                 <tbody md-body>
-                                    <tr md-row ng-repeat="(id, name) in policy.dailyReportQuestions track by $index" class="hoverLightGrey3">
+                                    <tr md-row ng-repeat="(id, name) in policy.progressReportQuestions track by $index" class="hoverLightGrey3">
                                         <td md-cell>{{$index}}</td>
                                         <td md-cell>{{name}}</td>
                                         <td md-cell><strong style="color:red;" ng-click="policy.deleteQuestion(id);" class="cursorPointer nooutline">X</strong></td>
