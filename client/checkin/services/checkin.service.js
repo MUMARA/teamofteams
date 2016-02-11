@@ -258,9 +258,9 @@
                 "type": statusType
             };
 
-            //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
-            refGroup.child(groupObj.groupId).child('members-checked-in').child('count').once('value', function(snapshot){
-                multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+            //multipath["groups/"+groupObj.groupId+"/members-checked-in-count"] = 0;
+            refGroup.child(groupObj.groupId).child('members-checked-in-count').once('value', function(snapshot){
+                multipath["groups/"+groupObj.groupId+"/members-checked-in-count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
                 ref.update(multipath, function(err){
                     if(err) {
                         // console.log('err', err);
@@ -515,7 +515,7 @@
             updateGroupCount: function(groupID, checkinType) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/members-checked-in');
+                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/members-checked-in-count');
                 var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
@@ -535,7 +535,7 @@
             updateAllSubGroupCount: function(groupID, subgroupID, numberofuser) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in-count');
                 var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
@@ -554,7 +554,7 @@
             updateSubGroupCount: function(groupID, subgroupID, checkinType) {
                 var defer = $q.defer();
 
-                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in-count');
                 var $checkin = $firebaseObject(groupCheckedIn);
 
                 $checkin.$loaded()
