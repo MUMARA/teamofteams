@@ -1275,22 +1275,22 @@ path /group-channel/{groupid}/{channelid} is ChatChannelType {
 
 }
 path /group-messages/{groupid}/{channelid}/{messageid} is ChatChannelMessageType {
-  create() { isAuthenticatedUser(this[from]) }
-  update() { isAuthenticatedUser(prior(this[from])) }
-  delete() { isAuthenticatedUser(prior(this[from])) }
+  create() { isAuthenticatedUser(this['from']) }
+  update() { isAuthenticatedUser(prior(this['from'])) }
+  delete() { isAuthenticatedUser(prior(this['from'])) }
   read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
 }
-path /subgroup-channel/{groupid}/{subgroup}/{channelid} is ChatChannelType {
+path /subgroup-channel/{groupid}/{subgroupid}/{channelid} is ChatChannelType {
    read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
    write() { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
 
 
 }
 path /subgroup-messages/{groupid}/{subgroupid}/{channelid}/{messageid} is ChatChannelMessageType {
-  create() { isAuthenticatedUser(this[from]) }
-  update() { isAuthenticatedUser(prior(this[from])) }
-  delete() { isAuthenticatedUser(prior(this[from])) }
+  create() { isAuthenticatedUser(this['from']) }
+  update() { isAuthenticatedUser(prior(this['from'])) }
+  delete() { isAuthenticatedUser(prior(this['from'])) }
   read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
 
 }

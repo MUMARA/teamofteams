@@ -35,14 +35,15 @@
 
         function getLocation(groupID, subgroupID) {
             var defer = $q.defer();
-            var locationRef = new Firebase(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID).toString());
-            locationRef.orderByValue().on("value", function(snapshot) {
-                snapshot.forEach(function(data) {
-                    //console.log(data.val());
-                    refs.$currentSubGroupLocationsObject = data.val();
-                });
+            // var locationRef = new Firebase(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID).toString());
+            // locationRef.orderByValue().on("value", function(snapshot) {
+            //     snapshot.forEach(function(data) {
+            //         //console.log(data.val());
+            //         refs.$currentSubGroupLocationsObject = data.val();
+            //     });
+            //     defer.resolve();
+            // });
                 defer.resolve();
-            });
             return defer.promise;
         }
 
@@ -259,8 +260,8 @@
             };
 
             //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
-            refGroup.child(groupObj.groupId).child('members-checked-in').child('count').once('value', function(snapshot){
-                multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+            refGroup.child(groupObj.groupId).child('members-checked-in-count').once('value', function(snapshot){
+                multipath["groups/"+groupObj.groupId+"/members-checked-in-count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
                 ref.update(multipath, function(err){
                     if(err) {
                         // console.log('err', err);
@@ -299,35 +300,36 @@
             hasSubGroupCurrentLocation: function(groupID, subGroupID){
                 var defer = $q.defer();
                 var hasLocation = false;
-                $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID))
-                    .$loaded().then(function(data){
-                        // console.log(data[0].location)
-                        if(data[0] && data[0].location){
-                            hasLocation = true;
-                            defer.resolve(hasLocation);
-                        }
-                    });
-
-                refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID).on('child_changed', function(snapshot){
-                    // console.log(snapshot.val().location);
-                    if(snapshot.val() && snapshot.val().location){
-                        hasLocation = true;
-                        defer.resolve(hasLocation);
-                }
-                })
-
+                // $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID))
+                //     .$loaded().then(function(data){
+                //         // console.log(data[0].location)
+                //         if(data[0] && data[0].location){
+                //             hasLocation = true;
+                //             defer.resolve(hasLocation);
+                //         }
+                //     });
+                //
+                // refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID).on('child_changed', function(snapshot){
+                //     // console.log(snapshot.val().location);
+                //     if(snapshot.val() && snapshot.val().location){
+                //         hasLocation = true;
+                //         defer.resolve(hasLocation);
+                // }
+                // })
+                defer.resolve('');
                 return defer.promise;
             },
             createCurrentRefsBySubgroup: function(groupID, subgroupID, userID) {
                 var defer = $q.defer();
-                getLocation(groupID, subgroupID).then(function(data) {
-                    //refs.$currentSubGroupLocations = Firebase.getAsArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
-                    refs.$currentSubGroupLocations = $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID));
-                    //refs.refCurrentSubGroupCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID).child(subgroupID);
-                    var userCheckinRecords = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupID + '/' + userID);
-                    refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
-                    defer.resolve('test');
-                });
+                // getLocation(groupID, subgroupID).then(function(data) {
+                //     //refs.$currentSubGroupLocations = Firebase.getAsArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
+                //     refs.$currentSubGroupLocations = $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID));
+                //     //refs.refCurrentSubGroupCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID).child(subgroupID);
+                //     var userCheckinRecords = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupID + '/' + userID);
+                //     refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+                //     defer.resolve('test');
+                // });
+                defer.resolve('');
                 return defer.promise;
             },
             getRefSubgroupCheckinCurrentByUser: function() {
