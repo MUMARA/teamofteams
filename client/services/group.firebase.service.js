@@ -321,7 +321,7 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
-                                    var subgroupNames = {title: subgroupInfo.title, hasPolicy: false};
+                                    var subgroupNames = {title: subgroupInfo.title};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
                                     groupNameRef.set(subgroupNames,  function(error) {
@@ -341,6 +341,10 @@ angular.module('core')
                                                             }
                                                         })
                                                     })
+
+                                                    //save in subgroup-policies for Policies
+                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({hasPolicy: false, policyID: '', title: subgroupInfo.title});
+
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
                                                     subgroupRef.set({
