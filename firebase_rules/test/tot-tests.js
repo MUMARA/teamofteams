@@ -34,18 +34,14 @@ rulesSuite("Team of Teams Tests", function(test) {
                     privacy : {
                         invitationType : 1
                     },
-                    "members-checked-in" : {
-                        count    : 0
-                    },
+                    "members-checked-in-count" : 0,
                     title             : "Hello",
                     timestamp         : test.TIMESTAMP,
                     "members-count"   : 1,
                     "subgroups-count" : 0,
                     timeZone          : "12345",
                     phone             : "124542124612225",
-                    "owner-img-url"   : "https://www.google.com.pk/imgres?imgurl=https://www.google.com/doodle4google/images/splashes/featured.png&imgrefurl=https://www.google.com/intl/en_ie/doodle4google/&h=485&w=1005&tbnid=C2v5frVt68mtsM:&docid=o9VhKqRKg4PkNM&ei=iU2vVorZFMjxULLRkZgB&tbm=isch&ved=0ahUKEwjKwfPGxtbKAhXIOBQKHbJoBBMQMwg7KAwwDA",
-                    signupMode        :    "1"
-
+                    "group-owner-id"  : "panacloud"
   };
   //Group Check In Current Data
  var GroupCheckInCurrentData = {
@@ -107,7 +103,7 @@ var GroupMessagesData = {
     //Testing Start from here
 //==============================================================================================
 //Create Team of Teams with User
-
+/*
 var GroupMembershipsRequestData = { message : "Please Add me in this group" , timestamp : test.TIMESTAMP };
  test("Team of Teams write Test with User", function(rules){
      rules
@@ -209,8 +205,7 @@ test("team of teams update test with unauth" ,function(rules){
 
 
 });
-
-
+*/
 //Team of teams update test with auth user
  test("team of Teams update by User" ,function(rules){
      rules
@@ -281,7 +276,7 @@ test("team of teams update test with unauth" ,function(rules){
          .at(pathforGroupMembersGroupidUid)
 
          .write({
-                  'membership-type': 0,
+                  'membership-type': 3,
                    timestamp       : 1452767752756
          }).succeeds("Groups Members created with membershiptype 0")
 
@@ -292,7 +287,7 @@ test("team of teams update test with unauth" ,function(rules){
          .write(groupData)
          .fails("Only Admin and Owner can update group");
  });
-
+/*
 //Team of teams update by Admin
  test("team of teams update by admin" ,function(rules){
      rules
@@ -3146,7 +3141,7 @@ test("group-messages delete test with auth user" ,function(rules){
         .write(null)
         .succeeds("authenticated user can delete Group messages");
 });
-
+*/
 //-----------------------------------------------------------------------
 
 
