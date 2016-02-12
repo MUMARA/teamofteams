@@ -1278,8 +1278,9 @@ path /progress-reports-by-users/{userid} {
           write() {  isAuthenticatedUser(userid) }
 
         }
+         index()  {  "date" }
       }
-       index()  {  "date" }
+
   }
 }
 
