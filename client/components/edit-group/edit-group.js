@@ -30,9 +30,10 @@
         groupObj.$loaded().then(function(data) {
             $timeout(function() {
 
-                // console.log(data);
+            //     console.log(data);
                 that.group = data;
-            //    that.group.signupMode = "2";
+            //  that.group.privacy = 2;
+
 
                 //debugger
             })
