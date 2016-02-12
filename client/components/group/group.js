@@ -264,8 +264,12 @@
                     if (pname === 'manualattendace') {
                         groupService.setActivePanel('manualattendace');
                     }
-                    if(pname === 'progressreport') { 
+                    if(pname === 'progressreport') {
                         groupService.setActivePanel('progressreport');
+                    }
+                    // firepad tab condition
+                    if(pname === 'collaborator') {
+                      groupService.setActivePanel('collaborator'); 
                     }
                     that.panel.subgroupID = subgroupID;
                     if(that.panel.subgroupID){

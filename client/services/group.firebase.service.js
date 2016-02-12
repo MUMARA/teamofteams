@@ -321,7 +321,7 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
-                                    var subgroupNames = {title: subgroupInfo.title, hasPolicy: false};
+                                    var subgroupNames = {title: subgroupInfo.title};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
                                     groupNameRef.set(subgroupNames,  function(error) {
@@ -341,6 +341,10 @@ angular.module('core')
                                                             }
                                                         })
                                                     })
+
+                                                    //save in subgroup-policies for Policies
+                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({hasPolicy: false, policyID: '', title: subgroupInfo.title});
+
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
                                                     subgroupRef.set({
@@ -349,10 +353,7 @@ angular.module('core')
                                                         timestamp: firebaseTimeStamp,
                                                         "members-count": response.membersCount,
                                                         "microgroups-count": 0,
-                                                        "members-checked-in": {
-                                                            "count": 0,
-                                                            "checked-in": 0
-                                                        },
+                                                        "members-checked-in-count": 0,
                                                         'logo-image': {
                                                             url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
                                                             id: subgroupInfo.subgroupID,
@@ -1172,10 +1173,16 @@ angular.module('core')
                         var dataObject = snapshot.val();
 
                         if (checkinObj && checkinObj.type == 1) {
-                            updateObj['members-checked-in'] = {
-                                count: dataObject['members-checked-in'].count - 1
-                            };
-                        }
+                            updateObj['members-checked-in-count'] =  dataObject['members-checked-in-count'] - 1
+                         }
+
+
+                        // if (checkinObj && checkinObj.type == 1) {
+                        //     updateObj['members-checked-in'] = {
+                        //         count: dataObject['members-checked-in'].count - 1
+                        //     };
+                        // }
+
 
                         updateObj['members-count'] = dataObject['members-count'] - 1;
                         groupDataRef.update(updateObj, function(err) {

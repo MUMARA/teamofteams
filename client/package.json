@@ -4,6 +4,7 @@
   "description": "Attendance System Web Application",
   "main": "app.js",
   "dependencies": {
+    "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-minify": "0.0.5",
     "gulp-uglify": "^1.5.1"

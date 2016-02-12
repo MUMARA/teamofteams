@@ -32,7 +32,7 @@
 
                 // console.log(data);
                 that.group = data;
-                that.group.signupMode = "2";
+            //    that.group.signupMode = "2";
 
                 //debugger
             })
@@ -164,7 +164,7 @@
                 editGroupService.editGroup(that.group, groupObj, groupForm, function(){
                     that.submitProgress = false;
                 })
-                
+
             }
 
 
