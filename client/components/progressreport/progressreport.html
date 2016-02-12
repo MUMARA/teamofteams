@@ -11,7 +11,7 @@
             </div>
         </div>
         <md-divider md-outset></md-divider>
-		<div ng-if="progressreport.dailyProgressReport" class="viewHeight vscroll">
+		<div ng-if="progressreport.dailyProgressReport" class="viewHeight-170 vscroll">
 			<md-list>
 			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox} | orderBy: '-date'" layout="column" layout-align="center start" class="md-whiteframe-z2">
 				<div layout="row" layout-fill layout-margin layout-align="space-between center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">
