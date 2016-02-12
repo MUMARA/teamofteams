@@ -139,7 +139,8 @@ angular.module('core')
                                                     var data = {
                                                         title: groupObj.title,
                                                         groupImgUrl: groupObj.imgLogoUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png',
-                                                        ownerImgUrl: groupObj.ownerImgUrl
+                                                        ownerImgUrl: groupObj.ownerImgUrl,
+                                                        'address-title': groupObj.addressTitle || ''
                                                             //groupOwnerImgUrl:
                                                     }
 
