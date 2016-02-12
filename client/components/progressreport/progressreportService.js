@@ -133,78 +133,74 @@
     		});
     	}
     	function getGroupReportFromFirebase(user, groupID, limit) {
-			selfCalling(user, groupID, limit);
-    	        function selfCalling(user, groupID, limit) {
-    	            firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).orderByChild("date").limitToLast(limit)
-    	                .on("value", function(snapshot) {
-    	                    var _flag = false;
+            firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).orderByChild("date").limitToLast(limit)
+            .on("value", function(snapshot) {
+                var _flag = false;
 
-    	                    if (dailyProgressReport.length > 0) {
+                if (dailyProgressReport.length > 0) {
 
-    	                        dailyProgressReport.forEach(function(val, index) {
-    	                            if (snapshot.val()) {
-    	                                for (var k in snapshot.val()) {
-    	                                    for (var key in snapshot.val()[k]) {
-    	                                        // console.log('Obj', snapshot.val()[k][key], key);
-    	                                        if (val.reportID == key) {
-    	                                            dailyProgressReport[index]['answers'] = snapshot.val()[k][key]['answers'];
-    	                                            _flag = true;
-    	                                            break;
-    	                                        }
-    	                                    }
+                    dailyProgressReport.forEach(function(val, index) {
+                        if (snapshot.val()) {
+                            for (var k in snapshot.val()) {
+                                for (var key in snapshot.val()[k]) {
+                                    // console.log('Obj', snapshot.val()[k][key], key);
+                                    if (val.reportID == key) {
+                                        dailyProgressReport[index]['answers'] = snapshot.val()[k][key]['answers'];
+                                        _flag = true;
+                                        break;
+                                    }
+                                }
 
-    	                                }
-    	                            }
+                            }
+                        }
 
-    	                            if (_flag) {
-    	                                return
-    	                            }
+                        if (_flag) {
+                            return
+                        }
 
-    	                            if (dailyProgressReport.length == index + 1) {
-    	                                if (snapshot.val()) {
-    	                                    var obj = {};
-    	                                    for (var k in snapshot.val()) {
-    	                                        for (var key in snapshot.val()[k]) {
-    	                                            obj = snapshot.val()[k][key];
-    	                                            obj['reportID'] = key;
-    	                                            obj['userID'] = user.id;
-    	                                            obj['fullName'] = user.fullName;
-    	                                            obj['profileImage'] = user.profileImage;
-    	                                            obj['groupID'] = user.groupID;
-    	                                            obj['subgroupID'] = user.subgroupID;
-    	                                            getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-    	                                            dailyProgressReport.push(obj);
-    	                                        }
+                        if (dailyProgressReport.length == index + 1) {
+                            if (snapshot.val()) {
+                                var obj = {};
+                                for (var k in snapshot.val()) {
+                                    for (var key in snapshot.val()[k]) {
+                                        obj = snapshot.val()[k][key];
+                                        obj['reportID'] = key;
+                                        obj['userID'] = user.id;
+                                        obj['fullName'] = user.fullName;
+                                        obj['profileImage'] = user.profileImage;
+                                        obj['groupID'] = user.groupID;
+                                        obj['subgroupID'] = k;
+                                        getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
+                                        dailyProgressReport.push(obj);
+                                    }
 
-    	                                    }
-    	                                }
-    	                            }
+                                }
+                            }
+                        }
 
-    	                        });
+                    });
+                } else {
+                    if (snapshot.val()) {
+                        var obj = {};
+                        for (var k in snapshot.val()) {
+                            for (var key in snapshot.val()[k]) {
+                                obj = snapshot.val()[k][key];
+                                obj['reportID'] = key;
+                                obj['userID'] = user.id;
+                                obj['fullName'] = user.fullName;
+                                obj['profileImage'] = user.profileImage;
+                                obj['groupID'] = user.groupID;
+                                obj['subgroupID'] = k;
+                                getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
+                                dailyProgressReport.push(obj);
 
-    	                    } else {
-    	                        if (snapshot.val()) {
-    	                            var obj = {};
-    	                            for (var k in snapshot.val()) {
-    	                                for (var key in snapshot.val()[k]) {
-    	                                    obj = snapshot.val()[k][key];
-    	                                    obj['reportID'] = key;
-    	                                    obj['userID'] = user.id;
-    	                                    obj['fullName'] = user.fullName;
-    	                                    obj['profileImage'] = user.profileImage;
-    	                                    obj['groupID'] = user.groupID;
-    	                                    obj['subgroupID'] = user.subgroupID;
-    	                                    getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-    	                                    dailyProgressReport.push(obj);
+                            }
 
-    	                                }
+                        }
+                    }
+                }
 
-    	                            }
-    	                        }
-    	                    }
-
-    	                });
-    	        }
+            });
     	}
     	function getGroupDailyProgressReport(userArray, groupID) {
     		dailyProgressReport = [];

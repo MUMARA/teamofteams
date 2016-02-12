@@ -235,11 +235,6 @@
                         userId: self.showUrlObj.userID
                     }
                 }
-<<<<<<< HEAD
-                
-=======
-
->>>>>>> 5b1e38542e15f95f032b588489c0bc6c3c913fc8
                 checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
                     if(result){
                         self.checkinSending = false;
@@ -249,11 +244,7 @@
                                 self.switchCheckIn = true;
                                 self.switchMsg = true;
                                 self.isDailyProgessSubmit = true
-<<<<<<< HEAD
                                 self.isDailyProgessgroupID = groupObject.groupId;                             
-=======
-                                self.isDailyProgessgroupID = groupObject.groupId;
->>>>>>> 5b1e38542e15f95f032b588489c0bc6c3c913fc8
                                 self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {
