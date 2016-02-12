@@ -492,7 +492,7 @@
                     obj["location"] = "";
                     obj["schedule"] = "";
                     obj["defined-by"] = that.userId;
-                    obj["timestamp"] = Date.now();
+                    obj["timestamp"] =  Firebase.ServerValue.TIMESTAMP;
                     obj["progressReport"] = false;
                     obj["progressReportQuestions"] = "";
 

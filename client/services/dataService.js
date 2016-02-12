@@ -7,7 +7,6 @@
 angular.module('core')
     .factory('dataService', ['$firebaseObject', 'firebaseService', 'checkinService', 'userService', 'userPresenceService',
         function($firebaseObject, firebaseService, checkinService, userService, userPresenceService) {
-
             var userData = [];
             var userGroups = [];
             var userID = '';

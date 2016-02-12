@@ -28,7 +28,7 @@
             </div>
         </md-card>
         <div style="border-bottom: 5px solid green; width:220px"></div>
-        <div style="overflow-x: hidden; overflow-y: auto; height: calc(100vh - 369px)">
+        <div style="overflow-x: hidden; overflow-y: auto; height: calc(100vh - 386px)">
             <div ng-repeat="subgroup in group.subgroups track by $index" class="bottommargin5px subgroupcard" layout="column">
                 <subgroupcard-directive subgroup="subgroup" ng-click="group.showPanel(group.panel.active, subgroup.$id)" class="nooutline backColorWhite md-whiteframe-z2 cursorPointer"></subgroupcard-directive>
                 <ng-md-icon ng-if="group.panel.subgroupID === subgroup.$id" icon="chevron_right" style="position: relative; left: 195px; top: -60px;"></ng-md-icon>
@@ -37,7 +37,7 @@
     </div>
     <!--navigation side-->
     <div class="viewHeight-64 gradient3" layout="column" layout-align="space-between center">
-        <div class="nopadding nomargin" >
+    <div class="nopadding nomargin" >
             <img src="img/menu.svg" class="nooutline icon40px" layout-margin id="menu-toggle" />
             <md-divider class="backColorWhite"></md-divider>
             <div layout="row">
