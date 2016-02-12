@@ -70,7 +70,7 @@
     "commit": "56931fbfb8d08528770c058312c07f5bf38a0178"
   },
   "_source": "git://github.com/angular-ui/ui-leaflet.git",
-  "_target": "~1.0.0",
+  "_target": "^1.0.0",
   "_originalSource": "ui-leaflet",
   "_direct": true
 }
