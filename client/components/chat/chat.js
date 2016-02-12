@@ -77,30 +77,34 @@
             if (that.subgroupID) {
                 chatService.checkSubGroupChannelExists(that.groupID, that.subgroupID, that.channelTitle).then(function(exists){
                     if(exists){
-                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle)
+                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle);
                     } else {
                         chatService.createSubGroupChannel(that.groupID, that.subgroupID, that.channelTitle, user.userID, onSuccessErrorChannelCreation);
                     }
-                })
+                });
             } else {
                 chatService.checkGroupChannelExists(that.groupID, that.channelTitle).then(function(exists){
                     if(exists){
-                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle)
+                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle);
                     } else {
                         chatService.createGroupChannel(that.groupID, that.channelTitle, user.userID, onSuccessErrorChannelCreation);
+                        
+
+
+
                     }
-                })
+                });
             }
         };
         function onSuccessErrorChannelCreation(err){
             if (err) {
                 messageService.showFailure(err);
             } else {
-                messageService.showSuccess('Channel created Successfullly!')
+                messageService.showSuccess('Channel created Successfullly!');
             }
             that.channelTitle = null;
             that.channelBottomSheet = false;
-        };
+        }
         function init(){
             groupService.setActivePanel('chat');
             groupService.setSubgroupIDPanel($stateParams.subgroupID);
@@ -125,7 +129,7 @@
                 that.viewChannelMessages(that.activeChannelID);
             }
             that.ScrollToMessage();
-        };
+        }
         init();
 
     } // ChatController
