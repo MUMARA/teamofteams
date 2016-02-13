@@ -41,8 +41,6 @@ gulp.task("minifying", function() {
             "./components/create-group/createGroup.js",
             "./components/edit-group/editGroupService.js",
             "./components/edit-group/edit-group.js",
-            "./components/subgroup/subgroupService.js",
-            "./components/subgroup/subgroup.js",
             "./components/create-sub-group/createSubGroupService.js",
             "./components/create-sub-group/createSubGroup.js",
             "./components/join-group/joinGroupService.js",
@@ -53,11 +51,6 @@ gulp.task("minifying", function() {
             "./components/policy/policy.js",
             "./components/user-setting/userSettingService.js",
             "./components/user-setting/userSetting.js",
-            "./components/geo-fencing/geo-fencing.js", //not working in minifying
-            "./components/create-channels/createChannelsService.js",
-            "./components/create-channels/createChannels.js",
-            "./components/create-teams-channels/createTeamsChannelsService.js",
-            "./components/create-teams-channels/createTeamsChannels.js",
             "./components/quiz/quizService.js",
             "./components/quiz/quiz.js",
             "./components/componentsCoreModule.js",
@@ -75,17 +68,17 @@ gulp.task("minifying", function() {
             "./services/userPresence.firebase.js",
             "./services/userHelper.firebase.js",
             "./services/subgroup.firebase.service.js",
+            "./services/checkin.service.js",
             "./directives/groupcardDirective.js",
             "./directives/subgroupcardDirective.js",
             "./directives/checkUserID.directive.js",
             "./directives/compareTo.directive.js",
             "./directives/checkGroupExistance.directive.js",
-            "./checkin/services/checkin.service.js",
             "./app.js",
             "./config/appRoutes.js"
         ])
         .pipe(concat('all.js'))
-        //.pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest("./minifyVersion/"));
 });
 

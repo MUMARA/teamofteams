@@ -5,7 +5,6 @@
 
     .controller('NavToolbarController', ['$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
         function($mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
-
             /*private variables*/
             // alert('inside controller');
 
@@ -244,7 +243,7 @@
                                 self.switchCheckIn = true;
                                 self.switchMsg = true;
                                 self.isDailyProgessSubmit = true
-                                self.isDailyProgessgroupID = groupObject.groupId;                             
+                                self.isDailyProgessgroupID = groupObject.groupId;
                                 self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {

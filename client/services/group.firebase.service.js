@@ -415,18 +415,19 @@ angular.module('core')
                                                                 .catch(function(d) {
                                                                     //debugger;
                                                                 })
-                                                            for (var member in mems) {
-
-                                                                var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
-                                                                    .$loaded()
-
-                                                                var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
-
-                                                                qArray.push($q.all([temp, temp1]))
-
-
-                                                            }
-                                                            deffer.resolve($q.all(qArray))
+                                                            // for (var member in mems) {
+                                                            //
+                                                            //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
+                                                            //         .$loaded()
+                                                            //
+                                                            //     var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
+                                                            //
+                                                            //     qArray.push($q.all([temp, temp1]))
+                                                            //
+                                                            //
+                                                            // }
+                                                            //deffer.resolve($q.all(qArray))
+                                                            deffer.resolve('');
 
                                                         }
                                                     });

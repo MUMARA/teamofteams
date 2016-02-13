@@ -159,6 +159,12 @@ angular.module('core')
                 getRefSubgroupPolicies: function(){
                         return subgroupPolicies;
                 },
+                logout: function(){
+                  console.log('unauth the firebase');
+                  ref.unauth();
+                  var authdata = ref.getAuth();
+                  console.log(authdata);
+                },
                 asyncLogin: function(userID, token) {
                     var deferred = $q.defer();
                     if (token) { // means user logged in from web server

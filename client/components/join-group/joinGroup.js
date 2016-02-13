@@ -21,10 +21,15 @@
                 // this.listgroup;
                 //this.groupOne = $firebaseObject(firebaseService.getRefGroupsNames());
                 // this.filteredGroups = dataService.getTotalGroups();
-                $firebaseArray(firebaseService.getRefGroups()).$loaded().then(function(data){
+                $firebaseArray(firebaseService.getRefGroupsNames()).$loaded().then(function(data){
                     that.filteredGroups = data;
                     that.loadingData = false;
                 });
+
+                // $firebaseArray(firebaseService.getRefGroups()).$loaded().then(function(data){
+                //     that.filteredGroups = data;
+                //     that.loadingData = false;
+                // });
                 // this.groupOne.$loaded().then(function(data) {
                 //     if (data) {
                 //         //console.log(data);
@@ -95,7 +100,7 @@
                                                                                  .then(function(img){
                                                                                      $scope.filteredGroups[j].ownerImg = img.$value
                                                                                  })
-                                     
+
                                                                          }
                                                                      });
                                                              })*/
