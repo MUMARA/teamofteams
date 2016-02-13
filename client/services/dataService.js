@@ -28,11 +28,15 @@ angular.module('core')
                 var groupTitle = '';
                 var subgroupTitle = '';
                 var groupsubgroupTitle = {};
+                console.log('iid', userID);
                 firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
+                  console.log('bhand1', userID, group.key());
                     $firebaseObject(firebaseService.getRefGroups().child(group.key())).$loaded().then(function(groupmasterdata) {
+                      console.log('bhand2', userID, group.key());
                         groupsubgroupTitle[group.key()] = groupmasterdata.title;
                     });
                     firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_added', function(subgroup, prevChildKey) {
+                      console.log('userID', userID, group.key(), group.val())
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
                             userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
@@ -48,21 +52,22 @@ angular.module('core')
                                 }
                             });
                         });
-                        checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
-                           userData.forEach(function(val, indx) {
-                                if (val.id === snapshot.key()) {
-                                    if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
-                                        if (snapshot.val().type === 1) {
-                                            val.type = true;
-                                        } else {
-                                            val.type = false;
-                                        }
-                                        val.message = snapshot.val().message;
-                                        val.timestamp = snapshot.val().timestamp;
-                                    }
-                                }
-                            });
-                        });
+                        // checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
+                        //    userData.forEach(function(val, indx) {
+                        //         if (val.id === snapshot.key()) {
+                        //             if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
+                        //                 if (snapshot.val().type === 1) {
+                        //                     val.type = true;
+                        //                 } else {
+                        //                     val.type = false;
+                        //                 }
+                        //                 val.message = snapshot.val().message;
+                        //                 val.timestamp = snapshot.val().timestamp;
+                        //             }
+                        //         }
+                        //     });
+                        // });
+                        console.log('ghjghj', subgroup.key())
                         $firebaseObject(firebaseService.getRefSubGroups().child(group.key()).child(subgroup.key())).$loaded().then(function(subgroupmasterdata) {
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
                         });

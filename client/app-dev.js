@@ -9,8 +9,6 @@
 //var mainApplicationModuleName = 'Panacloud.WOW';// Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
 var mainApplicationModuleName = 'myApp'; // Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
 var mainApplicationModule = angular.module(mainApplicationModuleName, [
-    // 'ngNewRouter',
-    'ngMaterial',
     'components',
     'core'
 

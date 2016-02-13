@@ -96,7 +96,7 @@ angular.module('core')
                     userPresenceService.removeCurrentConRef();
                     // for manually sign out from firebase.
                     userService.removeCurrentUser();
-                    firebaseService.getRefMain().unauth();
+                    firebaseService.logout();
                     Firebase.goOffline();
                     $state.go('signin');
                 },
