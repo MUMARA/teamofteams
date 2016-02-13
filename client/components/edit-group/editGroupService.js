@@ -33,7 +33,7 @@
                         angular.extend(groupRef, dataToSet);
                         groupRef['logo-image'].url = groupInfo['logo-image'].url
                         groupRef.$save().then(function(response) {
-                            console.log(groupNameRef);
+                            //console.log(groupNameRef);
                             groupNameRef.title = groupInfo.title;
                             groupNameRef.groupImgUrl = groupInfo['logo-image'].url
                             groupNameRef.$save()

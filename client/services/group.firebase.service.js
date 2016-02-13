@@ -374,15 +374,15 @@ angular.module('core')
                                                             deffer.promise
                                                                 .then(function(dataArrofArr) {
 
-                                                                    dataArrofArr.forEach(function(arr) {
-                                                                        if (arr[1].type == 1) {
-                                                                            arr[0].checkedin = true
-                                                                        } else {
-                                                                            arr[0].checkedin = false
-                                                                        }
-                                                                        qArray2.push(arr[0].$save())
-                                                                    });
-                                                                    return $q.all(qArray2)
+                                                                    // dataArrofArr.forEach(function(arr) {
+                                                                    //     if (arr[1].type == 1) {
+                                                                    //         arr[0].checkedin = true
+                                                                    //     } else {
+                                                                    //         arr[0].checkedin = false
+                                                                    //     }
+                                                                    //     qArray2.push(arr[0].$save())
+                                                                    // });
+                                                                    // return $q.all(qArray2)
                                                                 })
                                                                 .then(function() {
                                                                     deferred.resolve({

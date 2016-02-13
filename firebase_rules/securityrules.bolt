@@ -241,7 +241,12 @@ path /group-members/{groupid}/{userid} is UserGroupSubGroupMemberShipType {
   update() {  isGroupIdExist(groupid)                   ||
               isCurrentUserGroupOwner(groupid)          ||
               isCurrentUserGroupAdmin(groupid)               }
+
+ delete() {   isGroupIdExist(groupid)                   ||
+              isCurrentUserGroupOwner(groupid)          ||
+              isCurrentUserGroupAdmin(groupid)               }
  }
+
 
 
 //===================================
@@ -832,7 +837,7 @@ path /subgroup-check-in-current-by-user/{userid} {
           isAuthenticated() &&
           isSubGroupGroupIDExist(this) ||
           isSubGroupGroupIDOwner(this) ||
-          isSubGroupGroupIDAdmin(this) } // greater than 0 old rules
+          isSubGroupGroupIDAdmin(this) ||   isAuthenticatedUser($userid)  } // greater than 0 old rules
 
 }
 function ifUserUserIDExist(userid) {
@@ -1176,17 +1181,19 @@ path /tasks/{groupid} {
 
 
 
-path /policies/{groupid}/{policyid} is PolicyType {
+path /policies/{groupid}{
+  read()  {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
+
+/{policyid} is PolicyType {
  read()  {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
  write() {  isAuthenticated() &&
             isCurrentUserGroupOwner(groupid)    ||
             isCurrentUserGroupAdmin(groupid)      }
 
-  /dailyReportQuestions/{questionSetId} is QuesitonType { }
+  /progressReportQuestions/{questionSetId} is QuesitonType { }
+  }
 }
-
-
 type PolicyType {
    dailyReport : Boolean | Null,
   // dailyReportQuestions : [String] | Null,
@@ -1194,10 +1201,12 @@ type PolicyType {
    location       : LocationType | Null,
    locationBased  : Boolean | Null,
    policyID      : String,
-   schedule   :  SchedulesType | Null,
-   timeBased : Boolean | Null,
+   schedule   :  SchedulesType | String,
+   timeBased : Boolean ,
    timestamp : CurrentTimeStamp,
    title    : String,
+   "latestProgressReportQuestionID" : String | Null,
+   progressReport   : Boolean
 
 }
 
@@ -1208,7 +1217,7 @@ type QuesitonType {
 
 type LocationType {
   lat : Number,
-  lan : Number,
+  lng : Number,
   radius : Number,
   title : String
 }
@@ -1223,12 +1232,18 @@ type LocationType {
    Saturday : Boolean[] | Null
   }
 
-path /subgroup-policies/{groupid}/{subgroupid} is AppliedPolicyType {
+path /subgroup-policies/{groupid} {
+    read(){
+          isAuthenticated() &&
+          isCurrentUserGroupOwner(groupid)    ||
+          isCurrentUserGroupAdmin(groupid)
+      }
+       /{subgroupid} is AppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)    ||
              isSubGroupGroupIDOwner(this) ||
-            isSubGroupGroupIDAdmin(this)
+             isSubGroupGroupIDAdmin(this)
           }
 
   write() {  isAuthenticated() &&
@@ -1237,7 +1252,7 @@ path /subgroup-policies/{groupid}/{subgroupid} is AppliedPolicyType {
              isSubGroupGroupIDOwner(this) ||
             isSubGroupGroupIDAdmin(this) }
  }
-
+}
 type AppliedPolicyType {
    hasPolicy   :  Boolean,
    policyID    :    String,
