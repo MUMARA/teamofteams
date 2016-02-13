@@ -158,7 +158,14 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
                  isCurrentUserGroupAdmin(groupid)       //  ||
                 // userGroupMembershipAnyType(groupid)           //discussion
                   }
+  delete() {
+                 isGroupIdExist(groupid)                    &&
+                 isCurrentUserGroupOwner(groupid)           ||
+                 isCurrentUserGroupAdmin(groupid)       //  ||
+                // userGroupMembershipAnyType(groupid)           //discussion
+                  }
  }
+
 
  type UserGroupSubGroupMemberShipType {
    "membership-type" : MembershipValue,
@@ -435,7 +442,8 @@ type LogoImageRequirement {
  type GroupsNameInfo {
           groupImgUrl  : String | Null,
           ownerImgUrl  : String | Null,
-          title        : String
+          title        : String,
+          'address-title' : String | Null
  }
 
 
@@ -1198,7 +1206,7 @@ type PolicyType {
    dailyReport : Boolean | Null,
   // dailyReportQuestions : [String] | Null,
    "defined-by" : String,
-   location       : LocationType | Null,
+   location       : LocationType | String,
    locationBased  : Boolean | Null,
    policyID      : String,
    schedule   :  SchedulesType | String,
@@ -1222,14 +1230,18 @@ type LocationType {
   title : String
 }
 
+type BooleanOrNull {
+  validate() { this.isBoolean() || this == null }
+}
+
  type SchedulesType {
-   Sunday : Boolean[] | Null,
-   Monday : Boolean[] | Null,
-   Tuesday : Boolean[] | Null,
-   Wednesday : Boolean[] | Null,
-   Thursday : Boolean[] | Null,
-   Friday : Boolean[] | Null,
-   Saturday : Boolean[] | Null
+   Sunday : BooleanOrNull[] | Null,
+   Monday : BooleanOrNull[] | Null,
+   Tuesday : BooleanOrNull[] | Null,
+   Wednesday : BooleanOrNull[] | Null,
+   Thursday : BooleanOrNull[] | Null,
+   Friday : BooleanOrNull[] | Null,
+   Saturday : BooleanOrNull[] | Null
   }
 
 path /subgroup-policies/{groupid} {

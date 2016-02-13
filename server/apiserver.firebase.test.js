@@ -65,7 +65,9 @@
                                                 'members-count': 1,
                                                 'subgroups-count': 0,
                                                 'microgroups-count': 0,
-                                                'members-checked-in': 0
+                                                'members-checked-in': {
+                                                    count: 0
+                                                }
                                             }, function(err1) {
                                                 if (err1) {
                                                     defer.reject('/group-members entry failed.')

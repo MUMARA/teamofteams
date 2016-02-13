@@ -21,7 +21,11 @@
             link: function(scope, element, attributes, ngModel) {
 
                 ngModel.$validators.compareTo = function(modelValue) {
-                    return modelValue == scope.otherModelValue;
+                    if(modelValue) {
+                      return modelValue !== scope.otherModelValue;
+                    } else {
+                       return true
+                    }
                 };
 
                 scope.$watch("otherModelValue", function() {
@@ -40,7 +44,11 @@
             link: function(scope, element, attributes, ngModel) {
 
                 ngModel.$validators.compareAgainst = function(modelValue) {
-                    return modelValue !== scope.otherModelValue;
+                    if(modelValue) {
+                      return modelValue !== scope.otherModelValue;
+                    } else {
+                       return true
+                    }
                 };
 
                 scope.$watch("otherModelValue", function() {
