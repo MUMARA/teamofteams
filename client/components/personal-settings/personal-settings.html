@@ -72,7 +72,11 @@
         <div layout="row">
             <md-input-container flex>
                 <label>Mobile Number</label>
-                <input name="contactNumber" type="text" ng-model="personalSettings.userData.contactNumber">
+                <input name="contactNumber" type="text" ng-model="personalSettings.userData.contactNumber" minlength="5">
+                <div ng-show="personalSettingForm.contactNumber.$touched" ng-messages="personalSettingForm.contactNumber.$error">
+                    <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
+                    <div class="invalid_color" ng-message="minlength">Required minimum length 5</div>
+                </div>
             </md-input-container>
             <md-input-container flex>
                 <label>Profession</label>
