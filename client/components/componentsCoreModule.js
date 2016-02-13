@@ -5,10 +5,10 @@
 (function() {
     'use strict';
     angular.module('components', [
-        "app.createChannels",
-        'app.createTeamsChannels',
+        // "app.createChannels",
+        // 'app.createTeamsChannels',
         "app.createGroup",
-        "app.subgroup",
+        // "app.subgroup",
         'app.editGroup',
         'app.createSubGroup',
         'app.home',
@@ -22,14 +22,15 @@
         'app.JoinGroup',
         'app.personalSettings',
         'app.userSetting',
-        'app.geoFencing',
+        // 'app.geoFencing',
         'app.quiz',
         'app.policy',
         'app.activity',
         'app.report',
         'app.manualattendace',
         'app.progressreport',
-        'app.chat'
+        'app.chat',
+        'app.collaborator'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',
@@ -40,6 +41,4 @@
         // 'app.quizAssign',
         // 'app.quizResult'
     ]);
-
-
 })();

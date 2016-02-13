@@ -30,9 +30,10 @@
         groupObj.$loaded().then(function(data) {
             $timeout(function() {
 
-                // console.log(data);
+            //     console.log(data);
                 that.group = data;
-                that.group.signupMode = "2";
+            //  that.group.privacy = 2;
+
 
                 //debugger
             })
@@ -164,7 +165,7 @@
                 editGroupService.editGroup(that.group, groupObj, groupForm, function(){
                     that.submitProgress = false;
                 })
-                
+
             }
 
 
@@ -211,18 +212,4 @@
 
     }
 
-
-    function DialogController($mdDialog) {
-        this.my = {
-            model: {
-                img: ''
-            }
-        };
-        this.hide = function(picture) {
-            // console.log(picture)
-            $mdDialog.hide(picture);
-        };
-
-
-    };
 })();

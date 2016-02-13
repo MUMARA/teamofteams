@@ -321,7 +321,7 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
-                                    var subgroupNames = {title: subgroupInfo.title, hasPolicy: false};
+                                    var subgroupNames = {title: subgroupInfo.title};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
                                     groupNameRef.set(subgroupNames,  function(error) {
@@ -341,6 +341,10 @@ angular.module('core')
                                                             }
                                                         })
                                                     })
+
+                                                    //save in subgroup-policies for Policies
+                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({hasPolicy: false, policyID: '', title: subgroupInfo.title});
+
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
                                                     subgroupRef.set({
@@ -349,10 +353,7 @@ angular.module('core')
                                                         timestamp: firebaseTimeStamp,
                                                         "members-count": response.membersCount,
                                                         "microgroups-count": 0,
-                                                        "members-checked-in": {
-                                                            "count": 0,
-                                                            "checked-in": 0
-                                                        },
+                                                        "members-checked-in-count": 0,
                                                         'logo-image': {
                                                             url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
                                                             id: subgroupInfo.subgroupID,
@@ -373,15 +374,15 @@ angular.module('core')
                                                             deffer.promise
                                                                 .then(function(dataArrofArr) {
 
-                                                                    dataArrofArr.forEach(function(arr) {
-                                                                        if (arr[1].type == 1) {
-                                                                            arr[0].checkedin = true
-                                                                        } else {
-                                                                            arr[0].checkedin = false
-                                                                        }
-                                                                        qArray2.push(arr[0].$save())
-                                                                    });
-                                                                    return $q.all(qArray2)
+                                                                    // dataArrofArr.forEach(function(arr) {
+                                                                    //     if (arr[1].type == 1) {
+                                                                    //         arr[0].checkedin = true
+                                                                    //     } else {
+                                                                    //         arr[0].checkedin = false
+                                                                    //     }
+                                                                    //     qArray2.push(arr[0].$save())
+                                                                    // });
+                                                                    // return $q.all(qArray2)
                                                                 })
                                                                 .then(function() {
                                                                     deferred.resolve({
@@ -414,18 +415,19 @@ angular.module('core')
                                                                 .catch(function(d) {
                                                                     //debugger;
                                                                 })
-                                                            for (var member in mems) {
-
-                                                                var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
-                                                                    .$loaded()
-
-                                                                var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
-
-                                                                qArray.push($q.all([temp, temp1]))
-
-
-                                                            }
-                                                            deffer.resolve($q.all(qArray))
+                                                            // for (var member in mems) {
+                                                            //
+                                                            //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
+                                                            //         .$loaded()
+                                                            //
+                                                            //     var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
+                                                            //
+                                                            //     qArray.push($q.all([temp, temp1]))
+                                                            //
+                                                            //
+                                                            // }
+                                                            //deffer.resolve($q.all(qArray))
+                                                            deffer.resolve('');
 
                                                         }
                                                     });
@@ -1172,10 +1174,16 @@ angular.module('core')
                         var dataObject = snapshot.val();
 
                         if (checkinObj && checkinObj.type == 1) {
-                            updateObj['members-checked-in'] = {
-                                count: dataObject['members-checked-in'].count - 1
-                            };
-                        }
+                            updateObj['members-checked-in-count'] =  dataObject['members-checked-in-count'] - 1
+                         }
+
+
+                        // if (checkinObj && checkinObj.type == 1) {
+                        //     updateObj['members-checked-in'] = {
+                        //         count: dataObject['members-checked-in'].count - 1
+                        //     };
+                        // }
+
 
                         updateObj['members-count'] = dataObject['members-count'] - 1;
                         groupDataRef.update(updateObj, function(err) {

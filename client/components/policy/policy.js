@@ -22,7 +22,7 @@
 
             this.isLocationbased = false;
             this.isTimebased = false;
-            this.isDailyReport = false;
+            this.isProgressReport = false;
             this.isProcessing = false;
             that.fencing = true;
             this.center = {};
@@ -55,7 +55,7 @@
 
             //Geo Fecning Default Location
             function defaultGeoLocation() {
-                
+
                 // for creating default geo fencing variables and define default lng, lat with marker
                 setLocationMarker(67.04971699999999, 24.8131137);
 
@@ -63,7 +63,7 @@
                 checkinService.getCurrentLocation().then(function(location) {
                     if (location) { //if location found
                         getLatLngByAddress(location.coords.latitude +', '+ location.coords.longitude);
-                    } 
+                    }
                 }, function(err) {
                     //messageService.showFailure(err.error.message);
                 });
@@ -115,7 +115,7 @@
             //on controller load...... END
 
 
-            
+
             this.openEditGroupPage = function() {
                 $state.go('user.edit-group', {
                     groupID: groupId
@@ -249,7 +249,7 @@
             }
 
 
-            //New Work POLICY 
+            //New Work POLICY
 
             this.subgroupSideNavBar = false;
             this.toggleSideNavBar = function() {
@@ -321,7 +321,7 @@
                             // console.log(val)
                             if (val.subgroupID == subgroup.subgroupID && val.policyID == that.activePolicyId) {
                                 that.subGroupNames[indx].hasPolicy = true;
-                            } 
+                            }
                         });
                     } else {
                         //after add in local selected team array chnage hasPolicy true in firebase team array
@@ -350,19 +350,19 @@
 
                 //On New/Create Policy Show Panel
                 that.showPanel = true;
-            } //this.newPolicy
+            };//this.newPolicy
 
 
             this.selectedPolicy = function(policy) {
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
                 that.isLocationbased = policy.locationBased;    //show if locationBased is True
-                
+
                 that.isTimebased = policy.timeBased;            //show if timebased is true
                 that.selectedTimesForAllow = {};
-                
-                that.isDailyReport = policy.dailyReport
-                that.dailyReportQuestions = {};
+
+                that.isProgressReport = policy.progressReport;
+                that.progressReportQuestions = {};
                 that.showPanel = true;
 
                 //Clear calender .. (run scheduler)
@@ -393,10 +393,10 @@
                     } //for day    policy.timeObj
                 } //policy.timeBased true
 
-                if(that.isDailyReport) {
-                     that.dailyReportQuestions = arrayToObject(policy.dailyReportQuestions);        //when comes from firebase our question change into array from object.
+                if(that.isProgressReport) {
+                     that.progressReportQuestions = arrayToObject(policy.progressReportQuestions[policy.latestProgressReportQuestionID]['questions']);        //when comes from firebase our question change into array from object.
                      // console.log('[]', policy.dailyReportQuestions);
-                     // console.log('{}', arrayToObject(policy.dailyReportQuestions));  
+                     // console.log('{}', arrayToObject(policy.dailyReportQuestions));
 
                      isQuestionExists();  //checking if questions exists
                 } //that.isDailyReport true
@@ -405,7 +405,7 @@
                 that.selectedTeams = []; //on edit policy clear selectedTeams Array  before reload
                 that.selectedTeamMembers = {}; //on edit policy clear selectedTeamMembers object before reload
 
-                //before selectedTeam first hasPolicy = false... 
+                //before selectedTeam first hasPolicy = false...
                 subGroupNamesPolicyFalse();
 
                 //if active policy is match from subgroup object of policyID then hasPolicy true
@@ -416,10 +416,8 @@
                 }); //subGroupNames.forEach
             } //this.selectedPolicy
 
-
-
             function subGroupNamesPolicyFalse() {
-                //before selectedTeam first hasPolicy = false... 
+                //before selectedTeam first hasPolicy = false...
                 that.subGroupNames.forEach(function(val, indx) {
                     that.subGroupNames[indx].hasPolicy = false;
                 });
@@ -427,18 +425,18 @@
 
             //Daily Report -- START --
             this.showQuestionList = false;      //for showing table
-            this.dailyReportQuestions = {};
+            this.progressReportQuestions = {};
             // var dailyReportQuestionsLength = gettingQuestionsLength();
             this.addQuestion = function() {
                 if(that.question) {
-                    
+
                     var sr = 0;
-                    for(var i in that.dailyReportQuestions) {
-                        that.dailyReportQuestions[sr.toString()] = that.dailyReportQuestions[i];
+                    for(var i in that.progressReportQuestions) {
+                        that.progressReportQuestions[sr.toString()] = that.progressReportQuestions[i];
                         sr++;
                     }
 
-                    that.dailyReportQuestions[sr.toString()] = that.question;
+                    that.progressReportQuestions[sr.toString()] = that.question;
                     that.question = '';
 
                     //Show Table of Question if question exists
@@ -447,20 +445,20 @@
             };
 
             function isQuestionExists(){
-                if(Object.keys(that.dailyReportQuestions).length > 0) {
+                if(Object.keys(that.progressReportQuestions).length > 0) {
                     that.showQuestionList = true;
                 } else {
                     that.showQuestionList = false;
-                }   
+                }
             }
             this.deleteQuestion = function(id) {
-                delete that.dailyReportQuestions[id.toString()];
-                
+                delete that.progressReportQuestions[id.toString()];
+
                 //Show Table of Question if question exists
                 isQuestionExists();
             };
             function gettingQuestionsLength(){      //getting current question object length
-                return Object.keys(that.dailyReportQuestions).length; 
+                return Object.keys(that.progressReportQuestions).length;
             }
             //when comes from firebase our question change into array from object.
             function arrayToObject(arr) {
@@ -480,7 +478,7 @@
 
                 if (that.policyTitle) {
 
-                    if(!that.isDailyReport && !that.isTimebased && !that.isLocationbased) {
+                    if(!that.isProgressReport && !that.isTimebased && !that.isLocationbased) {
                         //nothing have to do....
                         messageService.showFailure('Please Select your Criteria');
                         return false;
@@ -490,13 +488,13 @@
                     var obj = {};
                     obj["title"] = that.policyTitle;    //setting policy title name
                     obj["locationBased"] = false;
-                    obj["timeBased"] = false;         
+                    obj["timeBased"] = false;
                     obj["location"] = "";
                     obj["schedule"] = "";
                     obj["defined-by"] = that.userId;
-                    obj["timestamp"] = Date.now();
-                    obj["dailyReport"] = false;
-                    obj["dailyReportQuestions"] = "";
+                    obj["timestamp"] = Firebase.ServerValue.TIMESTAMP;
+                    obj["progressReport"] = false;
+                    obj["progressReportQuestions"] = "";
 
 
                     //if locationBased is selected
@@ -521,19 +519,19 @@
                             messageService.showFailure('Please add schedule/time slot!');
                             return false;
                         }
-                    } 
+                    }
 
                     //if dailyBased is selected
-                    if(that.isDailyReport) {
+                    if(that.isProgressReport) {
                         //isDailyReport
-                        if(Object.keys(that.dailyReportQuestions).length > 0) {
-                            obj["dailyReport"] = true;         
-                            obj["dailyReportQuestions"] = that.dailyReportQuestions;
+                        if(Object.keys(that.progressReportQuestions).length > 0) {
+                            obj["progressReport"] = true;
+                            obj["progressReportQuestions"] = { questions: that.progressReportQuestions, timestamp: Firebase.ServerValue.TIMESTAMP }
                         } else {
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
-                    } 
+                    }
 
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);
@@ -541,21 +539,20 @@
                     //calling policy service function to add in firebase
                     policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(){
                        //Load Group Policies from given GroupID
-                       //that.groupPolicies = policyService.getGroupPolicies(that.groupId); 
+                       //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
                         if(that.activePolicyId) {  //if edit
                             that.groupPolicies.forEach(function(val,index){
                                 if(val.policyID == that.activePolicyId) {
                                     that.groupPolicies[index] = obj;
                                 }
-                            }); 
+                            });
                             messageService.showSuccess('Policy Successfully Updated!');
                         } else{
-                            messageService.showSuccess('Policy Successfully Created!');  
-                            //after created reload initial page 
+                            messageService.showSuccess('Policy Successfully Created!');
+                            //after created reload initial page
                             that.newPolicy();
                         }
                     });
-
                 } else {//if that.title exists
                     messageService.showFailure('Please Write Policy Name');
                 }
@@ -569,8 +566,8 @@
                 that.isTimebased = false; //unchek default time based
                 that.selectedTeams = []; //onLoad or create empty selectedTeams array
                 that.selectedTeamMembers = {}; //onLoad or create empty selectedTeamMembers obj
-                that.isDailyReport = false;
-                that.dailyReportQuestions = {}; //onLoad clear daily Report Questions obj
+                that.isProgressReport = false;
+                that.progressReportQuestions = {}; //onLoad clear daily Report Questions obj
 
                 //set default location
                 defaultGeoLocation();

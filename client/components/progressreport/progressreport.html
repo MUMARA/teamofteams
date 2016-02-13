@@ -2,7 +2,7 @@
 <div layout="row" layout-align="space-between start" style="font-size:large;" class="backColorWhite viewHeight-64">
 	<div  layout-padding layout-fill flex>
 		<div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
-            <h4 class="leftmargin20px">{{progressreport.activeTitle | uppercase}}</h4>
+            <h4 class="leftmargin20px nomargin">{{progressreport.activeTitle | uppercase}}</h4>
             <div layout="row" flex="50">
                 <md-input-container md-no-float class="nopadding nomargin" flex layout="row" layout-align="center">
                     <input type="text" id="#UserSearch" ng-model="progressreport.searchbox" aria-label="search dashboard" placeholder="e.g. member name" class="serachbox2">
@@ -11,34 +11,33 @@
             </div>
         </div>
         <md-divider md-outset></md-divider>
-		<div class="md-whiteframe-z2" layout-margin ng-show="progressreport.dailyProgressReport[0].questions && progressreport.subgroupID">
-		<h5 class="foreColorDarkGrey">Questions</h5>
-			<span class="foreColorDarkGrey" ng-repeat="question in progressreport.questions"> <strong>*</strong> {{question}} </span>
-		</div>
-		<div ng-if="progressreport.dailyProgressReport">
+		<div ng-if="progressreport.dailyProgressReport" class="viewHeight-170 vscroll">
 			<md-list>
-			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox}" layout="column" layout-align="center start" class="md-whiteframe-z2">
+			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox} | orderBy: '-date'" layout="column" layout-align="center start" class="md-whiteframe-z2">
 				<div layout="row" layout-fill layout-margin layout-align="space-between center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">
+					<div layout="row" layout-align="start center" >
+						<img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="	icon40px  imageRound">
+						<span class="leftmargin10px foreColorDarkGrey">{{report.fullName}}</span>
+					</div>
 				  	<strong><em class="foreColorDarkGrey">{{report.date | date: 'dd-MMM-yyyy'}}</em></strong>
 				  	<strong class="foreColorLightGrey">{{report.groupID}} / {{report.subgroupID}}</strong>
 				</div>
-				<div layout="row" layout-align="center center" layout-fill>
-					<div layout="row" layout-align="start center" flex="20">
-						<img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="	icon40px leftmargin20px imageRound"> 
-						<span class="leftmargin20px foreColorDarkGrey">{{report.fullName}}</span>
+				<div layout="row" layout-align="center end" layout-fill>
+					<div flex>
+						<div layout="column" ng-repeat="q in report.questions">
+							<md-input-container flex class="leftmargin20px" layout="row">
+								<label>{{q}}</label>
+								<textarea ng-model="report.answers[$index]" ng-disabled="progressreport.user.userID != report.userID || !progressreport.subgroupID" placeholder="please type..."></textarea>
+							</md-input-container>
+						</div>
 					</div>
-					<md-input-container flex class="leftmargin20px" layout="row">
-					  	<label>Answer</label>
-					  	<textarea ng-model="report.answers" ng-disabled="progressreport.user.userID != report.userID || !progressreport.subgroupID"></textarea>
-					</md-input-container>
-
-					<md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID && progressreport.subgroupID" ng-click="progressreport.update(report)">Update</md-button>		
+					<md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID && progressreport.subgroupID" ng-click="progressreport.update(report)">Update</md-button>
 				</div>
 			  </md-list-item>
-			</md-list>	
+			</md-list>
 		</div>
 	</div>
-	<div style="width:300px;" layout-fill class="backColorSeaGreen" ng-if="progressreport.subgroupID">
+	<div style="width:300px;" layout-fill class="backColorSeaGreen viewHeight vscroll" ng-if="progressreport.subgroupID">
 	<md-list>
 	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in progressreport.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: progressreport.groupID, subgroupID: progressreport.subgroupID}" ng-click="progressreport.activeUser = user.id">
 		    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>

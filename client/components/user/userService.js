@@ -96,15 +96,15 @@
 
                         },
                         'flattendGroupHandler': function(snapshot) {
-                            //debugger;
-
-
-                            if (snapshot.val() && Object.keys(snapshot.val()).length) {
-                                self.data.groupSubgroupData = snapshot.val()
-                                setData(snapshot.val(), flattenedsubGroupsByuser);
-                            } else {
-                                // console.log('no data')
-                            }
+                            // //debugger;
+                            //
+                            //
+                            // if (snapshot.val() && Object.keys(snapshot.val()).length) {
+                            //     self.data.groupSubgroupData = snapshot.val()
+                            //     setData(snapshot.val(), flattenedsubGroupsByuser);
+                            // } else {
+                            //     // console.log('no data')
+                            // }
 
 
                         },
@@ -127,7 +127,7 @@
                     'openCreateGroupPage': function() {
 
                         $location.path('/user/' + userService.getCurrentUser().userID + '/create-group');
-                        
+
 
                     },
                     'openJoinGroupPage': function() {

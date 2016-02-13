@@ -119,7 +119,6 @@
 
         //map dialog controller
         function MapDialogController($scope, $mdDialog, dateFilter, detailsObj) {
-            debugger;
             var filteredDate = dateFilter(detailsObj.timestamp, 'medium');
 
             $scope.hide = function() {

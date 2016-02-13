@@ -8,7 +8,7 @@
             <!-- <div cropper-directive>
             </div> -->
             <input type="file" img-cropper-fileread id="ImageUpload" image="ctrl.cropper.sourceImage" style="display:none"/>
-            <div onclick="$('#ImageUpload')[0].click();" ng-show="!$root.newImg" >
+            <div onclick="document.querySelector('#ImageUpload').click();" ng-show="!$root.newImg" >
                 <img src="img/image.PNG" width="320px">
             </div>
             <div ng-show="$root.newImg">

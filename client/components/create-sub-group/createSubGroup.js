@@ -54,7 +54,7 @@
 
         this.adminSideNav = true;
         this.memberSideNav = true;
-        
+
         that.groupAdmin = false
         firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
             if (group.val()['membership-type'] == 1) {
@@ -159,7 +159,7 @@
                                     //that.group.groupID = data.$id;
                                     that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
                                     that.teamsettingpanel = true;
-                        // },50000)   
+                        // },50000)
                             // console.log(2)
                             // console.log(SubgroupObj)
                         })
@@ -214,7 +214,7 @@
 
             });
 
-        
+
         this.selectedMember = function(userObj, index) {
             var _flag = true;
             //if(that.memberss.length > 0) {
@@ -223,12 +223,12 @@
                     _flag = false;
                 }
             });//checking if userobj is exists or not
-            //} 
+            //}
 
             if(that.submembers.length > 0){
                 that.submembers.forEach(function(val, inx){
                     if(val.userID == userObj.$id){
-                        _flag = false;   
+                        _flag = false;
                     }
                 })
             }
@@ -245,7 +245,7 @@
             if(that.becomeMember.length > 0){
                 var membersIDarray = [];    //for policy
                 that.becomeMember.forEach(function(userObj,index){
-                    
+
                     var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
                         groupID: groupID,
                         subgroupID: that.activeID
@@ -261,10 +261,10 @@
 
                         })
                     }
-                    
+
                 }) //that.becomeMember.forEach
             } //if
-        } //this.selectedMemberSave 
+        } //this.selectedMemberSave
 
         function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
             subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
@@ -299,7 +299,7 @@
                     _flag = false;
                 }
             }); //checking if admin is exists or not
-            //} 
+            //}
 
             if(that.selectedAdminArray.length > 0) {
                 that.selectedAdminArray.forEach(function(val,i){
@@ -313,14 +313,14 @@
                 that.becomeAdmin.push(obj);
             }
 
-            
+
         };
 
         this.selectedAdminSave = function(){
             if(that.becomeAdmin.length > 0){
                 var membersIDarray = [];    //for policy
                 that.becomeAdmin.forEach(function(val,index){
-                    
+
                     var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
                         groupID: groupID,
                         subgroupID: that.activeID
@@ -419,7 +419,7 @@
                         // console.log('subgroup img  uploaded ' + data)
                         // console.log(3)
                         //console.log(SubgroupObj)
-                        
+
                         if(SubgroupObj) {
                             //edit team
                             SubgroupObj['logo-image'].url = data;
@@ -433,7 +433,7 @@
                             //create team
                             that.subgroupData.imgLogoUrl = data;
                             createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID,function(){
-                                that.teamsettingpanel = false;    
+                                that.teamsettingpanel = false;
                             });
                             that.processingSave = false;
                         }
@@ -459,7 +459,7 @@
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
-                        that.teamsettingpanel = false;   
+                        that.teamsettingpanel = false;
                     });
                     that.processingSave = false;
                 }
@@ -495,7 +495,8 @@
             $rootScope.tmpImg = $rootScope.newImg;
             $rootScope.newImg = '';
             $mdDialog.show({
-                controller: "DialogController as ctrl",
+                controller: "DialogController",
+                controllerAs: "ctrl",
                 templateUrl: 'directives/dilogue1.tmpl.html',
                 targetEvent: ev
             }).then(function(picture) {
@@ -608,11 +609,12 @@
                 img: ''
             }
         };
+        this.openFileSelect = function(){
+          angular.element('#ImageUpload').click();
+        }
         this.hide = function(picture) {
             // console.log("dialog box pic" + picture)
             $mdDialog.hide(picture);
         };
-
-
     }
 })();

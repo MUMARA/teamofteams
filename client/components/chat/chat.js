@@ -3,9 +3,9 @@
  */
 (function() {
     'use strict';
-    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$anchorScroll', '$location', '$mdDialog', '$stateParams', '$state', ChatController]);
+    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', ChatController]);
 
-    function ChatController(messageService, groupService, chatService, userService, $anchorScroll, $location, $mdDialog, $stateParams, $state) {
+    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state) {
         var that = this;
         var user = userService.getCurrentUser();
         this.setFocus = function() {
@@ -70,15 +70,50 @@
             }
             return profileObj;
         };
+        this.showChannelBottomSheet = function(){
+            that.channelBottomSheet = true;
+        };
+        this.createChannel = function () {
+            if (that.subgroupID) {
+                chatService.checkSubGroupChannelExists(that.groupID, that.subgroupID, that.channelTitle).then(function(exists){
+                    if(exists){
+                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle);
+                    } else {
+                        chatService.createSubGroupChannel(that.groupID, that.subgroupID, that.channelTitle, user.userID, onSuccessErrorChannelCreation);
+                    }
+                });
+            } else {
+                chatService.checkGroupChannelExists(that.groupID, that.channelTitle).then(function(exists){
+                    if(exists){
+                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle);
+                    } else {
+                        chatService.createGroupChannel(that.groupID, that.channelTitle, user.userID, onSuccessErrorChannelCreation);
+                        
+
+
+
+                    }
+                });
+            }
+        };
+        function onSuccessErrorChannelCreation(err){
+            if (err) {
+                messageService.showFailure(err);
+            } else {
+                messageService.showSuccess('Channel created Successfullly!');
+            }
+            that.channelTitle = null;
+            that.channelBottomSheet = false;
+        }
         function init(){
             groupService.setActivePanel('chat');
             groupService.setSubgroupIDPanel($stateParams.subgroupID);
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             if (that.subgroupID) {
-                that.channels = chatService.geTeamChannelsSyncArray(that.groupID, that.subgroupID);
+                that.channels = chatService.getSubGroupChannel(that.groupID, that.subgroupID);
             } else {
-                that.channels = chatService.getGroupChannelsSyncArray(that.groupID);
+                that.channels = chatService.getGroupChannel(that.groupID);
             }
             that.activeTitle = 'Select Channel to Start Chat';
             that.activeChannelID = null;
@@ -86,6 +121,8 @@
             that.messagesArray = [];
             that.profilesCacheObj = {};
             that.text = { msg: "" };
+            that.channelBottomSheet = false;
+            that.channelTitle = null;
             that.activeChannelID = $stateParams.channelID;
             that.activeTitle = $stateParams.channelTitle;
             if (that.activeChannelID) {

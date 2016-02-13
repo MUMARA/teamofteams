@@ -81,6 +81,9 @@ function createUser(res, user) {
         password: user.password,
         firstName: user.firstName,
         lastName: user.lastName,
+        contactNumber: '',
+        profession: '',
+        desc: '',
         uuid: nodeUuid.v1(),
         status: 0
     };
@@ -152,7 +155,7 @@ function sendVerificationEmail(user) {
     //     console.log('email sent success: ' + user.email);
     //     console.log(json);
     // });
-    
+
     ////using postmark
     var payload = {
         "To": user.email,
