@@ -185,6 +185,7 @@
                             questionID: Policy.latestProgressReportQuestionID,
                             answers: ''
                         });
+                        cb(false, 'notSubmitted');
                     } else {
                         for(var obj in snapshot.val()) {
                             //console.log(snapshot.val()[obj])
