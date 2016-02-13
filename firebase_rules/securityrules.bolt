@@ -165,7 +165,7 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
                 // userGroupMembershipAnyType(groupid)           //discussion
                   }
  }
- 
+
 
  type UserGroupSubGroupMemberShipType {
    "membership-type" : MembershipValue,
@@ -1230,14 +1230,18 @@ type LocationType {
   title : String
 }
 
+type BooleanOrNull {
+  validate() { this.isBoolean() || this == null }
+}
+
  type SchedulesType {
-   Sunday : Boolean[] | Null,
-   Monday : Boolean[] | Null,
-   Tuesday : Boolean[] | Null,
-   Wednesday : Boolean[] | Null,
-   Thursday : Boolean[] | Null,
-   Friday : Boolean[] | Null,
-   Saturday : Boolean[] | Null
+   Sunday : BooleanOrNull[] | Null,
+   Monday : BooleanOrNull[] | Null,
+   Tuesday : BooleanOrNull[] | Null,
+   Wednesday : BooleanOrNull[] | Null,
+   Thursday : BooleanOrNull[] | Null,
+   Friday : BooleanOrNull[] | Null,
+   Saturday : BooleanOrNull[] | Null
   }
 
 path /subgroup-policies/{groupid} {

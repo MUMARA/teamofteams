@@ -542,43 +542,43 @@
             ".validate": "newData.hasChildren() || newData.isString()",
             "Sunday": {
               "$key2": {
-                ".validate": "newData.isBoolean()"
+                ".validate": "newData.isBoolean() || newData.val() == null"
               },
               ".validate": "newData.val() == null"
             },
             "Monday": {
               "$key2": {
-                ".validate": "newData.isBoolean()"
+                ".validate": "newData.isBoolean() || newData.val() == null"
               },
               ".validate": "newData.val() == null"
             },
             "Tuesday": {
               "$key2": {
-                ".validate": "newData.isBoolean()"
+                ".validate": "newData.isBoolean() || newData.val() == null"
               },
               ".validate": "newData.val() == null"
             },
             "Wednesday": {
               "$key2": {
-                ".validate": "newData.isBoolean()"
+                ".validate": "newData.isBoolean() || newData.val() == null"
               },
               ".validate": "newData.val() == null"
             },
             "Thursday": {
               "$key2": {
-                ".validate": "newData.isBoolean()"
+                ".validate": "newData.isBoolean() || newData.val() == null"
               },
               ".validate": "newData.val() == null"
             },
             "Friday": {
               "$key2": {
-                ".validate": "newData.isBoolean()"
+                ".validate": "newData.isBoolean() || newData.val() == null"
               },
               ".validate": "newData.val() == null"
             },
             "Saturday": {
               "$key2": {
-                ".validate": "newData.isBoolean()"
+                ".validate": "newData.isBoolean() || newData.val() == null"
               },
               ".validate": "newData.val() == null"
             },
