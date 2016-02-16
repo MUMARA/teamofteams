@@ -260,8 +260,8 @@
                 "type": statusType
             };
             //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
-            refGroup.child(groupObj.groupId).child('members-checked-in-count').once('value', function(snapshot){
-                multipath["groups/"+groupObj.groupId+"/members-checked-in-count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+            refGroup.child(groupObj.groupId).child('members-checked-in/count').once('value', function(snapshot){
+                multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
                 ref.update(multipath, function(err){
                     if(err) {
                         // console.log('err', err);
