@@ -32,7 +32,7 @@
             </md-input-container>
             <md-input-container>
                 <label>Last Name</label>
-                <input name="lastName" ng-model="signUp.user.lastName" required autocomplete="off"> 
+                <input name="lastName" ng-model="signUp.user.lastName" required autocomplete="off">
                 <div ng-hide="singupForm.lastName.$untouched" ng-messages="singupForm.lastName.$error">
                     <div class="invalid_color" ng-message="required">This is required.</div>
                 </div>
@@ -48,7 +48,7 @@
             </md-input-container>
             <md-input-container>
                 <label>Confirm Password</label>
-                <input name="confirmPassword" ng-model="signUp.user.confirmPassword" compare-to="signUp.user.password" type="password" required minlength="3" maxlength="40">
+                <input name="confirmPassword" ng-model="signUp.user.confirmPassword" type="password" required minlength="3" maxlength="40">
                 <div ng-hide="singupForm.confirmPassword.$untouched" ng-messages="singupForm.confirmPassword.$error">
                     <div class="invalid_color" ng-message="required">This is required.</div>
                     <div class="invalid_color" ng-message="compareTo">Password does not match.</div>
@@ -62,4 +62,3 @@
         </div>
     </form>
 </div>
-
