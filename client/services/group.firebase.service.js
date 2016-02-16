@@ -353,7 +353,9 @@ angular.module('core')
                                                         timestamp: firebaseTimeStamp,
                                                         "members-count": response.membersCount,
                                                         "microgroups-count": 0,
-                                                        "members-checked-in-count": 0,
+                                                       "members-checked-in": {
+                                                            "count": 0
+                                                        },
                                                         'logo-image': {
                                                             url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
                                                             id: subgroupInfo.subgroupID,
@@ -1174,8 +1176,10 @@ angular.module('core')
                         var dataObject = snapshot.val();
 
                         if (checkinObj && checkinObj.type == 1) {
-                            updateObj['members-checked-in-count'] =  dataObject['members-checked-in-count'] - 1
-                         }
+                            updateObj['members-checked-in'] = {
+                                   count: dataObject['members-checked-in'].count - 1
+                              };
+                          }
 
 
                         // if (checkinObj && checkinObj.type == 1) {

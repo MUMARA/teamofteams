@@ -1,19 +1,23 @@
 <!-- Activity -->
 <div layout="row" layout-align="space-between start" style="font-size:large;" class="backColorWhite viewHeight-64">
 	<div  layout-padding layout-fill flex>
-		<div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
-            <h4 class="leftmargin20px nomargin">{{progressreport.activeTitle | uppercase}}</h4>
-            <div layout="row" flex="50">
-                <md-input-container md-no-float class="nopadding nomargin" flex layout="row" layout-align="center">
+
+     <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
+
+
+			      <h4 class="leftmargin20px nomargin">{{progressreport.activeTitle | uppercase}}</h4>
+            <md-input-container md-no-float class="nopadding  nomargin" layout="row" layout-align="center">
                     <input type="text" id="#UserSearch" ng-model="progressreport.searchbox" aria-label="search dashboard" placeholder="e.g. member name" class="serachbox2">
-                </md-input-container>
-                <ng-md-icon icon="search" size="36" class="nooutline fillColorLightGrey rightmargin20px" ng-click="progressreport.setFocus()"></ng-md-icon>
-            </div>
-        </div>
+            </md-input-container>
+						<md-datepicker ng-model="progressreport.startDate" md-placeholder="Start Date"></md-datepicker>
+						<md-datepicker ng-model="progressreport.endDate" md-placeholder="End Date"></md-datepicker>
+            <ng-md-icon icon="search" size="36" class="nooutline fillColorLightGrey rightmargin20px" ng-click="progressreport.setFocus()"></ng-md-icon>
+    </div>
         <md-divider md-outset></md-divider>
+
 		<div ng-if="progressreport.dailyProgressReport" class="viewHeight-170 vscroll">
 			<md-list>
-			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox} | orderBy: '-date'" layout="column" layout-align="center start" class="md-whiteframe-z2">
+			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox, subgroupID: subgroupID} | orderBy: '-date'" layout="column" layout-align="center start" class="md-whiteframe-z2">
 				<div layout="row" layout-fill layout-margin layout-align="space-between center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">
 					<div layout="row" layout-align="start center" >
 						<img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="	icon40px  imageRound">
