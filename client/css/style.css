@@ -159,6 +159,9 @@ md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, md-pro
     margin-top: 5px;
     margin-bottom: 5px;
 }
+.leftmargin80px {
+    margin-left: 80px;
+}
 .leftmargin40px {
     margin-left: 40px;
 }
@@ -168,8 +171,8 @@ md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, md-pro
 .leftmargin20px {
     margin-left: 20px !important;
 }
-.rightmargin100px {
-    margin-right: 100px;
+.rightmargin140px {
+    margin-right: 140px;
 }
 .rightmargin20px {
     margin-right: 20px;
