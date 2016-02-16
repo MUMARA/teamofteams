@@ -22,8 +22,8 @@
                     <img ng-src="{{group.userObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound" alt="group owner image" />
                 </div>
                 <div layout="row" layout-align="start center" layout-margin>
-                    <md-progress-circular md-mode="determinate" md-diameter="44" ng-value="( group.group['members-checked-in-count'] / group.group['members-count'] ) * 100" class="md-accent userPageGroupProg"></md-progress-circular>
-                    <span style="margin-left: -45%;margin-top:20%;font-size: 11px">{{ ( group.group['members-checked-in-count'] / group.group['members-count'] ) * 100 | number: 0 }}%</span>
+                    <md-progress-circular md-mode="determinate" md-diameter="44" ng-value="( group.group['members-checked-in'].count / group.group['members-count'] ) * 100" class="md-accent userPageGroupProg"></md-progress-circular>
+                    <span style="margin-left: -45%;margin-top:20%;font-size: 11px">{{ ( group.group['members-checked-in'].count / group.group['members-count'] ) * 100 | number: 0 }}%</span>
                 </div>
             </div>
         </md-card>

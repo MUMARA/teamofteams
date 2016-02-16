@@ -7,9 +7,15 @@
 
     function ProgressReportController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
-
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
+
+            $timeout(function() {
+                that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+
+            // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
+
+            }, 2000);
         };
         this.update = function(report) {
             // console.log(report);
@@ -27,7 +33,7 @@
             groupService.setActivePanel('progressreport');
             groupService.setSubgroupIDPanel($stateParams.subgroupID);
             that.groupID = $stateParams.groupID;
-            that.subgroupID = $stateParams.subgroupID;
+            that.subgroupID = $stateParams.subgroupID || '';
             that.user = userService.getCurrentUser();
             that.users = dataService.getUserData();
             that.activeUser = ($stateParams.u) ? that.user.userID : '';
