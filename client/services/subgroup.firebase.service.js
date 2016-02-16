@@ -344,15 +344,15 @@ angular.module('core')
                                     .catch(function(d) {
                                         console.log(d);
                                     })
-                                for (var member in memArray) {
-
-                                    var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(loggedInUserObj.userID).child(subgroupObj.groupID + "_" + subgroupObj.subgroupID).child(member))
-                                        .$loaded().then(function() {
-                                            var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded().then(function() {
-                                                qArray.push($q.all([temp, temp1]))
-                                            })
-                                        })
-                                }
+                                // for (var member in memArray) {
+                                //
+                                //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(loggedInUserObj.userID).child(subgroupObj.groupID + "_" + subgroupObj.subgroupID).child(member))
+                                //         .$loaded().then(function() {
+                                //             var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded().then(function() {
+                                //                 qArray.push($q.all([temp, temp1]))
+                                //             })
+                                //         })
+                                // }
                                 deffer.resolve($q.all(qArray));
 
 

@@ -91,7 +91,7 @@
                     <h2>Team Admin</h2>
                     <div layout="row">
                         <div flex="10">
-                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.ActiveSideNavBar('admin');"><span style="color: white;font-size: 14px;">Assign</span></md-button>
+                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.assignMemberClick(); createSubGroup.ActiveSideNavBar('admin');"><span style="color: white;font-size: 14px;">Assign</span></md-button>
                         </div>
                         <div flex="20">
                         </div>
@@ -113,7 +113,7 @@
                     </md-button>
                     <div layout="row">
                         <div flex="10">
-                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.ActiveSideNavBar('member');"><span style="color: white;font-size: 14px;">Assign</span></md-button>
+                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.assignMemberClick(); createSubGroup.ActiveSideNavBar('member');"><span style="color: white;font-size: 14px;">Assign</span></md-button>
                         </div>
                         <div flex="20">
                         </div>
@@ -143,7 +143,8 @@
                 <div>
                     <md-list>
                         <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline" ng-click="createSubGroup.selectedAdmin(2,member)" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-label="Select Admin">
-                            <ng-md-icon icon="done" ng-class="createSubGroup.filterUser2(member.user.profile.email) ? 'fillColorWhite' : 'fillColorDarkGrey' ">
+                            <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' ">
+                                <!-- <ng-md-icon icon="done" ng-class="createSubGroup.filterUser2(member.user.profile.email) ? 'fillColorWhite' : 'fillColorDarkGrey' "> -->
                                 </ng-md-icon>
                             <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound nooutline" layout-margin alt="user" />
                             <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
@@ -162,7 +163,8 @@
                 <div>
                     <md-list>
                         <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline" ng-click="createSubGroup.selectedMember(member.user.profile,$index)" ng-disabled="createSubGroup.filterUser(member.user.profile.$id);" aria-label="Select Member">
-                            <ng-md-icon icon="done" ng-class="createSubGroup.filterUser(member.user.profile.$id) ? 'fillColorWhite' : 'fillColorDarkGrey' ">
+                            <ng-md-icon icon="done" ng-class="member.isMember ? 'fillColorWhite' : 'fillColorDarkGrey' ">
+                            <!-- <ng-md-icon icon="done" ng-class="(createSubGroup.filterUser(member.user.profile.$id)) ? 'fillColorWhite' : 'fillColorDarkGrey' "> -->
                             </ng-md-icon>
                             <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound nooutline" layout-margin alt="user" />
                             <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
