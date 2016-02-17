@@ -28,6 +28,9 @@
                 }
             });
         };
+        this.everyone = function(){
+            that.activeUser = '';
+        }
 
         function init() {
             groupService.setActivePanel('progressreport');
@@ -36,7 +39,8 @@
             that.subgroupID = $stateParams.subgroupID || '';
             that.user = userService.getCurrentUser();
             that.users = dataService.getUserData();
-            that.activeUser = ($stateParams.u) ? that.user.userID : '';
+            //that.activeUser = ($stateParams.u) ? that.user.userID : '';
+            that.activeUser = that.user.userID;
             that.activeTitle = "Daily Progress Report";
 
             if ($stateParams.u) {

@@ -35,7 +35,7 @@
 							</md-input-container>
 						</div>
 					</div>
-					<md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID && progressreport.subgroupID" ng-click="progressreport.update(report)">Update</md-button>
+					<md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID && progressreport.subgroupID" ng-click="progressreport.update(report)"><span class="foreColorWhite">Edit</span></md-button>
 				</div>
 			  </md-list-item>
 			</md-list>
@@ -43,9 +43,12 @@
 	</div>
 	<div style="width:300px;" layout-fill class="backColorSeaGreen viewHeight vscroll" ng-if="progressreport.subgroupID">
 	<md-list>
-	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in progressreport.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: progressreport.groupID, subgroupID: progressreport.subgroupID}" ng-click="progressreport.activeUser = user.id">
+		<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-click="progressreport.activeUser = user.id">
+		    <img src="/img/multiContact.png" alt="everyone" class="icon40px leftmargin20px imageRound" ng-click="progressreport.everyone();"> <span class="leftmargin20px">Everyone</span>
+	  	</md-list-item>
+	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in progressreport.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: progressreport.groupID, subgroupID: progressreport.subgroupID }" ng-click="progressreport.activeUser = user.id">
 		    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
-		  </md-list-item>
-		</md-list>
+	  	</md-list-item>
+	</md-list>
 	</div>
 </div>
