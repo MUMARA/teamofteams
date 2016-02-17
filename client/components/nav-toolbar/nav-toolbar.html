@@ -1,3 +1,4 @@
+
 <md-toolbar class="backColorSeaGreen leftrightpadding20px md-whiteframe-z2" layout="row" layout-align="space-between center">
     <div layout="row" layout-align="start center" layout-margin>
         <img src="img/Untitled-3.svg" ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
@@ -10,6 +11,10 @@
           Custom Dialog
         </md-button> -->
         <!-- EMTP -->
+
+        <ng-md-icon icon="add" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.progressReport()" title="Quiz">
+        </ng-md-icon>
+
         <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
         <div style="position: relative" layout-margin class="check-in-slider">
             <md-switch ng-model="navToolbar.switchCheckIn" ng-change="navToolbar.checkTeamAvailable()" ng-click="navToolbar.checkinClick($event)" aria-label="Check In">
@@ -74,3 +79,14 @@
         </div>
     </div>
 </md-toolbar>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;width: 35%;max-width: 35%">
+  <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
+    <h1 class="md-toolbar-tools">Progress report</h1>
+  </md-toolbar>
+  <md-content layout-padding style="">
+    <ng-md-icon icon="add" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.progressReport()" title="Quiz">
+    </ng-md-icon>
+  </md-content>
+</md-sidenav>
+<md-backdrop style="background: transparent !important;" ng-if="navToolbar.openNav" class="md-sidenav-backdrop md-opaque"></md-backdrop>
