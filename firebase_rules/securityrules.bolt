@@ -1226,13 +1226,13 @@ type BooleanOrNull {
 }
 
  type SchedulesType {
-   Sunday : BooleanOrNull[] | Null,
-   Monday : BooleanOrNull[] | Null,
-   Tuesday : BooleanOrNull[] | Null,
-   Wednesday : BooleanOrNull[] | Null,
-   Thursday : BooleanOrNull[] | Null,
-   Friday : BooleanOrNull[] | Null,
-   Saturday : BooleanOrNull[] | Null
+   Sunday : BooleanOrNull[],
+   Monday : BooleanOrNull[],
+   Tuesday : BooleanOrNull[],
+   Wednesday : BooleanOrNull[],
+   Thursday : BooleanOrNull[],
+   Friday : BooleanOrNull[],
+   Saturday : BooleanOrNull[]
   }
 
 path /subgroup-policies/{groupid} {

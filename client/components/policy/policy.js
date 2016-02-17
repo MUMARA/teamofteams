@@ -395,9 +395,6 @@
 
                 if(that.isProgressReport) {
                      that.progressReportQuestions = arrayToObject(policy.progressReportQuestions[policy.latestProgressReportQuestionID]['questions']);        //when comes from firebase our question change into array from object.
-                     // console.log('[]', policy.dailyReportQuestions);
-                     // console.log('{}', arrayToObject(policy.dailyReportQuestions));
-
                      isQuestionExists();  //checking if questions exists
                 } //that.isDailyReport true
 
@@ -414,7 +411,7 @@
                         that.selectedTeam(val, true); //creating selected teams array
                     }
                 }); //subGroupNames.forEach
-            } //this.selectedPolicy
+            }; //this.selectedPolicy
 
             function subGroupNamesPolicyFalse() {
                 //before selectedTeam first hasPolicy = false...
@@ -453,6 +450,7 @@
             }
             this.deleteQuestion = function(id) {
                 delete that.progressReportQuestions[id.toString()];
+                that.progressReportQuestions = arrayToObject(that.progressReportQuestions);
 
                 //Show Table of Question if question exists
                 isQuestionExists();
@@ -484,7 +482,8 @@
                         return false;
                     }
 
-                    //default Object
+                    //default ObjectX
+
                     var obj = {};
                     obj["title"] = that.policyTitle;    //setting policy title name
                     obj["locationBased"] = false;
@@ -495,6 +494,7 @@
                     obj["timestamp"] = Firebase.ServerValue.TIMESTAMP;
                     obj["progressReport"] = false;
                     obj["progressReportQuestions"] = "";
+                    obj["latestProgressReportQuestionID"] = '';
 
 
                     //if locationBased is selected
@@ -532,21 +532,26 @@
                             return false;
                         }
                     }
-
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);
 
                     //calling policy service function to add in firebase
-                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(){
+                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid){
                        //Load Group Policies from given GroupID
                        //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
                         if(that.activePolicyId) {  //if edit
                             that.groupPolicies.forEach(function(val,index){
                                 if(val.policyID == that.activePolicyId) {
+                                    if(obj["progressReport"]){
+                                        obj['latestProgressReportQuestionID'] = lastQuestionid || '';
+                                        obj['progressReportQuestions'][lastQuestionid] = obj['progressReportQuestions'];
+                                    }
+                                    //reasign updated obj to our local array
                                     that.groupPolicies[index] = obj;
                                 }
                             });
                             messageService.showSuccess('Policy Successfully Updated!');
+                            //$state.go('user.policy', {groupID: groupId});
                         } else{
                             messageService.showSuccess('Policy Successfully Created!');
                             //after created reload initial page
