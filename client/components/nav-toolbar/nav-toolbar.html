@@ -1,15 +1,20 @@
+
 <md-toolbar class="backColorSeaGreen leftrightpadding20px md-whiteframe-z2" layout="row" layout-align="space-between center">
-    <div layout='row' layout-align="start center" layout-margin>
-        <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
+    <div layout="row" layout-align="start center" layout-margin>
+        <img src="img/Untitled-3.svg" ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
         <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
         <md-progress-circular md-diameter="45" ng-show="navToolbar.checkinSending" class="nomargin" md-mode="indeterminate"></md-progress-circular>
     </div>
-    <div layout='row' layout-align="end center">
+    <div layout="row" layout-align="end center">
         <!-- EMTP -->
     <!--     <md-button class="md-primary md-raised" ng-click="showAdvanced($event)" flex="100" flex-gt-md="auto">
           Custom Dialog
         </md-button> -->
         <!-- EMTP -->
+
+        <ng-md-icon icon="add" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.progressReport()" title="Quiz">
+        </ng-md-icon>
+
         <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
         <div style="position: relative" layout-margin class="check-in-slider">
             <md-switch ng-model="navToolbar.switchCheckIn" ng-change="navToolbar.checkTeamAvailable()" ng-click="navToolbar.checkinClick($event)" aria-label="Check In">
@@ -27,7 +32,7 @@
                 <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
                     <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
                         <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
-                            <div><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
+                            <div><img class="icon10px rightmargin10px switchCardListDot" src="../../img/switchCardListLogo.svg"></div>
                             <span>{{group.groupTitle}}</span>
                         </div>
                         <div style="font-size:large;" layout-fill>
@@ -46,6 +51,10 @@
                 </div>
             </div>
             </md-card>
+        </div>
+        <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
+            {{navToolbar.showUrlObj.groupID}} /
+            {{navToolbar.showUrlObj.subgroupID}}
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
             <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()" title="Quiz">
@@ -70,3 +79,14 @@
         </div>
     </div>
 </md-toolbar>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;width: 35%;max-width: 35%">
+  <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
+    <h1 class="md-toolbar-tools">Progress report</h1>
+  </md-toolbar>
+  <md-content layout-padding style="">
+    <ng-md-icon icon="add" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.progressReport()" title="Quiz">
+    </ng-md-icon>
+  </md-content>
+</md-sidenav>
+<md-backdrop style="background: transparent !important;" ng-if="navToolbar.openNav" class="md-sidenav-backdrop md-opaque"></md-backdrop>
