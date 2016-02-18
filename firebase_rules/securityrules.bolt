@@ -703,7 +703,7 @@ path /subgroup-members/{groupid} {
 
   read() {     isGroupMembersIdExist(groupid)          &&
                isCurrentUserGroupMembersOwner(groupid) ||
-               isCurrentUserGroupMembersAdmin(groupid)  ||
+               isCurrentUserGroupMembersAdmin(groupid) ||
                groupMemberShipAnyType($groupid)   }
 
   write() {    isGroupMembersIdExist(groupid)            &&
