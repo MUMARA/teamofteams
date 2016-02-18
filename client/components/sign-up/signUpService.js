@@ -12,7 +12,7 @@
                     var defer = $q.defer();
                     authService.signup(user, function(data, firebaseData) {
                             if (data.statusCode == 1) {
-                                messageService.showSuccess('Sign up successful please login.');
+                                messageService.showSuccess('Email has been sent please verify.');
                                 $location.path(location);
                             } else {
                                 messageService.showFailure(data.statusDesc);
