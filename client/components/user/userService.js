@@ -2,8 +2,8 @@
     'use strict';
     angular
         .module('app.user', ['core'])
-        .factory('userCompService', ['$state', '$interval', 'userService', '$location', 'authService', '$http', '$q', 'appConfig', '$sessionStorage', '$firebaseObject', 'firebaseService', 'userFirebaseService', '$firebaseArray',
-            function($state, $interval, userService, $location, authService, $http, $q, appConfig, $localStorage, $firebaseObject, firebaseService, userFirebaseService, $firebaseArray) {
+        .factory('userCompService', ['$state', '$interval', 'userService', '$location', 'authService', '$http', '$q', 'appConfig', '$firebaseObject', 'firebaseService', 'userFirebaseService', '$firebaseArray',
+            function($state, $interval, userService, $location, authService, $http, $q, appConfig, $firebaseObject, firebaseService, userFirebaseService, $firebaseArray) {
                 var FlattendGroupDataByUser = (function() {
                     var _cb, self, pending = true;
                     var $loadedDefer, _count = 0;
@@ -96,15 +96,15 @@
 
                         },
                         'flattendGroupHandler': function(snapshot) {
-                            //debugger;
-
-
-                            if (snapshot.val() && Object.keys(snapshot.val()).length) {
-                                self.data.groupSubgroupData = snapshot.val()
-                                setData(snapshot.val(), flattenedsubGroupsByuser);
-                            } else {
-                                // console.log('no data')
-                            }
+                            // //debugger;
+                            //
+                            //
+                            // if (snapshot.val() && Object.keys(snapshot.val()).length) {
+                            //     self.data.groupSubgroupData = snapshot.val()
+                            //     setData(snapshot.val(), flattenedsubGroupsByuser);
+                            // } else {
+                            //     // console.log('no data')
+                            // }
 
 
                         },
@@ -127,6 +127,7 @@
                     'openCreateGroupPage': function() {
 
                         $location.path('/user/' + userService.getCurrentUser().userID + '/create-group');
+
 
                     },
                     'openJoinGroupPage': function() {

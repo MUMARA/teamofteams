@@ -2,12 +2,11 @@
  * Created by Mkamran on 31/12/14.
  */
 
-'use strict';
+"use strict";
 
 angular.module('core')
-    .factory('dataService', ['$firebaseObject', 'firebaseService', 'checkinService', 'userService',
-        function($firebaseObject, firebaseService, checkinService, userService) {
-
+    .factory('dataService', ['$firebaseObject', 'firebaseService', 'checkinService', 'userService', 'userPresenceService',
+        function($firebaseObject, firebaseService, checkinService, userService, userPresenceService) {
             var userData = [];
             var userGroups = [];
             var userID = '';
@@ -20,11 +19,11 @@ angular.module('core')
 
             function loadData () {
                 unloadData();
-                userID = userService.getCurrentUser().userID;                
+                userID = userService.getCurrentUser().userID;
                 setUserData();
                 setUserGroups();
             }
-            
+
             function setUserData () {
                 var groupTitle = '';
                 var subgroupTitle = '';
@@ -32,33 +31,41 @@ angular.module('core')
                 firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
                     $firebaseObject(firebaseService.getRefGroups().child(group.key())).$loaded().then(function(groupmasterdata) {
                         groupsubgroupTitle[group.key()] = groupmasterdata.title;
-                    })
+                    });
                     firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_added', function(subgroup, prevChildKey) {
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
                             userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
                                     if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
-                                        val.type = snapshot.val().type;
+                                        if (snapshot.val().type === 1) {
+                                            val.type = true;
+                                        } else {
+                                            val.type = false;
+                                        }
                                         val.message = snapshot.val().message;
                                         val.timestamp = snapshot.val().timestamp;
                                     }
                                 }
-                            })
+                            });
                         });
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
                            userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
                                     if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
-                                        val.type = snapshot.val().type;
+                                        if (snapshot.val().type === 1) {
+                                            val.type = true;
+                                        } else {
+                                            val.type = false;
+                                        }
                                         val.message = snapshot.val().message;
                                         val.timestamp = snapshot.val().timestamp;
                                     }
                                 }
-                            })
+                            });
                         });
                         $firebaseObject(firebaseService.getRefSubGroups().child(group.key()).child(subgroup.key())).$loaded().then(function(subgroupmasterdata) {
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
-                        })
+                        });
                         firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
                             $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
                                 if (userdata.type === 1) {
@@ -85,7 +92,7 @@ angular.module('core')
                                                     val.contactNumber = snapshot.val();
                                                 }
                                             }
-                                        })
+                                        });
                                     });
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
@@ -103,7 +110,34 @@ angular.module('core')
                                                     val.contactNumber = snapshot.val();
                                                 }
                                             }
+                                        });
+                                    });
+                                    /*userPresenceService.getRefUsersPresense().child(userdata.$id).child('defined-status').on('value', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                val.onlinestatus = snapshot.val();
+                                            }
                                         })
+                                    });*/
+                                    userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                if (snapshot.val()) {
+                                                    /*for (var key in snapshot.val()) {
+                                                        if (snapshot.val()[key].type === 1) {
+                                                            val.onlineweb = 1;
+                                                        } else if (snapshot.val()[key].type === 2) {
+                                                            val.onlineios = 1;
+                                                        } else if (snapshot.val()[key].type === 3) {
+                                                            val.onlineandroid = 1;
+                                                        }
+                                                    }*/
+                                                    val.onlinestatus = true;
+                                                } else {
+                                                    val.onlinestatus = false;
+                                                }
+                                            }
+                                        });
                                     });
                                     userData.push({
                                         id: userdata.$id,
@@ -115,6 +149,10 @@ angular.module('core')
                                         subgroupID: subgroup.key(),
                                         subgroupTitle: groupsubgroupTitle[subgroup.key()],
                                         contactNumber: usermasterdata.contactNumber || '',
+                                        onlinestatus: 0,
+                                        /*onlineweb: 0,
+                                        onlineios: 0,
+                                        onlineandroid: 0,*/
                                         timestamp: timestamp,
                                         message: message,
                                         profileImage: usermasterdata['profile-image'] || '',
@@ -122,13 +160,13 @@ angular.module('core')
                                         lastName: usermasterdata.lastName,
                                         fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
                                     });
-                                })
+                                });
                             });
-                        })
+                        });
                     });
                 });
             }
-            
+
             function getUserData () {
                 return userData;
             }
@@ -154,8 +192,8 @@ angular.module('core')
                                 val.members = groupmasterdata["members-count"];
                                 eflag = false;
                             }
-                        })
-                        
+                        });
+
                         if(eflag){
                             if(snapshot.hasChildren()) {
                                 userGroups.push({
@@ -175,13 +213,13 @@ angular.module('core')
                                     userGroups.forEach(function(item, index){
                                         if (item.groupID === group.key()) {
                                             if (snapshot.key() === "title") {
-                                                item['title'] = snapshot.val()
+                                                item.title = snapshot.val();
                                             }
                                             if (snapshot.key() === "members-checked-in") {
-                                                item.membersOnline = snapshot.val().count
+                                                item.membersOnline = snapshot.val().count;
                                             }
                                             if (snapshot.key() === "members-count") {
-                                                item.members = snapshot.val()
+                                                item.members = snapshot.val();
                                             }
                                             if (snapshot.key() === "address-title") {
                                                 item.addressTitle = snapshot.val();
@@ -245,19 +283,34 @@ angular.module('core')
                         //         }//if closing
                         //     }//else closing
                         // })
-                    })
-                })
+                    });
+                });
             }
 
             function getUserGroups () {
                 return userGroups;
             }
 
+            function setUserCheckInOut (grId, sgrId, userID, type) {
+                userData.forEach(function(val, indx) {
+                    if (val.groupsubgroup === (grId + ' / ' + sgrId)) {
+                        if (val.id === userID) {
+                            if (type) {
+                                val.type = false;
+                            } else {
+                                val.type = true;
+                            }
+                        }
+                    }
+                });
+            }
+
             return {
                 loadData: loadData,
                 unloadData: unloadData,
                 getUserData: getUserData,
-                getUserGroups: getUserGroups
-            }
+                getUserGroups: getUserGroups,
+                setUserCheckInOut: setUserCheckInOut
+            };
         }
     ]);

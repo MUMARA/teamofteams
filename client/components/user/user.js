@@ -1,18 +1,18 @@
 (function() {
     'use strict';
 
-    angular.module('app.user')
-        .controller('UserController', ['dataService', '$q', '$location', 'checkinService', '$rootScope', '$sessionStorage', 'subgroupFirebaseService', '$firebaseArray', 'userCompService', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
+    angular.module('app.user', ['core'])
+        .controller('UserController', ['dataService', '$q', '$state', '$location', 'checkinService', '$rootScope', 'subgroupFirebaseService', '$firebaseArray', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
 
-    function UserController(dataService, $q, $location, checkinService, $rootScope, $sessionStorage, subgroupFirebaseService, $firebaseArray, userCompService, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
-
+    function UserController(dataService, $q, $state, $location, checkinService, $rootScope, subgroupFirebaseService, $firebaseArray, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
         //$rootScope.fl= 'hello'
         var $scope = this;
         var that = this;
         //window.userScope = this;
         this.pageUserId = userService.getCurrentUser();
         this.createGroup = function() {
-            $location.path('/user/:userID/create-group');
+            // $location.path('/user/:userID/create-group');
+            $state.go('user.create-group', {userID: userService.getCurrentUser().userID})
         }
         var userData;
         this.groupMembers;
@@ -86,7 +86,7 @@
         //                             $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
         //                             $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
         //                             $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
-        //                             $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;                            
+        //                             $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;
         //                             if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
         //                                 $scope.userObj[j].membersPercentage = 0
         //                             }
@@ -134,7 +134,7 @@
         //             that.groups.push(groupData);
         //         })
         //         // if (groupsData.length == (index + 1)) {
-        //            // defer.resolve(groups); 
+        //            // defer.resolve(groups);
         //         // }
         //     })
         //     // return defer.promise;
@@ -242,8 +242,8 @@
             });
         }
 
-        
-        
+
+
     }
 
 })();

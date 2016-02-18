@@ -5,41 +5,55 @@
 'use strict';
 
 angular.module('core')
-    .factory('userService', ["$q", "$http", "appConfig", "$sessionStorage", '$localStorage', '$firebaseObject', function($q, $http, appConfig, $sessionStorage, $localStorage, $firebaseObject) {
+    .factory('userService', ["$state", "$q", "$http", "appConfig", '$localStorage', function($state, $q, $http, appConfig, $localStorage) {
         //.factory('userService',["$http","appConfig","$sessionStorage",'$localStorage','userFirebaseService', function( $http, appConfig,$sessionStorage,$localStorage, userFirebaseService) {
 
+        var user = $localStorage.loggedInUser;
 
         return {
             getUserPresenceFromLocastorage: function() {
                 var deferred = $q.defer();
-
-                var userObj = $localStorage.loggedInUser;
-                var userExit = false;
-
-                if (userObj) {
+                if (user && user.userID) {
+                    if ((user.expiry*1000) < Date.now()) {
+                        deferred.resolve();
+                    }
                     var ref = new Firebase(appConfig.myFirebase);
-                    var user = ref.child("users").child(userObj.userID);
-
-                    user.once('value', function(snapshot) {
+                    ref.child("users").child(user.userID).once('value', function(snapshot) {
                         if (snapshot.hasChild('email')) {
-                            userExit = true;
-                            deferred.resolve(userExit);
+                            $state.go('user.dashboard', {userID: user.userID})
                         } else {
-                            userExit = false;
-                            deferred.resolve(userExit);
+                            deferred.resolve();
                         }
                         //console.log(snapshot)
                     }); //user once
                 } // if userObj
                 else {
-                    deferred.resolve(false);
+                    deferred.resolve();
                 }
 
                 return deferred.promise;
 
             },
             getCurrentUser: function() {
-                return $localStorage.loggedInUser;
+                return user;
+            },
+            getCurrentUserID: function() {
+                return user.userID;
+            },
+            setCurrentUser: function(newuser) {
+                $localStorage.loggedInUser = newuser;
+                user = newuser;
+            },
+            removeCurrentUser: function() {
+                delete $localStorage.loggedInUser;
+                user = {};
+            },
+            setExpiry: function(timestamp) {
+                $localStorage.loggedInUser.expiry = timestamp;
+                user.expiry = timestamp;
+            },
+            getExpire: function() {
+                return user.expiry
             },
             isUserAccessingOwnHome: function(path, userLoggedInfo) {
                 return true;

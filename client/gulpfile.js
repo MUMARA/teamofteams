@@ -3,9 +3,11 @@
  */
 
 var gulp = require('gulp'),
+    url = require('url')
     concat = require('gulp-concat'),
     // minify = require('gulp-minify');
     uglify = require('gulp-uglify');
+    fs = require('fs')
 
 var webserver = require('gulp-webserver');
 
@@ -14,6 +16,14 @@ gulp.task("minifying", function() {
             "./coreModules/core.module.js",
             "./coreModules/firebase-as-array.js",
             "./components/user/userService.js",
+            "./components/activity/activity.js",
+            "./components/report/report.js",
+            "./components/chat/chat.js",
+            "./components/manualattendace/manualattendace.js",
+            "./components/progressreport/progressreportService.js",
+            "./components/progressreport/progressreport.js",
+            "./components/collaborator/collaboratorService.js",
+            "./components/collaborator/collaborator.js",
             "./components/user/user.js",
             "./components/group/groupService.js",
             "./components/group/group.js",
@@ -31,21 +41,16 @@ gulp.task("minifying", function() {
             "./components/create-group/createGroup.js",
             "./components/edit-group/editGroupService.js",
             "./components/edit-group/edit-group.js",
-            "./components/subgroup/subgroupService.js",
-            "./components/subgroup/subgroup.js",
             "./components/create-sub-group/createSubGroupService.js",
             "./components/create-sub-group/createSubGroup.js",
             "./components/join-group/joinGroupService.js",
             "./components/join-group/joinGroup.js",
             "./components/personal-settings/personal-settingsService.js",
             "./components/personal-settings/personal-settings.js",
+            "./components/policy/policyService.js",
+            "./components/policy/policy.js",
             "./components/user-setting/userSettingService.js",
             "./components/user-setting/userSetting.js",
-            "./components/geo-fencing/geo-fencing.js", //not working in minifying
-            "./components/create-channels/createChannelsService.js",
-            "./components/create-channels/createChannels.js",
-            "./components/create-teams-channels/createTeamsChannelsService.js",
-            "./components/create-teams-channels/createTeamsChannels.js",
             "./components/quiz/quizService.js",
             "./components/quiz/quiz.js",
             "./components/componentsCoreModule.js",
@@ -63,12 +68,12 @@ gulp.task("minifying", function() {
             "./services/userPresence.firebase.js",
             "./services/userHelper.firebase.js",
             "./services/subgroup.firebase.service.js",
+            "./services/checkin.service.js",
             "./directives/groupcardDirective.js",
             "./directives/subgroupcardDirective.js",
             "./directives/checkUserID.directive.js",
             "./directives/compareTo.directive.js",
             "./directives/checkGroupExistance.directive.js",
-            "./checkin/services/checkin.service.js",
             "./app.js",
             "./config/appRoutes.js"
         ])
@@ -80,12 +85,12 @@ gulp.task("minifying", function() {
 
 
 // gulp.task("minifying", function(){
-//     gulp.src([  "./checkin/**/*.js", 
-//                 "./components/**/*.js", 
-//                 //"./config/**/*.js", 
-//                 "./coreModules/**/*.js", 
-//                 "./directives/**/*.js", 
-//                 "./services/**/*.js", 
+//     gulp.src([  "./checkin/**/*.js",
+//                 "./components/**/*.js",
+//                 //"./config/**/*.js",
+//                 "./coreModules/**/*.js",
+//                 "./directives/**/*.js",
+//                 "./services/**/*.js",
 //                 "./app-dev.js", "./router.es5.js"
 //                 ])
 //     .pipe(concat('all.js'))
@@ -106,7 +111,16 @@ gulp.task('webserver', function() {
                 path: '/index.html'
             },
             open: true,
-            port: 7000
+            port: 7000,
+            middleware: function(req, res, next) {
+                var fileName = url.parse(req.url);
+                fileName = fileName.href.split(fileName.search).join("");
+                var fileExists = fs.existsSync("./" + fileName);
+                if (!fileExists) {
+                    req.url = "/index.html";
+                }
+                return next();
+            }
         }));
 });
 

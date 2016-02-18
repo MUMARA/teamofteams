@@ -2,9 +2,9 @@
     'use strict';
     angular
         .module('app.editGroup')
-        .controller('EditGroupController', ['messageService', '$http', '$rootScope', 'firebaseService', '$location', 'editGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', '$firebaseObject', '$stateParams', EditGroupController]);
+        .controller('EditGroupController', ['messageService', '$http', '$rootScope', 'firebaseService', '$state', '$location', 'editGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', '$firebaseObject', '$stateParams', EditGroupController]);
 
-    function EditGroupController(messageService, $http, $rootScope, firebaseService, $location, editGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q, $firebaseObject, $stateParams) {
+    function EditGroupController(messageService, $http, $rootScope, firebaseService, $state, $location, editGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q, $firebaseObject, $stateParams) {
 
 
         $rootScope.croppedImage = {};
@@ -13,6 +13,7 @@
         var that = this;
         var user = userService.getCurrentUser();
         var groupId = $stateParams.groupID;
+        this.groupId = groupId;
         $rootScope.newImg = '';
         /*VM functions*/
         this.groupPath = '';
@@ -29,9 +30,10 @@
         groupObj.$loaded().then(function(data) {
             $timeout(function() {
 
-                // console.log(data);
+            //     console.log(data);
                 that.group = data;
-                that.group.signupMode = "2";
+            //  that.group.privacy = 2;
+
 
                 //debugger
             })
@@ -40,17 +42,25 @@
         })
 
         this.openCreateSubGroupPage = function() {
-            $location.path('/user/group/' + groupId + '/create-subgroup');
+            // $location.path('/user/group/' + groupId + '/create-subgroup');
+            $state.go('user.create-subgroup', {groupID: groupId})
         }
         this.openUserSettingPage = function() {
-            $location.path('/user/group/' + groupId + '/user-setting');
+            // $location.path('/user/group/' + groupId + '/user-setting');
+            $state.go('user.user-setting', {groupID: groupId})
         };
         this.subgroupPage = function() {
-            $location.path('user/group/' + groupId + '/subgroup');
+            // $location.path('user/group/' + groupId + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupId})
         }
 
         this.openGeoFencingPage = function() {
-            $location.path('/user/group/' + groupId + '/geoFencing');
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupId})
+        }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupId})
         }
 
         //query for users names list
@@ -155,7 +165,7 @@
                 editGroupService.editGroup(that.group, groupObj, groupForm, function(){
                     that.submitProgress = false;
                 })
-                
+
             }
 
 
@@ -202,18 +212,4 @@
 
     }
 
-
-    function DialogController($mdDialog) {
-        this.my = {
-            model: {
-                img: ''
-            }
-        };
-        this.hide = function(picture) {
-            // console.log(picture)
-            $mdDialog.hide(picture);
-        };
-
-
-    };
 })();

@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by ZiaKhan on 03/02/15.
  */
 
@@ -6,8 +6,8 @@
 
 
 angular.module('core')
-    .factory('groupFirebaseService', ["firebaseService", "$q", "$timeout", '$sessionStorage', 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService", "$localStorage",
-        function(firebaseService, $q, $timeout, $sessionStorage, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService, $localStorage) {
+    .factory('groupFirebaseService', ["firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
+        function(firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -19,8 +19,6 @@ angular.module('core')
 
 
             return {
-                getSignedinUserObj: firebaseService.getSignedinUserObj,
-
                 getGroupSyncObjAsync: function(groupID, viewerUserID) {
                     var deferred = $q.defer();
                     var self = this;
@@ -265,6 +263,7 @@ angular.module('core')
                             userID: snapshot.key(),
                             message: snapshot.val()["message"],
                             timestamp: snapshot.val()["timestamp"],
+                            "teamrequest": snapshot.val()["team-request"],
                             userSyncObj: userSyncObj
                         });
                     });
@@ -322,9 +321,10 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
+                                    var subgroupNames = {title: subgroupInfo.title};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
-                                    groupNameRef.set(subgroupInfo.title, function(error) {
+                                    groupNameRef.set(subgroupNames,  function(error) {
                                         if (error) {
                                             deferred.reject();
                                             //role back previous
@@ -332,6 +332,18 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
+
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
+                                                        snapshot.val()["subgroup-count"] = snapshot.val()["subgroup-count"] + 1
+                                                        firebaseService.getRefGroups().child(group.$id).set(snapshot.val(), function(){
+                                                            if (error) {
+                                                                errorHandler();
+                                                            }
+                                                        })
+                                                    })
+
+                                                    //save in subgroup-policies for Policies
+                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({hasPolicy: false, policyID: '', title: subgroupInfo.title});
 
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
@@ -341,8 +353,8 @@ angular.module('core')
                                                         timestamp: firebaseTimeStamp,
                                                         "members-count": response.membersCount,
                                                         "microgroups-count": 0,
-                                                        "members-checked-in": {
-                                                            count: 0
+                                                       "members-checked-in": {
+                                                            "count": 0
                                                         },
                                                         'logo-image': {
                                                             url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
@@ -357,21 +369,22 @@ angular.module('core')
                                                             errorHandler();
                                                         } else {
                                                             // creating flattened-groups data in firebase
+
                                                             var qArray = [];
                                                             var qArray2 = [];
                                                             var deffer = $q.defer();
                                                             deffer.promise
                                                                 .then(function(dataArrofArr) {
 
-                                                                    dataArrofArr.forEach(function(arr) {
-                                                                        if (arr[1].type == 1) {
-                                                                            arr[0].checkedin = true
-                                                                        } else {
-                                                                            arr[0].checkedin = false
-                                                                        }
-                                                                        qArray2.push(arr[0].$save())
-                                                                    });
-                                                                    return $q.all(qArray2)
+                                                                    // dataArrofArr.forEach(function(arr) {
+                                                                    //     if (arr[1].type == 1) {
+                                                                    //         arr[0].checkedin = true
+                                                                    //     } else {
+                                                                    //         arr[0].checkedin = false
+                                                                    //     }
+                                                                    //     qArray2.push(arr[0].$save())
+                                                                    // });
+                                                                    // return $q.all(qArray2)
                                                                 })
                                                                 .then(function() {
                                                                     deferred.resolve({
@@ -404,18 +417,19 @@ angular.module('core')
                                                                 .catch(function(d) {
                                                                     //debugger;
                                                                 })
-                                                            for (var member in mems) {
-
-                                                                var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
-                                                                    .$loaded()
-
-                                                                var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
-
-                                                                qArray.push($q.all([temp, temp1]))
-
-
-                                                            }
-                                                            deffer.resolve($q.all(qArray))
+                                                            // for (var member in mems) {
+                                                            //
+                                                            //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
+                                                            //         .$loaded()
+                                                            //
+                                                            //     var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
+                                                            //
+                                                            //     qArray.push($q.all([temp, temp1]))
+                                                            //
+                                                            //
+                                                            // }
+                                                            //deffer.resolve($q.all(qArray))
+                                                            deffer.resolve('');
 
                                                         }
                                                     });
@@ -881,6 +895,32 @@ angular.module('core')
 
                     return deferred.promise;
                 },
+                addsubgroupmember: function(userID, groupID, subgroupID){
+                    var defer = $q.defer();
+                    var count = 0;
+                    firebaseService.getRefMain().child('subgroups').child(groupID).child(subgroupID).child('members-count').once('value', function(snapshot){
+                        count = snapshot.val();
+                    })
+                    var multipath = {};
+                    multipath["user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID] = {
+                        "membership-type": 3,
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    };
+                    multipath["subgroup-members/" + groupID + "/" + subgroupID + "/" + userID] = {
+                        "membership-type": 3,
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    }
+                    multipath["subgroups/" + groupID + "/" + subgroupID + "/members-count"] = count + 1;
+                    multipath["subgroups/" + groupID + "/" + subgroupID + "/timestamp"] = Firebase.ServerValue.TIMESTAMP;
+                    firebaseService.getRefMain().update(multipath, function(err){
+                        if (err) {
+                            defer.reject(err);
+                        } else {
+                            defer.resolve();
+                        }
+                    })
+                    return defer.promise;
+                },
                 approveMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID, membershipType,
                         userMembershipObj, errorHandler;
@@ -952,7 +992,7 @@ angular.module('core')
                 rejectMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID,
                         errorHandler;
-
+                     debugger;
                     defer = $q.defer();
                     userID = requestedMember.userID;
 
@@ -961,11 +1001,11 @@ angular.module('core')
                     };
 
                     //step1: delete group membership request from user-membership list
-                    firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
-                        .remove(function(err) {
-                            if (err) {
-                                errorHandler();
-                            } else {
+                    //firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
+                        //.remove(function(err) {
+                        //    if (err) {
+                        //        errorHandler();
+                        //    } else {
                                 //step2: delete user request from group-membership-requests
                                 firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
                                     .remove(function(err) {
@@ -984,8 +1024,8 @@ angular.module('core')
                                                 });
                                         }
                                     });
-                            }
-                        });
+                        //    }
+                        //});
 
                     return defer.promise;
                 },
@@ -1137,9 +1177,17 @@ angular.module('core')
 
                         if (checkinObj && checkinObj.type == 1) {
                             updateObj['members-checked-in'] = {
-                                count: dataObject['members-checked-in'].count - 1
-                            };
-                        }
+                                   count: dataObject['members-checked-in'].count - 1
+                              };
+                          }
+
+
+                        // if (checkinObj && checkinObj.type == 1) {
+                        //     updateObj['members-checked-in'] = {
+                        //         count: dataObject['members-checked-in'].count - 1
+                        //     };
+                        // }
+
 
                         updateObj['members-count'] = dataObject['members-count'] - 1;
                         groupDataRef.update(updateObj, function(err) {

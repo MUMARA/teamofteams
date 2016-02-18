@@ -10,6 +10,7 @@ var User = require('mongoose').model('User'),
     ejs = require('ejs'),
     nodeUuid = require('node-uuid'),
     sendgrid = require('../../config/sendgrid'),
+    postmark = require('../../config/postmark'),
     credentials = require('../../config/credentials'),
     fireHandler = require("./fireHandler");
 
@@ -80,6 +81,9 @@ function createUser(res, user) {
         password: user.password,
         firstName: user.firstName,
         lastName: user.lastName,
+        contactNumber: '',
+        profession: '',
+        desc: '',
         uuid: nodeUuid.v1(),
         status: 0
     };
@@ -135,17 +139,40 @@ function sendVerificationEmail(user) {
         supportEmail: appconfig.SUPPORT
     });
 
-    var payload = {
-        to: user.email,
-        from: appconfig.SUPPORT,
-        subject: 'Verify your "' + appconfig.TITLE + '" email address',
-        html: template
-    };
+    ////using sendgrid
+    // var payload = {
+    //     to: user.email,
+    //     from: appconfig.SUPPORT,
+    //     subject: 'Verify your "' + appconfig.TITLE + '" email address',
+    //     html: template
+    // };
+    // sendgrid.send(payload, function(err, json) {
+    //     if (err) {
+    //         console.log('email sent error: ' + user.email);
+    //         return console.error(err);
+    //     }
 
-    sendgrid.send(payload, function(err, json) {
+    //     console.log('email sent success: ' + user.email);
+    //     console.log(json);
+    // });
+
+    ////using postmark
+    var payload = {
+        "To": user.email,
+        "From": appconfig.SUPPORT,
+        "Subject": 'Verify your "' + appconfig.TITLE + '" email address',
+        "HtmlBody": template/*,
+        "TextBody": template,
+        "Attachments": [{
+            "Content": File.readFileSync("./unicorns.jpg").toString('base64'),
+            "Name": "PrettyUnicorn.jpg",
+            "ContentType": "image/jpeg"
+        }]*/
+    };
+    postmark.sendEmail(payload,function(err, json) {
         if (err) {
             console.log('email sent error: ' + user.email);
-            return console.error(err);
+            return console.error(err.message);
         }
 
         console.log('email sent success: ' + user.email);

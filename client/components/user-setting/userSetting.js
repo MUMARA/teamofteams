@@ -8,36 +8,45 @@
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', '$localStorage', 'groupFirebaseService', 'firebaseService', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
-        /* .controller("DialogController", ["$mdDialog", DialogController]);*/
-    function UserSettingController($rootScope, messageService, $stateParams, $localStorage, groupFirebaseService, firebaseService, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
 
         var that = this;
         var user = userService.getCurrentUser();
         this.hide = hide;
-        var localStorage = $localStorage.loggedInUser;
+        var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
-        var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
+        this.groupId = groupID
+        // var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
 
         this.approveMembership = approveMembership;
         this.rejectMembership = rejectMembership;
         this.changeMemberRole = changeMemberRole;
 
         this.openCreateSubGroupPage = function() {
-            $location.path('/user/group/' + groupID + '/create-subgroup');
+            // $location.path('/user/group/' + groupID + '/create-subgroup');
+            $state.go('user.create-subgroup', {groupID: groupID})
         }
 
         this.subgroupPage = function() {
-            $location.path('user/group/' + groupID + '/subgroup');
+            // $location.path('user/group/' + groupID + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupID})
         }
         this.editgroupPage = function() {
-            $location.path('user/group/' + groupID + '/edit-group');
+            // $location.path('user/group/' + groupID + '/edit-group');
+            $state.go('user.edit-group', {groupID: groupID})
         }
         this.openGeoFencingPage = function() {
-            $location.path('/user/group/' + groupID + '/geoFencing');
+            // $location.path('/user/group/' + groupID + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupID})
+        }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupID})
         }
 
-        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, localStorage.userID)
+
+        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
             .then(function(syncObj) {
                 that.groupSyncObj = syncObj;
                 //that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
@@ -54,60 +63,54 @@
         function hide() {
             /*   createGroupService.cancelGroupCreation();*/
             /* $mdDialog.cancel();*/
-            $location.path('/user/group/' + groupID);
+            // $location.path('/user/group/' + groupID);
+            $state.go('user.group', {groupID: groupID})
 
         }
-        //For owner/admin: Rejects membership request.
+        //For owner/admin: Approve membership request.
         function approveMembership(requestedMember) {
-            $loggedInUserObj.$loaded().then(function() {
-                $loggedInUserObj.userID = localStorage.userID;
-                groupFirebaseService.approveMembership(groupID, $loggedInUserObj, requestedMember)
+            // $loggedInUserObj.$loaded().then(function() {
+                // $loggedInUserObj.userID = user.userID;
+                groupFirebaseService.approveMembership(groupID, user, requestedMember)
                     .then(function(res) {
-                        messageService.showSuccess(res);
+                        if(requestedMember.teamrequest){
+                            requestedMember.teamrequest.forEach(function(val, indx){
+                                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
+                                    messageService.showSuccess("Approved Request Successfully");
+                                }, function(err){
+                                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
+                                })
+                            })
+                        } else{
+                            messageService.showSuccess("Approved Request Successfully");
+                        }
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });
-            });
+            // });
         }
 
         //For owner/admin: Rejects membership request.
         function rejectMembership(requestedMember) {
-            $loggedInUserObj.$loaded().then(function() {
-                $loggedInUserObj.userID = localStorage.userID;
-                groupFirebaseService.rejectMembership(groupID, $loggedInUserObj, requestedMember)
+            // $loggedInUserObj.$loaded().then(function() {
+                // $loggedInUserObj.userID = user.userID;
+                groupFirebaseService.rejectMembership(groupID, user, requestedMember)
                     .then(function(res) {
-                        messageService.showSuccess(res);
+                        messageService.showSuccess("Ignored Request Successfully");
                     }, function(reason) {
                         messageService.showFailure(reason);
                     });
-            });
+            // });
         }
 
         //For owner only: to change membership role of a member
         function changeMemberRole(newType, member) {
-            groupFirebaseService.changeMemberRole(newType, member, that.group, $loggedInUserObj)
+            groupFirebaseService.changeMemberRole(newType, member, that.group, user)
                 .then(function(res) {
-                    messageService.showSuccess(res);
+                    messageService.showSuccess("Changed Role Successfully");
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });
-        }
-
-
-        //dummy data
-        this.userarray = [];
-        this.name = 'World';
-        this.userImg = ['card.jpg', 'userImg1.svg', 'userImg2.svg', 'userImg3.svg', 'userImg4.svg', 'card.jpg', 'userImg1.svg', 'userImg2.svg', 'userImg3.svg', 'userImg4.svg'];
-
-        for (var i = 1; i < 5; ++i) {
-            this.userarray.push({
-                img: '../../img/' + this.userImg[i],
-                name: 'Salman',
-                phone: '4019654',
-                //                group: 'first',
-                //LastM: 'second'
-                LastM: "yy-mm-dd"
-            })
         }
 
     }

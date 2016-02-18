@@ -26,7 +26,10 @@ var development = {
         USERNAME: process.env.SENDGRID_USERNAME,
         PASSWORD: process.env.SENDGRID_PASSWORD
     },
+    postmark:{
+        SERVERAPIKEY: process.env.POSTMARK_API_KEY
 
+    },
     /*mongoDB ( mongoLab ) credentials*/
     mongoDB: {
         URI: 'mongodb://heroku_app32789651:6439bsgc56ehi5cpkpnoelqgmt@ds047950.mongolab.com:47950/heroku_app32789651'
@@ -47,7 +50,7 @@ var production = {
     product: {
         BASEURL: 'https://teamofteams.herokuapp.com/',
         TITLE: 'Automated Attendance System',
-        SUPPORT: 'support@teamofteams.io',
+        SUPPORT: 'zia@panacloud.com',
         DOMAIN: 'https://www.teamofteams.io/'
     },
     /*firebase credentials*/
@@ -55,13 +58,16 @@ var production = {
         SECRET: process.env.FIREBASE_SECRET,
         BASEURL: 'https://panacloud.firebaseio.com/'
     },
+    postmark:{
+        SERVERAPIKEY: process.env.POSTMARK_API_KEY
 
+    },
+    
     /*sendgrid credentials*/
     sendgrid: {
         USERNAME: process.env.SENDGRID_USERNAME,
         PASSWORD: process.env.SENDGRID_PASSWORD
     },
-
     /*mongoDB ( mongoLab ) credentials*/
     mongoDB: {
         URI: 'mongodb://heroku_z1gg2qp7:kf4cemovh3t2vrgco5qpruogrn@ds057214.mongolab.com:57214/heroku_z1gg2qp7'

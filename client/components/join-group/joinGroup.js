@@ -3,8 +3,8 @@
 
     angular
         .module('app.JoinGroup')
-        .controller('JoinGroupController', ['dataService', 'joinGroupService', 'firebaseService', 'authService', '$firebaseObject', '$firebaseArray',
-            function(dataService, joinGroupService, firebaseService, authService, $firebaseObject, $firebaseArray) {
+        .controller('JoinGroupController', ['dataService', 'userService', 'joinGroupService', 'firebaseService', 'authService', '$firebaseObject', '$firebaseArray',
+            function(dataService, userService, joinGroupService, firebaseService, authService, $firebaseObject, $firebaseArray) {
                 // var $scope = this;
                 //https://github.com/angular/material/issues/547#issuecomment65620808
 
@@ -12,6 +12,7 @@
                 var that = this;
                 this.filteredGroups = [];
                 this.loadingData = true;
+                this.user = userService.getCurrentUser();
 
                 // firebaseService.getRefGroups().on('child_added', function (snapshot) {
                 //     that.filteredGroups.push(snapshot.val());
@@ -20,10 +21,15 @@
                 // this.listgroup;
                 //this.groupOne = $firebaseObject(firebaseService.getRefGroupsNames());
                 // this.filteredGroups = dataService.getTotalGroups();
-                $firebaseArray(firebaseService.getRefGroups()).$loaded().then(function(data){
+                $firebaseArray(firebaseService.getRefGroupsNames()).$loaded().then(function(data){
                     that.filteredGroups = data;
                     that.loadingData = false;
                 });
+
+                // $firebaseArray(firebaseService.getRefGroups()).$loaded().then(function(data){
+                //     that.filteredGroups = data;
+                //     that.loadingData = false;
+                // });
                 // this.groupOne.$loaded().then(function(data) {
                 //     if (data) {
                 //         //console.log(data);
@@ -94,7 +100,7 @@
                                                                                  .then(function(img){
                                                                                      $scope.filteredGroups[j].ownerImg = img.$value
                                                                                  })
-                                     
+
                                                                          }
                                                                      });
                                                              })*/

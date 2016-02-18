@@ -7,9 +7,9 @@
 
 
 angular.module('core')
-    .factory('subgroupFirebaseService', ['checkinService', "$firebaseArray", "firebaseService", "$q", "$timeout", "$sessionStorage", "$firebaseObject", 'userFirebaseService', 'groupFirebaseService', '$localStorage',
+    .factory('subgroupFirebaseService', ['checkinService', "$firebaseArray", "firebaseService", "$q", "$timeout", "$firebaseObject", 'userFirebaseService', 'groupFirebaseService',
         //function(firebaseService, $q, $timeout, $sessionStorage, $route, $firebaseObject,userFirebaseService,groupFirebaseService) {
-        function(checkinService, $firebaseArray, firebaseService, $q, $timeout, $sessionStorage, $firebaseObject, userFirebaseService, groupFirebaseService, $localStorage) {
+        function(checkinService, $firebaseArray, firebaseService, $q, $timeout, $firebaseObject, userFirebaseService, groupFirebaseService) {
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
             return {
                 getSubgroupSyncObjAsync: function(groupID, subgroupID, viewerUserID) {
@@ -344,15 +344,15 @@ angular.module('core')
                                     .catch(function(d) {
                                         console.log(d);
                                     })
-                                for (var member in memArray) {
-
-                                    var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(loggedInUserObj.userID).child(subgroupObj.groupID + "_" + subgroupObj.subgroupID).child(member))
-                                        .$loaded().then(function() {
-                                            var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded().then(function() {
-                                                qArray.push($q.all([temp, temp1]))
-                                            })
-                                        })
-                                }
+                                // for (var member in memArray) {
+                                //
+                                //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(loggedInUserObj.userID).child(subgroupObj.groupID + "_" + subgroupObj.subgroupID).child(member))
+                                //         .$loaded().then(function() {
+                                //             var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded().then(function() {
+                                //                 qArray.push($q.all([temp, temp1]))
+                                //             })
+                                //         })
+                                // }
                                 deffer.resolve($q.all(qArray));
 
 

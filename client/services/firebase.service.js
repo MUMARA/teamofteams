@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('core')
-    .factory('firebaseService', ["$firebaseAuth", "$sessionStorage", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", '$localStorage',
-        function($firebaseAuth, $sessionStorage, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, $localStorage) {
+    .factory('firebaseService', ["$firebaseAuth", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", "userService",
+        function($firebaseAuth, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, userService) {
 
             var ref = new Firebase(appConfig.myFirebase);
 
@@ -38,9 +38,10 @@ angular.module('core')
             var groupLocsDefined = null;
             var flattenedGroups = null;
             var loggedUserRef = null;
-            var $loggedUserObj = null;
-
-
+            var policies = null;
+            var userPolicies = null;
+            var dailyProgressReport = null;
+            var subgroupPolicies = null;
 
             return {
                 addUpdateHandler: function() {
@@ -51,7 +52,7 @@ angular.module('core')
                         } else {
                             //console.info("User is logged out");
                             //delete $sessionStorage.loggedInUser;
-                            delete $localStorage.loggedInUser;
+                            userService.removeCurrentUser();
                             appConfig.firebaseAuth = false;
                             messageService.showFailure("User is logged out, Please login again.");
                             //$location.path("/user/login");
@@ -143,15 +144,29 @@ angular.module('core')
                 getSignedinUserRef: function() {
                     return loggedUserRef
                 },
-                getSignedinUserObj: function() {
-                    return $loggedUserObj
-                },
                 getRefFlattendGroups: function() {
                     return flattenedGroups
                 },
+                getRefPolicies: function() {
+                    return policies;
+                },
+                getRefUserPolicies: function() {
+                    return userPolicies;
+                },
+                getRefDailyProgressReport: function() {
+                    return dailyProgressReport;
+                },
+                getRefSubgroupPolicies: function(){
+                        return subgroupPolicies;
+                },
+                logout: function(){
+                  console.log('unauth the firebase');
+                  ref.unauth();
+                  var authdata = ref.getAuth();
+                  console.log(authdata);
+                },
                 asyncLogin: function(userID, token) {
                     var deferred = $q.defer();
-
                     if (token) { // means user logged in from web server
                         Firebase.goOnline(); // if previously manually signed out from firebase.
                         var auth = $firebaseAuth(ref);
@@ -160,6 +175,7 @@ angular.module('core')
 
                                 //authenticated
                                 appConfig.firebaseAuth = true;
+                                userService.setExpiry(authData.expires)
 
                                 /*storing references*/
                                 currentAuthData = authData;
@@ -189,10 +205,10 @@ angular.module('core')
                                 subgroupCheckinRecords = ref.child("subgroup-check-in-records");
                                 groupLocsDefined = ref.child("group-locations-defined");
                                 flattenedGroups = ref.child("flattened-groups");
-
-                                loggedUserRef = refUsers.child(userID);
-
-                                $loggedUserObj = $firebaseObject(loggedUserRef);
+                                policies = ref.child("policies");
+                                userPolicies = ref.child("user-policies");
+                                dailyProgressReport = ref.child('progress-reports-by-users');
+                                subgroupPolicies = ref.child('subgroup-policies');
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.
@@ -211,7 +227,7 @@ angular.module('core')
                                 deferred.reject();
                             }
                         }).catch(function(error) {
-                            console.error("Firebase Authentication failed: ", error);
+                            // console.error("Firebase Authentication failed: ", error);
                             deferred.reject(error);
                         });
                     } else {

@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('core')
-    .factory('userFirebaseService', ["firebaseService", "$q", "$timeout", '$http', "$sessionStorage", "$firebaseObject", 'appConfig', '$localStorage', 'userService',
-        function(firebaseService, $q, $timeout, $http, $sessionStorage, $firebaseObject, appConfig, $localStorage, userService) {
+    .factory('userFirebaseService', ["firebaseService", "$q", "$timeout", '$http', "$firebaseObject", 'appConfig', 'userService',
+        function(firebaseService, $q, $timeout, $http, $firebaseObject, appConfig, userService) {
 
             //Firebase timeStamp object.
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
@@ -107,13 +107,10 @@ angular.module('core')
                                                 "members-count": 1,
                                                 "subgroups-count": 0,
                                                 "members-checked-in": {
-                                                    count: 0
-                                                },
-
-                                                privacy: {
-                                                    invitationType: +groupObj.signupMode
-                                                },
-                                                'logo-image': {
+                                                     "count": 0
+                                                 },
+                                                 privacy: + groupObj.signupMode,
+                                                 'logo-image': {
                                                     url: groupObj.imgLogoUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png', // pID is going to be changed with userID for single profile picture only
                                                     id: groupObj.groupID,
                                                     'bucket-name': 'test2pwow',
@@ -143,7 +140,8 @@ angular.module('core')
                                                     var data = {
                                                         title: groupObj.title,
                                                         groupImgUrl: groupObj.imgLogoUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png',
-                                                        ownerImgUrl: groupObj.ownerImgUrl
+                                                        ownerImgUrl: groupObj.ownerImgUrl,
+                                                        'address-title': groupObj.addressTitle || ''
                                                             //groupOwnerImgUrl:
                                                     }
 
@@ -172,7 +170,7 @@ angular.module('core')
                                                                         });
                                                                         $q.all(promises).then(function() {
                                                                             //self.asyncRecordGroupCreationActivity(groupObj, $sessionStorage.loggedInUser).then(function () {
-                                                                            self.asyncRecordGroupCreationActivity(groupObj, $localStorage.loggedInUser).then(function() {
+                                                                            self.asyncRecordGroupCreationActivity(groupObj, userService.getCurrentUser()).then(function() {
                                                                                 var memberCountRef = firebaseService.getRefGroups().child(groupObj.groupID).child("members-count");
                                                                                 if (memArray.length > 0) {
                                                                                     memberCountRef.transaction(function(current_value) {
@@ -182,7 +180,7 @@ angular.module('core')
 
                                                                                 if (memArray.length == 1) {
                                                                                     //self.asyncRecordGroupMemberAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members[0])
-                                                                                    self.asyncRecordGroupMemberAdditionActivity(groupObj, $localStorage.loggedInUser, response.members[0])
+                                                                                    self.asyncRecordGroupMemberAdditionActivity(groupObj, userService.getCurrentUser(), response.members[0])
                                                                                         .then(function() {
                                                                                             deferred.resolve({
                                                                                                 unlistedMembersArray: response.unlisted
@@ -190,7 +188,7 @@ angular.module('core')
                                                                                         })
                                                                                 } else if (memArray.length > 1) {
                                                                                     //self.asyncRecordManyGroupMembersAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members)
-                                                                                    self.asyncRecordManyGroupMembersAdditionActivity(groupObj, $localStorage.loggedInUser, response.members)
+                                                                                    self.asyncRecordManyGroupMembersAdditionActivity(groupObj, userService.getCurrentUser(), response.members)
                                                                                         .then(function() {
                                                                                             deferred.resolve({
                                                                                                 unlistedMembersArray: response.unlisted
@@ -313,7 +311,7 @@ angular.module('core')
                     var ref = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
                     var actor = {
                         "type": "user",
-                        "id": userObj.$id, //this is the userID, and an index should be set on this
+                        "id": userObj.userID, //this is the userID, and an index should be set on this
                         "email": userObj.email,
                         "displayName": userObj.firstName + " " + userObj.lastName
                     };
@@ -694,10 +692,9 @@ angular.module('core')
                 asyncRecordMembershipChangeActivity: function(prevType, newType, user, groupObj, loggedInUser) {
                     var deferred = $q.defer();
                     var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
-
                     var actor = {
                         "type": "user",
-                        "id": loggedInUser.$id, //this is the userID, and an index should be set on this
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
                         "email": loggedInUser.email,
                         "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
                     };
@@ -762,7 +759,7 @@ angular.module('core')
 
                     var actor = {
                         "type": "user",
-                        "id": loggedInUser.$id, //this is the userID, and an index should be set on this
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
                         "email": loggedInUser.email,
                         "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
                     };
@@ -866,7 +863,7 @@ angular.module('core')
 
                     return verb;
                 },
-                asyncGroupJoiningRequest: function(userID, groupID, message) {
+                asyncGroupJoiningRequest: function(userID, groupID, message, subgroupID, subgrouptitle) {
                     var deferred = $q.defer();
                     var self = this;
                     firebaseService.asyncCheckIfGroupExists(groupID).then(function(response) {
@@ -877,13 +874,13 @@ angular.module('core')
                                 var membershipData = snapshotMem.val();
                                 if (membershipData) {
                                     if (membershipData["membership-type"] == 1) {
-                                        deferred.reject("User is already an owner of this group");
+                                        deferred.reject("User is already an owner of this team of teams");
                                     } else if (membershipData["membership-type"] == 2) {
-                                        deferred.reject("User is already a admin of this group");
+                                        deferred.reject("User is already a admin of this team of teams");
                                     } else if (membershipData["membership-type"] == 0) {
-                                        deferred.reject("Membership request is already pending for this group");
+                                        deferred.reject("Membership request is already pending for this team of teams");
                                     } else {
-                                        deferred.reject("User is already a member of this group");
+                                        deferred.reject("User is already a member of this team of teams");
                                     }
 
                                 } else {
@@ -891,13 +888,78 @@ angular.module('core')
                                     ref.child(userID).once("value", function(snap) {
                                         var alreadyPending = snap.val();
                                         if (alreadyPending) {
-                                            deferred.reject("Request is already pending for this group"); //just to double check here also, but no need if data is consistent
+                                            if (subgroupID) {
+                                                if (snap.val()['team-request']) {
+                                                    var obj = snap.val()['team-request'];
+                                                    obj.forEach(function(key, indx){
+                                                        if(key.subgroupID === subgroupID) {
+                                                            deferred.reject("Request is already pending for this team");
+                                                            return
+                                                        };
+                                                        if(obj.length === (indx + 1)) {
+                                                            var request = {};
+                                                            request[userID] = snap.val();
+                                                            request[userID]['timestamp'] = firebaseTimeStamp;
+                                                            request[userID]['message'] = message;
+                                                            request[userID]['team-request'][obj.length] = {
+                                                                'subgroupID': subgroupID,
+                                                                'subgrouptitle': subgrouptitle
+                                                            };
+                                                            ref.update(request, function(error) {
+                                                                if (error) {
+                                                                    deferred.reject("Server Error, please try again");
+                                                                    return
+                                                                } else {
+                                                                    deferred.resolve();
+                                                                    return
+                                                                }
+                                                            })
+                                                        }
+                                                    })
+                                                } else {
+                                                    var request = {};
+                                                    request[userID] = {
+                                                        timestamp: firebaseTimeStamp,
+                                                        message: message,
+                                                        'team-request': {
+                                                            '0': {
+                                                                'subgroupID': subgroupID,
+                                                                'subgrouptitle': subgrouptitle
+                                                            }
+                                                        }
+                                                    };
+                                                    ref.update(request, function(error) {
+                                                        if (error) {
+                                                            deferred.reject("Server Error, please try again");
+                                                            return
+                                                        } else {
+                                                            deferred.resolve();
+                                                            return
+                                                        }
+                                                    })
+                                                }
+                                            } else {
+                                                deferred.reject("Request is already pending for this team of teams"); //just to double check here also, but no need if data is consistent
+                                            }
                                         } else {
                                             var request = {};
-                                            request[userID] = {
-                                                timestamp: firebaseTimeStamp,
-                                                message: message
-                                            };
+                                            if (subgroupID) {
+                                                request[userID] = {
+                                                    timestamp: firebaseTimeStamp,
+                                                    message: message,
+                                                    'team-request': {
+                                                        '0': {
+                                                            'subgroupID': subgroupID,
+                                                            'subgrouptitle': subgrouptitle
+                                                        }
+                                                    }
+                                                };
+                                            } else {
+                                                request[userID] = {
+                                                    timestamp: firebaseTimeStamp,
+                                                    message: message
+                                                };
+                                            }
                                             ref.update(request, function(error) {
                                                 if (error) {
                                                     deferred.reject("Server Error, please try again");
@@ -941,15 +1003,15 @@ angular.module('core')
                             var membershipData = snapshotMem.val();
                             if (membershipData) {
                                 if (membershipData["membership-type"] == 1) {
-                                    deferred.reject("User is already an owner of this group");
+                                    deferred.reject("User is already an owner of this team of teams");
                                 } else if (membershipData["membership-type"] == 2) {
-                                    deferred.reject("User is already a admin of this group");
+                                    deferred.reject("User is already a admin of this team of teams");
                                 }
                                 //else if (membershipData["membership-type"] == 0) {
                                 //    deferred.reject("Membership request is already pending for this group");
                                 //}
                                 else {
-                                    deferred.reject("User is already a member of this group");
+                                    deferred.reject("User is already a member of this team of teams");
                                 }
 
                             } else {
@@ -958,7 +1020,7 @@ angular.module('core')
                                 ref.once("value", function(snap) {
                                     var alreadyPending = snap.val();
                                     if (alreadyPending) {
-                                        deferred.reject("Request is already pending for this subgroup"); //just to double check here also, but no need if data is consistent
+                                        deferred.reject("Request is already pending for this team"); //just to double check here also, but no need if data is consistent
                                     } else {
                                         //step : setting request for membership "subgroup-membership-requests"
                                         ref.set({

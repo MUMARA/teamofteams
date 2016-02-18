@@ -1,38 +1,56 @@
-<md-toolbar class="backColorSeaGreen" layout="row" layout-align="space-between center">
-    <div layout='row' layout-align="start center" layout-margin>
-        <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
+
+<md-toolbar class="backColorSeaGreen leftrightpadding20px md-whiteframe-z2" layout="row" layout-align="space-between center">
+    <div layout="row" layout-align="start center" layout-margin>
+        <img src="img/Untitled-3.svg" ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
         <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
         <md-progress-circular md-diameter="45" ng-show="navToolbar.checkinSending" class="nomargin" md-mode="indeterminate"></md-progress-circular>
     </div>
-    <div layout='row' layout-align="end center">
+    <div layout="row" layout-align="end center">
+        <!-- EMTP -->
+    <!--     <md-button class="md-primary md-raised" ng-click="showAdvanced($event)" flex="100" flex-gt-md="auto">
+          Custom Dialog
+        </md-button> -->
+        <!-- EMTP -->
         <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
-        <div style="position: relative" layout-margin>
-            <md-switch ng-model="navToolbar.switchCheckIn" ng-click="navToolbar.checkinClick()" ng-disabled="navToolbar.groups.length === 0" aria-label="Check In" class="check-in-slider">
+        <div style="position: relative" layout-margin class="check-in-slider">
+            <md-switch ng-model="navToolbar.switchCheckIn" ng-change="navToolbar.checkTeamAvailable()" ng-click="navToolbar.checkinClick($event)" aria-label="Check In">
             </md-switch>
             <md-card class="carrotImg" ng-show="navToolbar.switchMsg"><img src="img/carrot.svg"></md-card>
             <md-card class="toolbarListCard" ng-show="navToolbar.switchMsg">
-                <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
-                    <md-input-container md-no-float style="padding-bottom: 0px;" layout="row" class="nomargin">
-                        <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
-                    </md-input-container>
-                    <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()"></ng-md-icon>
-                </md-toolbar>
-                <md-list class="nopadding vscroll" ng-hide="navToolbar.groupObj1">
-                    <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
-                        <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
-                            <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
-                                <div><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
-                                <span>{{group.groupTitle}}</span>
-                            </div>
-                            <div style="font-size:large;" layout-fill>
-                                <div class="nooutline leftpadding40px cursorPointer hoverLightGrey3 foreColorDarkGrey" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in filter = (group.subGroups | filter: navToolbar.search)" layout-padding>{{subgroup.subgroupTitle}}
-                                </div>
-                            </div>
-                            <md-divider md-outset></md-divider>
+            <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
+                <md-input-container md-no-float style="padding-bottom: 0px;" layout="row" class="nomargin" ng-hide="navToolbar.isDailyProgessSubmit">
+                    <input type="text" id="#GroupSearch" ng-model="navToolbar.search" aria-label="search group for checkin" autocomplete="off" class="serachbox2" placeholder="Search Team">
+                </md-input-container>
+                <ng-md-icon icon="search" style="fill: #929497;" class="nooutline" ng-click="navToolbar.setFocus()" ng-hide="navToolbar.isDailyProgessSubmit"></ng-md-icon>
+                <span layout-padding class="foreColorDarkGrey" ng-show="navToolbar.isDailyProgessSubmit">Today: {{navToolbar.todayDate | date: 'dd-MMM-yyyy'}}</span>
+            </md-toolbar>
+            <md-list class="nopadding vscroll" ng-hide="navToolbar.groupObj1 || navToolbar.isDailyProgessSubmit">
+                <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
+                    <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
+                        <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
+                            <div><img class="icon10px rightmargin10px switchCardListDot" src="../../img/switchCardListLogo.svg"></div>
+                            <span>{{group.groupTitle}}</span>
                         </div>
-                    </md-list-item>
-                </md-list>
+                        <div style="font-size:large;" layout-fill>
+                            <div class="nooutline leftpadding40px cursorPointer hoverLightGrey3 foreColorDarkGrey" ng-click="navToolbar.switchMsg = !navToolbar.switchMsg; navToolbar.updateStatus(subgroup)" ng-repeat="subgroup in filter = (group.subGroups | filter: navToolbar.search)" layout-padding>{{subgroup.subgroupTitle}}
+                            </div>
+                        </div>
+                        <md-divider md-outset></md-divider>
+                    </div>
+                </md-list-item>
+            </md-list>
+            <div ng-show="navToolbar.isDailyProgessSubmit" layout="column">
+                <span layout-padding class="foreColorDarkGrey">Please Submit your Daily Progress Report.</span>
+                <div layout="row" layout-align="space-between center">
+                    <md-button class="backColorLightGrey" aria-label="Report Later" ng-click="navToolbar.laterReport()">Later</md-button>
+                    <md-button class="backColorSeaGreen" aria-label="Submit Report" ng-click="navToolbar.submitReport()">Submit</md-button>
+                </div>
+            </div>
             </md-card>
+        </div>
+        <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
+            {{navToolbar.showUrlObj.groupID}} /
+            {{navToolbar.showUrlObj.subgroupID}}
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
             <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()" title="Quiz">
@@ -57,3 +75,28 @@
         </div>
     </div>
 </md-toolbar>
+
+<!-- Side Nav for Progress Daily Report-->
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;width: 35%;max-width: 35%">
+  <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
+     <h1 class="md-toolbar-tools"><strong>Progress Report</strong></h1>
+  </md-toolbar>
+  <md-content layout-padding style="">
+  <div layout="column" layout-align="center start">
+    <p>
+      <br />
+    </p>
+    <div layout="column" layout-fill ng-repeat="report in navToolbar.dailyProgressReport">
+      <md-input-container ng-repeat="q in report.questions">
+        <label>{{q}}</label>
+        <textarea name="progRessAns{{$index}}" aria-label="progress comment{{$index}}" ng-model="report.answers[$index]" placeholder="pls type your comments.."></textarea>
+      </md-input-container>
+    </div>
+    <div layout="row" layout-align="space-between center" layout-fill>
+      <md-button class="backColorLightSeaGreen foreColorWhite" aria-label="submit report later" md-ripple-size="auto" ng-click="navToolbar.progressReportSideNav()"><strong>Later</strong></md-button>
+      <md-button class="backColorSeaGreen foreColorWhite" aria-label="submit report" md-ripple-size="auto" ng-click="navToolbar.updateProgressReport()"><strong>Submit</strong></md-button>
+    </div>
+  </div>
+  </md-content>
+</md-sidenav>
+<!-- <md-backdrop style="background: transparent !important;" ng-if="navToolbar.openNav" class="md-sidenav-backdrop md-opaque"></md-backdrop> -->

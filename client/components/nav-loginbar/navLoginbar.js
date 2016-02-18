@@ -8,6 +8,7 @@
     NavLoginbarController.$inject = ['authService'];
 
     function NavLoginbarController(authService) {
+        this.showmenu = false;
         //console.log('test')
         /*this.canActivate = function(){
             return authService.resolveUserPage();

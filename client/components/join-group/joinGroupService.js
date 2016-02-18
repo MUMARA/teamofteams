@@ -4,8 +4,8 @@
 (function() {
     'use strict';
     angular.module('app.JoinGroup', ['core'])
-        .factory('joinGroupService', ['$timeout', '$firebaseArray', 'userFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService', '$localStorage',
-            function($timeout, $firebaseArray, userFirebaseService, $location, $sessionStorage, soundService, userService, messageService, firebaseService, $q, authService, $localStorage) {
+        .factory('joinGroupService', ['$timeout', '$firebaseArray', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService',
+            function($timeout, $firebaseArray, userFirebaseService, $location, soundService, userService, messageService, firebaseService, $q, authService) {
                 return {
                     'userData': function(pageUserID) {
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
@@ -16,11 +16,11 @@
                     'joinGroupRequest': function(groupInfo, cb) {
                         groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '')
                             //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
-                        userFirebaseService.asyncGroupJoiningRequest($localStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
+                        userFirebaseService.asyncGroupJoiningRequest(userService.getCurrentUser().userID, groupInfo.groupID, groupInfo.message, groupInfo.subgroupID, groupInfo.subgrouptitle)
                             .then(function() {
                                 //console.log("Group join request sent successfully");
                                 cb();
-                                messageService.showSuccess("Group joining request sent successfully");
+                                messageService.showSuccess("Team of Teams joining request sent successfully");
 
                             }, function(reason) {
                                 //console.log("Unable to send group joining request");

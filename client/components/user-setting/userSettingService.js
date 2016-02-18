@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.userSetting', ['core', 'ngMdIcons'])
-        .factory('userSettingService', ['groupFirebaseService', '$location', '$sessionStorage', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$localStorage',
-            function(groupFirebaseService, $location, $sessionStorage, soundService, userService, messageService, $q, $http, appConfig, $localStorage) {
+        .factory('userSettingService', ['groupFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
+            function(groupFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
 
                 return {
 
@@ -17,16 +17,16 @@
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
                         groupFirebaseService.asyncCreateSubgroup(userID, group, SubgroupInfo, subgroupList, formDataFlag)
                             .then(function(response) {
-                                console.log("Group Creation Successful");
+                                // console.log("Group Creation Successful");
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
 
-                                    messageService.showSuccess("Group creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                    messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
-                                    messageService.showSuccess("Group creation Successful");
+                                    messageService.showSuccess("Team of Teams creation Successful");
                                 }
                             }, function(group) {
-                                messageService.showFailure("Group not created, " + SubgroupInfo.groupID + " already exists");
+                                messageService.showFailure("Team of Teams not created, " + SubgroupInfo.groupID + " already exists");
                             })
                     },
                     'cancelSubGroupCreation': function(userId) {
@@ -50,9 +50,9 @@
 
 
                             var data = new FormData();
-                            data.append('userID', pageUserId);
+                            data.append('userID', userService.getCurrentUser().userID);
                             //data.append('token', $sessionStorage.loggedInUser.token);
-                            data.append('token', $localStorage.loggedInUser.token);
+                            data.append('token', userService.getCurrentUser().token);
                             data.append("source", fileBlob, file.name);
 
                             defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {

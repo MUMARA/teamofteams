@@ -1,3 +1,4 @@
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.dashboard ({userID : joinGroup.user.userID })"></ng-md-icon>
 <div layout="row" layout-align="center start" layout-padding layout-margin>
     <div layout="column" layout-align="start center" flex-gt-sm="70" class="viewHeight">
         <div layout="row" layout-align="center center" style="width:100%">
@@ -12,8 +13,8 @@
                 <div style="margin:auto;">
                     <!-- <a ui-sref="user.group({groupID: group.groupID})" layout="row" layout-align="center center"> -->
                     <span layout="row" layout-align="center center">
-                        <img ng-src="{{ key['logo-image'].url || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
-                    </span>    
+                        <img ng-src="{{ key.groupImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
+                    </span>
                     <h4 class="textAlignCenter" layout-margin>
                         {{ key.title }}
                     </h4>
@@ -23,11 +24,8 @@
                     </div>
                 </div>
                 <div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
-                    <md-button class="md-fab cards-button" aria-label="User Status">
-                        <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
-                    </md-button>
                     <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
-                        <img ng-src="{{key['owner-img-url'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image" style="margin-top:50%"/>
+                        <img ng-src="{{key.ownerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image" style="margin-top:50%"/>
                     </div>
                     <div layout="row" layout-align="start center" layout-margin>
                         <md-button class="md-button backColorSeaGreen" ng-click="joinGroup.answer(key.$id )" style="margin-top:32%">
@@ -104,7 +102,7 @@
     <div>
          <md-progress-circular ng-show="joinGroup.loadingData" md-mode="indeterminate"></md-progress-circular>
     </div>
-    
+
     <div layout="row" layout-align="center center" layout-wrap ng-show="joinGroup.filteredGroups.length > 0" style="height: 50vh; overflow-x:hidden; overflow:auto" class="md-whiteframe-z2 backColorLightGrey">
         <md-card class="md-whiteframe-z4" style="width: 220px; height: 300px;" class="foreColorDarkGrey" ng-repeat="key in joinGroup.filteredGroups | filter: joinGroup.search">
             <div style="margin:auto;">

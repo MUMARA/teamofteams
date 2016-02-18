@@ -3,9 +3,9 @@
     'use strict';
 
     angular.module('app.personalSettings')
-        .controller('PersonalSettingsController', ['$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
+        .controller('PersonalSettingsController', ['dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
 
-            function($location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
+            function(dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
 
                 /*Private Variables*/
                 var that = this;
@@ -31,6 +31,7 @@
 
                 /*VM Functions*/
                 function answer(perSettingForm) {
+                    if(perSettingForm.$error) return;
                     that.isProcessing = true;
                     var uploadFile, editUser, changePassword, data1, data2, pFlag, eFlag, imgFlag;
                     var promiseArray = [];
@@ -76,6 +77,7 @@
                             var mimeType = temp.split(':')[1].split(';')[0];
                             imgFlag = true
                             uploadFile = saveFile(x, mimeType, userService.getCurrentUser().userID);
+
                         }
                         eFlag ? promiseArray.push(editUser) : promiseArray.push($q.when(false));
                         pFlag ? promiseArray.push(changePassword) : promiseArray.push($q.when(false));
@@ -89,17 +91,20 @@
 
                     saveDataToServer().then(function(data) {
                             if (data[2]) {
-                                //that.userData['profile-image'] = data[2]+'?random='+ new Date();
-                                that.userData['profile-image'] = data[2];
+                                that.userData['profile-image'] = data[2]+'?random='+ Date.now();
+                                updateOwnImgGroup(data[2]+'?random='+ Date.now())
+                                // that.userData['profile-image'] = data[2];
+
                             }
                             delete that.userData.oldPassword;
                             delete that.userData.newPassword;
                             if (!that.userData['date-created']) that.userData['date-created'] = new Date().getTime();
-                            that.userData['status'] = -1;
-                            
+                            that.userData['status'] = 0;
+
                             // console.log(that.userData)
                             that.userData.$save().then(function(data) {
-                                $location.path('/user/' + userService.getCurrentUser().userID)
+                                // $location.path('/user/' + userService.getCurrentUser().userID)
+                                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
                                 that.isProcessing = false;
                                 perSettingForm.$submitted = false;
                                 messageService.showSuccess('User profile updated')
@@ -169,6 +174,18 @@
                         defer.reject(console.log("Could not upload file."));
                     };
                     xhr.send(file);
+                    return defer.promise;
+                }
+
+                function updateOwnImgGroup (imgurl) {
+                    var defer = $q.defer();
+                    var groups = dataService.getUserGroups();
+                    groups.forEach(function(group, index){
+                        if (group.ownerID === that.loggedInUserData.userID) {
+                            firebaseService.getRefGroups().child(group.groupID).update({'owner-img-url' : imgurl})
+                            firebaseService.getRefGroupsNames().child(group.groupID).update({'ownerImgUrl' : imgurl})
+                        }
+                    })
                     return defer.promise;
                 }
 

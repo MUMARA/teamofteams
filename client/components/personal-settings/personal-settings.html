@@ -1,4 +1,5 @@
-<div layout="row" layout-align="center start" layout-padding layout-margin class="viewHeight">
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.dashboard ({userID : personalSettings.loggedInUserData.userID })"></ng-md-icon>
+<div layout="row" layout-align="center start" layout-padding layout-margin class="viewHeight-170 leftrightpadding65px">
     <form flex="100" name="personalSettingForm" novalidate class="md-whiteframe-z2 backColorWhite vscroll" layout-margin>
         <h1 style="color: #d3d3d3;">Personal Settings</h1>
         <md-divider md-outset></md-divider>
@@ -71,7 +72,11 @@
         <div layout="row">
             <md-input-container flex>
                 <label>Mobile Number</label>
-                <input name="contactNumber" type="number" ng-model="personalSettings.userData.contactNumber">
+                <input name="contactNumber" type="text" ng-model="personalSettings.userData.contactNumber" minlength="5">
+                <div ng-show="personalSettingForm.contactNumber.$touched" ng-messages="personalSettingForm.contactNumber.$error">
+                    <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
+                    <div class="invalid_color" ng-message="minlength">Required minimum length 5</div>
+                </div>
             </md-input-container>
             <md-input-container flex>
                 <label>Profession</label>
@@ -89,12 +94,10 @@
                         <img src="../../img/sampleUserImg.svg" layout="row" class="sampleUserImg">
                     </div>-->
         <div layout="column" layout-align="space-between start">
-            <div class="foreColorLightGrey">
-                Set Your Photo
-                <!-- <ng-md-icon icon="info_outline" class="icon10px fillColorLightGrey"></ng-md-icon> -->
-                <ng-md-icon icon="info_outline" size="20" class="fillColorLightGrey">
-                </ng-md-icon>
-            </div>
+            <div layout="row" layout-align="start center">
+                    <h3>Set You Photo</h3>
+                    <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please Select Logo"></ng-md-icon>
+                </div>
             <br />
             <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
                 <img style="outline: none;" ng-src="{{personalSettings.userData['profile-image'] || '../../img/sampleUserImg.svg'}}" alt="sample user img" class="cropper-main-image  imageRound" ng-click="personalSettings.showAdvanced($event)" />

@@ -11,6 +11,7 @@
         fs = require('fs'),
         ejs = require('ejs'),
         sendgrid = require('../../config/sendgrid'),
+        postmark = require('../../config/postmark'),
         credentials = require('../../config/credentials');
 
 
@@ -69,17 +70,40 @@
             app: appconfig
         });
 
-        var payload = {
-            to: user.email,
-            from: appconfig.SUPPORT,
-            subject: 'Account Recovery Email - "' + appconfig.TITLE,
-            html: template
-        };
+        ////using sendgrid
+        // var payload = {
+        //     to: user.email,
+        //     from: appconfig.SUPPORT,
+        //     subject: 'Account Recovery Email - "' + appconfig.TITLE,
+        //     html: template
+        // };
+        // sendgrid.send(payload, function(err, json) {
+        //     if (err) {
+        //         console.log('email sent error: ' + user.email);
+        //         return console.error(err);
+        //     }
 
-        sendgrid.send(payload, function(err, json) {
+        //     console.log('email sent success: ' + user.email);
+        //     console.log(json);
+        // });
+        
+        ////using postmark
+        var payload = {
+            "To": user.email,
+            "From": appconfig.SUPPORT,
+            "Subject": 'Account Recovery Email - "' + appconfig.TITLE,
+            "HtmlBody": template/*,
+            "TextBody": template,
+            "Attachments": [{
+                "Content": File.readFileSync("./unicorns.jpg").toString('base64'),
+                "Name": "PrettyUnicorn.jpg",
+                "ContentType": "image/jpeg"
+            }]*/
+        };
+        postmark.sendEmail(payload,function(err, json) {
             if (err) {
                 console.log('email sent error: ' + user.email);
-                return console.error(err);
+                return console.error(err.message);
             }
 
             console.log('email sent success: ' + user.email);
