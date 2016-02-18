@@ -21,10 +21,6 @@ angular.module('core')
                         if (data.statusCode != 0) {
                             //$sessionStorage.loggedInUser = data.user;
                             userService.setCurrentUser(data.user);
-                            console.log('seTCurrent1', data.user)
-                            console.log('seTCurrent2', userService.getCurrentUser())
-                            //console.log('login response object: ' + JSON.stringify(data));
-
                             //firebaseService.asyncLogin($sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token)
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
                                 .then(function() {
