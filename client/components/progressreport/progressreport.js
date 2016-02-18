@@ -30,8 +30,7 @@
         };
         this.everyone = function(){
             that.activeUser = '';
-        }
-
+        };
         function init() {
             groupService.setActivePanel('progressreport');
             groupService.setSubgroupIDPanel($stateParams.subgroupID);
@@ -64,6 +63,7 @@
                     //group report
                     $timeout(function() {
                         that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
+                        that.activeUser = '';
                     }, 2000);
                 }
 

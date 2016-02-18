@@ -1,10 +1,10 @@
 <md-toolbar class="backColorSeaGreen leftrightpadding20px md-whiteframe-z2" layout="row" layout-align="space-between center">
-    <div layout='row' layout-align="start center" layout-margin>
-        <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
+    <div layout="row" layout-align="start center" layout-margin>
+        <img src="img/Untitled-3.svg" ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
         <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
         <md-progress-circular md-diameter="45" ng-show="navToolbar.checkinSending" class="nomargin" md-mode="indeterminate"></md-progress-circular>
     </div>
-    <div layout='row' layout-align="end center">
+    <div layout="row" layout-align="end center">
         <!-- EMTP -->
     <!--     <md-button class="md-primary md-raised" ng-click="showAdvanced($event)" flex="100" flex-gt-md="auto">
           Custom Dialog
@@ -27,7 +27,7 @@
                 <md-list-item ng-repeat="group in filterd =  (navToolbar.ListGroupSubGroup | filter: navToolbar.search)" class="nopadding">
                     <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
                         <div layout="row" layout-align="start center" layout-fill class="foreColorLightGrey padding10px ">
-                            <div><img class='icon10px rightmargin10px' src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
+                            <div><img class="icon10px rightmargin10px" src="../../img/switchCardListLogo.svg" class="switchCardListDot"></div>
                             <span>{{group.groupTitle}}</span>
                         </div>
                         <div style="font-size:large;" layout-fill>
@@ -70,3 +70,28 @@
         </div>
     </div>
 </md-toolbar>
+
+<!-- Side Nav for Progress Daily Report-->
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;width: 35%;max-width: 35%">
+  <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
+     <h1 class="md-toolbar-tools"><strong>Daily Progress report</strong></h1>
+  </md-toolbar>
+  <md-content layout-padding style="">
+  <div layout="column" layout-align="center start">
+    <p>
+      <br />
+    </p>
+    <div layout="column" layout-fill ng-repeat="report in navToolbar.dailyProgressReport">
+      <md-input-container ng-repeat="q in report.questions">
+        <label>{{q}}</label>
+        <textarea name="progRessAns{{$index}}" aria-label="progress comment{{$index}}" ng-model="report.answers[$index]" placeholder="pls type your comments.."></textarea>
+      </md-input-container>
+    </div>
+    <div layout="row" layout-align="space-between center" layout-fill>
+      <md-button class="backColorLightSeaGreen foreColorWhite" aria-label="submit report later" md-ripple-size="auto" ng-click="navToolbar.progressReportSideNav()"><strong>Later</strong></md-button>
+      <md-button class="backColorSeaGreen foreColorWhite" aria-label="submit report" md-ripple-size="auto" ng-click="navToolbar.updateProgressReport()"><strong>Submit</strong></md-button>
+    </div>
+  </div>
+  </md-content>
+</md-sidenav>
+<md-backdrop style="background: transparent !important;" ng-if="navToolbar.openNav" class="md-sidenav-backdrop md-opaque"></md-backdrop>

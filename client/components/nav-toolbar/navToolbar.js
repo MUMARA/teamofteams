@@ -3,8 +3,8 @@
 
     angular.module('app.navToolbar')
 
-    .controller('NavToolbarController', ['$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function($mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
@@ -240,11 +240,16 @@
                         if(checkoutFlag){
                             messageService.showSuccess('Checkout Successfully!');
                             if(isSubmitted){
-                                self.switchCheckIn = true;
-                                self.switchMsg = true;
-                                self.isDailyProgessSubmit = true
-                                self.isDailyProgessgroupID = groupObject.groupId;
-                                self.isDailyProgesssubgroupID = groupObject.subgroupId;
+                                //if daily progress report is not submitted load progress Report side nav bar..
+                                self.progressReportSideNav();
+                                var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId }
+                                //val.id, user.groupID, user.subgroupID
+                                self.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(userObj, groupObj.groupId, groupObj.subgroupId);
+                                // self.switchCheckIn = true;
+                                // self.switchMsg = true;
+                                // self.isDailyProgessSubmit = true
+                                // self.isDailyProgessgroupID = groupObject.groupId;
+                                // self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {
                             self.checkinSending = false;
@@ -343,14 +348,13 @@
                     }
                 }); //checkinService.getCurrentLocation()
             } // updateStatus
-
             this.laterReport = function(){
                 self.checkout = false;
                 self.checkinSending = false;
                 self.switchMsg = false;
                 self.isDailyProgessSubmit = false;
                 self.switchCheckIn = false;
-            }
+            };
             this.submitReport = function(){
                 //self.showUrlObj.userID
                 //self.showUrlObj.groupID
@@ -360,8 +364,7 @@
                 self.switchMsg = false;
                 self.isDailyProgessSubmit = false;
                 $state.go('user.group.subgroup-progressreport', {groupID: self.isDailyProgessgroupID, subgroupID: self.isDailyProgesssubgroupID, u: true});
-            }
-
+            };
             function checkinPolicy(callback) {
                 if(self.subGroupPolicy.locationBased) {  //checking if location Based
 
@@ -394,7 +397,6 @@
                     callback();      //result true (checkin allow) (might be only dailyReport has checked)
                 }
             } //checkinLocationBased
-
             function checkinTimeBased(callback) {
                 var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -418,7 +420,6 @@
                     callback(true);    //if not timebased then return true....
                 }
             } //checkinTimeBased
-
             function chekinSwitch(group, checkoutFlag){
                 var grId = group && group.pId || self.showUrlObj.groupID;
                 var sgrId = group && group.subgroupId || self.showUrlObj.subgroupID;
@@ -437,7 +438,6 @@
                     // console.log('switchCheckIn', self.switchCheckIn)
                 }
             }
-
             function updateHelper(group, checkoutFlag, event, cb) {
                 var groupObj = {};
 
@@ -478,8 +478,6 @@
                 //updateFirebase(groupObj, checkoutFlag, cb);
 
             } //updateHelper
-
-
             function updateStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
                 checkinService.getCurrentLocation().then(function(location) {
                     if (location) {
@@ -521,7 +519,6 @@
                     self.checkinSending = false;
                 });
             }
-
             //update firebase on checkin or checkout
             function updateFirebase(groupObj, checkoutFlag, cb) { //on checkout checkoutFlag is true, on checkin checkoutFlag is false
 
@@ -585,30 +582,20 @@
                     }); //ref update
                 }); //getting and update members-checked-in count
             } //updateFirebase
-
-
-
-
-
-
             function logout() {
                 authService.logout();
-
             }
-
             function shiftToUserPage() {
                 // $location.path('/user/' + userService.getCurrentUser().userID)
                 $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
             }
-
             this.checkTeamAvailable = function () {
                 if (self.groups.length === 0) {
                     messageService.showFailure('Currently you are not a member of any Team!');
                     self.switchCheckIn = false;
                     return
                 }
-            }
-
+            };
             this.checkinClick = function(event) {
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
@@ -644,10 +631,8 @@
                     }
                     self.ListGroupSubGroup.push(tmp);
                 })
-            }
-
+            };
             function showSubGroup(group, pId) {
-
                 self.subgroups = [];
                 for (var i in group) {
                     if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
@@ -657,10 +642,8 @@
                         temp.data = group[i];
                         self.subgroups.push(temp)
                     }
-                    //debugger
                 }
             }
-
             function queryGroups() {
                 if (self.search) {
                     var filteredGroupsNamesRef = firebaseService.getRefUserSubGroupMemberships().child(userID)
@@ -683,13 +666,28 @@
                 self.filteredGroups
                 self.groupObj1;
             }
-
             function PersonalSetting() {
                 // $location.path('/user/' + userID + '/personalSettings')
                 $state.go('user.personal-settings', {userID: userService.getCurrentUser().userID})
             }
 
+            this.progressReportSideNav = function(){
+            //side nav bar for daily progress report
+              $mdSidenav('right').toggle().then(function(){
+              });
+            };
 
+            this.updateProgressReport = function() {
+                //console.log(self.dailyProgressReport[0]);
+                ProgressReportService.updateReport(self.dailyProgressReport[0], function(result) {
+                    if (result) {
+                        messageService.showSuccess('Progress Report Updated!');
+                        self.progressReportSideNav();
+                    } else {
+                        messageService.showFailure('Progress Report Update Failure!');
+                    }
+                });
+            };
         }
     ]);
 
