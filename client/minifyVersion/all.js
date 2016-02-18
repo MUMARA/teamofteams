@@ -5276,7 +5276,7 @@ angular.module('core', [
 
                 /*VM Functions*/
                 function answer(perSettingForm) {
-                    if(perSettingForm.$error) return;
+                    //if(perSettingForm.$error) return;
                     that.isProcessing = true;
                     var uploadFile, editUser, changePassword, data1, data2, pFlag, eFlag, imgFlag;
                     var promiseArray = [];
