@@ -40,7 +40,7 @@
             that.users = dataService.getUserData();
             //that.activeUser = ($stateParams.u) ? that.user.userID : '';
             that.activeUser = that.user.userID;
-            that.activeTitle = "Daily Progress Report";
+            that.activeTitle = "Progress Report";
 
             if ($stateParams.u) {
                 $timeout(function() {

@@ -1,6 +1,6 @@
 <div class="subheaderBar"></div>
 <div layout="row" layout-align="center start" class="toppadding40px viewHeight">
-    <md-table-container hide show-gt-xs flex class="leftmargin40px md-whiteframe-z2 backColorWhite" style="z-index: 1; height:100%">
+    <md-table-container hide show-gt-xs flex class="leftmargin80px md-whiteframe-z2 backColorWhite" style="z-index: 1; height:100%">
         <div layout="row" layout-align="space-between center" layout-padding style="font-size:large;">
             <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="user.setFocus()"></ng-md-icon>
             <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
@@ -37,7 +37,7 @@
             </tbody>
         </table>
     </md-table-container>
-    <md-content style="height: calc(100vh - 125px) ; width: 480px; overflow-x: hidden;z-index: 1; background-color: transparent;" class="leftpadding20px rightmargin100px">
+    <md-content style="height: calc(100vh - 125px) ; width: 480px; overflow-x: hidden;z-index: 1; background-color: transparent;" class="leftpadding20px rightmargin140px">
         <div layout="column" layout-gt-xs="row" layout-wrap>
             <div ng-repeat="group in user.groups">
                 <groupcard-directive group="group"></groupcard-directive>
@@ -45,8 +45,9 @@
         </div>
     </md-content>
 </div>
+
 <div hide show-gt-xs>
-    <nav style="position:absolute;top: 235px;" mfb-menu position="tr" effect="zoomin" resting-icon="ion-plus-round" toggling-method="click" id="sideCustomNav" label="Team of Teams" class="nooutline fillColorWhite">
+    <nav style="position:absolute;top: 235px; margin-right: 60px;" mfb-menu position="tr" effect="zoomin" resting-icon="ion-plus-round" toggling-method="click" id="sideCustomNav" label="Team of Teams" class="nooutline fillColorWhite">
         <button mfb-button label="Add" id="sideButtonAdd" ui-sref="user.create-group({userID : user.pageUserId.userID})" class="nooutline fillColorWhite"></button>
         <button mfb-button label="Join" id="sideButtonSearch" ui-sref="user.join-group" class="nooutline fillColorWhite"></button>
         <button mfb-button label="Delete" id="sideButtondelete" class="nooutline fillColorWhite"></button>

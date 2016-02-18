@@ -46,6 +46,12 @@
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
+
+            this.progressReport = function(){
+              $mdSidenav('right').toggle().then(function(){
+                self.openNav = !self.openNav;
+              });
+            }
                 // alert(this.test)
             this.setFocus = function() {
                 document.getElementById("#GroupSearch").focus();
