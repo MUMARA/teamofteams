@@ -149,7 +149,7 @@ angular.module('core')
                                         subgroupID: subgroup.key(),
                                         subgroupTitle: groupsubgroupTitle[subgroup.key()],
                                         contactNumber: usermasterdata.contactNumber || '',
-                                        onlinestatus: 0,
+                                        onlinestatus: false,
                                         /*onlineweb: 0,
                                         onlineios: 0,
                                         onlineandroid: 0,*/
