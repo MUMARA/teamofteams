@@ -992,7 +992,6 @@ angular.module('core')
                 rejectMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID,
                         errorHandler;
-                     debugger;
                     defer = $q.defer();
                     userID = requestedMember.userID;
 
