@@ -30,8 +30,7 @@
         };
         this.everyone = function(){
             that.activeUser = '';
-        }
-
+        };
         function init() {
             groupService.setActivePanel('progressreport');
             groupService.setSubgroupIDPanel($stateParams.subgroupID);
@@ -41,7 +40,7 @@
             that.users = dataService.getUserData();
             //that.activeUser = ($stateParams.u) ? that.user.userID : '';
             that.activeUser = that.user.userID;
-            that.activeTitle = "Daily Progress Report";
+            that.activeTitle = "Progress Report";
 
             if ($stateParams.u) {
                 $timeout(function() {
@@ -64,6 +63,7 @@
                     //group report
                     $timeout(function() {
                         that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
+                        that.activeUser = '';
                     }, 2000);
                 }
 

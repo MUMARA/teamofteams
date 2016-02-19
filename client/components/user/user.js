@@ -8,7 +8,6 @@
         //$rootScope.fl= 'hello'
         var $scope = this;
         var that = this;
-        console.log('SERVICE: ', userService.getCurrentUser())
         //window.userScope = this;
         this.pageUserId = userService.getCurrentUser();
         this.createGroup = function() {
