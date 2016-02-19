@@ -524,6 +524,7 @@
                                 that.teamsettingpanel = false;
                             });
                             that.processingSave = false;
+                            that.teamsettingpanel = false;
                         }
                             // $rootScope.newImg=null;
                     })
@@ -542,14 +543,13 @@
                     createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
                         that.processingSave = false;
                         that.teamsettingpanel = false;
-
                     });
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
                         that.teamsettingpanel = false;
+                        that.processingSave = false;
                     });
-                    that.processingSave = false;
                 }
             }
         }
