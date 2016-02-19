@@ -149,8 +149,8 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
  //read() { isGroupIdExist(groupid) && isCurrentUserGroupOwner(groupid) || isCurrentUserGroupAdmin(groupid) }
 
  create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1 ||
-                  isCurrentUserGroupOwner(groupid)           &&        this['membership-type'].val() > 0     ||
-                  isCurrentUserGroupAdmin(groupid)           &&        this['membership-type'].val() > 0
+                  isCurrentUserGroupOwner(groupid)        ||    // &&        this['membership-type'].val() > 0
+                  isCurrentUserGroupAdmin(groupid)          // &&        this['membership-type'].val() > 0
                   }
  update() {
                  isGroupIdExist(groupid)                    &&
@@ -306,26 +306,12 @@ function isCurrentUserGroupMembersOwner($groupid) {
 
   update() { isGroupMembersIdExist(groupid) && isCurrentUserGroupMembersOwner(groupid) || isCurrentUserGroupMembersAdmin(groupid) }
 
-  //update() { }
-
-   // path for /groups/groupid/privacy
-  //--------------------------------------------
+  /members-checked-in is MembersCheckInInfo {
+   update() { isGroupMembersIdExist(groupid) }
+  }
 
   //privacy is PrivacyType { }
 
-
-  //--------------------------------------------------
-  /members-checked-in is MembersCheckInInfo {
-   update() { isGroupMembersIdExist(groupid) }
-
-     /checked-in/{userid} {
-      validate() {  isUserUSerIDExist()  }
-      write()    {  isAuthenticatedUser($userid) &&
-                    isGroupMembersIdExist(groupid)   &&
-                    groupMemberShipAnyType(groupid)
-       }
-     }
-  }
 }
 
 function isUserUSerIDExist() {
@@ -1367,4 +1353,21 @@ type ChatChannelType {
   attachmentId  : String | Null
  }
 
+ path /firepad-groups/{groupid} {
+   read() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+   write() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+ }
+
+ path /firepad-subgroups/{groupid}/{subgroupid} {
+   read() {
+     isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+   }
+   write() {
+   isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+ }
+ }
 //===========================================================  23/1/16  =====================================================================
