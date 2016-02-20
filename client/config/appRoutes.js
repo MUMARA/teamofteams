@@ -128,6 +128,11 @@
         templateUrl: 'components/activity/activity.html',
         controller: 'ActivityController',
         controllerAs: 'activity',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
       });
       $stateProvider.state('user.group.report', {
         url: '/tab/report',
@@ -140,6 +145,11 @@
         templateUrl: 'components/report/report.html',
         controller: 'ReportController',
         controllerAs: 'report',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
       });
       $stateProvider.state('user.group.manualattendace', {
         url: '/tab/manualattendace',
@@ -152,6 +162,11 @@
         templateUrl: 'components/manualattendace/manualattendace.html',
         controller: 'ManualAttendaceController',
         controllerAs: 'manualattendace',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
       });
       $stateProvider.state('user.group.progressreport', {
         url: '/tab/progressreport',
@@ -164,6 +179,11 @@
         templateUrl: 'components/progressreport/progressreport.html',
         controller: 'ProgressReportController',
         controllerAs: 'progressreport',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
       });
       $stateProvider.state('user.group.chat', {
         url: '/tab/chat?channelID?channelTitle',
@@ -176,6 +196,11 @@
         templateUrl: 'components/chat/chat.html',
         controller: 'ChatController',
         controllerAs: 'chat',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
       });
       // firepad States
       $stateProvider.state('user.group.collaborator', {
@@ -189,6 +214,11 @@
         templateUrl: 'components/collaborator/collaborator.html',
         controller: 'CollaboratorController',
         controllerAs: 'collaborator',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
       });
       // end firepad states
       $stateProvider.state('user.edit-group', {

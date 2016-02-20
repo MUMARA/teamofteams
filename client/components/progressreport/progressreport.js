@@ -33,7 +33,6 @@
         };
         function init() {
             groupService.setActivePanel('progressreport');
-            groupService.setSubgroupIDPanel($stateParams.subgroupID);
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID || '';
             that.user = userService.getCurrentUser();

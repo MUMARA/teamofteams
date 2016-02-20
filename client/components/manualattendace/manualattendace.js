@@ -5,12 +5,12 @@
 (function() {
     'use strict';
     angular.module('app.manualattendace', ['core']).controller('ManualAttendaceController', ['groupService', 'checkinService', '$firebaseArray', 'messageService', 'dataService', 'userService', '$stateParams', ManualAttendaceController]);
-    
+
     function ManualAttendaceController(groupService, checkinService, $firebaseArray, messageService, dataService, userService, $stateParams) {
         var that = this;
         var userCurrentCheckinRefBySubgroup;
         var user = userService.getCurrentUser();
-        
+
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         }
@@ -54,7 +54,6 @@
         }
         function init(){
             groupService.setActivePanel('manualattendace');
-            groupService.setSubgroupIDPanel($stateParams.subgroupID)
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             that.processTeamAttendance = false;

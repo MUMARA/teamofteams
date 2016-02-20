@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody md-body>
-                <tr md-row ng-repeat="user in activity.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: activity.groupID, subgroupID: activity.subgroupID, fullName: activity.searchbox}"
+                <tr md-row ng-repeat="user in activity.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: activity.groupID, subgroupID: activity.subgroupID, fullName: activity.searchbox} : true"
                 class="hoverLightGrey3 nooutline">
                     <td md-cell>
                         <ng-md-icon icon="lens" size="10" ng-class="user.onlinestatus ? 'fillColorDarkSeaGreen' : 'fillColorDarkGrey'"></ng-md-icon>

@@ -1,7 +1,7 @@
 <div layout="row" layout-align="center start" ng-if="group.isMember">
     <!-- Side Nav Bar -->
     <div class="md-whiteframe-z2" layout="column">
-        <md-card style="width: 220px; height: 280px; margin:0px;" class="foreColorDarkGrey" layout="column">
+        <md-card style="width: 220px; height: 300px; margin:0px;" class="foreColorDarkGrey" layout="column">
             <div style="margin: auto;margin-top: 30px;margin-bottom: 0px;">
                 <a class="cursorPointer" ng-click="group.showPanel(group.panel.active, false)" layout="row" layout-align="center center">
                     <img ng-src="{{ group.group.groupImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
@@ -28,7 +28,7 @@
             </div>
         </md-card>
         <div style="border-bottom: 5px solid green; width:220px"></div>
-        <div style="overflow-x: hidden; overflow-y: auto; height: calc(100vh - 350px)">
+        <div style="overflow-x: hidden; overflow-y: auto; height: calc(100vh - 370px)">
             <div ng-repeat="subgroup in group.subgroups track by $index" class="bottommargin5px subgroupcard" layout="column">
                 <subgroupcard-directive subgroup="subgroup" ng-click="group.showPanel(group.panel.active, subgroup.$id)" class="nooutline backColorWhite md-whiteframe-z2 cursorPointer"></subgroupcard-directive>
                 <ng-md-icon ng-if="group.panel.subgroupID === subgroup.$id" icon="chevron_right" style="position: relative; left: 195px; top: -60px;"></ng-md-icon>
@@ -72,7 +72,7 @@
             </div>
         </div>
     </div>
-    <ui-view flex></ui-view>
+    <ui-view flex ng-if="group.isMember"></ui-view>
 </div>
 <div ng-if="!group.isMember" layout="column" layout-align="center center" class="viewHeight">
     <md-card layout-padding class="foreColorDarkGrey" ng-if="group.errorMsg">

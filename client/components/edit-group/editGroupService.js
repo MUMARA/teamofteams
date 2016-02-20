@@ -34,6 +34,7 @@
                         groupRef['logo-image'].url = groupInfo['logo-image'].url
                         groupRef.$save().then(function(response) {
                             //console.log(groupNameRef);
+                            groupNameRef['address-title'] = groupInfo['address-title'];
                             groupNameRef.title = groupInfo.title;
                             groupNameRef.groupImgUrl = groupInfo['logo-image'].url
                             groupNameRef.$save()

@@ -88,10 +88,6 @@
                         onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle);
                     } else {
                         chatService.createGroupChannel(that.groupID, that.channelTitle, user.userID, onSuccessErrorChannelCreation);
-                        
-
-
-
                     }
                 });
             }
@@ -107,7 +103,6 @@
         }
         function init(){
             groupService.setActivePanel('chat');
-            groupService.setSubgroupIDPanel($stateParams.subgroupID);
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             if (that.subgroupID) {
