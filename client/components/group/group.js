@@ -72,7 +72,7 @@
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
                     if (subg.val()) {
                         firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgrp){
-                            if (subgrp.val()['membership-type'] > 0) {
+                            if (subgrp.val() && subgrp.val()['membership-type'] > 0) {
                                 checkGroup()
                             } else {
                                 that.reqObj.subgroupID = subg.key();
