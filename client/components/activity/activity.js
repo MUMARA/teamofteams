@@ -13,7 +13,6 @@
         }
         function init(){
             groupService.setActivePanel('activity');
-            groupService.setSubgroupIDPanel($stateParams.subgroupID)
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             that.users = dataService.getUserData();         //load users

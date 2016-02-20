@@ -353,7 +353,9 @@ angular.module('core')
                                                         timestamp: firebaseTimeStamp,
                                                         "members-count": response.membersCount,
                                                         "microgroups-count": 0,
-                                                        "members-checked-in-count": 0,
+                                                       "members-checked-in": {
+                                                            "count": 0
+                                                        },
                                                         'logo-image': {
                                                             url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
                                                             id: subgroupInfo.subgroupID,
@@ -990,7 +992,6 @@ angular.module('core')
                 rejectMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID,
                         errorHandler;
-
                     defer = $q.defer();
                     userID = requestedMember.userID;
 
@@ -999,11 +1000,11 @@ angular.module('core')
                     };
 
                     //step1: delete group membership request from user-membership list
-                    firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
-                        .remove(function(err) {
-                            if (err) {
-                                errorHandler();
-                            } else {
+                    //firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
+                        //.remove(function(err) {
+                        //    if (err) {
+                        //        errorHandler();
+                        //    } else {
                                 //step2: delete user request from group-membership-requests
                                 firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
                                     .remove(function(err) {
@@ -1022,8 +1023,8 @@ angular.module('core')
                                                 });
                                         }
                                     });
-                            }
-                        });
+                        //    }
+                        //});
 
                     return defer.promise;
                 },
@@ -1174,8 +1175,10 @@ angular.module('core')
                         var dataObject = snapshot.val();
 
                         if (checkinObj && checkinObj.type == 1) {
-                            updateObj['members-checked-in-count'] =  dataObject['members-checked-in-count'] - 1
-                         }
+                            updateObj['members-checked-in'] = {
+                                   count: dataObject['members-checked-in'].count - 1
+                              };
+                          }
 
 
                         // if (checkinObj && checkinObj.type == 1) {

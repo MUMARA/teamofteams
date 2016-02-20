@@ -5,10 +5,10 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController(policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController($scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -167,7 +167,6 @@
             });
         };
 
-
         //cancels create group modal
         function hide() {
             /*   createGroupService.cancelGroupCreation();*/
@@ -208,12 +207,83 @@
                     that.pendingRequests = that.groupSyncObj.pendingMembershipSyncArray;
                     that.activities = that.groupSyncObj.activitiesSyncArray;
                     // that.veiwSubgroup(that.subgroups[0])
-                    ;
                 });
 
 
             });
 
+        this.assignMemberClick = function() {
+            that.members.forEach(function(val, index){
+                //if is member
+                if(that.submembers.length > 0) {
+                    for (var i = 0; i < that.submembers.length; i++) {
+                        if (val.userID === that.submembers[i].userID) {
+                            that.members[index].isMember = true;
+                            that.members[index].isAdmin = (that.members[index].membershipType == 1 || that.members[index].membershipType == 2) ? true : false;
+                            break;
+                        }
+                    }
+                }
+                //if is admin member
+                if(that.selectedAdminArray.length > 0) {
+                    for (var i = 0; i < that.selectedAdminArray.length; i++) {
+                        if (val.user.profile.email === that.selectedAdminArray[i].email) {
+                            that.members[index].isAdmin = true;
+                            break;
+                        }
+                    }
+                }
+            }); //that.members.forEach
+        };
+
+        this.afterSelectMember = function(id){
+            var _flag = false;
+            that.members.forEach(function(val, index){
+                // console.log('that.members', val)
+                if(_flag){
+                    return;
+                }
+
+                if(id === val.userID){
+                    //if is member
+                    if(that.becomeMember.length > 0) {
+                        for (var i = 0; i < that.becomeMember.length; i++) {
+                            if(id == that.becomeMember[i].$id) {
+                                that.members[index].isMember = true;
+                                _flag = true
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }); //that.members.forEach
+        }
+
+        this.afterSelectAdmin = function(email){
+            var _flag = false;
+            that.members.forEach(function(val, index){
+                console.log('that.members', val)
+                if(_flag){
+                    return false;
+                }
+                if(email == val.user.profile.email){
+                    //if is admin member
+                    if(that.becomeAdmin.length > 0) {
+                        for (var i = 0; i < that.becomeAdmin.length; i++) {
+                            // console.log('that.becomeAdminmembers', that.becomeAdmin[i])
+                            if (email === that.becomeAdmin[i].member.user.profile.email && email === val.user.profile.email) {
+                                that.members[index].isAdmin = true;
+                                _flag = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }); //that.members.forEach
+
+        }
 
         this.selectedMember = function(userObj, index) {
             var _flag = true;
@@ -238,8 +308,24 @@
                 that.memberss.selectedUsersArray.push(userObj.$id);
                 that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
                 var membersArray = that.memberss.memberIDs.split(',');
+
+                //after add in  becomeMember chnage arrow css
+                that.afterSelectMember(userObj.$id);
             }
         };
+
+
+
+        // this.checkingIsSelectedMember = function(mmbrid) {
+        //     that.becomeMember.forEach(function(val,index){
+        //         console.log('val', val.$id, mmbrid);
+        //         if(mmbrid === val.$id){
+        //             console.log('trrrrrrue');
+        //             return true;
+        //         }
+        //     });
+        //     return false;
+        // };
 
         this.selectedMemberSave = function(){
             if(that.becomeMember.length > 0){
@@ -290,7 +376,6 @@
 
         this.selectedAdmin = function(newType, member) {
             var obj = {type: newType, member: member};
-            console.log('admin',obj);
             var _flag = true;
 
             //if(that.memberss.length > 0) {
@@ -311,6 +396,9 @@
 
             if(_flag) {
                 that.becomeAdmin.push(obj);
+
+                //after add in  becomeMember chnage arrow css
+                this.afterSelectAdmin(obj.member.user.profile.email)
             }
 
 
@@ -375,6 +463,7 @@
             })
         }
 
+
         function filterUser(userID) {
             var disableItem = false;
             for (var i = 0; i < that.submembers.length; i++) {
@@ -384,7 +473,6 @@
                     disableItem = true;
                 }
             }
-
             return disableItem;
         }
 
@@ -436,6 +524,7 @@
                                 that.teamsettingpanel = false;
                             });
                             that.processingSave = false;
+                            that.teamsettingpanel = false;
                         }
                             // $rootScope.newImg=null;
                     })
@@ -454,14 +543,13 @@
                     createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
                         that.processingSave = false;
                         that.teamsettingpanel = false;
-
                     });
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
                         that.teamsettingpanel = false;
+                        that.processingSave = false;
                     });
-                    that.processingSave = false;
                 }
             }
         }

@@ -54,7 +54,7 @@ exports.verifyEmail = function(req, res) {
                         statusDesc: "account verification failed. please try again."
                     });
                 } else {
-                    res.redirect(appconfig.DOMAIN + '#/signin');
+                    res.redirect(appconfig.DOMAIN + '/signin');
                     // template = ejs.render( accountConfirmationTemplate, {
                     //     user: user,
                     //     app: appconfig

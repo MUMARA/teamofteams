@@ -111,8 +111,8 @@
                 //set policyID
                 obj.policyID = newPolicyKey;
 
-                var questionObj = obj["progressReportQuestions"];   //setting progressReportQuestions from 'obj'
-                delete obj["progressReportQuestions"];              //delete progressReportQuestions from 'obj'
+                // var questionObj = obj["progressReportQuestions"];   //setting progressReportQuestions from 'obj'
+                // delete obj["progressReportQuestions"];              //delete progressReportQuestions from 'obj'
 
                 //Saving on firebase by using multi path update
                 var multiPathUpdate = {};
@@ -120,18 +120,26 @@
                 //add policy in policies node
                 //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey] = obj;
 
+                //add policy in policies node
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/defined-by"] = obj['defined-by'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/location"] = obj['location'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/locationBased"] = obj['locationBased'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/policyID"] = obj['policyID'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReport"] = obj['progressReport'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/schedule"] = obj['schedule'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/timeBased"] = obj['timeBased'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/timestamp"] = obj['timestamp'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/title"] = obj['title'];
+
                 //for daily progress questions
                 if(obj['progressReport']){
-                    var newQuestionRef = refNodes.ref.child("policies").child(groupID).child(newPolicyKey).child('progressReportQuestions').push();
-                    var newQuestionID = newQuestionRef.key();
-                    //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = questionObj;
-                    obj['progressReportQuestions'] = {};
-                    obj['progressReportQuestions'][newQuestionID] = questionObj;
-                    obj['latestProgressReportQuestionID'] = newQuestionID;
+                     var newQuestionRef = refNodes.ref.child("policies").child(groupID).child(newPolicyKey).child('progressReportQuestions').push();
+                     var newQuestionID = newQuestionRef.key();
+                     multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/latestProgressReportQuestionID"] = newQuestionID;
+                     multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
+                     //obj['latestProgressReportQuestionID'] = newQuestionID;
+                     //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = questionObj;
                 }
-
-                //add policy in policies node
-                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey] = obj;
 
                 //getting subgroups which are selected....
                 selectedTeams.forEach(function(val, indx){
@@ -169,15 +177,30 @@
                 // console.log(multiPathUpdate)
 
                	//Multi-Path update Queery
-                refNodes.ref.update(multiPathUpdate, function(err){
+                refNodes.ref.update(multiPathUpdate, function(err) {
                     if(err) {
                         console.log("Error updating Date:", err);
                     } else {
-                    	cb();
+                        //adding questions obj if progressReport is true    (for daily progress questions)
+                    	cb(newQuestionID);
                     }
                 });
-
 			}
+
+            // function pushProgressReportQuestions(groupID, policyID, newQuestionID, qobj, cb){
+            //     var ref = firebaseService.getRefMain();
+            //     var multiPathUpdate = {};
+            //     //saving question object
+            //     multiPathUpdate["policies/"+groupID+"/"+policyID+"/progressReportQuestions/"+newQuestionID] = qobj;
+            //     ref.update(multiPathUpdate, function(err){
+            //         if(err) {
+            //             console.log("Error updating Question Object:", err);
+            //         } else {
+            //             console.log('added questions');
+            //         	cb();
+            //         }
+            //     });
+            // }
 			//Save data in firebase using Multi-Path	-- END --
 
             //if member assign into any team, if policy has exists on that team then also assigned to member -- START --

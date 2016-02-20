@@ -7,9 +7,15 @@
 
     function ProgressReportController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
-
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
+
+            $timeout(function() {
+                that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+
+            // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
+
+            }, 2000);
         };
         this.update = function(report) {
             // console.log(report);
@@ -22,16 +28,18 @@
                 }
             });
         };
-
+        this.everyone = function(){
+            that.activeUser = '';
+        };
         function init() {
             groupService.setActivePanel('progressreport');
-            groupService.setSubgroupIDPanel($stateParams.subgroupID);
             that.groupID = $stateParams.groupID;
-            that.subgroupID = $stateParams.subgroupID;
+            that.subgroupID = $stateParams.subgroupID || '';
             that.user = userService.getCurrentUser();
             that.users = dataService.getUserData();
-            that.activeUser = ($stateParams.u) ? that.user.userID : '';
-            that.activeTitle = "Daily Progress Report";
+            //that.activeUser = ($stateParams.u) ? that.user.userID : '';
+            that.activeUser = that.user.userID;
+            that.activeTitle = "Progress Report";
 
             if ($stateParams.u) {
                 $timeout(function() {
@@ -54,6 +62,7 @@
                     //group report
                     $timeout(function() {
                         that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
+                        that.activeUser = '';
                     }, 2000);
                 }
 

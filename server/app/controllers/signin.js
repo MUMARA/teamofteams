@@ -23,12 +23,12 @@ exports.signIn = function(req, res) {
             if (user.password === req.body.password) {
                 //checking pending request
                 if (process.env.NODE_ENV == "production") {
-                    // if (user.status == 0) {
-                    //     res.send({
-                    //         statusCode: 0,
-                    //         statusDesc: "Before signin please verify your email address!"
-                    //     });
-                    // }
+                    if (user.status == 0) {
+                        res.send({
+                            statusCode: 0,
+                            statusDesc: "Before signin please verify your email address!"
+                        });
+                    }
                 } //checking pending request
                 updateLastLogin(res, user);
             } else {

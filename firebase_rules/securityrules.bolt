@@ -148,9 +148,9 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
 
  //read() { isGroupIdExist(groupid) && isCurrentUserGroupOwner(groupid) || isCurrentUserGroupAdmin(groupid) }
 
- create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1 ||
-                  isCurrentUserGroupOwner(groupid)           &&        this['membership-type'].val() >= 2     ||
-                  isCurrentUserGroupAdmin(groupid)           &&        this['membership-type'].val() >= 2
+ create() {      isAuthenticated()  &&  this['membership-type'].val() == 1 ||
+                  isCurrentUserGroupOwner(groupid)        ||    // &&        this['membership-type'].val() > 0
+                  isCurrentUserGroupAdmin(groupid)          // &&        this['membership-type'].val() > 0
                   }
  update() {
                  isGroupIdExist(groupid)                    &&
@@ -159,8 +159,8 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
                 // userGroupMembershipAnyType(groupid)           //discussion
                   }
   delete() {
-                 isGroupIdExist(groupid)                    &&
                  isCurrentUserGroupOwner(groupid)           ||
+                 isGroupIdExist(groupid)                    &&
                  isCurrentUserGroupAdmin(groupid)       //  ||
                 // userGroupMembershipAnyType(groupid)           //discussion
                   }
@@ -306,33 +306,12 @@ function isCurrentUserGroupMembersOwner($groupid) {
 
   update() { isGroupMembersIdExist(groupid) && isCurrentUserGroupMembersOwner(groupid) || isCurrentUserGroupMembersAdmin(groupid) }
 
-  //update() { }
-
-   // path for /groups/groupid/privacy
-  //--------------------------------------------
+  /members-checked-in is MembersCheckInInfo {
+   update() { isGroupMembersIdExist(groupid) }
+  }
 
   //privacy is PrivacyType { }
 
-
-  //--------------------------------------------------
-/*
-  /members-checked-in is MembersCheckInInfo {
-   update() { isGroupMembersIdExist(groupid)}
-   }
-
-
-   // path for /group/groupid/members-checked-in/checked-in/$userid
-  //----------------------------------------------------------------
-
-  /members-checked-in/checked-in/{userid} {
-   validate() {  isUserUSerIDExist()  }
-   write()    {  isAuthenticatedUser($userid) &&
-                 isGroupMembersIdExist(groupid)   &&
-                 groupMemberShipAnyType(groupid)
-    }
-
-  }
-    */
 }
 
 function isUserUSerIDExist() {
@@ -352,8 +331,7 @@ type GroupInfo {
   'address'         :  AddressLength        | Null,
   "group-owner-id"  :  String,
   "owner-img-url"   :  String | Null,
-  'members-checked-in-count' : Number,
-  "privacy"                  : InvitationPrivacyType
+  "privacy"         : InvitationPrivacyType
   }
 
 
@@ -394,12 +372,12 @@ type MembersCheckInInfo {
  // validate() { this.hasChildren(['checked-in']) }
    count : Count
 }
-/*
+
 type Count extends Number {
   validate() { this >= 0 }
   write()    { isGroupMembersIdExist(groupid) && groupMemberShipAnyType(groupid) }
 }
-
+/*
 type PrivacyType {
   invitationType : InvitationPrivacyType
 
@@ -408,7 +386,6 @@ type PrivacyType {
  type InvitationPrivacyType extends Number {
   validate() { this == 1 || this == 2 || this == 3}
  }
-
 type LogoImageRequirement {
    validate() {
     this.hasChildren(['url','id','bucket-name','source','mediaType']);
@@ -526,7 +503,11 @@ path /group-membership-requests/{groupid} {
                    isCurrentUserGroupMembersAdmin(groupid)
             }
 
-        write() {  isGroupMembersIdExist(groupid)            &&
+        update() {   isGroupMembersIdExist(groupid)            &&
+                    isCurrentUserGroupMembersOwner(groupid)   ||
+                    isCurrentUserGroupMembersAdmin(groupid)
+        }
+        delete() {  isGroupMembersIdExist(groupid)            &&
                    isCurrentUserGroupMembersOwner(groupid)   ||
                    isCurrentUserGroupMembersAdmin(groupid)
         }
@@ -535,8 +516,8 @@ path /group-membership-requests/{groupid} {
     //-----------------------------------------------
 
     /{userid} {
-      read() { isAuthenticatedUser($userid) }
-      write() { isAuthenticatedUser($userid) }
+      read()  { isAuthenticatedUser($userid) }
+      write() {  isAuthenticated()  }
    }
 
 }
@@ -575,7 +556,8 @@ path /group-membership-requests-by-user/{userid} {
 
    read() { isGroupMembersIdExist(groupid)            &&
             isCurrentUserGroupMembersOwner(groupid)   ||
-            isCurrentUserGroupMembersAdmin(groupid)  }
+            isCurrentUserGroupMembersAdmin(groupid)  ||
+            groupMemberShipAnyType($groupid) }
 
    write() {
             isGroupMembersIdExist(groupid)            &&
@@ -586,7 +568,7 @@ path /group-membership-requests-by-user/{userid} {
       //--------------------------------------------------
 
      /{subgroupid} is SubGroupInfo {
-    //      validate() { this.hasChildren(['members-checked-in'])   }
+    validate() { this.hasChildren(['members-checked-in'])   }
 
    read() {  isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid)         &&
              subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
@@ -602,23 +584,20 @@ path /group-membership-requests-by-user/{userid} {
 
     // path for /subgroups/{groupid}/{subgroupid}/members-checked-in
    //---------------------------------------------------------
-/*
-    /members-checked-in-count is SubGroupMembersCheckInInfo { }
 
-   // path for /subgroups/{groupid}/{subgroupid}/members-checked-in
-   //-------------------------------------------------------------
+    /members-checked-in is SubGroupMembersCheckInInfo {
 
-    /members-checked-in/checked-in/{userid} {
-    validate() { isUserUSerIDExist() }
+      /checked-in/{userid} {
 
-    write()    { isAuthenticatedUser($userid) &&
-                 isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
-                 subGroupMembersMemberShipAnyType(groupid,subgroupid)    }
-      }
-      */
+      validate() { isUserUSerIDExist() }
+
+      write()    { isAuthenticatedUser($userid) &&
+                   isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
+                   subGroupMembersMemberShipAnyType(groupid,subgroupid)    }
+        }
+     }
    }
-
-}
+ }
  //------------------------------------
  // TypeFor SubGroup
  //-------------------------------------
@@ -630,10 +609,11 @@ path /group-membership-requests-by-user/{userid} {
  'members-count'             :  MemberCountGreaterThanEqualToZero,
  'microgroups-count'         :  SubgroupCountGreaterThanEqualToZero ,
  'logo-image'                :  LogoImageRequirement | Null,
- 'members-checked-in-count'  :  Number,
  'policyID'                  :  String | Null,
+ "subgroup-owner-id"         :  String | Null,
+ "owner-img-url"             :  String | Null
 }
-/* Rules changed members-checked-in object remove and replace to members-checked-in-count property; \
+
 
 type SubGroupMembersCheckInInfo {
   // validate() { this.hasChildren(['checked-in']) }
@@ -645,7 +625,6 @@ type SubGroupCount extends Number {
                subGroupMembersMemberShipAnyType(groupid,subgroupid)
  }
 }
-*/
 type MemberCountGreaterThanEqualToZero extends Number{
    validate() {  this >=0  }
 }
@@ -712,7 +691,8 @@ path /subgroup-members/{groupid} {
 
   read() {     isGroupMembersIdExist(groupid)          &&
                isCurrentUserGroupMembersOwner(groupid) ||
-               isCurrentUserGroupMembersAdmin(groupid)   }
+               isCurrentUserGroupMembersAdmin(groupid) ||
+               groupMemberShipAnyType($groupid)   }
 
   write() {    isGroupMembersIdExist(groupid)            &&
                isCurrentUserGroupMembersOwner(groupid)   ||
@@ -1189,10 +1169,10 @@ path /tasks/{groupid} {
 
 
 
-path /policies/{groupid}{
+path /policies/{groupid}  {
   read()  {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
-/{policyid} is PolicyType {
+ /{policyid} is PolicyType {
  read()  {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
  write() {  isAuthenticated() &&
@@ -1200,6 +1180,7 @@ path /policies/{groupid}{
             isCurrentUserGroupAdmin(groupid)      }
 
   /progressReportQuestions/{questionSetId} is QuesitonType { }
+
   }
 }
 type PolicyType {
@@ -1235,21 +1216,22 @@ type BooleanOrNull {
 }
 
  type SchedulesType {
-   Sunday : BooleanOrNull[] | Null,
-   Monday : BooleanOrNull[] | Null,
-   Tuesday : BooleanOrNull[] | Null,
-   Wednesday : BooleanOrNull[] | Null,
-   Thursday : BooleanOrNull[] | Null,
-   Friday : BooleanOrNull[] | Null,
-   Saturday : BooleanOrNull[] | Null
+   Sunday : BooleanOrNull[],
+   Monday : BooleanOrNull[],
+   Tuesday : BooleanOrNull[],
+   Wednesday : BooleanOrNull[],
+   Thursday : BooleanOrNull[],
+   Friday : BooleanOrNull[],
+   Saturday : BooleanOrNull[]
   }
 
 path /subgroup-policies/{groupid} {
     read(){
           isAuthenticated() &&
           isCurrentUserGroupOwner(groupid)    ||
-          isCurrentUserGroupAdmin(groupid)
-      }
+          isCurrentUserGroupAdmin(groupid)    ||
+          userGroupMembershipAnyType($groupid)
+     }
        /{subgroupid} is AppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
@@ -1319,8 +1301,9 @@ path /progress-reports-by-users/{userid} {
  }
 
 path /group-channel/{groupid} {
+    read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
-    /{channelid} is ChatChannelType  {
+     /{channelid} is ChatChannelType  {
       read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
       write() { isAuthenticated() && userGroupMembershipAnyType(groupid) }
     }
@@ -1328,19 +1311,28 @@ path /group-channel/{groupid} {
    index() { "title" }
 
 }
-path /group-messages/{groupid}/{channelid}/{messageid} is ChatChannelMessageType {
+path /group-messages/{groupid}/{channelid} {
+
+  read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
+
+ /{messageid} is ChatChannelMessageType {
+
   create() { isAuthenticatedUser(this['from']) }
   update() { isAuthenticatedUser(prior(this['from'])) }
   delete() { isAuthenticatedUser(prior(this['from'])) }
+
   read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
+ }
 }
-path /subgroup-channel/{groupid}/{subgroupid}/{channelid} is ChatChannelType {
-   read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
-   write() { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+path /subgroup-channel/{groupid}{
 
-
-}
+  read() {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
+  /{subgroupid}/{channelid} is ChatChannelType {
+     read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+     write() { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+   }
+ }
 path /subgroup-messages/{groupid}/{subgroupid}/{channelid}/{messageid} is ChatChannelMessageType {
   create() { isAuthenticatedUser(this['from']) }
   update() { isAuthenticatedUser(prior(this['from'])) }
@@ -1364,4 +1356,21 @@ type ChatChannelType {
   attachmentId  : String | Null
  }
 
+ path /firepad-groups/{groupid} {
+   read() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+   write() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+ }
+
+ path /firepad-subgroups/{groupid}/{subgroupid} {
+   read() {
+     isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+   }
+   write() {
+   isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+ }
+ }
 //===========================================================  23/1/16  =====================================================================

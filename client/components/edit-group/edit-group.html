@@ -80,17 +80,16 @@
                 <md-radio-group ng-model="editGroup.group.privacy">
                     <md-radio-button value="1" ng-disabled="true" class="md-primary">Invitation Only</md-radio-button>
                     <md-radio-button value="2" ng-disabled="true" class="md-primary">Request Support</md-radio-button>
-                    <md-radio-button value="3" ng-disabled="true" class="md-primary">Any Email Address from these domains.</md-radio-button>
+                    <!-- <md-radio-button value="3" ng-disabled="true" class="md-primary">Any Email Address from these domains.</md-radio-button> -->
                 </md-radio-group>
-                <md-input-container md-no-float flex>
-                    <!--<md-icon md-svg-src="img/icons/ic_phone_24px.svg"></md-icon>-->
+                <!-- <md-input-container md-no-float flex>
                     <input ng-model="editGroup.group.domain" type="text" placeholder="To allow email addresses from multiple domains, separate them with commas." ng-disabled="!editGroup.signupModeDisabled(editGroup.group.signupMode)">
                     <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.domain.$error" ng-messages-multiple>
                         <div class="invalid_color" ng-message="required">This is required.</div>
                         <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
-                        <!--<div layout="row" class="invalid_color id_Error" ng-message="checkDomainValidation">This name is not available.</div>-->
+                        <!<div layout="row" class="invalid_color id_Error" ng-message="checkDomainValidation">This name is not available.</div>>
                     </div>
-                </md-input-container>
+                </md-input-container> -->
             </div>
             <div>
             	<div layout="row" layout-align="start center">
