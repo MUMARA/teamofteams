@@ -148,7 +148,7 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
 
  //read() { isGroupIdExist(groupid) && isCurrentUserGroupOwner(groupid) || isCurrentUserGroupAdmin(groupid) }
 
- create() {      isAuthenticatedUser($userid)  &&  this['membership-type'].val() == 1 ||
+ create() {      isAuthenticated()  &&  this['membership-type'].val() == 1 ||
                   isCurrentUserGroupOwner(groupid)        ||    // &&        this['membership-type'].val() > 0
                   isCurrentUserGroupAdmin(groupid)          // &&        this['membership-type'].val() > 0
                   }
@@ -503,21 +503,21 @@ path /group-membership-requests/{groupid} {
                    isCurrentUserGroupMembersAdmin(groupid)
             }
 
-        write() {  isGroupMembersIdExist(groupid)            &&
+        update() {   isGroupMembersIdExist(groupid)            &&
                     isCurrentUserGroupMembersOwner(groupid)   ||
                     isCurrentUserGroupMembersAdmin(groupid)
         }
-        //delete() {  isGroupMembersIdExist(groupid)            &&
-          //         isCurrentUserGroupMembersOwner(groupid)   ||
-            //       isCurrentUserGroupMembersAdmin(groupid)
-        //}
+        delete() {  isGroupMembersIdExist(groupid)            &&
+                   isCurrentUserGroupMembersOwner(groupid)   ||
+                   isCurrentUserGroupMembersAdmin(groupid)
+        }
 
      //Path for /group-membership-requests/{groupid}/{userid}
     //-----------------------------------------------
 
     /{userid} {
-      read() { isAuthenticatedUser($userid) }
-      write() { isAuthenticatedUser($userid) }
+      read()  { isAuthenticatedUser($userid) }
+      write() {  isAuthenticated()  }
    }
 
 }
@@ -556,8 +556,8 @@ path /group-membership-requests-by-user/{userid} {
 
    read() { isGroupMembersIdExist(groupid)            &&
             isCurrentUserGroupMembersOwner(groupid)   ||
-            isCurrentUserGroupMembersAdmin(groupid) // ||
-          }//  groupMemberShipAnyType($groupid)
+            isCurrentUserGroupMembersAdmin(groupid)  ||
+            groupMemberShipAnyType($groupid) }
 
    write() {
             isGroupMembersIdExist(groupid)            &&
@@ -610,6 +610,8 @@ path /group-membership-requests-by-user/{userid} {
  'microgroups-count'         :  SubgroupCountGreaterThanEqualToZero ,
  'logo-image'                :  LogoImageRequirement | Null,
  'policyID'                  :  String | Null,
+ "subgroup-owner-id"         :  String | Null,
+ "owner-img-url"             :  String | Null
 }
 
 
@@ -1324,6 +1326,7 @@ path /group-messages/{groupid}/{channelid} {
  }
 }
 path /subgroup-channel/{groupid}{
+
   read() {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
   /{subgroupid}/{channelid} is ChatChannelType {
      read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
