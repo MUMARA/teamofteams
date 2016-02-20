@@ -31,7 +31,7 @@
 
                 /*VM Functions*/
                 function answer(perSettingForm) {
-                    //if(perSettingForm.$error) return;
+                    if(Object.keys(perSettingForm.$error).length > 0) return;
                     that.isProcessing = true;
                     var uploadFile, editUser, changePassword, data1, data2, pFlag, eFlag, imgFlag;
                     var promiseArray = [];

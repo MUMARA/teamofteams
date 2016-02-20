@@ -57,20 +57,23 @@
                 userID: el.scope().personalSettings.userData.$id,
                 password: modelValue
             }
-            $http.post(appConfig.apiBaseUrl + '/api/checkpassword', dataToCheck)
-                .success(function(data) {
-                    if (data.statusCode === 1) {
-                        defer.resolve();
+            if (modelValue) {
+                $http.post(appConfig.apiBaseUrl + '/api/checkpassword', dataToCheck)
+                    .success(function(data) {
+                        console.log('1', data);
+                        if (data.statusCode === 1) {
+                            defer.resolve();
 
-                    } else {
+                        } else {
+                            defer.reject();
+                        }
+                    })
+                    .error(function(data) {
+                        console.log('2', data);
+                        //handle this case
                         defer.reject();
-                    }
-                })
-                .error(function(data) {
-                    //handle this case
-                    defer.reject();
-                });
-
+                    });
+            }
             return defer.promise;
         };
 

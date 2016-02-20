@@ -38,11 +38,8 @@
         <div layout="row">
             <md-input-container flex>
                 <label>Old Password</label>
-                <!-- check-user-password="" -->
-                <input name="oldPassword" type="password" ng-model="personalSettings.userData.oldPassword" minlength="3" maxlength="40">
-                <!--<input name="oldPassword" type="password" ng-model="personalSettings.userData.oldPassword"  minlength="3" maxlength="40" >-->
+                <input name="oldPassword" type="password" ng-model="personalSettings.userData.oldPassword" minlength="3" maxlength="40" check-user-password="">
                 <div ng-show="personalSettingForm.oldPassword.$touched" ng-messages="personalSettingForm.oldPassword.$error">
-                    <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
                     <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
                     <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                     <div class="invalid_color" ng-message="_oldPassword">Incorrect password</div>
@@ -50,11 +47,9 @@
             </md-input-container>
             <md-input-container flex>
                 <label>New Password</label>
-                <!-- compare-against="personalSettings.userData.oldPassword" -->
-                <input name="newPassword" type="password" ng-model="personalSettings.userData.newPassword" minlength="3" maxlength="40">
+                <input name="newPassword" type="password" ng-model="personalSettings.userData.newPassword" minlength="3" maxlength="40" compare-against="personalSettings.userData.oldPassword">
                 <div ng-show="personalSettingForm.newPassword.$touched" ng-messages="personalSettingForm.newPassword.$error">
                     <div class="invalid_color" ng-message="compareAgainst">Same Password</div>
-                    <!--<div class="invalid_color" ng-message="required">This is required.</div>-->
                     <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
                     <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                 </div>
