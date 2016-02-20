@@ -90,15 +90,33 @@
                             that.isOwner = true;
                             that.isAdmin = true;
                             that.isMember = true;
+                            that.adminOf = "Group"
                         } else if (groups.val() && groups.val()['membership-type'] == 2) {
                             that.isAdmin = true;
                             that.isMember = true;
+                            that.adminOf = "Group"
                         } else if (groups.val() && groups.val()['membership-type'] == 3) {
                             that.isMember = true;
                         }
                         if (!that.isMember) {
-                            that.errorMsg = that.errorMsg ? errorMsg : "You have to be Member of Team before access";
+                            that.errorMsg = that.errorMsg ? that.errorMsg : "You have to be Member of Team before access";
                         }
+                        firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
+                            for (var subgroup in subgroups.val()) {
+                                if (subgroups.val()[subgroup]['membership-type'] == 1) {
+                                    isOwner = true;
+                                    isAdmin = true;
+                                    isMember = true;
+                                    that.adminOf = 'Subgroup';
+                                } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
+                                    isAdmin = true;
+                                    isMember = true;
+                                    that.adminOf = 'Subgroup';
+                                } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
+                                    isMember = true;
+                                }
+                            }
+                        });
                     });
                 });
             }
