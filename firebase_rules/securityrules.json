@@ -808,7 +808,8 @@
               },
               ".write": "data.val() == null && (auth != null && auth.uid == newData.child('from').val()) || data.val() != null && newData.val() != null && (auth != null && auth.uid == data.child('from').val()) || data.val() != null && newData.val() == null && (auth != null && auth.uid == data.child('from').val())",
               ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
-            }
+            },
+            ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
           }
         }
       }

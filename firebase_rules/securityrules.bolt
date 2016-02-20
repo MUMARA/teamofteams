@@ -1333,12 +1333,15 @@ path /subgroup-channel/{groupid}{
      write() { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
    }
  }
-path /subgroup-messages/{groupid}/{subgroupid}/{channelid}/{messageid} is ChatChannelMessageType {
-  create() { isAuthenticatedUser(this['from']) }
-  update() { isAuthenticatedUser(prior(this['from'])) }
-  delete() { isAuthenticatedUser(prior(this['from'])) }
+path /subgroup-messages/{groupid}/{subgroupid}/{channelid}{
   read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
-
+  
+  /{messageid} is ChatChannelMessageType {
+    create() { isAuthenticatedUser(this['from']) }
+    update() { isAuthenticatedUser(prior(this['from'])) }
+    delete() { isAuthenticatedUser(prior(this['from'])) }
+    read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+ }
 }
 
 
