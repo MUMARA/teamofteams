@@ -78,7 +78,7 @@ gulp.task("minifying", function() {
             "./config/appRoutes.js"
         ])
         .pipe(concat('all.js'))
-        // .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest("./minifyVersion/"));
 });
 
