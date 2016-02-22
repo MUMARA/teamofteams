@@ -7,15 +7,21 @@
 
     function ProgressReportController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
-        this.setFocus = function() {
-            document.getElementById("#UserSearch").focus();
+        this.loadingData = false;
+        this.setFocus = function(startDate , endDate) {
+            that.loadingData = true;
+             if(startDate && endDate) {
+                 $timeout(function() {
+                     that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+                     that.loadingData = false;
+                 // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
 
-            $timeout(function() {
-                that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+                 }, 2000);
+             }else{
+                 document.getElementById("#UserSearch").focus();
+                 that.loadingData = false; 
+             }
 
-            // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
-
-            }, 2000);
         };
         this.update = function(report) {
             // console.log(report);

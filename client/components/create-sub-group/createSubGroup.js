@@ -516,12 +516,16 @@
                             createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
                                 that.processingSave = false;
                                 that.teamsettingpanel = false;
+                                that.selectedindex = undefined;
+
                             })
                         } else {
                             //create team
                             that.subgroupData.imgLogoUrl = data;
                             createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID,function(){
                                 that.teamsettingpanel = false;
+                                that.selectedindex = undefined;
+
                             });
                             that.processingSave = false;
                         }
@@ -542,12 +546,16 @@
                     createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
                         that.processingSave = false;
                         that.teamsettingpanel = false;
+                        that.selectedindex = undefined;
+
 
                     });
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
                         that.teamsettingpanel = false;
+                        that.selectedindex = undefined;
+                        
                     });
                     that.processingSave = false;
                 }
