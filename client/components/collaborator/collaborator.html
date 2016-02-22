@@ -32,7 +32,7 @@
             <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
                 <!--Documents side-->
                 <md-tab label="Documents" class="rightTbs">
-                    <md-content ng-repeat="channel in chat.channels track by $index">
+                    <md-content ng-repeat="channel in collaborator.documents track by $index">
                         <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                             <md-list-item class="md-3-line selectable" ng-click="chat.gotoChannel(channel)">
                                 <div class="md-list-item-text" style="padding:0px;">

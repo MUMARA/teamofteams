@@ -24,17 +24,33 @@
 
 
         that.createDocument = function() {
+          var updateDocument = {};
           that.hideLoader = false;
           that.document = that.documentTitle;
           that.default = false;
           that.channelBottomSheet = false;
           that.documentready = true;
           if(that.subgroupID){
-            firepadRef = new Firebase(ref).child("firepad-subgroups").child(that.groupID).child(that.subgroupID).child(that.document);
+            ref = new Firebase(ref);
+            // var tempRef =
+            firepadRef =  ref.child("firepad-subgroups/"+that.groupID+"/"+that.subgroupID);
+            var pushDocumentNode = ref.child("firepad-subgroups/"+that.groupID+"/"+that.subgroupID).push();
+            var firebaseDocumentId = pushDocumentNode.key();
+            firepadRef = firepadRef.child(firebaseDocumentId);
+            console.log(firepadRef.toString());
+            //updateDocument["firepad-subgroups/"+that.groupID+"/"+that.subgroupID+"/"+firebaseDocumentId] = {};
+            updateDocument["firepad-subgroups/"+that.groupID+"/"+that.subgroupID+"/"+firebaseDocumentId+"/title"] = that.document
+            updateDocument["firepad-subgroups-documents/"+that.groupID+"/"+that.subgroupID+"/"+firebaseDocumentId+"/title"] =  that.document;
           }
           else {
-            firepadRef = new Firebase(ref).child("firepad-groups").child(that.groupID).child(that.document);
+
           }
+
+          ref.update(updateDocument,function(error){
+            if(error){
+              console.log("error due to :",error);
+            }
+          })
 
           var codeMirror = CodeMirror(document.getElementById('firepad'), {lineWrapping: true});
           var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
