@@ -136,7 +136,7 @@
                      var newQuestionRef = refNodes.ref.child("policies").child(groupID).child(newPolicyKey).child('progressReportQuestions').push();
                      var newQuestionID = newQuestionRef.key();
                      multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/latestProgressReportQuestionID"] = newQuestionID;
-                     multiPathUpdate["policies/"+groupID+"/"+policyID+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
+                     multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
                      //obj['latestProgressReportQuestionID'] = newQuestionID;
                      //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = questionObj;
                 }
@@ -146,7 +146,7 @@
                     //add property hasPolicy in subgroupNames..
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey };
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
@@ -169,7 +169,7 @@
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
-                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey };
+                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
                         //multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
@@ -187,20 +187,20 @@
                 });
 			}
 
-            function pushProgressReportQuestions(groupID, policyID, newQuestionID, qobj, cb){
-                var ref = firebaseService.getRefMain();
-                var multiPathUpdate = {};
-                //saving question object
-                multiPathUpdate["policies/"+groupID+"/"+policyID+"/progressReportQuestions/"+newQuestionID] = qobj;
-                ref.update(multiPathUpdate, function(err){
-                    if(err) {
-                        console.log("Error updating Question Object:", err);
-                    } else {
-                        console.log('added questions');
-                    	cb();
-                    }
-                });
-            }
+            // function pushProgressReportQuestions(groupID, policyID, newQuestionID, qobj, cb){
+            //     var ref = firebaseService.getRefMain();
+            //     var multiPathUpdate = {};
+            //     //saving question object
+            //     multiPathUpdate["policies/"+groupID+"/"+policyID+"/progressReportQuestions/"+newQuestionID] = qobj;
+            //     ref.update(multiPathUpdate, function(err){
+            //         if(err) {
+            //             console.log("Error updating Question Object:", err);
+            //         } else {
+            //             console.log('added questions');
+            //         	cb();
+            //         }
+            //     });
+            // }
 			//Save data in firebase using Multi-Path	-- END --
 
             //if member assign into any team, if policy has exists on that team then also assigned to member -- START --

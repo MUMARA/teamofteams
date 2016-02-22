@@ -14,13 +14,13 @@
     		if(subgroupID){
 	    		userArray.forEach(function(val, indx){
 	    			if(val.groupID == groupID && val.subgroupID == subgroupID) {
-						getSubGroupReportFromFirebase(val, groupID, subgroupID, 2);
+						getSubGroupReportFromFirebase(val, groupID, subgroupID, 1);
 					}
 	    		});
     		} else {
     			userArray.forEach(function(val, indx){
 	    			if(val.groupID == groupID) {
-						getGroupReportFromFirebase(val, groupID, 2);
+						getGroupReportFromFirebase(val, groupID, 1);
 					}
 	    		});
     		}
@@ -75,8 +75,8 @@
 									obj = snapshot.val()[key];
 									obj['reportID'] = key;
 									obj['userID'] = user.id;
-									obj['fullName'] = user.fullName;
-									obj['profileImage'] = user.profileImage;
+									obj['fullName'] = user.fullName || '';
+									obj['profileImage'] = user.profileImage || '';
 									obj['groupID'] = user.groupID;
 									obj['subgroupID'] = user.subgroupID;
                                     getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
@@ -128,7 +128,7 @@
     	function getGroupReports(userArray, groupID){
     		userArray.forEach(function(val, indx){
     			if(val.groupID == groupID) {
-					getGroupReportFromFirebase(val, groupID, 2);
+					getGroupReportFromFirebase(val, groupID, 1);
 				}
     		});
     	}
@@ -171,7 +171,7 @@
 										obj['profileImage'] = user.profileImage;
 										obj['groupID'] = user.groupID;
 										obj['subgroupID'] = user.subgroupID;
-																			getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+										getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 										dailyProgressReport.push(obj);
 									}
 								}
@@ -303,7 +303,7 @@
         	updateReport: 					updateReport,
         	getGroupDailyProgressReport: 	getGroupDailyProgressReport,
         	getSingleSubGroupReport: 		getSingleSubGroupReport,
-					getGroupReportByDates : getGroupReportByDates
+			getGroupReportByDates : 		getGroupReportByDates
         }
     }; //ProgressReportService
 })();

@@ -36,7 +36,6 @@
         };
         function init(){
             groupService.setActivePanel('report');
-            groupService.setSubgroupIDPanel($stateParams.subgroupID);
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             that.showParams = true;

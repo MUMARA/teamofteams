@@ -132,6 +132,8 @@ function createUser(res, user) {
 function sendVerificationEmail(user) {
 
     var template = ejs.render(verificationEmailTemplate, {
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         token: user.uuid,
         baseUrl: appconfig.BASEURL,

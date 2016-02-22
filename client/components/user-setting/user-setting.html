@@ -72,7 +72,7 @@
                                         </md-option>
                                         <md-option value="3" ng-click="userSetting.changeMemberRole(3, member)">Member
                                         </md-option>
-                                        <md-option value="4" ng-click="userSetting.changeMemberRole(4, member)" >Block Account
+                                        <md-option value="-1" ng-click="userSetting.changeMemberRole(-1, member)" >Block Account
                                         </md-option>
                                         <md-option ng-click="userSetting.changeMemberRole(null, member)" value="5">Delete Account
                                         </md-option>
@@ -94,7 +94,7 @@
                                 Sort By
                                 <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
                                     <md-option value="0">Name</md-option>
-                                </md-select>    
+                                </md-select>
                             </div>
                         </div>
                         <md-divider md-outset></md-divider>
@@ -149,7 +149,7 @@
                                 Sort By
                                 <md-select class="nopadding nomargin leftmargin20px" placeholder="Name" ng-model="user.dropbox" style="overflow: hidden!important;">
                                     <md-option value="0">Name</md-option>
-                                </md-select>    
+                                </md-select>
                             </div>
                         </div>
                         <md-divider md-outset></md-divider>
@@ -163,7 +163,7 @@
                                 </tr>
                             </thead>
                             <tbody md-body>
-                                <tr md-row ng-repeat="request in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="request.membershipType == 4">
+                                <tr md-row ng-repeat="request in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="request.membershipType == -1">
                                     <td md-cell style="width:10%">
                                         <img ng-src="{{request.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound"  alt="user" layout-margin/>
                                     </td>
