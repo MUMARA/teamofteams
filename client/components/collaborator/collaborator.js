@@ -5,10 +5,10 @@
     'use strict';
     angular.module('app.collaborator')
         .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
-        .controller('CollaboratorController', ['ref', 'FileSaver', 'Blob','groupService','CollaboratorService','$stateParams','userService','dataService','messageService','$timeout', collaboratorFunction]);
+        .controller('CollaboratorController', ['ref', 'FileSaver', 'Blob','groupService','CollaboratorService','$stateParams','userService','dataService','messageService','$timeout','$scope', collaboratorFunction]);
 
 
-    function collaboratorFunction(ref, FileSaver, Blob,groupService,CollaboratorService,$stateParams,userService,dataService,messageService,$timeout) {
+    function collaboratorFunction(ref, FileSaver, Blob,groupService,CollaboratorService,$stateParams,userService,dataService,messageService,$timeout,$scope) {
 
 
       var firepadRef;
@@ -18,13 +18,40 @@
         that.channelBottomSheet = false;
         that.default = true;
         that.document = "Untitled"
+        that.documentready = false;
+        that.hideLoader = true;
 
 
 
         that.createDocument = function() {
+          that.hideLoader = false;
           that.document = that.documentTitle;
           that.default = false;
           that.channelBottomSheet = false;
+          that.documentready = true;
+          if(that.subgroupID){
+            firepadRef = new Firebase(ref).child("firepad-subgroups").child(that.groupID).child(that.subgroupID).child(that.document);
+          }
+          else {
+            firepadRef = new Firebase(ref).child("firepad-groups").child(that.groupID).child(that.document);
+          }
+
+          var codeMirror = CodeMirror(document.getElementById('firepad'), {lineWrapping: true});
+          var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+              richTextShortcuts: true,
+              richTextToolbar: true,
+              // userId: null,
+              defaultText: null
+              /*'Welcome to firepad!'*/
+          });
+          firepad.on("ready", function () {
+              that.ready = false;
+              console.log("Usera",that.user);
+              firepad.setUserId(that.user.userID);
+              firepad.setUserColor("#ccccc");
+              that.hideLoader = true;
+              //that.$digest();
+          })
         }
 
         that.channelBottomSheetfunc = function() {
@@ -48,28 +75,6 @@
 
         };
         init();
-        if(that.subgroupID){
-          firepadRef = new Firebase(ref).child("firepad-subgroups").child(that.groupID).child(that.subgroupID);
-        }
-        else {
-          firepadRef = new Firebase(ref).child("firepad-groups").child(that.groupID);
-        }
-
-        var codeMirror = CodeMirror(document.getElementById('firepad'), {lineWrapping: true});
-        var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
-            richTextShortcuts: true,
-            richTextToolbar: true,
-            // userId: null,
-            defaultText: null
-            /*'Welcome to firepad!'*/
-        });
-        firepad.on("ready", function () {
-            that.ready = false;
-            console.log("Usera",that.user);
-            firepad.setUserId(that.user.userID);
-            firepad.setUserColor("#ccccc");
-            //that.$digest();
-        })
 
 
 

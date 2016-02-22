@@ -10,10 +10,6 @@
                   <span flex></span>
                   <!-- Right aligned menu below button -->
                       <!--<i class="material-icons">more_vert</i>-->
-                      <md-button class="md-fab md-mini text" id="demo-menu-lower-right" aria-label="Eat cake" ng-click="collaborator.channelBottomSheetfunc()">
-                        <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
-                      </md-button>
-
                   <div class="mdl-tooltip" for="demo-menu-lower-right">more</div>
                   <!--<button ng-click='collaborator.export()' ng-disabled="ready">Export to Html</button>-->
                   <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-right">
@@ -26,24 +22,62 @@
                   </ul>
               </div>
             </md-toolbar>
-       <div id="firepad" style="" >
+       <div id="firepad" style="" ng-show='collaborator.documentready'>
       </div>
       </div>
-      <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll" ng-if="collaborator.subgroupID">
-    	<md-list>
-    	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in collaborator.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: collaborator.groupID, subgroupID: collaborator.subgroupID ,onlinestatus: true}" ng-click="collaborator.activeUser = user.id">
-    		    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
-    	  	</md-list-item>
 
-          <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
-              <h3 class="foreColorDarkGrey">New Document</h3>
-              <md-input-container>
-                  <label>Document Title</label>
-                  <input type="text" ng-model="collaborator.documentTitle">
-              </md-input-container>
-              <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">Create</md-button>
-          </div>
-    	</md-list>
+      <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
+        <md-card class="nomargin" layout-fill>
+            <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
+            <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
+                <!--Documents side-->
+                <md-tab label="Documents" class="rightTbs">
+                    <md-content ng-repeat="channel in chat.channels track by $index">
+                        <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+                            <md-list-item class="md-3-line selectable" ng-click="chat.gotoChannel(channel)">
+                                <div class="md-list-item-text" style="padding:0px;">
+                                    <ng-md-icon icon="more_vert" style="float: right;padding-top: 18px;fill: #FFFFFF;"></ng-md-icon>
+                                    <span style="font-size: 13px; color: #ffffff;">{{channel.title | uppercase}}</span>
+                                    <p style="font-size: 10px;margin-top: -12px;color: #ffffff">
+                                        {{ channel.desc }}
+                                    </p>
+
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </md-content>
+                </md-tab>
+                <!--Online Users side-->
+                <md-tab label="Online Users" class="rightTbs">
+                    <md-content class="backColorSeaGreen">
+                      <md-list>
+                    	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in collaborator.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: collaborator.groupID, subgroupID: collaborator.subgroupID ,onlinestatus: true}" ng-click="collaborator.activeUser = user.id">
+                    		    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
+                    	  	</md-list-item>
+                      <md-list>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+
+            <!-- Fab button to add a document  -->
+            <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
+                <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
+            </md-button>
+        </md-card>
+
+
+        <!--  Modal for creating a new Document -->
+        <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
+            <h3 class="foreColorDarkGrey">New Document</h3>
+            <md-input-container>
+                <label>Document Title</label>
+                <input type="text" ng-model="collaborator.documentTitle">
+            </md-input-container>
+            <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
+              Create
+              <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>
+            </md-button>
+        </div>
     	</div>
 
 
