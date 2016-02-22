@@ -1,5 +1,5 @@
 
-<md-toolbar class="backColorSeaGreen leftrightpadding20px md-whiteframe-z2" layout="row" layout-align="space-between center">
+<md-toolbar  ng-keydown="navToolbar.count($event)" class="backColorSeaGreen leftrightpadding20px md-whiteframe-z2" layout="row" layout-align="space-between center">
     <div layout='row' layout-align="start center" layout-margin>
         <img src='img/Untitled-3.svg' ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
         <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
@@ -76,7 +76,7 @@
     </div>
 </md-toolbar>
 
-<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;width: 35%;max-width: 35%">
+<md-sidenav md-is-open="navToolbar.openNav" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;width: 35%;max-width: 35%">
   <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
     <h1 class="md-toolbar-tools">Progress report</h1>
   </md-toolbar>
