@@ -13,7 +13,7 @@ var development = {
         // BASEURL: 'https://127.0.0.1:3000/',
         TITLE: 'Automated Attendance System',
         SUPPORT: 'support@teamofteams.io',
-        DOMAIN: 'https://www.teamofteams.io/'
+        DOMAIN: 'https://app.teamofteams.io/'
     },
     /*firebase credentials*/
     firebase: {
@@ -51,7 +51,7 @@ var production = {
         BASEURL: 'https://teamofteams.herokuapp.com/',
         TITLE: 'Automated Attendance System',
         SUPPORT: 'zia@panacloud.com',
-        DOMAIN: 'https://www.teamofteams.io/'
+        DOMAIN: 'https://app.teamofteams.io/'
     },
     /*firebase credentials*/
     firebase: {
@@ -62,7 +62,7 @@ var production = {
         SERVERAPIKEY: process.env.POSTMARK_API_KEY
 
     },
-    
+
     /*sendgrid credentials*/
     sendgrid: {
         USERNAME: process.env.SENDGRID_USERNAME,

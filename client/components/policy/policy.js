@@ -572,7 +572,9 @@
                 that.selectedTeams = []; //onLoad or create empty selectedTeams array
                 that.selectedTeamMembers = {}; //onLoad or create empty selectedTeamMembers obj
                 that.isProgressReport = false;
-                that.progressReportQuestions = {}; //onLoad clear daily Report Questions obj
+                //onLoad default qustion daily Report Questions obj
+                that.progressReportQuestions = {'0': 'What did you accomplish today?', '1': 'What will you do tomorrow?', '2': 'What obstacles are impeding your progress?'};
+                isQuestionExists();
 
                 //set default location
                 defaultGeoLocation();

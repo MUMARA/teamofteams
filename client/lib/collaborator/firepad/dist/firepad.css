@@ -112,7 +112,7 @@ pre.firepad-lt-o, pre.firepad-lt-u, pre.firepad-lt-t, pre.firepad-lt-tc {
 }
 
 .firepad-btn-group {
-  margin: 5px 7px 0 0;
+  margin: 1% 7px 0 0;
   display: inline-block;
 }
 
@@ -221,12 +221,6 @@ a.firepad-btn:active {
 .firepad-color-dropdown-item {
   height: 25px;
   width: 25px;
-  background-color: black;
-  /* text-align: center; */
-  width: 60%;
-  margin: auto auto;
-  /* padding: 2px; */
-  margin-top: 11%;
 }
 
 .firepad-dialog {

@@ -992,7 +992,6 @@ angular.module('core')
                 rejectMembership: function(groupID, loggedInUserObj, requestedMember) {
                     var defer, userID,
                         errorHandler;
-
                     defer = $q.defer();
                     userID = requestedMember.userID;
 
@@ -1001,11 +1000,11 @@ angular.module('core')
                     };
 
                     //step1: delete group membership request from user-membership list
-                    firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
-                        .remove(function(err) {
-                            if (err) {
-                                errorHandler();
-                            } else {
+                    //firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
+                        //.remove(function(err) {
+                        //    if (err) {
+                        //        errorHandler();
+                        //    } else {
                                 //step2: delete user request from group-membership-requests
                                 firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
                                     .remove(function(err) {
@@ -1024,8 +1023,8 @@ angular.module('core')
                                                 });
                                         }
                                     });
-                            }
-                        });
+                        //    }
+                        //});
 
                     return defer.promise;
                 },
