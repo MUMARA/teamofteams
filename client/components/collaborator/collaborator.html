@@ -1,173 +1,50 @@
 <!-- Activity -->
-<div layout="row" layout-align="space-between start" style="font-size:large;" class="backColorWhite viewHeight-64">
-    <!--<div  layout-padding layout-fill flex>
-        <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
-            <h4 class="leftmargin20px">{{collaborator.activeTitle | uppercase}}</h4>
-            <div layout="row" flex="50">
-                <md-input-container md-no-float class="nopadding nomargin" flex layout="row" layout-align="center">
-                    <input type="text" id="#UserSearch" ng-model="progressreport.searchbox" aria-label="search dashboard" placeholder="e.g. member name" class="serachbox2">
-                </md-input-container>
-                <ng-md-icon icon="search" size="36" class="nooutline fillColorLightGrey rightmargin20px" ng-click="progressreport.setFocus()"></ng-md-icon>
-            </div>
-        </div>
-        <md-divider md-outset></md-divider>
-        <div ng-if="progressreport.dailyProgressReport">
-            <md-list>
-              <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox} | orderBy: '-date'" layout="column" layout-align="center start" class="md-whiteframe-z2">
-                <div layout="row" layout-fill layout-margin layout-align="space-between center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">
-                      <strong><em class="foreColorDarkGrey">{{report.date | date: 'dd-MMM-yyyy'}}</em></strong>
-                      <strong class="foreColorLightGrey">{{report.groupID}} / {{report.subgroupID}}</strong>
-                </div>
-                <div layout="row" layout-align="center center" layout-fill>
-                    <div layout="row" layout-align="start center" flex="20">
-                        <img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="	icon40px leftmargin20px imageRound">
-                        <span class="leftmargin20px foreColorDarkGrey">{{report.fullName}}</span>
-                    </div>
-                    <div flex>
-                        <div layout="column" ng-repeat="q in report.questions">
-                            <md-input-container flex class="leftmargin20px" layout="row">
-                                <label>{{q}}</label>
-                                <textarea ng-model="report.answers[$index]" ng-disabled="progressreport.user.userID != report.userID || !progressreport.subgroupID" placeholder="please type..."></textarea>
-                            </md-input-container>
-                        </div>
-                    </div>
-                    <md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID && progressreport.subgroupID" ng-click="progressreport.update(report)">Update</md-button>
-                </div>
-              </md-list-item>
-            </md-list>
-        </div>
-    </div>-->
-    <div flex="100">
-        <md-toolbar class="md-whiteframe-4dp">
-            <div class="md-toolbar-tools">
-                <md-button class="md-icon-button" aria-label="Settings">
-                    <ng-md-icon icon="reorder" style="fill:white" size="20"></ng-md-icon>
-                </md-button>
-                <h2>
-                    <span>Firebase Pad</span>
-                </h2>
-                <span flex></span>
-                <!-- Right aligned menu below button -->
 
-                <button id="demo-menu-lower-right"
-                        class="mdl-button mdl-js-button mdl-button--icon">
-                    <!--<i class="material-icons">more_vert</i>-->
-                    <ng-md-icon icon="more_vert" style="fill:white" size="20"></ng-md-icon>
-                </button>
-                <div class="mdl-tooltip" for="demo-menu-lower-right">
-                    more
-                </div>
-                <!--<button ng-click='collaborator.export()' ng-disabled="ready">Export to Html</button>-->
-                <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-right">
-                    <li class="mdl-menu__item onhover" ng-click='collaborator.export()' ng-if="!ready">
-                        <ng-md-icon icon="check" style="fill: white" ng-if="!clicked" size="20"></ng-md-icon>
-                        <ng-md-icon icon="check" style="fill: black" ng-if="clicked" size="20"></ng-md-icon>
-                        <!--Export-->
-                        <button class="cust"> Export</button>
-                    </li>
-                </ul>
-            </div>
-        </md-toolbar>
+ <div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
+<div layout-fill flex>
+  <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);">
+              <div class="md-toolbar-tools">
+                  <div style="text-align:center">
+                   <h2>{{collaborator.document}}<sup ng-if="collaborator.default">*</sup></h2>
+                  </div>
+                  <span flex></span>
+                  <!-- Right aligned menu below button -->
+                      <!--<i class="material-icons">more_vert</i>-->
+                      <md-button class="md-fab md-mini text" id="demo-menu-lower-right" aria-label="Eat cake" ng-click="collaborator.channelBottomSheetfunc()">
+                        <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
+                      </md-button>
 
-        <!--Export to Html-->
-        <!--</button>-->
-        <!--button for Color Dropdown-->
-        <div class="toolbar-list">
-            <button id="listColor" class="mdl-button mdl-js-button mdl-js-ripple-effect">
-                Color
-            </button>
-            <div class="mdl-tooltip" for="listColor">
-                Text Color
-            </div>
-            <!--List for Color Dropdown-->
-            <ul class="mdl-menu  mdl-js-menu mdl-js-ripple-effect " id="list-Color"
-                for="listColor">
-            </ul>
-            <!--button for Font Dropdown-->
-            <button id="listFont"
-                    class="mdl-button mdl-js-button mdl-js-ripple-effect">
-                Color
-            </button>
-            <div class="mdl-tooltip" for="listFont">
-                Font
-            </div>
-            <!--List for Font Dropdown-->
-            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Font"
-                for="listFont">
+                  <div class="mdl-tooltip" for="demo-menu-lower-right">more</div>
+                  <!--<button ng-click='collaborator.export()' ng-disabled="ready">Export to Html</button>-->
+                  <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-right">
+                      <li class="mdl-menu__item onhover" ng-click='collaborator.export()' ng-if="!ready">
+                          <ng-md-icon icon="check" style="fill: white" ng-if="!clicked" size="20"></ng-md-icon>
+                          <ng-md-icon icon="check" style="fill: black" ng-if="clicked" size="20"></ng-md-icon>
+                          <!--Export-->
+                          <button class="cust"> Export</button>
+                      </li>
+                  </ul>
+              </div>
+            </md-toolbar>
+       <div id="firepad" style="" >
+      </div>
+      </div>
+      <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll" ng-if="collaborator.subgroupID">
+    	<md-list>
+    	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in collaborator.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: collaborator.groupID, subgroupID: collaborator.subgroupID ,onlinestatus: true}" ng-click="collaborator.activeUser = user.id">
+    		    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
+    	  	</md-list-item>
 
-            </ul>
-            <!--button for Size Dropdown-->
-            <button id="listSize"
-                    class="mdl-button mdl-js-button mdl-js-ripple-effect">
-                Color
-                <!--<i class="material-icons">more_vert</i>-->
-            </button>
-            <div class="mdl-tooltip" for="listSize">
-                Size
-            </div>
-            <!--List for Size Dropdown-->
-            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Size"
-                for="listSize">
-            </ul>
-            <div id="firepad">
-            </div>
-        </div>
+          <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
+              <h3 class="foreColorDarkGrey">New Document</h3>
+              <md-input-container>
+                  <label>Document Title</label>
+                  <input type="text" ng-model="collaborator.documentTitle">
+              </md-input-container>
+              <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">Create</md-button>
+          </div>
+    	</md-list>
+    	</div>
 
-        <!--Tooltips for Toolbar Controls-->
-        <div class="mdl-tooltip" for="bold">
-            Bold
-        </div>
-        <div class="mdl-tooltip" for="italic">
-            Italic
-        </div>
-        <div class="mdl-tooltip" for="underline">
-            Underline
-        </div>
-        <div class="mdl-tooltip" for="strike">
-            Strike
-        </div>
-        <div class="mdl-tooltip" for="unordered-list">
-            Bullet
-        </div>
-        <div class="mdl-tooltip" for="ordered-list">
-            Number List
-        </div>
-        <div class="mdl-tooltip" for="todo-list">
-            List
-        </div>
-        <div class="mdl-tooltip" for="indent-decrease">
-            Move Left
-        </div>
-        <div class="mdl-tooltip" for="indent-increase">
-            Move Right
-        </div>
-        <div class="mdl-tooltip" for="left">
-            Align Left
-        </div>
-        <div class="mdl-tooltip" for="center">
-            Align Center
-        </div>
-        <div class="mdl-tooltip" for="right">
-            Align Right
-        </div>
-        <div class="mdl-tooltip" for="undo">
-            Undo
-        </div>
-        <div class="mdl-tooltip" for="redo">
-            Redo
-        </div>
-        <div class="mdl-tooltip" for="insert-image">
-            Add Image
-        </div>
-    </div>
-    <!--    <div style="width:300px;" layout-fill class="backColorSeaGreen" ng-if="progressreport.subgroupID">
-            <md-list>
-                <md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer"
-                              ng-repeat="user in progressreport.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: progressreport.groupID, subgroupID: progressreport.subgroupID}"
-                              ng-click="progressreport.activeUser = user.id">
-                    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                         alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
-                </md-list-item>
-            </md-list>
-        </div>-->
+
 </div>

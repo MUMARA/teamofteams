@@ -1335,7 +1335,7 @@ path /subgroup-channel/{groupid}{
  }
 path /subgroup-messages/{groupid}/{subgroupid}/{channelid}{
   read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
-  
+
   /{messageid} is ChatChannelMessageType {
     create() { isAuthenticatedUser(this['from']) }
     update() { isAuthenticatedUser(prior(this['from'])) }
