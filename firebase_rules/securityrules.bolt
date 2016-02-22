@@ -1365,4 +1365,28 @@ type ChatChannelType {
   attachmentId  : String | Null
  }
 
+ path /firepad-groups/{groupid} {
+   read() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+   write() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+ }
+
+ path /firepad-subgroups/{groupid}/{subgroupid} {
+   read() {
+     isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+   }
+   write() {
+   isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+ }
+ }
+
+
+
+
+
+
+
 //===========================================================  23/1/16  =====================================================================
