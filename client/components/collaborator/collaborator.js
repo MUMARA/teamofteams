@@ -5,10 +5,10 @@
     'use strict';
     angular.module('app.collaborator')
         .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
-        .controller('CollaboratorController', ['ref', 'FileSaver', 'Blob','groupService','CollaboratorService','$stateParams','userService','dataService','messageService','$timeout','$scope', collaboratorFunction]);
+        .controller('CollaboratorController', ['ref',"$firebaseArray", 'FileSaver', 'Blob','groupService','CollaboratorService','$stateParams','userService','dataService','messageService','$timeout','$scope', collaboratorFunction]);
 
 
-    function collaboratorFunction(ref, FileSaver, Blob,groupService,CollaboratorService,$stateParams,userService,dataService,messageService,$timeout,$scope) {
+    function collaboratorFunction(ref,$firebaseArray, FileSaver, Blob,groupService,CollaboratorService,$stateParams,userService,dataService,messageService,$timeout,$scope) {
 
 
       var firepadRef;
@@ -32,18 +32,23 @@
           that.documentready = true;
           if(that.subgroupID){
             ref = new Firebase(ref);
-            // var tempRef =
             firepadRef =  ref.child("firepad-subgroups/"+that.groupID+"/"+that.subgroupID);
             var pushDocumentNode = ref.child("firepad-subgroups/"+that.groupID+"/"+that.subgroupID).push();
+            that.documents = $firebaseArray(firepadRef);
             var firebaseDocumentId = pushDocumentNode.key();
             firepadRef = firepadRef.child(firebaseDocumentId);
-            console.log(firepadRef.toString());
-            //updateDocument["firepad-subgroups/"+that.groupID+"/"+that.subgroupID+"/"+firebaseDocumentId] = {};
             updateDocument["firepad-subgroups/"+that.groupID+"/"+that.subgroupID+"/"+firebaseDocumentId+"/title"] = that.document
             updateDocument["firepad-subgroups-documents/"+that.groupID+"/"+that.subgroupID+"/"+firebaseDocumentId+"/title"] =  that.document;
           }
           else {
-
+            ref = new Firebase(ref);
+            firepadRef =  ref.child("firepad-groups/"+that.groupID);
+            var pushDocumentNode = ref.child("firepad-groups/"+that.groupID).push();
+            that.documents = $firebaseArray(firepadRef);
+            var firebaseDocumentId = pushDocumentNode.key();
+            firepadRef = firepadRef.child(firebaseDocumentId);
+            updateDocument["firepad-groups/"+that.groupID+"/"+firebaseDocumentId+"/title"] = that.document
+            updateDocument["firepad-groups-documents/"+that.groupID+firebaseDocumentId+"/title"] =  that.document;
           }
 
           ref.update(updateDocument,function(error){
