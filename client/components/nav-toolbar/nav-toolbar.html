@@ -87,6 +87,9 @@
     <p>
       <br />
     </p>
+    <div layout="row" layout-align="center center">
+        <md-progress-circular md-diameter="45" ng-show="!navToolbar.dailyProgressReport" class="nomargin" md-mode="indeterminate"></md-progress-circular>
+    </div>
     <div layout="column" layout-fill ng-repeat="report in navToolbar.dailyProgressReport">
       <md-input-container ng-repeat="q in report.questions">
         <label>{{q}}</label>
