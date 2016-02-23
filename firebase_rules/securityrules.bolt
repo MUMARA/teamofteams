@@ -663,8 +663,8 @@ function isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) {
 //================================
 
 path /subgroups-names/{groupid}/{subgroupid} is SubGroupsNameInfo {
-    read()  {   isGroupMembersIdExist(groupid) &&
-                isAuthenticated() }
+    /*read()  {   isGroupMembersIdExist(groupid) &&*/
+    read()  { isAuthenticated() }
                 /*groupMemberShipAnyType(groupid) }*/
 
     create() {  isGroupMembersIdExist(groupid)              &&
@@ -1347,12 +1347,15 @@ path /subgroup-channel/{groupid}{
      write() { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
    }
  }
-path /subgroup-messages/{groupid}/{subgroupid}/{channelid}/{messageid} is ChatChannelMessageType {
-  create() { isAuthenticatedUser(this['from']) }
-  update() { isAuthenticatedUser(prior(this['from'])) }
-  delete() { isAuthenticatedUser(prior(this['from'])) }
+path /subgroup-messages/{groupid}/{subgroupid}/{channelid}{
   read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
 
+  /{messageid} is ChatChannelMessageType {
+    create() { isAuthenticatedUser(this['from']) }
+    update() { isAuthenticatedUser(prior(this['from'])) }
+    delete() { isAuthenticatedUser(prior(this['from'])) }
+    read()  { isAuthenticated() &&    subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+ }
 }
 
 
@@ -1387,4 +1390,27 @@ type ChatChannelType {
    isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
  }
  }
+
+ path /firepad-groups-documents/{groupid}/{documentid} is DocumentType {
+   read() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+   write() {
+     isAuthenticated() && userGroupMembershipAnyType(groupid)
+   }
+ }
+
+ path /firepad-subgroups-documents/{groupid}/{subgroupid}/{documentid} is DocumentType {
+   read() {
+     isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+   }
+   write() {
+   isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+ }
+ }
+
+type DocumentType {
+  title : String
+}
+
 //===========================================================  23/1/16  =====================================================================

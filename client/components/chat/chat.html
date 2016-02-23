@@ -53,12 +53,12 @@
         <div style="width: 100%;">
             <form name="chatForm" novalidate ng-submit="chat.SendMsg()" layout="row" layout-align="center center"
             layout-padding>
-                <md-input-container layout flex style="border: 1px solid lightgrey;" class="backColorLightGrey2 nopadding" layout="row" layout-align="start center">
+                <div layout flex style="border: 1px solid lightgrey;" class="backColorLightGrey2 nopadding" layout="row" layout-align="start center">
                     <div style="border-right: 1px solid lightgrey;">
                         <img src="img/arrow.svg" class="icon20px padding10px">
                     </div>
-                    <textarea type="text" name="msg" ng-model="chat.text.msg" aria-label="Team of Teams Text Msg Box" class="serachbox2" required></textarea>
-                </md-input-container>
+                    <textarea style="width:100%;outline:none;resize: none;" row="5" type="text" name="msg" ng-model="chat.text.msg" aria-label="Team of Teams Text Msg Box" class="serachbox2" required></textarea>
+                </div>
                 <md-button type="submit" ng-disabled="chatForm.msg.$invalid || !chat.activeChannelID" class="backColorSeaGreen foreColorWhite">SEND</md-button>
             </form>
         </div>
