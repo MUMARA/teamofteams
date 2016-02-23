@@ -40,34 +40,37 @@
     <div class="nopadding nomargin" >
             <img src="img/menu.svg" class="nooutline icon40px" layout-margin id="menu-toggle" />
             <md-divider class="backColorWhite"></md-divider>
-            <div layout="row">
-                <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('activity', group.panel.subgroupID)" />
+            <div layout="row" layout-align="center center">
+                <img src="img/line.svg" class="nooutline cursorPointer icon30px" layout-margin ng-click="group.showPanel('activity', group.panel.subgroupID)" />
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'activity'" class="showArrow anifade">
             </div>
-            <div layout="row" ng-if="group.isMember">
-                <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('chat', group.panel.subgroupID)" />
+            <div layout="row" layout-align="center center" ng-if="group.isMember">
+                <img src="img/comment.svg" class="nooutline cursorPointer icon30px" layout-margin ng-click="group.showPanel('chat', group.panel.subgroupID)" />
+                <!-- <ng-md-icon icon="insert_comment" size="50" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('chat', group.panel.subgroupID)"></ng-md-icon> -->
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'chat'" class="showArrow anifade">
             </div>
-            <div layout="row">
-                <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('progressreport', group.panel.subgroupID)" />
+            <div layout="row" layout-align="center center">
+                <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('progressreport', group.panel.subgroupID)" /> -->
+                <ng-md-icon icon="assignment" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('progressreport', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'progressreport'" class="showArrow anifade">
             </div>
             <!-- firepad tab -->
-            <div layout="row" ng-if="group.isMember">
-                <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('collaborator', group.panel.subgroupID)" />
+            <div layout="row" layout-align="center center" ng-if="group.isMember">
+                <!-- <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('collaborator', group.panel.subgroupID)" /> -->
+                <ng-md-icon icon="border_color" size="35" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('collaborator', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'collaborator'" class="showArrow anifade">
             </div>
         </div>
         <div ng-if="group.isAdmin">
             <md-divider class="backColorWhite topbottommargin5px"></md-divider>
-            <div layout="row">
+            <div layout="row" layout-align="center center">
                 <!-- <img src="img/menu.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" /> -->
-                <ng-md-icon icon="alarm_on" size="50" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('manualattendace', group.panel.subgroupID)"></ng-md-icon>
+                <ng-md-icon icon="alarm_on" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('manualattendace', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'manualattendace'" class="showArrow anifade">
             </div>
             <div layout="row" layout-align="center center">
                 <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('report'); group.showParams=true;" /> -->
-                <ng-md-icon icon="equalizer" size="50" class="nooutline cursorPointer fillColorWhite padding5px"  ng-click="group.showPanel('report', group.panel.subgroupID); group.showParams=true;"></ng-md-icon>
+                <ng-md-icon icon="equalizer" size="40" class="nooutline cursorPointer fillColorWhite padding5px"  ng-click="group.showPanel('report', group.panel.subgroupID); group.showParams=true;"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'report'" class="showArrow anifade">
             </div>
         </div>
