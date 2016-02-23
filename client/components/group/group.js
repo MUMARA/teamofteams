@@ -12,7 +12,7 @@
             if (that.adminOf === 'Group') {
                 $state.go('user.edit-group', {groupID: that.groupID});
             } else if (that.adminOf === 'Subgroup') {
-                $state.go('user.policy', {groupID: that.groupID});
+                $state.go('user.create-subgroup', {groupID: that.groupID});
             }
         };
 
@@ -58,7 +58,7 @@
             that.isAdmin = false;
             that.user = userService.getCurrentUser();
             that.panel = groupService.getPanelInfo();
-            that.adminOf = '';
+            that.adminOf = false;
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID ? $stateParams.subgroupID : that.panel.subgroupID;
             that.group = false;
@@ -129,11 +129,11 @@
                                         that.isOwner = true;
                                         that.isAdmin = true;
                                         that.isMember = true;
-                                        that.adminOf = 'Subgroup';
+                                        that.adminOf = that.adminOf || 'Subgroup';
                                     } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
                                         that.isAdmin = true;
                                         that.isMember = true;
-                                        that.adminOf = 'Subgroup';
+                                        that.adminOf = that.adminOf || 'Subgroup';
                                     } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
                                         that.isMember = true;
                                     }

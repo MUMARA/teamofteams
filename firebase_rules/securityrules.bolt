@@ -663,8 +663,8 @@ function isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) {
 //================================
 
 path /subgroups-names/{groupid}/{subgroupid} is SubGroupsNameInfo {
-    read()  {   isGroupMembersIdExist(groupid) &&
-                isAuthenticated() }
+    /*read()  {   isGroupMembersIdExist(groupid) &&*/
+    read()  { isAuthenticated() }
                 /*groupMemberShipAnyType(groupid) }*/
 
     create() {  isGroupMembersIdExist(groupid)              &&
