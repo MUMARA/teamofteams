@@ -49,8 +49,13 @@
 
             this.progressReport = function(){
               $mdSidenav('right').toggle().then(function(){
-                self.openNav = !self.openNav;
+                //self.openNav = !self.openNav;
               });
+            }
+            //#document.onkey
+            this.count = function(e){
+              console.log(document);
+              console.log(e);
             }
                 // alert(this.test)
             this.setFocus = function() {
