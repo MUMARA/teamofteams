@@ -29,12 +29,9 @@
                     <md-content ng-repeat="document in collaborator.documents track by $index">
                         <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                             <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
-                                <div class="md-list-item-text" style="padding:0px;">
-                                    <span style="font-size: 13px; color: #ffffff;">{{document.title}}</span>
-                                    <p style="font-size: 10px;margin-top: -12px;color: #ffffff">
-                                        {{ channel.desc }}
-                                    </p>
-
+                                <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                                  <h3 class="foreColorDarkGrey">Document {{$index+1}}:</h3>
+                                    <span style="font-size: 13px; color: #ffffff;" class=""><strong>Name:</strong> {{document.title}}</span>
                                 </div>
                             </md-list-item>
                         </md-list>
@@ -51,7 +48,6 @@
                     </md-content>
                 </md-tab>
             </md-tabs>
-
             <!-- Fab button to add a document  -->
             <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
                 <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
