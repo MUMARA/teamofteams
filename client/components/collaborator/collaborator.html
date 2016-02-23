@@ -2,27 +2,21 @@
 
  <div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
 <div layout-fill flex>
-  <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);">
-              <div class="md-toolbar-tools">
-                  <div style="text-align:center">
-                   <h2>{{collaborator.document}}<sup ng-if="collaborator.default">*</sup></h2>
-                  </div>
+  <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);" layout="row">
+            <div class="md-toolbar-tools">
+                <div class="foreColorDarkGrey">
+                 <h2>{{collaborator.document}}<sup ng-if="collaborator.default">*</sup></h2>
+                </div>
                   <span flex></span>
-                  <!-- Right aligned menu below button -->
-                      <!--<i class="material-icons">more_vert</i>-->
-                  <div class="mdl-tooltip" for="demo-menu-lower-right">more</div>
-                  <!--<button ng-click='collaborator.export()' ng-disabled="ready">Export to Html</button>-->
-                  <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-right">
-                      <li class="mdl-menu__item onhover" ng-click='collaborator.export()' ng-if="!ready">
-                          <ng-md-icon icon="check" style="fill: white" ng-if="!clicked" size="20"></ng-md-icon>
-                          <ng-md-icon icon="check" style="fill: black" ng-if="clicked" size="20"></ng-md-icon>
-                          <!--Export-->
-                          <button class="cust"> Export</button>
-                      </li>
-                  </ul>
+                  <md-input-container ng-hide="collaborator.default">
+                    <label>Export</label>
+                    <md-select ng-model="collaborator.export">
+                          <md-option ng-click="collaborator.export()">Export to html</md-option>
+                    </md-select>
+                  </md-input-container>
               </div>
             </md-toolbar>
-       <div id="firepad" style="" ng-show='collaborator.documentready'>
+       <div id="firepad" style="" ng-show="collaborator.documentready">
       </div>
       </div>
 
@@ -32,12 +26,11 @@
             <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
                 <!--Documents side-->
                 <md-tab label="Documents" class="rightTbs">
-                    <md-content ng-repeat="channel in collaborator.documents track by $index">
+                    <md-content ng-repeat="document in collaborator.documents track by $index">
                         <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
-                            <md-list-item class="md-3-line selectable" ng-click="chat.gotoChannel(channel)">
+                            <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
                                 <div class="md-list-item-text" style="padding:0px;">
-                                    <ng-md-icon icon="more_vert" style="float: right;padding-top: 18px;fill: #FFFFFF;"></ng-md-icon>
-                                    <span style="font-size: 13px; color: #ffffff;">{{channel.title | uppercase}}</span>
+                                    <span style="font-size: 13px; color: #ffffff;">{{document.title}}</span>
                                     <p style="font-size: 10px;margin-top: -12px;color: #ffffff">
                                         {{ channel.desc }}
                                     </p>
