@@ -1,73 +1,117 @@
 <!-- Activity -->
-
- <div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
-<div layout-fill flex>
-  <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);" layout="row">
-            <div class="md-toolbar-tools">
-                <div class="foreColorDarkGrey">
-                 <h2>{{collaborator.document}}<sup ng-if="collaborator.default">*</sup></h2>
-                </div>
-                  <span flex></span>
-                  <md-input-container ng-hide="collaborator.default">
-                    <label>Export</label>
-                    <md-select ng-model="collaborator.export">
-                          <md-option ng-click="collaborator.export()">Export to html</md-option>
-                    </md-select>
-                  </md-input-container>
-              </div>
-            </md-toolbar>
-       <div id="firepad" style="" ng-show="collaborator.documentready">
-      </div>
-      </div>
-
-      <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
-        <md-card class="nomargin" layout-fill>
-            <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
-            <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
-                <!--Documents side-->
-                <md-tab label="Documents" class="rightTbs">
-                    <md-content ng-repeat="document in collaborator.documents track by $index">
-                        <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
-                            <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
-                                <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                                  <h3 class="foreColorDarkGrey">Document {{$index+1}}:</h3>
-                                    <span style="font-size: 13px; color: #ffffff;" class=""><strong>Name:</strong> {{document.title}}</span>
-                                </div>
-                            </md-list-item>
-                        </md-list>
-                    </md-content>
-                </md-tab>
-                <!--Online Users side-->
-                <md-tab label="Online Users" class="rightTbs">
-                    <md-content class="backColorSeaGreen">
-                      <md-list>
-                    	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in collaborator.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: collaborator.groupID, subgroupID: collaborator.subgroupID ,onlinestatus: true}" ng-click="collaborator.activeUser = user.id">
-                    		    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
-                    	  	</md-list-item>
-                      <md-list>
-                    </md-content>
-                </md-tab>
-            </md-tabs>
-            <!-- Fab button to add a document  -->
-            <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
-                <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
-            </md-button>
-        </md-card>
-
-
-        <!--  Modal for creating a new Document -->
-        <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
-            <h3 class="foreColorDarkGrey">New Document</h3>
-            <md-input-container>
-                <label>Document Title</label>
-                <input type="text" ng-model="collaborator.documentTitle">
-            </md-input-container>
-            <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
-              Create
-              <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>
-            </md-button>
+<div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
+  <div layout-fill flex>
+    <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);" layout="row">
+      <div class="md-toolbar-tools">
+        <div class="foreColorDarkGrey">
+          <h2>{{collaborator.document}}</h2>
         </div>
-    	</div>
+        <span flex></span>
+        <md-input-container ng-hide="collaborator.default">
+          <label>Export</label>
+          <md-select ng-model="collaborator.export">
+            <md-option ng-click="collaborator.export()">Export to html</md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+    </md-toolbar>
 
+    <!--button for Color Dropdown-->
+    <div class="toolbar-list">
+      <button id="listColor" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        Color
+      </button>
+      <div class="mdl-tooltip" for="listColor">
+        Text Color
+      </div>
+      <!--List for Color Dropdown-->
+      <ul class="mdl-menu  mdl-js-menu mdl-js-ripple-effect " id="list-Color" for="listColor"></ul>
+      <!--button for Font Dropdown-->
+      <button id="listFont" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        Color
+      </button>
+      <div class="mdl-tooltip" for="listFont">
+        Font
+      </div>
+      <!--List for Font Dropdown-->
+      <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Font" for="listFont"></ul>
+      <!--button for Size Dropdown-->
+      <button id="listSize" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        Color
+        <!--<i class="material-icons">more_vert</i>-->
+      </button>
+      <div class="mdl-tooltip" for="listSize">
+        Size
+      </div>
+      <!--List for Size Dropdown-->
+      <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Size" for="listSize"></ul>
+      <div id="firepad" style="" ng-show="collaborator.documentready">
+        <div class="mdl-tooltip" for="bold">
+          Bold
+        </div>
+      </div>
+    </div>
 
-</div>
+    <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
+      <md-card class="nomargin" layout-fill>
+        <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
+        <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
+          <!--Documents side-->
+          <md-tab label="Documents" class="rightTbs">
+            <md-content ng-repeat="document in collaborator.documents track by $index">
+              <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+                <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
+                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                    <h3 class="foreColorDarkGrey">Document
+                      {{$index+1}}:</h3>
+                    <span style="font-size: 13px; color: #ffffff;" class="">
+                      <strong>Name:</strong>
+                      {{document.title}}</span>
+                  </div>
+                </md-list-item>
+              </md-list>
+            </md-content>
+          </md-tab>
+          <!--Online Users side-->
+          <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
+            <md-content class="backColorSeaGreen" ng-repeat="history in collaborator.history track by $index">
+              <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+                <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
+                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                    <h3 class="foreColorDarkGrey">Editor :
+                      {{history.a}}</h3>
+                    <span style="font-size: 13px; color: #ffffff;">Time :
+                      {{history.t | date : 'M/d/yy'}}</span>
+                  </div>
+                </md-list-item>
+              </md-list>
+            </md-content>
+          </md-tab>
+          <md-tab label="Collaborators">
+            <md-content layout-padding layout-wrap class="backColorSeaGreen">
+              Lorem ipsum dolor sit amet, ne quod novum mei
+            </md-content>
+          </md-tab>
+        </md-tabs>
+
+        <!-- Fab button to add a document  -->
+        <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
+          <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
+        </md-button>
+      </md-card>
+
+      <!--  Modal for creating a new Document -->
+      <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
+        <h3 class="foreColorDarkGrey">New Document</h3>
+        <md-input-container>
+          <label>Document Title</label>
+          <input type="text" ng-model="collaborator.documentTitle">
+        </md-input-container>
+        <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
+          Create
+          <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>
+        </md-button>
+      </div>
+    </div>
+
+  </div>

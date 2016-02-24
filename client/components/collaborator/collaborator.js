@@ -5,12 +5,13 @@
   'use strict';
   angular.module('app.collaborator')
     .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
-    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', 'CollaboratorService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', collaboratorFunction]);
+    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', collaboratorFunction]);
 
 
-  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, CollaboratorService, $stateParams, userService, dataService, messageService, $timeout, $scope) {
+  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope) {
 
 
+    componentHandler.upgradeAllRegistered();
     var firepadRef;
     var that = this;
     var pushDocumentNode,firebaseDocumentId,firepad;
@@ -41,6 +42,7 @@
       else {
         globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID + "/" + that.subgroupID).child(openDoc.$id);
       }
+      that.history = $firebaseArray(globalRef.child("history"));
       that.documentready = true;
       initiateFirepad(globalRef);
       that.document = openDoc.title;
@@ -67,7 +69,10 @@
         firepad.setUserColor("#ccccc");
         that.hideLoader = true;
       })
+
     }
+
+
 
     that.createDocument = function() {
       clearDiv();
@@ -75,7 +80,6 @@
       var updateDocument = {};
       that.hideLoader = false;
       that.document = that.documentTitle;
-      that.default = false;
       that.channelBottomSheet = false;
       that.documentready = true;
       if (that.subgroupID) {
@@ -136,113 +140,31 @@
       that.groupID = $stateParams.groupID;
       that.user = userService.getCurrentUser();
       that.users = dataService.getUserData();
-      console.log("Ya Khuda,", JSON.stringify(dataService.getUserData()));
+      console.log(that.users);
+      console.log("Users Array: ",that.users.length);
       that.activeTitle = "Collaborator";
 
-
-
-      if(that.subgroupID) {
-        that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
-        console.log(that.documents);
-        console.log(that.documents.length);
+      if($stateParams.docID) {
+        if(that.subgroupID) {
+          that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
+          console.log(that.documents);
+          console.log(that.documents.length);
+          globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID);
+          // initiateFirepad(globalRef);
+        }
+        else {
+          that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
+          globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID);
+          initiateFirepad(globalRef);
+          that.document = $stateParams.docID;
+          console.log(that.documents);
+          console.log(that.documents.length);
+        }
       }
-      else {
-        that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
-        console.log(that.documents);
-        console.log(that.documents.length);
-      }
-      // if ($stateParams.u) {
-      //   $timeout(function() {
-      //     that.users.forEach(function(val, index) {
-      //       if (val.id === that.user.userID && val.groupID == that.groupID && val.subgroupID == that.subgroupID) {
-      //         //that.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(val, that.groupID, that.subgroupID);
-      //       }
-      //     });
-      //   }, 2000);
-      // } else {
-      //   if ($stateParams.subgroupID) {
-      //     //sub group report
-      //     $timeout(function() {
-      //       //that.dailyProgressReport = ProgressReportService.getSubGroupDailyProgressReport(that.users, that.groupID, that.subgroupID);
-      //       // $timeout(function() {
-      //       //     console.log('xxxx',that.dailyProgressReport);
-      //       // }, 5000);
-      //     }, 2000);
-      //   } else {
-      //     //group report
-      //     $timeout(function() {
-      //       // that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
-      //     }, 2000);
-      //   }
-      //
-      // }
+
 
 
 
     }
-
-
   }
-
-
-  /*function CollaboratorController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
-   var that = this;
-   console.log("in collaborator controller");
-   /!*        // this.setFocus = function() {
-   //     document.getElementById("#UserSearch").focus();
-   // };
-   // this.update = function(report) {
-   //     // console.log(report);
-   //     ProgressReportService.updateReport(report, function(result) {
-   //         if (result) {
-   //             messageService.showSuccess('Update Successfully!');
-   //             $state.go('user.group.subgroup-collaborator', {groupID: that.groupID, subgroupID: that.subgroupID, u: ''});
-   //         } else {
-   //             messageService.showFailure('Update Failure!');
-   //         }
-   //     });
-   // };
-
-   function init() {
-   groupService.setActivePanel('collaborator');
-   groupService.setSubgroupIDPanel($stateParams.subgroupID);
-   that.groupID = $stateParams.groupID;
-   that.subgroupID = $stateParams.subgroupID;
-   that.user = userService.getCurrentUser();
-   that.users = dataService.getUserData();
-   that.activeUser = ($stateParams.u) ? that.user.userID : '';
-   that.activeTitle = "Collaborator";
-
-   if ($stateParams.u) {
-   $timeout(function() {
-   that.users.forEach(function(val, index){
-   if(val.id === that.user.userID && val.groupID == that.groupID &&  val.subgroupID == that.subgroupID){
-   that.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(val, that.groupID, that.subgroupID);
-   }
-   });
-   }, 2000);
-   } else {
-   if ($stateParams.subgroupID) {
-   //sub group report
-   $timeout(function() {
-   that.dailyProgressReport = ProgressReportService.getSubGroupDailyProgressReport(that.users, that.groupID, that.subgroupID);
-   // $timeout(function() {
-   //     console.log('xxxx',that.dailyProgressReport);
-   // }, 5000);
-   }, 2000);
-   } else {
-   //group report
-   $timeout(function() {
-   // that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
-   }, 2000);
-   }
-
-   }
-
-
-
-   }
-   init();*!/
-
-   } // ProgressReportController*/
 })();
