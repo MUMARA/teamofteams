@@ -132,7 +132,7 @@
                     var mimeType = temp.split(':')[1].split(';')[0];
                     that.saveFile(x, mimeType, that.group.groupID).then(function(data) {
                             createGroupService.createGroup(that.group, fromDataFlag, groupForm);
-                            
+
                             // collaborator variable to identity that a New group has been created
                             $rootScope.groupIDCollaborator = that.group.groupID;
 
