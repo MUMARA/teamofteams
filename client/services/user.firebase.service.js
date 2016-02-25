@@ -670,17 +670,12 @@ angular.module('core')
                             "email": res.user.email,
                             "displayName": res.user.firstName + " " + res.user.lastName
                         };
-
                         //create an appropriate display message.
                         var displayName;
                         if (type === "approve") {
                             displayName = actor.displayName + " approved " + object.displayName +
                                 " as a member in " + group.title + "."
-                        } else if (type === 'reject'){
-                            displayName = actor.displayName + " rejected " + object.displayName +
-                                " as a member in " + group.title + "."
-                        }
-                        else {
+                        } else {
                             displayName = actor.displayName + " rejected " + object.displayName +
                                 "'s membership request for " + group.title + "group."
                         }
@@ -689,7 +684,7 @@ angular.module('core')
                             language: "en",
                             verb: type === "approve" ? "group-approve-member" : "group-reject-member",
                             published: firebaseTimeStamp,
-                            displayName: actor.displayName + " approved " + object.displayName + " as a member in " + group.title,
+                            displayName: displayName,//actor.displayName + " approved " + object.displayName + " as a member in " + group.title,
                             // if actor is to subject and target is to object then object is to verb
                             actor: actor,
                             object: object,
