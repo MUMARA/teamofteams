@@ -3,9 +3,9 @@
 
     angular
         .module('app.group')
-        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state', GroupController]);
+        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
 
-    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state) {
+    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
         var that = this;
         //adminof subgroup checkin member
         this.openSetting = function () {
@@ -44,9 +44,11 @@
             }
             that.panel.subgroupID = subgroupID;
             if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {groupID: that.groupID, subgroupID: that.panel.subgroupID});
+                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
+                //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'), {groupID: that.groupID});
+                $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
+                //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
             }
         };
 

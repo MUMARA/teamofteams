@@ -31,7 +31,7 @@
 					firebaseService.getRefPolicies().child(groupID).child(policyObj.val().policyID).child('progressReportQuestions').child(questionID)
 					.once('value', function(snapshot){
 						if(snapshot.val()){
-							// console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
+							//console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
 							//adding questions into dailyProgressReport object of user report
 							dailyProgressReport.forEach(function(val, index){
 								if(val.reportID == ObjectIndex){
@@ -191,7 +191,7 @@
 								obj['profileImage'] = user.profileImage;
 								obj['groupID'] = user.groupID;
 								obj['subgroupID'] = user.subgroupID;
-															getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 								dailyProgressReport.push(obj);
 							}
 						}

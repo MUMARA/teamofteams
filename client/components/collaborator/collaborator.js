@@ -4,8 +4,8 @@
 (function() {
   'use strict';
   angular.module('app.collaborator')
-    .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
-    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', 'CollaboratorService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', collaboratorFunction]);
+      .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
+      .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', 'CollaboratorService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', collaboratorFunction]);
 
 
   function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, CollaboratorService, $stateParams, userService, dataService, messageService, $timeout, $scope) {
@@ -58,7 +58,7 @@
         richTextToolbar: true,
         // userId: null,
         defaultText: null
-          /*'Welcome to firepad!'*/
+        /*'Welcome to firepad!'*/
       });
       firepad.on("ready", function() {
         that.ready = false;

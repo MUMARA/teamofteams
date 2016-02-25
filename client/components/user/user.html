@@ -25,7 +25,7 @@
             </thead>
             <tbody md-body>
                 <tr md-row ng-repeat="usr in user.users | orderBy: ['firstName', 'lastName', 'groupsubgroup'] | filter: {fullName: user.searchbox, type: user.filterUserType }" class="hoverLightGrey3">
-                    <td md-cell>
+                    <td md-cell layout="row" layout-align="center center">
                         <ng-md-icon icon="lens" size="10" ng-class="usr.onlinestatus ? 'fillColorDarkSeaGreen' : 'fillColorDarkGrey'"></ng-md-icon>
                         <img ng-src="{{usr.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px" ng-style="usr.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">
                     </td>
