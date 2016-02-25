@@ -10,13 +10,14 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
     var user = '';
     var userID = '';
     var actor = '';
-    var userActivityArray = [];
+    var currentUserActivities = [];
+    var currentUserSubGroups = [];
+    var currentUserSubGroupsMembers = [];
     var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
 
     //object for those who will be notify....
 
     function init() {
-      console.log('workingggg.....');
         user = userService.getCurrentUser();
         userID = user.userID;
         actor = {
@@ -26,176 +27,310 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
                    "displayName": user.firstName + " " + user.lastName
                };
 
-
-
+         //getting curent use groups and then getting its notification/activities
          getGroupsOfCurrentUser();
 
-    } //init
-    //init();
+         //getting current user subgroup names
+         getSubGroupsOfCurrentUsers();
 
-   
+         //getting current user subgroup members
+         getSubGroupsOfCurrentUsers ()
+
+    } //init
+    init();
+
+   //for activity step1
    function getGroupsOfCurrentUser(){
       firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function(group){
-         console.log('groupp', group.key(), group.val());
-         getActivityOfCurrentUserByGroup(group.key())
-      })
+         getActivityOfCurrentUserByGroup(group.key());
+      });
    }
-
-   function getActivityOfCurrentUserByGroup(groupID){
+   //for activity step2
+   function getActivityOfCurrentUserByGroup (groupID) {
       firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('object/id').equalTo(userID).on("child_added", function(snapshot) {
-         console.log('activityStreamService', snapshot.key(), snapshot.val());
          if(snapshot && snapshot.val()) {
-            userActivityArray.push(snapshot.val().displayName);
-            console.log('userActivityArray.Length', userActivityArray.length);
+            currentUserActivities.push({groupID: groupID, displayMessage: snapshot.val().displayName});
          }
       });
    }
 
+   //for getting subgroups of current user
+   function getSubGroupsOfCurrentUsers () {
+      firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(snapshot){
+         for(var subgroup in snapshot.val()){
+            currentUserSubGroups.push({groupID: snapshot.key(), subgroupID: subgroup});
+             getSubGroupsMembersOfCurrentUsers (snapshot.key(), subgroup);
+         }
+      });
+   }
 
-    //actor; current user is our actor
+   //for getting subgroups members of current user
+   function getSubGroupsMembersOfCurrentUsers (groupID, subgroupID) {
+      firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_added', function(snapshot){
+         if(currentUserSubGroupsMembers.length == 0){
+            currentUserSubGroupsMembers.push({groupID: groupID, subgroupID: subgroupID, member: snapshot.key()});
+         } else {
+            for(var i = 0; i < currentUserSubGroupsMembers.length; i++){
+               if(currentUserSubGroupsMembers[i].groupID === groupID && currentUserSubGroupsMembers[i].subgroupID == subgroupID && currentUserSubGroupsMembers[i].member == snapshot.key()){
+                  break;
+               } else {
+                  if (i == currentUserSubGroupsMembers.length-1) {
+                     currentUserSubGroupsMembers.push({groupID: groupID, subgroupID: subgroupID, member: snapshot.key()});
+                  } //for else if
+               } //for else
+            } //for
+         } //else
+      }); //firebaseService.getRefSubGroupMembers
+   } //getSubGroupsMembersOfCurrentUsers
 
-    //type; group, subgroup, policy, profile, chat, progressReport
-
-    //targetinfo;
-    //  if (type group)     { id: targetinfo.groupID, url: targetinfo.groupID, title: targetinfo.groupTitle}
-    //  if (type subgroup)  { id: targetinfo.subgroupID, url: targetinfo.subgroupID, title: targetinfo.subgroupTitle}
-    //  if (type policy)    { id: targetinfo.policyID, url: targetinfo.policyID, title: targetinfo.policyTitle}
-    //  if (type progressReport)    { id: targetinfo.subgroupID, url: targetinfo.subgroupID, title: targetinfo.subgroupTitle }
-
-    //area {   type: 'membersettings' | ' group-create' | 'group-update',
-    //         action: 'group-reject-member' || 'group-approve-member' || 'user-membership-change' || 'group-member-removed' };
-    //  if (type group):    membersettings, group-create, group-update
-    //  if (type group && area.type == 'membersettings') area {type: 'membersettings', action: 'aprovedmmebr' | 'rejected' | 'membership' | 'ignore' | 'delete' }
-    //  if (type subgroup): subgroup-create, subgroup-update, subgroup-add-member, subgroup-add-admin
-    //  if (type policy):   policy-create, policy-update, policy-assign-to-team
-    //  if (type progressReport):   report-created, report-update
-
-    //verb;
-    //  if(type group     & area.type = group-create):           'group-creation'
-    //  if(type group     & area.type = group-update):           'group-update'
-    //  if(type group     & area.type = membersettings):         actions: 'group-reject-member' || 'group-approve-member' || 'user-membership-change' || 'group-member-removed'
-    //  if(type subgroup  & area.type = subgroup-create):        'subgroup-creation'
-    //  if(type subgroup  & area.type = subgroup-update):        'subgroup-update'
-    //  if(type subgroup  & area.type = subgroup-add-member):    'user-membership-change'
-    //  if(type subgroup  & area.type = subgroup-add-admin):     'user-membership-change'
-    //  if(type policy    & area.type = policy-create):          'policy-creation'
-    //  if(type policy    & area.type = policy-update):          'policy-update'
-    //  if(type policy    & area.type = policy-assigned):        'policy-assigned'
-    //  if(type progressReport   & area.type = report-created):        'progress-report-created'
-    //  if(type progressReport   & area.type = report-update):        'progress-report-updated'
-
-    //we have decide to create user-activity-streams
-    /* node will be user-activity-streams -> userid -> {
-               userName: 'usuf qutubuddin'
-               email: 'usuf53@gmail.com'
-               userId: 'usuf53'
-               displayMessage: 'Usuf Qutubuddin approved Usuf Qutubuddin as a member in Team of teams 01."',
-               seen : false
-      }
-    */
-
-    //object: affected area for user.... (represent notification)
+   function getActivities() {
+      return currentUserActivities;
+   }
+   function getSubgroupNames() {
+      return currentUserSubGroups;
+   }
+   function getSubgroupMembers() {
+      return currentUserSubGroupsMembers;
+   }
 
 
+         //
+         // var TypeAreaObj = { 'group':  {  'membersettings': '',
+         //                                  'group-created': '',
+         //                                  'group-updated': ''
+         //                               },
+         //                  'subgroup':  {  'subgroup-created': 'function()',
+         //                                  'subgroup-updated': 'function()',
+         //                                  'subgroup-member-assigned': 'function()',
+         //                                  'subgroup-admin-assigned': 'function()'
+         //                               },
+         //                    'policy':	{  'policy-created': 'function()',
+         //                                  'policy-updated': 'function()',
+         //                                  'policy-assigned-team': 'function()'
+         //                               },
+         //            'progressReport':  {  'progressReport-created': 'function()',
+         //                                  'progressReport-updated': 'function()'
+         //                               },
+         //                   'firepad':  {   },
+         //                      'chat':  {  }
+         //    }; //myObj
 
 
-   //  //multi path node...
-   //  var multipath = {};
-   //  multipath['group-activity-streams/'+groupid+ '/actor'] = actor;
-   //  multipath['group-activity-streams/'+groupid+ '/displayName'] = '';
-   //  multipath['group-activity-streams/'+groupid+ '/language'] = "en";
-   //  multipath['group-activity-streams/'+groupid+ '/object'] = {
-   //    displayName: "usuf53",
-   //    email: 'usuf53@gmail.com',
-   //    id: 'usuf53',
-   //    type:  'user'
-   // };
-   // multipath['group-activity-streams/'+groupid+ '/published'] = firebaseTimeStamp;
-   // multipath['group-activity-streams/'+groupid+ '/target'] = {
-   //    displayName: "usuf53",
-   //    url: 'tot01',
-   //    id: 'usuf53',
-   //    type:  'user'
-   // };
-   // multipath['group-activity-streams/'+groupid+ '/verb'] = "group-approve-member";
-   // multipath['user-activity-streams/'+userid] = {
-   //           userName: 'usuf qutubuddin',
-   //           email: 'usuf53@gmail.com',
-   //           userId: 'usuf53',
-   //           displayMessage: 'Usuf Qutubuddin approved Usuf Qutubuddin as a member in Team of teams 01."',
-   //           seen : false,
-   //           published: firebaseTimeStamp
-   //  }
+
+   // type = group, subgroup, policy, progressReport, firepad, chat
+   //targetinfo = {id: '', url: '', title: '', type: '' }
+   //area = {type: '', action: ''}
+   //memberUserID = if object is user for notification
 
 
-    function groupActivityStream (type, requestFor, group, user, memberUserID) {
-      var deferred = $q.defer();
-      var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+   function activityStream(type, targetinfo, area, groupID, memberUserID) {
 
-      var target = {
-         "type": "group",         //we are using group activity streams
-         "id": group.groupID,
-         "url": group.groupID,
-         "displayName": group.title
-      };
+      var object = {};  //object: affected area for user.... (represent notification)
 
-      //type:
-      //for membership in user-settings we will use memberSettings,
-      //on team (create/edit) we will use TeamSettings
-      if(type === 'memberSettings') {
+      if (memberUserID) {  // incase of group ceration or group edit
          firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
-            var object = {
-               "type": "user",
+            object = {
+               "type": type,
                "id": memberUserID, //an index should be set on this
                "email": res.user.email,
                "displayName": res.user.firstName + " " + res.user.lastName
             };
-            //create an appropriate display message.
-            var displayName;
-            if (requestFor === "approve") {
-                displayName = actor.displayName + " approved " + object.displayName +
-                   " as a member in " + group.title + "."
-            } else {
-                displayName = actor.displayName + " rejected " + object.displayName +
-                   "'s membership request for " + group.title + "group."
-            }
-
-            var activity = {
-               language: "en",
-               verb: requestFor === "approve" ? "group-approve-member" : "group-reject-member",
-               published: firebaseTimeStamp,
-               displayName: displayName,
-               actor: actor,
-               object: object,
-               target: target
-            };
-
-            var newActivityRef = refGroupActivities.push();
-            newActivityRef.set(activity, function(error) {
-               if (error) {
-                   deferred.reject();
-               } else {
-
-                  var activityID = newActivityRef.key();
-                  var activityEntryRef = refGroupActivities.child(activityID);
-                  activityEntryRef.once("value", function(snapshot) {
-                     var timestamp = snapshot.val().published;
-                     newActivityRef.setPriority(0 - timestamp, function(error2) {
-                        if (error2) {
-                           deferred.reject();
-                        } else {
-                           deferred.resolve(displayName);
-                        }
-                     });
-                  });
-
-               } //else
-            }); //newActivityRef.set
-         }); //firebaseService.asyncCheckIfUserExists
+            //now calling function for save to firebase....
+            saveToFirebase(type, targetinfo, area, object);
+         });
+      } else {
+         object = {
+            "type": type,
+            "id": targetinfo.id, //an index should be set on this
+            "url": targetinfo.id,
+            "displayName": targetinfo.title
+         };
+         //now calling function for save to firebase....
+         saveToFirebase(type, targetinfo, area, object);
       }
-      return deferred.promise;
-   } //groupActivityStream
+   } //activityStream
 
+
+   function saveToFirebase(type, targetinfo, area, groupID, object){
+
+      // ## target ##
+      //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
+      var target = {
+               "type": type,
+               "id": targetinfo.id,
+               "url": targetinfo.url,
+               "displayName": targetinfo.title
+      };
+
+      var displayNameObject = {
+         'group': {
+                  'membersettings': {  //reject == ignore
+                              'group-ignore-member': actor.displayName +" rejected " + object.displayName +"'s membership request for " + target.displayName,
+                              'group-approve-member': actor.displayName +" approved " + object.displayName + " as a member in "+ target.displayName,
+                              'user-membership-to-member': actor.displayName +" changed " + object.displayName +"'s membership from \"member\" to \"suspend\" for " + target.displayName,
+                              'user-membership-to-admin': actor.displayName +" changed " + object.displayName +"'s membership from \"member\" to \"admin\" for " + target.displayName,
+                              'user-membership-block': actor.displayName +" changed " + object.displayName +"'s membership to \"suspend\" for " + target.displayName,
+                              'user-membership-unblock': actor.displayName +" changed " + object.displayName +"'s membership from \"suspend\" to \"member\" for " + target.displayName,
+                              'group-member-removed': actor.displayName +" removed " + object.displayName +" from " + target.displayName,
+                           }, //membersettings
+                  'group-created': actor.displayName +" created group " + target.displayName,
+                  'group-updated': actor.displayName +" udpated group " + target.displayName,
+               }, //'type: group'
+         'subgroup': {
+                  'subgroup-created': actor.displayName +" created subgroup " + target.displayName,
+                  'subgroup-updated': actor.displayName +" updated subgroup " + target.displayName,
+                  'subgroup-member-assigned': actor.displayName +" assigned " + object.displayName + " as a member of " + target.displayName,
+                  'subgroup-admin-assigned': actor.displayName +" assigned " + object.displayName +" as a admin of " + target.displayName,
+                  }, //subgroup
+         'policy': {
+                  'policy-created': actor.displayName +" created policy " + target.displayName,
+                  'policy-updated': actor.displayName +" updated policy " + target.displayName,
+                  'policy-assigned-team': actor.displayName +" assigned policy " + target.displayName + " to " + object.displayName,
+                  }, //policy
+         'progressReport': {
+                  'progressReport-created': actor.displayName + " Created progress report in " + target.displayName,
+                  'progressReport-updated': actor.displayName + " Updated progress report in " + target.displayName,
+                  } //progressReport
+      }; //displayNameObject
+
+
+      var displayMessage = '';
+
+      if(area.action){
+       displayMessage = displayNameObject[type][area.type][area.action];
+      } else {
+       displayMessage = displayNameObject[type][area.type];
+      }
+
+      var activity = {
+             language: "en",
+             verb: (area.action) ? area.action : area.type,
+             published: firebaseTimeStamp,
+             displayName: displayMessage,
+             actor: actor,
+             object: object,
+             target: target
+      };
+
+      // console.log('activity', activity);
+
+      var ref = firebaseService.getRefMain();
+      var pushObj = ref.child('group-activity-streams').push();
+      var activityPushID = pushObj.key();
+
+      var multipath = {};
+      multipath['group-activity-streams/'+groupID+'/'+activityPushID] = activity;
+
+      firebaseService.getRefMain().update(multipath, function(err){
+         if (err) { console.log('activityError', err); }
+      });
+
+      // multipath['user-activity-streams/'+memberUserID] = {
+      //           userName: res.user.firstName + " " + res.user.lastName,
+      //           email: res.user.email,
+      //           userId: memberUserID,
+      //           displayMessage: displayMessage,
+      //           seen : false,
+      //           published: firebaseTimeStamp
+      //  }
+
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   //  function groupActivityStream (type, requestFor, group, user, memberUserID) {
+   //    var deferred = $q.defer();
+   //    var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+   //
+   //    var target = {
+   //       "type": "group",         //we are using group activity streams
+   //       "id": group.groupID,
+   //       "url": group.groupID,
+   //       "displayName": group.title
+   //    };
+   //
+   //    //type:
+   //    //for membership in user-settings we will use memberSettings,
+   //    //on team (create/edit) we will use TeamSettings
+   //    if(type === 'memberSettings') {
+   //       firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+   //          var object = {
+   //             "type": "user",
+   //             "id": memberUserID, //an index should be set on this
+   //             "email": res.user.email,
+   //             "displayName": res.user.firstName + " " + res.user.lastName
+   //          };
+   //          //create an appropriate display message.
+   //          var displayName;
+   //          if (requestFor === "approve") {
+   //              displayName = actor.displayName + " approved " + object.displayName +
+   //                 " as a member in " + group.title + "."
+   //          } else {
+   //              displayName = actor.displayName + " rejected " + object.displayName +
+   //                 "'s membership request for " + group.title + "group."
+   //          }
+   //
+   //          var activity = {
+   //             language: "en",
+   //             verb: requestFor === "approve" ? "group-approve-member" : "group-reject-member",
+   //             published: firebaseTimeStamp,
+   //             displayName: displayName,
+   //             actor: actor,
+   //             object: object,
+   //             target: target
+   //          };
+   //
+   //          var newActivityRef = refGroupActivities.push();
+   //          newActivityRef.set(activity, function(error) {
+   //             if (error) {
+   //                 deferred.reject();
+   //             } else {
+   //
+   //                var activityID = newActivityRef.key();
+   //                var activityEntryRef = refGroupActivities.child(activityID);
+   //                activityEntryRef.once("value", function(snapshot) {
+   //                   var timestamp = snapshot.val().published;
+   //                   newActivityRef.setPriority(0 - timestamp, function(error2) {
+   //                      if (error2) {
+   //                         deferred.reject();
+   //                      } else {
+   //                         deferred.resolve(displayName);
+   //                      }
+   //                   });
+   //                });
+   //
+   //             } //else
+   //          }); //newActivityRef.set
+   //       }); //firebaseService.asyncCheckIfUserExists
+   //    }
+   //    return deferred.promise;
+   // } //groupActivityStream
+   //
 
 
    // function currentUserActivity() {
@@ -208,7 +343,9 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
    // }
 
     return {
-      init : init
+      init : init,
+      getActivities: getActivities,
+      activityStream: activityStream
     };
 
 } //activityStreamService

@@ -3,8 +3,8 @@
 
     angular.module('app.navToolbar')
 
-    .controller('NavToolbarController', ['ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
@@ -12,6 +12,7 @@
             self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
+            this.notifications = [];
 
             /*VM properties*/
 
@@ -48,10 +49,11 @@
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
-        //   notification
-        self.showNotification = function(){
-            self.show = !self.show;    
-        };
+
+            //   notification activities
+            self.showNotification = function(){
+                self.show = !self.show;
+            };
 
             this.progressReport = function(){
               $mdSidenav('right').toggle().then(function(){
@@ -708,6 +710,9 @@
                     }
                 });
             };
+
+            //getting notifications
+            this.notifications = activityStreamService.getActivities();
         }
     ]);
 
