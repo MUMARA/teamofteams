@@ -1717,16 +1717,27 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
     height: 160px;
     padding: 0 !important;
 }
+.cropper-main-button-team {
+    width: 96px;
+    height: 160px;
+    padding: 0 !important;
+}
+
 .cropper-main-image {
     width: 160px;
     height: 160px;
 }
+.cropper-main-image-team {
+    width: 96px;
+    height: 160px;
+}
+
 .subgroupcard {
     width: 220px;
     height: 90px
 }
 .subgrouplogo {
-    width: 70px;
+    width: 54px;
     height: 90px;
     overflow: hidden;
 }

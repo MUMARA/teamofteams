@@ -45,6 +45,7 @@
                                     $rootScope.newImg = null;
                                     cb();
                                     messageService.showSuccess('Team of Teams Edited Successfully')
+                                    // CollaboratorService.CreateDocument("Team of Teams Information",groupInfo.groupID,)
                                 }, function(group) {
                                     cb();
                                     messageService.showFailure("Team of Teams not edited");

@@ -1,26 +1,26 @@
 <!-- Activity -->
 
- <div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
-<div layout-fill flex>
-  <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);" layout="row">
+<div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
+    <div layout-fill flex>
+        <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);" layout="row">
             <div class="md-toolbar-tools">
                 <div class="foreColorDarkGrey">
-                 <h2>{{collaborator.document}}<sup ng-if="collaborator.default">*</sup></h2>
+                    <h2>{{collaborator.document}}<sup ng-if="collaborator.default">*</sup></h2>
                 </div>
-                  <span flex></span>
-                  <md-input-container ng-hide="collaborator.default">
+                <span flex></span>
+                <md-input-container ng-hide="collaborator.default">
                     <label>Export</label>
                     <md-select ng-model="collaborator.export">
-                          <md-option ng-click="collaborator.export()">Export to html</md-option>
+                        <md-option ng-click="collaborator.export()">Export to html</md-option>
                     </md-select>
-                  </md-input-container>
-              </div>
-            </md-toolbar>
-       <div id="firepad" style="" ng-show="collaborator.documentready">
-      </div>
-      </div>
+                </md-input-container>
+            </div>
+        </md-toolbar>
+        <div id="firepad" style="" ng-show="collaborator.documentready">
+        </div>
+    </div>
 
-      <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
+    <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
         <md-card class="nomargin" layout-fill>
             <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
             <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
@@ -30,7 +30,7 @@
                         <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                             <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
                                 <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                                  <h3 class="foreColorDarkGrey">Document {{$index+1}}:</h3>
+                                    <h3 class="foreColorDarkGrey">Document {{$index+1}}:</h3>
                                     <span style="font-size: 13px; color: #ffffff;" class=""><strong>Name:</strong> {{document.title}}</span>
                                 </div>
                             </md-list-item>
@@ -40,11 +40,11 @@
                 <!--Online Users side-->
                 <md-tab label="Online Users" class="rightTbs">
                     <md-content class="backColorSeaGreen">
-                      <md-list>
-                    	  	<md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in collaborator.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: collaborator.groupID, subgroupID: collaborator.subgroupID ,onlinestatus: true}" ng-click="collaborator.activeUser = user.id">
-                    		    <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
-                    	  	</md-list-item>
-                      <md-list>
+                        <md-list>
+                            <md-list-item class="nopadding nomargin buttonHover nooutline cursorPointer" ng-repeat="user in collaborator.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: collaborator.groupID, subgroupID: collaborator.subgroupID ,onlinestatus: true}" ng-click="collaborator.activeUser = user.id">
+                                <img ng-src="{{user.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="icon40px leftmargin20px imageRound"> <span class="leftmargin20px">{{user.fullName}}</span>
+                            </md-list-item>
+                            <md-list>
                     </md-content>
                 </md-tab>
             </md-tabs>
@@ -63,11 +63,11 @@
                 <input type="text" ng-model="collaborator.documentTitle">
             </md-input-container>
             <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
-              Create
-              <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>
+                Create
+                <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>
             </md-button>
         </div>
-    	</div>
+    </div>
 
 
 </div>
