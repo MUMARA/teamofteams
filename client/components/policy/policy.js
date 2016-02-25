@@ -17,7 +17,7 @@
         "policyService",
         function($state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
 
-            this.showPanel = true;
+            this.showPanel = false;
             var that = this;
 
             this.isLocationbased = false;
@@ -550,9 +550,11 @@
                                     that.groupPolicies[index] = obj;
                                 }
                             });
+                            that.showPanel = false;
                             messageService.showSuccess('Policy Successfully Updated!');
                             //$state.go('user.policy', {groupID: groupId});
                         } else{
+                            that.showPanel = false;
                             messageService.showSuccess('Policy Successfully Created!');
                             //after created reload initial page
                             that.newPolicy();

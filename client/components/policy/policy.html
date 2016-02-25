@@ -22,7 +22,7 @@ md-checkbox.md-checked .md-icon {
 }*/
 
 </style>
-<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group({groupID : policy.groupId })"></ng-md-icon>
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group.activity({groupID : policy.groupId })"></ng-md-icon>
 <div layout="row" layout-padding layout-margin class="leftrightpadding65px">
        <div layout="column" layout-align="start center" class="nomargin nopadding">
         <md-button ng-click="policy.openEditGroupPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z2">
@@ -59,7 +59,7 @@ md-checkbox.md-checked .md-icon {
             <!-- <div ng-show="policy.showPanel" class="backColorWhite md-whiteframe-z1 viewHeight-154 vscroll" layout="column" -->
             <div ng-show="true" class="backColorWhite " layout="row" layout-align="space-between" flex ng-if="policy.showPanel">
                 <div class="viewHeight-250 vscroll" layout="column" layout-padding flex>
-                    <div layout="row" layout-align="start center">
+                    <div layout="row" style="padding-bottom: 75px;">
                         <md-input-container flex>
                             <label>Policy Name</label>
                             <input name="policyTitle" ng-model="policy.policyTitle" minlength="3" maxlength="40" required>
@@ -75,7 +75,7 @@ md-checkbox.md-checked .md-icon {
                     <!-- locationBasediv    START -->
                     <div>
                         <md-checkbox ng-model="policy.isLocationbased" aria-label="locationBased">
-                            <h4>Location Based</h4>
+                            <h4>Location Based</h4>(Create a Geo Fence for Attendance)
                         </md-checkbox>
                         <div id="locationBasediv" ng-if="policy.isLocationbased">
                             <div layout="row" layout-align="center center">
@@ -106,7 +106,7 @@ md-checkbox.md-checked .md-icon {
                     <!-- timeBasediv    START -->
                     <div>
                         <md-checkbox ng-model="policy.isTimebased" aria-label="locationBased">
-                            <h4>Time Based</h4>
+                            <h4>Time Based</h4>(Create a Schedule for Attendance)
                         </md-checkbox>
                         <div id="timeBasediv" ng-show="policy.isTimebased">
 
@@ -150,7 +150,7 @@ md-checkbox.md-checked .md-icon {
                     <!-- DailyReport div    START -->
                     <div>
                         <md-checkbox ng-model="policy.isProgressReport" aria-label="Daily Report">
-                            <h4>Progress Report</h4>
+                            <h4>Progress Report</h4>(Create a Progress Report on Checkout)
                         </md-checkbox>
                         <div id="dailyReportdiv" ng-show="policy.isProgressReport">
                             <div layout="row" layout-align="start center">
@@ -187,7 +187,7 @@ md-checkbox.md-checked .md-icon {
                     <!-- DailyReport div    END -->
                     <div layout="row" layout-align="space-between center">
                         <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
-                            <span>Assign</span>
+                            <span>Apply</span>
                         </md-button>
                         <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
                             <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
