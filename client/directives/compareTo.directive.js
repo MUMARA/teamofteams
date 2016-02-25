@@ -10,6 +10,7 @@
     angular
         .module('core')
         .directive("compareTo", compareTo)
+        .directive("compareToo", compareToo)
         .directive("compareAgainst", compareAgainst);
 
     function compareTo() {
@@ -21,11 +22,31 @@
             link: function(scope, element, attributes, ngModel) {
 
                 ngModel.$validators.compareTo = function(modelValue) {
+                    console.log(modelValue);
                     if(modelValue) {
                       return modelValue !== scope.otherModelValue;
                     } else {
                        return true
                     }
+                };
+
+                scope.$watch("otherModelValue", function() {
+                    ngModel.$validate();
+                });
+            }
+        };
+    }
+
+    function compareToo() {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=compareToo"
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareToo = function(modelValue) {
+                  return modelValue == scope.otherModelValue;
                 };
 
                 scope.$watch("otherModelValue", function() {

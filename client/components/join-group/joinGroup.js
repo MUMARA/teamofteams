@@ -57,6 +57,7 @@
                 this.hide = hide;
 
                 /*VM properties*/
+                this.message = {};
                 this.group = {
                     groupID: "",
                     message: "Please add me in your group."
@@ -131,9 +132,8 @@
                 //answers join/subscribe group modal and sends back some data modal.
                 function answer(id) {
                     that.loadingData = true;
-
-                    this.group.groupID = id;
-
+                    that.group.message = that.message[id] || that.group.message;
+                    that.group.groupID = id;
 
                     joinGroupService.joinGroupRequest(this.group, function(){
                         that.loadingData = false;

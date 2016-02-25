@@ -30,7 +30,6 @@
 
         function loginFn(form) {
             that.submitting = true;
-
             singInService.login(form.user, pageToRoutAfterLoginSuccess)
                 .then(function(data) {
                     that.submitting = false;

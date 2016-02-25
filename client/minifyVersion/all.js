@@ -773,7 +773,7 @@ angular.module('core', [
 					firebaseService.getRefPolicies().child(groupID).child(policyObj.val().policyID).child('progressReportQuestions').child(questionID)
 					.once('value', function(snapshot){
 						if(snapshot.val()){
-							// console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
+							//console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
 							//adding questions into dailyProgressReport object of user report
 							dailyProgressReport.forEach(function(val, index){
 								if(val.reportID == ObjectIndex){
@@ -933,7 +933,7 @@ angular.module('core', [
 								obj['profileImage'] = user.profileImage;
 								obj['groupID'] = user.groupID;
 								obj['subgroupID'] = user.subgroupID;
-															getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 								dailyProgressReport.push(obj);
 							}
 						}
@@ -1059,15 +1059,21 @@ angular.module('core', [
 
     function ProgressReportController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
-        this.setFocus = function() {
-            document.getElementById("#UserSearch").focus();
+        this.loadingData = false;
+        this.setFocus = function(startDate , endDate) {
+            that.loadingData = true;
+             if(startDate && endDate) {
+                 $timeout(function() {
+                     that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+                     that.loadingData = false;
+                 // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
 
-            $timeout(function() {
-                that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+                 }, 2000);
+             }else{
+                 document.getElementById("#UserSearch").focus();
+                 that.loadingData = false; 
+             }
 
-            // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
-
-            }, 2000);
         };
         this.update = function(report) {
             // console.log(report);
@@ -1134,338 +1140,294 @@ angular.module('core', [
 (function() {
   'use strict';
   angular.module('app.collaborator', ['core'])
-    .factory('CollaboratorService', ['firebaseService', CollaboratorService]);
+    .factory('CollaboratorService', ['$q','$firebaseArray','ref', CollaboratorService]);
 
-  function CollaboratorService(firebaseService) {
+  function CollaboratorService($q,$firebaseArray,ref) {
 
-
-    var dailyProgressReport = [];
-
-    //getting daily progress report
-    function getReports(userArray, groupID, subgroupID) {
-      if (subgroupID) {
-        userArray.forEach(function(val, indx) {
-          if (val.groupID == groupID && val.subgroupID == subgroupID) {
-            getSubGroupReportFromFirebase(val, groupID, subgroupID, 10);
-          }
-        });
-      } else {
-        userArray.forEach(function(val, indx) {
-          if (val.groupID == groupID) {
-            getGroupReportFromFirebase(val, groupID, 10);
-          }
-        });
-      }
-    } //getReports
-    function getReportQuestion(groupID, subgroupID, questionID, ObjectIndex) {
-      firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupID).once('value', function(policyObj) {
-        if (policyObj.val() && policyObj.val().hasPolicy === true) {
-          firebaseService.getRefPolicies().child(groupID).child(policyObj.val().policyID).child('progressReportQuestions').child(questionID)
-            .once('value', function(snapshot) {
-              // console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
-
-              //adding questions into dailyProgressReport object of user report
-              dailyProgressReport.forEach(function(val, index) {
-                if (val.reportID == ObjectIndex) {
-                  dailyProgressReport[index]['questions'] = snapshot.val().questions;
-                }
-              });
-            });
-        }
-      });
-    } //getReportQuestion
-    function getSubGroupReportFromFirebase(user, groupID, subgroupID, limit) {
-      firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).child(subgroupID).orderByChild("date").limitToLast(limit)
-        .on("value", function(snapshot) {
-          var _flag = false;
-          // console.log('key', snapshot.key());
-          // console.log('val', snapshot.val());
-
-          if (dailyProgressReport.length > 0) {
-            dailyProgressReport.forEach(function(val, index) {
-              if (snapshot.val()) {
-                for (var key in snapshot.val()) {
-                  console.log(val.reportID, key)
-                  if (val.reportID === key) {
-                    //getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
-                    dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
-                    _flag = true;
-                    break;
-                  }
-                }
-              }
-
-              if (_flag) {
-                return;
-              }
-
-              if (dailyProgressReport.length == index + 1) {
-                if (snapshot.val()) {
-                  var obj = {};
-                  for (var key in snapshot.val()) {
-                    obj = snapshot.val()[key];
-                    obj['reportID'] = key;
-                    obj['userID'] = user.id;
-                    obj['fullName'] = user.fullName;
-                    obj['profileImage'] = user.profileImage;
-                    obj['groupID'] = user.groupID;
-                    obj['subgroupID'] = user.subgroupID;
-                    getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
-                    dailyProgressReport.push(obj);
-                  }
-                }
-              }
-
-            });
-
-          } else {
-            if (snapshot.val()) {
-              var obj = {};
-              for (var key in snapshot.val()) {
-                obj = snapshot.val()[key];
-                obj['reportID'] = key;
-                obj['userID'] = user.id;
-                obj['fullName'] = user.fullName;
-                obj['profileImage'] = user.profileImage;
-                obj['groupID'] = user.groupID;
-                obj['subgroupID'] = user.subgroupID;
-                getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
-                dailyProgressReport.push(obj);
-              }
-            }
-
-          }
-
-        });
-    } //getFromFirebase
-    function getSubGroupDailyProgressReport(userArray, groupID, subgroupID) {
-      dailyProgressReport = [];
-      getReports(userArray, groupID, subgroupID);
-      return dailyProgressReport;
-    } //getDailyProgressReport
-    function updateReport(report, cb) {
-      // console.log(report)
-      firebaseService.getRefDailyProgressReport().child(report.userID).child(report.groupID).child(report.subgroupID).child(report.reportID).update({
-        'answers': report.answers
-      }, function(err) {
-        if (err) {
-          console.log('err', err)
-          cb(false);
-        }
-
-        cb(true);
-
-      });
-    } //updateReport
-    function getGroupReports(userArray, groupID) {
-      userArray.forEach(function(val, indx) {
-        if (val.groupID == groupID) {
-          getGroupReportFromFirebase(val, groupID, 10);
-        }
-      });
-    }
-
-    function getGroupReportFromFirebase(user, groupID, limit) {
-      firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).orderByChild("date").limitToLast(limit)
-        .on("value", function(snapshot) {
-          var _flag = false;
-
-          if (dailyProgressReport.length > 0) {
-
-            dailyProgressReport.forEach(function(val, index) {
-              if (snapshot.val()) {
-                for (var k in snapshot.val()) {
-                  for (var key in snapshot.val()[k]) {
-                    // console.log('Obj', snapshot.val()[k][key], key);
-                    if (val.reportID == key) {
-                      dailyProgressReport[index]['answers'] = snapshot.val()[k][key]['answers'];
-                      _flag = true;
-                      break;
-                    }
-                  }
-
-                }
-              }
-
-              if (_flag) {
-                return
-              }
-
-              if (dailyProgressReport.length == index + 1) {
-                if (snapshot.val()) {
-                  var obj = {};
-                  for (var k in snapshot.val()) {
-                    for (var key in snapshot.val()[k]) {
-                      obj = snapshot.val()[k][key];
-                      obj['reportID'] = key;
-                      obj['userID'] = user.id;
-                      obj['fullName'] = user.fullName;
-                      obj['profileImage'] = user.profileImage;
-                      obj['groupID'] = user.groupID;
-                      obj['subgroupID'] = user.subgroupID;
-                      dailyProgressReport.push(obj);
-
-                    }
-
-                  }
-                }
-              }
-
-            });
-
-          } else {
-            if (snapshot.val()) {
-              var obj = {};
-              for (var k in snapshot.val()) {
-                for (var key in snapshot.val()[k]) {
-                  obj = snapshot.val()[k][key];
-                  obj['reportID'] = key;
-                  obj['userID'] = user.id;
-                  obj['fullName'] = user.fullName;
-                  obj['profileImage'] = user.profileImage;
-                  obj['groupID'] = user.groupID;
-                  obj['subgroupID'] = user.subgroupID;
-                  dailyProgressReport.push(obj);
-
-                }
-
-              }
-            }
-          }
-
-        });
-    }
-
-    function getGroupDailyProgressReport(userArray, groupID) {
-      dailyProgressReport = [];
-      getReports(userArray, groupID);
-      return dailyProgressReport;
-    } //getDailyProgressReport
-
-    function getSingleSubGroupReport(user, groupID, subgroupID) {
-      dailyProgressReport = [];
-      getSubGroupReportFromFirebase(user, groupID, subgroupID, 1);
-      return dailyProgressReport;
-
-    } //getSingleSubGroupReport
-
-
+    var firepadRef,pushDocumentNode,firebaseDocumentId;
     return {
-      getSubGroupDailyProgressReport: getSubGroupDailyProgressReport,
-      updateReport: updateReport,
-      getGroupDailyProgressReport: getGroupDailyProgressReport,
-      getSingleSubGroupReport: getSingleSubGroupReport
+      CreateDocument:CreateDocument
+    };
+
+    function CreateDocument(documentTitle,groupID,subgroupID) {
+      var firebaseLocalRef;
+      var updateDocument = {};
+      if (subgroupID) {
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
+        pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID).push();
+        // that.documents = $firebaseArray(firepadRef);
+        firebaseDocumentId = pushDocumentNode.key();
+        firepadRef = firepadRef.child(firebaseDocumentId);
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+      } else {
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
+        pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
+        // that.documents = $firebaseArray(firepadRef);
+        firebaseDocumentId = pushDocumentNode.key();
+        firepadRef = firepadRef.child(firebaseDocumentId);
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/title"] = documentTitle;
+      }
+
+      firebaseLocalRef.update(updateDocument, function(error) {
+        if (error) {
+          console.log("error due to :", error);
+        }
+      });
     }
-  }; //ProgressReportService
+  };
 })();
 
 /**
  * on 2/02/2016.
  */
-(function () {
-    'use strict';
-    angular.module('app.collaborator')
-        .constant("ref", "https://firepad123.firebaseio.com/")
-        .controller('CollaboratorController', ['ref', 'FileSaver', 'Blob', collaboratorFunction]);
+(function() {
+  'use strict';
+  angular.module('app.collaborator')
+      .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
+      .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', 'CollaboratorService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', collaboratorFunction]);
 
 
-    function collaboratorFunction(ref, FileSaver, Blob) {
+  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, CollaboratorService, $stateParams, userService, dataService, messageService, $timeout, $scope) {
 
-        var that = this;
-        that.ready = true;
+
+    var firepadRef;
+    var that = this;
+    var pushDocumentNode,firebaseDocumentId,firepad;
+    that.ready = true;
+    that.clicked = false;
+    that.channelBottomSheet = false;
+    that.default = true;
+    that.document = "Create/Open Document"
+    that.documentready = false;
+    that.hideLoader = true;
+    var globalRef = new Firebase(ref);
+
+
+    function clearDiv(){
+      var div = document.getElementById("firepad");
+      while (div.firstChild) {
+        div.removeChild(div.firstChild);
+      }
+    }
+
+    that.gotoDocument = function(openDoc) {
+
+
+      clearDiv();
+      if(that.subgroupID) {
+        globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child(openDoc.$id);
+      }
+      else {
+        globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID + "/" + that.subgroupID).child(openDoc.$id);
+      }
+      that.documentready = true;
+      initiateFirepad(globalRef);
+      that.document = openDoc.title;
+      that.default = false;
+      console.log(openDoc.$id);
+    }
+
+
+    function initiateFirepad(refArgument){
+      var codeMirror = CodeMirror(document.getElementById('firepad'), {
+        lineWrapping: true
+      });
+      firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
+        richTextShortcuts: true,
+        richTextToolbar: true,
+        // userId: null,
+        defaultText: null
+        /*'Welcome to firepad!'*/
+      });
+      firepad.on("ready", function() {
+        that.ready = false;
+        console.log("Usera", that.user);
+        firepad.setUserId(that.user.userID);
+        firepad.setUserColor("#ccccc");
+        that.hideLoader = true;
+      })
+    }
+
+    that.createDocument = function() {
+      clearDiv();
+      var firebaseLocalRef;
+      var updateDocument = {};
+      that.hideLoader = false;
+      that.document = that.documentTitle;
+      that.default = false;
+      that.channelBottomSheet = false;
+      that.documentready = true;
+      if (that.subgroupID) {
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID);
+        pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).push();
+        that.documents = $firebaseArray(firepadRef);
+        firebaseDocumentId = pushDocumentNode.key();
+        firepadRef = firepadRef.child(firebaseDocumentId);
+        updateDocument["firepad-subgroups/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/title"] = that.document
+        updateDocument["firepad-subgroups-documents/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/title"] = that.document;
+      } else {
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-groups/" + that.groupID);
+        pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + that.groupID).push();
+        that.documents = $firebaseArray(firepadRef);
+        firebaseDocumentId = pushDocumentNode.key();
+        firepadRef = firepadRef.child(firebaseDocumentId);
+        updateDocument["firepad-groups/" + that.groupID + "/" + firebaseDocumentId + "/title"] = that.document
+        updateDocument["firepad-groups-documents/" + that.groupID + "/" +firebaseDocumentId + "/title"] = that.document;
+      }
+
+      firebaseLocalRef.update(updateDocument, function(error) {
+        if (error) {
+          console.log("error due to :", error);
+        }
+      })
+      initiateFirepad(firepadRef);
+    }
+
+    that.channelBottomSheetfunc = function() {
+      if (that.channelBottomSheet)
+        that.channelBottomSheet = false;
+      else
+        that.channelBottomSheet = true;
+    }
+    that.export = function() {
+
+      if (that.clicked) {
         that.clicked = false;
-        that.export = function () {
-
-            if (that.clicked) {
-                that.clicked = false;
-            }
-            else {
-                that.clicked = true;
-                var content = firepad.getHtml();
-                var data = new Blob([content], {type: 'html;charset=utf-8'});
-                FileSaver.saveAs(data, 'data.html');
-                console.log(firepad.getHtml())
-            }
-
-        };
-        var firepadRef = new Firebase(ref).child("firepad");
-        var codeMirror = CodeMirror(document.getElementById('firepad'), {lineWrapping: true});
-        var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
-            richTextShortcuts: true,
-            richTextToolbar: true,
-            // userId: null,
-            defaultText: null
-            /*'Welcome to firepad!'*/
+      } else {
+        that.clicked = true;
+        var content = firepad.getHtml();
+        var data = new Blob([content], {
+          type: 'html;charset=utf-8'
         });
-        firepad.on("ready", function () {
-            that.ready = false;
-            //that.$digest();
-        })
+        FileSaver.saveAs(data, 'data.html');
+        console.log(firepad.getHtml())
+      }
+
+    };
+    init();
+
+    function init() {
+      groupService.setActivePanel('collaborator');
+      groupService.setSubgroupIDPanel($stateParams.subgroupID);
+      that.subgroupID = $stateParams.subgroupID || '';
+      that.groupID = $stateParams.groupID;
+      that.user = userService.getCurrentUser();
+      that.users = dataService.getUserData();
+      console.log("Ya Khuda,", JSON.stringify(dataService.getUserData()));
+      that.activeTitle = "Collaborator";
+
+
+
+      if(that.subgroupID) {
+        that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
+        console.log(that.documents);
+        console.log(that.documents.length);
+      }
+      else {
+        that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
+        console.log(that.documents);
+        console.log(that.documents.length);
+      }
+      // if ($stateParams.u) {
+      //   $timeout(function() {
+      //     that.users.forEach(function(val, index) {
+      //       if (val.id === that.user.userID && val.groupID == that.groupID && val.subgroupID == that.subgroupID) {
+      //         //that.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(val, that.groupID, that.subgroupID);
+      //       }
+      //     });
+      //   }, 2000);
+      // } else {
+      //   if ($stateParams.subgroupID) {
+      //     //sub group report
+      //     $timeout(function() {
+      //       //that.dailyProgressReport = ProgressReportService.getSubGroupDailyProgressReport(that.users, that.groupID, that.subgroupID);
+      //       // $timeout(function() {
+      //       //     console.log('xxxx',that.dailyProgressReport);
+      //       // }, 5000);
+      //     }, 2000);
+      //   } else {
+      //     //group report
+      //     $timeout(function() {
+      //       // that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
+      //     }, 2000);
+      //   }
+      //
+      // }
+
 
 
     }
 
 
-    /*function CollaboratorController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
-     var that = this;
-     console.log("in collaborator controller");
-     /!*        // this.setFocus = function() {
-     //     document.getElementById("#UserSearch").focus();
-     // };
-     // this.update = function(report) {
-     //     // console.log(report);
-     //     ProgressReportService.updateReport(report, function(result) {
-     //         if (result) {
-     //             messageService.showSuccess('Update Successfully!');
-     //             $state.go('user.group.subgroup-collaborator', {groupID: that.groupID, subgroupID: that.subgroupID, u: ''});
-     //         } else {
-     //             messageService.showFailure('Update Failure!');
-     //         }
-     //     });
-     // };
-
-     function init() {
-     groupService.setActivePanel('collaborator');
-     groupService.setSubgroupIDPanel($stateParams.subgroupID);
-     that.groupID = $stateParams.groupID;
-     that.subgroupID = $stateParams.subgroupID;
-     that.user = userService.getCurrentUser();
-     that.users = dataService.getUserData();
-     that.activeUser = ($stateParams.u) ? that.user.userID : '';
-     that.activeTitle = "Collaborator";
-
-     if ($stateParams.u) {
-     $timeout(function() {
-     that.users.forEach(function(val, index){
-     if(val.id === that.user.userID && val.groupID == that.groupID &&  val.subgroupID == that.subgroupID){
-     that.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(val, that.groupID, that.subgroupID);
-     }
-     });
-     }, 2000);
-     } else {
-     if ($stateParams.subgroupID) {
-     //sub group report
-     $timeout(function() {
-     that.dailyProgressReport = ProgressReportService.getSubGroupDailyProgressReport(that.users, that.groupID, that.subgroupID);
-     // $timeout(function() {
-     //     console.log('xxxx',that.dailyProgressReport);
-     // }, 5000);
-     }, 2000);
-     } else {
-     //group report
-     $timeout(function() {
-     // that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
-     }, 2000);
-     }
-
-     }
+  }
 
 
+  /*function CollaboratorController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
+   var that = this;
+   console.log("in collaborator controller");
+   /!*        // this.setFocus = function() {
+   //     document.getElementById("#UserSearch").focus();
+   // };
+   // this.update = function(report) {
+   //     // console.log(report);
+   //     ProgressReportService.updateReport(report, function(result) {
+   //         if (result) {
+   //             messageService.showSuccess('Update Successfully!');
+   //             $state.go('user.group.subgroup-collaborator', {groupID: that.groupID, subgroupID: that.subgroupID, u: ''});
+   //         } else {
+   //             messageService.showFailure('Update Failure!');
+   //         }
+   //     });
+   // };
 
-     }
-     init();*!/
+   function init() {
+   groupService.setActivePanel('collaborator');
+   groupService.setSubgroupIDPanel($stateParams.subgroupID);
+   that.groupID = $stateParams.groupID;
+   that.subgroupID = $stateParams.subgroupID;
+   that.user = userService.getCurrentUser();
+   that.users = dataService.getUserData();
+   that.activeUser = ($stateParams.u) ? that.user.userID : '';
+   that.activeTitle = "Collaborator";
 
-     } // ProgressReportController*/
+   if ($stateParams.u) {
+   $timeout(function() {
+   that.users.forEach(function(val, index){
+   if(val.id === that.user.userID && val.groupID == that.groupID &&  val.subgroupID == that.subgroupID){
+   that.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(val, that.groupID, that.subgroupID);
+   }
+   });
+   }, 2000);
+   } else {
+   if ($stateParams.subgroupID) {
+   //sub group report
+   $timeout(function() {
+   that.dailyProgressReport = ProgressReportService.getSubGroupDailyProgressReport(that.users, that.groupID, that.subgroupID);
+   // $timeout(function() {
+   //     console.log('xxxx',that.dailyProgressReport);
+   // }, 5000);
+   }, 2000);
+   } else {
+   //group report
+   $timeout(function() {
+   // that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
+   }, 2000);
+   }
+
+   }
+
+
+
+   }
+   init();*!/
+
+   } // ProgressReportController*/
 })();
 
 (function() {
@@ -1828,16 +1790,16 @@ angular.module('core', [
 
     angular
         .module('app.group')
-        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state', GroupController]);
+        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
 
-    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state) {
+    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
         var that = this;
         //adminof subgroup checkin member
         this.openSetting = function () {
             if (that.adminOf === 'Group') {
                 $state.go('user.edit-group', {groupID: that.groupID});
             } else if (that.adminOf === 'Subgroup') {
-                $state.go('user.policy', {groupID: that.groupID});
+                $state.go('user.create-subgroup', {groupID: that.groupID});
             }
         };
 
@@ -1869,9 +1831,11 @@ angular.module('core', [
             }
             that.panel.subgroupID = subgroupID;
             if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {groupID: that.groupID, subgroupID: that.panel.subgroupID});
+                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
+                //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'), {groupID: that.groupID});
+                $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
+                //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
             }
         };
 
@@ -1883,7 +1847,7 @@ angular.module('core', [
             that.isAdmin = false;
             that.user = userService.getCurrentUser();
             that.panel = groupService.getPanelInfo();
-            that.adminOf = '';
+            that.adminOf = false;
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID ? $stateParams.subgroupID : that.panel.subgroupID;
             that.group = false;
@@ -1897,7 +1861,7 @@ angular.module('core', [
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
                     if (subg.val()) {
                         firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgrp){
-                            if (subgrp.val()['membership-type'] > 0) {
+                            if (subgrp.val() && subgrp.val()['membership-type'] > 0) {
                                 checkGroup()
                             } else {
                                 that.reqObj.subgroupID = subg.key();
@@ -1923,6 +1887,9 @@ angular.module('core', [
                     that.group.addresstitle = (grp.val() && grp.val()['address-title']) ? grp.val()['address-title'] : false;
                     that.group.groupImgUrl = (grp.val() && grp.val().groupImgUrl) ? grp.val().groupImgUrl : false;
                     that.group.ownerImgUrl = (grp.val() && grp.val().ownerImgUrl) ? grp.val().ownerImgUrl : false;
+
+
+
                     cb();
                 } else {
                     that.errorMsg = "Requested Team of Team not found!";
@@ -1954,11 +1921,11 @@ angular.module('core', [
                                         that.isOwner = true;
                                         that.isAdmin = true;
                                         that.isMember = true;
-                                        that.adminOf = 'Subgroup';
+                                        that.adminOf = that.adminOf || 'Subgroup';
                                     } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
                                         that.isAdmin = true;
                                         that.isMember = true;
-                                        that.adminOf = 'Subgroup';
+                                        that.adminOf = that.adminOf || 'Subgroup';
                                     } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
                                         that.isMember = true;
                                     }
@@ -2095,8 +2062,13 @@ angular.module('core', [
 
             this.progressReport = function(){
               $mdSidenav('right').toggle().then(function(){
-                self.openNav = !self.openNav;
+                //self.openNav = !self.openNav;
               });
+            }
+            //#document.onkey
+            this.count = function(e){
+              console.log(document);
+              console.log(e);
             }
                 // alert(this.test)
             this.setFocus = function() {
@@ -2293,10 +2265,12 @@ angular.module('core', [
                             messageService.showSuccess('Checkout Successfully!');
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
-                                self.progressReportSideNav();
                                 var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId }
-                                //val.id, user.groupID, user.subgroupID
                                 self.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(userObj, groupObj.groupId, groupObj.subgroupId);
+
+                                //open side nav bar for getting progress report
+                                self.progressReportSideNav();
+
                                 // self.switchCheckIn = true;
                                 // self.switchMsg = true;
                                 // self.isDailyProgessSubmit = true
@@ -2764,7 +2738,6 @@ angular.module('core', [
                         // $location.path(location + data.user.userID);
                         $state.go('user.dashboard', {userID: data.user.userID})
                         defer.resolve()
-
                     }, function(data) {
                         if (data) {
                             if (data.statusCode == 0) {
@@ -2776,7 +2749,6 @@ angular.module('core', [
                             messageService.showFailure('Network Error Please Submit Again');
                         }
                         defer.reject(data)
-
                     });
                     return defer.promise;
 
@@ -2819,7 +2791,6 @@ angular.module('core', [
 
         function loginFn(form) {
             that.submitting = true;
-
             singInService.login(form.user, pageToRoutAfterLoginSuccess)
                 .then(function(data) {
                     that.submitting = false;
@@ -3010,8 +2981,8 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.createGroup', ['core', 'ngMdIcons'])
-        .factory('createGroupService', ['userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$rootScope',
-            function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope) {
+        .factory('createGroupService', ['userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$rootScope','CollaboratorService',
+            function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope,CollaboratorService) {
 
                 var pageUserId = userService.getCurrentUser().userID;
 
@@ -3025,7 +2996,7 @@ angular.module('core', [
                         userFirebaseService.asyncCreateGroup(pageUserId, groupInfo, this.userData(pageUserId), formDataFlag)
                             .then(function(response) {
                                 form.$submitted = false;
-                                // console.log("Group Creation Successful");
+                                console.log("Group Creation Successful", groupInfo);
                                 $rootScope.newImg = null
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
@@ -3033,6 +3004,7 @@ angular.module('core', [
                                     messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
                                     messageService.showSuccess("Team of Teams creation Successful");
+                                    CollaboratorService.CreateDocument("Team Information",groupInfo.groupID);
                                 }
                                 $location.path('/user/' + pageUserId);
                             }, function(group) {
@@ -3256,6 +3228,10 @@ angular.module('core', [
                     var mimeType = temp.split(':')[1].split(';')[0];
                     that.saveFile(x, mimeType, that.group.groupID).then(function(data) {
                             createGroupService.createGroup(that.group, fromDataFlag, groupForm);
+
+                            // collaborator variable to identity that a New group has been created
+                            $rootScope.groupIDCollaborator = that.group.groupID;
+
                             //$location.path('/user/' + user.userID);
                         })
                         .catch(function() {
@@ -3391,6 +3367,7 @@ angular.module('core', [
                                     $rootScope.newImg = null;
                                     cb();
                                     messageService.showSuccess('Team of Teams Edited Successfully')
+                                    // CollaboratorService.CreateDocument("Team of Teams Information",groupInfo.groupID,)
                                 }, function(group) {
                                     cb();
                                     messageService.showFailure("Team of Teams not edited");
@@ -4154,7 +4131,7 @@ angular.module('core', [
         this.showAdvanced = function(ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
-                templateUrl: 'directives/dilogue1.tmpl.html',
+                templateUrl: 'directives/dilogue2.tmpl.html',
                 targetEvent: ev,
                 escapeToClose: false
             }).then(function(picture) {
@@ -4489,15 +4466,18 @@ angular.module('core', [
                             createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
                                 that.processingSave = false;
                                 that.teamsettingpanel = false;
+                                that.selectedindex = undefined;
+
                             })
                         } else {
                             //create team
                             that.subgroupData.imgLogoUrl = data;
                             createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID,function(){
                                 that.teamsettingpanel = false;
+                                that.selectedindex = undefined;
+
                             });
                             that.processingSave = false;
-                            that.teamsettingpanel = false;
                         }
                             // $rootScope.newImg=null;
                     })
@@ -4516,13 +4496,18 @@ angular.module('core', [
                     createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
                         that.processingSave = false;
                         that.teamsettingpanel = false;
+                        that.selectedindex = undefined;
+
+
                     });
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
                         that.teamsettingpanel = false;
-                        that.processingSave = false;
+                        that.selectedindex = undefined;
+
                     });
+                    that.processingSave = false;
                 }
             }
         }
@@ -4552,23 +4537,23 @@ angular.module('core', [
 
 
         //Cropper Code start
-        this.showAdvanced = function(ev) {
-            $rootScope.tmpImg = $rootScope.newImg;
-            $rootScope.newImg = '';
-            $mdDialog.show({
-                controller: "DialogController",
-                controllerAs: "ctrl",
-                templateUrl: 'directives/dilogue1.tmpl.html',
-                targetEvent: ev
-            }).then(function(picture) {
-                $rootScope.newImg = picture;
-                // console.log("this is image" + picture)
-            }, function(err) {
-                //console.log(err)
-
-            })
-
-        };
+        // this.showAdvanced = function(ev) {
+        //     $rootScope.tmpImg = $rootScope.newImg;
+        //     $rootScope.newImg = '';
+        //     $mdDialog.show({
+        //         controller: "DialogController",
+        //         controllerAs: "ctrl",
+        //         templateUrl: 'directives/dilogue1.tmpl.html',
+        //         targetEvent: ev
+        //     }).then(function(picture) {
+        //         $rootScope.newImg = picture;
+        //         // console.log("this is image" + picture)
+        //     }, function(err) {
+        //         //console.log(err)
+        //
+        //     })
+        //
+        // };
 
 
         //Cropper Code End
@@ -4788,6 +4773,7 @@ angular.module('core', [
                 this.hide = hide;
 
                 /*VM properties*/
+                this.message = {};
                 this.group = {
                     groupID: "",
                     message: "Please add me in your group."
@@ -4862,9 +4848,8 @@ angular.module('core', [
                 //answers join/subscribe group modal and sends back some data modal.
                 function answer(id) {
                     that.loadingData = true;
-
-                    this.group.groupID = id;
-
+                    that.group.message = that.message[id] || that.group.message;
+                    that.group.groupID = id;
 
                     joinGroupService.joinGroupRequest(this.group, function(){
                         that.loadingData = false;
@@ -5281,7 +5266,7 @@ angular.module('core', [
                     //add property hasPolicy in subgroupNames..
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey };
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
@@ -5304,7 +5289,7 @@ angular.module('core', [
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
-                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey };
+                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
                         //multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
@@ -6230,27 +6215,27 @@ angular.module('core', [
 
 })();
 
-(function() {
+(function () {
     'use strict';
     angular
         .module('app.quiz', ['core'])
-        .directive('onBookRender', function($timeout, quizService) {
+        .directive('onBookRender', function ($timeout, quizService) {
             return {
                 restrict: 'A',
-                link: function(scope, element, attr) {
+                link: function (scope, element, attr) {
                     if (scope.$last) {
-                        $timeout(function() {
+                        $timeout(function () {
                             $('#bookId' + quizService.getBookIndex() + '').addClass('selectedBook')
                         }, 0);
                     }
                 }
             }
         })
-        .directive('onChapterRender', function($timeout, quizService) {
+        .directive('onChapterRender', function ($timeout, quizService) {
             return {
                 restrict: 'A',
-                link: function(scope, element, attr) {
-                    $timeout(function() {
+                link: function (scope, element, attr) {
+                    $timeout(function () {
                         if (scope.$last) {
                             //$('#chapid' + quizService.getChapterIndex() + '').addClass('selectedChapter')
                         }
@@ -6260,19 +6245,19 @@ angular.module('core', [
                 }
             }
         })
-        .directive('onTopicRender', function($timeout, quizService) {
+        .directive('onTopicRender', function ($timeout, quizService) {
             return {
                 restrict: 'A',
-                link: function(scope, element, attr) {
+                link: function (scope, element, attr) {
                     if (scope.$last) {
-                        $timeout(function() {
+                        $timeout(function () {
                             $('#topicId' + quizService.getTopicIndex() + '').addClass('selectedTopic')
                         }, 0);
                     }
                 }
             }
         })
-        .factory('quizService', ["$location", function($location) {
+        .factory('quizService', ["$location", function ($location) {
             var that = this;
 
             that.book = null;
@@ -6289,96 +6274,96 @@ angular.module('core', [
 
             return {
                 /*    Tabs    */
-                'getSelectedTab': function() {
+                'getSelectedTab': function () {
                     return that.selectedTab;
                 },
-                'setSelectedTab': function(tab) {
+                'setSelectedTab': function (tab) {
                     that.selectedTab = tab;
                 },
 
-                'quiz': function() {
+                'quiz': function () {
 
                 },
-                'getSelected': function() {
+                'getSelected': function () {
                     return {
                         book: that.book,
                         chapter: that.chapter,
                         topic: that.topic
                     }
                 },
-                'getBook': function() {
+                'getBook': function () {
                     return that.book;
                 },
-                'getChapter': function() {
+                'getChapter': function () {
                     return that.chapter;
                 },
-                'getTopic': function() {
+                'getTopic': function () {
                     return that.topic;
                 },
-                'getQuestionObject': function() {
+                'getQuestionObject': function () {
                     return that.question;
                 },
 
-                'getBookIndex': function() {
+                'getBookIndex': function () {
                     return that.bookIndex;
                 },
-                'getChapterIndex': function() {
+                'getChapterIndex': function () {
                     return that.chapterIndex + '';
                 },
-                'getTopicIndex': function() {
+                'getTopicIndex': function () {
                     return that.topicIndex;
                 },
-                'getBookAfterCreation': function() {
+                'getBookAfterCreation': function () {
                     return that.bookAfterCreation;
                 },
 
 
-                'setBook': function(bookId, bookIndex) {
+                'setBook': function (bookId, bookIndex) {
                     that.book = bookId
                     that.bookIndex = bookIndex
                 },
-                'setChapter': function(chapterId, chapterIndex) {
+                'setChapter': function (chapterId, chapterIndex) {
                     that.chapter = chapterId
                     that.chapterIndex = chapterIndex
                 },
-                'setTopic': function(topicId, topicIndex) {
+                'setTopic': function (topicId, topicIndex) {
                     that.topic = topicId
                     that.topicIndex = topicIndex
                 },
-                'setQuestionObject': function(question) {
+                'setQuestionObject': function (question) {
                     that.question = question;
                 },
 
-                'getSelectedBook': function() {
+                'getSelectedBook': function () {
                     return that.SelectedBook;
                 },
-                'getSelectedChapter': function() {
+                'getSelectedChapter': function () {
                     return that.SelectedChapter;
                 },
-                'getSelectedTopic': function() {
+                'getSelectedTopic': function () {
                     return that.SelectedTopic;
                 },
-                'getSelectedQuestion': function() {
+                'getSelectedQuestion': function () {
                     return that.SelectedQuestion;
                 },
-                'setSelectedBook': function(index) {
+                'setSelectedBook': function (index) {
                     that.SelectedBook = index;
                 },
-                'setSelectedChapter': function(index) {
+                'setSelectedChapter': function (index) {
                     that.SelectedChapter = index;
                 },
-                'setSelectedTopic': function(index) {
+                'setSelectedTopic': function (index) {
                     that.SelectedTopic = index;
                 },
-                'setSelectedQuestion': function(index) {
+                'setSelectedQuestion': function (index) {
                     that.SelectedQuestion = index;
                 },
-                'setBookAfterCreation': function(book) {
+                'setBookAfterCreation': function (book) {
                     that.bookAfterCreation = book;
                 }
             }
         }])
-        .service('navService', function($mdSidenav, $mdUtil, $log, $timeout) {
+        .service('navService', function ($mdSidenav, $mdUtil, $log, $timeout) {
             var $scope = this;
             $scope.toggleRight1 = buildToggler('nav1');
             $scope.toggleRight2 = buildToggler('nav2');
@@ -6388,10 +6373,10 @@ angular.module('core', [
             $scope.toggleRight6 = buildToggler('nav6');
 
             function buildToggler(navID) {
-                var debounceFn = $mdUtil.debounce(function() {
+                var debounceFn = $mdUtil.debounce(function () {
                     $mdSidenav(navID)
                         .toggle()
-                        .then(function() {
+                        .then(function () {
                             $log.debug("toggle " + navID + " is done");
                         });
                 }, 200);
@@ -6400,44 +6385,44 @@ angular.module('core', [
 
             }
 
-            $scope.close = function() {
+            $scope.close = function () {
                 $mdSidenav('nav1').close()
-                    .then(function() {
+                    .then(function () {
                         $log.debug("close LEFT is done");
                     });
             }
 
-            $scope.close = function() {
+            $scope.close = function () {
                 $mdSidenav('nav2').close()
-                    .then(function() {
+                    .then(function () {
                         $log.debug("close LEFT is done");
                     });
             }
 
 
-            $scope.close = function() {
+            $scope.close = function () {
                 $mdSidenav('nav3').close()
-                    .then(function() {
+                    .then(function () {
                         $log.debug("close RIGHT is done");
                     });
             };
 
 
-            $scope.close = function() {
+            $scope.close = function () {
                 $mdSidenav('nav4').close()
-                    .then(function() {
+                    .then(function () {
                         $log.debug("close RIGHT is done");
                     });
             };
-            $scope.close = function() {
+            $scope.close = function () {
                 $mdSidenav('nav5').close()
-                    .then(function() {
+                    .then(function () {
                         $log.debug("close RIGHT is done");
                     });
             };
-            $scope.close = function() {
+            $scope.close = function () {
                 $mdSidenav('nav6').close()
-                    .then(function() {
+                    .then(function () {
                         $log.debug("close RIGHT is done");
                     });
             };
@@ -6448,16 +6433,16 @@ angular.module('core', [
 /**
  * Created by Adnan Irfan on 06-Jul-15.
  */
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('app.quiz')
         .controller('QuizController', QuizController);
 
-    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizCreateService", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
+    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
 
-    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizCreateService, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
+    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
 
         /*Private Variables*/
         var $scope = this;
@@ -6556,25 +6541,25 @@ angular.module('core', [
         setTabs()
 
         authService.resolveUserPage()
-            .then(function(response) {
+            .then(function (response) {
                 getUserObj();
                 initializeView();
-            }, function(err) {
+            }, function (err) {
                 alert('Error in Line 86: ' + err)
             });
         setTabs();
 
         function setTabs() {
             if (quizService.getSelectedTab() == 'QuizBank') {
-                $timeout(function() {
+                $timeout(function () {
                     showQuizBankFunc();
                 }, 0)
             } else if (quizService.getSelectedTab() == 'Quiz') {
-                $timeout(function() {
+                $timeout(function () {
                     showQuiz();
                 }, 0)
             } else if (quizService.getSelectedTab() == 'QuizAssign') {
-                $timeout(function() {
+                $timeout(function () {
                     showAssignQuiz();
                 }, 0)
             }
@@ -6585,8 +6570,8 @@ angular.module('core', [
             // console.log(quizService.getBookAfterCreation() !== null)
 
             if (quizService.getBookAfterCreation() !== null) {
-                ref.child('question-bank').on('child_added', function(snapShot) {
-                    $timeout(function() {
+                ref.child('question-bank').on('child_added', function (snapShot) {
+                    $timeout(function () {
                         $scope.books.push(snapShot.val());
                         $scope.booksId.push(snapShot.key());
                         if (quizService.getBookAfterCreation() == snapShot.key()) {
@@ -6597,8 +6582,8 @@ angular.module('core', [
                 });
             } else {
                 // console.log('ELSE');
-                ref.child('question-bank').on('child_added', function(snapShot) {
-                    $timeout(function() {
+                ref.child('question-bank').on('child_added', function (snapShot) {
+                    $timeout(function () {
                         $scope.books.push(snapShot.val());
                         $scope.booksId.push(snapShot.key());
 
@@ -6618,16 +6603,16 @@ angular.module('core', [
                     $scope.bookId = quizService.getBook();
                     $scope.selectedBookIndex = quizService.getSelectedBook();
                     console.log(quizService.getBook());
-                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function(snapShot) {
-                        $timeout(function() {
+                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
+                        $timeout(function () {
                             $scope.chapters.push(snapShot.val());
                             $scope.chaptersId.push(snapShot.key());
                         }, 0)
                     });
                     if (quizService.getChapter() !== null) {
                         $scope.chapterId = quizService.getChapter();
-                        ref.child('question-bank-topic').child(quizService.getBook()).child(quizService.getChapter()).on('child_added', function(snapShot) {
-                            $timeout(function() {
+                        ref.child('question-bank-topic').child(quizService.getBook()).child(quizService.getChapter()).on('child_added', function (snapShot) {
+                            $timeout(function () {
                                 $scope.topics.push(snapShot.val());
                                 $scope.topicsId.push(snapShot.key());
                             }, 0)
@@ -6635,8 +6620,8 @@ angular.module('core', [
                         $scope.selectedChapterIndex = quizService.getSelectedChapter()
                         if (quizService.getTopic() !== null) {
                             $scope.topicId = quizService.getTopic();
-                            ref.child('questions').child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).on('child_added', function(snapShot) {
-                                $timeout(function() {
+                            ref.child('questions').child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).on('child_added', function (snapShot) {
+                                $timeout(function () {
                                     $scope.questions.push(snapShot.val())
                                 }, 0)
                             });
@@ -6661,7 +6646,8 @@ angular.module('core', [
         };
 
         function afterLoad(check) {
-            if (check) {}
+            if (check) {
+            }
 
         };
 
@@ -6718,7 +6704,6 @@ angular.module('core', [
         function showAssignQuiz() {
 
 
-
             $scope.showQuizBank = false;
             $scope.showQuizList = false;
             $scope.showQuizAssign = true;
@@ -6732,35 +6717,35 @@ angular.module('core', [
 
             $scope.shceduleQuizArray = [];
             //Calling Shcedule Array List
-            ref.child('quiz-schedule').on('child_added', function(snapShot) {
+            ref.child('quiz-schedule').on('child_added', function (snapShot) {
 
                 var abc = {
                     group: snapShot.key(),
                     sub_group: []
                 };
-                $.map(snapShot.val(), function(dbTopics, sbgindex) {
+                $.map(snapShot.val(), function (dbTopics, sbgindex) {
                     //for getting sub groups and topics
                     var sb = {
                         name: sbgindex,
                         topics: []
                     };
                     //var tmp2 = {name: sbgindex, topics:
-                    $.map(dbTopics, function(quiz, quizindex) {
+                    $.map(dbTopics, function (quiz, quizindex) {
 
-                            //Quiezes
-                            var qiuzess = [];
-                            $.map(quiz, function(quizDb, qindex) {
-                                qiuzess.push(quizDb);
-                            }); //map quizDb
+                        //Quiezes
+                        var qiuzess = [];
+                        $.map(quiz, function (quizDb, qindex) {
+                            qiuzess.push(quizDb);
+                        }); //map quizDb
 
-                            //Topics
-                            var topicx = {
-                                name: quizindex,
-                                quizes: qiuzess
-                            };
-                            sb.topics.push(topicx);
+                        //Topics
+                        var topicx = {
+                            name: quizindex,
+                            quizes: qiuzess
+                        };
+                        sb.topics.push(topicx);
 
-                        }) //map dbtopic
+                    }) //map dbtopic
 
                     //  };//tmp2
 
@@ -6788,22 +6773,21 @@ angular.module('core', [
 
                 console.log(JSON.stringify($scope.shceduleQuizArray));
 
-                $scope.SearchBindRecord = function(a, b, c) {
+                $scope.SearchBindRecord = function (a, b, c) {
                     if (c === 'sub') {
                         $scope.shceduleQuizSubGroups = a.sub_group;
 
                         //getting All Questions of Specific Groups
                         $scope.shceduleQuizQuizes = [];
-                        $scope.shceduleQuizArray.forEach(function(value, index) {
+                        $scope.shceduleQuizArray.forEach(function (value, index) {
 
                             if (value.group == b) {
-                                value.sub_group.forEach(function(val, indx) {
+                                value.sub_group.forEach(function (val, indx) {
 
-                                    val.topics.forEach(function(v, i) {
+                                    val.topics.forEach(function (v, i) {
 
-                                        v.quizes.forEach(function(q, qi) {
+                                        v.quizes.forEach(function (q, qi) {
                                             $scope.shceduleQuizQuizes.push(q);
-
 
 
                                         }); //q
@@ -6816,27 +6800,25 @@ angular.module('core', [
                         });
 
 
-
                     } // if sub_group
 
                     if (c === 'topic') {
                         $scope.shceduleQuizTopics = a.topics;
 
 
-
                         //getting All Questions of Specific Sub Group
                         $scope.shceduleQuizQuizes = [];
-                        $scope.shceduleQuizArray.forEach(function(value, index) {
+                        $scope.shceduleQuizArray.forEach(function (value, index) {
 
 
-                            value.sub_group.forEach(function(val, indx) {
+                            value.sub_group.forEach(function (val, indx) {
 
                                 console.log('topic----: ' + JSON.stringify(val));
 
                                 if (val.name == b) {
-                                    val.topics.forEach(function(v, i) {
+                                    val.topics.forEach(function (v, i) {
 
-                                        v.quizes.forEach(function(q, qi) {
+                                        v.quizes.forEach(function (q, qi) {
                                             $scope.shceduleQuizQuizes.push(q);
                                         }); //q
 
@@ -6859,11 +6841,6 @@ angular.module('core', [
                     } //quiz
 
 
-
-
-
-
-
                 }; // SearchBindRecord
                 //$scope.SearchBindRecord($scope.shceduleQuizArray, 'saylani', 'sub');
 
@@ -6882,16 +6859,16 @@ angular.module('core', [
         function setSelectedQuestion(that, index) {
             $scope.selectedQuestionIndex = index;
             quizService.setSelectedQuestion(index)
-                /*if ($scope.lastSelectedTopic.selectedTopic) {
-                 console.log("show", arguments, that);
-                 $('.selectedTopic').addClass('previousSelected')
-                 if ($scope.lastSelectedQuestion) {
-                 $scope.lastSelectedQuestion.selectedQuestion = '';
-                 }
-                 that.selectedQuestion = 'selectedQuestion';
-                 $scope.lastSelectedQuestion = that;
-                 }
-                 console.log($scope.lastSelectedTopic.selectedTopic)*/
+            /*if ($scope.lastSelectedTopic.selectedTopic) {
+             console.log("show", arguments, that);
+             $('.selectedTopic').addClass('previousSelected')
+             if ($scope.lastSelectedQuestion) {
+             $scope.lastSelectedQuestion.selectedQuestion = '';
+             }
+             that.selectedQuestion = 'selectedQuestion';
+             $scope.lastSelectedQuestion = that;
+             }
+             console.log($scope.lastSelectedTopic.selectedTopic)*/
         }
 
         function setSelectedTopic(that, index) {
@@ -6899,17 +6876,17 @@ angular.module('core', [
             $scope.selectedTopicIndex = index;
             quizService.setSelectedTopic(index)
             quizService.setSelectedQuestion(null)
-                /*console.log("show", arguments, that);
-                 if ($scope.lastSelectedChapter.selected) {
-                 console.log('in IF')
-                 $('.previousSelected').removeClass('previousSelected')
-                 $('.selectedChapter').addClass('previousSelected')
-                 if ($scope.lastSelectedTopic) {
-                 $scope.lastSelectedTopic.selectedTopic = '';
-                 }
-                 that.selectedTopic = 'selectedTopic';
-                 $scope.lastSelectedTopic = that;
-                 }*/
+            /*console.log("show", arguments, that);
+             if ($scope.lastSelectedChapter.selected) {
+             console.log('in IF')
+             $('.previousSelected').removeClass('previousSelected')
+             $('.selectedChapter').addClass('previousSelected')
+             if ($scope.lastSelectedTopic) {
+             $scope.lastSelectedTopic.selectedTopic = '';
+             }
+             that.selectedTopic = 'selectedTopic';
+             $scope.lastSelectedTopic = that;
+             }*/
         }
 
         function setSelectedChapter(that, index) {
@@ -6919,15 +6896,15 @@ angular.module('core', [
             quizService.setSelectedChapter(index)
             quizService.setSelectedTopic(null)
             quizService.setSelectedQuestion(null)
-                /*$('.selectedChapter').removeClass('previousSelected')
-                 console.log("show", that);
-                 if ($scope.lastSelectedChapter) {
-                 $scope.lastSelectedChapter.selected = '';
-                 }
-                 quizService.setSelectedChapter(that)
-                 that.selected = 'selectedChapter';
-                 $scope.lastSelectedChapter = that;
-                 console.log($scope.lastSelectedChapter.selected)*/
+            /*$('.selectedChapter').removeClass('previousSelected')
+             console.log("show", that);
+             if ($scope.lastSelectedChapter) {
+             $scope.lastSelectedChapter.selected = '';
+             }
+             quizService.setSelectedChapter(that)
+             that.selected = 'selectedChapter';
+             $scope.lastSelectedChapter = that;
+             console.log($scope.lastSelectedChapter.selected)*/
         }
 
         function setSelectedBook(that, index) {
@@ -6940,15 +6917,15 @@ angular.module('core', [
             quizService.setSelectedChapter(null)
             quizService.setSelectedTopic(null)
             quizService.setSelectedQuestion(null)
-                /*$scope.selectedQuestionIndex = null;
-                 $scope.selectedTopicIndex = null;
-                 $scope.selectedChapterIndex = null;
-                 if ($scope.lastSelectedBook) {
-                 $scope.lastSelectedBook.selected = '';
-                 }
-                 that.selected = 'selectedBook';
-                 $scope.lastSelectedBook = that;
-                 console.log($scope.lastSelectedBook.selected)*/
+            /*$scope.selectedQuestionIndex = null;
+             $scope.selectedTopicIndex = null;
+             $scope.selectedChapterIndex = null;
+             if ($scope.lastSelectedBook) {
+             $scope.lastSelectedBook.selected = '';
+             }
+             that.selected = 'selectedBook';
+             $scope.lastSelectedBook = that;
+             console.log($scope.lastSelectedBook.selected)*/
         }
 
         function setSelectedQuizes(index) {
@@ -6976,8 +6953,8 @@ angular.module('core', [
             $scope.chaptersId = [];
             $scope.topicsId = [];
             $scope.questionsId = [];
-            ref.child('question-bank-chapters').child($scope.bookId).on('child_added', function(snapShot) {
-                $timeout(function() {
+            ref.child('question-bank-chapters').child($scope.bookId).on('child_added', function (snapShot) {
+                $timeout(function () {
                     $scope.chapters.push(snapShot.val());
                     $scope.chaptersId.push(snapShot.key());
                 }, 0)
@@ -6999,8 +6976,8 @@ angular.module('core', [
             quizService.setChapter($scope.chapterId, chapterIndex);
             $scope.topics = [];
             $scope.questions = []
-            ref.child('question-bank-topic').child($scope.bookId).child($scope.chapterId).on('child_added', function(snapShot) {
-                $timeout(function() {
+            ref.child('question-bank-topic').child($scope.bookId).child($scope.chapterId).on('child_added', function (snapShot) {
+                $timeout(function () {
                     $scope.topics.push(snapShot.val());
                     $scope.topicsId.push(snapShot.key());
                 }, 0)
@@ -7015,8 +6992,8 @@ angular.module('core', [
             quizService.setQuestionObject(null);
             $scope.questions = [];
             ref.child('questions').child($scope.bookId).child($scope.chapterId).child($scope.topicId).on('child_added',
-                function(snapShot) {
-                    $timeout(function() {
+                function (snapShot) {
+                    $timeout(function () {
                         $scope.questions.push(snapShot.val())
                     }, 0)
                 });
@@ -7039,7 +7016,7 @@ angular.module('core', [
 
         function showQuizes(bookIndex) {
             $scope.quizes = [];
-            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function(snapShot) {
+            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
                 var temp = {
                     details: snapShot.val().quizDetails,
                     key: snapShot.key()
@@ -7054,24 +7031,24 @@ angular.module('core', [
             var chapterKey = '';
             console.log('showing quiz Questions');
             ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
-                .on('child_added', function(snapShot) {
+                .on('child_added', function (snapShot) {
                     chapterKey = snapShot.key();
                     var chapterTemp = snapShot.val().ChapterDetails;
                     ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
-                        .child(chapterKey).child('ChapterTopics').on('child_added', function(snap) {
-                            var topicTemp = snap.val().TopicDetails;
-                            ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
-                                .child(chapterKey).child('ChapterTopics').child(snap.key())
-                                .child('TopicQuestions').on('child_added', function(shot) {
-                                    $scope.Array[iterator] = {
-                                        chapterDetails: chapterTemp,
-                                        topicDetails: topicTemp,
-                                        question: shot.val()
-                                    };
-                                    iterator++;
-                                });
-
+                        .child(chapterKey).child('ChapterTopics').on('child_added', function (snap) {
+                        var topicTemp = snap.val().TopicDetails;
+                        ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
+                            .child(chapterKey).child('ChapterTopics').child(snap.key())
+                            .child('TopicQuestions').on('child_added', function (shot) {
+                            $scope.Array[iterator] = {
+                                chapterDetails: chapterTemp,
+                                topicDetails: topicTemp,
+                                question: shot.val()
+                            };
+                            iterator++;
                         });
+
+                    });
                 });
 
         }
@@ -7098,20 +7075,20 @@ angular.module('core', [
             //var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.userID))
             var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child(userService.getCurrentUser().userID))
                 .$loaded()
-                .then(function(data) {
+                .then(function (data) {
                     //alert(data.$id)
                     // console.log('THEN getUserObj')
 
-                    userObjUbind = data.$watch(function() {
+                    userObjUbind = data.$watch(function () {
                         getUserObj()
                     })
                     $scope.userObj = data;
-                    data.forEach(function(el, i) {
+                    data.forEach(function (el, i) {
                         var j = i;
                         $firebaseObject(firebaseService.getRefGroups().child(el.$id))
                             .$loaded()
-                            .then(function(groupData) {
-                                groupDataUbind[j] = groupData.$watch(function() {
+                            .then(function (groupData) {
+                                groupDataUbind[j] = groupData.$watch(function () {
                                     $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
                                 });
                                 $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
@@ -7120,37 +7097,37 @@ angular.module('core', [
                                     //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/!*.child('profile-image')*!/)
                                     $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))
                                         .$loaded()
-                                        .then(function(img) {
+                                        .then(function (img) {
 
                                             $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
-                                            userDataUbind[j] = img.$watch(function(dataVal) {
+                                            userDataUbind[j] = img.$watch(function (dataVal) {
 
-                                                    $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img)
-                                                })
-                                                // console.log($scope.userObj)
+                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img)
+                                            })
+                                            // console.log($scope.userObj)
                                         })
 
                                 }
                             });
                     });
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     //alert(err);
                 })
         };
 
         function assignQuiz() {
             /* $timeout(function () {
-                 $location.path('/user/:userID/quiz/quizAssign');
+             $location.path('/user/:userID/quiz/quizAssign');
              }, 0)*/
             $scope.subGroup = [];
-            $timeout(function() {
+            $timeout(function () {
                 $scope.showQuizSceduling = navService.toggleRight6;
                 $scope.showQuizSceduling();
             }, 0)
 
             $scope.quizesList = [];
-            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function(snapShot) {
+            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
                 $scope.quizesListKey.push(snapShot.key());
                 $scope.quizesList.push(snapShot.val().quizDetails);
                 console.log(snapShot.val());
@@ -7191,13 +7168,11 @@ angular.module('core', [
         }
 
 
-
-
         function setSelectedGroup(id, index) {
             $scope.selectedGroup = id;
             $scope.selectedGroupIndex = index;
             $scope.subGroup = [];
-            refMain.child('subgroups').child(id).on('child_added', function(snapShot) {
+            refMain.child('subgroups').child(id).on('child_added', function (snapShot) {
                 $scope.subGroup.push(snapShot.key());
                 console.log($scope.subGroup);
             });
@@ -7214,8 +7189,6 @@ angular.module('core', [
                     $scope.myDatabase[i].quizId = $scope.seclectedQuizID;
                     $scope.myDatabase[i].subGroupIdIndex = index;
                 }
-
-
 
 
             }
@@ -7252,7 +7225,6 @@ angular.module('core', [
             $scope.showQuizSceduling();
 
         }
-
 
 
         function showQuizChapters(bookIndex) {
@@ -7312,7 +7284,7 @@ angular.module('core', [
                 console.log(mimeType)
                 console.log($scope.bookID)
                 $scope.saveFile(x, mimeType, $scope.bookID)
-                    .then(function(url) {
+                    .then(function (url) {
                         // $scope.temps.imgLogoUrl = url + '?random=' + new Date();
                         //its for sending data on firebase by Name's node
                         userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
@@ -7331,9 +7303,9 @@ angular.module('core', [
                         $scope.bookID = "";
                         //$scope.newImg = null;
                         alert('book creation successful')
-                            // $location.path('/user/' + user.userID)
+                        // $location.path('/user/' + user.userID)
                     })
-                    .catch(function() {
+                    .catch(function () {
                         //bookForm.$submitted = false;
                         //return messageService.showSuccess('picture upload failed')
                         alert('picture upload failed')
@@ -7343,22 +7315,22 @@ angular.module('core', [
 
         }
 
-        $scope.showAdvanced1 = function(ev) {
+        $scope.showAdvanced1 = function (ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue.tmpl.html',
                 targetEvent: ev
-            }).then(function(picture) {
+            }).then(function (picture) {
                 $rootScope.newImg = picture;
                 console.log("this is image" + picture)
-            }, function(err) {
+            }, function (err) {
                 console.log(err)
 
             })
 
         };
 
-        $scope.saveFile = function(file, type, quizID) {
+        $scope.saveFile = function (file, type, quizID) {
 
             console.log(file);
             console.log(type);
@@ -7367,7 +7339,7 @@ angular.module('core', [
             var defer = $q.defer();
             var xhr = new XMLHttpRequest();
             xhr.open("GET", appConfig.apiBaseUrl + "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" + type);
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
@@ -7377,8 +7349,9 @@ angular.module('core', [
                     }
                 }
             };
-            defer.resolve(true) /*remove it*/
-                //            xhr.send();
+            defer.resolve(true)
+            /*remove it*/
+            //            xhr.send();
             return defer.promise;
         };
 
@@ -7388,7 +7361,7 @@ angular.module('core', [
             var xhr = new XMLHttpRequest();
             xhr.open("PUT", signed_request);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
-            xhr.onload = function(data) {
+            xhr.onload = function (data) {
                 console.log(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
@@ -7400,7 +7373,7 @@ angular.module('core', [
 
                 }
             };
-            xhr.onerror = function(error) {
+            xhr.onerror = function (error) {
                 defer.reject(messageService.showSuccess("Could not upload file."));
             };
             xhr.send(file);
@@ -7435,7 +7408,7 @@ angular.module('core', [
             ref.child("question-bank-chapters").child($scope.bookId).push({
                 title: $scope.Title,
                 description: $scope.Description
-            }, function() {
+            }, function () {
                 $scope.Title = '';
                 $scope.Description = '';
 
@@ -7444,7 +7417,7 @@ angular.module('core', [
 
         function addChapter() {
             if ($scope.bookId) {
-                $timeout(function() {
+                $timeout(function () {
                     $scope.showChapter = navService.toggleRight2;
                     $scope.showChapter();
                 }, 0)
@@ -7477,7 +7450,7 @@ angular.module('core', [
         function addTopic() {
             //console.log('Add Book')
             if ($scope.chapterId) {
-                $timeout(function() {
+                $timeout(function () {
                     //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddTopic/' + $scope.chapterId)
                     $scope.showTopic = navService.toggleRight4;
                     $scope.showTopic();
@@ -7499,7 +7472,7 @@ angular.module('core', [
         function addQuestion() {
             //console.log('Add Book')
             if ($scope.topicId) {
-                $timeout(function() {
+                $timeout(function () {
                     //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddQuestion/' + $scope.topicId)
                     $scope.showQuestion = navService.toggleRight3;
                     $scope.showQuestion();
@@ -7556,20 +7529,20 @@ angular.module('core', [
             }]
         };
         //If Answer Type Changes.
-        this.typeChanged = function() {
+        this.typeChanged = function () {
 
             that.radioValue = '';
             that.myAnswer = undefined;
             that.myTop = ['40px', '90px'];
             topMargin = 50;
-            angular.forEach(that.question.QuestionOptions, function(data) {
+            angular.forEach(that.question.QuestionOptions, function (data) {
                 if (data.id === true) {
                     data.id = false;
                 }
             });
         };
         //Setting different inputs.
-        this.setBoxValue = function() {
+        this.setBoxValue = function () {
             this.showAddButton = true;
             that.question.QuestionOptions = [{
                 optionText: '',
@@ -7593,7 +7566,7 @@ angular.module('core', [
             }
         };
         //Push new input fields.
-        this.addOption = function() {
+        this.addOption = function () {
 
             //Radio margin.
             if (topMargin < 100) {
@@ -7608,14 +7581,14 @@ angular.module('core', [
             });
         };
         //Delete Option
-        this.deleteOption = function(optionIndex) {
+        this.deleteOption = function (optionIndex) {
             if (optionIndex > -1) {
                 that.question.QuestionOptions.splice(optionIndex, 1);
             }
         };
 
         //Sets Answer if Type CheckBox is selected.
-        that.setCheckBoxValue = function(questionId) {
+        that.setCheckBoxValue = function (questionId) {
             if (that.question.QuestionOptions[questionId].id == true) {
                 that.question.QuestionOptions[questionId].rightAnswer = true;
                 that.answerTag.push('one');
@@ -7625,12 +7598,12 @@ angular.module('core', [
             }
         };
         //        //Add more Questions, Saves data to firebase and clears input fields.
-        that.addQuestionsAndContinue = function() {
+        that.addQuestionsAndContinue = function () {
             that.showRadioOptions = false;
             that.showCheckOptions = false;
             that.showAddButton = false;
             if (that.myType.name === 'Radio Button') {
-                angular.forEach(that.question.QuestionOptions, function(data) {
+                angular.forEach(that.question.QuestionOptions, function (data) {
                     if (data.optionText == that.myAnswer.optionText) {
                         data.rightAnswer = true;
                     } else {
@@ -7638,7 +7611,7 @@ angular.module('core', [
                     }
                 });
             }
-            angular.forEach(that.question.QuestionOptions, function(data) {
+            angular.forEach(that.question.QuestionOptions, function (data) {
                 delete data.$$hashKey;
                 delete data.$$mdSelectId;
                 delete data.id;
@@ -7663,15 +7636,15 @@ angular.module('core', [
             that.myAnswer = undefined;
         };
         //Redirect on close
-        this.prev = function() {
-            $timeout(function() {
+        this.prev = function () {
+            $timeout(function () {
                 $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
             });
         };
         //Save and Exit Button
-        this.showAnswer = function() {
+        this.showAnswer = function () {
             if (that.myType.name === 'Radio Button') {
-                angular.forEach(that.question.QuestionOptions, function(data) {
+                angular.forEach(that.question.QuestionOptions, function (data) {
                     if (data.optionText == that.myAnswer.optionText) {
                         data.rightAnswer = true;
                     } else {
@@ -7679,13 +7652,13 @@ angular.module('core', [
                     }
                 });
             }
-            angular.forEach(that.question.QuestionOptions, function(data) {
+            angular.forEach(that.question.QuestionOptions, function (data) {
                 delete data.$$hashKey;
                 delete data.$$mdSelectId;
                 delete data.id;
             });
             that.question.Type = that.myType.name;
-            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function() {
+            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
 
                 that.question = {};
                 abc();
@@ -7697,10 +7670,10 @@ angular.module('core', [
 
 
         //View Dialog Box.
-        this.showAdvanced = function(ev) {
+        this.showAdvanced = function (ev) {
             that.question.Type = that.myType.name;
             if (that.myType.name === 'Radio Button') {
-                angular.forEach(that.question.QuestionOptions, function(data) {
+                angular.forEach(that.question.QuestionOptions, function (data) {
                     if (data.optionText == that.myAnswer.optionText) {
                         data.rightAnswer = true;
                     } else {
@@ -7717,9 +7690,9 @@ angular.module('core', [
                         questionData: that.question
                     }
                 })
-                .then(function(answer) {
+                .then(function (answer) {
 
-                }, function() {
+                }, function () {
 
                 });
         };
@@ -7737,7 +7710,7 @@ angular.module('core', [
             /*$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')*/
 
             if ($scope.bookId) {
-                $timeout(function() {
+                $timeout(function () {
                     //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')
 
                     $scope.showQuize = navService.toggleRight5;
@@ -7826,7 +7799,7 @@ angular.module('core', [
 
 
                     // seleted data start
-                    $scope.setSelectedQuestion = function(thisScope) {
+                    $scope.setSelectedQuestion = function (thisScope) {
 
                         if ($scope.lastSelectedTopic.selectedTopic) {
                             $('.selectedTopic').addClass('previousSelected');
@@ -7838,7 +7811,7 @@ angular.module('core', [
                         }
                     };
 
-                    $scope.setSelectedTopics = function(thisScope) {
+                    $scope.setSelectedTopics = function (thisScope) {
                         if ($scope.lastSelectedChapter.selected) {
                             $('.previousSelected').removeClass('previousSelected');
                             $('.selectedChapter').addClass('previousSelected');
@@ -7850,7 +7823,7 @@ angular.module('core', [
                         }
                     };
 
-                    $scope.setSelectedChapters = function(thisScope) {
+                    $scope.setSelectedChapters = function (thisScope) {
 
                         $('.selectedChapter').removeClass('previousSelected');
                         if ($scope.lastSelectedChapter) {
@@ -7865,7 +7838,7 @@ angular.module('core', [
                     var chapterCounter = 0;
                     //Chapters
 
-                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function(snapShot) {
+                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
                         //$timeout(function () {
 
                         $scope.chapters.push(snapShot.val());
@@ -7889,7 +7862,7 @@ angular.module('core', [
                     $scope.awaisObject[quizService.getBook()] = {};
 
                     //Topics
-                    $scope.showTopics = function(chapterIndex) {
+                    $scope.showTopics = function (chapterIndex) {
                         $scope.showQuestionView1 = false;
                         if ($scope.quizObject[bookId]['quizQuestion'] == undefined) {
                             $scope.quizObject[bookId]['quizQuestion'] = {};
@@ -7916,8 +7889,8 @@ angular.module('core', [
                             $scope.topicsId = [];
                             $scope.topicId = null;
                             topicCounter = 0;
-                            ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function(snapShot) {
-                                $timeout(function() {
+                            ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function (snapShot) {
+                                $timeout(function () {
                                     $scope.topics.push(snapShot.val());
                                     $scope.viewAllTopics[chapterIndex].push(snapShot.val());
                                     $scope.topicsId.push(snapShot.key());
@@ -7935,7 +7908,7 @@ angular.module('core', [
                     };
 
                     //Questions.
-                    $scope.showQuestions = function(topicIndex) {
+                    $scope.showQuestions = function (topicIndex) {
                         $scope.showQuestionView1 = false;
                         if ($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]] == undefined) {
                             $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]] = {};
@@ -7962,8 +7935,8 @@ angular.module('core', [
                             quizCreateService.setTopic($scope.topicId, topicIndex);
 
                             ref.child('questions').child(quizService.getBook()).child(quizCreateService.getChapter()).child(quizCreateService.getTopic()).on('child_added',
-                                function(snapShot) {
-                                    $timeout(function() {
+                                function (snapShot) {
+                                    $timeout(function () {
                                         $scope.questions.push(snapShot.val());
                                         $scope.questionsId.push(snapShot.key());
                                         $scope.nestedQuestions[$scope.myChapterIndex][topicIndex].push(snapShot.val());
@@ -7978,7 +7951,7 @@ angular.module('core', [
                             $scope.nestedQuestions[$scope.myChapterIndex][topicIndex] = $scope.tempQuestions[$scope.myChapterIndex][topicIndex];
                         }
                     };
-                    $scope.showQuestionView = function(question) {
+                    $scope.showQuestionView = function (question) {
                         $scope.showQuestionView1 = true;
                         if (question !== null) {
                             quizService.setQuestionObject(question);
@@ -7986,15 +7959,15 @@ angular.module('core', [
                         $scope.questionView = question;
                     };
                     $scope.checkArray = [];
-                    $scope.showTickIcon = function(trueFalseValue, questionIndex) {
+                    $scope.showTickIcon = function (trueFalseValue, questionIndex) {
 
                         console.log($scope.tickArray);
 
                         if (trueFalseValue == false) {
                             console.log("Checking");
                             $scope.checkArray.push(questionIndex)
-                                //$scope.tickArray.push(trueFalseValue);
-                                //console.log($scope.tickArray + 'pus');
+                            //$scope.tickArray.push(trueFalseValue);
+                            //console.log($scope.tickArray + 'pus');
                             $scope.showQuestionView1 = true;
                             $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
                             $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
@@ -8013,7 +7986,7 @@ angular.module('core', [
                             $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = false;
                             arr = $scope.viewAllQuestions;
                             name = $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].Title;
-                            angular.forEach(arr, function(data, key) {
+                            angular.forEach(arr, function (data, key) {
                                 if (data.Title == name) {
                                     arr.splice(key, 1);
                                 }
@@ -8027,17 +8000,17 @@ angular.module('core', [
                     };
 
 
-                    $scope.createQuiz = function() {
+                    $scope.createQuiz = function () {
                         /*Quiz Create.*/
 
                         //Delete Topics if Questions not there.
                         console.log($scope.quizObject[bookId]['quizQuestion']);
-                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function(datum, key, obj) {
+                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (datum, key, obj) {
                             //$scope.consoleObj = datum;
                             //console.log($scope.consoleObj + 'TIS IS T LENT OF AN OBJECT');
                             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
                             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
-                            angular.forEach(datum['ChapterTopics'], function(datum1, key2) {
+                            angular.forEach(datum['ChapterTopics'], function (datum1, key2) {
                                 if (Object.keys(datum1['TopicQuestions']).length == 0) {
                                     delete($scope.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
                                 }
@@ -8046,7 +8019,7 @@ angular.module('core', [
                         //console.log($scope.consoleObj);
                         //console.log($scope.consoleObj.length + 'TIS IS T LENT OF AN OBJECT');
                         //Delete Chapters if Topics not there.
-                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function(data, key) {
+                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (data, key) {
                             if (Object.keys(data['ChapterTopics']).length == 0) {
                                 delete($scope.quizObject[bookId]['quizQuestion'][key])
                             }
@@ -8056,8 +8029,8 @@ angular.module('core', [
                         /*Quiz Attempt*/
 
                         //Delete Topics if Questions not there.
-                        angular.forEach($scope.awaisObject[bookId], function(datum, key) {
-                            angular.forEach(datum, function(datum1, key2) {
+                        angular.forEach($scope.awaisObject[bookId], function (datum, key) {
+                            angular.forEach(datum, function (datum1, key2) {
                                 if (Object.keys(datum1).length == 0) {
                                     delete($scope.awaisObject[bookId][key][key2]);
                                 }
@@ -8066,7 +8039,7 @@ angular.module('core', [
 
 
                         //Delete Chapters if Topics not there.
-                        angular.forEach($scope.awaisObject[bookId], function(data, key) {
+                        angular.forEach($scope.awaisObject[bookId], function (data, key) {
                             if (Object.keys(data).length == 0) {
                                 delete($scope.awaisObject[bookId][key])
                             }
@@ -8080,12 +8053,12 @@ angular.module('core', [
 
 
                         //Object With Answer.
-                        ref.child('quiz-create').child(bookId).push($scope.quizObject[bookId], function() {
+                        ref.child('quiz-create').child(bookId).push($scope.quizObject[bookId], function () {
 
-                            angular.forEach($scope.awaisObject[bookId], function(one) {
-                                angular.forEach(one, function(two) {
-                                    angular.forEach(two, function(three) {
-                                        angular.forEach(three.QuestionOptions, function(deleteAnswer) {
+                            angular.forEach($scope.awaisObject[bookId], function (one) {
+                                angular.forEach(one, function (two) {
+                                    angular.forEach(two, function (three) {
+                                        angular.forEach(three.QuestionOptions, function (deleteAnswer) {
                                             delete(deleteAnswer.rightAnswer);
                                         });
                                     });
@@ -8093,12 +8066,12 @@ angular.module('core', [
                             });
                             //Object WithoutAnswer.
                             // ref.child('quiz-attempt').child(bookId).push($scope.awaisObject[bookId]);
-                            angular.forEach($scope.viewAllQuestions, function(data) {
+                            angular.forEach($scope.viewAllQuestions, function (data) {
                                 delete(data.$$hashKey);
-                                angular.forEach(data.QuestionOptions, function(option) {
+                                angular.forEach(data.QuestionOptions, function (option) {
                                     delete(option.$$hashKey);
                                 });
-                                ref.child('quiz-create').child(bookId).on("child_added", function(snapshot) {
+                                ref.child('quiz-create').child(bookId).on("child_added", function (snapshot) {
                                     $scope.latestNode.push(snapshot.key());
                                 });
                                 ref.child('quiz-attempt').child(bookId).child($scope.latestNode[$scope.latestNode.length - 1]).set(
@@ -8120,7 +8093,6 @@ angular.module('core', [
                     hideDelay: 5000
                 });
             }
-
 
 
             console.log($scope.quizes);
@@ -8207,6 +8179,7 @@ angular.module('core')
                     var self = this;
                     $http.post(appConfig.apiBaseUrl + '/api/signin', userCred).
                     success(function(data, status, headers, config) {
+
                         // this callback will be called asynchronously
                         // when the response is available
                         //self.userData = data.user;
@@ -8217,7 +8190,7 @@ angular.module('core')
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
                                 .then(function() {
                                     successFn(data);
-                                    dataService.loadData();
+                                    // dataService.loadData();
                                 }, function(error) {
                                     if (error) {
                                         console.error("Firebase Authentication failed: ", error);
@@ -10115,7 +10088,6 @@ angular.module('core')
                             "email": res.user.email,
                             "displayName": res.user.firstName + " " + res.user.lastName
                         };
-
                         //create an appropriate display message.
                         var displayName;
                         if (type === "approve") {
@@ -10130,7 +10102,7 @@ angular.module('core')
                             language: "en",
                             verb: type === "approve" ? "group-approve-member" : "group-reject-member",
                             published: firebaseTimeStamp,
-                            displayName: actor.displayName + " approved " + object.displayName + " as a member in " + group.title,
+                            displayName: displayName,//actor.displayName + " approved " + object.displayName + " as a member in " + group.title,
                             // if actor is to subject and target is to object then object is to verb
                             actor: actor,
                             object: object,
@@ -13774,6 +13746,7 @@ angular.module('core')
     angular
         .module('core')
         .directive("compareTo", compareTo)
+        .directive("compareToo", compareToo)
         .directive("compareAgainst", compareAgainst);
 
     function compareTo() {
@@ -13785,11 +13758,31 @@ angular.module('core')
             link: function(scope, element, attributes, ngModel) {
 
                 ngModel.$validators.compareTo = function(modelValue) {
+                    console.log(modelValue);
                     if(modelValue) {
                       return modelValue !== scope.otherModelValue;
                     } else {
                        return true
                     }
+                };
+
+                scope.$watch("otherModelValue", function() {
+                    ngModel.$validate();
+                });
+            }
+        };
+    }
+
+    function compareToo() {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=compareToo"
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareToo = function(modelValue) {
+                  return modelValue == scope.otherModelValue;
                 };
 
                 scope.$watch("otherModelValue", function() {

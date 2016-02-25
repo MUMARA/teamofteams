@@ -15,6 +15,7 @@ angular.module('core')
                     var self = this;
                     $http.post(appConfig.apiBaseUrl + '/api/signin', userCred).
                     success(function(data, status, headers, config) {
+
                         // this callback will be called asynchronously
                         // when the response is available
                         //self.userData = data.user;
@@ -25,7 +26,7 @@ angular.module('core')
                             firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
                                 .then(function() {
                                     successFn(data);
-                                    dataService.loadData();
+                                    // dataService.loadData();
                                 }, function(error) {
                                     if (error) {
                                         console.error("Firebase Authentication failed: ", error);

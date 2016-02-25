@@ -17,7 +17,6 @@
                         // $location.path(location + data.user.userID);
                         $state.go('user.dashboard', {userID: data.user.userID})
                         defer.resolve()
-
                     }, function(data) {
                         if (data) {
                             if (data.statusCode == 0) {
@@ -29,7 +28,6 @@
                             messageService.showFailure('Network Error Please Submit Again');
                         }
                         defer.reject(data)
-
                     });
                     return defer.promise;
 
