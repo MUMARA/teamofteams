@@ -252,10 +252,12 @@
                             messageService.showSuccess('Checkout Successfully!');
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
-                                self.progressReportSideNav();
                                 var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId }
-                                //val.id, user.groupID, user.subgroupID
                                 self.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(userObj, groupObj.groupId, groupObj.subgroupId);
+
+                                //open side nav bar for getting progress report
+                                self.progressReportSideNav();
+
                                 // self.switchCheckIn = true;
                                 // self.switchMsg = true;
                                 // self.isDailyProgessSubmit = true
