@@ -1,0 +1,118 @@
+function activityStream(type, targetinfo, area, memberUserID) {
+
+var myObj = {	'type: group': { 'area.type: membersettings': 'membersettings()', 'area.type: group-created': 'function()', 'area.type: group-updated': 'function()' } }
+		'type: subgroup': { 'area.type: subgroup-created': 'function()', 'area.type: subgroup-updated': 'function()', 'area.type: subgroup-member-assigned': 'function()', 'area.type: subgroup-admin-assigned': 'function()' }
+		'type: policy':	{ 'area.type: policy-created': 'function()', 'area.type: policy-updated': 'function()', 'area.type: policy-assigned-team': 'function()' }
+		'type: progressReport': { 'area.type: progressReport-created': 'function()', 'area.type: progressReport-updated': 'function()' }
+		'type: firepad': {}
+		'type: chat': {}
+}
+
+
+var displayNameObject = {
+	'type: group': {
+            'area.type: membersettings': {
+            //reject == ignore
+            'area.action: group-ignore-member' : "actor.displayName rejected object.displayName's membership request for target.displayName."
+			'area.action: group-approve-member' : "actor.displayName approved object.displayName as a member in target.displayName."
+			'area.action: user-membership-to-member' : "actor.displayName changed object.displayName's membership from \"member\" to \"suspend\" for Team of teams 01 group."
+			'area.action: user-membership-to-admin' : "actor.displayName changed object.displayName's membership from \"member\" to \"admin\" for target.displayName."
+			'area.action: user-membership-block' : "actor.displayName changed object.displayName's membership to \"suspend\" for target.displayName."
+			'area.action: user-membership-unblock' : "actor.displayName changed object.displayName's membership from \"suspend\" to \"member\" for target.displayName."
+			'area.action: group-member-removed' : "actor.displayName removed object.displayName from target.displayName group."
+		}, //membersettings
+        'area.type: group-created': "actor.displayName created group \"target.displayName\" ",
+        'area.type: group-updated': "actor.displayName udpated group \"target.displayName\" ",
+	}, //'type: group'
+    'type: subgroup': {
+            'area.type: subgroup-created': "actor.displayName created subgroup \"target.displayName\" ",
+            'area.type: subgroup-updated': "actor.displayName updated subgroup \"target.displayName\" ",
+            'area.type: subgroup-member-assigned': "actor.displayName assigned object.displayName as a member of target.displayName.",
+            'area.type: subgroup-admin-assigned': "actor.displayName assigned object.displayName as a admin of target.displayName.",
+    }, //subgroup
+    'type: policy': {
+            'area.type: policy-created': "actor.displayName created policy \"target.displayName\" ",
+            'area.type: policy-updated': "actor.displayName updated policy \"target.displayName\" ",
+            'area.type: policy-assigned-team': "actor.displayName assigned policy \"target.displayName\" to \"object.displayName\" ",
+    }, //policy
+    'type: progressReport': {
+        'area.type: progressReport-created': "Created progress report in \"target.displayName\" ",
+        'area.type: progressReport-updated': "Updated progress report in \"target.displayName\" ",
+    } //progressReport
+
+}
+
+
+// ## target ## //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
+var target = {
+         "type": type,         //we are using group activity streams
+         "id": targetinfo.id,
+         "url": targetinfo.url,
+         "displayName": targetinfo.title
+};
+
+var displayMessage = ''
+
+//getting memberInfo by memberUserID
+firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+    var object = {
+       "type": "user",
+       "id": memberUserID, //an index should be set on this
+       "email": res.user.email,
+       "displayName": res.user.firstName + " " + res.user.lastName
+    };
+
+
+
+var activity = {
+       language: "en",
+       verb: requestFor === "approve" ? "group-approve-member" : "group-reject-member",
+       published: firebaseTimeStamp,
+       displayMessage: displayMessage,
+       actor: actor,
+       object: object,
+       target: target
+};
+
+
+//multipath will be run.......
+//  //multi path node...
+//  var multipath = {};
+//  multipath['group-activity-streams/'+groupid] = activity;
+// multipath['user-activity-streams/'+memberUserID] = {
+//           userName: res.user.firstName + " " + res.user.lastName,
+//           email: res.user.email,
+//           userId: memberUserID,
+//           displayMessage: displayMessage,
+//           seen : false,
+//           published: firebaseTimeStamp
+//  }
+
+
+};
+
+
+
+
+//myObj[type][area.type]
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function membersettings(area.action) {
+
+}
