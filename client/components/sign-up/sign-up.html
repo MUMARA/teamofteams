@@ -17,10 +17,11 @@
             </div>
              <md-input-container>
                 <label>Email Address</label>
-                <input name="email" ng-model="signUp.user.email" type="email" required>
+                <input name="email" ng-model="signUp.user.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" type="email" required>
                 <div ng-hide="singupForm.email.$untouched" ng-messages="singupForm.email.$error" ng-messages-multiple>
                     <div class="invalid_color" ng-message="required">This is required.</div>
                     <div class="invalid_color" ng-message="email">Not valid email</div>
+                    <div class="invalid_color" ng-message="pattern">Email is not valid</div>
                 </div>
             </md-input-container>
             <md-input-container>
