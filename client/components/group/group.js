@@ -3,16 +3,16 @@
 
     angular
         .module('app.group')
-        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state', GroupController]);
+        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
 
-    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state) {
+    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
         var that = this;
         //adminof subgroup checkin member
         this.openSetting = function () {
             if (that.adminOf === 'Group') {
                 $state.go('user.edit-group', {groupID: that.groupID});
             } else if (that.adminOf === 'Subgroup') {
-                $state.go('user.policy', {groupID: that.groupID});
+                $state.go('user.create-subgroup', {groupID: that.groupID});
             }
         };
 
@@ -44,9 +44,11 @@
             }
             that.panel.subgroupID = subgroupID;
             if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {groupID: that.groupID, subgroupID: that.panel.subgroupID});
+                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
+                //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'), {groupID: that.groupID});
+                $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
+                //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
             }
         };
 
@@ -58,7 +60,7 @@
             that.isAdmin = false;
             that.user = userService.getCurrentUser();
             that.panel = groupService.getPanelInfo();
-            that.adminOf = '';
+            that.adminOf = false;
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID ? $stateParams.subgroupID : that.panel.subgroupID;
             that.group = false;
@@ -72,7 +74,7 @@
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
                     if (subg.val()) {
                         firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgrp){
-                            if (subgrp.val()['membership-type'] > 0) {
+                            if (subgrp.val() && subgrp.val()['membership-type'] > 0) {
                                 checkGroup()
                             } else {
                                 that.reqObj.subgroupID = subg.key();
@@ -132,11 +134,11 @@
                                         that.isOwner = true;
                                         that.isAdmin = true;
                                         that.isMember = true;
-                                        that.adminOf = 'Subgroup';
+                                        that.adminOf = that.adminOf || 'Subgroup';
                                     } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
                                         that.isAdmin = true;
                                         that.isMember = true;
-                                        that.adminOf = 'Subgroup';
+                                        that.adminOf = that.adminOf || 'Subgroup';
                                     } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
                                         that.isMember = true;
                                     }

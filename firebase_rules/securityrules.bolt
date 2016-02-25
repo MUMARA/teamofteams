@@ -662,26 +662,40 @@ function isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) {
 //subgroup names
 //================================
 
-path /subgroups-names/{groupid} {
-    read()  {   isGroupMembersIdExist(groupid) &&
-                groupMemberShipAnyType(groupid) }
+path /subgroups-names/{groupid}/{subgroupid} is SubGroupsNameInfo {
+    /*read()  {   isGroupMembersIdExist(groupid) &&*/
+    read()  { isAuthenticated() }
+                /*groupMemberShipAnyType(groupid) }*/
 
-    write() {  isGroupMembersIdExist(groupid)              &&
-               isCurrentUserGroupMembersOwner(groupid)     ||
-               groupMemberShipAnyType(groupid)  }
+    create() {  isGroupMembersIdExist(groupid)              &&
+               isCurrentUserGroupMembersOwner(groupid)      ||
+               isCurrentUserGroupMembersAdmin(groupid)
+             }
+               /*groupMemberShipAnyType(groupid)  }*/
+    update() {
+                    isGroupMembersIdExist(groupid)                              &&
+                    isCurrentUserGroupMembersOwner(groupid)                     ||
+                    isCurrentUserGroupMembersAdmin(groupid)                     ||
+                    isCurrentSubUserGroupMembersOwner(groupid, subgroupid)      ||
+                    isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)
+            }
 
     // path for /subgroups-names/{groupid}/{subgroupid}
    //------------------------------------
 
-    path /{subgroupid} {
-        read() { isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
-                   subGroupMembersMemberShipAnyType(groupid,subgroupid)
-        }
-   }
+        /*/{subgroupid} is SubGroupsNameInfo {*/
+        /*read() { isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&*/
+                   /*subGroupMembersMemberShipAnyType(groupid,subgroupid)*/
+        /*}*/
+   /*}*/
 
 }
 
-
+type SubGroupsNameInfo {
+     subgroupImgUrl  : String | Null,
+     ownerImgUrl  : String | Null,
+     title        : String
+}
 
 //================================
 //subgroup Members

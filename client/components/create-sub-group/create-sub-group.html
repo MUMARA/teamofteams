@@ -9,11 +9,11 @@
             <img src="../../img/3sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
             <div style="color: white;">Members</div>
         </md-button>
-        <md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen md-whiteframe-z1">
+        <md-button style="min-width: 110px; margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen md-whiteframe-z1">
             <img src="../../img/4sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
             <div style="color: white;">Teams</div>
         </md-button>
-        <md-button ng-click="createSubGroup.openPolicyPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1">
+        <md-button ng-click="createSubGroup.openPolicyPage()" style="margin: 0px; width:100%; border-radius:0px;" class="backColorDarkSeaGreen md-whiteframe-z1" ng-if="createSubGroup.groupAdmin">
             <img src="../../img/verified_user.svg" style="width: 33px;height: 33px;margin-bottom: -15px;">
             <div style="color: white;">Policy</div>
         </md-button>
@@ -76,14 +76,14 @@
                     </div>
                     <div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap ng-hide="$root.newImg">
                         <div style="width: 96px; height: 160px; overflow: hidden;" ng-show="createSubGroup.subgroupData['logo-image'].url">
-                            <img ng-src="{{ createSubGroup.subgroupData['logo-image'].url || 'img/image.svg'}}" class="cropper-main-image nooutline" ng-click="createSubGroup.showAdvanced($event)" />
+                            <img ng-src="{{ createSubGroup.subgroupData['logo-image'].url || 'img/image.svg'}}" class="cropper-main-image-team nooutline" ng-click="createSubGroup.showAdvanced($event)" />
                         </div>
                         <div ng-hide="createSubGroup.subgroupData['logo-image'].url" >
-                            <img ng-src="{{'img/image.svg'}}" class="cropper-main-image nooutline" ng-click="createSubGroup.showAdvanced($event)" />
+                            <img ng-src="{{'img/image.svg'}}" class="cropper-main-image-team nooutline" ng-click="createSubGroup.showAdvanced($event)" />
                         </div>
                     </div>
                     <div style="width: 96px; overflow: hidden;">
-                        <img ng-src="{{$root.newImg}}" alt="" class="cropper-main-button nooutline" ng-hide="!$root.newImg" ng-click="createSubGroup.showAdvanced($event)" />
+                        <img ng-src="{{$root.newImg}}" alt="" class="cropper-main-button-team nooutline" ng-hide="!$root.newImg" ng-click="createSubGroup.showAdvanced($event)" />
                     </div>
                 </div>
                 <div ng-if="createSubGroup.activeID">
@@ -91,7 +91,7 @@
                     <h2>Team Admin</h2>
                     <div layout="row">
                         <div flex="10">
-                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.assignMemberClick(); createSubGroup.ActiveSideNavBar('admin');"><span style="color: white;font-size: 14px;">Assign</span></md-button>
+                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.assignMemberClick(); createSubGroup.ActiveSideNavBar('admin');"><span style="color: white;font-size: 14px;">Select</span></md-button>
                         </div>
                         <div flex="20">
                         </div>
@@ -113,7 +113,7 @@
                     </md-button>
                     <div layout="row">
                         <div flex="10">
-                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.assignMemberClick(); createSubGroup.ActiveSideNavBar('member');"><span style="color: white;font-size: 14px;">Assign</span></md-button>
+                            <md-button class="backColorSeaGreen" ng-click="createSubGroup.assignMemberClick(); createSubGroup.ActiveSideNavBar('member');"><span style="color: white;font-size: 14px;">Select</span></md-button>
                         </div>
                         <div flex="20">
                         </div>

@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.createGroup', ['core', 'ngMdIcons'])
-        .factory('createGroupService', ['userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$rootScope',
-            function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope) {
+        .factory('createGroupService', ['userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$rootScope','CollaboratorService',
+            function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope,CollaboratorService) {
 
                 var pageUserId = userService.getCurrentUser().userID;
 
@@ -21,7 +21,7 @@
                         userFirebaseService.asyncCreateGroup(pageUserId, groupInfo, this.userData(pageUserId), formDataFlag)
                             .then(function(response) {
                                 form.$submitted = false;
-                                // console.log("Group Creation Successful");
+                                console.log("Group Creation Successful", groupInfo);
                                 $rootScope.newImg = null
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
@@ -29,6 +29,7 @@
                                     messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
                                     messageService.showSuccess("Team of Teams creation Successful");
+                                    CollaboratorService.CreateDocument("Team Information",groupInfo.groupID);
                                 }
                                 $location.path('/user/' + pageUserId);
                             }, function(group) {

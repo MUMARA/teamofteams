@@ -1,0 +1,25 @@
+<md-dialog aria-label="cropper" style="min-width: 320px;" >
+    <ng-md-icon icon="close" class="nooutline nomargin" size="20" layout-padding ng-click="ctrl.hide($root.tmpImg)"></ng-md-icon>
+    <md-dialog-content class="sticky-container">
+        <md-subheader class="md-sticky-no-effect">
+            <h4 style="color:#000000">Select Photo</h4>
+            <br>To select different Image Tap on Image</md-subheader>
+        <div>
+            <!-- <div cropper-directive>
+            </div> -->
+            <input type="file" img-cropper-fileread id="ImageUpload" image="ctrl.cropper.sourceImage" style="display:none"/>
+            <div onclick="document.querySelector('#ImageUpload').click();" ng-show="!$root.newImg" >
+                <img src="img/image.PNG" width="320px">
+            </div>
+            <div ng-show="$root.newImg">
+                 <canvas width="320" height="320" id="canvas" image-cropper image="ctrl.cropper.sourceImage" cropped-image="$root.newImg" crop-width="192" crop-height="320" keep-aspect="true" touch-radius="30" crop-area-bounds="ctrl.bounds"></canvas>
+            </div>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <span flex></span>
+        <md-button ng-click="ctrl.hide($root.newImg)" ng-show="$root.newImg" class="md-primary">
+            Done
+        </md-button>
+    </div>
+</md-dialog>

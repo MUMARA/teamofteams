@@ -181,7 +181,7 @@
         this.showAdvanced = function(ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
-                templateUrl: 'directives/dilogue1.tmpl.html',
+                templateUrl: 'directives/dilogue2.tmpl.html',
                 targetEvent: ev,
                 escapeToClose: false
             }).then(function(picture) {
@@ -555,7 +555,7 @@
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
                         that.teamsettingpanel = false;
                         that.selectedindex = undefined;
-                        
+
                     });
                     that.processingSave = false;
                 }
@@ -587,23 +587,23 @@
 
 
         //Cropper Code start
-        this.showAdvanced = function(ev) {
-            $rootScope.tmpImg = $rootScope.newImg;
-            $rootScope.newImg = '';
-            $mdDialog.show({
-                controller: "DialogController",
-                controllerAs: "ctrl",
-                templateUrl: 'directives/dilogue1.tmpl.html',
-                targetEvent: ev
-            }).then(function(picture) {
-                $rootScope.newImg = picture;
-                // console.log("this is image" + picture)
-            }, function(err) {
-                //console.log(err)
-
-            })
-
-        };
+        // this.showAdvanced = function(ev) {
+        //     $rootScope.tmpImg = $rootScope.newImg;
+        //     $rootScope.newImg = '';
+        //     $mdDialog.show({
+        //         controller: "DialogController",
+        //         controllerAs: "ctrl",
+        //         templateUrl: 'directives/dilogue1.tmpl.html',
+        //         targetEvent: ev
+        //     }).then(function(picture) {
+        //         $rootScope.newImg = picture;
+        //         // console.log("this is image" + picture)
+        //     }, function(err) {
+        //         //console.log(err)
+        //
+        //     })
+        //
+        // };
 
 
         //Cropper Code End
