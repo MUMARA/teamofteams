@@ -19,7 +19,7 @@
 
             this.showPanel = true;
             var that = this;
-
+            this.showarrow = undefined ;
             this.isLocationbased = false;
             this.isTimebased = false;
             this.isProgressReport = false;
@@ -353,7 +353,8 @@
             };//this.newPolicy
 
 
-            this.selectedPolicy = function(policy) {
+            this.selectedPolicy = function(policy,index) {
+                that.showarrow = index;
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
                 that.isLocationbased = policy.locationBased;    //show if locationBased is True
@@ -479,7 +480,9 @@
                     if(!that.isProgressReport && !that.isTimebased && !that.isLocationbased) {
                         //nothing have to do....
                         messageService.showFailure('Please Select your Criteria');
+                        this.showarrow = undefined ;
                         return false;
+
                     }
 
                     //default ObjectX
@@ -496,7 +499,7 @@
                     obj["progressReportQuestions"] = "";
                     obj["latestProgressReportQuestionID"] = '';
 
-
+                     this.showarrow = undefined ;
                     //if locationBased is selected
                     if (that.isLocationbased) {
                         //isLocationbased
@@ -507,6 +510,7 @@
                             radius: that.paths.c1.radius,
                             title: that.markers.mark.message
                         }
+                           this.showarrow = undefined ;
                     }
 
                     //if timeBased is selected
@@ -519,6 +523,7 @@
                             messageService.showFailure('Please add schedule/time slot!');
                             return false;
                         }
+                           this.showarrow = undefined ;
                     }
 
                     //if dailyBased is selected
@@ -531,6 +536,7 @@
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
+                        this.showarrow = undefined ;
                     }
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);

@@ -9,8 +9,10 @@
             // alert('inside controller');
 
             var self = this;
+            self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
+
             /*VM properties*/
 
             this.checkinObj = {
@@ -46,6 +48,10 @@
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
+        //   notification
+        self.showNotification = function(){
+            self.show = !self.show;    
+        };
 
             this.progressReport = function(){
               $mdSidenav('right').toggle().then(function(){
@@ -610,6 +616,7 @@
                 }
             };
             this.checkinClick = function(event) {
+                self.show = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
                     return
