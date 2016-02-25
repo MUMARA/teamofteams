@@ -44,10 +44,10 @@
             }
             that.panel.subgroupID = subgroupID;
             if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
+                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: "Team of Teams Information"});
                 //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
+                $state.go('user.group.' + (that.panel.active || 'activity'),  {groupID: that.groupID,docID: "Team Information"});
                 //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
             }
         };

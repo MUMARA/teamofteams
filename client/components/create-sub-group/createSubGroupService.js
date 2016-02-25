@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.createSubGroup', ['core', 'ngMdIcons'])
-        .factory('createSubGroupService', ['$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
-            function($firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
+        .factory('createSubGroupService', ['$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig','CollaboratorService',
+            function($firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig,CollaboratorService) {
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                 var groupAdminUsers = [];
 
@@ -28,6 +28,8 @@
                                 // } else {
                                 //     // $location.path('/' + groupID);
                                     messageService.showSuccess("Team creation Successful...");
+                                    // console.log(JSON.stringify());
+                                    CollaboratorService.CreateDocument("Team of Teams Information",group.$id,SubgroupInfo.subgroupID);
                                     $rootScope.newImg = null;
                                 // }
                             }, function(group) {

@@ -19,21 +19,13 @@
       if (subgroupID) {
         firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
-        pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID).push();
-        // that.documents = $firebaseArray(firepadRef);
-        firebaseDocumentId = pushDocumentNode.key();
-        firepadRef = firepadRef.child(firebaseDocumentId);
-        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
-        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/init/title"] = documentTitle;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/init/title"] = documentTitle;
       } else {
         firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
-        pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
-        // that.documents = $firebaseArray(firepadRef);
-        firebaseDocumentId = pushDocumentNode.key();
-        firepadRef = firepadRef.child(firebaseDocumentId);
-        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
-        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-groups/" + groupID + "/init/title"] = documentTitle;
+        updateDocument["firepad-groups-documents/" + groupID + "/init/title"] = documentTitle;
       }
 
       firebaseLocalRef.update(updateDocument, function(error) {

@@ -45,7 +45,7 @@
       </div>
       <!--List for Size Dropdown-->
       <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Size" for="listSize"></ul>
-      <div id="firepad" style="" ng-show="collaborator.documentready">
+      <div id="firepad" style="">
         <div class="mdl-tooltip" for="bold">
           Bold
         </div>
@@ -73,7 +73,7 @@
             </md-content>
           </md-tab>
           <!--Online Users side-->
-          <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
+          <!-- <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
             <md-content class="backColorSeaGreen" ng-repeat="history in collaborator.history track by $index">
               <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
@@ -86,7 +86,7 @@
                 </md-list-item>
               </md-list>
             </md-content>
-          </md-tab>
+          </md-tab> -->
           <md-tab label="Collaborators">
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
               Lorem ipsum dolor sit amet, ne quod novum mei
