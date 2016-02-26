@@ -61,6 +61,8 @@
             <md-content ng-repeat="document in collaborator.documents track by $index">
               <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
+                  <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
+                  <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
                     <h3 class="foreColorDarkGrey">Document
                       {{$index+1}}:</h3>
@@ -68,28 +70,27 @@
                       <strong>Name:</strong>
                       {{document.title}}</span>
                   </div>
+
                 </md-list-item>
               </md-list>
             </md-content>
           </md-tab>
           <!--Online Users side-->
-          <!-- <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
-            <md-content class="backColorSeaGreen" ng-repeat="history in collaborator.history track by $index">
-              <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
-                <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
-                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <h3 class="foreColorDarkGrey">Editor :
-                      {{history.a}}</h3>
-                    <span style="font-size: 13px; color: #ffffff;">Time :
-                      {{history.t | date : 'M/d/yy'}}</span>
-                  </div>
-                </md-list-item>
-              </md-list>
-            </md-content>
-          </md-tab> -->
           <md-tab label="Collaborators">
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
               Lorem ipsum dolor sit amet, ne quod novum mei
+            </md-content>
+          </md-tab>
+          <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
+            <md-content class="backColorSeaGreen">
+              <md-list class="nopadding">
+                <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)" ng-repeat="(key, value) in collaborator.history | groupBy: 'a'">
+                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                    <h3 class="foreColorDarkGrey">Editor : {{ key }}</h3>
+                    <span style="font-size: 13px; color: #ffffff;">Time : {{value[value.length-1].t | date : 'M/d/yy'}}</span>
+                  </div>
+                </md-list-item>
+              </md-list>
             </md-content>
           </md-tab>
         </md-tabs>
