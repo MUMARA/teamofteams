@@ -114,15 +114,25 @@
     		return dailyProgressReport;
     	} //getDailyProgressReport
     	function updateReport(report, cb) {
-    		// console.log(report)
+    		// console.log('report', report)
     		firebaseService.getRefDailyProgressReport().child(report.userID).child(report.groupID).child(report.subgroupID).child(report.reportID).update({'answers': report.answers}, function(err){
 				if(err){
 					console.log('err', err)
 					cb(false);
-				}
+				} else {
 
-				cb(true);
+                    // //for group activity stream record -- START --
+                    // var type = 'progressReport';
+                    // var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
+                    // var area = {type: 'progressReport-updated'};
+                    // var group_id = groupObj.groupId;
+                    // var memberuserID = groupObj.userId;
+                    // //for group activity record
+                    // activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    // //for group activity stream record -- END --
 
+                    cb(true);
+                }
     		});
     	} //updateReport
     	function getGroupReports(userArray, groupID){

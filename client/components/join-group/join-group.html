@@ -32,7 +32,8 @@
                         <img ng-src="{{key.ownerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image" style="margin-top:50%"/>
                     </div>
                     <div layout="row" layout-align="start center" layout-margin>
-                        <md-button class="md-button backColorSeaGreen" ng-click="joinGroup.answer(key.$id )" style="margin-top:32%">
+                        <!-- <md-button class="md-button backColorSeaGreen" ng-click="joinGroup.answer(key.$id )" style="margin-top:32%"> -->
+                            <md-button class="md-button backColorSeaGreen" ng-click="joinGroup.answer(key)" style="margin-top:32%">
                             <span style="color:white;">REQUEST</span>
                         </md-button>
                     </div>

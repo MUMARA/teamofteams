@@ -44,16 +44,15 @@
                                     })
                                     $rootScope.newImg = null;
 
-                                    //for group activity record -- START --
+                                    //for group activity stream record -- START --
                                     var type = 'group';
                                     var targetinfo = {id: groupInfo.$id, url: groupInfo.$id, title: groupInfo.title, type: 'group' };
                                     var area = {type: 'group-updated'};
-                                    var memberuserInfo = null;
-
+                                    var group_id = groupInfo.$id;
+                                    var memberuserID = null;
                                     //for group activity record
-                                    activityStreamService.activityStream(type, targetinfo, area, groupInfo.$id, memberuserInfo);
-
-                                    //for group activity record -- END --
+                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                    //for group activity stream record -- END --
 
 
                                     cb();

@@ -37,7 +37,6 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
          getSubGroupsOfCurrentUsers ()
 
     } //init
-    init();
 
    //for activity step1
    function getGroupsOfCurrentUser(){
@@ -84,6 +83,7 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
    } //getSubGroupsMembersOfCurrentUsers
 
    function getActivities() {
+      init();
       return currentUserActivities;
    }
    function getSubgroupNames() {
@@ -136,7 +136,7 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
                "displayName": res.user.firstName + " " + res.user.lastName
             };
             //now calling function for save to firebase....
-            saveToFirebase(type, targetinfo, area, object);
+            saveToFirebase(type, targetinfo, area, groupID, memberUserID, object);
          });
       } else {
          object = {
@@ -146,13 +146,13 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
             "displayName": targetinfo.title
          };
          //now calling function for save to firebase....
-         saveToFirebase(type, targetinfo, area, object);
+         saveToFirebase(type, targetinfo, area, groupID, memberUserID, object);
       }
    } //activityStream
 
 
-   function saveToFirebase(type, targetinfo, area, groupID, object){
-
+   function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object){
+      console.log('saveToFirebase', object);
       // ## target ##
       //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
       var target = {
@@ -175,12 +175,14 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
                            }, //membersettings
                   'group-created': actor.displayName +" created group " + target.displayName,
                   'group-updated': actor.displayName +" udpated group " + target.displayName,
+                  'group-join': actor.displayName +" sent team join request of " + target.displayName,
                }, //'type: group'
          'subgroup': {
                   'subgroup-created': actor.displayName +" created subgroup " + target.displayName,
                   'subgroup-updated': actor.displayName +" updated subgroup " + target.displayName,
                   'subgroup-member-assigned': actor.displayName +" assigned " + object.displayName + " as a member of " + target.displayName,
                   'subgroup-admin-assigned': actor.displayName +" assigned " + object.displayName +" as a admin of " + target.displayName,
+                  'subgroup-join': actor.displayName +" sent team of teams join request of " + target.displayName,
                   }, //subgroup
          'policy': {
                   'policy-created': actor.displayName +" created policy " + target.displayName,
@@ -188,7 +190,7 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
                   'policy-assigned-team': actor.displayName +" assigned policy " + target.displayName + " to " + object.displayName,
                   }, //policy
          'progressReport': {
-                  'progressReport-created': actor.displayName + " Created progress report in " + target.displayName,
+                  'progressReport-created': actor.displayName + " Created progress report against " + target.displayName,
                   'progressReport-updated': actor.displayName + " Updated progress report in " + target.displayName,
                   } //progressReport
       }; //displayNameObject
@@ -219,20 +221,23 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
       var activityPushID = pushObj.key();
 
       var multipath = {};
-      multipath['group-activity-streams/'+groupID+'/'+activityPushID] = activity;
+
+      if(groupID){
+         multipath['group-activity-streams/'+groupID+'/'+activityPushID] = activity;
+      }
+
+      multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = {
+                displayName: displayMessage,
+                seen : false,
+                published: firebaseTimeStamp,
+                verb: (area.action) ? area.action : area.type
+      };
 
       firebaseService.getRefMain().update(multipath, function(err){
          if (err) { console.log('activityError', err); }
       });
 
-      // multipath['user-activity-streams/'+memberUserID] = {
-      //           userName: res.user.firstName + " " + res.user.lastName,
-      //           email: res.user.email,
-      //           userId: memberUserID,
-      //           displayMessage: displayMessage,
-      //           seen : false,
-      //           published: firebaseTimeStamp
-      //  }
+
 
    }
 

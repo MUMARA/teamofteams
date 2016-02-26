@@ -10,9 +10,9 @@
         .module('core')
         .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
+    checkinService.$inject = ['activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
 
-    function checkinService($q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
+    function checkinService(activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
 
         /*private variables*/
         var refs, fireTimeStamp;
@@ -173,18 +173,30 @@
 
         //checkinDailyProgress
         function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb){
+            console.log('Policy', Policy, 'groupObj', groupObj);
                if(Policy && Policy.progressReport) {
                 //checking daily progress report is exists or not -- START --
                 firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
                 .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
                     if(snapshot.val() === null) { //if null then create daily report dummy
                         //cerating Dummy Report Object on Checkin....
-                        firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
+                        var progressRprtObj = firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
                             //date: Firebase.ServerValue.TIMESTAMP,
                             date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
                             answers: ''
                         });
+
+                        //for group activity stream record -- START --
+                        var type = 'progressReport';
+                        var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
+                        var area = {type: 'progressReport-created'};
+                        var group_id = groupObj.groupId;
+                        var memberuserID = groupObj.userId;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        //for group activity stream record -- END --
+
                         cb(false, 'notSubmitted');
                     } else {
                         for(var obj in snapshot.val()) {
