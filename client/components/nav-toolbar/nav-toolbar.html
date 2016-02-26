@@ -10,7 +10,7 @@
         <!-- EMTP -->
     <!--     <md-button class="md-primary md-raised" ng-click="showAdvanced($event)" flex="100" flex-gt-md="auto">
           Custom Dialog
-        </md-button> -->
+        </md-button> --
         <!-- EMTP -->
         <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
         <div style="position: relative" layout-margin class="check-in-slider">
@@ -49,6 +49,28 @@
             </div>
             </md-card>
         </div>
+        <!-- Notification Start -->
+        <div style="position:relative;top: -20px;right: -140px">
+            <md-card class="carrotImg" ng-show="navToolbar.show"><img src="img/carrot.svg"></md-card>
+              <md-card class="toolbarListCard" ng-show="navToolbar.show">
+              <md-toolbar style="background-color: #E0E0E0; height:auto;" layout="row" layout-align="space-between center" layout-padding>
+                  <strong class="foreColorDarkGrey" style="font-size: large;">Notifications</strong>
+              </md-toolbar>
+              <md-list class="nopadding vscroll">
+                  <md-list-item  class="nopadding" ng-repeat="notify in navToolbar.notifications track by $index">
+                      <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
+                          <div style="font-size:small;" layout-fill>
+                              <div class="nooutline leftpadding20px cursorPointer hoverLightGrey3 foreColorDarkGrey"  layout-padding>
+                                  {{notify.displayMessage}}
+                              </div>
+                          </div>
+                          <md-divider md-outset></md-divider>
+                      </div>
+                  </md-list-item>
+              </md-list>
+              </md-card>
+        </div>
+        <!-- Notification End-->
         <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
             {{navToolbar.showUrlObj.groupID}} /
             {{navToolbar.showUrlObj.subgroupID}}
@@ -60,6 +82,9 @@
             </ng-md-icon>
             <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
             </ng-md-icon>
+            <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="notification" ng-click="navToolbar.showNotification()">
+            </ng-md-icon>
+            <md-badge ng-if="navToolbar.notifications.length > 0" ng-click="navToolbar.showNotification()" style="background-color:rgb(251, 68, 130); position:fixed; font-size: small; right:90px; top:15px;"><strong>{{navToolbar.notifications.length}}</strong></md-badge>
             <div >
                 <md-menu md-offset="0 50">
                     <img ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px nooutline leftmargin10px">

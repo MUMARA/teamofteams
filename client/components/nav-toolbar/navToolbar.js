@@ -3,14 +3,17 @@
 
     angular.module('app.navToolbar')
 
-    .controller('NavToolbarController', ['ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
             var self = this;
+            self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
+            this.notifications = [];
+
             /*VM properties*/
 
             this.checkinObj = {
@@ -46,6 +49,11 @@
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
+
+            //   notification activities
+            self.showNotification = function(){
+                self.show = !self.show;
+            };
 
             this.progressReport = function(){
               $mdSidenav('right').toggle().then(function(){
@@ -610,6 +618,7 @@
                 }
             };
             this.checkinClick = function(event) {
+                self.show = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
                     return
@@ -701,6 +710,9 @@
                     }
                 });
             };
+
+            //getting notifications
+            this.notifications = activityStreamService.getActivities();
         }
     ]);
 
