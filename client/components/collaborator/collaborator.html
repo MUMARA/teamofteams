@@ -107,6 +107,13 @@
           <label>Document Title</label>
           <input type="text" ng-model="collaborator.documentTitle">
         </md-input-container>
+        <md-input-container style="margin-right: 10px;">
+          <label>Document Type</label>
+          <md-select ng-model="collaborator.documentType">
+            <md-option>Normal</md-option>
+            <md-option>Javascript</md-option>
+          </md-select>
+        </md-input-container>
         <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
           Create
           <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>

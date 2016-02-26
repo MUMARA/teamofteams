@@ -19,7 +19,7 @@
     that.clicked = false;
     that.channelBottomSheet = false;
     that.default = true;
-    that.document = "Create/Open Document"
+    that.document = "Create/Open Document";
     that.hideLoader = true;
     var globalRef = new Firebase(ref);
     init();
