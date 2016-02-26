@@ -242,10 +242,11 @@
             //Show Dailogue Box for Daily Report Questions -- END --
 
             function updateStatus(group, checkoutFlag, event) {
+                console.log('group', group);
                 var groupObj = {};
                 self.checkinSending = true;
                 if(group){
-                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID};
+                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
                 } else {
                      groupObj = {
                         groupId: self.showUrlObj.groupID,

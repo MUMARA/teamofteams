@@ -4,8 +4,8 @@
 (function() {
     'use strict';
     angular.module('app.progressreport', ['core'])
-    .factory('ProgressReportService', ['firebaseService', ProgressReportService]);
-    function ProgressReportService(firebaseService) {
+    .factory('ProgressReportService', ['activityStreamService', 'firebaseService', ProgressReportService]);
+    function ProgressReportService(activityStreamService, firebaseService) {
 
     	var dailyProgressReport = [];
 
@@ -54,7 +54,7 @@
 					dailyProgressReport.forEach(function(val, index) {
 						if(snapshot.val()) {
 							for(var key in snapshot.val()) {
-								console.log(val.reportID, key)
+								// console.log(val.reportID, key)
 								if(val.reportID === key) {
 									//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
 									dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
@@ -91,7 +91,7 @@
     				if(snapshot.val()) {
 						var obj = {};
 						for(var key in snapshot.val()) {
-							console.log('subkey', key)
+							// console.log('subkey', key)
 							obj = snapshot.val()[key];
 							obj['reportID'] = key;
 							obj['userID'] = user.id;
@@ -114,22 +114,22 @@
     		return dailyProgressReport;
     	} //getDailyProgressReport
     	function updateReport(report, cb) {
-    		// console.log('report', report)
+    		console.log('report', report)
     		firebaseService.getRefDailyProgressReport().child(report.userID).child(report.groupID).child(report.subgroupID).child(report.reportID).update({'answers': report.answers}, function(err){
 				if(err){
 					console.log('err', err)
 					cb(false);
 				} else {
 
-                    // //for group activity stream record -- START --
-                    // var type = 'progressReport';
-                    // var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
-                    // var area = {type: 'progressReport-updated'};
-                    // var group_id = groupObj.groupId;
-                    // var memberuserID = groupObj.userId;
-                    // //for group activity record
-                    // activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
-                    // //for group activity stream record -- END --
+                    //for group activity stream record -- START --
+                    var type = 'progressReport';
+                    var targetinfo = {id: report.reportID, url: report.groupID+'/'+report.subgroupID, title: report.groupID+'/'+report.subgroupID, type: 'progressReport' };
+                    var area = {type: 'progressReport-updated'};
+                    var group_id = report.groupID;
+                    var memberuserID = report.userID;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
 
                     cb(true);
                 }

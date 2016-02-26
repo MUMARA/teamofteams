@@ -463,6 +463,14 @@ md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, md-pro
     right: -25px;
     top: 45px;
 }
+.toolbarListCard_MinHeight {
+    position: absolute;
+    width: 350px;
+    min-height: 100px;
+    max-height: 300px;
+    right: -25px;
+    top: 45px;
+}
 .carrotImg {
     width: 24.073px;
     height: 13.167px;

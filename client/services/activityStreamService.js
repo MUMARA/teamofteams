@@ -5,8 +5,8 @@
 
 "use strict";
 
-angular.module('core').factory('activityStreamService', ['$firebaseObject', 'firebaseService', 'userService', activityStreamService]);
-function activityStreamService($firebaseObject, firebaseService, userService) {
+angular.module('core').factory('activityStreamService', ['$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+function activityStreamService($firebaseObject, firebaseService, userService, $rootScope) {
     var user = '';
     var userID = '';
     var actor = '';
@@ -24,7 +24,8 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
                    "type": "user",
                    "id": user.userID, //this is the userID, and an index should be set on this
                    "email": user.email,
-                   "displayName": user.firstName + " " + user.lastName
+                   "displayName": user.firstName + " " + user.lastName,
+                   'profile-image': $rootScope.userImg
                };
 
          //getting curent use groups and then getting its notification/activities
@@ -57,8 +58,8 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
    function getSubGroupsOfCurrentUsers () {
       firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(snapshot){
          for(var subgroup in snapshot.val()){
-            currentUserSubGroups.push({groupID: snapshot.key(), subgroupID: subgroup});
-             getSubGroupsMembersOfCurrentUsers (snapshot.key(), subgroup);
+            currentUserSubGroups.push({groupID: snapshot.key(), subgroupID: subgroup}); //subgroup array
+            getSubGroupsMembersOfCurrentUsers (snapshot.key(), subgroup);
          }
       });
    }
@@ -66,7 +67,7 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
    //for getting subgroups members of current user
    function getSubGroupsMembersOfCurrentUsers (groupID, subgroupID) {
       firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_added', function(snapshot){
-         if(currentUserSubGroupsMembers.length == 0){
+         if(currentUserSubGroupsMembers.length === 0){
             currentUserSubGroupsMembers.push({groupID: groupID, subgroupID: subgroupID, member: snapshot.key()});
          } else {
             for(var i = 0; i < currentUserSubGroupsMembers.length; i++){
@@ -92,30 +93,6 @@ function activityStreamService($firebaseObject, firebaseService, userService) {
    function getSubgroupMembers() {
       return currentUserSubGroupsMembers;
    }
-
-
-         //
-         // var TypeAreaObj = { 'group':  {  'membersettings': '',
-         //                                  'group-created': '',
-         //                                  'group-updated': ''
-         //                               },
-         //                  'subgroup':  {  'subgroup-created': 'function()',
-         //                                  'subgroup-updated': 'function()',
-         //                                  'subgroup-member-assigned': 'function()',
-         //                                  'subgroup-admin-assigned': 'function()'
-         //                               },
-         //                    'policy':	{  'policy-created': 'function()',
-         //                                  'policy-updated': 'function()',
-         //                                  'policy-assigned-team': 'function()'
-         //                               },
-         //            'progressReport':  {  'progressReport-created': 'function()',
-         //                                  'progressReport-updated': 'function()'
-         //                               },
-         //                   'firepad':  {   },
-         //                      'chat':  {  }
-         //    }; //myObj
-
-
 
    // type = group, subgroup, policy, progressReport, firepad, chat
    //targetinfo = {id: '', url: '', title: '', type: '' }
