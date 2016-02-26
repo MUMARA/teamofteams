@@ -61,15 +61,16 @@
             <md-content ng-repeat="document in collaborator.documents track by $index">
               <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
+                  <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
+                  <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 20px; top: 30px;"></ng-md-icon>
-                    <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 20px; top: 30px;"></ng-md-icon>
                     <h3 class="foreColorDarkGrey">Document
                       {{$index+1}}:</h3>
                     <span style="font-size: 13px; color: #ffffff;" class="">
                       <strong>Name:</strong>
                       {{document.title}}</span>
                   </div>
+
                 </md-list-item>
               </md-list>
             </md-content>
