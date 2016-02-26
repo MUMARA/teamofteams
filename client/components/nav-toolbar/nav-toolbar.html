@@ -113,12 +113,16 @@
      <h1 class="md-toolbar-tools"><strong>Progress Report</strong></h1>
   </md-toolbar>
   <md-content layout-padding style="">
+
   <div layout="column" layout-align="center start">
     <p>
       <br />
     </p>
     <div layout="column" layout-fill ng-repeat="report in navToolbar.dailyProgressReport">
-      <md-input-container ng-repeat="q in report.questions">
+        <div layout="row" layout-align="center center">
+            <md-progress-circular class="cirrcularGrey" ng-hide="report.questions" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
+        </div>
+      <md-input-container ng-repeat="q in report.questions track by $index">
         <label>{{q}}</label>
         <textarea name="progRessAns{{$index}}" aria-label="progress comment{{$index}}" ng-model="report.answers[$index]" placeholder="Please type your answer..."></textarea>
       </md-input-container>
