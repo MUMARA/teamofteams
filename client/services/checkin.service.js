@@ -128,18 +128,18 @@
             if(Policy && Policy.locationBased) {  //checking if location Based
 
                 //checking distance (RADIUS)
-                var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
+                // var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
                 // console.log('distance:' + distance);
                 // console.log('distance in meter:' + distance * 1000);
 
-                if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
-                    callback(false, 'Current Location does not near to the Team Location');
-                } else { // if within radius
+                // if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
+                    // callback(false, 'Current Location does not near to the Team Location');
+                // } else { // if within radius
 
                     checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
                         callback(d, msg);     //if result true (checkin allow)
                     }); //checking if time based
-                } //if within radius
+                // } //if within radius
 
             } else if(Policy && Policy.timeBased) { //policy has timeBased
                 checkinTimeBased(Policy, function(d, msg) {
