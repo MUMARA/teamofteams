@@ -62,6 +62,8 @@
               <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                    <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 20px; top: 30px;"></ng-md-icon>
+                    <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 20px; top: 30px;"></ng-md-icon>
                     <h3 class="foreColorDarkGrey">Document
                       {{$index+1}}:</h3>
                     <span style="font-size: 13px; color: #ffffff;" class="">
@@ -73,7 +75,12 @@
             </md-content>
           </md-tab>
           <!--Online Users side-->
-          <!-- <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
+          <md-tab label="Collaborators">
+            <md-content layout-padding layout-wrap class="backColorSeaGreen">
+              Lorem ipsum dolor sit amet, ne quod novum mei
+            </md-content>
+          </md-tab>
+          <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
             <md-content class="backColorSeaGreen" ng-repeat="history in collaborator.history track by $index">
               <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
@@ -85,11 +92,6 @@
                   </div>
                 </md-list-item>
               </md-list>
-            </md-content>
-          </md-tab> -->
-          <md-tab label="Collaborators">
-            <md-content layout-padding layout-wrap class="backColorSeaGreen">
-              Lorem ipsum dolor sit amet, ne quod novum mei
             </md-content>
           </md-tab>
         </md-tabs>
@@ -107,9 +109,9 @@
           <label>Document Title</label>
           <input type="text" ng-model="collaborator.documentTitle">
         </md-input-container>
-        <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
-          Create
-          <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>
+        <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="new document" ng-click="collaborator.createDocument()">
+            <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+            <span>Create</span>
         </md-button>
       </div>
     </div>
