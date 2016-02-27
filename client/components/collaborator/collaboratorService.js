@@ -20,12 +20,17 @@
         firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
         updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/init/title"] = documentTitle;
+        updateDocument["firepad-subgroups/" + that.groupID + "/init/type"] = "text/javascript";
         updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/init/title"] = documentTitle;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/init/type"] = "text/javascript";
+
       } else {
         firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
         updateDocument["firepad-groups/" + groupID + "/init/title"] = documentTitle;
+        updateDocument["firepad-groups/" + that.groupID + "/init/type"] = "text/javascript";
         updateDocument["firepad-groups-documents/" + groupID + "/init/title"] = documentTitle;
+        updateDocument["firepad-groups-documents/" + groupID + "/" + subgroupID + "/init/type"] = "text/javascript";
       }
 
       firebaseLocalRef.update(updateDocument, function(error) {

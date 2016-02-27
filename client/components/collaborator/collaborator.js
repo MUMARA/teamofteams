@@ -5,17 +5,23 @@
   'use strict';
   angular.module('app.collaborator')
     .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
-    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject', collaboratorFunction]);
+    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope', collaboratorFunction]);
 
 
-  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject) {
+  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope) {
 
 
     componentHandler.upgradeAllRegistered();
     var firepadRef;
     var that = this;
+    that.documentTypes = [
+      {displayName:"Rich Text",codeMirrorName: "Rich Text"},
+      {displayName:"JavaScript",codeMirrorName: "text/javascript"},
+      {displayName:"Swift",codeMirrorName: "text/x-swift"},
+      {displayName:"Java",codeMirrorName: "text/x-java"},
+      {displayName:"C#",codeMirrorName: "text/x-csharp"},];
     that.isNormal = true;
-    that.mode = "";
+    that.mode = "Rich Text";
     var pushDocumentNode,firebaseDocumentId,firepad;
     that.ready = true;
     that.clicked = false;
@@ -79,6 +85,12 @@
       var firebaseLocalRef;
       var updateDocument = {};
       that.showLoader = true;
+      that.createdBy = {
+        firstName:that.user.firstName,
+        lastName:that.user.lastName,
+        userID:that.user.userID,
+        imgUrl:$rootScope.userImg
+      };
       if (that.subgroupID) {
         firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID);
@@ -86,8 +98,14 @@
         that.documents = $firebaseArray(firepadRef);
         firebaseDocumentId = pushDocumentNode.key();
         firepadRef = firepadRef.child(firebaseDocumentId);
-        updateDocument["firepad-subgroups/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/title"] = that.documentTitle
+        updateDocument["firepad-subgroups/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/title"] = that.documentTitle;
+        updateDocument["firepad-subgroups/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/type"] = that.documentType;
+        updateDocument["firepad-subgroups/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/createdBy"] = that.createdBy;
+        updateDocument["firepad-subgroups/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
         updateDocument["firepad-subgroups-documents/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/title"] = that.documentTitle;
+        updateDocument["firepad-subgroups-documents/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/type"] = that.documentType;
+        updateDocument["firepad-subgroups-documents/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/createdBy"] = that.createdBy;
+        updateDocument["firepad-subgroups-documents/" + that.groupID + "/" + that.subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
       } else {
         firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-groups/" + that.groupID);
@@ -95,8 +113,14 @@
         that.documents = $firebaseArray(firepadRef);
         firebaseDocumentId = pushDocumentNode.key();
         firepadRef = firepadRef.child(firebaseDocumentId);
-        updateDocument["firepad-groups/" + that.groupID + "/" + firebaseDocumentId + "/title"] = that.documentTitle
+        updateDocument["firepad-groups/" + that.groupID + "/" + firebaseDocumentId + "/title"] = that.documentTitle;
+        updateDocument["firepad-groups/" + that.groupID + "/" + firebaseDocumentId + "/type"] = that.documentType;
+        updateDocument["firepad-groups/" + that.groupID + "/" + firebaseDocumentId + "/createdBy"] = that.createdBy;
+        updateDocument["firepad-groups/" + that.groupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
         updateDocument["firepad-groups-documents/" + that.groupID + "/" +firebaseDocumentId + "/title"] = that.documentTitle;
+        updateDocument["firepad-groups-documents/" + that.groupID + "/" +firebaseDocumentId + "/type"] = that.documentType;
+        updateDocument["firepad-groups-documents/" + that.groupID + "/" +firebaseDocumentId + "/createdBy"] = that.createdBy;
+        updateDocument["firepad-groups-documents/" + that.groupID + "/" +firebaseDocumentId + "/timestamp"] = Date.now();
       }
 
       firebaseLocalRef.update(updateDocument, function(error) {
@@ -145,7 +169,6 @@
       groupService.setSubgroupIDPanel($stateParams.subgroupID);
       that.subgroupID = $stateParams.subgroupID || '';
       that.currentDocument = $stateParams.docID;
-      that.docType = ['Rich Text','JavaScript','Swift','C#','Java'];
       that.groupID = $stateParams.groupID;
       that.user = userService.getCurrentUser();
       that.users = dataService.getUserData();
@@ -163,6 +186,8 @@
             globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID);  //this will be the user created documents
             globalRef.once('value', function(snapshot){
               that.document = snapshot.val().title;
+              that.mode = snapshot.val().type;
+              that.isNormal = false;
            });
           }
         }
@@ -171,10 +196,16 @@
           if($stateParams.docID === "Team Information") {
             globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child("init");
             that.document = $stateParams.docID;
+            that.mode = 'Rich Text';
+            // that.isNormal = false;
+            initiateFirepad(globalRef);
           }else {
           globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child($stateParams.docID);
           globalRef.once('value', function(snapshot){
             that.document = snapshot.val().title;
+            that.mode = snapshot.val().type;
+            that.isNormal = false;
+            initiateFirepad(globalRef);
          });
 
           var array = $firebaseArray(globalRef)
@@ -183,10 +214,10 @@
           // console.log(JSON.parse(JSON.stringify(array)));
           }
         }
-        initiateFirepad(globalRef);
+
 
       }
-      that.history = $firebaseArray(globalRef.child("history"));
+      that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
     }
   }
 })();

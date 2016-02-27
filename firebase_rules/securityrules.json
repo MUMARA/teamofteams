@@ -293,10 +293,22 @@
     "subgroups-names": {
       "$groupid": {
         "$subgroupid": {
-          ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
-        },
-        ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
-        ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
+          ".validate": "newData.hasChildren(['title'])",
+          "subgroupImgUrl": {
+            ".validate": "newData.isString() || newData.val() == null"
+          },
+          "ownerImgUrl": {
+            ".validate": "newData.isString() || newData.val() == null"
+          },
+          "title": {
+            ".validate": "newData.isString()"
+          },
+          "$other": {
+            ".validate": "false"
+          },
+          ".write": "data.val() == null && (root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
+          ".read": "auth != null"
+        }
       }
     },
     "subgroup-members": {
@@ -831,9 +843,15 @@
     "firepad-groups-documents": {
       "$groupid": {
         "$documentid": {
-          ".validate": "newData.hasChildren(['title'])",
+          ".validate": "newData.hasChildren(['title', 'createdBy', 'timestamp'])",
           "title": {
             ".validate": "newData.isString()"
+          },
+          "createdBy": {
+            ".validate": "newData.isString()"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() && newData.val() <= now"
           },
           "$other": {
             ".validate": "false"
@@ -847,9 +865,15 @@
       "$groupid": {
         "$subgroupid": {
           "$documentid": {
-            ".validate": "newData.hasChildren(['title'])",
+            ".validate": "newData.hasChildren(['title', 'createdBy', 'timestamp'])",
             "title": {
               ".validate": "newData.isString()"
+            },
+            "createdBy": {
+              ".validate": "newData.isString()"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber() && newData.val() <= now"
             },
             "$other": {
               ".validate": "false"

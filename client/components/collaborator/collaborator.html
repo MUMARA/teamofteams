@@ -17,7 +17,7 @@
     </md-toolbar>
 
     <!--button for Color Dropdown-->
-    <div class="toolbar-list">
+    <div class="toolbar-list" ng-show="collaborator.isNormal">
       <button id="listColor" class="mdl-button mdl-js-button mdl-js-ripple-effect">
         Color
       </button>
@@ -45,11 +45,12 @@
       </div>
       <!--List for Size Dropdown-->
       <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Size" for="listSize"></ul>
-      <div id="firepad" style=""></div>
+
         <div class="mdl-tooltip" for="bold">
           Bold
         </div>
       </div>
+        <div id="firepad" style=""></div>
     </div>
 
     <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
@@ -69,6 +70,9 @@
                     <span style="font-size: 13px; color: #ffffff;" class="">
                       <strong>Name:</strong>
                       {{document.title}}</span>
+                      <span style="font-size: 13px; color: #ffffff;" class="">
+                        <strong>Type:</strong>
+                        {{document.type}}</span>
                   </div>
 
                 </md-list-item>
@@ -82,14 +86,12 @@
             </md-content>
           </md-tab>
           <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
-            <md-content class="backColorSeaGreen" ng-repeat="history in collaborator.history track by $index">
-              <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
-                <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
+            <md-content class="backColorSeaGreen">
+              <md-list class="nopadding">
+                <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)" ng-repeat="(key, value) in collaborator.history | groupBy: 'a'">
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <h3 class="foreColorDarkGrey">Editor :
-                      {{history.a}}</h3>
-                    <span style="font-size: 13px; color: #ffffff;">Time :
-                      {{history.t | date : 'M/d/yy'}}</span>
+                    <h3 class="foreColorDarkGrey">Editor : {{ key }}</h3>
+                    <span style="font-size: 13px; color: #ffffff;">Time : {{value[value.length-1].t | date : 'M/d/yy'}}</span>
                   </div>
                 </md-list-item>
               </md-list>
@@ -110,19 +112,16 @@
           <label>Document Title</label>
           <input type="text" ng-model="collaborator.documentTitle">
         </md-input-container>
-        <md-input-container>
-       <label>State</label>
-       <md-select ng-model="ctrl.userState">
-         <md-option ng-repeat="type in collaborator.docType" value="{{type}}">
-           {{type}}
-         </md-option>
-       </md-select>
-     </md-input-container>
-        <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="new document" ng-click="collaborator.createDocument()">
-            <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+        <md-input-container style="margin-right: 10px;">
+          <label>Document Type</label>
+          <md-select ng-model="collaborator.documentType">
+            <md-option ng-repeat="type in collaborator.documentTypes" value="{{type.codeMirrorName}}">{{type.displayName}}</md-option>
+          </md-select>
+        </md-input-container>
+        <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="Create" ng-click="collaborator.createDocument()">
+            <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
             <span>Create</span>
         </md-button>
-
       </div>
     </div>
 
