@@ -80,11 +80,17 @@
                 <!-- <img src="img/menu.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" /> -->
                 <ng-md-icon icon="alarm_on" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('manualattendace', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'manualattendace'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Manual Attendance
+                </md-tooltip>
             </div>
             <div layout="row" layout-align="center center">
                 <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('report'); group.showParams=true;" /> -->
                 <ng-md-icon icon="equalizer" size="40" class="nooutline cursorPointer fillColorWhite padding5px"  ng-click="group.showPanel('report', group.panel.subgroupID); group.showParams=true;"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'report'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="top" md-autohide="true">
+                    Report
+                </md-tooltip>
             </div>
         </div>
     </div>

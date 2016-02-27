@@ -118,8 +118,6 @@
                             title: subgroupInfo.title,
                             desc: (subgroupInfo.desc ? subgroupInfo.desc : ''),
                             timestamp: firebaseTimeStamp
-
-
                         };
                         if (subgroupRef) {
                             // var $subgroupRef = firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id);

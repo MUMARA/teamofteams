@@ -143,6 +143,12 @@
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.subgroupTitle = snapshot.val()
+                    })
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.groupTitle = snapshot.val()
+                    })
                     // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
             })
