@@ -719,6 +719,7 @@
             };
 
             //getting notifications
+            activityStreamService.init();
             this.notifications = activityStreamService.getActivities();
         }
     ]);
