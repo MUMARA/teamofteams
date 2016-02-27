@@ -51,7 +51,7 @@
                             </tr>
                         </thead>
                         <tbody md-body>
-                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== 4">
+                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== -1">
                                 <td md-cell>
                                     <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound" alt="user" layout-margin />
                                 </td>

@@ -6,8 +6,8 @@
 
 
 angular.module('core')
-    .factory('groupFirebaseService', ["firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
-        function(firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
+    .factory('groupFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
+        function(activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -1057,11 +1057,31 @@ angular.module('core')
                                             errorHandler();
                                         } else {
 
-                                            //publish an activity for membership changed.
-                                            userFirebaseService.asyncRecordMembershipChangeActivity(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
-                                                .then(function(res) {
-                                                    defer.resolve(res);
-                                                }, errorHandler);
+                                            //type: '2' is Admin, '3' is Member, '-1' is block, 'null' is delete membership for this group
+                                            var typeAction = { '2': 'user-membership-from-member-to-admin', '3': 'user-membership-from-admin-to-member', '-1': 'user-membership-block', '4': 'user-membership-unblock' };
+
+                                            //incase from block to member (we check prevType, if block then allow to be member)
+                                            if(prevType == '-1'){
+                                                newType = '4';
+                                            }
+
+                                            //for group activity stream record -- START --
+                                            var type = 'group';
+                                            var targetinfo = {id: groupObj.$id, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                            var area = {type: 'membersettings', action: (newType) ? typeAction[newType] : 'group-member-removed'};
+                                            var group_id = groupObj.$id;
+                                            var memberuserID = member.userID;
+                                            //for group activity record
+                                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                            //for group activity stream record -- END --
+
+                                            defer.resolve();
+
+                                            // //publish an activity for membership changed.
+                                            // userFirebaseService.asyncRecordMembershipChangeActivity(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
+                                            //     .then(function(res) {
+                                            //         defer.resolve(res);
+                                            //     }, errorHandler);
                                         }
                                     });
 
