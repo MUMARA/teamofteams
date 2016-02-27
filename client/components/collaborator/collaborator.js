@@ -14,6 +14,8 @@
     componentHandler.upgradeAllRegistered();
     var firepadRef;
     var that = this;
+    that.isNormal = true;
+    that.mode = "";
     var pushDocumentNode,firebaseDocumentId,firepad;
     that.ready = true;
     that.clicked = false;
@@ -49,11 +51,12 @@
 
     function initiateFirepad(refArgument,arg){
       var codeMirror = CodeMirror(document.getElementById('firepad'), {
-        lineWrapping: true
+        lineNumbers: that.mode == "Rich Text" ? false: true,
+        mode: that.mode
       });
       firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
-        richTextShortcuts: true,
-        richTextToolbar: true,
+        richTextShortcuts: that.isNormal,
+        richTextToolbar: that.isNormal,
         // userId: null,
         defaultText: null
           /*'Welcome to firepad!'*/
@@ -142,6 +145,7 @@
       groupService.setSubgroupIDPanel($stateParams.subgroupID);
       that.subgroupID = $stateParams.subgroupID || '';
       that.currentDocument = $stateParams.docID;
+      that.docType = ['Rich Text','JavaScript','Swift','C#','Java'];
       that.groupID = $stateParams.groupID;
       that.user = userService.getCurrentUser();
       that.users = dataService.getUserData();
@@ -177,18 +181,6 @@
           console.log(array);
           console.log(array.length);
           // console.log(JSON.parse(JSON.stringify(array)));
-
-            // for(var i in array){
-            //   console.log('i', i)
-            //   console.log('[i]', array[i])
-            // }
-            // array.forEach(function(v,l){
-            //   console.log('v', v);
-            //   console.log('L', l);
-            // })
-            // console.log(array.$id);
-            // console.log(array.title);
-          // that.document = globalRef.$getRecord($stateParams.docID)[0].title;
           }
         }
         initiateFirepad(globalRef);

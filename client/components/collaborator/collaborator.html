@@ -110,10 +110,19 @@
           <label>Document Title</label>
           <input type="text" ng-model="collaborator.documentTitle">
         </md-input-container>
+        <md-input-container>
+       <label>State</label>
+       <md-select ng-model="ctrl.userState">
+         <md-option ng-repeat="type in collaborator.docType" value="{{type}}">
+           {{type}}
+         </md-option>
+       </md-select>
+     </md-input-container>
         <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="new document" ng-click="collaborator.createDocument()">
             <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
             <span>Create</span>
         </md-button>
+
       </div>
     </div>
 
