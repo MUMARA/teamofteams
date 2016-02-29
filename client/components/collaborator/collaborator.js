@@ -5,15 +5,23 @@
   'use strict';
   angular.module('app.collaborator')
     .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
-    .controller('CollaboratorController', ['$rootScope','ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject', collaboratorFunction]);
+    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope', collaboratorFunction]);
 
 
-  function collaboratorFunction($rootScope,ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject) {
+  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope) {
 
 
     componentHandler.upgradeAllRegistered();
     var firepadRef;
     var that = this;
+    that.documentTypes = [
+      {displayName:"Rich Text",codeMirrorName: "Rich Text"},
+      {displayName:"JavaScript",codeMirrorName: "text/javascript"},
+      {displayName:"Swift",codeMirrorName: "text/x-swift"},
+      {displayName:"Java",codeMirrorName: "text/x-java"},
+      {displayName:"C#",codeMirrorName: "text/x-csharp"},];
+    that.isNormal = true;
+    that.mode = "Rich Text";
     var pushDocumentNode,firebaseDocumentId,firepad;
     that.ready = true;
     that.clicked = false;
@@ -49,11 +57,12 @@
 
     function initiateFirepad(refArgument,arg){
       var codeMirror = CodeMirror(document.getElementById('firepad'), {
-        lineWrapping: true
+        lineNumbers: that.mode == "Rich Text" ? false: true,
+        mode: that.mode
       });
       firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
-        richTextShortcuts: true,
-        richTextToolbar: true,
+        richTextShortcuts: that.isNormal,
+        richTextToolbar: that.isNormal,
         // userId: null,
         defaultText: null
           /*'Welcome to firepad!'*/
@@ -83,7 +92,6 @@
         userID:that.user.userID,
         imgUrl:$rootScope.userImg
       };
-      console.log(that.createdBy);
       if (that.subgroupID) {
         firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID);
@@ -179,6 +187,8 @@
             globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID);  //this will be the user created documents
             globalRef.once('value', function(snapshot){
               that.document = snapshot.val().title;
+              that.mode = snapshot.val().type;
+              that.isNormal = false;
            });
           }
         }
@@ -187,31 +197,25 @@
           if($stateParams.docID === "Team Information") {
             globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child("init");
             that.document = $stateParams.docID;
+            that.mode = 'Rich Text';
+            // that.isNormal = false;
+            initiateFirepad(globalRef);
           }else {
           globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child($stateParams.docID);
           globalRef.once('value', function(snapshot){
             that.document = snapshot.val().title;
+            that.mode = snapshot.val().type;
+            that.isNormal = false;
+            initiateFirepad(globalRef);
          });
 
           var array = $firebaseArray(globalRef)
           console.log(array);
           console.log(array.length);
           // console.log(JSON.parse(JSON.stringify(array)));
-
-            // for(var i in array){
-            //   console.log('i', i)
-            //   console.log('[i]', array[i])
-            // }
-            // array.forEach(function(v,l){
-            //   console.log('v', v);
-            //   console.log('L', l);
-            // })
-            // console.log(array.$id);
-            // console.log(array.title);
-          // that.document = globalRef.$getRecord($stateParams.docID)[0].title;
           }
         }
-        initiateFirepad(globalRef);
+
 
       }
       that.history = $firebaseArray(globalRef.child("history").limitToLast(3000));

@@ -17,7 +17,7 @@
     </md-toolbar>
 
     <!--button for Color Dropdown-->
-    <div class="toolbar-list">
+    <div class="toolbar-list" ng-show="collaborator.isNormal">
       <button id="listColor" class="mdl-button mdl-js-button mdl-js-ripple-effect">
         Color
       </button>
@@ -45,11 +45,12 @@
       </div>
       <!--List for Size Dropdown-->
       <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Size" for="listSize"></ul>
-      <div id="firepad" style=""></div>
+
         <div class="mdl-tooltip" for="bold">
           Bold
         </div>
       </div>
+        <div id="firepad" style=""></div>
     </div>
 
     <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
@@ -69,6 +70,9 @@
                     <span style="font-size: 13px; color: #ffffff;" class="">
                       <strong>Name:</strong>
                       {{document.title}}</span>
+                      <span style="font-size: 13px; color: #ffffff;" class="">
+                        <strong>Type:</strong>
+                        {{document.type}}</span>
                   </div>
 
                 </md-list-item>
@@ -111,14 +115,12 @@
         <md-input-container>
           <label>Document Type</label>
           <md-select ng-model="collaborator.documentType">
-            <md-option>Normal</md-option>
-            <md-option>Javascript</md-option>
+            <md-option ng-repeat="type in collaborator.documentTypes" value="{{type.codeMirrorName}}">{{type.displayName}}</md-option>
           </md-select>
         </md-input-container>
-
-        <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
-          Create
-          <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate"></md-progress-circular>
+        <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="Create" ng-click="collaborator.createDocument()">
+            <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
+            <span>Create</span>
         </md-button>
       </div>
     </div>
