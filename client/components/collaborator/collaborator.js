@@ -14,6 +14,7 @@
     componentHandler.upgradeAllRegistered();
     var firepadRef;
     var that = this;
+
     that.documentTypes = [
       {displayName:"Rich Text",codeMirrorName: "Rich Text"},
       {displayName:"JavaScript",codeMirrorName: "text/javascript"},
@@ -73,6 +74,9 @@
 
     }
 
+    that.checkboxClicked = function() {
+      console.log(that.allow);
+    }
     that.createDocument = function() {
       var firebaseLocalRef;
       var updateDocument = {};
@@ -163,7 +167,6 @@
       that.groupID = $stateParams.groupID;
       that.user = userService.getCurrentUser();
       that.users = dataService.getUserData();
-      console.log("DataService:", that.users);
       that.activeTitle = "Collaborator";
 
       if($stateParams.docID) {
@@ -203,6 +206,7 @@
        });
       }
       that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
+      console.log("DataService:", that.users);
     }
   }
 })();

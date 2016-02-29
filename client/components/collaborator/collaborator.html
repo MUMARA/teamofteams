@@ -81,11 +81,21 @@
           <!--Online Users side-->
           <md-tab label="Collaborators">
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
-              <div class="nopadding">
-                <md-checkbox ng-model="data.cb1" aria-label="Checkbox 1" ng-repeat="(key, value) in collaborator.users | groupBy: collaborator.groupID">
-                  <h5 class="foreColorDarkGrey">{{ value[$index].fullName }}</h5>
-                  <span style="font-size: 13px; color: #ffffff;">Time : {{value[$index].contactNumber}}</span>
+              <div class="">
+                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {groupID: collaborator.groupID}">
+                  <h5 class="foreColorDarkGrey">
+                    <!-- {{ value[$index].fullName }} -->
+                    {{user.fullName}}
+                  </h5>
                 </md-checkbox>
+                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
+                  <h5 class="foreColorDarkGrey">
+                    <!-- {{ value[$index].fullName }} -->
+                    {{user.fullName}}
+                  </h5>
+                  <!-- <span style="font-size: 13px; color: #ffffff;">Time : {{value[$index].contactNumber}}</span> -->
+                </md-checkbox>
+                <br>
               </div>
               <!-- <md-list class="nopadding">
                 <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-repeat="(key, value) in collaborator.users | groupBy: collaborator.groupID">
