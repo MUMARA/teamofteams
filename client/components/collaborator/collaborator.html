@@ -65,15 +65,19 @@
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
                   <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
                   <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                    <img ng-src="{{document.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px">
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <h3 class="foreColorDarkGrey">Document
-                      {{$index+1}}:</h3>
+                    <h3 class="foreColorDarkGrey">Created By :
+                      {{document.createdBy.firstName}} {{document.createdBy.lastName}}</h3>
                     <span style="font-size: 13px; color: #ffffff;" class="">
                       <strong>Name:</strong>
                       {{document.title}}</span>
-                      <span style="font-size: 13px; color: #ffffff;" class="">
-                        <strong>Type:</strong>
-                        {{document.type}}</span>
+                      <div style="font-size: 13px; color: #ffffff;" class="" ng-repeat="docType in collaborator.documentTypes">
+                        <span ng-if="(document.type == docType.codeMirrorName)"><strong>Type:</strong>
+                        {{docType.displayName}}</span></div>
+                    <div style="font-size: 13px; color: #ffffff;" class="">
+                      <strong>Date:</strong>
+                      {{document.timestamp | date:"MM/dd/yyyy  h:mma"}}</div>
                   </div>
                 </md-list-item>
               </md-list>
@@ -83,7 +87,7 @@
           <md-tab label="Collaborators">
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
               <div class="">
-                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {groupID: collaborator.groupID}">
+                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {groupID: collaborator.groupID}">
                   <h5 class="foreColorDarkGrey">
                     <!-- {{ value[$index].fullName }} -->
                     {{user.fullName}}
