@@ -51,18 +51,27 @@
         </div>
 
         <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
-            {{navToolbar.showUrlObj.groupID}} /
-            {{navToolbar.showUrlObj.subgroupID}}
+            {{navToolbar.showUrlObj.groupTitle}} /
+            {{navToolbar.showUrlObj.subgroupTitle}}
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
-            <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()" title="Quiz">
+            <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                  Quiz
+                </md-tooltip>
             </ng-md-icon>
-            <ng-md-icon icon="hangouts" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
+            <ng-md-icon icon="hangouts" class="fillColorWhite nooutline leftmargin10px">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Chat
+                </md-tooltip>
             </ng-md-icon>
             <!-- <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
             </ng-md-icon> -->
             <div id="notification">
-                <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="notification" ng-click="navToolbar.showNotification()">
+                <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.showNotification()">
+                    <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                        Notification
+                    </md-tooltip>
                 </ng-md-icon>
                 <!-- Notification Start -->
                 <div style="position:relative;top: -35px;right: 15px">
@@ -91,6 +100,9 @@
 
             <md-badge ng-if="navToolbar.notifications.length > 0" ng-click="navToolbar.showNotification()" style="background-color:rgb(251, 68, 130); position:fixed; font-size: small; right:90px; top:15px;"><strong>{{navToolbar.notifications.length}}</strong></md-badge>
             <div >
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Profile
+                </md-tooltip>
                 <md-menu md-offset="0 50">
                     <img ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px nooutline leftmargin10px">
                     <md-menu-content>

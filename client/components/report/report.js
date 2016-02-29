@@ -11,6 +11,13 @@
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        };
         this.showReportData = function (user) {
             this.report = [];
             that.showParams = false;

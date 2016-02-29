@@ -107,6 +107,8 @@
         function changeMemberRole(newType, member) {
             groupFirebaseService.changeMemberRole(newType, member, that.group, user)
                 .then(function(res) {
+
+
                     messageService.showSuccess("Changed Role Successfully");
                 }, function(reason) {
                     messageService.showFailure(reason);

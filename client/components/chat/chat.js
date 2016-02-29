@@ -11,6 +11,13 @@
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        }
         this.showNewChannel = function(ev) {
             if (that.subgroupID) {
                 $state.go('user.create-teams-channels', {groupID: that.groupID, teamID: that.subgroupID});

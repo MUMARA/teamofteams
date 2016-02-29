@@ -25,7 +25,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
                    "id": user.userID, //this is the userID, and an index should be set on this
                    "email": user.email,
                    "displayName": user.firstName + " " + user.lastName,
-                   'profile-image': $rootScope.userImg
+                   'profile-image': $rootScope.userImg || ''
                };
 
          //getting curent use groups and then getting its notification/activities
@@ -48,6 +48,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
    //for activity step2
    function getActivityOfCurrentUserByGroup (groupID) {
       firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('object/id').equalTo(userID).on("child_added", function(snapshot) {
+         console.log('11111111111111111111', snapshot.key(), snapshot.val());
          if(snapshot && snapshot.val()) {
             currentUserActivities.push({groupID: groupID, displayMessage: snapshot.val().displayName});
          }
@@ -84,7 +85,6 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
    } //getSubGroupsMembersOfCurrentUsers
 
    function getActivities() {
-      init();
       return currentUserActivities;
    }
    function getSubgroupNames() {
@@ -120,7 +120,8 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
             "type": type,
             "id": targetinfo.id, //an index should be set on this
             "url": targetinfo.id,
-            "displayName": targetinfo.title
+            "displayName": targetinfo.title,
+            "seen": false
          };
          //now calling function for save to firebase....
          saveToFirebase(type, targetinfo, area, groupID, memberUserID, object);
@@ -129,7 +130,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
 
 
    function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object){
-      console.log('saveToFirebase', object);
+      // console.log('saveToFirebase', object);
       // ## target ##
       //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
       var target = {
@@ -144,8 +145,8 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
                   'membersettings': {  //reject == ignore
                               'group-ignore-member': actor.displayName +" rejected " + object.displayName +"'s membership request for " + target.displayName,
                               'group-approve-member': actor.displayName +" approved " + object.displayName + " as a member in "+ target.displayName,
-                              'user-membership-to-member': actor.displayName +" changed " + object.displayName +"'s membership from \"member\" to \"suspend\" for " + target.displayName,
-                              'user-membership-to-admin': actor.displayName +" changed " + object.displayName +"'s membership from \"member\" to \"admin\" for " + target.displayName,
+                              'user-membership-from-admin-to-member': actor.displayName +" changed " + object.displayName +"'s membership from \"admin\" to \"member\" for " + target.displayName,
+                              'user-membership-from-member-to-admin': actor.displayName +" changed " + object.displayName +"'s membership from \"member\" to \"admin\" for " + target.displayName,
                               'user-membership-block': actor.displayName +" changed " + object.displayName +"'s membership to \"suspend\" for " + target.displayName,
                               'user-membership-unblock': actor.displayName +" changed " + object.displayName +"'s membership from \"suspend\" to \"member\" for " + target.displayName,
                               'group-member-removed': actor.displayName +" removed " + object.displayName +" from " + target.displayName,
@@ -177,6 +178,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
 
       if(area.action){
        displayMessage = displayNameObject[type][area.type][area.action];
+       console.log('displayNameObject[type][area.type][area.action]', displayNameObject[type][area.type][area.action])
       } else {
        displayMessage = displayNameObject[type][area.type];
       }
@@ -197,6 +199,9 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
       var pushObj = ref.child('group-activity-streams').push();
       var activityPushID = pushObj.key();
 
+      //Sets a priority for the data at this Firebase location.
+      pushObj.setPriority(0 - Date.now());
+
       var multipath = {};
 
       if(groupID){
@@ -209,6 +214,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
                 published: firebaseTimeStamp,
                 verb: (area.action) ? area.action : area.type
       };
+
 
       firebaseService.getRefMain().update(multipath, function(err){
          if (err) { console.log('activityError', err); }
