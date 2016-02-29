@@ -2,6 +2,12 @@
     'use strict';
 
     angular.module('app.navToolbar')
+    //Filter Array in reverse
+    .filter('reverse', function() {
+      return function(items) {
+        return items.slice().reverse();
+      };
+    })
 
     .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
         function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
@@ -12,7 +18,8 @@
             self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
-            this.notifications = [];
+            this.notifications = []
+           //filter Array in reverse
 
             /*VM properties*/
 

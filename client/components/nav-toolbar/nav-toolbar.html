@@ -72,7 +72,7 @@
                           <strong class="foreColorDarkGrey" style="font-size: large;">Notifications</strong>
                       </div>
                       <md-list class="nopadding vscroll">
-                          <md-list-item  class="nopadding" ng-repeat="notify in navToolbar.notifications track by $index">
+                          <md-list-item  class="nopadding" ng-repeat="notify in navToolbar.notifications | reverse track by $index">
                               <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
                                   <div style="font-size:small;" layout="row" layout-align="center center" layout-fill>
                                       <img ng-src="{{notify['profile-image'] ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon30px nooutline leftmargin10px">
