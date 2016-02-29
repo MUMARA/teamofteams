@@ -167,3 +167,23 @@ ng-md-icon:hover {
 .toolbar-list .is-upgraded {
     margin-top:4%;
 }
+
+.dropDown-list
+{
+    top:6em;
+    left: 19.25em;
+}
+
+[class~="mdl-menu__outline"]
+{
+    top:4em;
+    left: 15em;
+}
+
+.firepad-color-dropdown-item
+{
+    padding: 2%;
+    width: 96%;
+    margin-top: 9px;
+}
+
