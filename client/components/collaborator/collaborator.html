@@ -7,7 +7,7 @@
           <h2>{{collaborator.document}}</h2>
         </div>
         <span flex></span>
-        <md-input-container ng-hide="collaborator.default">
+        <md-input-container>
           <label>Export</label>
           <md-select ng-model="collaborator.export">
             <md-option ng-click="collaborator.export()">Export to html</md-option>
@@ -17,7 +17,7 @@
     </md-toolbar>
 
     <!--button for Color Dropdown-->
-    <div class="toolbar-list">
+    <div class="toolbar-list" ng-show="collaborator.isNormal">
       <button id="listColor" class="mdl-button mdl-js-button mdl-js-ripple-effect">
         Color
       </button>
@@ -44,12 +44,14 @@
         Size
       </div>
       <!--List for Size Dropdown-->
+
       <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Size" for="listSize"></ul>
-      <div id="firepad" style=""></div>
+
         <div class="mdl-tooltip" for="bold">
           Bold
         </div>
       </div>
+        <div id="firepad" style=""></div>
     </div>
 
     <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
@@ -69,8 +71,10 @@
                     <span style="font-size: 13px; color: #ffffff;" class="">
                       <strong>Name:</strong>
                       {{document.title}}</span>
+                      <span style="font-size: 13px; color: #ffffff;" class="">
+                        <strong>Type:</strong>
+                        {{document.type}}</span>
                   </div>
-
                 </md-list-item>
               </md-list>
             </md-content>
@@ -78,7 +82,30 @@
           <!--Online Users side-->
           <md-tab label="Collaborators">
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
-              Lorem ipsum dolor sit amet, ne quod novum mei
+              <div class="">
+                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {groupID: collaborator.groupID}">
+                  <h5 class="foreColorDarkGrey">
+                    <!-- {{ value[$index].fullName }} -->
+                    {{user.fullName}}
+                  </h5>
+                </md-checkbox>
+                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
+                  <h5 class="foreColorDarkGrey">
+                    <!-- {{ value[$index].fullName }} -->
+                    {{user.fullName}}
+                  </h5>
+                  <!-- <span style="font-size: 13px; color: #ffffff;">Time : {{value[$index].contactNumber}}</span> -->
+                </md-checkbox>
+                <br>
+              </div>
+              <!-- <md-list class="nopadding">
+                <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-repeat="(key, value) in collaborator.users | groupBy: collaborator.groupID">
+                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                    <h3 class="foreColorDarkGrey">Name : {{ value[$index].fullName }}</h3>
+                    <span style="font-size: 13px; color: #ffffff;">Time : {{value[$index].contactNumber}}</span>
+                  </div>
+                </md-list-item>
+              </md-list> -->
             </md-content>
           </md-tab>
           <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
@@ -111,13 +138,12 @@
         <md-input-container style="margin-right: 10px;">
           <label>Document Type</label>
           <md-select ng-model="collaborator.documentType">
-            <md-option>Normal</md-option>
-            <md-option>Javascript</md-option>
+            <md-option ng-repeat="type in collaborator.documentTypes" value="{{type.codeMirrorName}}">{{type.displayName}}</md-option>
           </md-select>
         </md-input-container>
-        <md-button class="backColorSeaGreen" ng-disabled="!collaborator.documentTitle" aria-label="new channel" ng-click="collaborator.createDocument()">
-          Create
-          <md-progress-circular ng-hide="collaborator.hideLoader" md-mode="indeterminate"></md-progress-circular>
+        <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="Create" ng-click="collaborator.createDocument()">
+            <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
+            <span>Create</span>
         </md-button>
       </div>
     </div>

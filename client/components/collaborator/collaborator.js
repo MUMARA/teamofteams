@@ -8,6 +8,7 @@
       .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope', collaboratorFunction]);
 
 
+
   function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope) {
 
 
@@ -179,11 +180,6 @@
 
           } else {
             globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID);  //this will be the user created documents
-            //   globalRef.once('value', function(snapshot){
-            //     that.document = snapshot.val().title;
-            //     that.mode = snapshot.val().type;
-            //     that.isNormal = false;
-            //  });
           }
         }
         else {
@@ -196,6 +192,7 @@
             var array = $firebaseArray(globalRef)
             console.log(array);
             console.log(array.length);
+
           }
         }
         globalRef.once('value', function(snapshot){
@@ -204,6 +201,7 @@
           that.isNormal = that.mode == "Rich Text" ? true : false;
           initiateFirepad(globalRef);
         });
+
       }
       that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
       console.log("DataService:", that.users);
