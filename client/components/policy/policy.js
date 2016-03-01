@@ -341,7 +341,7 @@
             //Selected SubGroup for Assign Policies
 
             //on create policy
-            this.newPolicy = function() {
+            this.newPolicy = function(saved) {
                 //load initial page
                 init();
 
@@ -350,6 +350,13 @@
 
                 //On New/Create Policy Show Panel
                 that.showPanel = true;
+
+                if(saved){
+                    that.showPanel = false;
+
+                }else {
+                    that.showPanel = true;
+                }
             };//this.newPolicy
 
 
@@ -556,19 +563,19 @@
                                     that.groupPolicies[index] = obj;
                                 }
                             });
-                            that.showPanel = false;
+
                             messageService.showSuccess('Policy Successfully Updated!');
                             //$state.go('user.policy', {groupID: groupId});
                         } else{
-                            that.showPanel = false;
                             messageService.showSuccess('Policy Successfully Created!');
                             //after created reload initial page
-                            that.newPolicy();
+                            that.newPolicy('saved');
                         }
                     });
                 } else {//if that.title exists
                     messageService.showFailure('Please Write Policy Name');
                 }
+
             } //onSave
 
             //load constructor

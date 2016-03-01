@@ -15,8 +15,6 @@
 
                 firebaseService.getRefSubgroupPolicies().child(groupID).on('child_added',function(subGroups, prevChildKey){
                     //after getting names checking subgroup has policy or nothing
-                    console.log(subGroups.val());
-                    console.log('subgroup-title', subGroups.val()['subgroup-title']);
                     subGroupNames.push({
                         subgroupID: subGroups.key(),
                         subgroupTitle: (subGroups.val()['subgroup-title']) ? subGroups.val()['subgroup-title'] : 'Subgroup Title',
