@@ -8,6 +8,7 @@
       .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope', collaboratorFunction]);
 
 
+
   function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope) {
 
 
@@ -85,7 +86,7 @@
         firstName:that.user.firstName,
         lastName:that.user.lastName,
         userID:that.user.userID,
-        imgUrl:$rootScope.userImg
+        imgUrl:$rootScope.userImg || ""
       };
       
       if (that.subgroupID) {
@@ -173,18 +174,14 @@
       if($stateParams.docID) {
         if(that.subgroupID) {
           that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
-          console.log(that.documents);
-          console.log(that.documents.length);
+          //console.log(that.documents);
+          //console.log(that.documents.length);
           if($stateParams.docID === "Team of Teams Information"){
             globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child("init"); // this will be the reference of the Default Document
 
           } else {
             globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID);  //this will be the user created documents
-            //   globalRef.once('value', function(snapshot){
-            //     that.document = snapshot.val().title;
-            //     that.mode = snapshot.val().type;
-            //     that.isNormal = false;
-            //  });
+
           }
         }
         else {
@@ -197,6 +194,7 @@
             var array = $firebaseArray(globalRef)
             console.log(array);
             console.log(array.length);
+
           }
         }
         globalRef.once('value', function(snapshot){
@@ -204,10 +202,14 @@
           that.mode = snapshot.val().type;
           that.isNormal = that.mode == "Rich Text" ? true : false;
           initiateFirepad(globalRef);
+
+          console.log("Snap :",snapshot.val())
         });
+
       }
       that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
-      console.log("DataService:", that.users);
+      //console.log("DataService:", that.users);
+      console.log("DDAAAA : ",that.documents);
     }
   }
 })();
