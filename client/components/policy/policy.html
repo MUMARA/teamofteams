@@ -58,7 +58,7 @@ md-checkbox.md-checked .md-icon {
                 </md-button>
             </div>
             <!-- <div ng-show="policy.showPanel" class="backColorWhite md-whiteframe-z1 viewHeight-154 vscroll" layout="column" -->
-            <div ng-show="true" class="backColorWhite " layout="row" layout-align="space-between" flex ng-if="policy.showPanel">
+            <div ng-show="policy.showPanel" class="backColorWhite " layout="row" layout-align="space-between" flex >
                 <div class="viewHeight-250 vscroll" layout="column" layout-padding flex>
                     <div layout="row" style="padding-bottom: 75px;">
                         <md-input-container flex>
@@ -206,18 +206,18 @@ md-checkbox.md-checked .md-icon {
                                 <span>Apply</span>
                             </md-button>
                     </div>
-                    <div ng-if="policy.subGroupNames.lenght > 0">
-                        <md-chips ng-repeat="subgroup in policy.subGroupNames track by $index">
-                            <md-chip  style="height:40px" class="backColorDarkGrey" ng-if="subgroup.hasPolicy == true">
-                                <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{subgroup.subgroupTitle}}</span>
-                                <span style="position:relative; top:-8px;" class="fillColorWhite" >
-                                        <!-- &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"></ng-md-icon> -->
-                                    </span>
-                            </md-chip>
-                            <md-divider></md-divider>
-                        </md-chips>
-                    </div>
+                    <div layout="row">
 
+
+                        <md-chips ng-repeat="subgroup in policy.subGroupNames track by $index" ng-if="subgroup.hasPolicy == true">
+                            <md-chip  style="height:40px" class="backColorDarkGrey" >
+                                <span style="margin-left: 10px; position:relative; top:5px;" class="foreColorWhite">{{subgroup.subgroupID}}</span>
+                                <!-- <span style="position:relative; top:-8px;" class="fillColorWhite" >
+                                        &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"></ng-md-icon>
+                                    </span> -->
+                            </md-chip>
+                        </md-chips>
+</div>
                 </div>
 
                 <div layout="row" layout-align="end center">

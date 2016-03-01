@@ -321,7 +321,7 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
-                                    var subgroupNames = {title: subgroupInfo.title, subgroupImgUrl: subgroupInfo.imgLogoUrl || '', ownerImgUrl: $rootScope.userImg};
+                                    var subgroupNames = {title: subgroupInfo.title, subgroupImgUrl: subgroupInfo.imgLogoUrl || '', ownerImgUrl: $rootScope.userImg || ''};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
                                     groupNameRef.set(subgroupNames,  function(error) {
@@ -365,7 +365,7 @@ angular.module('core')
                                                             mediaType: 'image/png' //image/jpeg
                                                         },
                                                         'subgroup-owner-id': userID,
-                                                        'owner-img-url': $rootScope.userImg
+                                                        'owner-img-url': $rootScope.userImg || ''
                                                     }, function(error) {
                                                         if (error) {
                                                             //role back previous

@@ -645,14 +645,17 @@
     "subgroup-policies": {
       "$groupid": {
         "$subgroupid": {
-          ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'title'])",
+          ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'policy-title', 'subgroup-title'])",
           "hasPolicy": {
             ".validate": "newData.isBoolean()"
           },
           "policyID": {
             ".validate": "newData.isString()"
           },
-          "title": {
+          "policy-title": {
+            ".validate": "newData.isString()"
+          },
+          "subgroup-title": {
             ".validate": "newData.isString()"
           },
           "$other": {
@@ -668,14 +671,17 @@
       "$userid": {
         "$groupid": {
           "$subgroupid": {
-            ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'title'])",
+            ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'policy-title', 'subgroup-title'])",
             "hasPolicy": {
               ".validate": "newData.isBoolean()"
             },
             "policyID": {
               ".validate": "newData.isString()"
             },
-            "title": {
+            "policy-title": {
+              ".validate": "newData.isString()"
+            },
+            "subgroup-title": {
               ".validate": "newData.isString()"
             },
             "$other": {
