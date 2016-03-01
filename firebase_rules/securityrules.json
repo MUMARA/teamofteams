@@ -671,17 +671,14 @@
       "$userid": {
         "$groupid": {
           "$subgroupid": {
-            ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'policy-title', 'subgroup-title'])",
+            ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'title'])",
             "hasPolicy": {
               ".validate": "newData.isBoolean()"
             },
             "policyID": {
               ".validate": "newData.isString()"
             },
-            "policy-title": {
-              ".validate": "newData.isString()"
-            },
-            "subgroup-title": {
+            "title": {
               ".validate": "newData.isString()"
             },
             "$other": {

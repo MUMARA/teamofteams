@@ -1248,7 +1248,7 @@ path /subgroup-policies/{groupid} {
           isCurrentUserGroupAdmin(groupid)    ||
           userGroupMembershipAnyType($groupid)
      }
-       /{subgroupid} is AppliedPolicyType {
+       /{subgroupid} is SubgroupAppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)    ||
@@ -1266,10 +1266,17 @@ path /subgroup-policies/{groupid} {
 type AppliedPolicyType {
    hasPolicy   :  Boolean,
    policyID    :    String,
+   title      : String
+
+}
+type SubgroupAppliedPolicyType {
+   hasPolicy   :  Boolean,
+   policyID    :    String,
   "policy-title"       : String,
    "subgroup-title"       : String
 
 }
+
 
 
   path /user-policies/{userid}/{groupid}/{subgroupid} is AppliedPolicyType {
