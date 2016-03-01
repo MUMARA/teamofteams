@@ -26,7 +26,7 @@
 						<img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="	icon40px  imageRound">
 						<span class="leftmargin10px foreColorDarkGrey">{{report.fullName}}</span>
 					</div>
-				  	<strong><em class="foreColorDarkGrey">{{report.date | date: 'dd-MMM-yyyy'}}</em></strong>
+				  	<strong><em class="foreColorDarkGrey">{{progressreport.returnMoment(report.date)}}</em></strong>
 				  	<strong class="foreColorLightGrey">{{report.groupID}} / {{report.subgroupID}}</strong>
 				</div>
 				<div layout="row" layout-align="center end" layout-fill>

@@ -186,7 +186,7 @@ md-checkbox.md-checked .md-icon {
                         </div>
                     </div>
                     <!-- DailyReport div    END -->
-                    <div layout="row" layout-align="space-between center">
+                    <!-- <div layout="row" layout-align="space-between center">
                         <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
                             <span>Apply</span>
                         </md-button>
@@ -194,7 +194,38 @@ md-checkbox.md-checked .md-icon {
                             <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
                             <span> Save</span>
                         </md-button>
+                    </div> -->
+
+                    <!--adding team members-->
+                    <h2>Team Members</h2>
+                    <!-- <md-button style="background: #60B089" class="backColorSeaGreen" ng-click="createSubGroup.ActiveSideNavBar('member');"><span style="color: white;">Add</span> -->
+
+                    <div layout="row">
+                        <div layout="row" layout-align="space-between center">
+                            <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
+                                <span>Apply</span>
+                            </md-button>
                     </div>
+                    <div ng-if="policy.subGroupNames.lenght > 0">
+                        <md-chips ng-repeat="subgroup in policy.subGroupNames track by $index">
+                            <md-chip  style="height:40px" class="backColorDarkGrey" ng-if="subgroup.hasPolicy == true">
+                                <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{subgroup.subgroupTitle}}</span>
+                                <span style="position:relative; top:-8px;" class="fillColorWhite" >
+                                        <!-- &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"></ng-md-icon> -->
+                                    </span>
+                            </md-chip>
+                            <md-divider></md-divider>
+                        </md-chips>
+                    </div>
+
+                </div>
+
+                <div layout="row" layout-align="end center">
+                    <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
+                        <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                        <span> Save</span>
+                    </md-button>
+                </div>
                 </div>
                 <!--SubGroups sidenav-->
                 <div ng-if="policy.subgroupSideNavBar" class="backColorSeaGreen nopadding viewHeight-250 anifade" style="width: 300px; position: absolute; right: 73px; overflow-y: scroll" layout="column" layout-align="space-between">

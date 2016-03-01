@@ -6,8 +6,8 @@
 
 
 angular.module('core')
-    .factory('groupFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
-        function(activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
+    .factory('groupFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject","$rootScope", "userPresenceService",
+        function(activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject,$rootScope,userPresenceService) {
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -341,6 +341,7 @@ angular.module('core')
                                                             }
                                                         })
                                                     })
+                                                    console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
                                                     firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({hasPolicy: false, policyID: '', title: subgroupInfo.title});

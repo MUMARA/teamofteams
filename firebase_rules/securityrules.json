@@ -283,7 +283,7 @@
           "$other": {
             ".validate": "false"
           },
-          ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
+          ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
           ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
         },
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
@@ -868,23 +868,31 @@
     "user-activity-streams": {
       "$userid": {
         "$activityid": {
-          ".validate": "newData.hasChildren(['displayName', 'seen', 'published', 'verb'])",
-          "displayName": {
-            ".validate": "newData.isString()"
-          },
-          "seen": {
-            ".validate": "newData.isBoolean()"
-          },
-          "published": {
-            ".validate": "newData.isNumber() && newData.val() <= now"
-          },
-          "verb": {
-            ".validate": "newData.isString()"
-          },
-          "$other": {
-            ".validate": "false"
-          },
           ".write": "auth != null"
+        }
+      }
+    },
+    "firepad-group-access": {
+      "$groupid": {
+        "$documentid": {
+          "$userid": {
+            ".validate": "newData.isBoolean()",
+            ".read": "auth != null",
+            ".write": "auth != null"
+          }
+        }
+      }
+    },
+    "firepad-subgroup-access": {
+      "$groupid": {
+        "$subgroupid": {
+          "$documentid": {
+            "$userid": {
+              ".validate": "newData.isBoolean()",
+              ".read": "auth != null",
+              ".write": "auth != null"
+            }
+          }
         }
       }
     }

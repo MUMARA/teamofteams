@@ -196,7 +196,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
       // console.log('activity', activity);
 
       var ref = firebaseService.getRefMain();
-      var pushObj = ref.child('group-activity-streams').child(groupID).push();
+      var pushObj = ref.child('group-activity-streams/'+groupID).push();
       var activityPushID = pushObj.key();
 
       //Sets a priority for the data at this Firebase location.
