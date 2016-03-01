@@ -541,6 +541,8 @@
                     .catch(function(err) {
                         // return alert('picture upload failed' + err)
                         that.processingSave = false;
+                        that.teamsettingpanel = false;
+
                         return messageService.showFailure('picture upload failed' + err)
                     });
                 // console.log(x);
@@ -560,11 +562,11 @@
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
-                        that.teamsettingpanel = false;
                         that.selectedindex = undefined;
-
+                       that.teamsettingpanel = false;
                     });
                     that.processingSave = false;
+
                 }
             }
         }

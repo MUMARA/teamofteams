@@ -6,13 +6,9 @@
 
 
 angular.module('core')
-<<<<<<< HEAD
     .factory('groupFirebaseService', ['$rootScope', 'activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
         function($rootScope, activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
-=======
-    .factory('groupFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject","$rootScope", "userPresenceService",
-        function(activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject,$rootScope,userPresenceService) {
->>>>>>> 5f0b26cca10d4e37b46c2118ae462ff0f81987df
+
 
             /*var syncObj = {
                 subgroupsSyncArray: [],

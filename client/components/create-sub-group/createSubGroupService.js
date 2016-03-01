@@ -13,7 +13,7 @@
 
                 return {
 
-                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID) {
+                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID,cb) {
                         //var pageUserId = userService.getCurrentUser().userID;
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
@@ -37,7 +37,7 @@
                                 //for group activity record
                                 activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                 //for group activity stream record -- END --
-
+                                    cb()
                                     messageService.showSuccess("Team creation Successful...");
                                     $rootScope.newImg = null;
                                 // }
