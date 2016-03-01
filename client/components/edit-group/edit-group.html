@@ -97,9 +97,9 @@
                     <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please Select Logo"></ng-md-icon>
                 </div>
             	<div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap>
-                    <img ng-src="{{$root.newImg || editGroup.group['logo-image'].url}}" alt="img/image.svg" class="cropper-main-image nooutline" ng-click="editGroup.showAdvanced($event)" />
+                    <img ng-src="{{$root.newImg || editGroup.group['logo-image'].url}}" alt="Group Logo" class="cropper-main-image nooutline" ng-click="editGroup.showAdvanced($event)" />
                 </div>
-                <image-cropper></image-cropper>
+                <!-- <image-cropper></image-cropper> -->
             </div>
             <div layout="row" layout-align="end center">
             	<md-button  layout="row" layout-align="center center" ng-disabled="groupForm.$invalid" class="backColorSeaGreen displayFlex" ng-click="editGroup.answer( groupForm )">

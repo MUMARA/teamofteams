@@ -198,7 +198,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
       var activityPushID = pushObj.key();
 
       //Sets a priority for the data at this Firebase location.
-      pushObj.setPriority(0 - Date.now());
+      // pushObj.setPriority(0 - Date.now());
 
       var multipath = {};
 

@@ -11,6 +11,13 @@
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         }
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        }
         function init(){
             groupService.setActivePanel('activity');
             that.groupID = $stateParams.groupID;

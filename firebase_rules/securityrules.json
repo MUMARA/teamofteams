@@ -841,7 +841,8 @@
           "$documentid": {
             ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
             ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
-          }
+          },
+          ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
         }
       }
     },

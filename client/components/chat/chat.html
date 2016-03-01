@@ -22,7 +22,7 @@
                                 {{chat.getUserProfile(message.from).firstName + ' '+ chat.getUserProfile(message.from).lastName}}
                             </div>
                             <div class="chatheaderTime backColorDarkSeaGreen">
-                                {{message.timestamp | date: 'shortTime'}}
+                                {{chat.returnMoment(message.timestamp)}}
                             </div>
                         </div>
                         <img ng-src="{{chat.getUserProfile(message.from)['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound chatuserimg" />
@@ -34,7 +34,7 @@
                     <div ng-if="chat.filterchatters(message.from)" layout="column" layout-align="end end">
                         <div class="chatheaderRight" layout="row">
                             <div class="chatheaderTimeRight backColorDarkSeaGreen">
-                                {{message.timestamp | date: 'shortTime'}}
+                                {{chat.returnMoment(message.timestamp)}}
                             </div>
                             <div class="chatheaderTitleRight backColorLightSeaGreen">
                                 {{chat.getUserProfile(message.from).firstName + ' '+ chat.getUserProfile(message.from).lastName}}
