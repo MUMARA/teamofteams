@@ -173,7 +173,6 @@
 
         //checkinDailyProgress
         function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb){
-            console.log('Policy', Policy, 'groupObj', groupObj);
                if(Policy && Policy.progressReport) {
                 //checking daily progress report is exists or not -- START --
                 firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
@@ -181,8 +180,8 @@
                     if(snapshot.val() === null) { //if null then create daily report dummy
                         //cerating Dummy Report Object on Checkin....
                         var progressRprtObj = firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
-                            //date: Firebase.ServerValue.TIMESTAMP,
-                            date: new Date().setHours(0,0,0,0),
+                            date: Firebase.ServerValue.TIMESTAMP,
+                            //date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
                             answers: ''
                         });

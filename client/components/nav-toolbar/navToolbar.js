@@ -255,7 +255,6 @@
             //Show Dailogue Box for Daily Report Questions -- END --
 
             function updateStatus(group, checkoutFlag, event) {
-                console.log('group', group);
                 var groupObj = {};
                 self.checkinSending = true;
                 if(group){

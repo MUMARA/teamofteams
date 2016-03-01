@@ -79,8 +79,9 @@
 									obj['profileImage'] = user.profileImage || '';
 									obj['groupID'] = user.groupID;
 									obj['subgroupID'] = user.subgroupID;
-                                    getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 									dailyProgressReport.push(obj);
+                                    getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 								}
 							}
 						}
@@ -99,8 +100,9 @@
 							obj['profileImage'] = user.profileImage;
 							obj['groupID'] = user.groupID;
 							obj['subgroupID'] = user.subgroupID;
-                            getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 							dailyProgressReport.push(obj);
+                            getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 						}
 					}
 
@@ -114,10 +116,10 @@
     		return dailyProgressReport;
     	} //getDailyProgressReport
     	function updateReport(report, cb) {
-    		console.log('report', report)
+    		// console.log('report', report)
     		firebaseService.getRefDailyProgressReport().child(report.userID).child(report.groupID).child(report.subgroupID).child(report.reportID).update({'answers': report.answers}, function(err){
 				if(err){
-					console.log('err', err)
+					// console.log('err', err)
 					cb(false);
 				} else {
 
@@ -156,7 +158,7 @@
 						dailyProgressReport.forEach(function(val, index) {
 							if(snapshot.val()) {
 								for(var key in snapshot.val()) {
-									console.log(val.reportID, key)
+									// console.log(val.reportID, key)
 									if(val.reportID === key) {
 										//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
 										dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
@@ -181,8 +183,9 @@
 										obj['profileImage'] = user.profileImage;
 										obj['groupID'] = user.groupID;
 										obj['subgroupID'] = user.subgroupID;
-										getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 										dailyProgressReport.push(obj);
+										getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 									}
 								}
 							}
@@ -201,8 +204,9 @@
 								obj['profileImage'] = user.profileImage;
 								obj['groupID'] = user.groupID;
 								obj['subgroupID'] = user.subgroupID;
-								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 								dailyProgressReport.push(obj);
+								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 							}
 						}
 
@@ -251,8 +255,9 @@
                                         obj['profileImage'] = user.profileImage;
                                         obj['groupID'] = user.groupID;
                                         obj['subgroupID'] = k;
+										dailyProgressReport.push(obj);
                                         getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-                                        dailyProgressReport.push(obj);
+
                                     }
 
                                 }
@@ -272,8 +277,9 @@
                                 obj['profileImage'] = user.profileImage;
                                 obj['groupID'] = user.groupID;
                                 obj['subgroupID'] = k;
+								dailyProgressReport.push(obj);
                                 getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-                                dailyProgressReport.push(obj);
+
 
                             }
 

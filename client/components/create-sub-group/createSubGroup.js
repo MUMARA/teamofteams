@@ -161,7 +161,7 @@
                                 that.teamsettingpanel = true;
 
                                 firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot){
-                                    that.subgroupPolicy = snaphot.val() ? snaphot.val().title : false;
+                                    that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
                                 })
                         // },50000)
                             // console.log(2)

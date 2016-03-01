@@ -15,9 +15,11 @@
 
                 firebaseService.getRefSubgroupPolicies().child(groupID).on('child_added',function(subGroups, prevChildKey){
                     //after getting names checking subgroup has policy or nothing
+                    console.log(subGroups.val());
+                    console.log('subgroup-title', subGroups.val()['subgroup-title']);
                     subGroupNames.push({
                         subgroupID: subGroups.key(),
-                        subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(),
+                        subgroupTitle: (subGroups.val()['subgroup-title']) ? subGroups.val()['subgroup-title'] : 'Subgroup Title',
                         hasPolicy: false,
                         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
                     });
@@ -147,7 +149,7 @@
                     //add property hasPolicy in subgroupNames..
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;

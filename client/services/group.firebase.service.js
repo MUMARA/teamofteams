@@ -6,8 +6,8 @@
 
 
 angular.module('core')
-    .factory('groupFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
-        function(activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
+    .factory('groupFirebaseService', ['$rootScope', 'activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
+        function($rootScope, activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -321,7 +321,7 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
-                                    var subgroupNames = {title: subgroupInfo.title, subgroupImgUrl: subgroupInfo.imgLogoUrl || '', ownerImgUrl: $rootScope.userImg};
+                                    var subgroupNames = {title: subgroupInfo.title, subgroupImgUrl: subgroupInfo.imgLogoUrl || '', ownerImgUrl: $rootScope.userImg || ''};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
                                     groupNameRef.set(subgroupNames,  function(error) {
@@ -343,7 +343,8 @@ angular.module('core')
                                                     })
 
                                                     //save in subgroup-policies for Policies
-                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({hasPolicy: false, policyID: '', title: subgroupInfo.title});
+                                                    console.log('hasPolicy' + false + 'policyID subgroup-title' + subgroupInfo.title);
+                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({'hasPolicy': false, 'policyID': '', 'subgroup-title': subgroupInfo.title, 'policy-title': ''});
 
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
@@ -364,7 +365,7 @@ angular.module('core')
                                                             mediaType: 'image/png' //image/jpeg
                                                         },
                                                         'subgroup-owner-id': userID,
-                                                        'owner-img-url': $rootScope.userImg
+                                                        'owner-img-url': $rootScope.userImg || ''
                                                     }, function(error) {
                                                         if (error) {
                                                             //role back previous
