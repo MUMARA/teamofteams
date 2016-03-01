@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.editGroup', ['core', 'ngMdIcons'])
-        .factory('editGroupService', ['$timeout', '$rootScope', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'firebaseService', '$firebaseObject', '$stateParams',
-            function($timeout, $rootScope, userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, firebaseService, $firebaseObject, $stateParams) {
+        .factory('editGroupService', ['activityStreamService', '$timeout', '$rootScope', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'firebaseService', '$firebaseObject', '$stateParams',
+            function(activityStreamService, $timeout, $rootScope, userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, firebaseService, $firebaseObject, $stateParams) {
 
                 var pageUserId = userService.getCurrentUser().userID;
 
@@ -43,6 +43,18 @@
                                         form.$submitted = false
                                     })
                                     $rootScope.newImg = null;
+
+                                    //for group activity stream record -- START --
+                                    var type = 'group';
+                                    var targetinfo = {id: groupInfo.$id, url: groupInfo.$id, title: groupInfo.title, type: 'group' };
+                                    var area = {type: 'group-updated'};
+                                    var group_id = groupInfo.$id;
+                                    var memberuserID = null;
+                                    //for group activity record
+                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                    //for group activity stream record -- END --
+
+
                                     cb();
                                     messageService.showSuccess('Team of Teams Edited Successfully')
                                     // CollaboratorService.CreateDocument("Team of Teams Information",groupInfo.groupID,)

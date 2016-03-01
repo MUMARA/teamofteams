@@ -21,7 +21,8 @@ angular.module('core', [
     'md.data.table',
     'ui-leaflet',
     'angular.filter',
-    'ngFileSaver'
+    'ngFileSaver',
+    'truncate'
   ]).filter('trustUrl', ['$sce', function($sce) {
     return function(url) {
       /*var temp;
@@ -478,6 +479,13 @@ angular.module('core', [
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         }
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        }
         function init(){
             groupService.setActivePanel('activity');
             that.groupID = $stateParams.groupID;
@@ -501,6 +509,13 @@ angular.module('core', [
 
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
+        };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
         };
         this.showReportData = function (user) {
             this.report = [];
@@ -552,6 +567,13 @@ angular.module('core', [
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        }
         this.showNewChannel = function(ev) {
             if (that.subgroupID) {
                 $state.go('user.create-teams-channels', {groupID: that.groupID, teamID: that.subgroupID});
@@ -687,7 +709,13 @@ angular.module('core', [
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         }
-
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        };
         this.CheckInuser = function(grId, sgrId, userID, type) {
             // Do not change status of self login user
             if (user.userID === userID) {
@@ -746,8 +774,8 @@ angular.module('core', [
 (function() {
     'use strict';
     angular.module('app.progressreport', ['core'])
-    .factory('ProgressReportService', ['firebaseService', ProgressReportService]);
-    function ProgressReportService(firebaseService) {
+    .factory('ProgressReportService', ['activityStreamService', 'firebaseService', ProgressReportService]);
+    function ProgressReportService(activityStreamService, firebaseService) {
 
     	var dailyProgressReport = [];
 
@@ -796,7 +824,7 @@ angular.module('core', [
 					dailyProgressReport.forEach(function(val, index) {
 						if(snapshot.val()) {
 							for(var key in snapshot.val()) {
-								console.log(val.reportID, key)
+								// console.log(val.reportID, key)
 								if(val.reportID === key) {
 									//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
 									dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
@@ -821,8 +849,9 @@ angular.module('core', [
 									obj['profileImage'] = user.profileImage || '';
 									obj['groupID'] = user.groupID;
 									obj['subgroupID'] = user.subgroupID;
-                                    getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 									dailyProgressReport.push(obj);
+                                    getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 								}
 							}
 						}
@@ -833,7 +862,7 @@ angular.module('core', [
     				if(snapshot.val()) {
 						var obj = {};
 						for(var key in snapshot.val()) {
-							console.log('subkey', key)
+							// console.log('subkey', key)
 							obj = snapshot.val()[key];
 							obj['reportID'] = key;
 							obj['userID'] = user.id;
@@ -841,8 +870,9 @@ angular.module('core', [
 							obj['profileImage'] = user.profileImage;
 							obj['groupID'] = user.groupID;
 							obj['subgroupID'] = user.subgroupID;
-                            getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 							dailyProgressReport.push(obj);
+                            getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 						}
 					}
 
@@ -856,15 +886,25 @@ angular.module('core', [
     		return dailyProgressReport;
     	} //getDailyProgressReport
     	function updateReport(report, cb) {
-    		// console.log(report)
+    		// console.log('report', report)
     		firebaseService.getRefDailyProgressReport().child(report.userID).child(report.groupID).child(report.subgroupID).child(report.reportID).update({'answers': report.answers}, function(err){
 				if(err){
-					console.log('err', err)
+					// console.log('err', err)
 					cb(false);
-				}
+				} else {
 
-				cb(true);
+                    //for group activity stream record -- START --
+                    var type = 'progressReport';
+                    var targetinfo = {id: report.reportID, url: report.groupID+'/'+report.subgroupID, title: report.groupID+'/'+report.subgroupID, type: 'progressReport' };
+                    var area = {type: 'progressReport-updated'};
+                    var group_id = report.groupID;
+                    var memberuserID = report.userID;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
 
+                    cb(true);
+                }
     		});
     	} //updateReport
     	function getGroupReports(userArray, groupID){
@@ -888,7 +928,7 @@ angular.module('core', [
 						dailyProgressReport.forEach(function(val, index) {
 							if(snapshot.val()) {
 								for(var key in snapshot.val()) {
-									console.log(val.reportID, key)
+									// console.log(val.reportID, key)
 									if(val.reportID === key) {
 										//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
 										dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
@@ -913,8 +953,9 @@ angular.module('core', [
 										obj['profileImage'] = user.profileImage;
 										obj['groupID'] = user.groupID;
 										obj['subgroupID'] = user.subgroupID;
-										getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 										dailyProgressReport.push(obj);
+										getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 									}
 								}
 							}
@@ -933,8 +974,9 @@ angular.module('core', [
 								obj['profileImage'] = user.profileImage;
 								obj['groupID'] = user.groupID;
 								obj['subgroupID'] = user.subgroupID;
-								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
 								dailyProgressReport.push(obj);
+								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+
 							}
 						}
 
@@ -983,8 +1025,9 @@ angular.module('core', [
                                         obj['profileImage'] = user.profileImage;
                                         obj['groupID'] = user.groupID;
                                         obj['subgroupID'] = k;
+										dailyProgressReport.push(obj);
                                         getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-                                        dailyProgressReport.push(obj);
+
                                     }
 
                                 }
@@ -1004,8 +1047,9 @@ angular.module('core', [
                                 obj['profileImage'] = user.profileImage;
                                 obj['groupID'] = user.groupID;
                                 obj['subgroupID'] = k;
+								dailyProgressReport.push(obj);
                                 getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-                                dailyProgressReport.push(obj);
+
 
                             }
 
@@ -1074,6 +1118,13 @@ angular.module('core', [
                  that.loadingData = false; 
              }
 
+        };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
         };
         this.update = function(report) {
             // console.log(report);
@@ -1440,6 +1491,13 @@ angular.module('core', [
         //$rootScope.fl= 'hello'
         var $scope = this;
         var that = this;
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        }
         //window.userScope = this;
         this.pageUserId = userService.getCurrentUser();
         this.createGroup = function() {
@@ -1447,6 +1505,7 @@ angular.module('core', [
             $state.go('user.create-group', {userID: userService.getCurrentUser().userID})
         }
         var userData;
+        this.time= new Date();
         this.groupMembers;
         this.onlineGroupMembers = [];
         this.offlineGroupMembers = [];
@@ -1673,9 +1732,6 @@ angular.module('core', [
                 }
             });
         }
-
-
-
     }
 
 })();
@@ -1831,10 +1887,12 @@ angular.module('core', [
             }
             that.panel.subgroupID = subgroupID;
             if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
+                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {groupID: that.groupID, subgroupID: that.panel.subgroupID});
+                // $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
                 //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
+                $state.go('user.group.' + (that.panel.active || 'activity'),  {groupID: that.groupID, subgroupID: that.panel.subgroupID});
+                // $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
                 //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
             }
         };
@@ -1855,7 +1913,7 @@ angular.module('core', [
             that.errorMsg = false;
             that.reqObj = {
                 groupID: that.groupID,
-                message: "Please add me in your group."
+                message: ""
             };
             if (that.subgroupID) {
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
@@ -1887,9 +1945,6 @@ angular.module('core', [
                     that.group.addresstitle = (grp.val() && grp.val()['address-title']) ? grp.val()['address-title'] : false;
                     that.group.groupImgUrl = (grp.val() && grp.val().groupImgUrl) ? grp.val().groupImgUrl : false;
                     that.group.ownerImgUrl = (grp.val() && grp.val().ownerImgUrl) ? grp.val().ownerImgUrl : false;
-
-
-
                     cb();
                 } else {
                     that.errorMsg = "Requested Team of Team not found!";
@@ -1915,6 +1970,14 @@ angular.module('core', [
                         if (!that.isMember) {
                             that.errorMsg = "You have to be Member of Team before access";
                         } else {
+                            if (that.isMember) {
+                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo){
+                                    that.group.onlinemember = (groupinfo.val() && groupinfo.val().count) ? groupinfo.val().count : 0;
+                                })
+                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo){
+                                    that.group.members = groupinfo.val() ? groupinfo.val() : 0;
+                                })
+                            }
                             firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
                                 for (var subgroup in subgroups.val()) {
                                     if (subgroups.val()[subgroup]['membership-type'] == 1) {
@@ -2015,15 +2078,25 @@ angular.module('core', [
     'use strict';
 
     angular.module('app.navToolbar')
+    //Filter Array in reverse
+    .filter('reverse', function() {
+      return function(items) {
+        return items.slice().reverse();
+      };
+    })
 
-    .controller('NavToolbarController', ['ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
             var self = this;
+            self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
+            this.notifications = []
+           //filter Array in reverse
+
             /*VM properties*/
 
             this.checkinObj = {
@@ -2059,6 +2132,11 @@ angular.module('core', [
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
+
+            //   notification activities
+            self.showNotification = function(){
+                self.show = !self.show;
+            };
 
             this.progressReport = function(){
               $mdSidenav('right').toggle().then(function(){
@@ -2148,6 +2226,12 @@ angular.module('core', [
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.subgroupTitle = snapshot.val()
+                    })
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.groupTitle = snapshot.val()
+                    })
                     // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
             })
@@ -2250,7 +2334,7 @@ angular.module('core', [
                 var groupObj = {};
                 self.checkinSending = true;
                 if(group){
-                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID};
+                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
                 } else {
                      groupObj = {
                         groupId: self.showUrlObj.groupID,
@@ -2623,6 +2707,7 @@ angular.module('core', [
                 }
             };
             this.checkinClick = function(event) {
+                self.show = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
                     return
@@ -2714,6 +2799,10 @@ angular.module('core', [
                     }
                 });
             };
+
+            //getting notifications
+            activityStreamService.init();
+            this.notifications = activityStreamService.getActivities();
         }
     ]);
 
@@ -3328,8 +3417,8 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.editGroup', ['core', 'ngMdIcons'])
-        .factory('editGroupService', ['$timeout', '$rootScope', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'firebaseService', '$firebaseObject', '$stateParams',
-            function($timeout, $rootScope, userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, firebaseService, $firebaseObject, $stateParams) {
+        .factory('editGroupService', ['activityStreamService', '$timeout', '$rootScope', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'firebaseService', '$firebaseObject', '$stateParams',
+            function(activityStreamService, $timeout, $rootScope, userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, firebaseService, $firebaseObject, $stateParams) {
 
                 var pageUserId = userService.getCurrentUser().userID;
 
@@ -3365,6 +3454,18 @@ angular.module('core', [
                                         form.$submitted = false
                                     })
                                     $rootScope.newImg = null;
+
+                                    //for group activity stream record -- START --
+                                    var type = 'group';
+                                    var targetinfo = {id: groupInfo.$id, url: groupInfo.$id, title: groupInfo.title, type: 'group' };
+                                    var area = {type: 'group-updated'};
+                                    var group_id = groupInfo.$id;
+                                    var memberuserID = null;
+                                    //for group activity record
+                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                    //for group activity stream record -- END --
+
+
                                     cb();
                                     messageService.showSuccess('Team of Teams Edited Successfully')
                                     // CollaboratorService.CreateDocument("Team of Teams Information",groupInfo.groupID,)
@@ -3628,14 +3729,14 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.createSubGroup', ['core', 'ngMdIcons'])
-        .factory('createSubGroupService', ['$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
-            function($firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
+        .factory('createSubGroupService', ['activityStreamService','$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
+            function(activityStreamService, $firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                 var groupAdminUsers = [];
 
                 return {
 
-                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID) {
+                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID,cb) {
                         //var pageUserId = userService.getCurrentUser().userID;
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
@@ -3649,6 +3750,17 @@ angular.module('core', [
                                 //     messageService.showSuccess("Team creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 // } else {
                                 //     // $location.path('/' + groupID);
+
+                                //for group activity stream record -- START --
+                                var type = 'subgroup';
+                                var targetinfo = {id: SubgroupInfo.subgroupID, url: SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
+                                var area = {type: 'subgroup-created'};
+                                var group_id = group.$id;
+                                var memberuserID = null;
+                                //for group activity record
+                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                //for group activity stream record -- END --
+                                    cb()
                                     messageService.showSuccess("Team creation Successful...");
                                     $rootScope.newImg = null;
                                 // }
@@ -3729,8 +3841,6 @@ angular.module('core', [
                             title: subgroupInfo.title,
                             desc: (subgroupInfo.desc ? subgroupInfo.desc : ''),
                             timestamp: firebaseTimeStamp
-
-
                         };
                         if (subgroupRef) {
                             // var $subgroupRef = firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id);
@@ -3747,6 +3857,17 @@ angular.module('core', [
                                         cb();
                                         //groupForm.$submitted = false;
                                         //$rootScope.newImg = null;
+
+                                        //for group activity stream record -- START --
+                                        var type = 'subgroup';
+                                        var targetinfo = {id: subgroupInfo.$id, url: subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };
+                                        var area = {type: 'subgroup-updated'};
+                                        var group_id = groupID;
+                                        var memberuserID = null;
+                                        //for group activity record
+                                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                        //for group activity stream record -- END --
+
                                         messageService.showSuccess('Team Edited Successfully')
                                     }, function(group) {
                                         cb();
@@ -4105,10 +4226,14 @@ angular.module('core', [
                             // console.log(1)
                             // console.log(SubgroupObj)
                             SubgroupObj.$loaded().then(function(data) {
-                                    that.subgroupData = data;
-                                    //that.group.groupID = data.$id;
-                                    that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
-                                    that.teamsettingpanel = true;
+                                that.subgroupData = data;
+                                //that.group.groupID = data.$id;
+                                that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
+                                that.teamsettingpanel = true;
+
+                                firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot){
+                                    that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
+                                })
                         // },50000)
                             // console.log(2)
                             // console.log(SubgroupObj)
@@ -4129,6 +4254,8 @@ angular.module('core', [
 
 
         this.showAdvanced = function(ev) {
+            $rootScope.tmpImg = $rootScope.newImg;
+            $rootScope.newImg = '';
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue2.tmpl.html',
@@ -4157,6 +4284,7 @@ angular.module('core', [
                     that.pendingRequests = that.groupSyncObj.pendingMembershipSyncArray;
                     that.activities = that.groupSyncObj.activitiesSyncArray;
                     // that.veiwSubgroup(that.subgroups[0])
+                    // console.log(that.subgroups)
                 });
 
 
@@ -4484,6 +4612,8 @@ angular.module('core', [
                     .catch(function(err) {
                         // return alert('picture upload failed' + err)
                         that.processingSave = false;
+                        that.teamsettingpanel = false;
+
                         return messageService.showFailure('picture upload failed' + err)
                     });
                 // console.log(x);
@@ -4503,11 +4633,11 @@ angular.module('core', [
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
-                        that.teamsettingpanel = false;
                         that.selectedindex = undefined;
-
+                       that.teamsettingpanel = false;
                     });
                     that.processingSave = false;
+
                 }
             }
         }
@@ -4671,8 +4801,8 @@ angular.module('core', [
 (function() {
     'use strict';
     angular.module('app.JoinGroup', ['core'])
-        .factory('joinGroupService', ['$timeout', '$firebaseArray', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService',
-            function($timeout, $firebaseArray, userFirebaseService, $location, soundService, userService, messageService, firebaseService, $q, authService) {
+        .factory('joinGroupService', ['activityStreamService', '$timeout', '$firebaseArray', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService',
+            function(activityStreamService, $timeout, $firebaseArray, userFirebaseService, $location, soundService, userService, messageService, firebaseService, $q, authService) {
                 return {
                     'userData': function(pageUserID) {
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
@@ -4681,11 +4811,24 @@ angular.module('core', [
                         return authService.resolveUserPage();
                     },
                     'joinGroupRequest': function(groupInfo, cb) {
+                        console.log(groupInfo);
                         groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '')
                             //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
                         userFirebaseService.asyncGroupJoiningRequest(userService.getCurrentUser().userID, groupInfo.groupID, groupInfo.message, groupInfo.subgroupID, groupInfo.subgrouptitle)
                             .then(function() {
                                 //console.log("Group join request sent successfully");
+
+                                //for group activity stream record -- START --
+                                var type = 'group';
+                                var targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.title, type: 'group' };
+                                var area = {type: 'group-join'};
+                                var group_id = null;
+                                var memberuser_id = userService.getCurrentUser().userID;
+                                //for group activity record
+                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id)
+                                //activityStreamService.activityStream(type, targetinfo, area, groupInfo.$id, memberuserInfo);
+                                //for group activity stream record -- END --
+
                                 cb();
                                 messageService.showSuccess("Team of Teams joining request sent successfully");
 
@@ -4846,12 +4989,13 @@ angular.module('core', [
                 }
 
                 //answers join/subscribe group modal and sends back some data modal.
-                function answer(id) {
+                function answer(group) {
                     that.loadingData = true;
-                    that.group.message = that.message[id] || that.group.message;
-                    that.group.groupID = id;
+                    that.group.message = that.message[group.$id] || that.group.message;
+                    that.group.groupID = group.$id;
+                    that.group.title = group.title;
 
-                    joinGroupService.joinGroupRequest(this.group, function(){
+                    joinGroupService.joinGroupRequest(that.group, function(){
                         that.loadingData = false;
                     });
                 }
@@ -5125,7 +5269,8 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.policy', ['core'])
-        .factory('policyService', ['firebaseService', '$q', "messageService", function(firebaseService, $q, dataService, messageService) {
+        .factory('policyService', ['activityStreamService', 'firebaseService', '$q', "messageService",
+        function(activityStreamService, firebaseService, $q, dataService, messageService) {
 
         	//Getting SubGroup Names of given GroupID -- START --
         	var subGroupNames = [];
@@ -5136,7 +5281,7 @@ angular.module('core', [
                     //after getting names checking subgroup has policy or nothing
                     subGroupNames.push({
                         subgroupID: subGroups.key(),
-                        subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(),
+                        subgroupTitle: (subGroups.val()['subgroup-title']) ? subGroups.val()['subgroup-title'] : 'Subgroup Title',
                         hasPolicy: false,
                         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
                     });
@@ -5266,7 +5411,7 @@ angular.module('core', [
                     //add property hasPolicy in subgroupNames..
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
@@ -5301,7 +5446,17 @@ angular.module('core', [
                     if(err) {
                         console.log("Error updating Date:", err);
                     } else {
-                        //adding questions obj if progressReport is true    (for daily progress questions)
+
+                        //for group activity stream record -- START --
+                        var type = 'policy';
+                        var targetinfo = {id: newPolicyKey, url: newPolicyKey, title: obj["title"], type: 'policy' };
+                        var area = (policyID) ? {type: 'policy-updated'} : {type: 'policy-created'};
+                        var group_id = groupID;
+                        var memberuserID = null;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        //for group activity stream record -- END --
+
                     	cb(newQuestionID);
                     }
                 });
@@ -5409,9 +5564,9 @@ angular.module('core', [
         "policyService",
         function($state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
 
-            this.showPanel = true;
+            this.showPanel = false;
             var that = this;
-
+            this.showarrow = undefined ;
             this.isLocationbased = false;
             this.isTimebased = false;
             this.isProgressReport = false;
@@ -5733,7 +5888,7 @@ angular.module('core', [
             //Selected SubGroup for Assign Policies
 
             //on create policy
-            this.newPolicy = function() {
+            this.newPolicy = function(saved) {
                 //load initial page
                 init();
 
@@ -5742,10 +5897,18 @@ angular.module('core', [
 
                 //On New/Create Policy Show Panel
                 that.showPanel = true;
+
+                if(saved){
+                    that.showPanel = false;
+
+                }else {
+                    that.showPanel = true;
+                }
             };//this.newPolicy
 
 
-            this.selectedPolicy = function(policy) {
+            this.selectedPolicy = function(policy,index) {
+                that.showarrow = index;
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
                 that.isLocationbased = policy.locationBased;    //show if locationBased is True
@@ -5871,7 +6034,9 @@ angular.module('core', [
                     if(!that.isProgressReport && !that.isTimebased && !that.isLocationbased) {
                         //nothing have to do....
                         messageService.showFailure('Please Select your Criteria');
+                        this.showarrow = undefined ;
                         return false;
+
                     }
 
                     //default ObjectX
@@ -5888,7 +6053,7 @@ angular.module('core', [
                     obj["progressReportQuestions"] = "";
                     obj["latestProgressReportQuestionID"] = '';
 
-
+                     this.showarrow = undefined ;
                     //if locationBased is selected
                     if (that.isLocationbased) {
                         //isLocationbased
@@ -5899,6 +6064,7 @@ angular.module('core', [
                             radius: that.paths.c1.radius,
                             title: that.markers.mark.message
                         }
+                           this.showarrow = undefined ;
                     }
 
                     //if timeBased is selected
@@ -5911,6 +6077,7 @@ angular.module('core', [
                             messageService.showFailure('Please add schedule/time slot!');
                             return false;
                         }
+                           this.showarrow = undefined ;
                     }
 
                     //if dailyBased is selected
@@ -5923,6 +6090,7 @@ angular.module('core', [
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
+                        this.showarrow = undefined ;
                     }
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);
@@ -5942,17 +6110,19 @@ angular.module('core', [
                                     that.groupPolicies[index] = obj;
                                 }
                             });
+
                             messageService.showSuccess('Policy Successfully Updated!');
                             //$state.go('user.policy', {groupID: groupId});
                         } else{
                             messageService.showSuccess('Policy Successfully Created!');
                             //after created reload initial page
-                            that.newPolicy();
+                            that.newPolicy('saved');
                         }
                     });
                 } else {//if that.title exists
                     messageService.showFailure('Please Write Policy Name');
                 }
+
             } //onSave
 
             //load constructor
@@ -6203,6 +6373,8 @@ angular.module('core', [
         function changeMemberRole(newType, member) {
             groupFirebaseService.changeMemberRole(newType, member, that.group, user)
                 .then(function(res) {
+
+
                     messageService.showSuccess("Changed Role Successfully");
                 }, function(reason) {
                     messageService.showFailure(reason);
@@ -10505,8 +10677,9 @@ angular.module('core')
 
 
 angular.module('core')
-    .factory('groupFirebaseService', ["firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
-        function(firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
+    .factory('groupFirebaseService', ['$rootScope', 'activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
+        function($rootScope, activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
+
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -10820,7 +10993,7 @@ angular.module('core')
                                     //roleback previous
                                     errorHandler();
                                 } else {
-                                    var subgroupNames = {title: subgroupInfo.title};
+                                    var subgroupNames = {title: subgroupInfo.title, subgroupImgUrl: subgroupInfo.imgLogoUrl || '', ownerImgUrl: $rootScope.userImg || ''};
                                     // step: create and entry for "subgroups-names"
                                     var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
                                     groupNameRef.set(subgroupNames,  function(error) {
@@ -10840,9 +11013,11 @@ angular.module('core')
                                                             }
                                                         })
                                                     })
+                                                    console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
-                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({hasPolicy: false, policyID: '', title: subgroupInfo.title});
+                                                    console.log('hasPolicy' + false + 'policyID subgroup-title' + subgroupInfo.title);
+                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({'hasPolicy': false, 'policyID': '', 'subgroup-title': subgroupInfo.title, 'policy-title': ''});
 
                                                     //step : create an entry for "subgroups"
                                                     var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
@@ -10861,7 +11036,9 @@ angular.module('core')
                                                             'bucket-name': 'test2pwow',
                                                             source: 1, // 1 = google cloud storage
                                                             mediaType: 'image/png' //image/jpeg
-                                                        }
+                                                        },
+                                                        'subgroup-owner-id': userID,
+                                                        'owner-img-url': $rootScope.userImg || ''
                                                     }, function(error) {
                                                         if (error) {
                                                             //role back previous
@@ -11556,11 +11733,30 @@ angular.module('core')
                                             errorHandler();
                                         } else {
 
-                                            //publish an activity for membership changed.
-                                            userFirebaseService.asyncRecordMembershipChangeActivity(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
-                                                .then(function(res) {
-                                                    defer.resolve(res);
-                                                }, errorHandler);
+                                            //type: '2' is Admin, '3' is Member, '-1' is block, 'null' is delete membership for this group
+                                            var typeAction = { '2': 'user-membership-from-member-to-admin', '3': 'user-membership-from-admin-to-member', '-1': 'user-membership-block', '4': 'user-membership-unblock' };
+
+                                            //incase from block to member (we check prevType, if block then allow to be member)
+                                            if(prevType == '-1'){
+                                                newType = '4';
+                                            }
+                                            //for group activity stream record -- START --
+                                            var type = 'group';
+                                            var targetinfo = {id: groupObj.$id, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                            var area = {type: 'membersettings', action: (newType) ? typeAction[newType] : 'group-member-removed'};
+                                            var group_id = groupObj.$id;
+                                            var memberuserID = member.userID;
+                                            //for group activity record
+                                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                            //for group activity stream record -- END --
+
+                                            defer.resolve();
+
+                                            // //publish an activity for membership changed.
+                                            // userFirebaseService.asyncRecordMembershipChangeActivity(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
+                                            //     .then(function(res) {
+                                            //         defer.resolve(res);
+                                            //     }, errorHandler);
                                         }
                                     });
 
@@ -12769,9 +12965,9 @@ var s = {
         .module('core')
         .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
+    checkinService.$inject = ['activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
 
-    function checkinService($q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
+    function checkinService(activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
 
         /*private variables*/
         var refs, fireTimeStamp;
@@ -12887,18 +13083,18 @@ var s = {
             if(Policy && Policy.locationBased) {  //checking if location Based
 
                 //checking distance (RADIUS)
-                var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
+                // var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
                 // console.log('distance:' + distance);
                 // console.log('distance in meter:' + distance * 1000);
 
-                if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
-                    callback(false, 'Current Location does not near to the Team Location');
-                } else { // if within radius
+                // if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
+                    // callback(false, 'Current Location does not near to the Team Location');
+                // } else { // if within radius
 
                     checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
                         callback(d, msg);     //if result true (checkin allow)
                     }); //checking if time based
-                } //if within radius
+                // } //if within radius
 
             } else if(Policy && Policy.timeBased) { //policy has timeBased
                 checkinTimeBased(Policy, function(d, msg) {
@@ -12938,12 +13134,23 @@ var s = {
                 .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
                     if(snapshot.val() === null) { //if null then create daily report dummy
                         //cerating Dummy Report Object on Checkin....
-                        firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
-                            //date: Firebase.ServerValue.TIMESTAMP,
-                            date: new Date().setHours(0,0,0,0),
+                        var progressRprtObj = firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
+                            date: Firebase.ServerValue.TIMESTAMP,
+                            //date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
                             answers: ''
                         });
+
+                        //for group activity stream record -- START --
+                        var type = 'progressReport';
+                        var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
+                        var area = {type: 'progressReport-created'};
+                        var group_id = groupObj.groupId;
+                        var memberuserID = groupObj.userId;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        //for group activity stream record -- END --
+
                         cb(false, 'notSubmitted');
                     } else {
                         for(var obj in snapshot.val()) {

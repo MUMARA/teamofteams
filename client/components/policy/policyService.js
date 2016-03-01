@@ -5,7 +5,8 @@
     'use strict';
     angular
         .module('app.policy', ['core'])
-        .factory('policyService', ['firebaseService', '$q', "messageService", function(firebaseService, $q, dataService, messageService) {
+        .factory('policyService', ['activityStreamService', 'firebaseService', '$q', "messageService",
+        function(activityStreamService, firebaseService, $q, dataService, messageService) {
 
         	//Getting SubGroup Names of given GroupID -- START --
         	var subGroupNames = [];
@@ -16,7 +17,7 @@
                     //after getting names checking subgroup has policy or nothing
                     subGroupNames.push({
                         subgroupID: subGroups.key(),
-                        subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(),
+                        subgroupTitle: (subGroups.val()['subgroup-title']) ? subGroups.val()['subgroup-title'] : 'Subgroup Title',
                         hasPolicy: false,
                         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
                     });
@@ -146,7 +147,7 @@
                     //add property hasPolicy in subgroupNames..
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
                     // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
@@ -181,7 +182,17 @@
                     if(err) {
                         console.log("Error updating Date:", err);
                     } else {
-                        //adding questions obj if progressReport is true    (for daily progress questions)
+
+                        //for group activity stream record -- START --
+                        var type = 'policy';
+                        var targetinfo = {id: newPolicyKey, url: newPolicyKey, title: obj["title"], type: 'policy' };
+                        var area = (policyID) ? {type: 'policy-updated'} : {type: 'policy-created'};
+                        var group_id = groupID;
+                        var memberuserID = null;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        //for group activity stream record -- END --
+
                     	cb(newQuestionID);
                     }
                 });

@@ -283,7 +283,7 @@
           "$other": {
             ".validate": "false"
           },
-          ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
+          ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
           ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
         },
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
@@ -293,10 +293,22 @@
     "subgroups-names": {
       "$groupid": {
         "$subgroupid": {
-          ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
-        },
-        ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
-        ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
+          ".validate": "newData.hasChildren(['title'])",
+          "subgroupImgUrl": {
+            ".validate": "newData.isString() || newData.val() == null"
+          },
+          "ownerImgUrl": {
+            ".validate": "newData.isString() || newData.val() == null"
+          },
+          "title": {
+            ".validate": "newData.isString()"
+          },
+          "$other": {
+            ".validate": "false"
+          },
+          ".write": "data.val() == null && (root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
+          ".read": "auth != null"
+        }
       }
     },
     "subgroup-members": {
@@ -325,7 +337,7 @@
       "$groupid": {
         "$subgroupid": {
           "$activityid": {
-            ".validate": "newData.child('actor').child('id').val() == auth.uid && newData.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb'])",
+            ".validate": "newData.child('actor').child('id').val() == auth.uid && newData.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb', 'profile-image'])",
             ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
           },
           ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2"
@@ -633,14 +645,17 @@
     "subgroup-policies": {
       "$groupid": {
         "$subgroupid": {
-          ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'title'])",
+          ".validate": "newData.hasChildren(['hasPolicy', 'policyID', 'policy-title', 'subgroup-title'])",
           "hasPolicy": {
             ".validate": "newData.isBoolean()"
           },
           "policyID": {
             ".validate": "newData.isString()"
           },
-          "title": {
+          "policy-title": {
+            ".validate": "newData.isString()"
+          },
+          "subgroup-title": {
             ".validate": "newData.isString()"
           },
           "$other": {
@@ -816,28 +831,27 @@
     },
     "firepad-groups": {
       "$groupid": {
-        ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
-        ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+        "$documentid": {
+          ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
+          ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+        },
+        ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
       }
     },
     "firepad-subgroups": {
       "$groupid": {
         "$subgroupid": {
-          ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
-          ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
+          "$documentid": {
+            ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
+            ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+          },
+          ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
         }
       }
     },
     "firepad-groups-documents": {
       "$groupid": {
         "$documentid": {
-          ".validate": "newData.hasChildren(['title'])",
-          "title": {
-            ".validate": "newData.isString()"
-          },
-          "$other": {
-            ".validate": "false"
-          },
           ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
           ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
         }
@@ -847,15 +861,40 @@
       "$groupid": {
         "$subgroupid": {
           "$documentid": {
-            ".validate": "newData.hasChildren(['title'])",
-            "title": {
-              ".validate": "newData.isString()"
-            },
-            "$other": {
-              ".validate": "false"
-            },
             ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
             ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
+          },
+          ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
+        }
+      }
+    },
+    "user-activity-streams": {
+      "$userid": {
+        "$activityid": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "firepad-group-access": {
+      "$groupid": {
+        "$documentid": {
+          "$userid": {
+            ".validate": "newData.isBoolean()",
+            ".read": "auth != null",
+            ".write": "auth != null"
+          }
+        }
+      }
+    },
+    "firepad-subgroup-access": {
+      "$groupid": {
+        "$subgroupid": {
+          "$documentid": {
+            "$userid": {
+              ".validate": "newData.isBoolean()",
+              ".read": "auth != null",
+              ".write": "auth != null"
+            }
           }
         }
       }

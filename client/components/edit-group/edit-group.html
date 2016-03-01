@@ -1,4 +1,4 @@
-<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group({groupID : editGroup.groupId })"></ng-md-icon>
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group.activity({groupID : editGroup.groupId })"></ng-md-icon>
 <div layout="row" layout-padding layout-margin class="leftrightpadding65px">
 	<div layout="column" layout-align="start center" class="nomargin nopadding" >
 		<md-button style="margin: 0px; width:100%; border-radius:0px;" class="backColorSeaGreen md-whiteframe-z1">
@@ -97,9 +97,9 @@
                     <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please Select Logo"></ng-md-icon>
                 </div>
             	<div class="dialog-demo-content cropper-main-button" id="cropperDialogue" layout="row" layout-wrap>
-                    <img ng-src="{{$root.newImg || editGroup.group['logo-image'].url}}" alt="img/image.svg" class="cropper-main-image nooutline" ng-click="editGroup.showAdvanced($event)" />
+                    <img ng-src="{{$root.newImg || editGroup.group['logo-image'].url}}" alt="Group Logo" class="cropper-main-image nooutline" ng-click="editGroup.showAdvanced($event)" />
                 </div>
-                <image-cropper></image-cropper>
+                <!-- <image-cropper></image-cropper> -->
             </div>
             <div layout="row" layout-align="end center">
             	<md-button  layout="row" layout-align="center center" ng-disabled="groupForm.$invalid" class="backColorSeaGreen displayFlex" ng-click="editGroup.answer( groupForm )">

@@ -10,9 +10,9 @@
         .module('core')
         .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
+    checkinService.$inject = ['activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
 
-    function checkinService($q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
+    function checkinService(activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
 
         /*private variables*/
         var refs, fireTimeStamp;
@@ -128,18 +128,18 @@
             if(Policy && Policy.locationBased) {  //checking if location Based
 
                 //checking distance (RADIUS)
-                var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
+                // var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
                 // console.log('distance:' + distance);
                 // console.log('distance in meter:' + distance * 1000);
 
-                if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
-                    callback(false, 'Current Location does not near to the Team Location');
-                } else { // if within radius
+                // if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
+                    // callback(false, 'Current Location does not near to the Team Location');
+                // } else { // if within radius
 
                     checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
                         callback(d, msg);     //if result true (checkin allow)
                     }); //checking if time based
-                } //if within radius
+                // } //if within radius
 
             } else if(Policy && Policy.timeBased) { //policy has timeBased
                 checkinTimeBased(Policy, function(d, msg) {
@@ -179,12 +179,23 @@
                 .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
                     if(snapshot.val() === null) { //if null then create daily report dummy
                         //cerating Dummy Report Object on Checkin....
-                        firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
-                            //date: Firebase.ServerValue.TIMESTAMP,
-                            date: new Date().setHours(0,0,0,0),
+                        var progressRprtObj = firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
+                            date: Firebase.ServerValue.TIMESTAMP,
+                            //date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
                             answers: ''
                         });
+
+                        //for group activity stream record -- START --
+                        var type = 'progressReport';
+                        var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
+                        var area = {type: 'progressReport-created'};
+                        var group_id = groupObj.groupId;
+                        var memberuserID = groupObj.userId;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        //for group activity stream record -- END --
+
                         cb(false, 'notSubmitted');
                     } else {
                         for(var obj in snapshot.val()) {

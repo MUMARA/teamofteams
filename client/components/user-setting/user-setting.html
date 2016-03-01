@@ -1,4 +1,4 @@
-<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group({groupID : userSetting.groupId })"></ng-md-icon><div layout="row" layout-padding layout-margin class="leftrightpadding65px">
+<ng-md-icon icon="arrow_back" size="36" class="cursorPointer fillColorDarkGrey nooutline rightmargin20px backButton" ui-sref="user.group.activity({groupID : userSetting.groupId })"></ng-md-icon><div layout="row" layout-padding layout-margin class="leftrightpadding65px">
     <div layout="column" layout-align="start center" class="nomargin nopadding">
         <md-button ng-click="userSetting.editgroupPage()" style="margin: 0px; width:100%; border-radius:0px;"  class="backColorDarkSeaGreen md-whiteframe-z1">
             <img src="../../img/6sami.svg" style="width: 33px;height: 33px;margin-bottom: -15px;" />
@@ -51,7 +51,7 @@
                             </tr>
                         </thead>
                         <tbody md-body>
-                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== 4">
+                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== -1">
                                 <td md-cell>
                                     <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound" alt="user" layout-margin />
                                 </td>
