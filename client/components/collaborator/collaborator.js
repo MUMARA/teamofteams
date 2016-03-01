@@ -5,10 +5,33 @@
   'use strict';
   angular.module('app.collaborator')
     .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
-    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope', collaboratorFunction]);
+    .filter('collaboratorUsers',function(){
+      return function(users,groupID) {
+        var filteredUsers = [];
+        users.forEach(function(user){
+          if(user.groupID == groupID){
+              var userNew = findWithAttr(filteredUsers,'fullName',user.fullName) == -1;
+              if(userNew) {
+                filteredUsers.push(user);
+              }
+          }
+        })
+        return filteredUsers;
+      }
+
+      function findWithAttr(array, attr, value) {
+      for(var i = 0; i < array.length; i += 1) {
+          if(array[i][attr] === value) {
+              return i;
+          }
+      }
+      return -1;
+  }
+    })
+    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope','CollaboratorService', collaboratorFunction]);
 
 
-  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope) {
+  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope,CollaboratorService) {
 
 
     componentHandler.upgradeAllRegistered();
@@ -157,6 +180,13 @@
 
     };
 
+    that.filterTeams = function(player) {
+        var teamIsNew = indexedTeams.indexOf(player.team) == -1;
+        if (teamIsNew) {
+            indexedTeams.push(player.team);
+        }
+        return teamIsNew;
+    };
 
     function init() {
 
@@ -165,8 +195,11 @@
       that.subgroupID = $stateParams.subgroupID || '';
       that.currentDocument = $stateParams.docID;
       that.groupID = $stateParams.groupID;
+      // that.accessedUsers = CollaboratorService.getUsers(that.groupID,dataService.getUserData())
       that.user = userService.getCurrentUser();
       that.users = dataService.getUserData();
+      // that.accessedUsers = CollaboratorService.getUsers(that.groupID,that.users);
+      // console.log("Users: ",that.users);
       that.activeTitle = "Collaborator";
 
       if($stateParams.docID) {
@@ -203,10 +236,12 @@
           that.mode = snapshot.val().type;
           that.isNormal = that.mode == "Rich Text" ? true : false;
           initiateFirepad(globalRef);
+          // that.accessedUsers = CollaboratorService.getUsers(that.groupID,dataService.getUserData())
        });
       }
       that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
-      console.log("DataService:", that.users);
+      // console.log("DataService:", JSON.stringify(that.users));
+      // console.log(CollaboratorService.getUsers(that.groupID,dataService.getUserData()));
     }
   }
 })();
