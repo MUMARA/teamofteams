@@ -130,7 +130,6 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
 
 
    function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object){
-      // console.log('saveToFirebase', object);
       // ## target ##
       //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
       var target = {
@@ -178,7 +177,6 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
 
       if(area.action){
        displayMessage = displayNameObject[type][area.type][area.action];
-       console.log('displayNameObject[type][area.type][area.action]', displayNameObject[type][area.type][area.action])
       } else {
        displayMessage = displayNameObject[type][area.type];
       }
@@ -196,7 +194,7 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
       // console.log('activity', activity);
 
       var ref = firebaseService.getRefMain();
-      var pushObj = ref.child('group-activity-streams').push();
+      var pushObj = ref.child('group-activity-streams').child(groupID).push();
       var activityPushID = pushObj.key();
 
       //Sets a priority for the data at this Firebase location.
@@ -208,12 +206,18 @@ function activityStreamService($firebaseObject, firebaseService, userService, $r
          multipath['group-activity-streams/'+groupID+'/'+activityPushID] = activity;
       }
 
-      multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = {
-                displayName: displayMessage,
-                seen : false,
-                published: firebaseTimeStamp,
-                verb: (area.action) ? area.action : area.type
-      };
+      if(memberUserID){
+         multipath['user-activity-streams/'+memberUserID+'/'+activityPushID] = activity;
+      }
+
+      multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = activity;
+
+      // multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = {
+      //           displayName: displayMessage,
+      //           seen : false,
+      //           published: firebaseTimeStamp,
+      //           verb: (area.action) ? area.action : area.type
+      // };
 
 
       firebaseService.getRefMain().update(multipath, function(err){

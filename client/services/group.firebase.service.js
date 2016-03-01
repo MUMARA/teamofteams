@@ -1064,7 +1064,6 @@ angular.module('core')
                                             if(prevType == '-1'){
                                                 newType = '4';
                                             }
-
                                             //for group activity stream record -- START --
                                             var type = 'group';
                                             var targetinfo = {id: groupObj.$id, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
