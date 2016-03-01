@@ -8,10 +8,12 @@
 
   function CollaboratorService($q,$firebaseArray,ref) {
 
-    var firepadRef,pushDocumentNode,firebaseDocumentId;
+    var firepadRef,pushDocumentNode,firebaseDocumentId,filteredUsers = [];
     return {
-      CreateDocument:CreateDocument
-    };
+      CreateDocument:CreateDocument,
+      // getUsers:getUsers
+    }
+
 
     function CreateDocument(documentTitle,groupID,subgroupID) {
       var firebaseLocalRef;

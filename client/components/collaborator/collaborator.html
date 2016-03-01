@@ -51,7 +51,9 @@
         Bold
       </div>
     </div>
-    <div id="firepad" style=""></div>
+    <md-content id="firepad" style="">
+      <!--<div style="height: 100%;width: 100%;background: transparent;z-index: 3;position: absolute"></div>-->
+    </md-content>
   </div>
 
     <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
@@ -63,8 +65,10 @@
             <md-content ng-repeat="document in collaborator.documents track by $index">
               <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
-                  <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
-                  <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                  <button class="md-button md-icon-button" style="padding: 0 0 0 0;margin: 0 0 0 0;width: 20px">
+                    <ng-md-icon ng-show="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
+                    <ng-md-icon ng-show="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                  </button>
                     <img ng-src="{{document.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px">
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
                     <h3 class="foreColorDarkGrey">Created By :
@@ -87,18 +91,17 @@
           <md-tab label="Collaborators">
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
               <div class="">
-                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {groupID: collaborator.groupID}">
+                <!-- <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.accessedUsers"> -->
+                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID == ''"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
+
                   <h5 class="foreColorDarkGrey">
-                    <!-- {{ value[$index].fullName }} -->
                     {{user.fullName}}
                   </h5>
                 </md-checkbox>
                 <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
                   <h5 class="foreColorDarkGrey">
-                    <!-- {{ value[$index].fullName }} -->
                     {{user.fullName}}
                   </h5>
-                  <!-- <span style="font-size: 13px; color: #ffffff;">Time : {{value[$index].contactNumber}}</span> -->
                 </md-checkbox>
                 <br>
               </div>
