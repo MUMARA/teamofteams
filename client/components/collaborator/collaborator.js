@@ -31,6 +31,7 @@
     .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope','CollaboratorService', collaboratorFunction]);
 
 
+
   function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope,CollaboratorService) {
 
 
@@ -82,7 +83,7 @@
         richTextToolbar: that.isNormal,
         // userId: null,
         defaultText: null
-          /*'Welcome to firepad!'*/
+        /*'Welcome to firepad!'*/
       });
       firepad.on("ready", function() {
         that.ready = false;
@@ -108,7 +109,7 @@
         firstName:that.user.firstName,
         lastName:that.user.lastName,
         userID:that.user.userID,
-        imgUrl:$rootScope.userImg
+        imgUrl:$rootScope.userImg || ""
       };
       if (that.subgroupID) {
         firebaseLocalRef = new Firebase(ref);
@@ -205,18 +206,13 @@
       if($stateParams.docID) {
         if(that.subgroupID) {
           that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
-          console.log(that.documents);
-          console.log(that.documents.length);
+          //console.log(that.documents);
+          //console.log(that.documents.length);
           if($stateParams.docID === "Team of Teams Information"){
             globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child("init"); // this will be the reference of the Default Document
 
           } else {
             globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID);  //this will be the user created documents
-          //   globalRef.once('value', function(snapshot){
-          //     that.document = snapshot.val().title;
-          //     that.mode = snapshot.val().type;
-          //     that.isNormal = false;
-          //  });
           }
         }
         else {
@@ -225,10 +221,11 @@
             globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child("init");
             that.mode = 'Rich Text';
           }else {
-          globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child($stateParams.docID);
-          var array = $firebaseArray(globalRef)
-          console.log(array);
-          console.log(array.length);
+            globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child($stateParams.docID);
+            var array = $firebaseArray(globalRef)
+            console.log(array);
+            console.log(array.length);
+
           }
         }
         globalRef.once('value', function(snapshot){
@@ -242,6 +239,7 @@
       that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
       // console.log("DataService:", JSON.stringify(that.users));
       // console.log(CollaboratorService.getUsers(that.groupID,dataService.getUserData()));
+
     }
   }
 })();

@@ -25,7 +25,7 @@
         Text Color
       </div>
       <!--List for Color Dropdown-->
-      <ul class="mdl-menu  mdl-js-menu mdl-js-ripple-effect " id="list-Color" for="listColor"></ul>
+      <ul class="mdl-menu  mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Color" for="listColor"></ul>
       <!--button for Font Dropdown-->
       <button id="listFont" class="mdl-button mdl-js-button mdl-js-ripple-effect">
         Color
@@ -34,7 +34,7 @@
         Font
       </div>
       <!--List for Font Dropdown-->
-      <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Font" for="listFont"></ul>
+      <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Font" for="listFont"></ul>
       <!--button for Size Dropdown-->
       <button id="listSize" class="mdl-button mdl-js-button mdl-js-ripple-effect">
         Color
@@ -44,7 +44,8 @@
         Size
       </div>
       <!--List for Size Dropdown-->
-      <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect " id="list-Size" for="listSize"></ul>
+
+      <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Size" for="listSize"></ul>
 
         <div class="mdl-tooltip" for="bold">
           Bold
@@ -64,15 +65,19 @@
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
                   <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
                   <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                    <img ng-src="{{document.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px">
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <h3 class="foreColorDarkGrey">Document
-                      {{$index+1}}:</h3>
+                    <h3 class="foreColorDarkGrey">Created By :
+                      {{document.createdBy.firstName}} {{document.createdBy.lastName}}</h3>
                     <span style="font-size: 13px; color: #ffffff;" class="">
                       <strong>Name:</strong>
                       {{document.title}}</span>
-                      <span style="font-size: 13px; color: #ffffff;" class="">
-                        <strong>Type:</strong>
-                        {{document.type}}</span>
+                      <div style="font-size: 13px; color: #ffffff;" class="" ng-repeat="docType in collaborator.documentTypes">
+                        <span ng-if="(document.type == docType.codeMirrorName)"><strong>Type:</strong>
+                        {{docType.displayName}}</span></div>
+                    <div style="font-size: 13px; color: #ffffff;" class="">
+                      <strong>Date:</strong>
+                      {{document.timestamp | date:"MM/dd/yyyy  h:mma"}}</div>
                   </div>
                 </md-list-item>
               </md-list>
@@ -84,6 +89,7 @@
               <div class="">
                 <!-- <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.accessedUsers"> -->
                 <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID == ''"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
+
                   <h5 class="foreColorDarkGrey">
                     {{user.fullName}}
                   </h5>
