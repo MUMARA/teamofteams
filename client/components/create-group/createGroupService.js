@@ -10,7 +10,6 @@
             function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope,CollaboratorService) {
 
                 var pageUserId = userService.getCurrentUser().userID;
-
                 return {
                     'userData': function(pageUserID) {
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
@@ -29,7 +28,8 @@
                                     messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 } else {
                                     messageService.showSuccess("Team of Teams creation Successful");
-                                    CollaboratorService.CreateDocument("Team Information",groupInfo.groupID);
+                                    console.log("this User is from createSubGroupService:",userService.getCurrentUser());
+                                    CollaboratorService.CreateDocument("Team Information",groupInfo.groupID,"",'Rich Text',userService.getCurrentUser());
                                 }
                                 $location.path('/user/' + pageUserId);
                             }, function(group) {

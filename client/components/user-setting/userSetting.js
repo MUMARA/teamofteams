@@ -8,8 +8,8 @@
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', UserSettingController])
-    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil) {
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
 
         var that = this;
         var user = userService.getCurrentUser();
@@ -77,6 +77,7 @@
                             requestedMember.teamrequest.forEach(function(val, indx){
                                 groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
                                     messageService.showSuccess("Approved Request Successfully");
+                                    CollaboratorService.addAccessUser()
                                 }, function(err){
                                     messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
                                 })

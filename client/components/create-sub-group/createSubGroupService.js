@@ -29,7 +29,8 @@
                                 //     // $location.path('/' + groupID);
                                     messageService.showSuccess("Team creation Successful...");
                                     // console.log(JSON.stringify());
-                                    CollaboratorService.CreateDocument("Team of Teams Information",group.$id,SubgroupInfo.subgroupID);
+                                    console.log("this User is from createSubGroupService:",userService.getCurrentUser());
+                                    CollaboratorService.CreateDocument("Team of Teams Information",group.$id,SubgroupInfo.subgroupID,'Rich Text',userService.getCurrentUser());
                                     $rootScope.newImg = null;
                                 // }
                             }, function(group) {

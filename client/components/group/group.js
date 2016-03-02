@@ -44,11 +44,13 @@
             }
             that.panel.subgroupID = subgroupID;
             if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: "Team of Teams Information"});
-                //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
+              CollaboratorService.getinitSubGroupDocument(that.groupID,that.panel.subgroupID,function(docId){
+                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId});
+              })
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'),  {groupID: that.groupID,docID: "Team Information"});
-                //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
+                CollaboratorService.getinitGroupDocument(that.groupID,function(docId){
+                  $state.go('user.group.' + (that.panel.active || 'activity'),  {groupID: that.groupID,docID: docId});
+                });
             }
         };
 
