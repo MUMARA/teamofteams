@@ -6,13 +6,8 @@
 
 
 angular.module('core')
-<<<<<<< HEAD
     .factory('groupFirebaseService', ['$rootScope', 'activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
         function($rootScope, activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
-=======
-    .factory('groupFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject","$rootScope", "userPresenceService",
-        function(activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject,$rootScope,userPresenceService) {
->>>>>>> 5f0b26cca10d4e37b46c2118ae462ff0f81987df
 
             /*var syncObj = {
                 subgroupsSyncArray: [],
@@ -346,7 +341,7 @@ angular.module('core')
                                                             }
                                                         })
                                                     })
-                                                    console.log($rootScope.userImg)
+                                                    // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
                                                     console.log('hasPolicy' + false + 'policyID subgroup-title' + subgroupInfo.title);
@@ -930,7 +925,7 @@ angular.module('core')
                     })
                     return defer.promise;
                 },
-                approveMembership: function(groupID, loggedInUserObj, requestedMember) {
+                approveMembership: function(groupID, loggedInUserObj, requestedMember, groupObj) {
                     var defer, userID, membershipType,
                         userMembershipObj, errorHandler;
 
@@ -976,16 +971,27 @@ angular.module('core')
                                                                 if (err) {
                                                                     errorHandler();
                                                                 } else {
-                                                                    //step4: publish an activity
-                                                                    firebaseService.getRefGroups().child(groupID)
-                                                                        .once('value', function(snapshot) {
-                                                                            var groupObj = snapshot.val();
-                                                                            groupObj.groupID = groupID;
-                                                                            userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('approve', groupObj, loggedInUserObj, userID)
-                                                                                .then(function(res) {
-                                                                                    defer.resolve(res);
-                                                                                }, errorHandler);
-                                                                        });
+
+                                                                    //publish an activity stream record -- START --
+                                                                    var type = 'group';
+                                                                    var targetinfo = {id: groupID, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                                                    var area = {type: 'membersettings', action: 'group-approve-member'};
+                                                                    var group_id = groupID;
+                                                                    var memberuserID = userID;
+                                                                    //for group activity record
+                                                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                                                    //for group activity stream record -- END --
+
+
+                                                                    // //step4: publish an activity
+                                                                    // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {
+                                                                    //         var groupObj = snapshot.val();
+                                                                    //         groupObj.groupID = groupID;
+                                                                    //         userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('approve', groupObj, loggedInUserObj, userID)
+                                                                    //             .then(function(res) {
+                                                                    //                 defer.resolve(res);
+                                                                    //             }, errorHandler);
+                                                                    //     });
                                                                 }
                                                             });
                                                         });
@@ -998,7 +1004,7 @@ angular.module('core')
 
                     return defer.promise;
                 },
-                rejectMembership: function(groupID, loggedInUserObj, requestedMember) {
+                rejectMembership: function(groupID, loggedInUserObj, requestedMember, groupObj) {
                     var defer, userID,
                         errorHandler;
                     defer = $q.defer();
@@ -1020,16 +1026,26 @@ angular.module('core')
                                         if (err) {
                                             errorHandler();
                                         } else {
-                                            //step3: publish an activity
-                                            firebaseService.getRefGroups().child(groupID)
-                                                .once('value', function(snapshot) {
-                                                    var groupObj = snapshot.val();
-                                                    groupObj.groupID = groupID;
-                                                    userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('reject', groupObj, loggedInUserObj, userID)
-                                                        .then(function(res) {
-                                                            defer.resolve(res);
-                                                        }, errorHandler);
-                                                });
+
+                                            //publish an activity stream record -- START --
+                                            var type = 'group';
+                                            var targetinfo = {id: groupID, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                            var area = {type: 'membersettings', action: 'group-ignore-member'};
+                                            var group_id = groupID;
+                                            var memberuserID = userID;
+                                            //for group activity record
+                                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                            //for group activity stream record -- END --
+
+                                            // //step3: publish an activity
+                                            // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {
+                                            //         var groupObj = snapshot.val();
+                                            //         groupObj.groupID = groupID;
+                                            //         userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('reject', groupObj, loggedInUserObj, userID)
+                                            //             .then(function(res) {
+                                            //                 defer.resolve(res);
+                                            //             }, errorHandler);
+                                            //     });
                                         }
                                     });
                         //    }
@@ -1073,6 +1089,7 @@ angular.module('core')
                                             if(prevType == '-1'){
                                                 newType = '4';
                                             }
+
                                             //for group activity stream record -- START --
                                             var type = 'group';
                                             var targetinfo = {id: groupObj.$id, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
@@ -1098,11 +1115,25 @@ angular.module('core')
                     } else {
                         self.asyncRemoveUserFromGroup(member.userSyncObj.$id, groupObj.$id)
                             .then(function() {
+
+                                //if newType is null for Delete Member..........
+                                //for group activity stream record -- START --
+                                var type = 'group';
+                                var targetinfo = {id: groupObj.$id, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                var area = {type: 'membersettings', action: 'group-member-removed'};
+                                var group_id = groupObj.$id;
+                                var memberuserID = member.userID;
+                                //for group activity record
+                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                //for group activity stream record -- END --
+
+                                defer.resolve();
+
                                 //publish an activity for group-member-removed.
-                                userFirebaseService.asyncRecordMemberRemoved(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
-                                    .then(function(res) {
-                                        defer.resolve(res);
-                                    }, errorHandler);
+                                // userFirebaseService.asyncRecordMemberRemoved(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
+                                //     .then(function(res) {
+                                //         defer.resolve(res);
+                                //     }, errorHandler);
 
                             }, errorHandler);
                         /* confirmDialogService('Are you sure to remove this user ?')

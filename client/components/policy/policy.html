@@ -76,7 +76,7 @@ md-checkbox.md-checked .md-icon {
                     <!-- locationBasediv    START -->
                     <div>
                         <md-checkbox ng-model="policy.isLocationbased" aria-label="locationBased">
-                            <h4>Location Based</h4>(Create a Geo Fence for Attendance)
+                            <h4>Location Based <span style="font-size:small;font-weight:normal;"> (Create a Geo Fence for Attendance)</span> </h4>
                         </md-checkbox>
                         <div id="locationBasediv" ng-if="policy.isLocationbased">
                             <div layout="row" layout-align="center center">
@@ -107,7 +107,7 @@ md-checkbox.md-checked .md-icon {
                     <!-- timeBasediv    START -->
                     <div>
                         <md-checkbox ng-model="policy.isTimebased" aria-label="locationBased">
-                            <h4>Time Based</h4>(Create a Schedule for Attendance)
+                            <h4>Time Based <span style="font-size:small;font-weight:normal;"> (Create a Schedule for Attendance)</span></h4>
                         </md-checkbox>
                         <div id="timeBasediv" ng-show="policy.isTimebased">
 
@@ -151,7 +151,7 @@ md-checkbox.md-checked .md-icon {
                     <!-- DailyReport div    START -->
                     <div>
                         <md-checkbox ng-model="policy.isProgressReport" aria-label="Daily Report">
-                            <h4>Progress Report</h4>(Create a Progress Report on Checkout)
+                            <h4>Progress Report <span style="font-size:small;font-weight:normal;"> (Create a Progress Report on Checkout)</span></h4>
                         </md-checkbox>
                         <div id="dailyReportdiv" ng-show="policy.isProgressReport">
                             <div layout="row" layout-align="start center">
@@ -196,36 +196,31 @@ md-checkbox.md-checked .md-icon {
                         </md-button>
                     </div> -->
 
-                    <!--adding team members-->
-                    <h2>Team Members</h2>
-                    <!-- <md-button style="background: #60B089" class="backColorSeaGreen" ng-click="createSubGroup.ActiveSideNavBar('member');"><span style="color: white;">Add</span> -->
+                    <div class="layout-column">
 
-                    <div layout="row">
-                        <div layout="row" layout-align="space-between center">
+                        <div layout="row" layout-align="space-between center" style="padding-bottom: 4%;">
                             <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
                                 <span>Apply</span>
                             </md-button>
+                        </div>
+
+                        <div layout="row" layout-wrap>
+                            <md-chips layout-wrap ng-repeat="subgroup in policy.subGroupNames track by $index" ng-if="subgroup.hasPolicy == true">
+                                <md-chip  style="height:40px" class="backColorDarkGrey" >
+                                    <span style="margin-left: 10px; position:relative; top:5px;" class="foreColorWhite">{{subgroup.subgroupTitle}}</span>
+                                </md-chip>
+                            </md-chips>
+                        </div>
+
                     </div>
-                    <div layout="row">
 
+                    <div layout="row" layout-align="end end">
+                        <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
+                            <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                            <span> Save</span>
+                        </md-button>
+                    </div>
 
-                        <md-chips ng-repeat="subgroup in policy.subGroupNames track by $index" ng-if="subgroup.hasPolicy == true">
-                            <md-chip  style="height:40px" class="backColorDarkGrey" >
-                                <span style="margin-left: 10px; position:relative; top:5px;" class="foreColorWhite">{{subgroup.subgroupID}}</span>
-                                <!-- <span style="position:relative; top:-8px;" class="fillColorWhite" >
-                                        &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"></ng-md-icon>
-                                    </span> -->
-                            </md-chip>
-                        </md-chips>
-</div>
-                </div>
-
-                <div layout="row" layout-align="end center">
-                    <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
-                        <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
-                        <span> Save</span>
-                    </md-button>
-                </div>
                 </div>
                 <!--SubGroups sidenav-->
                 <div ng-if="policy.subgroupSideNavBar" class="backColorSeaGreen nopadding viewHeight-250 anifade" style="width: 300px; position: absolute; right: 73px; overflow-y: scroll" layout="column" layout-align="space-between">
