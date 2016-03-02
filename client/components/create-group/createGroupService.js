@@ -29,7 +29,10 @@
                                 } else {
                                     messageService.showSuccess("Team of Teams creation Successful");
                                     console.log("this User is from createSubGroupService:",userService.getCurrentUser());
-                                    CollaboratorService.CreateDocument("Team Information",groupInfo.groupID,"",'Rich Text',userService.getCurrentUser());
+                                    CollaboratorService.CreateDocument("Team Information",groupInfo.groupID,"",'Rich Text',userService.getCurrentUser())
+                                    .then(function(response){
+                                      CollaboratorService.addAccessUser(response.docId,groupInfo.groupID,"",pageUserId);
+                                    });
                                 }
                                 $location.path('/user/' + pageUserId);
                             }, function(group) {

@@ -30,7 +30,10 @@
                                     messageService.showSuccess("Team creation Successful...");
                                     // console.log(JSON.stringify());
                                     console.log("this User is from createSubGroupService:",userService.getCurrentUser());
-                                    CollaboratorService.CreateDocument("Team of Teams Information",group.$id,SubgroupInfo.subgroupID,'Rich Text',userService.getCurrentUser());
+                                    CollaboratorService.CreateDocument("Team of Teams Information",group.$id,SubgroupInfo.subgroupID,'Rich Text',userService.getCurrentUser())
+                                    .then(function(response){
+                                      CollaboratorService.addAccessUser(response.docId,group.$id,SubgroupInfo.subgroupID,userService.getCurrentUser().userID);
+                                    });
                                     $rootScope.newImg = null;
                                 // }
                             }, function(group) {
