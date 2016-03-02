@@ -253,11 +253,11 @@
                 multipath['group-activity-streams/' + groupID + '/' + activityPushID] = activity;
             }
 
-            // if (memberUserID) {
-            //     multipath['user-activity-streams/' + memberUserID + '/' + activityPushID] = activity;
-            // }
+            if (memberUserID) {
+                multipath['user-activity-streams/' + memberUserID + '/' + activityPushID] = activity;
+            }
 
-            //multipath['user-activity-streams/' + actor.id + '/' + activityPushID] = activity;
+            multipath['user-activity-streams/' + actor.id + '/' + activityPushID] = activity;
 
             // multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = {
             //           displayName: displayMessage,

@@ -577,7 +577,7 @@
                     messageService.showFailure('Please Write Policy Name');
                 }
 
-            } //onSave
+            }; //onSave
 
             //load constructor
             function init() {
