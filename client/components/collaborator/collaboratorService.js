@@ -31,7 +31,7 @@
     function getinitGroupDocument(groupID, cb) {
       var val = "";
       firepadRef = new Firebase(ref).child("firepad-groups/"+groupID);
-      firepadRef.limitToLast(1).once('value',function(snapshot){
+      firepadRef.limitToFirst(1).once('value',function(snapshot){
         for(var a in snapshot.val()){
            val = a;
         }
@@ -43,7 +43,7 @@
     function getinitSubGroupDocument(groupID,subgroupID,cb){
       var val = "";
       firepadRef = new Firebase(ref).child("firepad-subgroups/"+groupID+'/'+subgroupID);
-      firepadRef.limitToLast(1).once('value',function(snapshot){
+      firepadRef.limitToFirst(1).once('value',function(snapshot){
         for(var a in snapshot.val()){
            val = a;
         }
