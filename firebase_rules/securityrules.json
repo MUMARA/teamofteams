@@ -871,11 +871,13 @@
     "user-activity-streams": {
       "$userid": {
         "$activityid": {
+          ".read": "auth != null",
           ".write": "auth != null"
-        }
+        },
+        ".read": "auth != null"
       }
     },
-    "firepad-group-access": {
+    "firepad-groups-access": {
       "$groupid": {
         "$documentid": {
           "$userid": {
@@ -886,7 +888,7 @@
         }
       }
     },
-    "firepad-subgroup-access": {
+    "firepad-subgroups-access": {
       "$groupid": {
         "$subgroupid": {
           "$documentid": {

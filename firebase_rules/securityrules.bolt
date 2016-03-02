@@ -1452,12 +1452,20 @@ type CreatedByObj {
   lastName: String,
   userID: String
 }*/
-path /user-activity-streams/{userid}/{activityid} {
- write() {
-   isAuthenticated()
+path /user-activity-streams/{userid}{
+  read() {
+    isAuthenticated()
+   }
+   /{activityid} {
+   read() {
+     isAuthenticated()
+    }
+  write() {
+    isAuthenticated()
+   }
+ }
   }
-}
-path /firepad-group-access/{groupid}/{documentid}/{userid} is Boolean {
+path /firepad-groups-access/{groupid}/{documentid}/{userid} is Boolean {
   read() {
     isAuthenticated()
   }
@@ -1465,7 +1473,7 @@ path /firepad-group-access/{groupid}/{documentid}/{userid} is Boolean {
     isAuthenticated()
   }
 }
-path /firepad-subgroup-access/{groupid}/{subgroupid}/{documentid}/{userid} is Boolean {
+path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}/{userid} is Boolean {
   read() {
     isAuthenticated()
   }
