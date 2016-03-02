@@ -111,6 +111,7 @@
         userID:that.user.userID,
         imgUrl:$rootScope.userImg || ""
       };
+
       if (that.subgroupID) {
         CollaboratorService.CreateDocument(that.documentTitle,that.groupID,that.subgroupID,that.documentType,that.user)
         .then(function(response){

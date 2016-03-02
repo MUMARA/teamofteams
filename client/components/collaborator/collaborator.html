@@ -47,12 +47,14 @@
 
       <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Size" for="listSize"></ul>
 
-        <div class="mdl-tooltip" for="bold">
-          Bold
-        </div>
+      <div class="mdl-tooltip" for="bold">
+        Bold
       </div>
-        <div id="firepad" style=""></div>
     </div>
+    <md-content id="firepad" style="">
+      <!--<div style="height: 100%;width: 100%;background: transparent;z-index: 3;position: absolute"></div>-->
+    </md-content>
+  </div>
 
     <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
       <md-card class="nomargin" layout-fill>
@@ -63,8 +65,10 @@
             <md-content ng-repeat="document in collaborator.documents track by $index">
               <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
-                  <ng-md-icon ng-if="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
-                  <ng-md-icon ng-if="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                  <button class="md-button md-icon-button" style="padding: 0 0 0 0;margin: 0 0 0 0;width: 20px">
+                    <ng-md-icon ng-show="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
+                    <ng-md-icon ng-show="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                  </button>
                     <img ng-src="{{document.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px">
                   <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
                     <h3 class="foreColorDarkGrey">Created By :
@@ -125,30 +129,30 @@
           </md-tab>
         </md-tabs>
 
-        <!-- Fab button to add a document  -->
-        <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
-          <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
-        </md-button>
-      </md-card>
+      <!-- Fab button to add a document  -->
+      <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
+        <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
+      </md-button>
+    </md-card>
 
-      <!--  Modal for creating a new Document -->
-      <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
-        <h3 class="foreColorDarkGrey">New Document</h3>
-        <md-input-container>
-          <label>Document Title</label>
-          <input type="text" ng-model="collaborator.documentTitle">
-        </md-input-container>
-        <md-input-container style="margin-right: 10px;">
-          <label>Document Type</label>
-          <md-select ng-model="collaborator.documentType">
-            <md-option ng-repeat="type in collaborator.documentTypes" value="{{type.codeMirrorName}}">{{type.displayName}}</md-option>
-          </md-select>
-        </md-input-container>
-        <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="Create" ng-click="collaborator.createDocument()">
-            <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
-            <span>Create</span>
-        </md-button>
-      </div>
+    <!--  Modal for creating a new Document -->
+    <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
+      <h3 class="foreColorDarkGrey">New Document</h3>
+      <md-input-container>
+        <label>Document Title</label>
+        <input type="text" ng-model="collaborator.documentTitle">
+      </md-input-container>
+      <md-input-container style="margin-right: 10px;">
+        <label>Document Type</label>
+        <md-select ng-model="collaborator.documentType">
+          <md-option ng-repeat="type in collaborator.documentTypes" value="{{type.codeMirrorName}}">{{type.displayName}}</md-option>
+        </md-select>
+      </md-input-container>
+      <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="!collaborator.documentTitle" aria-label="Create" ng-click="collaborator.createDocument()">
+        <md-progress-circular ng-show="collaborator.showLoader" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
+        <span>Create</span>
+      </md-button>
     </div>
-
   </div>
+
+</div>
