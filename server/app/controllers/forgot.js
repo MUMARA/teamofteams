@@ -86,7 +86,7 @@
         //     console.log('email sent success: ' + user.email);
         //     console.log(json);
         // });
-        
+
         ////using postmark
         var payload = {
             "To": user.email,

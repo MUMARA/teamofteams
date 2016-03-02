@@ -10,7 +10,7 @@
         <!-- EMTP -->
     <!--     <md-button class="md-primary md-raised" ng-click="showAdvanced($event)" flex="100" flex-gt-md="auto">
           Custom Dialog
-        </md-button> -->
+        </md-button> --
         <!-- EMTP -->
         <p>{{navToolbar.checkout ? "Check out": 'Check In'}}</p>
         <div style="position: relative" layout-margin class="check-in-slider">
@@ -49,18 +49,60 @@
             </div>
             </md-card>
         </div>
+
         <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
-            {{navToolbar.showUrlObj.groupID}} /
-            {{navToolbar.showUrlObj.subgroupID}}
+            {{navToolbar.showUrlObj.groupTitle}} /
+            {{navToolbar.showUrlObj.subgroupTitle}}
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
-            <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()" title="Quiz">
+            <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                  Quiz
+                </md-tooltip>
             </ng-md-icon>
-            <ng-md-icon icon="hangouts" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
+            <ng-md-icon icon="hangouts" class="fillColorWhite nooutline leftmargin10px">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Chat
+                </md-tooltip>
             </ng-md-icon>
-            <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
-            </ng-md-icon>
+            <!-- <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
+            </ng-md-icon> -->
+            <div id="notification">
+                <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.showNotification()">
+                    <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                        Notification
+                    </md-tooltip>
+                </ng-md-icon>
+                <!-- Notification Start -->
+                <div style="position:relative;top: -35px;right: 15px">
+                    <md-card class="carrotImg" ng-show="navToolbar.show"><img src="img/carrot.svg"></md-card>
+                      <md-card class="toolbarListCard_MinHeight" ng-show="navToolbar.show">
+                      <div style="background-color: #E0E0E0; height:40px;" layout="row" layout-align="space-between center" layout-padding>
+                          <strong class="foreColorDarkGrey" style="font-size: large;">Notifications</strong>
+                      </div>
+                      <md-list class="nopadding vscroll">
+                          <md-list-item  class="nopadding" ng-repeat="notify in navToolbar.notifications | reverse track by $index">
+                              <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
+                                  <div style="font-size:small;" layout="row" layout-align="center center" layout-fill>
+                                      <img ng-src="{{notify['profile-image'] ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon30px nooutline leftmargin10px">
+                                      <div class="nooutline leftpadding20px cursorPointer hoverLightGrey3 foreColorDarkGrey"  layout-padding>
+                                          {{notify.displayMessage}}
+                                      </div>
+                                  </div>
+                                  <md-divider md-outset></md-divider>
+                              </div>
+                          </md-list-item>
+                      </md-list>
+                      </md-card>
+                </div>
+                <!-- Notification End-->
+            </div>
+
+            <md-badge ng-if="navToolbar.notifications.length > 0" ng-click="navToolbar.showNotification()" style="background-color:rgb(251, 68, 130); position:fixed; font-size: small; right:90px; top:15px;"><strong>{{navToolbar.notifications.length}}</strong></md-badge>
             <div >
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Profile
+                </md-tooltip>
                 <md-menu md-offset="0 50">
                     <img ng-click="$mdOpenMenu($event)" ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px nooutline leftmargin10px">
                     <md-menu-content>
@@ -83,14 +125,18 @@
      <h1 class="md-toolbar-tools"><strong>Progress Report</strong></h1>
   </md-toolbar>
   <md-content layout-padding style="">
+
   <div layout="column" layout-align="center start">
     <p>
       <br />
     </p>
     <div layout="column" layout-fill ng-repeat="report in navToolbar.dailyProgressReport">
-      <md-input-container ng-repeat="q in report.questions">
+        <div layout="row" layout-align="center center">
+            <md-progress-circular class="cirrcularGrey" ng-hide="report.questions" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
+        </div>
+      <md-input-container ng-repeat="q in report.questions track by $index">
         <label>{{q}}</label>
-        <textarea name="progRessAns{{$index}}" aria-label="progress comment{{$index}}" ng-model="report.answers[$index]" placeholder="pls type your comments.."></textarea>
+        <textarea name="progRessAns{{$index}}" aria-label="progress comment{{$index}}" ng-model="report.answers[$index]" placeholder="Please type your answer..."></textarea>
       </md-input-container>
     </div>
     <div layout="row" layout-align="space-between center" layout-fill>

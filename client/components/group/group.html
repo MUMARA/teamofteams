@@ -7,26 +7,24 @@
                     <img ng-src="{{ group.group.groupImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px">
                 </a>
                 <h4 class="textAlignCenter" layout-margin>
-        					{{ group.group.grouptitle }}
-        				</h4>
+                            {{ group.group.grouptitle }}
+                        </h4>
                 <div layout="row" layout-align="center center" ng-if="group.group.addresstitle">
                     <md-icon md-svg-src="img/location.svg" class="nomargin"></md-icon>
                     <div>{{group.group.addresstitle}}</div>
                 </div>
             </div>
-                <md-button class="md-fab " aria-label="Setting" ng-if="group.isAdmin" ng-click="group.openSetting()" style="position: relative; top: 25px; left: 150px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
-                    <ng-md-icon icon="settings" class="fillColorWhite" size="20" style="position: absolute; top: -1px; left: 10px;"></ng-md-icon>
-                    <md-tooltip md-visible="false" md-delay="200" md-direction="bottom" md-autohide="true">
-                    'Setting Panel'
-                    </md-tooltip>
-                </md-button>
+            <md-button class="md-fab " aria-label="Setting" ng-if="group.isAdmin" ng-click="group.openSetting()" style="position: relative; top: 25px; left: 150px; width: 40px !important; height: 40px !important; background-color: #31B4CB !important;">
+                <ng-md-icon icon="settings" class="fillColorWhite" size="20" style="position: absolute; top: -1px; left: 10px;"></ng-md-icon>
+                <md-tooltip md-visible="false" md-delay="200" md-direction="bottom" md-autohide="true">Admin Panel</md-tooltip>
+            </md-button>
             <div flex="25" style="border-top: 2px solid #dddddd; margin:0px" layout="row" layout-align="start center">
                 <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
                     <img ng-src="{{group.group.ownerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound" alt="group owner image" />
                 </div>
                 <div layout="row" layout-align="start center" layout-margin>
-                    <md-progress-circular md-mode="determinate" md-diameter="44" ng-value="( group.group['members-checked-in'].count / group.group['members-count'] ) * 100" class="md-accent userPageGroupProg"></md-progress-circular>
-                    <span style="margin-left: -45%;margin-top:20%;font-size: 11px">{{ ( group.group['members-checked-in'].count / group.group['members-count'] ) * 100 | number: 0 }}%</span>
+                    <md-progress-circular md-mode="determinate" md-diameter="44" ng-value="( group.group.onlinemember / group.group.members ) * 100" class="md-accent userPageGroupProg"></md-progress-circular>
+                    <span style="margin-left: -45%;margin-top:20%;font-size: 11px">{{ ( group.group.onlinemember / group.group.members ) * 100 | number: 0 }}%</span>
                 </div>
             </div>
         </md-card>
@@ -40,28 +38,40 @@
     </div>
     <!--navigation side-->
     <div class="viewHeight-64 gradient3" layout="column" layout-align="space-between center">
-    <div class="nopadding nomargin" >
+        <div class="nopadding nomargin">
             <img src="img/menu.svg" class="nooutline icon40px" layout-margin id="menu-toggle" />
             <md-divider class="backColorWhite"></md-divider>
             <div layout="row" layout-align="center center">
                 <img src="img/line.svg" class="nooutline cursorPointer icon30px" layout-margin ng-click="group.showPanel('activity', group.panel.subgroupID)" />
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'activity'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Activity
+                </md-tooltip>
             </div>
             <div layout="row" layout-align="center center" ng-if="group.isMember">
                 <img src="img/comment.svg" class="nooutline cursorPointer icon30px" layout-margin ng-click="group.showPanel('chat', group.panel.subgroupID)" />
                 <!-- <ng-md-icon icon="insert_comment" size="50" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('chat', group.panel.subgroupID)"></ng-md-icon> -->
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'chat'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Chat
+                </md-tooltip>
             </div>
             <div layout="row" layout-align="center center">
                 <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('progressreport', group.panel.subgroupID)" /> -->
                 <ng-md-icon icon="assignment" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('progressreport', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'progressreport'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Progress Report
+                </md-tooltip>
             </div>
             <!-- firepad tab -->
             <div layout="row" layout-align="center center" ng-if="group.isMember">
                 <!-- <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('collaborator', group.panel.subgroupID)" /> -->
                 <ng-md-icon icon="border_color" size="35" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('collaborator', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'collaborator'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Collaborator
+                </md-tooltip>
             </div>
         </div>
         <div ng-if="group.isAdmin">
@@ -70,11 +80,17 @@
                 <!-- <img src="img/menu.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" /> -->
                 <ng-md-icon icon="alarm_on" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('manualattendace', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'manualattendace'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Manual Attendance
+                </md-tooltip>
             </div>
             <div layout="row" layout-align="center center">
                 <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('report'); group.showParams=true;" /> -->
-                <ng-md-icon icon="equalizer" size="40" class="nooutline cursorPointer fillColorWhite padding5px"  ng-click="group.showPanel('report', group.panel.subgroupID); group.showParams=true;"></ng-md-icon>
+                <ng-md-icon icon="equalizer" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('report', group.panel.subgroupID); group.showParams=true;"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'report'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="top" md-autohide="true">
+                    Report
+                </md-tooltip>
             </div>
         </div>
     </div>
@@ -84,7 +100,7 @@
     <md-card layout-padding class="foreColorDarkGrey" ng-if="group.errorMsg">
         <h3>{{group.errorMsg}}</h3>
     </md-card>
-    <md-card style="width: 220px; height: 320px; margin:0px 5px 5px 5px;" class="foreColorDarkGrey" layout="column" ng-if="group.group">
+    <md-card style="width: 220px; height: 380px; margin:0px 5px 5px 5px;" class="foreColorDarkGrey" layout="column" ng-if="group.group">
         <div style="margin:auto;">
             <span layout="row" layout-align="center center">
                 <img ng-src="{{ group.group.groupImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png' }}" class="md-card-image" alt="group image" style="width: 100px; height:100px; padding-bottom:10px; padding-top:10px">
@@ -105,10 +121,13 @@
                 <h4>Requested Team not found!</h4>
             </div>
         </div>
-
+        <md-input-container class="nomargin">
+            <label>Message</label>
+            <input type="text" ng-model="group.reqObj.message">
+        </md-input-container>
         <div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
             <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
-                <img ng-src="{{group.group.ownerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image"/>
+                <img ng-src="{{group.group.ownerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image" />
             </div>
             <div layout="row" layout-align="start center" layout-margin>
                 <md-button class="md-button backColorSeaGreen" ng-click="group.sendRequest()">

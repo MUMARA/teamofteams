@@ -21,7 +21,8 @@ angular.module('core', [
     'md.data.table',
     'ui-leaflet',
     'angular.filter',
-    'ngFileSaver'
+    'ngFileSaver',
+    'truncate'
   ]).filter('trustUrl', ['$sce', function($sce) {
     return function(url) {
       /*var temp;

@@ -14,7 +14,13 @@
         this.setFocus = function() {
             document.getElementById("#UserSearch").focus();
         }
-
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        };
         this.CheckInuser = function(grId, sgrId, userID, type) {
             // Do not change status of self login user
             if (user.userID === userID) {

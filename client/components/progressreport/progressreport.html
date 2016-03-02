@@ -1,7 +1,7 @@
 <!-- Activity -->
 <div layout="row" layout-align="space-between start" style="font-size:large;" class="backColorWhite viewHeight-64">
 	<div  layout-padding layout-fill flex>
-	
+
      <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
 
 
@@ -16,21 +16,22 @@
         <md-divider md-outset></md-divider>
 				<div layout="row" layout-align="center center">
 					<md-progress-circular class="cirrcularGrey" ng-show="progressreport.loadingData" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
+					<md-progress-circular class="cirrcularGrey" ng-hide="progressreport.dailyProgressReport" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
 				</div>
 		<div ng-if="progressreport.dailyProgressReport" class="viewHeight-170 vscroll">
 			<md-list>
-			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox, subgroupID: subgroupID} | orderBy: '-date'" layout="column" layout-align="center start" class="md-whiteframe-z2">
+			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport  | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox, subgroupID: subgroupID}  | orderBy: '-date' " layout="column" layout-align="center start" class="md-whiteframe-z2">
 				<div layout="row" layout-fill layout-margin layout-align="space-between center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">
 					<div layout="row" layout-align="start center" >
 						<img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="	icon40px  imageRound">
 						<span class="leftmargin10px foreColorDarkGrey">{{report.fullName}}</span>
 					</div>
-				  	<strong><em class="foreColorDarkGrey">{{report.date | date: 'dd-MMM-yyyy'}}</em></strong>
+				  	<strong><em class="foreColorDarkGrey">{{progressreport.returnMoment(report.date)}}</em></strong>
 				  	<strong class="foreColorLightGrey">{{report.groupID}} / {{report.subgroupID}}</strong>
 				</div>
 				<div layout="row" layout-align="center end" layout-fill>
 					<div flex>
-						<div layout="column" ng-repeat="q in report.questions">
+						<div layout="column" ng-repeat="q in report.questions track by $index">
 							<md-input-container flex class="leftmargin20px" layout="row">
 								<label>{{q}}</label>
 								<textarea ng-model="report.answers[$index]" ng-disabled="progressreport.user.userID != report.userID || !progressreport.subgroupID" placeholder="please type..."></textarea>
