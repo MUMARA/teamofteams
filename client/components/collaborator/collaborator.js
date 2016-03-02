@@ -8,6 +8,7 @@
     .filter('collaboratorUsers',function(){
       return function(users,groupID) {
         var filteredUsers = [];
+        //console.log(JSON.stringify(users));
         users.forEach(function(user){
           if(user.groupID == groupID){
               var userNew = findWithAttr(filteredUsers,'fullName',user.fullName) == -1;
@@ -28,11 +29,11 @@
       return -1;
   }
     })
-    .controller('CollaboratorController', ['ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope','CollaboratorService', collaboratorFunction]);
+    .controller('CollaboratorController', ['firebaseService','ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope','$state','$firebaseObject','$rootScope','CollaboratorService', collaboratorFunction]);
 
 
 
-  function collaboratorFunction(ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope,CollaboratorService) {
+  function collaboratorFunction(firebaseService,ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope,$state,$firebaseObject,$rootScope,CollaboratorService) {
 
 
     componentHandler.upgradeAllRegistered();
@@ -56,6 +57,44 @@
     that.showLoader = false;
     var globalRef = new Firebase(ref);
     init();
+
+
+    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups){
+      if (groups.val() && groups.val()['membership-type'] == 1) {
+        that.isOwner = true;
+        that.isAdmin = true;
+        that.isMember = true;
+        that.adminOf = "Group"
+      } else if (groups.val() && groups.val()['membership-type'] == 2) {
+        that.isAdmin = true;
+        that.isMember = true;
+        that.adminOf = "Group"
+      } else if (groups.val() && groups.val()['membership-type'] == 3) {
+        that.isMember = true;
+      }
+      if (!that.isMember) {
+        that.errorMsg = "You have to be Member of Team before access";
+      } else {
+        firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
+          for (var subgroup in subgroups.val()) {
+            if (subgroups.val()[subgroup]['membership-type'] == 1) {
+              that.isOwner = true;
+              that.isAdmin = true;
+              that.isMember = true;
+              that.adminOf = that.adminOf || 'Subgroup';
+            } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
+              that.isAdmin = true;
+              that.isMember = true;
+              that.adminOf = that.adminOf || 'Subgroup';
+            } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
+              that.isMember = true;
+            }
+          }
+          // that.subgroups = $firebaseArray(firebaseService.getRefSubGroups().child(that.groupID));
+        });
+      }
+      console.log(that.isOwner,that.isAdmin,that.isMember,that.adminOf)
+    });
 
     function clearDiv(){
       var div = document.getElementById("firepad");
@@ -180,6 +219,7 @@
         }
         globalRef.once('value', function(snapshot){
           that.document = snapshot.val().title;
+          that.createdBy = snapshot.val().createdBy;
           that.mode = snapshot.val().type;
           that.isNormal = that.mode == "Rich Text" ? true : false;
           initiateFirepad(globalRef);

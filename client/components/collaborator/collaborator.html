@@ -52,7 +52,7 @@
       </div>
     </div>
     <md-content id="firepad" style="">
-      <!--<div style="height: 100%;width: 100%;background: transparent;z-index: 3;position: absolute"></div>-->
+      <div ng-if="" style="height: 100%;width: 100%;background: transparent;z-index: 3;position: absolute"></div>
     </md-content>
   </div>
 
@@ -92,17 +92,12 @@
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
               <div class="">
                 <!-- <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.accessedUsers"> -->
-                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID == ''"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
-
-                  <h5 class="foreColorDarkGrey">
-                    {{user.fullName}}
-                  </h5>
-                </md-checkbox>
-                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
-                  <h5 class="foreColorDarkGrey">
-                    {{user.fullName}}
-                  </h5>
-                </md-checkbox>
+                <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID.length === 0"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
+                  <h5 class="foreColorDarkGrey">{{user.fullName}}</h5>
+                </md-switch>
+                <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0)" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
+                  <h5 class="foreColorDarkGrey">{{user.fullName}}</h5>
+                </md-switch>
                 <br>
               </div>
               <!-- <md-list class="nopadding">
