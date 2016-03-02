@@ -54,29 +54,20 @@
 
 
     function addAccessUser(documentId, groupID, subgroupID, userID) {
-      var firebaseRef;
+      var firebaseLocalRef;
+      firepadRef = new Firebase(ref);
       var updateDocument = {};
-      if (!subgroupID) {
-        firebaseRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + subgroupID + '/' + documentId);
-        firebaseRef.once('value', function(snapshot) {
-          var isPresent = snapshot.exists();
-          if (!isPresent) {
-            updateDocument['firepad-groups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/allUsers'] = true;
-          }
-          updateDocument['firepad-groups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/' + userID] = true;
-        });
+      if (subgroupID) {
+        firebaseLocalRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId);
+          updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/allUsers'] = true;
+          updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/' + userID] = true;
       }
       else {
-        firebaseRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + documentId);
-        firebaseRef.once('value', function(snapshot) {
-          var isPresent = snapshot.exists();
-          if (!isPresent) {
-            updateDocument['firepad-subgroups-access/' + groupID + '/' + documentId + '/allUsers'] = true;
-          }
-          updateDocument['firepad-subgroups-access/' + groupID +  '/' + documentId + '/' + userID] = true;
-        });
+        firebaseLocalRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + documentId);
+          updateDocument['firepad-groups-access/' + groupID + '/' + documentId + '/allUsers'] = true;
+          updateDocument['firepad-groups-access/' + groupID +  '/' + documentId + '/' + userID] = true;
       }
-      firebaseRef.update(updateDocument, function(error) {
+      firepadRef.update(updateDocument, function(error) {
         if (error) {
           console.log("Error From AccessUsers:", error);
         }

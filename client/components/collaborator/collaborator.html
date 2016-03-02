@@ -56,78 +56,79 @@
     </md-content>
   </div>
 
-    <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
-      <md-card class="nomargin" layout-fill>
-        <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
-        <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
-          <!--Documents side-->
-          <md-tab label="Documents" class="rightTbs">
-            <md-content ng-repeat="document in collaborator.documents track by $index">
-              <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
-                <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
-                  <button class="md-button md-icon-button" style="padding: 0 0 0 0;margin: 0 0 0 0;width: 20px">
-                    <ng-md-icon ng-show="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
-                    <ng-md-icon ng-show="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
-                  </button>
-                    <img ng-src="{{document.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px">
-                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <h3 class="foreColorDarkGrey">Created By :
-                      {{document.createdBy.firstName}} {{document.createdBy.lastName}}</h3>
-                    <span style="font-size: 13px; color: #ffffff;" class="">
-                      <strong>Name:</strong>
-                      {{document.title}}</span>
-                      <div style="font-size: 13px; color: #ffffff;" class="" ng-repeat="docType in collaborator.documentTypes">
-                        <span ng-if="(document.type == docType.codeMirrorName)"><strong>Type:</strong>
-                        {{docType.displayName}}</span></div>
-                    <div style="font-size: 13px; color: #ffffff;" class="">
-                      <strong>Date:</strong>
-                      {{document.timestamp | date:"MM/dd/yyyy  h:mma"}}</div>
+  <div style="width:400px;" layout-fill class="backColorSeaGreen viewHeight vscroll">
+    <md-card class="nomargin" layout-fill>
+      <!-- <md-toolbar class="md-whiteframe-z1 backColorWhite"> -->
+      <md-tabs class="OnlineChat backColorSeaGreen" layout-fill>
+        <!--Documents side-->
+        <md-tab label="Documents" class="rightTbs">
+          <md-content ng-repeat="document in collaborator.documents track by $index">
+            <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+              <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
+                <button class="md-button md-icon-button" style="padding: 0 0 0 0;margin: 0 0 0 0;width: 20px">
+                  <ng-md-icon ng-show="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
+                  <ng-md-icon ng-show="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                </button>
+                <img ng-src="{{document.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" layout-margin class="imageRound icon50px">
+                <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                  <h3 class="foreColorDarkGrey">Created By :
+                    {{document.createdBy.firstName}}
+                    {{document.createdBy.lastName}}</h3>
+                  <span style="font-size: 13px; color: #ffffff;" class="">
+                    <strong>Name:</strong>
+                    {{document.title}}</span>
+                  <div style="font-size: 13px; color: #ffffff;" class="" ng-repeat="docType in collaborator.documentTypes">
+                    <span ng-if="(document.type == docType.codeMirrorName)">
+                      <strong>Type:</strong>
+                      {{docType.displayName}}</span>
                   </div>
-                </md-list-item>
-              </md-list>
-            </md-content>
-          </md-tab>
-          <!--Online Users side-->
-          <md-tab label="Collaborators">
-            <md-content layout-padding layout-wrap class="backColorSeaGreen">
-              <div class="">
-                <!-- <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.accessedUsers"> -->
-                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID == ''"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
+                  <div style="font-size: 13px; color: #ffffff;" class="">
+                    <strong>Date:</strong>
+                    {{document.timestamp | date:"MM/dd/yyyy  h:mma"}}</div>
+                </div>
+              </md-list-item>
+            </md-list>
+          </md-content>
+        </md-tab>
+        <!--Online Users side-->
+        <md-tab label="Collaborators">
+          <md-content layout-padding layout-wrap class="backColorSeaGreen">
+            <div class="">
+              <!-- <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.accessedUsers"> -->
+              <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID == ''" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
 
-                  <h5 class="foreColorDarkGrey">
-                    {{user.fullName}}
-                  </h5>
-                </md-checkbox>
-                <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
-                  <h5 class="foreColorDarkGrey">
-                    {{user.fullName}}
-                  </h5>
-                </md-checkbox>
-                <br>
-              </div>
-              <!-- <md-list class="nopadding">
-                <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-repeat="(key, value) in collaborator.users | groupBy: collaborator.groupID">
-                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <h3 class="foreColorDarkGrey">Name : {{ value[$index].fullName }}</h3>
-                    <span style="font-size: 13px; color: #ffffff;">Time : {{value[$index].contactNumber}}</span>
-                  </div>
-                </md-list-item>
-              </md-list> -->
-            </md-content>
-          </md-tab>
-          <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
-            <md-content class="backColorSeaGreen">
-              <md-list class="nopadding">
-                <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-repeat="(key, value) in collaborator.history | groupBy: 'a'">
-                  <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                    <h3 class="foreColorDarkGrey">Editor : {{ key }}</h3>
-                    <span style="font-size: 13px; color: #ffffff;">Time : {{value[value.length-1].t | date : 'M/d/yy'}}</span>
-                  </div>
-                </md-list-item>
-              </md-list>
-            </md-content>
-          </md-tab>
-        </md-tabs>
+                <h5 class="foreColorDarkGrey">
+                  {{user.fullName}}
+                </h5>
+              </md-checkbox>
+              <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID == '')" ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
+                <h5 class="foreColorDarkGrey">
+                  {{user.fullName}}
+                </h5>
+              </md-checkbox>
+              <br>
+            </div>
+            <md-switch ng-model="user.permission" aria-label="Switch 1" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
+              {{user.fullNmae}}
+              <!-- {{user.permission}} -->
+            </md-switch>
+          </md-content>
+        </md-tab>
+        <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
+          <md-content class="backColorSeaGreen">
+            <md-list class="nopadding">
+              <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-repeat="(key, value) in collaborator.history | groupBy: 'a'">
+                <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
+                  <h3 class="foreColorDarkGrey">Editor :
+                    {{ key }}</h3>
+                  <span style="font-size: 13px; color: #ffffff;">Time :
+                    {{value[value.length-1].t | date : 'M/d/yy'}}</span>
+                </div>
+              </md-list-item>
+            </md-list>
+          </md-content>
+        </md-tab>
+      </md-tabs>
 
       <!-- Fab button to add a document  -->
       <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
