@@ -10,7 +10,8 @@
         var that = this;
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().from(timestamp);
+                return moment().to(timestamp);
+                // return moment.duration(-timestamp, "day").humanize(true);
             } else {
                 return ''
             }

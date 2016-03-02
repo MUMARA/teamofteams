@@ -16,7 +16,7 @@
         }
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().from(timestamp);
+                return moment().to(timestamp);
             } else {
                 return ''
             }

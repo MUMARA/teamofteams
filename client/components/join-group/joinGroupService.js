@@ -25,8 +25,8 @@
                                 var type = 'group';
                                 var targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.title, type: 'group' };
                                 var area = {type: 'group-join'};
-                                var group_id = null;
-                                var memberuser_id = userService.getCurrentUser().userID;
+                                var group_id = groupInfo.groupID;
+                                var memberuser_id = null;
                                 //for group activity record
                                 activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id)
                                 //activityStreamService.activityStream(type, targetinfo, area, groupInfo.$id, memberuserInfo);
