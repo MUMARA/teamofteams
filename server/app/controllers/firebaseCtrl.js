@@ -30,7 +30,9 @@
             this.refs.refGroupsNames = refMain.child("groups-names");
             this.refs.refGroupMembers = refMain.child("group-members");
             this.refs.refSubGroups = refMain.child("subgroups");
+            this.refs.refGroupActivityStream = refMain.child("group-activity-streams");
             this.refs.refQuizbanks = refMain2.child("question-bank");
+            this.refs.refGroupActivityStream = refMain.child("group-activity-streams");
         },
         getFirebaseTimestamp: function() {
             return Firebase.ServerValue.TIMESTAMP;
@@ -55,6 +57,9 @@
         },
         getRefGroupMembers: function() {
             return this.refs.refGroupMembers;
+        },
+        getRefGroupActivityStream: function(){
+            return this.refs.refGroupActivityStream;
         },
         getRefQuizbank: function() {
             return this.refs.refQuizbanks;
@@ -186,5 +191,5 @@
         }
     };
 
-    module.exports = firbaseCtrl;
+    module.exports = g;
 })();
