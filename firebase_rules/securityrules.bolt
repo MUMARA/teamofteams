@@ -1281,7 +1281,6 @@ type SubgroupAppliedPolicyType {
    policyID    :    String,
   "policy-title" :  String,
    "subgroup-title"  : String | Null
-
 }
 
 

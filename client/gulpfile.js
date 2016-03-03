@@ -54,6 +54,7 @@ gulp.task("minifying", function() {
             "./components/quiz/quizService.js",
             "./components/quiz/quiz.js",
             "./components/componentsCoreModule.js",
+            "./services/activityStreamService.js",
             "./services/auth.service.js",
             "./services/chatService.js",
             "./services/user.service.js",
