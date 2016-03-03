@@ -73,7 +73,12 @@
             </div>
             <!-- <div ng-show="policy.showPanel" class="backColorWhite md-whiteframe-z1 viewHeight-154 vscroll" layout="column" -->
             <div ng-show="policy.showPanel" class="backColorWhite " layout="row" layout-align="space-between" flex>
+
+
+
                 <div class="viewHeight-250 vscroll" layout="column" layout-padding flex>
+
+
                     <div layout="row" style="padding-bottom: 75px;">
                         <md-input-container flex>
                             <label>Policy Name</label>
@@ -88,6 +93,7 @@
                             </div>
                         </md-input-container>
                     </div>
+
                     <span class="foreColorDarkGrey">Please Select your Criteria</span>
                     <br>
                     <!-- locationBasediv    START -->
@@ -98,32 +104,24 @@
                         <div id="locationBasediv" ng-if="policy.isLocationbased">
                             <div layout="row" layout-align="center center">
                                 <div layout="row" flex>
-                                    <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey"
-                                                ng-click="policy.setFocus()"></ng-md-icon>
+                                    <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="policy.setFocus()"></ng-md-icon>
                                     <form ng-submit="policy.getLatLngByAddress(policy.address)" flex>
                                         <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
-                                            <input type="text" style="font-size:x-large;" id="#UserSearch"
-                                                   ng-model="policy.address" aria-label="search dashboard"
-                                                   class="serachbox2" placeholder="Search">
+                                            <input type="text" style="font-size:x-large;" id="#UserSearch" ng-model="policy.address" aria-label="search dashboard" class="serachbox2" placeholder="Search">
                                         </md-input-container>
                                     </form>
                                 </div>
                                 <div>
                                     <md-button class="md-raised" ng-click="policy.getLatLngByAddress(policy.address)">
-                                        <span style="color: #60B089"><b>Find on Map</b></span></md-button>
+                                        <span style="color: #60B089"><b>Find on Map</b></span>
+                                    </md-button>
                                 </div>
                             </div>
                             <div layout="column" layout-align="center center" layout-padding layout-margin>
-                                <leaflet id="leafletmap" defaults="policy.defaults" center="policy.center"
-                                         markers="policy.markers" height="600px" width="900px" flex
-                                         paths="policy.paths"></leaflet>
+                                <leaflet id="leafletmap" defaults="policy.defaults" center="policy.center" markers="policy.markers" height="600px" width="900px" flex paths="policy.paths"></leaflet>
                                 <div layout="row" layout-align="center center" style="width:900px">
-                                    <span>
-                                            Fencing:
-                                        </span>
-                                    <md-slider style="width:900px;height:44px" md-discrete class="md-primary"
-                                               ng-model="policy.paths.c1.radius" step="1" min="1" max="100"
-                                               aria-label="fecning"></md-slider>
+                                    <span>Fencing:</span>
+                                    <md-slider style="width:900px;height:44px" md-discrete class="md-primary" ng-model="policy.paths.c1.radius" step="1" min="1" max="100" aria-label="fecning"></md-slider>
                                 </div>
                             </div>
                         </div>
@@ -231,39 +229,37 @@
                         </md-button>
                     </div> -->
 
+                    <div layout="column" layout-align="center space-between" layout-padding style="padding-top: 15vh">
 
-                    <div layout="column" layout-align="center space-between" layout-padding>
-
-                        <div layout="row" layout-align="space-between center">
+                        <div layout="row" layout-align="start center">
                             <md-button layout="row" layout-align="center center"
                                        class="backColorSeaGreen foreColorWhite displayFlex"
                                        ng-click="policy.toggleSideNavBar()">
                                 <span>Apply</span>
                             </md-button>
                         </div>
-
-                        <div layout="row" layout-wrap>
-                            <md-chips ng-repeat="subgroup in policy.subGroupNames track by $index"
-                                      ng-if="subgroup.hasPolicy == true">
-                                <md-chip style="height:40px" class="backColorDarkGrey">
+                        <br>
+                            <md-chips>
+                                <!-- ng-if="!subgroup.hasPolicy == true" -->
+                                <md-chip style="height:40px" class="backColorDarkGrey" ng-repeat="subgroup in policy.subGroupNames track by $index">
                                     <span style="margin-left: 10px; position:relative; top:5px;" class="foreColorWhite">{{subgroup.subgroupTitle}}</span>
                                     <!-- <span style="position:relative; top:-8px;" class="fillColorWhite" >
                                             &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"></ng-md-icon>
                                         </span> -->
                                 </md-chip>
                             </md-chips>
+                        <br>
+                        <br>
+                        <div layout="row" layout-align="end end">
+                            <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
+                                <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                                <span>Save</span>
+                            </md-button>
                         </div>
 
                     </div>
 
-                    <div layout="row" layout-align="end center">
-                        <md-button layout="row" layout-align="center center"
-                                   class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
-                            <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate"
-                                                  md-diameter="30"></md-progress-circular>
-                            <span>Save</span>
-                        </md-button>
-                    </div>
+
                 </div>
                 <!--SubGroups sidenav-->
                 <div ng-if="policy.subgroupSideNavBar" class="backColorSeaGreen nopadding viewHeight-250 anifade"
