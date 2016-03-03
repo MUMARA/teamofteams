@@ -14,7 +14,8 @@
       addAccessUser: addAccessUser,
       setCurrentTeam : setCurrentTeam,
       getinitGroupDocument : getinitGroupDocument,
-      getinitSubGroupDocument: getinitSubGroupDocument
+      getinitSubGroupDocument: getinitSubGroupDocument,
+      getGroupMembers:getGroupMembers
     }
 
     function setCurrentTeam(id,type) {
@@ -37,6 +38,21 @@
         }
         cb(val);
       })
+    }
+    
+    function getGroupMembers(groupID,subgroupID) {
+      if(subgroupID){
+        firepadRef = new Firebase(ref).child("group-members/"+subgroupID+"/"+groupID);
+        $firebaseArray(firepadRef).$loaded().then(function(x){
+           return x;
+        });
+      }
+      else {
+        firepadRef = new Firebase(ref).child("group-members/"+groupID);
+        $firebaseArray(firepadRef).$loaded().then(function(x){
+           return x;
+         });
+      }
     }
 
 
