@@ -70,7 +70,7 @@
             <div id="notification">
                 <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.showNotification()">
                     <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                        Notification
+                        Notifications
                     </md-tooltip>
                 </ng-md-icon>
                 <!-- Notification Start -->
@@ -83,7 +83,7 @@
                       <md-list class="nopadding vscroll">
                           <md-list-item  class="nopadding" ng-repeat="notify in navToolbar.notifications | reverse track by $index">
                               <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
-                                  <div style="font-size:small;" layout="row" layout-align="center center" layout-fill>
+                                  <div style="font-size:small;" layout="row" layout-align="start center" layout-fill>
                                       <img ng-src="{{notify['profile-image'] ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon30px nooutline leftmargin10px">
                                       <div class="nooutline leftpadding20px cursorPointer hoverLightGrey3 foreColorDarkGrey"  layout-padding>
                                           {{notify.displayMessage}}
