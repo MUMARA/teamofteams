@@ -43,13 +43,13 @@
               groupService.setActivePanel('collaborator');
             }
             that.panel.subgroupID = subgroupID;
-            if(that.panel.subgroupID){
-              CollaboratorService.getinitSubGroupDocument(that.groupID,that.panel.subgroupID,function(docId){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId});
-              })
+            if (that.panel.subgroupID) {
+                CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
+                    $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId });
+                })
             } else {
-                CollaboratorService.getinitGroupDocument(that.groupID,function(docId){
-                  $state.go('user.group.' + (that.panel.active || 'activity'),  {groupID: that.groupID,docID: docId});
+                CollaboratorService.getinitGroupDocument(that.groupID, function(docId) {
+                    $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID, docID: docId });
                 });
             }
         };
@@ -70,7 +70,7 @@
             that.errorMsg = false;
             that.reqObj = {
                 groupID: that.groupID,
-                message: "Please add me in your group."
+                message: ""
             };
             if (that.subgroupID) {
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
@@ -102,9 +102,6 @@
                     that.group.addresstitle = (grp.val() && grp.val()['address-title']) ? grp.val()['address-title'] : false;
                     that.group.groupImgUrl = (grp.val() && grp.val().groupImgUrl) ? grp.val().groupImgUrl : false;
                     that.group.ownerImgUrl = (grp.val() && grp.val().ownerImgUrl) ? grp.val().ownerImgUrl : false;
-
-
-
                     cb();
                 } else {
                     that.errorMsg = "Requested Team of Team not found!";
@@ -130,6 +127,14 @@
                         if (!that.isMember) {
                             that.errorMsg = "You have to be Member of Team before access";
                         } else {
+                            if (that.isMember) {
+                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo){
+                                    that.group.onlinemember = (groupinfo.val() && groupinfo.val().count) ? groupinfo.val().count : 0;
+                                })
+                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo){
+                                    that.group.members = groupinfo.val() ? groupinfo.val() : 0;
+                                })
+                            }
                             firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
                                 for (var subgroup in subgroups.val()) {
                                     if (subgroups.val()[subgroup]['membership-type'] == 1) {

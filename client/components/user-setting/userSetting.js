@@ -63,15 +63,13 @@
         function hide() {
             /*   createGroupService.cancelGroupCreation();*/
             /* $mdDialog.cancel();*/
-            // $location.path('/user/group/' + groupID);
-            $state.go('user.group', {groupID: groupID})
-
+            // $location.path('/user/group/' + groupID);groupID
         }
         //For owner/admin: Approve membership request.
         function approveMembership(requestedMember) {
             // $loggedInUserObj.$loaded().then(function() {
-                // $loggedInUserObj.userID = user.userID;
-                groupFirebaseService.approveMembership(groupID, user, requestedMember)
+                // $loggedInUserObj.userID = user.userID;groupID
+                groupFirebaseService.approveMembership(groupID, user, requestedMember, that.group)
                     .then(function(res) {
                         if(requestedMember.teamrequest){
                             requestedMember.teamrequest.forEach(function(val, indx){
@@ -95,7 +93,7 @@
         function rejectMembership(requestedMember) {
             // $loggedInUserObj.$loaded().then(function() {
                 // $loggedInUserObj.userID = user.userID;
-                groupFirebaseService.rejectMembership(groupID, user, requestedMember)
+                groupFirebaseService.rejectMembership(groupID, user, requestedMember, that.group)
                     .then(function(res) {
                         messageService.showSuccess("Ignored Request Successfully");
                     }, function(reason) {

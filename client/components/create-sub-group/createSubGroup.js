@@ -155,10 +155,14 @@
                             // console.log(1)
                             // console.log(SubgroupObj)
                             SubgroupObj.$loaded().then(function(data) {
-                                    that.subgroupData = data;
-                                    //that.group.groupID = data.$id;
-                                    that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
-                                    that.teamsettingpanel = true;
+                                that.subgroupData = data;
+                                //that.group.groupID = data.$id;
+                                that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
+                                that.teamsettingpanel = true;
+
+                                firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot){
+                                    that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
+                                })
                         // },50000)
                             // console.log(2)
                             // console.log(SubgroupObj)
@@ -179,6 +183,8 @@
 
 
         this.showAdvanced = function(ev) {
+            $rootScope.tmpImg = $rootScope.newImg;
+            $rootScope.newImg = '';
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue2.tmpl.html',
@@ -207,6 +213,7 @@
                     that.pendingRequests = that.groupSyncObj.pendingMembershipSyncArray;
                     that.activities = that.groupSyncObj.activitiesSyncArray;
                     // that.veiwSubgroup(that.subgroups[0])
+                    // console.log(that.subgroups)
                 });
 
 
@@ -534,6 +541,8 @@
                     .catch(function(err) {
                         // return alert('picture upload failed' + err)
                         that.processingSave = false;
+                        that.teamsettingpanel = false;
+
                         return messageService.showFailure('picture upload failed' + err)
                     });
                 // console.log(x);
@@ -553,11 +562,11 @@
                 } else {
                     //create team
                     createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
-                        that.teamsettingpanel = false;
                         that.selectedindex = undefined;
-
+                       that.teamsettingpanel = false;
                     });
                     that.processingSave = false;
+
                 }
             }
         }

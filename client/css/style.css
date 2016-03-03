@@ -463,6 +463,14 @@ md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, md-pro
     right: -25px;
     top: 45px;
 }
+.toolbarListCard_MinHeight {
+    position: absolute;
+    width: 350px;
+    min-height: 100px;
+    max-height: 300px;
+    right: -25px;
+    top: 45px;
+}
 .carrotImg {
     width: 24.073px;
     height: 13.167px;
@@ -1151,13 +1159,13 @@ md-autocomplete input:not(.md-input) {
 }
 .chatheaderTime {
     padding-top: 5px;
-    width: 50px;
+    width: auto;
     padding-left: 10px;
     border-top-right-radius: 100px;
 }
 .chatheaderTimeRight {
     padding-top: 5px;
-    width: 50px;
+    width: auto;
     padding-left: 15px;
     padding-right: 10px;
     border-top-left-radius: 100px;
@@ -1737,7 +1745,7 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
     height: 90px
 }
 .subgrouplogo {
-    width: 54px;
+    width: 60px;
     height: 90px;
     overflow: hidden;
 }

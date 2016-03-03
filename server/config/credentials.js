@@ -11,7 +11,7 @@ var development = {
     product: {
         BASEURL: 'https://panacloudapi.herokuapp.com/',
         // BASEURL: 'https://127.0.0.1:3000/',
-        TITLE: 'Automated Attendance System',
+        TITLE: 'Team of Teams',
         SUPPORT: 'support@teamofteams.io',
         DOMAIN: 'https://app.teamofteams.io/'
     },
@@ -49,7 +49,7 @@ var production = {
     /*product application*/
     product: {
         BASEURL: 'https://teamofteams.herokuapp.com/',
-        TITLE: 'Automated Attendance System',
+        TITLE: 'Team of Teams',
         SUPPORT: 'zia@panacloud.com',
         DOMAIN: 'https://app.teamofteams.io/'
     },

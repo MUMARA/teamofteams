@@ -2,15 +2,25 @@
     'use strict';
 
     angular.module('app.navToolbar')
+    //Filter Array in reverse
+    .filter('reverse', function() {
+      return function(items) {
+        return items.slice().reverse();
+      };
+    })
 
-    .controller('NavToolbarController', ['ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
             var self = this;
+            self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
+            this.notifications = []
+           //filter Array in reverse
+
             /*VM properties*/
 
             this.checkinObj = {
@@ -46,6 +56,11 @@
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart
+
+            //   notification activities
+            self.showNotification = function(){
+                self.show = !self.show;
+            };
 
             this.progressReport = function(){
               $mdSidenav('right').toggle().then(function(){
@@ -135,6 +150,12 @@
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.subgroupTitle = snapshot.val()
+                    })
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.groupTitle = snapshot.val()
+                    })
                     // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
             })
@@ -237,7 +258,7 @@
                 var groupObj = {};
                 self.checkinSending = true;
                 if(group){
-                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID};
+                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
                 } else {
                      groupObj = {
                         groupId: self.showUrlObj.groupID,
@@ -252,10 +273,12 @@
                             messageService.showSuccess('Checkout Successfully!');
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
-                                self.progressReportSideNav();
                                 var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId }
-                                //val.id, user.groupID, user.subgroupID
                                 self.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(userObj, groupObj.groupId, groupObj.subgroupId);
+
+                                //open side nav bar for getting progress report
+                                self.progressReportSideNav();
+
                                 // self.switchCheckIn = true;
                                 // self.switchMsg = true;
                                 // self.isDailyProgessSubmit = true
@@ -608,6 +631,7 @@
                 }
             };
             this.checkinClick = function(event) {
+                self.show = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
                     return
@@ -699,6 +723,10 @@
                     }
                 });
             };
+
+            //getting notifications
+            activityStreamService.init();
+            this.notifications = activityStreamService.getActivities();
         }
     ]);
 

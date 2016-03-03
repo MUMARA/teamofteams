@@ -9,7 +9,7 @@
             <md-progress-circular class="cirrcularGrey" ng-show="joinGroup.loadingData" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
         </div>
         <div layout="row" layout-align="center start" layout-margin layout-padding layout-wrap class="vscroll">
-            <md-card style="width: 220px; height: 300px; margin:0px 5px 5px 5px;" class="foreColorDarkGrey" layout="column" ng-repeat="key in joinGroup.filteredGroups | filter: joinGroup.search">
+            <md-card style="width: 220px; height: 350px; margin:0px 5px 5px 5px;" class="foreColorDarkGrey" layout="column" ng-repeat="key in joinGroup.filteredGroups | filter: joinGroup.search">
                 <div style="margin:auto;">
                     <!-- <a ui-sref="user.group({groupID: group.groupID})" layout="row" layout-align="center center"> -->
                     <span layout="row" layout-align="center center">
@@ -23,12 +23,17 @@
                         <div>{{key['address-title']}}</div>
                     </div>
                 </div>
+                <md-input-container class="nomargin">
+                    <label>Message</label>
+                    <input type="text" ng-model="joinGroup.message[key.$id]">
+                </md-input-container>
                 <div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
                     <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
                         <img ng-src="{{key.ownerImgUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound" alt="group owner image" style="margin-top:50%"/>
                     </div>
                     <div layout="row" layout-align="start center" layout-margin>
-                        <md-button class="md-button backColorSeaGreen" ng-click="joinGroup.answer(key.$id )" style="margin-top:32%">
+                        <!-- <md-button class="md-button backColorSeaGreen" ng-click="joinGroup.answer(key.$id )" style="margin-top:32%"> -->
+                            <md-button class="md-button backColorSeaGreen" ng-click="joinGroup.answer(key)" style="margin-top:32%">
                             <span style="color:white;">REQUEST</span>
                         </md-button>
                     </div>

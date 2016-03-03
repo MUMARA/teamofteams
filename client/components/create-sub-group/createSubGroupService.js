@@ -6,14 +6,14 @@
     'use strict';
     angular
         .module('app.createSubGroup', ['core', 'ngMdIcons'])
-        .factory('createSubGroupService', ['$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig','CollaboratorService',
-            function($firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig,CollaboratorService) {
+        .factory('createSubGroupService', ['activityStreamService', '$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig','CollaboratorService',
+            function(activityStreamService, $firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig,CollaboratorService) {
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                 var groupAdminUsers = [];
 
                 return {
 
-                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID) {
+                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID,cb) {
                         //var pageUserId = userService.getCurrentUser().userID;
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
@@ -27,6 +27,17 @@
                                 //     messageService.showSuccess("Team creation Successful, but following are not valid IDs: " + unlistedMembersArray);
                                 // } else {
                                 //     // $location.path('/' + groupID);
+
+                                //for group activity stream record -- START --
+                                var type = 'subgroup';
+                                var targetinfo = {id: SubgroupInfo.subgroupID, url: SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
+                                var area = {type: 'subgroup-created'};
+                                var group_id = group.$id;
+                                var memberuserID = null;
+                                //for group activity record
+                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                //for group activity stream record -- END --
+                                    cb()
                                     messageService.showSuccess("Team creation Successful...");
                                     // console.log(JSON.stringify());
                                     console.log("this User is from createSubGroupService:",userService.getCurrentUser());
@@ -113,8 +124,6 @@
                             title: subgroupInfo.title,
                             desc: (subgroupInfo.desc ? subgroupInfo.desc : ''),
                             timestamp: firebaseTimeStamp
-
-
                         };
                         if (subgroupRef) {
                             // var $subgroupRef = firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id);
@@ -131,6 +140,17 @@
                                         cb();
                                         //groupForm.$submitted = false;
                                         //$rootScope.newImg = null;
+
+                                        //for group activity stream record -- START --
+                                        var type = 'subgroup';
+                                        var targetinfo = {id: subgroupInfo.$id, url: subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };
+                                        var area = {type: 'subgroup-updated'};
+                                        var group_id = groupID;
+                                        var memberuserID = null;
+                                        //for group activity record
+                                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                        //for group activity stream record -- END --
+
                                         messageService.showSuccess('Team Edited Successfully')
                                     }, function(group) {
                                         cb();

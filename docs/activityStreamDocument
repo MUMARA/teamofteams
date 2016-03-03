@@ -1,0 +1,192 @@
+function activityStream(type, targetinfo, area, memberUserID) {
+
+var myObj = {	'type: group': { 'area.type: membersettings': 'membersettings()', 'area.type: group-created': 'function()', 'area.type: group-updated': 'function()' } }
+		'type: subgroup': { 'area.type: subgroup-created': 'function()', 'area.type: subgroup-updated': 'function()', 'area.type: subgroup-member-assigned': 'function()', 'area.type: subgroup-admin-assigned': 'function()' }
+		'type: policy':	{ 'area.type: policy-created': 'function()', 'area.type: policy-updated': 'function()', 'area.type: policy-assigned-team': 'function()' }
+		'type: progressReport': { 'area.type: progressReport-created': 'function()', 'area.type: progressReport-updated': 'function()' }
+		'type: firepad': {}
+		'type: chat': {}
+}
+
+
+var displayNameObject = {
+	'type: group': {
+            'area.type: membersettings': {
+            //reject == ignore
+            'area.action: group-ignore-member' : "actor.displayName rejected object.displayName's membership request for target.displayName."
+			'area.action: group-approve-member' : "actor.displayName approved object.displayName as a member in target.displayName."
+			'area.action: user-membership-to-member' : "actor.displayName changed object.displayName's membership from \"member\" to \"suspend\" for Team of teams 01 group."
+			'area.action: user-membership-to-admin' : "actor.displayName changed object.displayName's membership from \"member\" to \"admin\" for target.displayName."
+			'area.action: user-membership-block' : "actor.displayName changed object.displayName's membership to \"suspend\" for target.displayName."
+			'area.action: user-membership-unblock' : "actor.displayName changed object.displayName's membership from \"suspend\" to \"member\" for target.displayName."
+			'area.action: group-member-removed' : "actor.displayName removed object.displayName from target.displayName group."
+		}, //membersettings
+        'area.type: group-created': "actor.displayName created group \"target.displayName\" ",
+        'area.type: group-updated': "actor.displayName udpated group \"target.displayName\" ",
+	}, //'type: group'
+    'type: subgroup': {
+            'area.type: subgroup-created': "actor.displayName created subgroup \"target.displayName\" ",
+            'area.type: subgroup-updated': "actor.displayName updated subgroup \"target.displayName\" ",
+            'area.type: subgroup-member-assigned': "actor.displayName assigned object.displayName as a member of target.displayName.",
+            'area.type: subgroup-admin-assigned': "actor.displayName assigned object.displayName as a admin of target.displayName.",
+    }, //subgroup
+    'type: policy': {
+            'area.type: policy-created': "actor.displayName created policy \"target.displayName\" ",
+            'area.type: policy-updated': "actor.displayName updated policy \"target.displayName\" ",
+            'area.type: policy-assigned-team': "actor.displayName assigned policy \"target.displayName\" to \"object.displayName\" ",
+    }, //policy
+    'type: progressReport': {
+        'area.type: progressReport-created': "actor.displayName Created progress report in \"target.displayName\" ",
+        'area.type: progressReport-updated': "actor.displayName Updated progress report in \"target.displayName\" ",
+    } //progressReport
+
+}
+
+
+// ## target ## //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
+var target = {
+         "type": type,         //we are using group activity streams
+         "id": targetinfo.id,
+         "url": targetinfo.url,
+         "displayName": targetinfo.title
+};
+
+var displayMessage = ''
+
+//getting memberInfo by memberUserID
+firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+    var object = {
+       "type": "user",
+       "id": memberUserID, //an index should be set on this
+       "email": res.user.email,
+       "displayName": res.user.firstName + " " + res.user.lastName
+    };
+
+
+
+var activity = {
+       language: "en",
+       verb: requestFor === "approve" ? "group-approve-member" : "group-reject-member",
+       published: firebaseTimeStamp,
+       displayMessage: displayMessage,
+       actor: actor,
+       object: object,
+       target: target
+};
+
+
+//multipath will be run.......
+//  //multi path node...
+//  var multipath = {};
+//  multipath['group-activity-streams/'+groupid] = activity;
+// multipath['user-activity-streams/'+memberUserID] = {
+//           userName: res.user.firstName + " " + res.user.lastName,
+//           email: res.user.email,
+//           userId: memberUserID,
+//           displayMessage: displayMessage,
+//           seen : false,
+//           published: firebaseTimeStamp
+//  }
+
+
+};
+
+
+
+
+//myObj[type][area.type]
+
+
+}
+
+
+
+function membersettings(area.action) {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//actor; current user is our actor
+
+//type; group, subgroup, policy, profile, chat, progressReport
+
+//targetinfo;
+//  if (type group)     { id: targetinfo.groupID, url: targetinfo.groupID, title: targetinfo.groupTitle}
+//  if (type subgroup)  { id: targetinfo.subgroupID, url: targetinfo.subgroupID, title: targetinfo.subgroupTitle}
+//  if (type policy)    { id: targetinfo.policyID, url: targetinfo.policyID, title: targetinfo.policyTitle}
+//  if (type progressReport)    { id: targetinfo.subgroupID, url: targetinfo.subgroupID, title: targetinfo.subgroupTitle }
+
+//area {   type: 'membersettings' | ' group-create' | 'group-update',
+//         action: 'group-reject-member' || 'group-approve-member' || 'user-membership-change' || 'group-member-removed' };
+//  if (type group):    membersettings, group-create, group-update
+//  if (type group && area.type == 'membersettings') area {type: 'membersettings', action: 'aprovedmmebr' | 'rejected' | 'membership' | 'ignore' | 'delete' }
+//  if (type subgroup): subgroup-create, subgroup-update, subgroup-add-member, subgroup-add-admin
+//  if (type policy):   policy-create, policy-update, policy-assign-to-team
+//  if (type progressReport):   report-created, report-update
+
+//verb;
+//  if(type group     & area.type = group-create):           'group-creation'
+//  if(type group     & area.type = group-update):           'group-update'
+//  if(type group     & area.type = membersettings):         actions: 'group-reject-member' || 'group-approve-member' || 'user-membership-change' || 'group-member-removed'
+//  if(type subgroup  & area.type = subgroup-create):        'subgroup-creation'
+//  if(type subgroup  & area.type = subgroup-update):        'subgroup-update'
+//  if(type subgroup  & area.type = subgroup-add-member):    'user-membership-change'
+//  if(type subgroup  & area.type = subgroup-add-admin):     'user-membership-change'
+//  if(type policy    & area.type = policy-create):          'policy-creation'
+//  if(type policy    & area.type = policy-update):          'policy-update'
+//  if(type policy    & area.type = policy-assigned):        'policy-assigned'
+//  if(type progressReport   & area.type =getActivities report-created):        'progress-report-created'
+//  if(type progressReport   & area.type = report-update):        'progress-report-updated'
+
+//we have decide to create user-activity-streams
+/* node will be user-activity-streams -> userid -> {
+           userName: 'usuf qutubuddin'
+           email: 'usuf53@gmail.com'
+           userId: 'usuf53'
+           displayMessage: 'Usuf Qutubuddin approved Usuf Qutubuddin as a member in Team of teams 01."',
+           seen : false
+  }
+*/
+
+//object: affected area for user.... (represent notification)
+
+
+
+
+//  //multi path node...
+//  var multipath = {};
+//  multipath['group-activity-streams/'+groupid+ '/actor'] = actor;
+//  multipath['group-activity-streams/'+groupid+ '/displayName'] = '';
+//  multipath['group-activity-streams/'+groupid+ '/language'] = "en";
+//  multipath['group-activity-streams/'+groupid+ '/object'] = {
+//    displayName: "usuf53",
+//    email: 'usuf53@gmail.com',
+//    id: 'usuf53',
+//    type:  'user'
+// };
+// multipath['group-activity-streams/'+groupid+ '/published'] = firebaseTimeStamp;
+// multipath['group-activity-streams/'+groupid+ '/target'] = {
+//    displayName: "usuf53",
+//    url: 'tot01',
+//    id: 'usuf53',
+//    type:  'user'
+// };
+// multipath['group-activity-streams/'+groupid+ '/verb'] = "group-approve-member";
+// multipath['user-activity-streams/'+userid] = {
+//           userName: 'usuf qutubuddin',
+//           email: 'usuf53@gmail.com',
+//           userId: 'usuf53',
+//           displayMessage: 'Usuf Qutubuddin approved Usuf Qutubuddin as a member in Team of teams 01."',
+//           seen : false,
+//           published: firebaseTimeStamp
+//  }

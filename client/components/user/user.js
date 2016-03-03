@@ -8,6 +8,14 @@
         //$rootScope.fl= 'hello'
         var $scope = this;
         var that = this;
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().to(timestamp);
+                // return moment.duration(-timestamp, "day").humanize(true);
+            } else {
+                return ''
+            }
+        }
         //window.userScope = this;
         this.pageUserId = userService.getCurrentUser();
         this.createGroup = function() {
@@ -15,6 +23,7 @@
             $state.go('user.create-group', {userID: userService.getCurrentUser().userID})
         }
         var userData;
+        this.time= new Date();
         this.groupMembers;
         this.onlineGroupMembers = [];
         this.offlineGroupMembers = [];
@@ -241,9 +250,6 @@
                 }
             });
         }
-
-
-
     }
 
 })();

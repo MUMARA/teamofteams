@@ -23,6 +23,13 @@
              }
 
         };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        };
         this.update = function(report) {
             // console.log(report);
             ProgressReportService.updateReport(report, function(result) {
