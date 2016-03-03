@@ -8,8 +8,11 @@
 
   function CollaboratorService($q, $firebaseArray, ref,$rootScope) {
     var currentGroup,currentSubGroup;
+    var currentDocumentId ="";
     var firepadRef, pushDocumentNode, firebaseDocumentId, filteredUsers = [];
     return {
+      getCurrentDocumentId :getCurrentDocumentId,
+      setCurrentDocumentId:setCurrentDocumentId,
       CreateDocument: CreateDocument,
       addAccessUser: addAccessUser,
       setCurrentTeam : setCurrentTeam,
@@ -18,6 +21,14 @@
       getGroupMembers:getGroupMembers
     }
 
+
+    function getCurrentDocumentId() {
+      return currentDocumentId;
+    }
+
+    function setCurrentDocumentId(documentId){
+      currentDocumentId = documentId;
+    }
     function setCurrentTeam(id,type) {
       if(type == "Group"){
         currentGroup = id;
@@ -39,7 +50,7 @@
         cb(val);
       })
     }
-    
+
     function getGroupMembers(groupID,subgroupID) {
       if(subgroupID){
         firepadRef = new Firebase(ref).child("group-members/"+subgroupID+"/"+groupID);
@@ -89,6 +100,7 @@
         }
       });
     }
+
     function CreateDocument(documentTitle, groupID, subgroupID,documentType,user) {
       var deferred = $q.defer();
       var firebaseLocalRef,pushDocumentNode,firebaseDocumentId;

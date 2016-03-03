@@ -5,10 +5,10 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['CollaboratorService','$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController($scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController(CollaboratorService,$scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -374,6 +374,12 @@
                             messageService.showSuccess(notificationString);
                         } else {
                             notificationString = 'Adding Members Successful.';
+                            console.log("SubgroupObj",subgroupObj); //subgroupID
+                            console.log("groupObj",groupData); // $id
+                            var members = memberIDs.split(',');
+                            for (var i = 0; i < members.length; i++) {
+                              CollaboratorService.addAccessUser(CollaboratorService.getCurrentDocumentId(),groupData.$id,subgroupObj.subgroupID,members[i]);
+                            }
                             messageService.showFailure(notificationString);
                         }
                     }, function(reason) {

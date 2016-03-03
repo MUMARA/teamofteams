@@ -75,7 +75,7 @@
                             requestedMember.teamrequest.forEach(function(val, indx){
                                 groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
                                     messageService.showSuccess("Approved Request Successfully");
-                                    CollaboratorService.addAccessUser()
+                                    // CollaboratorService.addAccessUser()
                                 }, function(err){
                                     messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
                                 })

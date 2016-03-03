@@ -152,6 +152,7 @@
                                         //for group activity stream record -- END --
 
                                         messageService.showSuccess('Team Edited Successfully')
+                                        
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");
