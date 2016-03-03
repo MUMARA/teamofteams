@@ -183,6 +183,7 @@
                             date: Firebase.ServerValue.TIMESTAMP,
                             //date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
+                            policyID: Policy.policyID,
                             answers: ''
                         });
 
@@ -287,7 +288,7 @@
                         } else {
                             cb(true, checkinResultMsg, mes);
                         }
-                    })
+                    });
 
                 }); //ref update
             }); //getting and update members-checked-in count
@@ -459,11 +460,11 @@
 
                                                 }, errorCallback);
 
-                                        }, errorCallback)
+                                        }, errorCallback);
 
-                                    }, errorCallback)
+                                    }, errorCallback);
 
-                            }, errorCallback)
+                            }, errorCallback);
 
                     }, errorCallback);
 
@@ -767,13 +768,13 @@
                 var syncRef;
                 if (!multiple && refs.$currentSubGroupLocations.length) {
                     //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
-                    angular.extend(refs.$currentSubGroupLocations[0], newLocation)
+                    angular.extend(refs.$currentSubGroupLocations[0], newLocation);
                     refs.$currentSubGroupLocations.$save(0)
                         .then(function() {
                             defer.resolve('Location has been added.');
                         }, function() {
                             defer.reject('Error occurred in saving on server.');
-                        })
+                        });
 
                 } else {
 
@@ -849,7 +850,7 @@
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
-                })
+                });
                 return title;
             },
             getSubGroupTitle: function(GroupID, subGroupID){
@@ -859,11 +860,11 @@
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
-                })
+                });
                 return title;
             }, //getSubGroupTitle
             ChekinUpdateSatatus: ChekinUpdateSatatus
 
-        } //return
+        }; //return
     } //checkin service function
 })();

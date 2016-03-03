@@ -17,6 +17,10 @@ md-checkbox.md-checked .md-icon {
     background: #008000;
 }
 
+md-chips.md-default-theme .md-chips, md-chips .md-chips {
+    box-shadow: none !important;
+}
+
 /*table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2), table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
      padding: 0 20px 0 0 !important;
 }*/
@@ -196,7 +200,20 @@ md-checkbox.md-checked .md-icon {
                         </md-button>
                     </div> -->
 
-                    <div class="layout-column">
+                        <div layout="row" layout-align="space-between center" style="padding-bottom: 2%;">
+                            <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
+                                <span>Apply</span>
+                            </md-button>
+                        </div>
+
+                        <md-chips layout-wrap style="padding-bottom: 8%;">
+                            <md-chip  ng-repeat="subgroup in policy.subGroupNames track by $index" style="height:40px;" class="backColorDarkGrey" ng-if="subgroup.hasPolicy == true">
+                                <span style="margin-left: 10px; position:relative; top:5px;" class="foreColorWhite">{{subgroup.subgroupTitle}}</span>
+                            </md-chip>
+                        </md-chips>
+
+
+                    <!-- <div layout="column">
 
                         <div layout="row" layout-align="space-between center" style="padding-bottom: 4%;">
                             <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
@@ -212,7 +229,7 @@ md-checkbox.md-checked .md-icon {
                             </md-chips>
                         </div>
 
-                    </div>
+                    </div> -->
 
                     <div layout="row" layout-align="end end">
                         <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
