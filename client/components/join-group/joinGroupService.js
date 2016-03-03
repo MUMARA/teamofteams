@@ -14,7 +14,6 @@
                         return authService.resolveUserPage();
                     },
                     'joinGroupRequest': function(groupInfo, cb) {
-                        console.log(groupInfo);
                         groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '')
                             //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
                         userFirebaseService.asyncGroupJoiningRequest(userService.getCurrentUser().userID, groupInfo.groupID, groupInfo.message, groupInfo.subgroupID, groupInfo.subgrouptitle)
@@ -26,7 +25,7 @@
                                 var targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.title, type: 'group' };
                                 var area = {type: 'group-join'};
                                 var group_id = groupInfo.groupID;
-                                var memberuser_id = null;
+                                var memberuser_id = userService.getCurrentUser().userID;
                                 //for group activity record
                                 activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id)
                                 //activityStreamService.activityStream(type, targetinfo, area, groupInfo.$id, memberuserInfo);

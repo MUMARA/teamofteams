@@ -5,9 +5,9 @@
 
     "use strict";
 
-    angular.module('core').factory('activityStreamService', ['$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+    angular.module('core').factory('activityStreamService', ["$http", "appConfig", '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
 
-    function activityStreamService($firebaseObject, firebaseService, userService, $rootScope) {
+    function activityStreamService($http, appConfig, $firebaseObject, firebaseService, userService, $rootScope) {
         var user = '';
         var userID = '';
         var actor = '';
@@ -138,7 +138,7 @@
         function activityHasSeen(){
             var multipath = {};
             currentUserActivities.forEach(function(val, index){
-                if (val.seen == false) {
+                if (val.seen === false) {
                     multipath['/user-activity-streams/'+userID+'/'+val.activityID+'/seen'] = true;
                 }
 
@@ -205,6 +205,7 @@
                     'subgroup-updated': actor.displayName + " updated subgroup " + target.displayName,
                     'subgroup-member-assigned': actor.displayName + " assigned " + object.displayName + " as a member of " + target.displayName,
                     'subgroup-admin-assigned': actor.displayName + " assigned " + object.displayName + " as a admin of " + target.displayName,
+                    'subgroup-member-removed': actor.displayName + " removed " + object.displayName + " from " + target.displayName,
                     'subgroup-join': actor.displayName + " sent team of teams join request of " + target.displayName,
                 }, //subgroup
                 'policy': {
@@ -253,11 +254,34 @@
                 multipath['group-activity-streams/' + groupID + '/' + activityPushID] = activity;
             }
 
-            if (memberUserID) {
-                multipath['user-activity-streams/' + memberUserID + '/' + activityPushID] = activity;
+            if (area.type === 'group-join' || area.type === 'subgroup-join') {
+                activity.groupID = groupID;
+                $http.post(appConfig.apiBaseUrl + '/api/activitystream', activity).
+                success(function(data, status, headers, config) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                    //console.log("response: " + data);
+                    console.log('signup response object: ' + JSON.stringify(data));
+                    //successFn(data);
+                }).
+                error(function(data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    //failureFn();
+                });
+            } else {
+                firebaseService.getRefMain().update(multipath, function(err) {
+                    if (err) {
+                        console.log('activityError', err);
+                    }
+                });
             }
 
-            multipath['user-activity-streams/' + actor.id + '/' + activityPushID] = activity;
+            // if (memberUserID) {
+            //     multipath['user-activity-streams/' + memberUserID + '/' + activityPushID] = activity;
+            // }
+            //
+            // multipath['user-activity-streams/' + actor.id + '/' + activityPushID] = activity;
 
             // multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = {
             //           displayName: displayMessage,
@@ -266,23 +290,7 @@
             //           verb: (area.action) ? area.action : area.type
             // };
 
-
-            firebaseService.getRefMain().update(multipath, function(err) {
-                if (err) {
-                    console.log('activityError', err);
-                }
-            });
-
-
-
-        }
-
-
-
-
-
-
-
+        } //saveToFirebase
 
 
         //  function groupActivityStream (type, requestFor, group, user, memberUserID) {
