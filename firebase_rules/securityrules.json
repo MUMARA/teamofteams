@@ -695,7 +695,7 @@
         "$groupid": {
           "$subgroupid": {
             "$reportid": {
-              ".validate": "newData.hasChildren(['date', 'questionID'])",
+              ".validate": "newData.hasChildren(['date', 'questionID', 'policyID'])",
               "answers": {
                 "$key1": {
                   ".validate": "newData.isString()"
@@ -705,6 +705,9 @@
                 ".validate": "newData.isNumber() && newData.val() <= now"
               },
               "questionID": {
+                ".validate": "newData.isString()"
+              },
+              "policyID": {
                 ".validate": "newData.isString()"
               },
               "$other": {
@@ -884,7 +887,9 @@
             ".validate": "newData.isBoolean()",
             ".read": "auth != null",
             ".write": "auth != null"
-          }
+          },
+          ".read": "auth != null",
+          ".write": "auth != null"
         }
       }
     },
@@ -896,7 +901,9 @@
               ".validate": "newData.isBoolean()",
               ".read": "auth != null",
               ".write": "auth != null"
-            }
+            },
+            ".read": "auth != null",
+            ".write": "auth != null"
           }
         }
       }

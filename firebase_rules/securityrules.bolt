@@ -1327,7 +1327,8 @@ path /progress-reports-by-users/{userid} {
  type ProgressType {
   answers : String[],
   date    : CurrentTimeStamp,
-  questionID : String
+  questionID : String,
+  policyID : String
 
  }
 
@@ -1465,7 +1466,30 @@ path /user-activity-streams/{userid}{
    }
  }
   }
-path /firepad-groups-access/{groupid}/{documentid}/{userid} is Boolean {
+path /firepad-groups-access/{groupid}/{documentid}{
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+   /{userid} is Boolean {
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+    }
+}
+path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
+  read() {
+    isAuthenticated()
+  }
+  write() {
+    isAuthenticated()
+  }
+/{userid} is Boolean {
   read() {
     isAuthenticated()
   }
@@ -1473,12 +1497,5 @@ path /firepad-groups-access/{groupid}/{documentid}/{userid} is Boolean {
     isAuthenticated()
   }
 }
-path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}/{userid} is Boolean {
-  read() {
-    isAuthenticated()
-  }
-  write() {
-    isAuthenticated()
-  }
 }
 //===========================================================  23/1/16  =====================================================================
