@@ -187,6 +187,8 @@
                             answers: ''
                         });
 
+                        console.log('progressReport', 'activityStream runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+
                         //for group activity stream record -- START --
                         var type = 'progressReport';
                         var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };

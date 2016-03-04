@@ -344,7 +344,6 @@ angular.module('core')
                                                     // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
-                                                    console.log('hasPolicy' + false + 'policyID subgroup-title' + subgroupInfo.title);
                                                     firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({'hasPolicy': false, 'policyID': '', 'subgroup-title': subgroupInfo.title, 'policy-title': ''});
 
                                                     //step : create an entry for "subgroups"

@@ -210,8 +210,8 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
                             </md-button>
                         </div>
 
-                        <md-chips layout-wrap style="padding-bottom: 8%;">
-                            <md-chip  ng-repeat="subgroup in policy.subGroupNames" style="height:40px;" class="backColorDarkGrey" ng-if="subgroup.hasPolicy == true">
+                        <md-chips layout-wrap style="padding-bottom: 8%;" ng-if="policy.subGroupNames.length > 0">
+                            <md-chip  ng-repeat="subgroup in policy.subGroupNames track by $index" style="height:40px;" class="backColorDarkGrey" ng-if="subgroup.hasPolicy == true">
                                 <span style="margin-left: 10px; position:relative; top:5px;" class="foreColorWhite">{{subgroup.subgroupTitle}}</span>
                             </md-chip>
                         </md-chips>
