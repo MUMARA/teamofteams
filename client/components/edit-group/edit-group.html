@@ -73,15 +73,25 @@
                 </div>
             </md-input-container>
             <div>
-                <div layout="row" layout-align="start center">
+                <!-- <div layout="row" layout-align="start center">
                     <h3>Sign Up Mode</h3>
                     <ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please select sign up mode for user"></ng-md-icon>
                 </div>
                 <md-radio-group ng-model="editGroup.group.privacy">
                     <md-radio-button value="1" ng-disabled="true" class="md-primary">Invitation Only</md-radio-button>
                     <md-radio-button value="2" ng-disabled="true" class="md-primary">Request Support</md-radio-button>
-                    <!-- <md-radio-button value="3" ng-disabled="true" class="md-primary">Any Email Address from these domains.</md-radio-button> -->
-                </md-radio-group>
+                     <md-radio-button value="3" ng-disabled="true" class="md-primary">Any Email Address from these domains.</md-radio-button>
+                </md-radio-group> -->
+				<div layout="row" layout-align="start center">
+					<h3>Sign Up Mode</h3>
+					<ng-md-icon icon="info_outline" size="25" class="leftmargin10px fillColorSeaGreen" title="Please select sign up mode for user"></ng-md-icon>
+				</div>
+				<md-radio-group  ng-model="editGroup.group.privacy">
+					<md-radio-button value="1" ng-disabled="true" class="md-primary">Invitation Only by Admin</md-radio-button>
+					<md-radio-button value="2" ng-disabled="true" class="md-primary">Request by User</md-radio-button>
+					<md-radio-button value="3" ng-disabled="true" class="md-primary">Both (Invitation/ Request)</md-radio-button>
+					<!-- <md-radio-button value="3" ng-disabled="true"  class="md-primary">Any Email Address from these domains.</md-radio-button> -->
+				</md-radio-group>
                 <!-- <md-input-container md-no-float flex>
                     <input ng-model="editGroup.group.domain" type="text" placeholder="To allow email addresses from multiple domains, separate them with commas." ng-disabled="!editGroup.signupModeDisabled(editGroup.group.signupMode)">
                     <div ng-hide="groupForm.groupId.$untouched" ng-messages="groupForm.domain.$error" ng-messages-multiple>

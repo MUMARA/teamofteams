@@ -226,7 +226,7 @@
             }
           },
           "object": {
-            ".validate": "newData.hasChildren(['displayName', 'id', 'type', 'url'])",
+            ".validate": "newData.hasChildren(['displayName', 'id', 'type'])",
             "displayName": {
               ".validate": "newData.isString()"
             },
@@ -237,7 +237,10 @@
               ".validate": "newData.isString()"
             },
             "url": {
-              ".validate": "newData.isString()"
+              ".validate": "newData.isString() || newData.val() == null"
+            },
+            "email": {
+              ".validate": "newData.isString() || newData.val() == null"
             },
             "$other": {
               ".validate": "false"
@@ -272,7 +275,6 @@
             "object/id"
           ]
         },
-        ".validate": "root.child('groups').child($groupid).val() != null",
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
         ".indexOn": [

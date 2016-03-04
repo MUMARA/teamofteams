@@ -430,12 +430,13 @@ type LogoImageRequirement {
  //Please note when creating group using Multi path update donot add group creation activity seprately
 path /group-activity-streams/{groupid}{
   index()  {  "object/id" }
+
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
 
   write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
 
-  validate() { prior(root['groups'][$groupid].val() != null)     }
+  // validate() { prior(root['groups'][$groupid].val() != null)     }
 
 /{activityid} is GroupActivityStreamsInfo {
     index()  {  "object/id" }
@@ -474,7 +475,8 @@ type  ActorType {
    displayName: String,
    id: String,
    type :String,
-   url: String
+   url: String | Null,
+   email: String | Null,
  }
  type TargetInfo {
    displayName: String,
