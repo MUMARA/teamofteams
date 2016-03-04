@@ -53,7 +53,11 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
             <div class="nopadding" layout="column" layout-align="space-between center" style="min-width: 220px; border-right: 1px solid grey">
                 <div class="vscroll">
                     <div ng-repeat="p in policy.groupPolicies track by $index" class="backColorWhite  bottommargin5px subgroupcard nooutline cursorPointer" layout="row" layout-align="center center" ng-click="policy.selectedindex = $index; policy.selectedPolicy(p,$index);" ng-class="(policy.selectedindex === $index) ? 'md-whiteframe-z4' : 'md-whiteframe-z1'">
-                    <strong title="{{p.title}}">{{p.title | characters:10}}</strong>
+                    <strong >{{p.title | characters:10}}
+                        <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                            {{p.title}}
+                        </md-tooltip></strong>
+
                     <ng-md-icon ng-show="policy.showarrow === $index" icon="chevron_right" style="position:relative;right: -30px;"></ng-md-icon>
                     </div>
                 </div>

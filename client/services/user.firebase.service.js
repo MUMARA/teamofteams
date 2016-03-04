@@ -246,7 +246,7 @@ angular.module('core')
                                                         ownerImgUrl: groupObj.ownerImgUrl,
                                                         'address-title': groupObj.addressTitle || ''
                                                             //groupOwnerImgUrl:
-                                                    }
+                                                    };
 
                                                     groupNameRef.set(data, function(error) {
                                                         if (error) {
@@ -311,7 +311,7 @@ angular.module('core')
                                                                 });
                                                             });
                                                         }
-                                                    })
+                                                    });
                                                 }
                                             });
                                         }
@@ -403,7 +403,7 @@ angular.module('core')
                             });
                         }, function() {
                             deferred.reject();
-                        })
+                        });
                     }
 
                     return deferred.promise;
@@ -758,11 +758,9 @@ angular.module('core')
                         //create an appropriate display message.
                         var displayName;
                         if (type === "approve") {
-                            displayName = actor.displayName + " approved " + object.displayName +
-                                " as a member in " + subgroup.title + "subgroup."
+                            displayName = actor.displayName + " approved " + object.displayName + " as a member in " + subgroup.title + "subgroup.";
                         } else {
-                            displayName = actor.displayName + " rejected " + object.displayName +
-                                "'s membership request for " + subgroup.title + "subgroup."
+                            displayName = actor.displayName + " rejected " + object.displayName + "'s membership request for " + subgroup.title + "subgroup.";
                         }
 
                         var activity = {
@@ -937,7 +935,7 @@ angular.module('core')
                         var activity = snapshot.val();
                         //activity.publishedDate = new Date(activity.published/1000);
                         if (activity) {
-                            if (activityArray.length == 0) {
+                            if (activityArray.length === 0) {
                                 $timeout(function() {
                                     activityArray.push(activity);
                                 });
