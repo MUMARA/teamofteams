@@ -16,8 +16,8 @@ var signUpCtrl = require('./app/controllers/signup'),
     forgotCtrl = require('./app/controllers/forgot'),
     verifyEmailCtrl = require('./app/controllers/verifyEmail'),
     usersCtrl = require('./app/controllers/users'),
-    notification = require('./app/controllers/notification'),
-    activityStreamCtrl = require('./app/controllers/activitystream');
+    notification = require('./app/controllers/notification');
+    //activityStreamCtrl = require('./app/controllers/activityStreams');
 
 var amazonServiceRoutes = require('./amazonServices/routeManager');
 var profilePictureManager = require('./amazonServices/profilePictureManager/profilePictureManager');
@@ -53,7 +53,7 @@ app.get('/', function(req, res) {
     res.send('Panacloud WOW api are running, please select a api, e.g., /api/signup')
 });
 
-amazonServiceRoutes.setupRoutes(app);app.post('/api/activitystream', activityStreamCtrl.activityStreams);
+amazonServiceRoutes.setupRoutes(app);
 profilePictureManager.init();
 
 app.get('/api/env', function(req, res) {
@@ -75,7 +75,7 @@ app.post('/api/sendnotification', notification.sendNotification);
 app.post('/api/registerdevice', notification.registerDevice);
 app.post('/api/unregisterdevice', notification.unregisterDevice);
 
-app.post('/api/activitystream', activityStreamCtrl.activityStreams);
+//app.post('/api/activitystream', activityStreamCtrl.activityStreams);
 
 process.on('uncaughtException', function(err) {
     console.error(err);
