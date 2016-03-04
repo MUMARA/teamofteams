@@ -4,7 +4,10 @@
     </div>
 	<div layout="column" flex>
 		<div layout="row" layout-align="space-between center">
-		     <div layout-padding>{{subgroup.title}}</div>
+		     <div layout-padding>
+                 <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                     {{subgroup.title}}
+                 </md-tooltip>{{subgroup.title  | characters:12 }}</div>
 		     <div> <ng-md-icon icon="more_vert" size="20" class="rightmargin5px"></ng-md-icon> </div>
 		</div>
       	<!-- <div layout="row" layout-align="space-between end" layout-fill style="margin-top: 30px;"> -->

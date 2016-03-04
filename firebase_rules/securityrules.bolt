@@ -425,23 +425,63 @@ type LogoImageRequirement {
 
 
 
- //===================================
  //   Group Activity Streams
  //====================================
  //Please note when creating group using Multi path update donot add group creation activity seprately
+path /group-activity-streams/{groupid}{
+  index()  {  "object/id" }
+  read()     {    isGroupMembersIdExist(groupid)       &&
+                  groupMemberShipAnyType(groupid) }
 
+  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
 
- path /group-activity-streams/{groupid} {
-        read()     {    isGroupMembersIdExist(groupid)       &&
-                        groupMemberShipAnyType(groupid) }
+  validate() { prior(root['groups'][$groupid].val() != null)     }
 
-        write()    {    isGroupMembersIdExist(groupid)       &&
-                        groupMemberShipAnyType(groupid) }
-
-        validate() { prior(root['groups'][$groupid].val() != null)     }
+/{activityid} is GroupActivityStreamsInfo {
+    index()  {  "object/id" }
+write() {
+  (isAuthenticated() && isGroupJoined(this['verb']) || isSubGroupJoined(this['verb']))
+}
+ }
+ }
+ function isGroupJoined(verb) {
+   return verb == "group-join" ? true : false;
+ }
+ function isSubGroupJoined(verb) {
+   return verb == "subgroup-join" ? true : false;
+ }
+ //Type of Group Activity Streams
+ type GroupActivityStreamsInfo {
+   displayName : String,
+   language : String,
+   published: CurrentTimeStamp,
+   verb : String,
+   actor: ActorType,
+   object: ObjectType,
+   target: TargetInfo | Null,
+   seen: Boolean
 
  }
 
+type  ActorType {
+   displayName: String,
+   email: String,
+   "profile-image" : String,
+   id: String,
+   type :String
+ }
+ type ObjectType {
+   displayName: String,
+   id: String,
+   type :String,
+   url: String
+ }
+ type TargetInfo {
+   displayName: String,
+   id: String,
+   type :String,
+   url: String
+ }
  //====================================
  //   Group Check In Current
  //====================================

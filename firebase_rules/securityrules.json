@@ -190,9 +190,94 @@
     },
     "group-activity-streams": {
       "$groupid": {
+        "$activityid": {
+          ".validate": "newData.hasChildren(['displayName', 'language', 'published', 'verb', 'actor', 'object', 'seen'])",
+          "displayName": {
+            ".validate": "newData.isString()"
+          },
+          "language": {
+            ".validate": "newData.isString()"
+          },
+          "published": {
+            ".validate": "newData.isNumber() && newData.val() <= now"
+          },
+          "verb": {
+            ".validate": "newData.isString()"
+          },
+          "actor": {
+            ".validate": "newData.hasChildren(['displayName', 'email', 'profile-image', 'id', 'type'])",
+            "displayName": {
+              ".validate": "newData.isString()"
+            },
+            "email": {
+              ".validate": "newData.isString()"
+            },
+            "profile-image": {
+              ".validate": "newData.isString()"
+            },
+            "id": {
+              ".validate": "newData.isString()"
+            },
+            "type": {
+              ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          },
+          "object": {
+            ".validate": "newData.hasChildren(['displayName', 'id', 'type', 'url'])",
+            "displayName": {
+              ".validate": "newData.isString()"
+            },
+            "id": {
+              ".validate": "newData.isString()"
+            },
+            "type": {
+              ".validate": "newData.isString()"
+            },
+            "url": {
+              ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          },
+          "target": {
+            ".validate": "newData.hasChildren() && newData.hasChildren(['displayName', 'id', 'type', 'url']) || newData.val() == null",
+            "displayName": {
+              ".validate": "newData.isString()"
+            },
+            "id": {
+              ".validate": "newData.isString()"
+            },
+            "type": {
+              ".validate": "newData.isString()"
+            },
+            "url": {
+              ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          },
+          "seen": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": "false"
+          },
+          ".write": "auth != null && (newData.child('verb').val() == 'group-join' ? true : false) || (newData.child('verb').val() == 'subgroup-join' ? true : false)",
+          ".indexOn": [
+            "object/id"
+          ]
+        },
         ".validate": "root.child('groups').child($groupid).val() != null",
         ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
-        ".write": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
+        ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
+        ".indexOn": [
+          "object/id"
+        ]
       }
     },
     "group-check-in-current": {
