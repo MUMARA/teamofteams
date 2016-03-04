@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('core')
-    .factory('userFirebaseService', ["firebaseService", "$q", "$timeout", '$http', "$firebaseObject", 'appConfig', 'userService',
-        function(firebaseService, $q, $timeout, $http, $firebaseObject, appConfig, userService) {
+    .factory('userFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", '$http', "$firebaseObject", 'appConfig', 'userService',
+        function(activityStreamService, firebaseService, $q, $timeout, $http, $firebaseObject, appConfig, userService) {
 
             //Firebase timeStamp object.
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
@@ -283,20 +283,20 @@ angular.module('core')
 
                                                                                 if (memArray.length == 1) {
                                                                                     //self.asyncRecordGroupMemberAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members[0])
-                                                                                    self.asyncRecordGroupMemberAdditionActivity(groupObj, userService.getCurrentUser(), response.members[0])
-                                                                                        .then(function() {
-                                                                                            deferred.resolve({
-                                                                                                unlistedMembersArray: response.unlisted
-                                                                                            });
-                                                                                        })
+                                                                                    // self.asyncRecordGroupMemberAdditionActivity(groupObj, userService.getCurrentUser(), response.members[0])
+                                                                                    //     .then(function() {
+                                                                                    //         deferred.resolve({
+                                                                                    //             unlistedMembersArray: response.unlisted
+                                                                                    //         });
+                                                                                    //     })
                                                                                 } else if (memArray.length > 1) {
                                                                                     //self.asyncRecordManyGroupMembersAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members)
-                                                                                    self.asyncRecordManyGroupMembersAdditionActivity(groupObj, userService.getCurrentUser(), response.members)
-                                                                                        .then(function() {
-                                                                                            deferred.resolve({
-                                                                                                unlistedMembersArray: response.unlisted
-                                                                                            });
-                                                                                        });
+                                                                                    // self.asyncRecordManyGroupMembersAdditionActivity(groupObj, userService.getCurrentUser(), response.members)
+                                                                                    //     .then(function() {
+                                                                                    //         deferred.resolve({
+                                                                                    //             unlistedMembersArray: response.unlisted
+                                                                                    //         });
+                                                                                    //     });
                                                                                 } else {
                                                                                     deferred.resolve({
                                                                                         unlistedMembersArray: response.unlisted
@@ -457,57 +457,68 @@ angular.module('core')
 
                     return deferred.promise;
                 },
-                asyncRecordGroupCreationActivity: function(group, user) {
+                asyncRecordGroupCreationActivity: function(groupObj, user) {
                     var deferred = $q.defer();
-                    var ref = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
-                    var actor = {
-                        "type": "user",
-                        "id": user.userID, //this is the userID, and an index should be set on this
-                        "email": user.email,
-                        "displayName": user.firstName + " " + user.lastName
-                    };
 
-                    var object = {
-                        "type": "group",
-                        "id": group.groupID, //an index should be set on this
-                        "url": group.groupID,
-                        "displayName": group.title
-                    };
+                    //publish an activity stream record -- START --
+                    var type = 'group';
+                    var targetinfo = {id: groupObj.groupID, url: groupObj.groupID, title: groupObj.title, type: 'group' };
+                    var area = {type: 'group-created'};
+                    var group_id = groupObj.groupID;
+                    var memberuserID = null;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
+                    deferred.resolve();
 
-                    var activity = {
-                        language: "en",
-                        verb: "group-creation",
-                        //published: firebaseTimeStamp,
-                        //published: Firebase.ServerValue.TIMESTAMP,
-                        published: {
-                            ".sv": "timestamp"
-                        },
-                        displayName: actor.displayName + " created " + group.title,
-                        actor: actor,
-                        object: object
-                    };
-
-                    var newActivityRef = ref.push();
-                    newActivityRef.set(activity, function(error) {
-                        if (error) {
-                            deferred.reject();
-                        } else {
-                            var activityID = newActivityRef.key();
-                            var activityEntryRef = ref.child(activityID);
-                            activityEntryRef.once("value", function(snapshot) {
-                                var timestamp = snapshot.val().published;
-                                newActivityRef.setPriority(0 - timestamp, function(error2) {
-                                    if (error2) {
-                                        deferred.reject();
-                                    } else {
-                                        deferred.resolve();
-                                    }
-                                });
-                            });
-
-
-                        }
-                    });
+                    // var ref = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+                    // var actor = {
+                    //     "type": "user",
+                    //     "id": user.userID, //this is the userID, and an index should be set on this
+                    //     "email": user.email,
+                    //     "displayName": user.firstName + " " + user.lastName
+                    // };
+                    //
+                    // var object = {
+                    //     "type": "group",
+                    //     "id": group.groupID, //an index should be set on this
+                    //     "url": group.groupID,
+                    //     "displayName": group.title
+                    // };
+                    //
+                    // var activity = {
+                    //     language: "en",
+                    //     verb: "group-creation",
+                    //     //published: firebaseTimeStamp,
+                    //     //published: Firebase.ServerValue.TIMESTAMP,
+                    //     published: {
+                    //         ".sv": "timestamp"
+                    //     },
+                    //     displayName: actor.displayName + " created " + group.title,
+                    //     actor: actor,
+                    //     object: object
+                    // };
+                    // var newActivityRef = ref.push();
+                    // newActivityRef.set(activity, function(error) {
+                    //     if (error) {
+                    //         deferred.reject();
+                    //     } else {
+                    //         var activityID = newActivityRef.key();
+                    //         var activityEntryRef = ref.child(activityID);
+                    //         activityEntryRef.once("value", function(snapshot) {
+                    //             var timestamp = snapshot.val().published;
+                    //             newActivityRef.setPriority(0 - timestamp, function(error2) {
+                    //                 if (error2) {
+                    //                     deferred.reject();
+                    //                 } else {
+                    //                     deferred.resolve();
+                    //                 }
+                    //             });
+                    //         });
+                    //
+                    //
+                    //     }
+                    // });
 
                     return deferred.promise;
                 },
