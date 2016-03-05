@@ -3086,7 +3086,7 @@ angular.module('core', [
                         userFirebaseService.asyncCreateGroup(pageUserId, groupInfo, this.userData(pageUserId), formDataFlag)
                             .then(function(response) {
                                 form.$submitted = false;
-                                console.log("Group Creation Successful", groupInfo);
+                                // console.log("Group Creation Successful", groupInfo);
                                 $rootScope.newImg = null
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
@@ -12093,7 +12093,7 @@ angular.module('core')
                                                                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                                                     //for group activity stream record -- END --
 
-                                                                    defer.resolve(res);
+                                                                    defer.resolve();
 
                                                                     // //step4: publish an activity
                                                                     // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {
