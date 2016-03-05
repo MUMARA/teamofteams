@@ -162,7 +162,7 @@ function sendVerificationEmail(user) {
     var payload = {
         "To": user.email,
         "From": appconfig.SUPPORT,
-        "Subject": 'Verify your ' + appconfig.TITLE + '\'s membership',
+        "Subject": 'Verify your ' + appconfig.TITLE + ' membership',
         "HtmlBody": template/*,
         "TextBody": template,
         "Attachments": [{
