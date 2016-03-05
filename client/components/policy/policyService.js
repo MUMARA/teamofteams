@@ -21,7 +21,7 @@
                         hasPolicy: false,
                         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
                     });
-                }); //getRefSubgroupPolicies
+                }); //getRefSubgroupPolicies (child_added)
 
                 firebaseService.getRefSubgroupPolicies().child(groupID).on('child_changed', function(snapshot){
                         subGroupNames.forEach(function(value, index){
@@ -29,20 +29,9 @@
                                 subGroupNames[index]['policyID'] = snapshot.val().policyID;
                             }
                         });
-                });
+                }); //getRefSubgroupPolicies (child_changed)
 
-                // //getting subgroup names
-                // firebaseService.getRefSubGroupsNames().child(groupID).on('child_added', function(subGroups, prevChildKey) {
-                //     //subGroupNames.push({subgroupID: subGroups.key(), subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(), hasPolicy: (subGroups.val().hasPolicy) ? subGroups.val().hasPolicy : false });
-                //     subGroupNames.push({
-                //         subgroupID: subGroups.key(),
-                //         subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(),
-                //         hasPolicy: false,
-                //         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
-                //     });
-                //     console.log('subGroupNames.length', subGroupNames.length);
-                // }); //getRefSubGroupsNames
-            }
+            } //setSubGroupNames
             function getSubGroupNames(groupID) {
             	setSubGroupNames(groupID);
             	return subGroupNames;
@@ -112,14 +101,8 @@
                 //set policyID
                 obj.policyID = newPolicyKey;
 
-                // var questionObj = obj["progressReportQuestions"];   //setting progressReportQuestions from 'obj'
-                // delete obj["progressReportQuestions"];              //delete progressReportQuestions from 'obj'
-
                 //Saving on firebase by using multi path update
                 var multiPathUpdate = {};
-
-                //add policy in policies node
-                //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey] = obj;
 
                 //add policy in policies node
                 multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/defined-by"] = obj['defined-by'];
@@ -138,40 +121,40 @@
                      var newQuestionID = newQuestionRef.key();
                      multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/latestProgressReportQuestionID"] = newQuestionID;
                      multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
-                     //obj['latestProgressReportQuestionID'] = newQuestionID;
-                     //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = questionObj;
                 }
 
                 //getting subgroups which are selected....
                 selectedTeams.forEach(function(val, indx){
                     //add property hasPolicy in subgroupNames..
-                    // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
-                    // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
                     multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
 
-                    //add policy into subgroup-locations-defined
-                    // if(obj.locationBased){
-                    //     var tmpObj = obj;
-                    //     tmpObj["location"] = obj.location;
-                    //     tmpObj["subgroup-url"] = groupID+"/"+val.subgroupID;
-                    //     tmpObj["type"] = 1
-                    //     delete tmpObj["location"];
-                    //     delete tmpObj["schedule"];
-                    //     delete tmpObj["timeBased"];
-                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey] = tmpObj;
-                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey+"/title"] = obj.location.title || '';
-                    // }
                 }); //selectedTeams.forEach
+
+                var userActivity = {};
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
                         multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
-                        //multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
+
+                        //for group activity stream record -- START --
+                        //for group activity record -- start --
+                        userActivity[v.userID] = {
+                            type: 'policy',
+                            targetinfo: {id: newPolicyKey, url: newPolicyKey, title: obj["title"], type: 'policy' },
+                            area: {type: (policyID) ? 'policy-updated' : 'policy-created'},
+                            group_id: v.groupID,
+                            memberuser_id: v.userID
+                        };
+                        //for group activity record -- end --
+
+                        //for group activity stream record -- END --
+
+
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
 
@@ -191,30 +174,17 @@
                         var memberuserID = null;
                         //for group activity record
                         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+
+                        for(var _usr in userActivity){
+                            activityStreamService.activityStream(userActivity[_usr].type, userActivity[_usr].targetinfo, userActivity[_usr].area, userActivity[_usr].group_id, userActivity[_usr].memberuser_id);
+                        }
+
                         //for group activity stream record -- END --
 
                     	cb(newQuestionID);
                     }
-                });
-			}
-
-            // function pushProgressReportQuestions(groupID, policyID, newQuestionID, qobj, cb){
-            //     var ref = firebaseService.getRefMain();
-            //     var multiPathUpdate = {};
-            //     //saving question object
-            //     multiPathUpdate["policies/"+groupID+"/"+policyID+"/progressReportQuestions/"+newQuestionID] = qobj;
-            //     ref.update(multiPathUpdate, function(err){
-            //         if(err) {
-            //             console.log("Error updating Question Object:", err);
-            //         } else {
-            //             console.log('added questions');
-            //         	cb();
-            //         }
-            //     });
-            // }
-			//Save data in firebase using Multi-Path	-- END --
-
-            //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
+                }); //ref.update
+			} //answer
 
             //Step1 checking Subgroup has Policy
             function checkingTeamHasPolicy(groupID, subgroupID, cb){
@@ -264,7 +234,7 @@
                     } else {
                         cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
                     }
-                });
+                }); //checkingTeamHasPolicy
             }//assignTeamPolicyToMultipleMembers
             //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
 
