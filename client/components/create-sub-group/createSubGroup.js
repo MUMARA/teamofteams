@@ -377,6 +377,7 @@
         function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
             subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
 
+
                     // .then(function(response) {
                     //     // console.log("Adding Members Successful");
                     //     var unlistedMembersArray = response.unlistedMembersArray,
@@ -420,6 +421,7 @@
                 }, function(reason) {
                     messageService.showFailure(reason);
                 }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+
 
         }
 

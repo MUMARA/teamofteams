@@ -7,7 +7,7 @@
     .factory('CollaboratorService', ['$q', '$firebaseArray', 'ref','$rootScope', CollaboratorService]);
 
   function CollaboratorService($q, $firebaseArray, ref,$rootScope) {
-    var currentGroup,currentSubGroup;
+    var currentGroup,currentSubGroup,subGroupUsers =[];
     var currentDocumentId ="";
     var firepadRef, pushDocumentNode, firebaseDocumentId, filteredUsers = [];
     return {
@@ -18,9 +18,18 @@
       setCurrentTeam : setCurrentTeam,
       getinitGroupDocument : getinitGroupDocument,
       getinitSubGroupDocument: getinitSubGroupDocument,
-      getGroupMembers:getGroupMembers
+      getGroupMembers:getGroupMembers,
+      getSubGroupUsers:getSubGroupUsers
     }
 
+
+    function getSubGroupUsers(users,subgroupID){
+      users.forEach(function(user){
+        if(user.subgroupID == subgroupID)
+          subGroupUsers.push(user);
+      })
+      return subGroupUsers;
+    }
 
     function getCurrentDocumentId() {
       return currentDocumentId;
@@ -80,19 +89,19 @@
 
 
 
-    function addAccessUser(documentId, groupID, subgroupID, userID) {
+    function addAccessUser(documentId, groupID, subgroupID, userID,access) {
       var firebaseLocalRef;
       firepadRef = new Firebase(ref);
       var updateDocument = {};
       if (subgroupID) {
         firebaseLocalRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId);
-          updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/allUsers'] = true;
-          updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/' + userID] = true;
+          updateDocument['firepad-subgroups-rules/' + groupID + '/' + subgroupID + '/' + documentId + '/allUsers'] = true;
+          updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/' + userID] = access;
       }
       else {
         firebaseLocalRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + documentId);
-          updateDocument['firepad-groups-access/' + groupID + '/' + documentId + '/allUsers'] = true;
-          updateDocument['firepad-groups-access/' + groupID +  '/' + documentId + '/' + userID] = true;
+          updateDocument['firepad-groups-rules/' + groupID + '/' + documentId + '/allUsers'] = true;
+          updateDocument['firepad-groups-access/' + groupID +  '/' + documentId + '/' + userID] = access;
       }
       firepadRef.update(updateDocument, function(error) {
         if (error) {
