@@ -110,7 +110,8 @@
             this.groupPolicies = policyService.getGroupPolicies(that.groupId);
 
             //Load SubgroupNames from Given GroupID
-            this.subGroupNames = policyService.getSubGroupNames(that.groupId)
+            this.subGroupNames = [];
+            this.subGroupNames = policyService.getSubGroupNames(that.groupId);
 
             //on controller load...... END
 
@@ -199,7 +200,7 @@
                             updatepostion(lat, lng, results[0].formatted_address);
                             $timeout(function() {
                                 updatepostion(lat, lng, results[0].formatted_address);
-                            }, 500)
+                            }, 500);
                         }
 
                     });

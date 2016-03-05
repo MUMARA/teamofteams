@@ -456,7 +456,9 @@
             createSubGroupService.changeMemberRole(newType, member, groupID, activeID).then(function() {
                 messageService.showSuccess("New Admin selected");
                 //publish activity Stream
-                userActivityStreamOnAddMemberOrAdmin(member.user.profile, subgroupObj, false, true);
+                $timeout(function(){
+                    userActivityStreamOnAddMemberOrAdmin(member.user.profile, subgroupObj, false, true);
+                },1000);
             }, function(reason) {
                 messageService.showFailure(reason);
             });
