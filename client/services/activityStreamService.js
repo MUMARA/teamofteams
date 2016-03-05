@@ -296,11 +296,11 @@
             //         //failureFn();
             //     });
             // } else {
-                firebaseService.getRefMain().update(multipath, function(err) {
-                    if (err) {
-                        console.log('activityError', err);
-                    }
-                });
+                // firebaseService.getRefMain().update(multipath, function(err) {
+                //     if (err) {
+                //         console.log('activityError', err);
+                //     }
+                // });
             // }
 
             // if (memberUserID) {
