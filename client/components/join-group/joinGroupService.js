@@ -24,7 +24,7 @@
                                     var type = 'subgroup';
                                     var targetinfo = {id: groupInfo.subgroupID, url: groupInfo.subgroupID, title: groupInfo.subgrouptitle, type: 'subgroup' };
                                     var area = {type: 'subgroup-join'};
-                                    var group_id = groupInfo.subgroupID;
+                                    var group_id = groupInfo.groupID;
                                     var memberuser_id = null;
                                     //for group activity record
                                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id);
@@ -42,7 +42,7 @@
                                     //for group activity record
                                     activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuser_id);
                                     //for group activity stream record -- END --
-                                    
+
                                     cb();
                                     messageService.showSuccess("Team of Teams joining request sent successfully");
 

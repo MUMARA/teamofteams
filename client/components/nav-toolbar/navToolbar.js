@@ -71,17 +71,26 @@
             this.count = function(e){
               console.log(document);
               console.log(e);
-            }
+          };
                 // alert(this.test)
             this.setFocus = function() {
                 document.getElementById("#GroupSearch").focus();
-            }
+            };
 
             function quizStart() {
                 // console.log('done')
                 // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
-                $state.go('user.quiz', {userID: userService.getCurrentUser().userID})
+                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
             }
+
+            //moment.js
+            this.returnMoment = function (timestamp) {
+                if (timestamp) {
+                    return moment().to(timestamp);
+                } else {
+                    return '';
+                }
+            };
 
             //this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
 

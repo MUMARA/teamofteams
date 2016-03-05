@@ -86,7 +86,7 @@
                                   <div style="font-size:small;" layout="row" layout-align="start center" layout-fill>
                                       <img ng-src="{{notify['profile-image'] ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon30px nooutline leftmargin10px">
                                       <div class="nooutline leftpadding20px cursorPointer hoverLightGrey3 foreColorDarkGrey"  layout-padding>
-                                          {{notify.displayMessage}}
+                                          {{notify.displayMessage}} - {{navToolbar.returnMoment(notify.published)}}
                                       </div>
                                   </div>
                                   <md-divider md-outset></md-divider>
