@@ -3279,9 +3279,9 @@ angular.module('core', [
                 xhr.onload = function(data) {
                     //alert(xhr.responseText);
                     if (xhr.status === 200) {
-                        messageService.showSuccess('Picture uploaded....')
+                        messageService.showSuccess('Picture uploaded....');
                         that.group.imgLogoUrl = url + '?random=' + new Date();
-                        defer.resolve(url)
+                        defer.resolve(url);
 
                     }
                 };
@@ -3301,10 +3301,10 @@ angular.module('core', [
                 if (groupForm.$invalid) {
                     return;
                 }
-                that.group.ownerImgUrl = ownerImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'
+                that.group.ownerImgUrl = ownerImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png';
                 that.group.members = that.group.membersArray.join();
                 if (that.group.domain) {
-                    that.group.allowedDomain = {}
+                    that.group.allowedDomain = {};
 
                     var temp = that.group.domain.split(',');
                     temp.forEach(function(el, i) {
@@ -3330,7 +3330,7 @@ angular.module('core', [
                         });
                 } else {
                     fromDataFlag = false;
-                    createGroupService.createGroup(that.group, fromDataFlag, groupForm)
+                    createGroupService.createGroup(that.group, fromDataFlag, groupForm);
                     //$location.path('/user/' + user.userID);
                 }
 
@@ -4077,10 +4077,10 @@ angular.module('core', [
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['activityStreamService', '$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController($scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController(activityStreamService, $scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -4329,7 +4329,7 @@ angular.module('core', [
                         for (var i = 0; i < that.becomeMember.length; i++) {
                             if(id == that.becomeMember[i].$id) {
                                 that.members[index].isMember = true;
-                                _flag = true
+                                _flag = true;
                                 break;
                             }
                         }
@@ -4337,12 +4337,11 @@ angular.module('core', [
                 }
 
             }); //that.members.forEach
-        }
+        };
 
         this.afterSelectAdmin = function(email){
             var _flag = false;
             that.members.forEach(function(val, index){
-                console.log('that.members', val)
                 if(_flag){
                     return false;
                 }
@@ -4359,10 +4358,8 @@ angular.module('core', [
                         }
                     }
                 }
-
             }); //that.members.forEach
-
-        }
+        };
 
         this.selectedMember = function(userObj, index) {
             var _flag = true;
@@ -4395,6 +4392,7 @@ angular.module('core', [
 
 
 
+
         // this.checkingIsSelectedMember = function(mmbrid) {
         //     that.becomeMember.forEach(function(val,index){
         //         console.log('val', val.$id, mmbrid);
@@ -4419,38 +4417,55 @@ angular.module('core', [
                     //for coluser checking
                     saveMemberToFirebase(user, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData);
 
+                    //for activity Stream Array
+                    //now checking is user is also exist in selectedAdminList then not publish activity stream by member
+                    var _flag_notInBecomeAdminArray = true;
+                    if(that.becomeAdmin.length > 0){
+                        that.becomeAdmin.forEach(function(val,index){
+                            if(val.member.user.profile == userObj.$id) {
+                                _flag_notInBecomeAdminArray = false;
+                            }
+                        });
+                    }
+                    //publish activity Stream
+                    if(_flag_notInBecomeAdminArray){        //if not exists in becomeAdminArray then publish activity as member
+                        userActivityStreamOnAddMemberOrAdmin(userObj, subgroupObj, true, false);
+                    }
+                    //for activity Stream Array
+
                     membersIDarray.push(userObj.$id);
+
                     //checking if team has policy then assigned policy to member
                     if(that.becomeMember.length == index+1){
                         policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg){
 
-                        })
+                        });
                     }
 
-                }) //that.becomeMember.forEach
+                }); //that.becomeMember.forEach
             } //if
-        } //this.selectedMemberSave
+        }; //this.selectedMemberSave
 
         function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
             subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
-                    .then(function(response) {
-                        // console.log("Adding Members Successful");
-                        var unlistedMembersArray = response.unlistedMembersArray,
-                            notificationString;
+                .then(function(response) {
+                    // console.log("Adding Members Successful");
+                    var unlistedMembersArray = response.unlistedMembersArray,
+                        notificationString;
 
-                        if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
-                            notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
-                            messageService.showFailure(notificationString);
-                        } else if (unlistedMembersArray.length) {
-                            notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
-                            messageService.showSuccess(notificationString);
-                        } else {
-                            notificationString = 'Adding Members Successful.';
-                            messageService.showFailure(notificationString);
-                        }
-                    }, function(reason) {
-                        messageService.showFailure(reason);
-                    }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+                    if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                        notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        messageService.showFailure(notificationString);
+                    } else if (unlistedMembersArray.length) {
+                        notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        messageService.showSuccess(notificationString);
+                    } else {
+                        notificationString = 'Adding Members Successful.';
+                        messageService.showFailure(notificationString);
+                    }
+                }, function(reason) {
+                    messageService.showFailure(reason);
+                }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
         }
 
         this.selectedAdmin = function(newType, member) {
@@ -4494,7 +4509,9 @@ angular.module('core', [
                     });
 
                     //for coluser checking
-                    saveAdminToFirebase(val.type, val.member, groupID, that.activeID);
+                    saveAdminToFirebase(val.type, val.member, groupID, that.activeID, subgroupObj);
+
+
 
                     membersIDarray.push(val.member.userID);
                     //checking if team has policy then assigned policy to member
@@ -4507,12 +4524,38 @@ angular.module('core', [
             } //if
         }; //selectedAdminSave
 
-        function saveAdminToFirebase(newType, member, groupID, activeID){
+        function saveAdminToFirebase(newType, member, groupID, activeID, subgroupObj){
             createSubGroupService.changeMemberRole(newType, member, groupID, activeID).then(function() {
                 messageService.showSuccess("New Admin selected");
+                //publish activity Stream
+                $timeout(function(){
+                    userActivityStreamOnAddMemberOrAdmin(member.user.profile, subgroupObj, false, true);
+                },1000);
             }, function(reason) {
                 messageService.showFailure(reason);
             });
+        }
+
+        function userActivityStreamOnAddMemberOrAdmin (userObj, subgroupObj, isMember, isAdmin) {
+            var areaType;
+
+            if(isMember){
+                areaType = 'subgroup-member-assigned';
+            }
+
+            if(isAdmin){
+                areaType = 'subgroup-admin-assigned';
+            }
+
+            //publish an activity stream record -- START --
+            var type = 'subgroup';
+            var targetinfo = {id: subgroupObj.$id, url: subgroupObj.$id, title: subgroupObj.title, type: 'subgroup' };
+            var area = {type: areaType };
+            var group_id = groupID;
+            var memberuserID = userObj.$id;
+            //for group activity record
+            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+            //for group activity stream record -- END --
         }
 
         this.deleteAdminMember = function(admin){
@@ -4812,26 +4855,39 @@ angular.module('core', [
                         return authService.resolveUserPage();
                     },
                     'joinGroupRequest': function(groupInfo, cb) {
-                        console.log(groupInfo);
-                        groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '')
+                        groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '');
                             //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
                         userFirebaseService.asyncGroupJoiningRequest(userService.getCurrentUser().userID, groupInfo.groupID, groupInfo.message, groupInfo.subgroupID, groupInfo.subgrouptitle)
                             .then(function() {
                                 //console.log("Group join request sent successfully");
+                                if(groupInfo.subgroupID){
+                                    //for group activity stream record -- START --
+                                    var type = 'subgroup';
+                                    var targetinfo = {id: groupInfo.subgroupID, url: groupInfo.subgroupID, title: groupInfo.subgrouptitle, type: 'subgroup' };
+                                    var area = {type: 'subgroup-join'};
+                                    var group_id = groupInfo.groupID;
+                                    var memberuser_id = null;
+                                    //for group activity record
+                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id);
+                                    //for group activity stream record -- END --
 
-                                //for group activity stream record -- START --
-                                var type = 'group';
-                                var targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.title, type: 'group' };
-                                var area = {type: 'group-join'};
-                                var group_id = groupInfo.groupID;
-                                var memberuser_id = null;
-                                //for group activity record
-                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id)
-                                //activityStreamService.activityStream(type, targetinfo, area, groupInfo.$id, memberuserInfo);
-                                //for group activity stream record -- END --
+                                    cb();
+                                    messageService.showSuccess("Team of Teams and Team joining request sent successfully");
+                                } else{
+                                    //for group activity stream record -- START --
+                                    var _type = 'group';
+                                    var _targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.title, type: 'group' };
+                                    var _area = {type: 'group-join'};
+                                    var _group_id = groupInfo.groupID;
+                                    var _memberuser_id = null;
+                                    //for group activity record
+                                    activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuser_id);
+                                    //for group activity stream record -- END --
 
-                                cb();
-                                messageService.showSuccess("Team of Teams joining request sent successfully");
+                                    cb();
+                                    messageService.showSuccess("Team of Teams joining request sent successfully");
+
+                                }
 
                             }, function(reason) {
                                 //console.log("Unable to send group joining request");
@@ -5286,7 +5342,7 @@ angular.module('core', [
                         hasPolicy: false,
                         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
                     });
-                }); //getRefSubgroupPolicies
+                }); //getRefSubgroupPolicies (child_added)
 
                 firebaseService.getRefSubgroupPolicies().child(groupID).on('child_changed', function(snapshot){
                         subGroupNames.forEach(function(value, index){
@@ -5294,20 +5350,9 @@ angular.module('core', [
                                 subGroupNames[index]['policyID'] = snapshot.val().policyID;
                             }
                         });
-                });
+                }); //getRefSubgroupPolicies (child_changed)
 
-                // //getting subgroup names
-                // firebaseService.getRefSubGroupsNames().child(groupID).on('child_added', function(subGroups, prevChildKey) {
-                //     //subGroupNames.push({subgroupID: subGroups.key(), subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(), hasPolicy: (subGroups.val().hasPolicy) ? subGroups.val().hasPolicy : false });
-                //     subGroupNames.push({
-                //         subgroupID: subGroups.key(),
-                //         subgroupTitle: (subGroups.val().title) ? subGroups.val().title : subGroups.key(),
-                //         hasPolicy: false,
-                //         policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
-                //     });
-                //     console.log('subGroupNames.length', subGroupNames.length);
-                // }); //getRefSubGroupsNames
-            }
+            } //setSubGroupNames
             function getSubGroupNames(groupID) {
             	setSubGroupNames(groupID);
             	return subGroupNames;
@@ -5377,14 +5422,8 @@ angular.module('core', [
                 //set policyID
                 obj.policyID = newPolicyKey;
 
-                // var questionObj = obj["progressReportQuestions"];   //setting progressReportQuestions from 'obj'
-                // delete obj["progressReportQuestions"];              //delete progressReportQuestions from 'obj'
-
                 //Saving on firebase by using multi path update
                 var multiPathUpdate = {};
-
-                //add policy in policies node
-                //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey] = obj;
 
                 //add policy in policies node
                 multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/defined-by"] = obj['defined-by'];
@@ -5403,40 +5442,40 @@ angular.module('core', [
                      var newQuestionID = newQuestionRef.key();
                      multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/latestProgressReportQuestionID"] = newQuestionID;
                      multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
-                     //obj['latestProgressReportQuestionID'] = newQuestionID;
-                     //multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = questionObj;
                 }
 
                 //getting subgroups which are selected....
                 selectedTeams.forEach(function(val, indx){
                     //add property hasPolicy in subgroupNames..
-                    // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/hasPolicy"] = true;
-                    // multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
                     multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
 
-                    //add policy into subgroup-locations-defined
-                    // if(obj.locationBased){
-                    //     var tmpObj = obj;
-                    //     tmpObj["location"] = obj.location;
-                    //     tmpObj["subgroup-url"] = groupID+"/"+val.subgroupID;
-                    //     tmpObj["type"] = 1
-                    //     delete tmpObj["location"];
-                    //     delete tmpObj["schedule"];
-                    //     delete tmpObj["timeBased"];
-                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey] = tmpObj;
-                    //     multiPathUpdate["subgroup-locations-defined/"+groupID+"/"+val.subgroupID+"/"+newPolicyKey+"/title"] = obj.location.title || '';
-                    // }
                 }); //selectedTeams.forEach
+
+                var userActivity = {};
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
                         multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
-                        //multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = obj;
+
+                        //for group activity stream record -- START --
+                        //for group activity record -- start --
+                        userActivity[v.userID] = {
+                            type: 'policy',
+                            targetinfo: {id: newPolicyKey, url: newPolicyKey, title: obj["title"], type: 'policy' },
+                            area: {type: (policyID) ? 'policy-updated' : 'policy-created'},
+                            group_id: v.groupID,
+                            memberuser_id: v.userID
+                        };
+                        //for group activity record -- end --
+
+                        //for group activity stream record -- END --
+
+
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
 
@@ -5456,30 +5495,17 @@ angular.module('core', [
                         var memberuserID = null;
                         //for group activity record
                         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+
+                        for(var _usr in userActivity){
+                            activityStreamService.activityStream(userActivity[_usr].type, userActivity[_usr].targetinfo, userActivity[_usr].area, userActivity[_usr].group_id, userActivity[_usr].memberuser_id);
+                        }
+
                         //for group activity stream record -- END --
 
                     	cb(newQuestionID);
                     }
-                });
-			}
-
-            // function pushProgressReportQuestions(groupID, policyID, newQuestionID, qobj, cb){
-            //     var ref = firebaseService.getRefMain();
-            //     var multiPathUpdate = {};
-            //     //saving question object
-            //     multiPathUpdate["policies/"+groupID+"/"+policyID+"/progressReportQuestions/"+newQuestionID] = qobj;
-            //     ref.update(multiPathUpdate, function(err){
-            //         if(err) {
-            //             console.log("Error updating Question Object:", err);
-            //         } else {
-            //             console.log('added questions');
-            //         	cb();
-            //         }
-            //     });
-            // }
-			//Save data in firebase using Multi-Path	-- END --
-
-            //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
+                }); //ref.update
+			} //answer
 
             //Step1 checking Subgroup has Policy
             function checkingTeamHasPolicy(groupID, subgroupID, cb){
@@ -5529,7 +5555,7 @@ angular.module('core', [
                     } else {
                         cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
                     }
-                });
+                }); //checkingTeamHasPolicy
             }//assignTeamPolicyToMultipleMembers
             //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
 
@@ -5658,7 +5684,8 @@ angular.module('core', [
             this.groupPolicies = policyService.getGroupPolicies(that.groupId);
 
             //Load SubgroupNames from Given GroupID
-            this.subGroupNames = policyService.getSubGroupNames(that.groupId)
+            this.subGroupNames = [];
+            this.subGroupNames = policyService.getSubGroupNames(that.groupId);
 
             //on controller load...... END
 
@@ -5747,7 +5774,7 @@ angular.module('core', [
                             updatepostion(lat, lng, results[0].formatted_address);
                             $timeout(function() {
                                 updatepostion(lat, lng, results[0].formatted_address);
-                            }, 500)
+                            }, 500);
                         }
 
                     });
@@ -5901,9 +5928,10 @@ angular.module('core', [
 
                 if(saved){
                     that.showPanel = false;
-
+                    this.showarrow = undefined;
                 }else {
                     that.showPanel = true;
+                    this.showarrow = undefined;
                 }
             };//this.newPolicy
 
@@ -6091,7 +6119,6 @@ angular.module('core', [
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
-                        this.showarrow = undefined ;
                     }
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);
@@ -8339,9 +8366,9 @@ angular.module('core', [
 
     "use strict";
 
-    angular.module('core').factory('activityStreamService', ['$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+    angular.module('core').factory('activityStreamService', ["$http", "appConfig", '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
 
-    function activityStreamService($firebaseObject, firebaseService, userService, $rootScope) {
+    function activityStreamService($http, appConfig, $firebaseObject, firebaseService, userService, $rootScope) {
         var user = '';
         var userID = '';
         var actor = '';
@@ -8370,38 +8397,50 @@ angular.module('core', [
             //getSubGroupsOfCurrentUsers();
 
             //getting current user subgroup members
-            //getSubGroupsMembersOfCurrentUsers ()
+            //getSubGroupsMembersOfCurrentUsers ();
 
             //getting user activity streams from firebase node: user-activity-streams
             //getCurrentUserActivity(); //from node: user-activity-streams
 
         } //init
 
-        //get cureent user activity stream from firebase node: user-activity-streams
-        function getCurrentUserActivity() {
-            //getting activity streams from firebase node: user-activity-streams
-            //.orderByChild('seen').equalTo('false')
-            firebaseService.getRefMain().child('user-activity-streams').child(userID).orderByChild('object/id').equalTo(userID).on("child_added", function(snapshot) {
-                if (snapshot && snapshot.val() && snapshot.val().seen === false) {
-                    currentUserActivities.push({
-                        activityID : snapshot.key(),
-                        displayMessage: snapshot.val().displayName
-                    });
-                }
-            });
-        }
-
         //for activity step1
         function getGroupsOfCurrentUser() {
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function(group) {
-                getActivityOfCurrentUserByGroup(group.key());
+                if (group && group.key()) {
+
+                    //getting activities by groupID
+                    getActivityOfCurrentUserByGroup(group.key());
+
+                    //checking if admin or owner of that group then shows join group/subgroup notifications
+                    if(group.val() && (group.val()['membership-type'] === 1 || group.val()['membership-type'] === 2)) {
+                        //getting activity for group/subgroup join request....
+                        getActivityOfJoinGroupSubGroupRequest(group.key());
+                    }
+
+                }
             });
         }
         //for activity step2
         function getActivityOfCurrentUserByGroup(groupID) {
             //getting activity streams from firebase node: group-activity-streams
             firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('object/id').equalTo(userID).on("child_added", function(snapshot) {
-                if (snapshot && snapshot.val()) {
+                if (snapshot && snapshot.val() && snapshot.val().seen === false) {
+                    currentUserActivities.push({
+                        groupID: groupID,
+                        displayMessage: snapshot.val().displayName,
+                        activityID: snapshot.key(),
+                        published: snapshot.val().published
+                    });
+                }
+            });
+        }
+
+        //if current use is admin or owner of given group then it will seen group-join or subgroup-join request
+        function getActivityOfJoinGroupSubGroupRequest(groupID) {
+            //getting activity streams from firebase node: group-activity-streams
+            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('object/id').equalTo(groupID).on("child_added", function(snapshot) {
+                if (snapshot && snapshot.val() && snapshot.val().seen === false && (snapshot.val().verb === 'group-join' || snapshot.val().verb === 'subgroup-join' )) {
                     currentUserActivities.push({
                         groupID: groupID,
                         displayMessage: snapshot.val().displayName,
@@ -8452,6 +8491,20 @@ angular.module('core', [
             }); //firebaseService.getRefSubGroupMembers
         } //getSubGroupsMembersOfCurrentUsers
 
+        //get cureent user activity stream from firebase node: user-activity-streams
+        function getCurrentUserActivity() {
+            //getting activity streams from firebase node: user-activity-streams
+            //.orderByChild('seen').equalTo('false')
+            firebaseService.getRefMain().child('user-activity-streams').child(userID).orderByChild('object/id').equalTo(userID).on("child_added", function(snapshot) {
+                if (snapshot && snapshot.val() && snapshot.val().seen === false) {
+                    currentUserActivities.push({
+                        activityID : snapshot.key(),
+                        displayMessage: snapshot.val().displayName
+                    });
+                }
+            });
+        }
+
         function getActivities() {
             return currentUserActivities;
         }
@@ -8472,14 +8525,14 @@ angular.module('core', [
         function activityHasSeen(){
             var multipath = {};
             currentUserActivities.forEach(function(val, index){
-                if (val.seen == false) {
+                if (val.seen === false) {
                     multipath['/user-activity-streams/'+userID+'/'+val.activityID+'/seen'] = true;
                 }
 
             });
         }
 
-
+        //calling from services or controller (public)
         function activityStream(type, targetinfo, area, groupID, memberUserID) {
 
             var object = {}; //object: affected area for user.... (represent notification)
@@ -8508,7 +8561,7 @@ angular.module('core', [
                 saveToFirebase(type, targetinfo, area, groupID, memberUserID, object);
             }
         } //activityStream
-
+        //calling from here  (private)
         function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object) {
             // ## target ##
             //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
@@ -8539,6 +8592,7 @@ angular.module('core', [
                     'subgroup-updated': actor.displayName + " updated subgroup " + target.displayName,
                     'subgroup-member-assigned': actor.displayName + " assigned " + object.displayName + " as a member of " + target.displayName,
                     'subgroup-admin-assigned': actor.displayName + " assigned " + object.displayName + " as a admin of " + target.displayName,
+                    'subgroup-member-removed': actor.displayName + " removed " + object.displayName + " from " + target.displayName,
                     'subgroup-join': actor.displayName + " sent team of teams join request of " + target.displayName,
                 }, //subgroup
                 'policy': {
@@ -8587,11 +8641,34 @@ angular.module('core', [
                 multipath['group-activity-streams/' + groupID + '/' + activityPushID] = activity;
             }
 
-            if (memberUserID) {
-                multipath['user-activity-streams/' + memberUserID + '/' + activityPushID] = activity;
-            }
+            // if (area.type === 'group-join' || area.type === 'subgroup-join') {
+            //     activity.groupID = groupID;
+            //     $http.post(appConfig.apiBaseUrl + '/api/activitystream', activity).
+            //     success(function(data, status, headers, config) {
+            //         // this callback will be called asynchronously
+            //         // when the response is available
+            //         //console.log("response: " + data);
+            //         console.log('signup response object: ' + JSON.stringify(data));
+            //         //successFn(data);
+            //     }).
+            //     error(function(data, status, headers, config) {
+            //         // called asynchronously if an error occurs
+            //         // or server returns response with an error status.
+            //         //failureFn();
+            //     });
+            // } else {
+                // firebaseService.getRefMain().update(multipath, function(err) {
+                //     if (err) {
+                //         console.log('activityError', err);
+                //     }
+                // });
+            // }
 
-            multipath['user-activity-streams/' + actor.id + '/' + activityPushID] = activity;
+            // if (memberUserID) {
+            //     multipath['user-activity-streams/' + memberUserID + '/' + activityPushID] = activity;
+            // }
+            //
+            // multipath['user-activity-streams/' + actor.id + '/' + activityPushID] = activity;
 
             // multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = {
             //           displayName: displayMessage,
@@ -8600,23 +8677,7 @@ angular.module('core', [
             //           verb: (area.action) ? area.action : area.type
             // };
 
-
-            firebaseService.getRefMain().update(multipath, function(err) {
-                if (err) {
-                    console.log('activityError', err);
-                }
-            });
-
-
-
-        }
-
-
-
-
-
-
-
+        } //saveToFirebase
 
 
         //  function groupActivityStream (type, requestFor, group, user, memberUserID) {
@@ -8688,7 +8749,6 @@ angular.module('core', [
         // } //groupActivityStream
         //
 
-
         // function currentUserActivity() {
         //    var deffer = $q.deffer();
         //    var refGroupActivitieStream = firebaseService.groupsActivityStreams().child('group002').child(userID);
@@ -8703,7 +8763,6 @@ angular.module('core', [
             getActivities: getActivities,
             activityStream: activityStream
         };
-
     } //activityStreamService
 })();
 
@@ -9968,8 +10027,8 @@ angular.module('core')
 'use strict';
 
 angular.module('core')
-    .factory('userFirebaseService', ["firebaseService", "$q", "$timeout", '$http', "$firebaseObject", 'appConfig', 'userService',
-        function(firebaseService, $q, $timeout, $http, $firebaseObject, appConfig, userService) {
+    .factory('userFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", '$http', "$firebaseObject", 'appConfig', 'userService',
+        function(activityStreamService, firebaseService, $q, $timeout, $http, $firebaseObject, appConfig, userService) {
 
             //Firebase timeStamp object.
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
@@ -10209,7 +10268,7 @@ angular.module('core')
                                                         ownerImgUrl: groupObj.ownerImgUrl,
                                                         'address-title': groupObj.addressTitle || ''
                                                             //groupOwnerImgUrl:
-                                                    }
+                                                    };
 
                                                     groupNameRef.set(data, function(error) {
                                                         if (error) {
@@ -10246,20 +10305,20 @@ angular.module('core')
 
                                                                                 if (memArray.length == 1) {
                                                                                     //self.asyncRecordGroupMemberAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members[0])
-                                                                                    self.asyncRecordGroupMemberAdditionActivity(groupObj, userService.getCurrentUser(), response.members[0])
-                                                                                        .then(function() {
-                                                                                            deferred.resolve({
-                                                                                                unlistedMembersArray: response.unlisted
-                                                                                            });
-                                                                                        })
+                                                                                    // self.asyncRecordGroupMemberAdditionActivity(groupObj, userService.getCurrentUser(), response.members[0])
+                                                                                    //     .then(function() {
+                                                                                    //         deferred.resolve({
+                                                                                    //             unlistedMembersArray: response.unlisted
+                                                                                    //         });
+                                                                                    //     })
                                                                                 } else if (memArray.length > 1) {
                                                                                     //self.asyncRecordManyGroupMembersAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members)
-                                                                                    self.asyncRecordManyGroupMembersAdditionActivity(groupObj, userService.getCurrentUser(), response.members)
-                                                                                        .then(function() {
-                                                                                            deferred.resolve({
-                                                                                                unlistedMembersArray: response.unlisted
-                                                                                            });
-                                                                                        });
+                                                                                    // self.asyncRecordManyGroupMembersAdditionActivity(groupObj, userService.getCurrentUser(), response.members)
+                                                                                    //     .then(function() {
+                                                                                    //         deferred.resolve({
+                                                                                    //             unlistedMembersArray: response.unlisted
+                                                                                    //         });
+                                                                                    //     });
                                                                                 } else {
                                                                                     deferred.resolve({
                                                                                         unlistedMembersArray: response.unlisted
@@ -10274,7 +10333,7 @@ angular.module('core')
                                                                 });
                                                             });
                                                         }
-                                                    })
+                                                    });
                                                 }
                                             });
                                         }
@@ -10366,7 +10425,7 @@ angular.module('core')
                             });
                         }, function() {
                             deferred.reject();
-                        })
+                        });
                     }
 
                     return deferred.promise;
@@ -10420,57 +10479,68 @@ angular.module('core')
 
                     return deferred.promise;
                 },
-                asyncRecordGroupCreationActivity: function(group, user) {
+                asyncRecordGroupCreationActivity: function(groupObj, user) {
                     var deferred = $q.defer();
-                    var ref = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
-                    var actor = {
-                        "type": "user",
-                        "id": user.userID, //this is the userID, and an index should be set on this
-                        "email": user.email,
-                        "displayName": user.firstName + " " + user.lastName
-                    };
 
-                    var object = {
-                        "type": "group",
-                        "id": group.groupID, //an index should be set on this
-                        "url": group.groupID,
-                        "displayName": group.title
-                    };
+                    //publish an activity stream record -- START --
+                    var type = 'group';
+                    var targetinfo = {id: groupObj.groupID, url: groupObj.groupID, title: groupObj.title, type: 'group' };
+                    var area = {type: 'group-created'};
+                    var group_id = groupObj.groupID;
+                    var memberuserID = null;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
+                    deferred.resolve();
 
-                    var activity = {
-                        language: "en",
-                        verb: "group-creation",
-                        //published: firebaseTimeStamp,
-                        //published: Firebase.ServerValue.TIMESTAMP,
-                        published: {
-                            ".sv": "timestamp"
-                        },
-                        displayName: actor.displayName + " created " + group.title,
-                        actor: actor,
-                        object: object
-                    };
-
-                    var newActivityRef = ref.push();
-                    newActivityRef.set(activity, function(error) {
-                        if (error) {
-                            deferred.reject();
-                        } else {
-                            var activityID = newActivityRef.key();
-                            var activityEntryRef = ref.child(activityID);
-                            activityEntryRef.once("value", function(snapshot) {
-                                var timestamp = snapshot.val().published;
-                                newActivityRef.setPriority(0 - timestamp, function(error2) {
-                                    if (error2) {
-                                        deferred.reject();
-                                    } else {
-                                        deferred.resolve();
-                                    }
-                                });
-                            });
-
-
-                        }
-                    });
+                    // var ref = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+                    // var actor = {
+                    //     "type": "user",
+                    //     "id": user.userID, //this is the userID, and an index should be set on this
+                    //     "email": user.email,
+                    //     "displayName": user.firstName + " " + user.lastName
+                    // };
+                    //
+                    // var object = {
+                    //     "type": "group",
+                    //     "id": group.groupID, //an index should be set on this
+                    //     "url": group.groupID,
+                    //     "displayName": group.title
+                    // };
+                    //
+                    // var activity = {
+                    //     language: "en",
+                    //     verb: "group-creation",
+                    //     //published: firebaseTimeStamp,
+                    //     //published: Firebase.ServerValue.TIMESTAMP,
+                    //     published: {
+                    //         ".sv": "timestamp"
+                    //     },
+                    //     displayName: actor.displayName + " created " + group.title,
+                    //     actor: actor,
+                    //     object: object
+                    // };
+                    // var newActivityRef = ref.push();
+                    // newActivityRef.set(activity, function(error) {
+                    //     if (error) {
+                    //         deferred.reject();
+                    //     } else {
+                    //         var activityID = newActivityRef.key();
+                    //         var activityEntryRef = ref.child(activityID);
+                    //         activityEntryRef.once("value", function(snapshot) {
+                    //             var timestamp = snapshot.val().published;
+                    //             newActivityRef.setPriority(0 - timestamp, function(error2) {
+                    //                 if (error2) {
+                    //                     deferred.reject();
+                    //                 } else {
+                    //                     deferred.resolve();
+                    //                 }
+                    //             });
+                    //         });
+                    //
+                    //
+                    //     }
+                    // });
 
                     return deferred.promise;
                 },
@@ -10710,11 +10780,9 @@ angular.module('core')
                         //create an appropriate display message.
                         var displayName;
                         if (type === "approve") {
-                            displayName = actor.displayName + " approved " + object.displayName +
-                                " as a member in " + subgroup.title + "subgroup."
+                            displayName = actor.displayName + " approved " + object.displayName + " as a member in " + subgroup.title + "subgroup.";
                         } else {
-                            displayName = actor.displayName + " rejected " + object.displayName +
-                                "'s membership request for " + subgroup.title + "subgroup."
+                            displayName = actor.displayName + " rejected " + object.displayName + "'s membership request for " + subgroup.title + "subgroup.";
                         }
 
                         var activity = {
@@ -10889,7 +10957,7 @@ angular.module('core')
                         var activity = snapshot.val();
                         //activity.publishedDate = new Date(activity.published/1000);
                         if (activity) {
-                            if (activityArray.length == 0) {
+                            if (activityArray.length === 0) {
                                 $timeout(function() {
                                     activityArray.push(activity);
                                 });
@@ -11376,10 +11444,10 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
-
                                                     firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
-                                                        snapshot.val()["subgroup-count"] = snapshot.val()["subgroup-count"] + 1
-                                                        firebaseService.getRefGroups().child(group.$id).set(snapshot.val(), function(){
+                                                        var countsubgroup = snapshot.val()["subgroups-count"] + 1;
+                                                        console.log(countsubgroup, 'testing')
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
                                                             if (error) {
                                                                 errorHandler();
                                                             }
@@ -11388,7 +11456,6 @@ angular.module('core')
                                                     // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
-                                                    console.log('hasPolicy' + false + 'policyID subgroup-title' + subgroupInfo.title);
                                                     firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({'hasPolicy': false, 'policyID': '', 'subgroup-title': subgroupInfo.title, 'policy-title': ''});
 
                                                     //step : create an entry for "subgroups"
@@ -12026,6 +12093,7 @@ angular.module('core')
                                                                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                                                     //for group activity stream record -- END --
 
+                                                                    defer.resolve(res);
 
                                                                     // //step4: publish an activity
                                                                     // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {
@@ -13547,8 +13615,11 @@ var s = {
                             date: Firebase.ServerValue.TIMESTAMP,
                             //date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
+                            policyID: Policy.policyID,
                             answers: ''
                         });
+
+                        console.log('progressReport', 'activityStream runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
 
                         //for group activity stream record -- START --
                         var type = 'progressReport';
@@ -13590,6 +13661,7 @@ var s = {
             var dated = Date.now();
             var ref = firebaseService.getRefMain();         //firebase main reference
             var refGroup = firebaseService.getRefGroups();  //firebase groups reference
+            var refSubGroup = firebaseService.getRefSubGroups();  //firebase groups reference
 
             //generate key
             var newPostRef = firebaseService.getRefsubgroupCheckinRecords().child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push();
@@ -13637,24 +13709,25 @@ var s = {
             //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
             refGroup.child(groupObj.groupId).child('members-checked-in/count').once('value', function(snapshot){
                 multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
-                ref.update(multipath, function(err){
-                    if(err) {
-                        // console.log('err', err);
-                        cb(false, 'Please contact to your administrator', null);
-                    }
-
-                    //checking Daily Progress Report
-                    checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes){
-                        if(rst) {
-                            //calling callbAck....
-                            cb(true, checkinResultMsg, null);
-                        } else {
-                            cb(true, checkinResultMsg, mes);
+                refSubGroup.child(groupObj.groupId).child(groupObj.subgroupId).child('members-checked-in/count').once('value', function(snapshot){
+                    multipath["subgroups/"+groupObj.groupId+"/"+groupObj.subgroupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+                    ref.update(multipath, function(err){
+                        if(err) {
+                            // console.log('err', err);
+                            cb(false, 'Please contact to your administrator', null);
                         }
-                    })
-
-                }); //ref update
-            }); //getting and update members-checked-in count
+                        //checking Daily Progress Report
+                        checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes){
+                            if(rst) {
+                                //calling callbAck....
+                                cb(true, checkinResultMsg, null);
+                            } else {
+                                cb(true, checkinResultMsg, mes);
+                            }
+                        })
+                    }); //ref update
+                }); //getting and update members-checked-in count - subgroup
+            }); //getting and update members-checked-in count - group
         } //saveFirebaseCheckInOut
 
 
@@ -13823,11 +13896,11 @@ var s = {
 
                                                 }, errorCallback);
 
-                                        }, errorCallback)
+                                        }, errorCallback);
 
-                                    }, errorCallback)
+                                    }, errorCallback);
 
-                            }, errorCallback)
+                            }, errorCallback);
 
                     }, errorCallback);
 
@@ -14131,13 +14204,13 @@ var s = {
                 var syncRef;
                 if (!multiple && refs.$currentSubGroupLocations.length) {
                     //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
-                    angular.extend(refs.$currentSubGroupLocations[0], newLocation)
+                    angular.extend(refs.$currentSubGroupLocations[0], newLocation);
                     refs.$currentSubGroupLocations.$save(0)
                         .then(function() {
                             defer.resolve('Location has been added.');
                         }, function() {
                             defer.reject('Error occurred in saving on server.');
-                        })
+                        });
 
                 } else {
 
@@ -14213,7 +14286,7 @@ var s = {
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
-                })
+                });
                 return title;
             },
             getSubGroupTitle: function(GroupID, subGroupID){
@@ -14223,12 +14296,12 @@ var s = {
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
-                })
+                });
                 return title;
             }, //getSubGroupTitle
             ChekinUpdateSatatus: ChekinUpdateSatatus
 
-        } //return
+        }; //return
     } //checkin service function
 })();
 
