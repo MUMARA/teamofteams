@@ -324,20 +324,15 @@
       "$groupid": {
         "$subgroupid": {
           "members-checked-in": {
-            "checked-in": {
-              "$userid": {
-                ".validate": "root.child('users').child(auth.uid).val() != null",
-                ".write": "auth != null && auth.uid == $userid && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
-              }
-            },
-            ".validate": "newData.hasChildren(['count'])",
+            ".validate": "newData.hasChildren(['count']) && root.child('users').child(auth.uid).val() != null",
             "count": {
               ".validate": "newData.isNumber() && newData.val() >= 0",
               ".write": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
             },
             "$other": {
               ".validate": "false"
-            }
+            },
+            ".write": "data.val() != null && newData.val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null"
           },
           ".validate": "newData.hasChildren(['title', 'timestamp', 'members-count', 'microgroups-count', 'members-checked-in'])",
           "title": {

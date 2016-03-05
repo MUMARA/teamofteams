@@ -628,17 +628,14 @@ path /group-membership-requests-by-user/{userid} {
 
     // path for /subgroups/{groupid}/{subgroupid}/members-checked-in
    //---------------------------------------------------------
-
+  // checked-in/{userid} { }
+  /*update()    { isAuthenticatedUser($userid) &&
+               isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
+               subGroupMembersMemberShipAnyType(groupid,subgroupid)    }*/
     /members-checked-in is SubGroupMembersCheckInInfo {
+    validate() { isUserUSerIDExist() }
 
-      /checked-in/{userid} {
-
-      validate() { isUserUSerIDExist() }
-
-      write()    { isAuthenticatedUser($userid) &&
-                   isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
-                   subGroupMembersMemberShipAnyType(groupid,subgroupid)    }
-        }
+      update()    { isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) }
      }
    }
  }
