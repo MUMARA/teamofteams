@@ -110,7 +110,8 @@
             this.groupPolicies = policyService.getGroupPolicies(that.groupId);
 
             //Load SubgroupNames from Given GroupID
-            this.subGroupNames = policyService.getSubGroupNames(that.groupId)
+            this.subGroupNames = [];
+            this.subGroupNames = policyService.getSubGroupNames(that.groupId);
 
             //on controller load...... END
 
@@ -199,7 +200,7 @@
                             updatepostion(lat, lng, results[0].formatted_address);
                             $timeout(function() {
                                 updatepostion(lat, lng, results[0].formatted_address);
-                            }, 500)
+                            }, 500);
                         }
 
                     });
@@ -353,9 +354,10 @@
 
                 if(saved){
                     that.showPanel = false;
-
+                    this.showarrow = undefined;
                 }else {
                     that.showPanel = true;
+                    this.showarrow = undefined;
                 }
             };//this.newPolicy
 
@@ -543,7 +545,6 @@
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
-                        this.showarrow = undefined ;
                     }
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);

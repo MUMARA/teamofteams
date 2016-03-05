@@ -17,6 +17,10 @@ md-checkbox.md-checked .md-icon {
     background: #008000;
 }
 
+md-chips.md-default-theme .md-chips, md-chips .md-chips {
+    box-shadow: none !important;
+}
+
 /*table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2), table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
      padding: 0 20px 0 0 !important;
 }*/
@@ -47,9 +51,13 @@ md-checkbox.md-checked .md-icon {
         <md-divider md-outset class="nopadding"></md-divider>
         <div autocomplete="off" layout="row" class="nopadding viewHeight-250" name="groupForm" novalidate>
             <div class="nopadding" layout="column" layout-align="space-between center" style="min-width: 220px; border-right: 1px solid grey">
-                <div class="vscroll">
+                <div class="vscroll" ng-if="policy.groupPolicies">
                     <div ng-repeat="p in policy.groupPolicies track by $index" class="backColorWhite  bottommargin5px subgroupcard nooutline cursorPointer" layout="row" layout-align="center center" ng-click="policy.selectedindex = $index; policy.selectedPolicy(p,$index);" ng-class="(policy.selectedindex === $index) ? 'md-whiteframe-z4' : 'md-whiteframe-z1'">
-                    <strong title="{{p.title}}">{{p.title | characters:10}}</strong>
+                    <strong >{{p.title | characters:10}}
+                        <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                            {{p.title}}
+                        </md-tooltip></strong>
+
                     <ng-md-icon ng-show="policy.showarrow === $index" icon="chevron_right" style="position:relative;right: -30px;"></ng-md-icon>
                     </div>
                 </div>
@@ -58,7 +66,7 @@ md-checkbox.md-checked .md-icon {
                 </md-button>
             </div>
             <!-- <div ng-show="policy.showPanel" class="backColorWhite md-whiteframe-z1 viewHeight-154 vscroll" layout="column" -->
-            <div ng-show="policy.showPanel" class="backColorWhite " layout="row" layout-align="space-between" flex >
+            <div ng-if="policy.showPanel" class="backColorWhite " layout="row" layout-align="space-between" flex >
                 <div class="viewHeight-250 vscroll" layout="column" layout-padding flex>
                     <div layout="row" style="padding-bottom: 75px;">
                         <md-input-container flex>
@@ -111,7 +119,7 @@ md-checkbox.md-checked .md-icon {
                         </md-checkbox>
                         <div id="timeBasediv" ng-show="policy.isTimebased">
 
-<!--                           <table md-table>
+                                <!-- <table md-table>
                                 <thead md-head>
                                     <tr md-row>
                                         <th md-column class="foreColorSeaGreen">Days</th>
@@ -132,11 +140,11 @@ md-checkbox.md-checked .md-icon {
                             </table> -->
 
 
-                           <div layout="row" layout-wrap flex>
+                           <div layout="row" layout-wrap flex ng-if="policy.times">
                                 <span flex="10">Days</span>
-                                <span flex ng-repeat="time in policy.times">{{time}}</span>
+                                <span flex ng-repeat="time in policy.times"> {{time}} </span>
                             </div>
-                            <div layout="column" ng-repeat="row in policy.schCalender track by $index">
+                            <div layout="column" ng-repeat="row in policy.schCalender track by $index" ng-if="policy.schCalender">
                                 <div layout="row" layout-wrap flex layout-align="center center">
                                     <span flex="10">{{policy.day[$index]}}</span>
                                     <span flex ng-repeat="itm in row track by $index" class="checkbox-icon">
@@ -175,7 +183,7 @@ md-checkbox.md-checked .md-icon {
                                         <th md-column class="foreColorSeaGreen">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody md-body>
+                                <tbody md-body ng-if="policy.progressReportQuestions">
                                     <tr md-row ng-repeat="(id, name) in policy.progressReportQuestions track by $index" class="hoverLightGrey3">
                                         <td md-cell>{{$index}}</td>
                                         <td md-cell>{{name}}</td>
@@ -195,7 +203,24 @@ md-checkbox.md-checked .md-icon {
                             <span> Save</span>
                         </md-button>
                     </div> -->
-                    <div class="layout-column">
+
+                        <div layout="row" layout-align="space-between center" style="padding-bottom: 2%;">
+                            <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
+                                <span>Apply</span>
+                            </md-button>
+                        </div>
+
+                        <!-- <md-chips layout-wrap style="padding-bottom: 8%;" ng-if="policy.subGroupNames && policy.subGroupNames.length > 0">
+                            <md-chip  ng-repeat="subgroup in policy.subGroupNames track by $index" style="height:40px;" class="backColorDarkGrey" ng-if="subgroup.hasPolicy == true">
+                                <span style="margin-left: 10px; position:relative; top:5px;" class="foreColorWhite">{{subgroup.subgroupTitle}}</span>
+                            </md-chip>
+                        </md-chips> -->
+
+                        <div layout-wrap style="margin-bottom: 4%;">
+                            <span style="margin: 5px 5px 10px 5px; padding: 8px 8px 8px 8px; display: inline-block; background:rgba(0,0,0,0.5);border-radius:50px; color:white;" ng-repeat="subgroup in policy.subGroupNames track by $index" ng-if="subgroup.hasPolicy == true">{{subgroup.subgroupTitle}}</span>
+                        </div>
+
+                    <!-- <div layout="column">
                         <div layout="row" layout-align="space-between center" style="padding-bottom: 4%;">
                             <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.toggleSideNavBar()">
                                 <span>Apply</span>
@@ -209,10 +234,9 @@ md-checkbox.md-checked .md-icon {
                                 </md-chip>
                             </md-chips>
                         </div>
+                    </div> -->
 
-                    </div>
-
-                    <div layout="row" layout-align="end end">
+                    <div layout="row" layout-align="end end" style=>
                         <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
                             <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
                             <span> Save</span>
@@ -223,7 +247,7 @@ md-checkbox.md-checked .md-icon {
                 <!--SubGroups sidenav-->
                 <div ng-if="policy.subgroupSideNavBar" class="backColorSeaGreen nopadding viewHeight-250 anifade" style="width: 300px; position: absolute; right: 73px; overflow-y: scroll" layout="column" layout-align="space-between">
                     <div>
-                        <md-list class="nopadding">
+                        <md-list class="nopadding" ng-if="policy.subGroupNames">
                             <md-list-item layout="row" layout-align="start center" ng-repeat="subgroup in policy.subGroupNames track by $index" class="buttonHover nooutline" ng-click="policy.selectedTeam(subgroup)">
                                 <ng-md-icon size="24" icon="done" ng-class="subgroup.hasPolicy ? 'fillColorWhite' : 'fillColorDarkGrey' " style="margin-top: 10px">
                                 </ng-md-icon>

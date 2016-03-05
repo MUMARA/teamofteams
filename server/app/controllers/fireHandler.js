@@ -19,6 +19,7 @@ var myFirebaseRef = firebaseCtrl.getRefMain();
 var usersRef = firebaseCtrl.getRefUsers();
 var authenticatedFirebase = false;
 var authDateFirebase = null;
+var activityRef = firebaseCtrl.getRefGroupActivityStream();
 
 /*exports*/
 exports.authenticate = authenticate;
@@ -164,4 +165,17 @@ exports.updateUserStatus = function(userID, status, callback) {
             }
         });
     }
+};
+
+//save stream on join groups
+exports.addActivityStream = function(activityObj, cb) {
+    var groupID = activityObj.groupID;
+    delete activityObj.groupID
+    activityRef.child(groupID).push(activityObj, function(err){
+        if (err) {
+            cb(err);
+        } else {
+            cb(null, {success: true});
+        }
+    });
 };
