@@ -139,8 +139,14 @@
 
         }
 
-        that.checkboxClicked = function (userStatus) {
+        that.checkboxClicked = function (userStatus,user) {
+            console.log(userStatus,user);
+            console.log(that.createdBy,that.isAdmin);
+
+
+            user.id == that.createdBy.userID ? userStatus = 1 : userStatus = 2;
             console.log(userStatus);
+
             firepadRef = new Firebase(ref);
             var updateDocument = {};
             if(that.subgroupID){
