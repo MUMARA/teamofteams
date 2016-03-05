@@ -966,9 +966,24 @@
       "$groupid": {
         "$documentid": {
           "$userid": {
-            ".validate": "newData.isBoolean()",
+            ".validate": "newData.isNumber()",
             ".read": "auth != null",
             ".write": "auth != null"
+          },
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      }
+    },
+    "firepad-groups-rules": {
+      "$groupid": {
+        "$documentid": {
+          ".validate": "newData.hasChildren(['allUsers'])",
+          "allUsers": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": "false"
           },
           ".read": "auth != null",
           ".write": "auth != null"
@@ -980,9 +995,26 @@
         "$subgroupid": {
           "$documentid": {
             "$userid": {
-              ".validate": "newData.isBoolean()",
+              ".validate": "newData.isNumber()",
               ".read": "auth != null",
               ".write": "auth != null"
+            },
+            ".read": "auth != null",
+            ".write": "auth != null"
+          }
+        }
+      }
+    },
+    "firepad-subgroups-rules": {
+      "$groupid": {
+        "$subgroupid": {
+          "$documentid": {
+            ".validate": "newData.hasChildren(['allUsers'])",
+            "allUsers": {
+              ".validate": "newData.isBoolean()"
+            },
+            "$other": {
+              ".validate": "false"
             },
             ".read": "auth != null",
             ".write": "auth != null"
