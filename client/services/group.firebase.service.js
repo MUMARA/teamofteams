@@ -981,7 +981,11 @@ angular.module('core')
                                                                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                                                     //for group activity stream record -- END --
 
+<<<<<<< HEAD
                                                                     defer.resolve();
+=======
+                                                                    defer.resolve(res);
+>>>>>>> f053d414623508d51e36c65e3624e09a6ecd6797
 
                                                                     // //step4: publish an activity
                                                                     // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {

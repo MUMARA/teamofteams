@@ -34,7 +34,7 @@
 						<div layout="column" ng-repeat="q in report.questions track by $index">
 							<md-input-container flex class="leftmargin20px" layout="row">
 								<label>{{q}}</label>
-								<textarea ng-model="report.answers[$index]" ng-disabled="progressreport.user.userID != report.userID || !progressreport.subgroupID" placeholder="please type..."></textarea>
+								<textarea ng-model="report.answers[$index]" ng-disabled="progressreport.user.userID != report.userID || !progressreport.subgroupID"></textarea>
 							</md-input-container>
 						</div>
 					</div>

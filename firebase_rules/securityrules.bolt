@@ -1504,6 +1504,7 @@ path /user-activity-streams/{userid}{
    }
  }
   }
+  /*firepad Group Access */
 path /firepad-groups-access/{groupid}/{documentid}{
       read() {
         isAuthenticated()
@@ -1511,7 +1512,7 @@ path /firepad-groups-access/{groupid}/{documentid}{
       write() {
         isAuthenticated()
       }
-   /{userid} is Boolean {
+   /{userid} is Number {
       read() {
         isAuthenticated()
       }
@@ -1520,6 +1521,16 @@ path /firepad-groups-access/{groupid}/{documentid}{
       }
     }
 }
+  /*firepad Group Rules */
+path /firepad-groups-rules/{groupid}/{documentid} is AllUserType {
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+}
+  /*firepad SubGroup Access */
 path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
   read() {
     isAuthenticated()
@@ -1527,7 +1538,18 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
   write() {
     isAuthenticated()
   }
-/{userid} is Boolean {
+    /{userid} is Number {
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+}
+}
+/*firepad SubGroup Rules */
+
+path /firepad-subgroups-rules/{groupid}/{subgroupid}/{documentid} is AllUserType {
   read() {
     isAuthenticated()
   }
@@ -1535,5 +1557,8 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
     isAuthenticated()
   }
 }
+
+type AllUserType {
+  allUsers:  Boolean;
 }
 //===========================================================  23/1/16  =====================================================================

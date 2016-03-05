@@ -19,13 +19,13 @@
                  }, 2000);
              }else{
                  document.getElementById("#UserSearch").focus();
-                 that.loadingData = false; 
+                 that.loadingData = false;
              }
 
         };
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().from(timestamp);
+                return moment().to(timestamp);
             } else {
                 return ''
             }

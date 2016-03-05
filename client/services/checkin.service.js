@@ -226,7 +226,7 @@
         function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, cb){
             // groupObj = {groupId: '', subgroupId: '', userId: ''}
             var multipath = {};
-            var dated = Date.now();
+            var dated = fireTimeStamp;
             var ref = firebaseService.getRefMain();         //firebase main reference
             var refGroup = firebaseService.getRefGroups();  //firebase groups reference
             var refSubGroup = firebaseService.getRefSubGroups();  //firebase groups reference
