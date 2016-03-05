@@ -5,10 +5,10 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['CollaboratorService','$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['activityStreamService','CollaboratorService', '$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController(CollaboratorService,$scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController(activityStreamService,CollaboratorService, $scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -257,7 +257,7 @@
                         for (var i = 0; i < that.becomeMember.length; i++) {
                             if(id == that.becomeMember[i].$id) {
                                 that.members[index].isMember = true;
-                                _flag = true
+                                _flag = true;
                                 break;
                             }
                         }
@@ -265,12 +265,11 @@
                 }
 
             }); //that.members.forEach
-        }
+        };
 
         this.afterSelectAdmin = function(email){
             var _flag = false;
             that.members.forEach(function(val, index){
-                console.log('that.members', val)
                 if(_flag){
                     return false;
                 }
@@ -287,10 +286,8 @@
                         }
                     }
                 }
-
             }); //that.members.forEach
-
-        }
+        };
 
         this.selectedMember = function(userObj, index) {
             var _flag = true;
@@ -323,6 +320,7 @@
 
 
 
+
         // this.checkingIsSelectedMember = function(mmbrid) {
         //     that.becomeMember.forEach(function(val,index){
         //         console.log('val', val.$id, mmbrid);
@@ -347,44 +345,82 @@
                     //for coluser checking
                     saveMemberToFirebase(user, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData);
 
+                    //for activity Stream Array
+                    //now checking is user is also exist in selectedAdminList then not publish activity stream by member
+                    var _flag_notInBecomeAdminArray = true;
+                    if(that.becomeAdmin.length > 0){
+                        that.becomeAdmin.forEach(function(val,index){
+                            if(val.member.user.profile == userObj.$id) {
+                                _flag_notInBecomeAdminArray = false;
+                            }
+                        });
+                    }
+                    //publish activity Stream
+                    if(_flag_notInBecomeAdminArray){        //if not exists in becomeAdminArray then publish activity as member
+                        userActivityStreamOnAddMemberOrAdmin(userObj, subgroupObj, true, false);
+                    }
+                    //for activity Stream Array
+
                     membersIDarray.push(userObj.$id);
+
                     //checking if team has policy then assigned policy to member
                     if(that.becomeMember.length == index+1){
                         policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg){
 
-                        })
+                        });
                     }
 
-                }) //that.becomeMember.forEach
+                }); //that.becomeMember.forEach
             } //if
-        } //this.selectedMemberSave
+        }; //this.selectedMemberSave
 
         function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
             subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
-                    .then(function(response) {
-                        // console.log("Adding Members Successful");
-                        var unlistedMembersArray = response.unlistedMembersArray,
-                            notificationString;
 
-                        if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
-                            notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
-                            messageService.showFailure(notificationString);
-                        } else if (unlistedMembersArray.length) {
-                            notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
-                            messageService.showSuccess(notificationString);
-                        } else {
-                            notificationString = 'Adding Members Successful.';
-                            console.log("SubgroupObj",subgroupObj); //subgroupID
-                            console.log("groupObj",groupData); // $id
-                            var members = memberIDs.split(',');
-                            for (var i = 0; i < members.length; i++) {
-                              CollaboratorService.addAccessUser(CollaboratorService.getCurrentDocumentId(),groupData.$id,subgroupObj.subgroupID,members[i]);
-                            }
-                            messageService.showFailure(notificationString);
-                        }
-                    }, function(reason) {
-                        messageService.showFailure(reason);
-                    }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+                    // .then(function(response) {
+                    //     // console.log("Adding Members Successful");
+                    //     var unlistedMembersArray = response.unlistedMembersArray,
+                    //         notificationString;
+                    //
+                    //     if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                    //         notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showFailure(notificationString);
+                    //     } else if (unlistedMembersArray.length) {
+                    //         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showSuccess(notificationString);
+                    //     } else {
+                    //         notificationString = 'Adding Members Successful.';
+                    //         console.log("SubgroupObj",subgroupObj); //subgroupID
+                    //         console.log("groupObj",groupData); // $id
+                    //         var members = memberIDs.split(',');
+                    //         for (var i = 0; i < members.length; i++) {
+                    //           CollaboratorService.addAccessUser(CollaboratorService.getCurrentDocumentId(),groupData.$id,subgroupObj.subgroupID,members[i]);
+                    //         }
+                    //         messageService.showFailure(notificationString);
+                    //     }
+                    // }, function(reason) {
+                    //     messageService.showFailure(reason);
+                    // }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+
+                .then(function(response) {
+                    // console.log("Adding Members Successful");
+                    var unlistedMembersArray = response.unlistedMembersArray,
+                        notificationString;
+
+                    if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                        notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        messageService.showFailure(notificationString);
+                    } else if (unlistedMembersArray.length) {
+                        notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        messageService.showSuccess(notificationString);
+                    } else {
+                        notificationString = 'Adding Members Successful.';
+                        messageService.showFailure(notificationString);
+                    }
+                }, function(reason) {
+                    messageService.showFailure(reason);
+                }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+
         }
 
         this.selectedAdmin = function(newType, member) {
@@ -428,7 +464,9 @@
                     });
 
                     //for coluser checking
-                    saveAdminToFirebase(val.type, val.member, groupID, that.activeID);
+                    saveAdminToFirebase(val.type, val.member, groupID, that.activeID, subgroupObj);
+
+
 
                     membersIDarray.push(val.member.userID);
                     //checking if team has policy then assigned policy to member
@@ -441,12 +479,36 @@
             } //if
         }; //selectedAdminSave
 
-        function saveAdminToFirebase(newType, member, groupID, activeID){
+        function saveAdminToFirebase(newType, member, groupID, activeID, subgroupObj){
             createSubGroupService.changeMemberRole(newType, member, groupID, activeID).then(function() {
                 messageService.showSuccess("New Admin selected");
+                //publish activity Stream
+                userActivityStreamOnAddMemberOrAdmin(member.user.profile, subgroupObj, false, true);
             }, function(reason) {
                 messageService.showFailure(reason);
             });
+        }
+
+        function userActivityStreamOnAddMemberOrAdmin (userObj, subgroupObj, isMember, isAdmin) {
+            var areaType;
+
+            if(isMember){
+                areaType = 'subgroup-member-assigned';
+            }
+
+            if(isAdmin){
+                areaType = 'subgroup-admin-assigned';
+            }
+
+            //publish an activity stream record -- START --
+            var type = 'subgroup';
+            var targetinfo = {id: subgroupObj.$id, url: subgroupObj.$id, title: subgroupObj.title, type: 'subgroup' };
+            var area = {type: areaType };
+            var group_id = groupID;
+            var memberuserID = userObj.$id;
+            //for group activity record
+            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+            //for group activity stream record -- END --
         }
 
         this.deleteAdminMember = function(admin){

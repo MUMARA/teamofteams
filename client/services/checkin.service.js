@@ -183,8 +183,11 @@
                             date: Firebase.ServerValue.TIMESTAMP,
                             //date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
+                            policyID: Policy.policyID,
                             answers: ''
                         });
+
+                        console.log('progressReport', 'activityStream runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
 
                         //for group activity stream record -- START --
                         var type = 'progressReport';
@@ -226,6 +229,7 @@
             var dated = Date.now();
             var ref = firebaseService.getRefMain();         //firebase main reference
             var refGroup = firebaseService.getRefGroups();  //firebase groups reference
+            var refSubGroup = firebaseService.getRefSubGroups();  //firebase groups reference
 
             //generate key
             var newPostRef = firebaseService.getRefsubgroupCheckinRecords().child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push();
@@ -273,24 +277,25 @@
             //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
             refGroup.child(groupObj.groupId).child('members-checked-in/count').once('value', function(snapshot){
                 multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
-                ref.update(multipath, function(err){
-                    if(err) {
-                        // console.log('err', err);
-                        cb(false, 'Please contact to your administrator', null);
-                    }
-
-                    //checking Daily Progress Report
-                    checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes){
-                        if(rst) {
-                            //calling callbAck....
-                            cb(true, checkinResultMsg, null);
-                        } else {
-                            cb(true, checkinResultMsg, mes);
+                refSubGroup.child(groupObj.groupId).child(groupObj.subgroupId).child('members-checked-in/count').once('value', function(snapshot){
+                    multipath["subgroups/"+groupObj.groupId+"/"+groupObj.subgroupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+                    ref.update(multipath, function(err){
+                        if(err) {
+                            // console.log('err', err);
+                            cb(false, 'Please contact to your administrator', null);
                         }
-                    })
-
-                }); //ref update
-            }); //getting and update members-checked-in count
+                        //checking Daily Progress Report
+                        checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes){
+                            if(rst) {
+                                //calling callbAck....
+                                cb(true, checkinResultMsg, null);
+                            } else {
+                                cb(true, checkinResultMsg, mes);
+                            }
+                        })
+                    }); //ref update
+                }); //getting and update members-checked-in count - subgroup
+            }); //getting and update members-checked-in count - group
         } //saveFirebaseCheckInOut
 
 
@@ -459,11 +464,11 @@
 
                                                 }, errorCallback);
 
-                                        }, errorCallback)
+                                        }, errorCallback);
 
-                                    }, errorCallback)
+                                    }, errorCallback);
 
-                            }, errorCallback)
+                            }, errorCallback);
 
                     }, errorCallback);
 
@@ -767,13 +772,13 @@
                 var syncRef;
                 if (!multiple && refs.$currentSubGroupLocations.length) {
                     //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
-                    angular.extend(refs.$currentSubGroupLocations[0], newLocation)
+                    angular.extend(refs.$currentSubGroupLocations[0], newLocation);
                     refs.$currentSubGroupLocations.$save(0)
                         .then(function() {
                             defer.resolve('Location has been added.');
                         }, function() {
                             defer.reject('Error occurred in saving on server.');
-                        })
+                        });
 
                 } else {
 
@@ -849,7 +854,7 @@
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
-                })
+                });
                 return title;
             },
             getSubGroupTitle: function(GroupID, subGroupID){
@@ -859,11 +864,11 @@
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
-                })
+                });
                 return title;
             }, //getSubGroupTitle
             ChekinUpdateSatatus: ChekinUpdateSatatus
 
-        } //return
+        }; //return
     } //checkin service function
 })();

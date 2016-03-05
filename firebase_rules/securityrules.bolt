@@ -425,23 +425,65 @@ type LogoImageRequirement {
 
 
 
- //===================================
  //   Group Activity Streams
  //====================================
  //Please note when creating group using Multi path update donot add group creation activity seprately
+path /group-activity-streams/{groupid}{
+  index()  {  "object/id" }
 
+  read()     {    isGroupMembersIdExist(groupid)       &&
+                  groupMemberShipAnyType(groupid) }
 
- path /group-activity-streams/{groupid} {
-        read()     {    isGroupMembersIdExist(groupid)       &&
-                        groupMemberShipAnyType(groupid) }
+  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
 
-        write()    {    isGroupMembersIdExist(groupid)       &&
-                        groupMemberShipAnyType(groupid) }
+  // validate() { prior(root['groups'][$groupid].val() != null)     }
 
-        validate() { prior(root['groups'][$groupid].val() != null)     }
+/{activityid} is GroupActivityStreamsInfo {
+    index()  {  "object/id" }
+write() {
+  (isAuthenticated() && isGroupJoined(this['verb']) || isSubGroupJoined(this['verb']))
+}
+ }
+ }
+ function isGroupJoined(verb) {
+   return verb == "group-join" ? true : false;
+ }
+ function isSubGroupJoined(verb) {
+   return verb == "subgroup-join" ? true : false;
+ }
+ //Type of Group Activity Streams
+ type GroupActivityStreamsInfo {
+   displayName : String,
+   language : String,
+   published: CurrentTimeStamp,
+   verb : String,
+   actor: ActorType,
+   object: ObjectType,
+   target: TargetInfo | Null,
+   seen: Boolean
 
  }
 
+type  ActorType {
+   displayName: String,
+   email: String,
+   "profile-image" : String,
+   id: String,
+   type :String
+ }
+ type ObjectType {
+   displayName: String,
+   id: String,
+   type :String,
+   url: String | Null,
+   email: String | Null,
+ }
+ type TargetInfo {
+   displayName: String,
+   id: String,
+   type :String,
+   url: String
+ }
  //====================================
  //   Group Check In Current
  //====================================
@@ -1326,7 +1368,8 @@ path /progress-reports-by-users/{userid} {
  type ProgressType {
   answers : String[],
   date    : CurrentTimeStamp,
-  questionID : String
+  questionID : String,
+  policyID : String
 
  }
 
@@ -1451,12 +1494,43 @@ type CreatedByObj {
   lastName: String,
   userID: String
 }*/
-path /user-activity-streams/{userid}/{activityid} {
- write() {
-   isAuthenticated()
+path /user-activity-streams/{userid}{
+  read() {
+    isAuthenticated()
+   }
+   /{activityid} {
+   read() {
+     isAuthenticated()
+    }
+  write() {
+    isAuthenticated()
+   }
+ }
   }
+path /firepad-groups-access/{groupid}/{documentid}{
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+   /{userid} is Boolean {
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+    }
 }
-path /firepad-group-access/{groupid}/{documentid}/{userid} is Boolean {
+path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
+  read() {
+    isAuthenticated()
+  }
+  write() {
+    isAuthenticated()
+  }
+/{userid} is Boolean {
   read() {
     isAuthenticated()
   }
@@ -1464,12 +1538,5 @@ path /firepad-group-access/{groupid}/{documentid}/{userid} is Boolean {
     isAuthenticated()
   }
 }
-path /firepad-subgroup-access/{groupid}/{subgroupid}/{documentid}/{userid} is Boolean {
-  read() {
-    isAuthenticated()
-  }
-  write() {
-    isAuthenticated()
-  }
 }
 //===========================================================  23/1/16  =====================================================================

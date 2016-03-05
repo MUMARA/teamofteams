@@ -353,9 +353,10 @@
 
                 if(saved){
                     that.showPanel = false;
-
+                    this.showarrow = undefined;
                 }else {
                     that.showPanel = true;
+                    this.showarrow = undefined;
                 }
             };//this.newPolicy
 
@@ -543,7 +544,6 @@
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
-                        this.showarrow = undefined ;
                     }
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);
