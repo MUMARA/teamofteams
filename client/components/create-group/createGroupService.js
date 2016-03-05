@@ -31,7 +31,7 @@
                                     console.log("this User is from createSubGroupService:",userService.getCurrentUser());
                                     CollaboratorService.CreateDocument("Team Information",groupInfo.groupID,"",'Rich Text',userService.getCurrentUser())
                                     .then(function(response){
-                                      CollaboratorService.addAccessUser(response.docId,groupInfo.groupID,"",pageUserId);
+                                      CollaboratorService.addAccessUser(response.docId,groupInfo.groupID,"",pageUserId,1);
                                     });
                                 }
                                 $location.path('/user/' + pageUserId);

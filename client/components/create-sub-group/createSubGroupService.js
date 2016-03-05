@@ -43,7 +43,7 @@
                                     console.log("this User is from createSubGroupService:",userService.getCurrentUser());
                                     CollaboratorService.CreateDocument("Team of Teams Information",group.$id,SubgroupInfo.subgroupID,'Rich Text',userService.getCurrentUser())
                                     .then(function(response){
-                                      CollaboratorService.addAccessUser(response.docId,group.$id,SubgroupInfo.subgroupID,userService.getCurrentUser().userID);
+                                      CollaboratorService.addAccessUser(response.docId,group.$id,SubgroupInfo.subgroupID,userService.getCurrentUser().userID,1);
                                     });
                                     $rootScope.newImg = null;
                                 // }
@@ -152,7 +152,7 @@
                                         //for group activity stream record -- END --
 
                                         messageService.showSuccess('Team Edited Successfully')
-                                        
+
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");
