@@ -84,7 +84,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
                     <!-- locationBasediv    START -->
                     <div>
                         <md-checkbox ng-model="policy.isLocationbased" aria-label="locationBased">
-                            <h4>Location Based <span style="font-size:small;font-weight:normal;"> (Create a Geo Fence for Attendance)</span> </h4>
+                            <h4>Define Location<span style="font-size:small;font-weight:normal;"> (Create a Geo Fence for Attendance)</span> </h4>
                         </md-checkbox>
                         <div id="locationBasediv" ng-if="policy.isLocationbased">
                             <div layout="row" layout-align="center center">
@@ -115,7 +115,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
                     <!-- timeBasediv    START -->
                     <div>
                         <md-checkbox ng-model="policy.isTimebased" aria-label="locationBased">
-                            <h4>Time Based <span style="font-size:small;font-weight:normal;"> (Create a Schedule for Attendance)</span></h4>
+                            <h4>Define Time Schedule<span style="font-size:small;font-weight:normal;"> (Create a Schedule for Attendance)</span></h4>
                         </md-checkbox>
                         <div id="timeBasediv" ng-show="policy.isTimebased">
 
@@ -159,7 +159,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
                     <!-- DailyReport div    START -->
                     <div>
                         <md-checkbox ng-model="policy.isProgressReport" aria-label="Daily Report">
-                            <h4>Progress Report <span style="font-size:small;font-weight:normal;"> (Create a Progress Report on Checkout)</span></h4>
+                            <h4>Progress Report Requirement<span style="font-size:small;font-weight:normal;"> (Create a Progress Report on Checkout)</span></h4>
                         </md-checkbox>
                         <div id="dailyReportdiv" ng-show="policy.isProgressReport">
                             <div layout="row" layout-align="start center">
