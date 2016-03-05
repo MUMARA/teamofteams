@@ -62,9 +62,9 @@
                      subgroupHasPolicy(group.groupId, group.subgroupId, function(hasPolicy, Policy){
                         if(hasPolicy) {
                             //hasPolicy true
-                            checkinPolicy(Policy, locationObj, function(result, msg){
+                            checkinPolicy(Policy, locationObj, function(result, msg, teamLocationTitle){
                                 if(result){
-                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, function(result, cbMsg, reportMsg){
+                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, teamLocationTitle, function(result, cbMsg, reportMsg){
                                         //console.log('group', group); //group = {groupId: "hotmaill", subgroupId: "yahooemail", userId: "usuf52"}
                                         cb(result, cbMsg, reportMsg, group);
                                     });
@@ -125,28 +125,31 @@
 
         //checking Policy is Subgroup Has Policy (is that timebased or locationbased)
         function checkinPolicy(Policy, currentLocationObj, callback) {
+            console.log('policy', Policy)
             if(Policy && Policy.locationBased) {  //checking if location Based
 
                 //checking distance (RADIUS)
-                // var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
+                var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
                 // console.log('distance:' + distance);
                 // console.log('distance in meter:' + distance * 1000);
 
-                // if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
+                if ((distance * 1000) < Policy.location.radius) {  //checking lcoation radius
                     // callback(false, 'Current Location does not near to the Team Location');
-                // } else { // if within radius
-
                     checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
-                        callback(d, msg);     //if result true (checkin allow)
+                        callback(d, msg, Policy.location.title);     //if result true (checkin allow)
                     }); //checking if time based
-                // } //if within radius
+                } else { // if within radius
+                    checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
+                        callback(d, msg, false);     //if result true (checkin allow)
+                    }); //checking if time based
+                } //if within radius
 
             } else if(Policy && Policy.timeBased) { //policy has timeBased
                 checkinTimeBased(Policy, function(d, msg) {
-                    callback(d, msg);      //if result true (checkin allow)
+                    callback(d, msg, false);      //if result true (checkin allow)
                 }); //checking if time based
             } else {    //checking others like if dailyReport
-                callback(true, '');      //result true (checkin allow) (might be only dailyReport has checked)
+                callback(true, '', false);      //result true (checkin allow) (might be only dailyReport has checked)
             }
         } //checkinLocationBased
         //checkinTimeBased
@@ -223,7 +226,7 @@
 
 
 
-        function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, cb){
+        function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, teamLocationTitle, cb){
             // groupObj = {groupId: '', subgroupId: '', userId: ''}
             var multipath = {};
             var dated = fireTimeStamp;
@@ -238,9 +241,9 @@
             var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
             var checkinResultMsg = (checkoutFlag) ? "Checkout Successfully" : "Checkin Successfully";
             var statusType = (checkoutFlag) ? 2 : 1;
-
+            var _teamLocationTitle = (teamLocationTitle ? teamLocationTitle : 'Other');
             multipath["subgroup-check-in-records/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId+"/"+newPostKey] = {
-                "identified-location-id": "Other",
+                "identified-location-id": _teamLocationTitle,
                 "location": {
                     "lat": locationObj.lat,
                     "lon": locationObj.lng

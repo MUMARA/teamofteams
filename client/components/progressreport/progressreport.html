@@ -20,14 +20,16 @@
 				</div>
 		<div ng-if="progressreport.dailyProgressReport" class="viewHeight-170 vscroll">
 			<md-list>
-			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport  | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox, subgroupID: subgroupID}  | orderBy: '-date' " layout="column" layout-align="center start" class="md-whiteframe-z2">
+			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport  | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox, subgroupID: subgroupID}  | orderBy: '-date' " layout="column" class="md-whiteframe-z2">
 				<div layout="row" layout-fill layout-margin layout-align="space-between center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">
 					<div layout="row" layout-align="start center" >
 						<img ng-src="{{report.profileImage || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" alt="{{user.id}} image" class="	icon40px  imageRound">
 						<span class="leftmargin10px foreColorDarkGrey">{{report.fullName}}</span>
 					</div>
 				  	<strong><em class="foreColorDarkGrey">{{progressreport.returnMoment(report.date)}}</em></strong>
-				  	<strong class="foreColorLightGrey">{{report.groupID}} / {{report.subgroupID}}</strong>
+				  	<strong class="foreColorLightGrey">
+				  		{{progressreport.grouptitle}} / {{progressreport.subgrouptitle}}
+				  	</strong>
 				</div>
 				<div layout="row" layout-align="center end" layout-fill>
 					<div flex>
@@ -38,8 +40,38 @@
 							</md-input-container>
 						</div>
 					</div>
-					<md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID && progressreport.subgroupID" ng-click="progressreport.update(report)"><span class="foreColorWhite">Edit</span></md-button>
 				</div>
+				<md-divider md-outset style="position: inherit!important;"></md-divider>
+				<div layout="row" layout-align="space-around center" layout-fill layout-padding>
+					<span>Checkin Hours : {{progressreport.checkinHours | millSecondsToTimeString}}</span>
+					<span flex></span>
+					<md-button class="backColorSeaGreen" aria-label="update report" ng-if="progressreport.user.userID == report.userID && progressreport.subgroupID" ng-click="progressreport.update(report)"><span class="foreColorWhite">Update</span></md-button>
+				</div>
+				<md-divider md-outset style="position: inherit!important;"></md-divider>
+				<md-table-container layout-fill>
+		            <table md-table>
+		                <thead md-head>
+		                    <tr md-row>
+		                        <th md-column class="foreColorSeaGreen">Date</th>
+		                        <th md-column class="foreColorSeaGreen">Check In</th>
+		                        <th md-column class="foreColorSeaGreen">Date</th>
+		                        <th md-column class="foreColorSeaGreen">Check Out</th>
+		                        <th md-column class="foreColorSeaGreen">Checkin Hours</th>
+		                        <th md-column class="foreColorSeaGreen">Location</th>
+		                    </tr>
+		                </thead>
+		                <tbody md-body>
+		                    <tr md-row ng-repeat="user in progressreport.attendancereport" ng-init="user.totalValue = progressreport.attendancereport[$index-1].totalValue + (user.checkout > 0 ? (user.checkout - user.checkin) : 0); progressreport.checkinHours = user.totalValue">
+		                        <td md-cell>{{user.checkin | date}}</td>
+		                        <td md-cell>{{user.checkin | date: 'hh:mm'}}</td>
+		                        <td md-cell>{{user.checkout | date}}</td>
+		                        <td md-cell>{{user.checkout | date: 'hh:mm'}}</td>
+		                        <td md-cell>{{(user.checkout - user.checkin) | millSecondsToTimeString}}</td>
+		                        <td md-cell>{{user.checkoutlocation ? (user.location === user.checkoutlocation ? user.location : user.location + ' / ' + user.checkoutlocation) : user.location}}</td>
+		                    </tr>
+		                </tbody>
+		            </table>
+		        </md-table-container>
 			  </md-list-item>
 			</md-list>
 		</div>
