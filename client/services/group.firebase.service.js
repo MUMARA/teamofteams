@@ -332,10 +332,10 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
-
                                                     firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
-                                                        snapshot.val()["subgroup-count"] = snapshot.val()["subgroup-count"] + 1
-                                                        firebaseService.getRefGroups().child(group.$id).set(snapshot.val(), function(){
+                                                        var countsubgroup = snapshot.val()["subgroups-count"] + 1;
+                                                        console.log(countsubgroup, 'testing')
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
                                                             if (error) {
                                                                 errorHandler();
                                                             }
