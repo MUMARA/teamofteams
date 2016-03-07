@@ -127,10 +127,11 @@
                     var type = 'progressReport';
                     var targetinfo = {id: report.reportID, url: report.groupID+'/'+report.subgroupID, title: report.groupID+'/'+report.subgroupID, type: 'progressReport' };
                     var area = {type: 'progressReport-updated'};
-                    var group_id = report.groupID;
+                    var group_id = report.groupID+'/'+report.subgroupID;
                     var memberuserID = report.userID;
+                    var _object = null;
                     //for group activity record
-                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
                     //for group activity stream record -- END --
 
                     cb(true);

@@ -187,16 +187,15 @@
                             answers: ''
                         });
 
-                        console.log('progressReport', 'activityStream runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
-
                         //for group activity stream record -- START --
                         var type = 'progressReport';
                         var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
                         var area = {type: 'progressReport-created'};
-                        var group_id = groupObj.groupId;
+                        var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
                         var memberuserID = groupObj.userId;
+                        var _object = null;
                         //for group activity record
-                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
                         //for group activity stream record -- END --
 
                         cb(false, 'notSubmitted');
@@ -226,7 +225,7 @@
         function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, cb){
             // groupObj = {groupId: '', subgroupId: '', userId: ''}
             var multipath = {};
-            var dated = Date.now();
+            var dated = fireTimeStamp;
             var ref = firebaseService.getRefMain();         //firebase main reference
             var refGroup = firebaseService.getRefGroups();  //firebase groups reference
             var refSubGroup = firebaseService.getRefSubGroups();  //firebase groups reference

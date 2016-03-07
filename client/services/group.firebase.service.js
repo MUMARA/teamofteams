@@ -334,7 +334,7 @@ angular.module('core')
                                                 .then(function() {
                                                     firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
                                                         var countsubgroup = snapshot.val()["subgroups-count"] + 1;
-                                                        console.log(countsubgroup, 'testing')
+                                                        // console.log(countsubgroup, 'testing')
                                                         firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
                                                             if (error) {
                                                                 errorHandler();

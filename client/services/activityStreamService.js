@@ -172,36 +172,45 @@
         }
 
         //calling from services or controller (public)
-        function activityStream(type, targetinfo, area, groupID, memberUserID) {
+        function activityStream(type, targetinfo, area, activityGroupOrSubGroupID, memberID, object) {
+        //function activityStream(type, targetinfo, area, activityGroupOrSubGroupID, memberUserID) {
+            var obj = {}; //object: affected area for user.... (represent notification)
 
-            var object = {}; //object: affected area for user.... (represent notification)
+            if (object) {
 
-            if (memberUserID) { // incase of group ceration or group edit
-                firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
-                    object = {
+                saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, object);
+
+            } else {
+
+                if (memberID) { // incase of group ceration or group edit
+                    firebaseService.asyncCheckIfUserExists(memberID).then(function(res) {
+                        obj = {
+                            "type": type,
+                            "id": memberID, //an index should be set on this
+                            "email": res.user.email,
+                            "displayName": res.user.firstName + " " + res.user.lastName,
+                        };
+                        //now calling function for save to firebase....
+                        saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, obj);
+                    });
+                } else {
+                    obj = {
                         "type": type,
-                        "id": memberUserID, //an index should be set on this
-                        "email": res.user.email,
-                        "displayName": res.user.firstName + " " + res.user.lastName,
-                        //"seen": false
+                        "id": targetinfo.id, //an index should be set on this
+                        "url": targetinfo.id,
+                        "displayName": targetinfo.title,
                     };
                     //now calling function for save to firebase....
-                    saveToFirebase(type, targetinfo, area, groupID, memberUserID, object);
-                });
-            } else {
-                object = {
-                    "type": type,
-                    "id": targetinfo.id, //an index should be set on this
-                    "url": targetinfo.id,
-                    "displayName": targetinfo.title,
-                    //"seen": false
-                };
-                //now calling function for save to firebase....
-                saveToFirebase(type, targetinfo, area, groupID, memberUserID, object);
+                    saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, obj);
+                }
+
             }
+
+
         } //activityStream
         //calling from here  (private)
-        function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object) {
+        function saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, object) {
+        //function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object) {
             // ## target ##
             //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
             var target = {
@@ -231,7 +240,8 @@
                     'subgroup-updated': actor.displayName + " updated subgroup " + target.displayName,
                     'subgroup-member-assigned': actor.displayName + " assigned " + object.displayName + " as a member of " + target.displayName,
                     'subgroup-admin-assigned': actor.displayName + " assigned " + object.displayName + " as a admin of " + target.displayName,
-                    'subgroup-member-removed': actor.displayName + " removed " + object.displayName + " from " + target.displayName,
+                    'subgroup-member-removed': actor.displayName + " removed as member " + object.displayName + " from " + target.displayName,
+                    'subgroup-admin-removed': actor.displayName + " removed as admin " + object.displayName + " from " + target.displayName,
                     'subgroup-join': actor.displayName + " sent team of teams join request of " + target.displayName,
                 }, //subgroup
                 'policy': {
@@ -262,131 +272,67 @@
                 actor: actor,
                 object: object,
                 target: target,
-                seen: false
+                //seen: false
             };
 
-            // console.log('activity', activity);
-
             var ref = firebaseService.getRefMain();
-            var pushObj = ref.child('group-activity-streams/' + groupID).push();
+            var pushObj = ref.child('group-activity-streams/' + activityGroupOrSubGroupID).push();
             var activityPushID = pushObj.key();
-
-            //Sets a priority for the data at this Firebase location.
-            // pushObj.setPriority(0 - Date.now());
 
             var multipath = {};
 
-            if (groupID) {
-                multipath['group-activity-streams/' + groupID + '/' + activityPushID] = activity;
+            if (type === 'group') {
+                //firebase node: group-activity-streams
+                if (area.type === 'group-created' || area.type === 'group-updated') {
+                    delete activity.target;
+                    delete activity.object;
+                } else if (area.type === 'group-join' || area.type === 'membersettings') {
+                    delete activity.target;
+                }
+
+                multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+
+            } else if (type === 'subgroup') {
+                //firebase node: subgroup-activity-streams
+                if (area.type === 'subgroup-created' || area.type === 'subgroup-updated') {
+                    delete activity.target;
+                    delete activity.object;
+                } else if (area.type === 'subgroup-join') {
+                    delete activity.target;
+                }
+
+                multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+
+            } else if (type === 'policy') {
+                //firbase node:
+                //if pass groupid in 'activityGroupOrSubGroupID' then save into firebase group-activity-streams
+                //else if pass subgroupid in 'activityGroupOrSubGroupID' then save into firebase subgroup-activity-streams
+
+                //checking if activityGroupOrSubGroupID contains / then location is subgroup-activity else group-activity
+                if(activityGroupOrSubGroupID.indexOf('/') > -1) {
+                    multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+                } else {
+                    multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+                }
+
+            } else if (type === 'progressReport') {
+                //progress report belongs to subgroup then activityGroupOrSubGroupID will be subgroupID
+                multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+
             }
 
-            // if (area.type === 'group-join' || area.type === 'subgroup-join') {
-            //     activity.groupID = groupID;
-            //     $http.post(appConfig.apiBaseUrl + '/api/activitystream', activity).
-            //     success(function(data, status, headers, config) {
-            //         // this callback will be called asynchronously
-            //         // when the response is available
-            //         //console.log("response: " + data);
-            //         console.log('signup response object: ' + JSON.stringify(data));
-            //         //successFn(data);
-            //     }).
-            //     error(function(data, status, headers, config) {
-            //         // called asynchronously if an error occurs
-            //         // or server returns response with an error status.
-            //         //failureFn();
-            //     });
-            // } else {
-                firebaseService.getRefMain().update(multipath, function(err) {
-                    if (err) {
-                        console.log('activityError', err);
-                    }
-                });
-            // }
+            // console.log('activityGroupOrSubGroupID', activityGroupOrSubGroupID);
+            // console.log('type', type);
+            // console.log('activity_', activity);
 
-            // if (memberUserID) {
-            //     multipath['user-activity-streams/' + memberUserID + '/' + activityPushID] = activity;
-            // }
-            //
-            // multipath['user-activity-streams/' + actor.id + '/' + activityPushID] = activity;
+            firebaseService.getRefMain().update(multipath, function(err) {
+                if (err) {
+                    console.log('activityError', err);
+                }
+            });
 
-            // multipath['user-activity-streams/'+actor.id+'/'+activityPushID] = {
-            //           displayName: displayMessage,
-            //           seen : false,
-            //           published: firebaseTimeStamp,
-            //           verb: (area.action) ? area.action : area.type
-            // };
 
         } //saveToFirebase
-
-
-        //  function groupActivityStream (type, requestFor, group, user, memberUserID) {
-        //    var deferred = $q.defer();
-        //    var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
-        //
-        //    var target = {
-        //       "type": "group",         //we are using group activity streams
-        //       "id": group.groupID,
-        //       "url": group.groupID,
-        //       "displayName": group.title
-        //    };
-        //
-        //    //type:
-        //    //for membership in user-settings we will use memberSettings,
-        //    //on team (create/edit) we will use TeamSettings
-        //    if(type === 'memberSettings') {
-        //       firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
-        //          var object = {
-        //             "type": "user",
-        //             "id": memberUserID, //an index should be set on this
-        //             "email": res.user.email,
-        //             "displayName": res.user.firstName + " " + res.user.lastName
-        //          };
-        //          //create an appropriate display message.
-        //          var displayName;
-        //          if (requestFor === "approve") {
-        //              displayName = actor.displayName + " approved " + object.displayName +
-        //                 " as a member in " + group.title + "."
-        //          } else {
-        //              displayName = actor.displayName + " rejected " + object.displayName +
-        //                 "'s membership request for " + group.title + "group."
-        //          }
-        //
-        //          var activity = {
-        //             language: "en",
-        //             verb: requestFor === "approve" ? "group-approve-member" : "group-reject-member",
-        //             published: firebaseTimeStamp,
-        //             displayName: displayName,
-        //             actor: actor,
-        //             object: object,
-        //             target: target
-        //          };
-        //
-        //          var newActivityRef = refGroupActivities.push();
-        //          newActivityRef.set(activity, function(error) {
-        //             if (error) {
-        //                 deferred.reject();
-        //             } else {
-        //
-        //                var activityID = newActivityRef.key();
-        //                var activityEntryRef = refGroupActivities.child(activityID);
-        //                activityEntryRef.once("value", function(snapshot) {
-        //                   var timestamp = snapshot.val().published;
-        //                   newActivityRef.setPriority(0 - timestamp, function(error2) {
-        //                      if (error2) {
-        //                         deferred.reject();
-        //                      } else {
-        //                         deferred.resolve(displayName);
-        //                      }
-        //                   });
-        //                });
-        //
-        //             } //else
-        //          }); //newActivityRef.set
-        //       }); //firebaseService.asyncCheckIfUserExists
-        //    }
-        //    return deferred.promise;
-        // } //groupActivityStream
-        //
 
         // function currentUserActivity() {
         //    var deffer = $q.deffer();

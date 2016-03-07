@@ -134,7 +134,7 @@
                     that.loadingData = true;
                     that.group.message = that.message[group.$id] || that.group.message;
                     that.group.groupID = group.$id;
-                    that.group.title = group.title;
+                    that.group.grouptitle = group.title;
 
                     joinGroupService.joinGroupRequest(that.group, function(){
                         that.loadingData = false;

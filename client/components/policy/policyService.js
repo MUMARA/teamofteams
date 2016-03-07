@@ -123,6 +123,8 @@
                      multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
                 }
 
+                var subgroupPolicyActivity = {};
+
                 //getting subgroups which are selected....
                 selectedTeams.forEach(function(val, indx){
                     //add property hasPolicy in subgroupNames..
@@ -131,54 +133,61 @@
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
 
-                }); //selectedTeams.forEach
+                    //for policy - group/subgroup activity record -- start --
+                    subgroupPolicyActivity[val.subgroupID] = {
+                        type: 'policy',
+                        targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
+                        area: {type: 'policy-assigned-team'},
+                        group_id: groupID+'/'+val.subgroupID,
+                        memberuser_id: null,
+                        object_is_Team: {   "type": 'subgroup',
+                                            "id": val.subgroupID, //an index should be set on this
+                                            "url": groupID+'/'+val.subgroupID,
+                                            "displayName": val.subgroupTitle
+                                        }
+                    };
+                    //for policy - group/subgroup activity record -- end --
 
-                var userActivity = {};
+                }); //selectedTeams.forEach
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {
                     selectedTeamMembers[group].forEach(function(v, i){
                         //adding obj into user-policies userid -> groupid -> subgroupid node
                         multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
-
-                        //for group activity stream record -- START --
-                        //for group activity record -- start --
-                        userActivity[v.userID] = {
-                            type: 'policy',
-                            targetinfo: {id: newPolicyKey, url: newPolicyKey, title: obj["title"], type: 'policy' },
-                            area: {type: (policyID) ? 'policy-updated' : 'policy-created'},
-                            group_id: v.groupID,
-                            memberuser_id: v.userID
-                        };
-                        //for group activity record -- end --
-
-                        //for group activity stream record -- END --
-
-
                     }); //selectedTeamMembers[group].forEach
                 } //for selectedTeamMembers
 
-                // console.log(multiPathUpdate)
 
                	//Multi-Path update Queery
                 refNodes.ref.update(multiPathUpdate, function(err) {
                     if(err) {
                         console.log("Error updating Date:", err);
                     } else {
-
-                        //for group activity stream record -- START --
+                        //for policy activity stream record -- START --
                         var type = 'policy';
-                        var targetinfo = {id: newPolicyKey, url: newPolicyKey, title: obj["title"], type: 'policy' };
-                        var area = (policyID) ? {type: 'policy-updated'} : {type: 'policy-created'};
+                        var targetinfo = {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' };
+                        var area = {type: (policyID) ? 'policy-updated' : 'policy-created'};
                         var group_id = groupID;
                         var memberuserID = null;
-                        //for group activity record
-                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        var object = null;
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, object);
+                        //for policy activity record
 
-                        for(var _usr in userActivity){
-                            activityStreamService.activityStream(userActivity[_usr].type, userActivity[_usr].targetinfo, userActivity[_usr].area, userActivity[_usr].group_id, userActivity[_usr].memberuser_id);
-                        }
-
+                        //if selected subgroup then add in group/subgroup activity
+                        if(subgroupPolicyActivity){
+                            for(var _sbgrp in subgroupPolicyActivity){
+                                console.log('_sbgrp', subgroupPolicyActivity[_sbgrp].object_is_Team);
+                                activityStreamService.activityStream(
+                                    subgroupPolicyActivity[_sbgrp].type,
+                                    subgroupPolicyActivity[_sbgrp].targetinfo,
+                                    subgroupPolicyActivity[_sbgrp].area,
+                                    subgroupPolicyActivity[_sbgrp].group_id,
+                                    subgroupPolicyActivity[_sbgrp].memberuser_id,
+                                    subgroupPolicyActivity[_sbgrp].object_is_Team
+                                );
+                            } //for: subgroupPolicyActivity
+                        } //if subgroupPolicyActivity
                         //for group activity stream record -- END --
 
                     	cb(newQuestionID);

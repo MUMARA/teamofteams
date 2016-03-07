@@ -30,9 +30,9 @@
 
                                 //for group activity stream record -- START --
                                 var type = 'subgroup';
-                                var targetinfo = {id: SubgroupInfo.subgroupID, url: SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
+                                var targetinfo = {id: SubgroupInfo.subgroupID, url: group.$id+'/'+SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
                                 var area = {type: 'subgroup-created'};
-                                var group_id = group.$id;
+                                var group_id = group.$id +'/'+ SubgroupInfo.subgroupID;
                                 var memberuserID = null;
                                 //for group activity record
                                 activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
@@ -137,9 +137,9 @@
 
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
-                                        var targetinfo = {id: subgroupInfo.$id, url: subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };
+                                        var targetinfo = {id: subgroupInfo.$id, url: groupID+'/'+subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };
                                         var area = {type: 'subgroup-updated'};
-                                        var group_id = groupID;
+                                        var group_id = groupID+'/'+subgroupInfo.$id;
                                         var memberuserID = null;
                                         //for group activity record
                                         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
@@ -312,14 +312,14 @@
                         // });
 
                         firebaseService.getRefMain().child("user-subgroup-memberships/"+userID+"/"+groupID+"/"+subgroupID+"/").remove(function(err){
-                            console.log(err);
+                            // console.log(err);
 
                             firebaseService.getRefMain().child("subgroup-members/"+groupID+"/"+subgroupID+"/"+userID+"/").remove(function(err){
-                                console.log(err);
+                                // console.log(err);
 
                                 firebaseService.getRefMain().child("subgroups/"+groupID+"/"+subgroupID+"/members-count").set(submembers-1, function(err){
-                                    console.log(err);
-                                })
+                                    // console.log(err);
+                                });
 
 
 

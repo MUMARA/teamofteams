@@ -21,7 +21,6 @@
                         userFirebaseService.asyncCreateGroup(pageUserId, groupInfo, this.userData(pageUserId), formDataFlag)
                             .then(function(response) {
                                 form.$submitted = false;
-                                console.log("Group Creation Successful", groupInfo);
                                 $rootScope.newImg = null
                                 var unlistedMembersArray = response.unlistedMembersArray;
                                 if (unlistedMembersArray.length > 0) {
