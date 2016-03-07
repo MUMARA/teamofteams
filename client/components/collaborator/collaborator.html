@@ -92,17 +92,17 @@
             <md-content layout-padding layout-wrap class="backColorSeaGreen">
               <div class="">
                 <!-- <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.accessedUsers"> -->
-                <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.allUsers" aria-label="Checkbox 1" ng-if="collaborator.subgroupID.length === 0 && collaborator.allUsers"  ng-change="collaborator.checkboxClicked(collaborator.allUsers)" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
-                  <h5 class="foreColorDarkGrey">{{user.fullName}}</h5>
+                <md-switch ng-hide="(!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID)" ng-model="collaborator.allUsers" aria-label="Checkbox 1"  ng-change="collaborator.toggleAllUser(collaborator.allUsers)">
+                  <h5 class="foreColorDarkGrey">All User</h5>
                 </md-switch>
-                <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.permission[user.id]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID.length === 0 && !collaborator.allUsers"  ng-change="collaborator.checkboxClicked(collaborator.permission[user.id])" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
-                  <h5 class="foreColorDarkGrey">{{user.fullName}}</h5>
+                <md-switch ng-disabled="(!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0)" ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
+                  <h5 class="foreColorDarkGrey">{{user.fullName}} Subgroup </h5>
                 </md-switch>
-                <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.allUsers" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0) && collaborator.allUsers" ng-change="collaborator.checkboxClicked(collaborator.allUsers)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
-                  <h5 class="foreColorDarkGrey">{{user.fullName}}</h5>
-                </md-switch>
-                <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.permission[user.id]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0) && !collaborator.allUsers" ng-change="collaborator.checkboxClicked(collaborator.permission[user.id])" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
-                  <h5 class="foreColorDarkGrey">{{user.fullName}}</h5>
+               <!-- <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.allUsers" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0) && collaborator.allUsers" ng-change="collaborator.checkboxClicked(collaborator.allUsers)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
+                  <h5 class="foreColorDarkGrey">{{user.fullName}} all user</h5>
+                </md-switch>-->
+                <md-switch ng-disabled="(!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID.length === 0"  ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
+                  <h5 class="foreColorDarkGrey">{{user.fullName}} group {{collaborator.permission[user.id]}}</h5>
                 </md-switch>
                 <br>
               </div>
