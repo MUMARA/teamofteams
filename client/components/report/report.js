@@ -32,7 +32,8 @@
                 if (snapshot.val().message == 'Checked-in') {
                     that.report.push({
                         checkin: snapshot.val().timestamp,
-                        checkindate: newDate
+                        checkindate: newDate,
+                        checkout: 0
                     });
                     that.count++;
                 } else if (snapshot.val().message == 'Checked-out') {

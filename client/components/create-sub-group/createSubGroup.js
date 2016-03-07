@@ -68,7 +68,9 @@
         this.ActiveSideNavBar = function(sideNav) {
             that.adminSideNav = true;
             that.memberSideNav = true;
-            if(sideNav === 'admin') {
+            $mdSidenav(sideNav).toggle();
+
+           /* if(sideNav === 'admin') {
                 that.adminSideNav = false;
                 that.memberSideNav = true;
             } else if(sideNav === 'member') {
@@ -77,7 +79,7 @@
             } else {
                 this.adminSideNav = true;
                 this.memberSideNav = true;
-            }
+            }*/
         }
 
         this.createTeam = function(){
