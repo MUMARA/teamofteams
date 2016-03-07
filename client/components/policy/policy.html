@@ -273,7 +273,7 @@
     <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
         <h1 class="md-toolbar-tools"><strong>Select Team</strong></h1>
     </md-toolbar>
-    <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
+    <md-content class="backColorLightSeaGreen" style="height:calc(94% - 64px)">
         <md-list class="nopadding" ng-if="policy.subGroupNames">
             <md-list-item layout="row" layout-align="start center" ng-repeat="subgroup in policy.subGroupNames track by $index" class="buttonHover nooutline" ng-click="policy.selectedTeam(subgroup)">
                 <ng-md-icon size="24" icon="done" ng-class="subgroup.hasPolicy ? 'fillColorWhite' : 'fillColorDarkGrey' " style="margin-top: 10px">
@@ -282,9 +282,8 @@
             </md-list-item>
         </md-list>
         <p><br></p>
-
-        <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;">
-            <md-button class="md-raised" aria-label="description" ng-click="policy.toggleSideNavBar('policySidenav');" md-ripple-size="auto">Done</md-button>
-        </div>
     </md-content>
+    <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;">
+        <md-button class="md-raised" aria-label="description" ng-click="policy.toggleSideNavBar('policySidenav');" md-ripple-size="auto">Done</md-button>
+    </div>
 </md-sidenav>
