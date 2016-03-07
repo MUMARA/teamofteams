@@ -87,7 +87,7 @@
                 </div>
                 <div ng-if="createSubGroup.activeID">
                     <!--adding team admin-->
-                    <h2>Team Admin</h2>
+                    <h2>Team Admins</h2>
                     <div layout="row">
                         <div flex="10">
                             <md-button class="backColorSeaGreen" ng-click="createSubGroup.assignMemberClick(); createSubGroup.ActiveSideNavBar('admin');"><span style="color: white;font-size: 14px;">Select</span></md-button>
@@ -99,7 +99,7 @@
                         <md-chip style="height:40px" class="backColorDarkGrey">
                             <img ng-src="{{admin['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar" alt="user" style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;;" />
                             <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{admin.firstName + ' ' + admin.lastName +" "}}</span>
-                            <span style="position:relative; top:-8px;" class="fillColorWhite">
+                            <span style="position:relative; top:-8px;" class="fillColorWhite" ng-if="admin.firstName != createSubGroup.submembers[0].userSyncObj.firstName">
                                     &nbsp; <ng-md-icon icon="close" size="24" class="nooutline" ng-click="createSubGroup.deleteAdminMember(admin)"></ng-md-icon>
                                 </span>
                         </md-chip>
@@ -127,9 +127,9 @@
                         </md-chip>
                     </md-chips>
                 </div>
-                <div ng-if="createSubGroup.activeID">
+                <div ng-if="createSubGroup.subgroupPolicy">
                     <h2>Team Policy</h2>
-                    <md-chips>
+                    <md-chips ng-if="createSubGroup.subgroupPolicy">
                         <md-chip style="height:40px" class="backColorDarkGrey">
                             <span style="position:relative; top:4px;" class="foreColorWhite">
                                 {{createSubGroup.subgroupPolicy}}
@@ -188,3 +188,36 @@
     </div>
 
 </div>
+
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="admin" style="margin-top:64px;">
+    <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
+        <h1 class="md-toolbar-tools">Sidenav Right admin</h1>
+    </md-toolbar>
+    <md-content layout-padding>
+        <div>
+            <md-list>
+                <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline" ng-click="createSubGroup.selectedAdmin(2,member)" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-label="Select Admin">
+                    <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' ">
+                        <!-- <ng-md-icon icon="done" ng-class="createSubGroup.filterUser2(member.user.profile.email) ? 'fillColorWhite' : 'fillColorDarkGrey' "> -->
+                    </ng-md-icon>
+                    <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="md-avatar icon40px imageRound nooutline" layout-margin alt="user" />
+                    <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
+                </md-list-item>
+            </md-list>
+        </div>
+        <p><br></p>
+        <div layout="row" layout-align="center center" style="width:100%">
+            <md-button class="md-raised" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar();" md-ripple-size="auto">Done</md-button>
+        </div>
+    </md-content>
+</md-sidenav>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="member" style="margin-top:64px;">
+    <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
+        <h1 class="md-toolbar-tools">Sidenav Right member</h1>
+    </md-toolbar>
+    <md-content layout-padding>
+
+    </md-content>
+</md-sidenav>

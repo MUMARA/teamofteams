@@ -55,7 +55,8 @@
             var i = 0;
             refs.fireConnection.on('value', function(snapshot) {
 
-                if (snapshot.val() && i === 0) {
+                // if (snapshot.val() && i === 0) {
+                if (snapshot.val()) {
                     var userPresenceRef = refs.usersPresence.child(userID);
                     userPresRef = userPresenceRef
                     //get an entry for the current connection.

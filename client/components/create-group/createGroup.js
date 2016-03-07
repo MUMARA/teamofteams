@@ -93,9 +93,9 @@
                 xhr.onload = function(data) {
                     //alert(xhr.responseText);
                     if (xhr.status === 200) {
-                        messageService.showSuccess('Picture uploaded....')
+                        messageService.showSuccess('Picture uploaded....');
                         that.group.imgLogoUrl = url + '?random=' + new Date();
-                        defer.resolve(url)
+                        defer.resolve(url);
 
                     }
                 };
@@ -115,10 +115,10 @@
                 if (groupForm.$invalid) {
                     return;
                 }
-                that.group.ownerImgUrl = ownerImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'
+                that.group.ownerImgUrl = ownerImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png';
                 that.group.members = that.group.membersArray.join();
                 if (that.group.domain) {
-                    that.group.allowedDomain = {}
+                    that.group.allowedDomain = {};
 
                     var temp = that.group.domain.split(',');
                     temp.forEach(function(el, i) {
@@ -144,7 +144,7 @@
                         });
                 } else {
                     fromDataFlag = false;
-                    createGroupService.createGroup(that.group, fromDataFlag, groupForm)
+                    createGroupService.createGroup(that.group, fromDataFlag, groupForm);
                     //$location.path('/user/' + user.userID);
                 }
 

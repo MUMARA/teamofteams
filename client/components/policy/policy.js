@@ -110,7 +110,8 @@
             this.groupPolicies = policyService.getGroupPolicies(that.groupId);
 
             //Load SubgroupNames from Given GroupID
-            this.subGroupNames = policyService.getSubGroupNames(that.groupId)
+            this.subGroupNames = [];
+            this.subGroupNames = policyService.getSubGroupNames(that.groupId);
 
             //on controller load...... END
 
@@ -199,7 +200,7 @@
                             updatepostion(lat, lng, results[0].formatted_address);
                             $timeout(function() {
                                 updatepostion(lat, lng, results[0].formatted_address);
-                            }, 500)
+                            }, 500);
                         }
 
                     });
@@ -353,9 +354,10 @@
 
                 if(saved){
                     that.showPanel = false;
-
+                    this.showarrow = undefined;
                 }else {
                     that.showPanel = true;
+                    this.showarrow = undefined;
                 }
             };//this.newPolicy
 
@@ -543,7 +545,6 @@
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
-                        this.showarrow = undefined ;
                     }
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);
@@ -566,6 +567,7 @@
 
                             messageService.showSuccess('Policy Successfully Updated!');
                             //$state.go('user.policy', {groupID: groupId});
+                            that.newPolicy('saved');
                         } else{
                             messageService.showSuccess('Policy Successfully Created!');
                             //after created reload initial page
@@ -576,7 +578,7 @@
                     messageService.showFailure('Please Write Policy Name');
                 }
 
-            } //onSave
+            }; //onSave
 
             //load constructor
             function init() {
@@ -586,7 +588,7 @@
                 that.isTimebased = false; //unchek default time based
                 that.selectedTeams = []; //onLoad or create empty selectedTeams array
                 that.selectedTeamMembers = {}; //onLoad or create empty selectedTeamMembers obj
-                that.isProgressReport = false;
+                that.isProgressReport = true;
                 //onLoad default qustion daily Report Questions obj
                 that.progressReportQuestions = {'0': 'What did you accomplish today?', '1': 'What will you do tomorrow?', '2': 'What obstacles are impeding your progress?'};
                 isQuestionExists();

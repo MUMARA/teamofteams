@@ -17,6 +17,7 @@ var signUpCtrl = require('./app/controllers/signup'),
     verifyEmailCtrl = require('./app/controllers/verifyEmail'),
     usersCtrl = require('./app/controllers/users'),
     notification = require('./app/controllers/notification');
+    //activityStreamCtrl = require('./app/controllers/activityStreams');
 
 var amazonServiceRoutes = require('./amazonServices/routeManager');
 var profilePictureManager = require('./amazonServices/profilePictureManager/profilePictureManager');
@@ -73,6 +74,9 @@ app.post('/api/deleteuser', usersCtrl.removeUser);
 app.post('/api/sendnotification', notification.sendNotification);
 app.post('/api/registerdevice', notification.registerDevice);
 app.post('/api/unregisterdevice', notification.unregisterDevice);
+
+//app.post('/api/activitystream', activityStreamCtrl.activityStreams);
+
 process.on('uncaughtException', function(err) {
     console.error(err);
     console.log("Node NOT Exiting...");
