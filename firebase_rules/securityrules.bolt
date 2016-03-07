@@ -491,14 +491,14 @@ path /subgroup-activity-streams/{groupid}/{subgroupid} {
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
 
-  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
+  write()    {   ( isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
 
   // validate() { prior(root['groups'][$groupid].val() != null)     }
 
 /{activityid} is GroupActivityStreamsInfo {
     index()  {  "object/id" }
 write() {
-  (isAuthenticated() && isSubGroupJoined(this['verb']))
+  ( isAuthenticated() && isSubGroupJoined(this['verb']))
 }
  }
  }
@@ -794,7 +794,7 @@ path /subgroup-members/{groupid} {
 //==================================
 
 
-path  /subgroup-activity-streams/{groupid} {
+/*path  /subgroup-activity-streams/{groupid} {
 
     read() {
         isAuthenticated()                &&
@@ -835,7 +835,7 @@ path  /subgroup-activity-streams/{groupid} {
         validate() {
             this['actor']['id'].val() === auth.uid &&
             this.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb','profile-image'])  }
-  }
+  }*/
 
 
 
