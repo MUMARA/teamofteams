@@ -64,7 +64,7 @@
         <md-tab label="Documents" class="rightTbs">
           <md-content ng-repeat="document in collaborator.documents track by $index">
             <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
-              <md-list-item class="md-3-line selectable" ng-click="collaborator.gotoDocument(document)">
+              <md-list-item class="md-3-line selectable selectedDocumentIcon" ng-click="collaborator.gotoDocument(document)">
                 <button class="md-button md-icon-button" style="padding: 0 0 0 0;margin: 0 0 0 0;width: 20px">
                   <ng-md-icon ng-show="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
                   <ng-md-icon ng-show="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>

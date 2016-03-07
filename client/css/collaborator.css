@@ -186,4 +186,8 @@ ng-md-icon:hover {
     width: 96%;
     margin-top: 9px;
 }
+.selectedDocumentIcon .md-button
+{
+    padding-left: 0;
+}
 
