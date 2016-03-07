@@ -13,7 +13,7 @@
         var actor = '';
         var currentUserActivities = [];
         var currentUserSubGroups = [];
-        var currentUserSubGroupsMembers = [];
+        var currentUserSubGroupsMembers = {};
         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
 
         //object for those who will be notify....
@@ -33,13 +33,10 @@
             getGroupsOfCurrentUser();
 
             //getting current user subgroup names
-            //getSubGroupsOfCurrentUsers();
+            getSubGroupsOfCurrentUsers();
 
             //getting current user subgroup members
             //getSubGroupsMembersOfCurrentUsers ();
-
-            //getting user activity streams from firebase node: user-activity-streams
-            //getCurrentUserActivity(); //from node: user-activity-streams
 
         } //init
 
@@ -51,22 +48,31 @@
                     //getting activities by groupID
                     getActivityOfCurrentUserByGroup(group.key());
 
-                    //checking if admin or owner of that group then shows join group/subgroup notifications
-                    if(group.val() && (group.val()['membership-type'] === 1 || group.val()['membership-type'] === 2)) {
-                        //getting activity for group/subgroup join request....
-                        getActivityOfJoinGroupSubGroupRequest(group.key());
-                    }
-
                 }
             });
         }
-        //for activity step2
+        //for activity group
         function getActivityOfCurrentUserByGroup(groupID) {
             //getting activity streams from firebase node: group-activity-streams
-            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('object/id').equalTo(userID).on("child_added", function(snapshot) {
-                if (snapshot && snapshot.val() && snapshot.val().seen === false) {
+            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function(snapshot) {
+                if (snapshot && snapshot.val()) {
                     currentUserActivities.push({
                         groupID: groupID,
+                        displayMessage: snapshot.val().displayName,
+                        activityID: snapshot.key(),
+                        published: snapshot.val().published
+                    });
+                }
+            });
+        }
+        //for activity of subgroup
+        function getActivityOfCurrentUserBySubGroup(groupID, subgroupID) {
+            //getting activity streams from firebase node: group-activity-streams
+            firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroupID).orderByChild('published').on("child_added", function(snapshot) {
+                if (snapshot && snapshot.val()) {
+                    currentUserActivities.push({
+                        groupID: groupID,
+                        subgroupID: subgroupID,
                         displayMessage: snapshot.val().displayName,
                         activityID: snapshot.key(),
                         published: snapshot.val().published
@@ -75,29 +81,21 @@
             });
         }
 
-        //if current use is admin or owner of given group then it will seen group-join or subgroup-join request
-        function getActivityOfJoinGroupSubGroupRequest(groupID) {
-            //getting activity streams from firebase node: group-activity-streams
-            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('object/id').equalTo(groupID).on("child_added", function(snapshot) {
-                if (snapshot && snapshot.val() && snapshot.val().seen === false && (snapshot.val().verb === 'group-join' || snapshot.val().verb === 'subgroup-join' )) {
-                    currentUserActivities.push({
-                        groupID: groupID,
-                        displayMessage: snapshot.val().displayName,
-                        activityID: snapshot.key(),
-                        published: snapshot.val().published
-                    });
-                }
-            });
-        }
 
         //for getting subgroups of current user
         function getSubGroupsOfCurrentUsers() {
             firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(snapshot) {
                 for (var subgroup in snapshot.val()) {
+                    console.log('snapshot_',snapshot.val()[subgroup]);
                     currentUserSubGroups.push({
                         groupID: snapshot.key(),
                         subgroupID: subgroup
                     }); //subgroup array
+
+                    //getting activity by subgroup
+                    getActivityOfCurrentUserBySubGroup(snapshot.key(), subgroup);
+
+                    //getting subgroup members
                     getSubGroupsMembersOfCurrentUsers(snapshot.key(), subgroup);
                 }
             });
@@ -106,43 +104,11 @@
         //for getting subgroups members of current user
         function getSubGroupsMembersOfCurrentUsers(groupID, subgroupID) {
             firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_added', function(snapshot) {
-                if (currentUserSubGroupsMembers.length === 0) {
-                    currentUserSubGroupsMembers.push({
-                        groupID: groupID,
-                        subgroupID: subgroupID,
-                        member: snapshot.key()
-                    });
-                } else {
-                    for (var i = 0; i < currentUserSubGroupsMembers.length; i++) {
-                        if (currentUserSubGroupsMembers[i].groupID === groupID && currentUserSubGroupsMembers[i].subgroupID == subgroupID && currentUserSubGroupsMembers[i].member == snapshot.key()) {
-                            break;
-                        } else {
-                            if (i == currentUserSubGroupsMembers.length - 1) {
-                                currentUserSubGroupsMembers.push({
-                                    groupID: groupID,
-                                    subgroupID: subgroupID,
-                                    member: snapshot.key()
-                                });
-                            } //for else if
-                        } //for else
-                    } //for
-                } //else
+                currentUserSubGroupsMembers[groupID][subgroupID] = snapshot.key();
             }); //firebaseService.getRefSubGroupMembers
         } //getSubGroupsMembersOfCurrentUsers
 
-        //get cureent user activity stream from firebase node: user-activity-streams
-        function getCurrentUserActivity() {
-            //getting activity streams from firebase node: user-activity-streams
-            //.orderByChild('seen').equalTo('false')
-            firebaseService.getRefMain().child('user-activity-streams').child(userID).orderByChild('object/id').equalTo(userID).on("child_added", function(snapshot) {
-                if (snapshot && snapshot.val() && snapshot.val().seen === false) {
-                    currentUserActivities.push({
-                        activityID : snapshot.key(),
-                        displayMessage: snapshot.val().displayName
-                    });
-                }
-            });
-        }
+
 
         function getActivities() {
             return currentUserActivities;
