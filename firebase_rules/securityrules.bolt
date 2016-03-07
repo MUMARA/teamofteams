@@ -428,7 +428,7 @@ type LogoImageRequirement {
  //   Group Activity Streams
  //====================================
  //Please note when creating group using Multi path update donot add group creation activity seprately
-path /group-activity-streams/{groupid}{
+path /group-activity-streams/{groupid} {
   index()  {  "object/id" }
 
   read()     {    isGroupMembersIdExist(groupid)       &&
@@ -441,7 +441,7 @@ path /group-activity-streams/{groupid}{
 /{activityid} is GroupActivityStreamsInfo {
     index()  {  "object/id" }
 write() {
-  (isAuthenticated() && isGroupJoined(this['verb']) || isSubGroupJoined(this['verb']))
+  (isAuthenticated() && isGroupJoined(this['verb']))
 }
  }
  }
@@ -458,11 +458,9 @@ write() {
    published: CurrentTimeStamp,
    verb : String,
    actor: ActorType,
-   object: ObjectType,
-   target: TargetInfo | Null,
-   seen: Boolean
-
- }
+   object: ObjectType | Null,
+   target: TargetInfo | Null
+}
 
 type  ActorType {
    displayName: String,
@@ -483,6 +481,26 @@ type  ActorType {
    id: String,
    type :String,
    url: String
+ }
+ //   SubGroup Activity Streams
+ //====================================
+ //Please note when creating group using Multi path update donot add group creation activity seprately
+path /subgroup-activity-streams/{groupid}/{subgroupid} {
+  index()  {  "object/id" }
+
+  read()     {    isGroupMembersIdExist(groupid)       &&
+                  groupMemberShipAnyType(groupid) }
+
+  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
+
+  // validate() { prior(root['groups'][$groupid].val() != null)     }
+
+/{activityid} is GroupActivityStreamsInfo {
+    index()  {  "object/id" }
+write() {
+  (isAuthenticated() && isSubGroupJoined(this['verb']))
+}
+ }
  }
  //====================================
  //   Group Check In Current
@@ -826,7 +844,7 @@ path  /subgroup-activity-streams/{groupid} {
 //      subgroup-check-in-current
 //==================================
 
-
+/*subgroup-check-in-current*/
 path /subgroup-check-in-current/{groupid} {
     read() {
             isAuthenticated()       &&
@@ -870,7 +888,7 @@ path /subgroup-check-in-current/{groupid} {
 //==================================
 //      subgroup-check-in-current-by-user
 //==================================
-
+/*subgroup-check-in-current-by-user*/
 path /subgroup-check-in-current-by-user/{userid} {
     read() {
           isAuthenticatedUser($userid) ||
@@ -905,9 +923,9 @@ function isSubGroupGroupIDAdmin(this) {
 
 
 //==================================
-//      subgroup-check-in-records
+//     subgroup-check-in-records
 //==================================
-
+/*subgroup-check-in-records*/
 path /subgroup-check-in-records/{groupid} {
     read() {
             isAuthenticated()                &&
@@ -953,7 +971,7 @@ path /subgroup-check-in-records/{groupid} {
 //==================================
 //     user-subgroup-memberships
 //==================================
-
+/*user-subgroup-memberships*/
 path /user-subgroup-memberships/{userid} {
     read() {
                 isAuthenticatedUser($userid) || (isAuthenticated() && ifUserUserIDExist($userid))   }
@@ -1014,7 +1032,7 @@ function isUserCurrentSubgroupMemberShipAdmin($groupid) {
 //==================================
 //     user-subgroup-memberships
 //==================================
-
+/*user-subgroup-memberships*/
 path /subgroup-membership-requests/{groupid} {
 
   read()  {    isGroupIdExist(groupid)                    &&
@@ -1056,7 +1074,7 @@ type SubGroupMembershipRequest {
  //==================================
 //     Subgroup Membership Requests By User
 //==================================
-
+/*Subgroup Membership Requests By User*/
  path /subgroup-membership-requests-by-user/{userid} {
 
   read()     { isAuthenticatedUser($userid) }
@@ -1090,7 +1108,7 @@ type SubGroupRequestByUserTimeStamp {
  //==========================================
  // Path For Group Private Chats
  //==========================================
-
+/*Group Private Chats*/
 path /group-private-chats/{groupid}/{chatid} {
     read() { isAuthenticated() && isChatIdExist($groupid,$chatid)  }
 
@@ -1109,7 +1127,7 @@ function isChatIdExist($groupid,$chatid) {
 //==========================================
  // Path For User Private Chat Refs
  //==========================================
-
+/*User Private Chat Refs*/
  path /user-private-chat-refs/{userid}/{groupid} {
   read()  { isAuthenticatedUser($userid) }
 
@@ -1121,6 +1139,7 @@ function isChatIdExist($groupid,$chatid) {
 //==========================================
  // Path For Group Chats
  //==========================================
+ /*Group Chats*/
 
 path /group-chats/{groupid} {
   read() {   isAuthenticated()       &&
@@ -1167,6 +1186,7 @@ type CreatedBy {
  //==========================================
  // Path For SubGroup Chats
  //==========================================
+ /*SubGroup Chats*/
 
 path /subgroup-chats/{groupid} {
    read() {
@@ -1212,7 +1232,7 @@ function isSubGroupSubGroupIdExist(groupid , subgroupid) {
 //=========================================
 //               Task
 //=========================================
-
+/*Task*/
 path /tasks/{groupid} {
   read() {    isAuthenticated()       &&
               isGroupMembersIdExist(groupid) &&
@@ -1223,7 +1243,7 @@ path /tasks/{groupid} {
 }
 
 
-
+/*Policies*/
 path /policies/{groupid}  {
   read()  {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
@@ -1279,7 +1299,7 @@ type BooleanOrNull {
    Friday : BooleanOrNull[],
    Saturday : BooleanOrNull[]
   }
-
+/*Subgroup Policies*/
 path /subgroup-policies/{groupid} {
     read(){
           isAuthenticated() &&
@@ -1323,6 +1343,7 @@ type SubgroupAppliedPolicyType {
 }
 
 
+/*User policies*/
 
   path /user-policies/{userid}/{groupid}/{subgroupid} is AppliedPolicyType {
     read()  {  isAuthenticatedUser(userid) ||
@@ -1338,7 +1359,7 @@ type SubgroupAppliedPolicyType {
                isSubGroupGroupIDOwner(this) ||
                isSubGroupGroupIDAdmin(this)  }
    }
-
+/*progress Report By User*/
 path /progress-reports-by-users/{userid} {
 
   read() { isAuthenticated() }
@@ -1369,7 +1390,7 @@ path /progress-reports-by-users/{userid} {
   policyID : String
 
  }
-
+/*Group Channel*/
 path /group-channel/{groupid} {
     read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
 
@@ -1381,6 +1402,9 @@ path /group-channel/{groupid} {
    index() { "title" }
 
 }
+
+/*Group Messages*/
+
 path /group-messages/{groupid}/{channelid} {
 
   read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
@@ -1395,6 +1419,8 @@ path /group-messages/{groupid}/{channelid} {
 
  }
 }
+/*Subgroup Channel*/
+
 path /subgroup-channel/{groupid}{
 
   read() {  isAuthenticated() && userGroupMembershipAnyType(groupid) }
@@ -1428,7 +1454,7 @@ type ChatChannelType {
   timestamp   : CurrentTimeStamp,
   attachmentId  : String | Null
  }
-
+  /*Firebase Group*/
  path /firepad-groups/{groupid} {
    read() {
      isAuthenticated() && userGroupMembershipAnyType(groupid)
@@ -1442,6 +1468,9 @@ type ChatChannelType {
    }
  }
 }
+
+/*firebase Subgroup*/
+
  path /firepad-subgroups/{groupid}/{subgroupid}{
    read() {
      isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
@@ -1456,6 +1485,7 @@ type ChatChannelType {
    }
   }
 }
+/*firepad group documents*/
  path /firepad-groups-documents/{groupid}/{documentid} {
    read() {
      isAuthenticated() && userGroupMembershipAnyType(groupid)
@@ -1464,7 +1494,7 @@ type ChatChannelType {
      isAuthenticated() && userGroupMembershipAnyType(groupid)
    }
  }
-
+ /*firepad Subgroup documents*/
  path /firepad-subgroups-documents/{groupid}/{subgroupid}{
    read() {
      isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
@@ -1475,22 +1505,12 @@ type ChatChannelType {
    }
    write() {
    isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
+    }
+   }
  }
- }
- }
-/*
-type DocumentType {
-  title : String,
-  timestamp : CurrentTimeStamp,
-  "type": String,
-  createdBy: CreatedByObj
-}
-type CreatedByObj {
-  imgUrl : String,
-  firstName: String,
-  lastName: String,
-  userID: String
-}*/
+
+/*User Activity Streams*/
+
 path /user-activity-streams/{userid}{
   read() {
     isAuthenticated()
@@ -1504,6 +1524,7 @@ path /user-activity-streams/{userid}{
    }
  }
   }
+  /*firepad Group Access */
 path /firepad-groups-access/{groupid}/{documentid}{
       read() {
         isAuthenticated()
@@ -1511,7 +1532,7 @@ path /firepad-groups-access/{groupid}/{documentid}{
       write() {
         isAuthenticated()
       }
-   /{userid} is Boolean {
+   /{userid} is Number {
       read() {
         isAuthenticated()
       }
@@ -1520,6 +1541,16 @@ path /firepad-groups-access/{groupid}/{documentid}{
       }
     }
 }
+  /*firepad Group Rules */
+path /firepad-groups-rules/{groupid}/{documentid}/allUsers is Boolean  {
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+}
+  /*firepad SubGroup Access */
 path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
   read() {
     isAuthenticated()
@@ -1527,7 +1558,18 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
   write() {
     isAuthenticated()
   }
-/{userid} is Boolean {
+    /{userid} is Number {
+      read() {
+        isAuthenticated()
+      }
+      write() {
+        isAuthenticated()
+      }
+}
+}
+/*firepad SubGroup Rules */
+
+path /firepad-subgroups-rules/{groupid}/{subgroupid}/{documentid}/allUsers is Boolean {
   read() {
     isAuthenticated()
   }
@@ -1535,5 +1577,8 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
     isAuthenticated()
   }
 }
-}
+
+/*type AllUserType {
+  allUsers:  Boolean;
+}*/
 //===========================================================  23/1/16  =====================================================================
