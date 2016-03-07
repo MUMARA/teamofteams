@@ -2,6 +2,7 @@
     'use strict';
 
     angular.module('app.policy').controller('PolicyController', [
+        '$mdSidenav',
         '$state',
         '$location',
         'messageService',
@@ -15,7 +16,7 @@
         'firebaseService',
         '$firebaseArray',
         "policyService",
-        function($state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
+        function($mdSidenav,$state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
 
             this.showPanel = false;
             var that = this;
@@ -253,9 +254,10 @@
             //New Work POLICY
 
             this.subgroupSideNavBar = false;
-            this.toggleSideNavBar = function() {
-                that.subgroupSideNavBar = !that.subgroupSideNavBar;
-            }
+            this.toggleSideNavBar = function(navID) {
+                //that.subgroupSideNavBar = !that.subgroupSideNavBar;
+                $mdSidenav(navID).toggle();
+            };
 
             //scheduler for time base -- START --
             this.selectedTimesForAllow = {};

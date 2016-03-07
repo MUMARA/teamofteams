@@ -69,9 +69,8 @@
             that.adminSideNav = true;
             that.memberSideNav = true;
             $mdSidenav(sideNav).toggle();
-            console.log(sideNav);
 
-            /*if(sideNav === 'admin') {
+           /* if(sideNav === 'admin') {
                 that.adminSideNav = false;
                 that.memberSideNav = true;
             } else if(sideNav === 'member') {
