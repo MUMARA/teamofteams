@@ -106,11 +106,11 @@
                   <h5 class="foreColorDarkGrey">{{user.fullName}} all user</h5>
                 </md-switch>-->
                 <md-switch ng-disabled="(collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID.length === 0"  ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
-                  <h5 class="">{{user.fullName}}</h5>
+                  <h5 class="">{{user.fullName}}
                   <!--<span ng-if="(collaborator.createdBy.userID !=  user.id) && collaborator.isAdmin"> : Admin</span>
                   <span ng-if="(collaborator.createdBy.userID ==  user.id) && !collaborator.isAdmin"> : Creater</span>
                   <span ng-if="(collaborator.createdBy.userID ==  user.id) && collaborator.isAdmin"> : Admin & Creater</span>-->
-                  </h5>
+                 </h5>
                 </md-switch>
                 <br>
               </div>
