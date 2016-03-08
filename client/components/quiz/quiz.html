@@ -197,6 +197,29 @@
         background-color: #ed4757;
         color: #2b2b2b;
     }
+
+    .quiz-menu-col {
+        position: absolute;
+        height: 100%;
+    }
+
+    .menu-item-btn {
+        border: 1px none;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .menu-item-btn .quiz-menu-btn {
+        width: 39px;
+        height: 63px;
+        margin-left: 16px
+    }
+
+    .menu-item-btn img {
+        height: 39px;
+        margin-top: 4px;
+        margin-left: 14px;
+    }
 </style>
 <!--<style>
 
@@ -507,9 +530,9 @@
             </md-button>
         </md-content>
     </md-sidenav>
-    <div class="gradient2" style="position:absolute;height: 100%;">
-        <a ng-click="quiz.booksNav = !quiz.booksNav" id="menu-toggle"><img src="img/menu.svg"
-                                                                           style="width: 39px; height: 63px;  margin-left: 16px;">
+    <div class="gradient2 quiz-menu-col">
+        <a ng-click="quiz.booksNav = !quiz.booksNav" id="menu-toggle" class="menu-item-btn">
+            <img ng-src="img/menu.svg" style=" height: 39px;">
         </a>
         <br>
         <md-divider style="background-color: white;"></md-divider>
@@ -517,24 +540,17 @@
 
         <div>
             <div ng-style="(quiz.books.length == 0) && {'display':'none'}">
-                <div id="quizBankIcon" ng-click="quiz.showQuizBankFunc()" class="selectedTab"
-                     style="border: 1px none;padding-bottom: 10px;padding-top: 10px;">
-                    <img src="img/1book.svg" style="height: 39px;  margin-left: 20px;  "/>
+                <div id="quizBankIcon" ng-click="quiz.showQuizBankFunc()" class="selectedTab menu-item-btn">
+                    <img ng-src="img/1book.svg" style="height: 39px;  margin-left: 20px;  "/>
                 </div>
-                <div id="quizIcon" ng-click="quiz.showQuiz()"
-                     style="border: 1px none;padding-bottom: 10px;padding-top: 10px;">
-                    <img src="img/1add_quiz.svg"
-                         style="height: 39px; margin-top:4px;  margin-left: 14px;; "/>
+                <div id="quizIcon" ng-click="quiz.showQuiz()" class="menu-item-btn">
+                    <img ng-src="img/1add_quiz.svg"/>
                 </div>
-                <div id="quizAssignIcon" ng-click="quiz.showAssignQuiz()"
-                     style="border: 1px none;padding-bottom: 10px;padding-top: 10px;">
-                    <img src="img/1calendar.svg"
-                         style="height: 39px; margin-top:4px;  margin-left: 14px;; "/>
+                <div id="quizAssignIcon" ng-click="quiz.showAssignQuiz()" class="menu-item-btn">
+                    <img ng-src="img/1calendar.svg"/>
                 </div>
-                <div id="quizResultIcon" ng-click="quiz.showAttemptQuiz()"
-                     style="border: 1px none;padding-bottom: 10px;padding-top: 10px;">
-                    <img src="img/comment.svg"
-                         style="height: 39px; margin-top:4px;  margin-left: 14px;; "/>
+                <div id="quizResultIcon" ng-click="quiz.showAttemptQuiz()" class="menu-item-btn">
+                    <img ng-src="img/comment.svg"/>
                 </div>
             </div>
         </div>

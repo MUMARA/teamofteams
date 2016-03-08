@@ -531,7 +531,8 @@ angular.module('core', [
                 if (snapshot.val().message == 'Checked-in') {
                     that.report.push({
                         checkin: snapshot.val().timestamp,
-                        checkindate: newDate
+                        checkindate: newDate,
+                        checkout: 0
                     });
                     that.count++;
                 } else if (snapshot.val().message == 'Checked-out') {
@@ -1099,9 +1100,9 @@ angular.module('core', [
  */
 (function() {
     'use strict';
-    angular.module('app.progressreport').controller('ProgressReportController', ['$state', 'messageService', '$timeout', 'groupService', 'ProgressReportService', 'dataService', 'userService', '$stateParams', ProgressReportController]);
+    angular.module('app.progressreport').controller('ProgressReportController', ['firebaseService', '$state', 'messageService', '$timeout', 'groupService', 'ProgressReportService', 'dataService', 'userService', '$stateParams', ProgressReportController]);
 
-    function ProgressReportController($state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
+    function ProgressReportController(firebaseService, $state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
         this.loadingData = false;
         this.setFocus = function(startDate , endDate) {
@@ -1109,23 +1110,41 @@ angular.module('core', [
              if(startDate && endDate) {
                  $timeout(function() {
                      that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+                     // that.showReportData();
                      that.loadingData = false;
                  // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
 
                  }, 2000);
              }else{
                  document.getElementById("#UserSearch").focus();
-                 that.loadingData = false; 
+                 that.loadingData = false;
              }
 
         };
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().from(timestamp);
+                return moment().to(timestamp);
             } else {
-                return ''
+                return '';
             }
         };
+        this.returnGroupTitle = function(groupID) {
+            firebaseService.getRefGroupsNames().child(groupID).child('title').once('value', function(snapshot){
+                that.grouptitle = snapshot.val();
+            })
+        }
+        this.returnSubGroupTitle = function(groupID, subgroupID) {
+            if (subgroupID) {
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).child('title').once('value', function(snapshot){
+                    that.subgrouptitle = snapshot.val();
+                })
+            } else {
+                that.subgrouptitle = '';
+            }
+        }
+        this.updatecheckinhours = function(value){
+            that.checkinHours = value;
+        }
         this.update = function(report) {
             // console.log(report);
             ProgressReportService.updateReport(report, function(result) {
@@ -1140,10 +1159,45 @@ angular.module('core', [
         this.everyone = function(){
             that.activeUser = '';
         };
+        this.showReportData = function () {
+            that.attendancereport = [];
+            that.count = -1;
+            that.checkinHours = 0;
+            // that.reportParam = {
+            //     fullName: user.fullName,
+            //     groupsubgroupTitle: user.groupsubgroupTitle,
+            // };
+            firebaseService.getRefsubgroupCheckinRecords()
+                .child(that.groupID)
+                .child(that.subgroupID)
+                .child(that.activeUser)
+                .orderByChild('timestamp')
+                .startAt(new Date().setHours(0,0,0,0))
+                .endAt(new Date().setHours(23,59,59,0))
+                .on('child_added', function(snapshot){
+                    var fullDate = new Date(snapshot.val().timestamp);
+                    var newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), fullDate.getDate());
+                    if (snapshot.val().message == 'Checked-in') {
+                        that.attendancereport.push({
+                            checkin: snapshot.val().timestamp,
+                            checkindate: newDate,
+                            location: snapshot.val()['identified-location-id'],
+                            checkout: 0
+                        });
+                        that.count++;
+                    } else if (snapshot.val().message == 'Checked-out') {
+                        that.attendancereport[that.count].checkout = snapshot.val().timestamp;
+                        that.attendancereport[that.count].checkoutdate = newDate;
+                        that.attendancereport[that.count].checkoutlocation = snapshot.val()['identified-location-id'];
+                    }
+            });
+        }
         function init() {
             groupService.setActivePanel('progressreport');
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID || '';
+            that.returnGroupTitle(that.groupID);
+            that.returnSubGroupTitle(that.groupID, that.subgroupID);
             that.user = userService.getCurrentUser();
             that.users = dataService.getUserData();
             //that.activeUser = ($stateParams.u) ? that.user.userID : '';
@@ -1163,16 +1217,18 @@ angular.module('core', [
                     //sub group report
                     $timeout(function() {
                         that.dailyProgressReport = ProgressReportService.getSubGroupDailyProgressReport(that.users, that.groupID, that.subgroupID);
+                        that.showReportData();
                          // $timeout(function() {
                          //     console.log('xxxx',that.dailyProgressReport);
                          // }, 5000);
                     }, 2000);
                 } else {
+                    that.dailyProgressReport = true;
                     //group report
-                    $timeout(function() {
-                        that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
-                        that.activeUser = '';
-                    }, 2000);
+                    // $timeout(function() {
+                    //     that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
+                    //     that.activeUser = '';
+                    // }, 2000);
                 }
 
             }
@@ -4140,7 +4196,9 @@ angular.module('core', [
         this.ActiveSideNavBar = function(sideNav) {
             that.adminSideNav = true;
             that.memberSideNav = true;
-            if(sideNav === 'admin') {
+            $mdSidenav(sideNav).toggle();
+
+           /* if(sideNav === 'admin') {
                 that.adminSideNav = false;
                 that.memberSideNav = true;
             } else if(sideNav === 'member') {
@@ -4149,7 +4207,7 @@ angular.module('core', [
             } else {
                 this.adminSideNav = true;
                 this.memberSideNav = true;
-            }
+            }*/
         }
 
         this.createTeam = function(){
@@ -5576,6 +5634,7 @@ angular.module('core', [
     'use strict';
 
     angular.module('app.policy').controller('PolicyController', [
+        '$mdSidenav',
         '$state',
         '$location',
         'messageService',
@@ -5589,7 +5648,7 @@ angular.module('core', [
         'firebaseService',
         '$firebaseArray',
         "policyService",
-        function($state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
+        function($mdSidenav,$state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
 
             this.showPanel = false;
             var that = this;
@@ -5827,9 +5886,10 @@ angular.module('core', [
             //New Work POLICY
 
             this.subgroupSideNavBar = false;
-            this.toggleSideNavBar = function() {
-                that.subgroupSideNavBar = !that.subgroupSideNavBar;
-            }
+            this.toggleSideNavBar = function(navID) {
+                //that.subgroupSideNavBar = !that.subgroupSideNavBar;
+                $mdSidenav(navID).toggle();
+            };
 
             //scheduler for time base -- START --
             this.selectedTimesForAllow = {};
@@ -12092,9 +12152,7 @@ angular.module('core')
                                                                     //for group activity record
                                                                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                                                     //for group activity stream record -- END --
-
                                                                     defer.resolve();
-
                                                                     // //step4: publish an activity
                                                                     // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {
                                                                     //         var groupObj = snapshot.val();
@@ -13494,9 +13552,9 @@ var s = {
                      subgroupHasPolicy(group.groupId, group.subgroupId, function(hasPolicy, Policy){
                         if(hasPolicy) {
                             //hasPolicy true
-                            checkinPolicy(Policy, locationObj, function(result, msg){
+                            checkinPolicy(Policy, locationObj, function(result, msg, teamLocationTitle){
                                 if(result){
-                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, function(result, cbMsg, reportMsg){
+                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, teamLocationTitle, function(result, cbMsg, reportMsg){
                                         //console.log('group', group); //group = {groupId: "hotmaill", subgroupId: "yahooemail", userId: "usuf52"}
                                         cb(result, cbMsg, reportMsg, group);
                                     });
@@ -13557,28 +13615,31 @@ var s = {
 
         //checking Policy is Subgroup Has Policy (is that timebased or locationbased)
         function checkinPolicy(Policy, currentLocationObj, callback) {
+            console.log('policy', Policy)
             if(Policy && Policy.locationBased) {  //checking if location Based
 
                 //checking distance (RADIUS)
-                // var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
+                var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
                 // console.log('distance:' + distance);
                 // console.log('distance in meter:' + distance * 1000);
 
-                // if ((distance * 1000) > Policy.location.radius) {  //checking lcoation radius
+                if ((distance * 1000) < Policy.location.radius) {  //checking lcoation radius
                     // callback(false, 'Current Location does not near to the Team Location');
-                // } else { // if within radius
-
                     checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
-                        callback(d, msg);     //if result true (checkin allow)
+                        callback(d, msg, Policy.location.title);     //if result true (checkin allow)
                     }); //checking if time based
-                // } //if within radius
+                } else { // if within radius
+                    checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
+                        callback(d, msg, false);     //if result true (checkin allow)
+                    }); //checking if time based
+                } //if within radius
 
             } else if(Policy && Policy.timeBased) { //policy has timeBased
                 checkinTimeBased(Policy, function(d, msg) {
-                    callback(d, msg);      //if result true (checkin allow)
+                    callback(d, msg, false);      //if result true (checkin allow)
                 }); //checking if time based
             } else {    //checking others like if dailyReport
-                callback(true, '');      //result true (checkin allow) (might be only dailyReport has checked)
+                callback(true, '', false);      //result true (checkin allow) (might be only dailyReport has checked)
             }
         } //checkinLocationBased
         //checkinTimeBased
@@ -13655,10 +13716,10 @@ var s = {
 
 
 
-        function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, cb){
+        function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, teamLocationTitle, cb){
             // groupObj = {groupId: '', subgroupId: '', userId: ''}
             var multipath = {};
-            var dated = Date.now();
+            var dated = fireTimeStamp;
             var ref = firebaseService.getRefMain();         //firebase main reference
             var refGroup = firebaseService.getRefGroups();  //firebase groups reference
             var refSubGroup = firebaseService.getRefSubGroups();  //firebase groups reference
@@ -13670,9 +13731,9 @@ var s = {
             var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
             var checkinResultMsg = (checkoutFlag) ? "Checkout Successfully" : "Checkin Successfully";
             var statusType = (checkoutFlag) ? 2 : 1;
-
+            var _teamLocationTitle = (teamLocationTitle ? teamLocationTitle : 'Other');
             multipath["subgroup-check-in-records/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId+"/"+newPostKey] = {
-                "identified-location-id": "Other",
+                "identified-location-id": _teamLocationTitle,
                 "location": {
                     "lat": locationObj.lat,
                     "lon": locationObj.lng
