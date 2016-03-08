@@ -66,18 +66,19 @@
 
 
         this.ActiveSideNavBar = function(sideNav) {
-            that.adminSideNav = true;
-            that.memberSideNav = true;
-            if(sideNav === 'admin') {
-                that.adminSideNav = false;
-                that.memberSideNav = true;
-            } else if(sideNav === 'member') {
-                that.adminSideNav = true;
-                that.memberSideNav = false;
-            } else {
-                this.adminSideNav = true;
-                this.memberSideNav = true;
-            }
+          $mdSidenav(sideNav).toggle()
+            // that.adminSideNav = true;
+            // that.memberSideNav = true;
+            // if(sideNav === 'admin') {
+            //     that.adminSideNav = false;
+            //     that.memberSideNav = true;
+            // } else if(sideNav === 'member') {
+            //     that.adminSideNav = true;
+            //     that.memberSideNav = false;
+            // } else {
+            //     this.adminSideNav = true;
+            //     this.memberSideNav = true;
+            // }
         };
 
         this.createTeam = function(){
