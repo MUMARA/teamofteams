@@ -1360,7 +1360,7 @@ type SubgroupAppliedPolicyType {
                isSubGroupGroupIDAdmin(this)  }
    }
 /*progress Report By User*/
-path /progress-reports-by-users/{userid} {
+/*path /progress-reports-by-users/{userid} {
 
   read() { isAuthenticated() }
 
@@ -1389,7 +1389,7 @@ path /progress-reports-by-users/{userid} {
   questionID : String,
   policyID : String
 
- }
+ }*/
 /*Group Channel*/
 path /group-channel/{groupid} {
     read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
@@ -1542,7 +1542,7 @@ path /firepad-groups-access/{groupid}/{documentid}{
     }
 }
   /*firepad Group Rules */
-path /firepad-groups-rules/{groupid}/{documentid}/allUsers is Boolean  {
+path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
       read() {
         isAuthenticated()
       }
@@ -1569,13 +1569,16 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
 }
 /*firepad SubGroup Rules */
 
-path /firepad-subgroups-rules/{groupid}/{subgroupid}/{documentid}/allUsers is Boolean {
+path /firepad-subgroups-rules/{groupid}/{subgroupid}/{documentid} is FirepadRulesType {
   read() {
     isAuthenticated()
   }
   write() {
     isAuthenticated()
   }
+}
+type FirepadRulesType {
+  allUsers: Boolean;
 }
 
 /*type AllUserType {

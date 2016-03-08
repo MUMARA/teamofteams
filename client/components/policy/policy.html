@@ -217,7 +217,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
                         </md-chips> -->
 
                         <div layout-wrap style="margin-bottom: 4%;">
-                            <span style="margin: 5px 5px 10px 5px; padding: 8px 8px 8px 8px; display: inline-block; background:rgba(0,0,0,0.5);border-radius:50px; color:white;" ng-repeat="subgroup in policy.subGroupNames track by $index" ng-if="subgroup.hasPolicy == true">{{subgroup.subgroupTitle}}</span>
+                            <span style="margin: 5px 5px 10px 5px; padding: 2px 8px 8px 8px; display: inline-block; background:rgba(0,0,0,0.5);border-radius:50px; color:white;" ng-repeat="subgroup in policy.subGroupNames track by $index" ng-if="subgroup.hasPolicy == true">{{subgroup.subgroupTitle}} &nbsp; <ng-md-icon style="position:relative; top:5px;" icon="close" size="24" class="fillColorWhite nooutline"></ng-md-icon></span>
                         </div>
 
                     <!-- <div layout="column">
