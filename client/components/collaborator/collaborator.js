@@ -66,17 +66,22 @@
     that.document = "Create/Open Document";
     that.showLoader = false;
     that.admins = [];
+    that.permissionMembers = {};
 
     init();
-    if (!that.subgroupID) {
-      $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
-        data.forEach(function(member) {
-          if (member["membership-type"] == 1) {
-            that.admins.push(member);
-          }
-        });
-        console.log("that.admins", that.admins);
+    $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
+      data.forEach(function(member) {
+        if (member["membership-type"] == 1 || member["membership-type"] == 2) {
+          console.log("admins",member);
+          that.admins.push(member);
+          that.permissionMembers[member.$id] = true;
+        }
       });
+      console.log("that.admins", that.admins);
+      console.log("that.permissionMembers", that.permissionMembers);
+    });
+
+    if (!that.subgroupID) {
 
       firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups) {
         if (groups.val() && groups.val()['membership-type'] == 1) {
@@ -120,19 +125,20 @@
     }
 
     that.gotoDocument = function(openDoc) {
+      firepadRef = new Firebase(ref);
       if (that.subgroupID) {
         $state.go("user.group.subgroup-collaborator", {
           groupID: that.groupID,
           subgroupID: that.subgroupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(firepadRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
+        that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
       } else {
         $state.go("user.group.collaborator", {
           groupID: that.groupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(firepadRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+        that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
       }
 
       that.allUsers.$loaded(function() {

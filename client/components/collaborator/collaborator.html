@@ -89,31 +89,38 @@
           </md-tab>
           <!--Online Users side-->
           <md-tab label="Collaborators">
-            <md-content layout-padding layout-wrap class="backColorSeaGreen">
-              <div class="">
+            <md-content layout-wrap class="backColorSeaGreen">
+              <md-list>
+                <md-list-item ng-hide="(!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID)">
                 <!-- <md-checkbox ng-model="collaborator.allow[user.fullName]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked()" ng-repeat="user in collaborator.accessedUsers"> -->
-                <md-switch ng-hide="(!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID)" ng-model="collaborator.allUsers" aria-label="Checkbox 1"  ng-change="collaborator.toggleAllUser(collaborator.allUsers)">
+                <md-switch  ng-model="collaborator.allUsers" aria-label="Checkbox 1"  ng-change="collaborator.toggleAllUser(collaborator.allUsers)">
                   <h5 class="foreColorDarkGrey">All User</h5>
                 </md-switch>
-                <md-switch ng-disabled="(collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0)" ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
-                  <h5 class="">{{user.fullName}}
-                    <!--<span ng-if="(collaborator.createdBy.userID !=  user.id) && collaborator.isAdmin"> : Admin</span>
-                    <span ng-if="(collaborator.createdBy.userID ==  user.id) && !collaborator.isAdmin"> : Creater</span>
-                    <span ng-if="(collaborator.createdBy.userID ==  user.id) && collaborator.isAdmin"> : Admin & Creater</span>-->
-                  </h5>
-                </md-switch>
+                </md-list-item>
+                <md-list-item ng-if="!(collaborator.subgroupID.length === 0)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+                  <md-switch ng-disabled="collaborator.permissionMembers[user.id] || ((collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers)" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1"  ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" >
+                    <h5 class="">{{user.fullName}}
+                      <span ng-if="(collaborator.createdBy.userID !=  user.id) && collaborator.permissionMembers[user.id]"> : Admin</span>
+                      <span ng-if="(collaborator.createdBy.userID ==  user.id) && !collaborator.permissionMembers[user.id]"> : Creater</span>
+                      <span ng-if="(collaborator.createdBy.userID ==  user.id) && collaborator.permissionMembers[user.id]"> : Admin & Creater</span>
+                    </h5>
+                  </md-switch>
+                </md-list-item>
                <!-- <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.allUsers" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0) && collaborator.allUsers" ng-change="collaborator.checkboxClicked(collaborator.allUsers)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
                   <h5 class="foreColorDarkGrey">{{user.fullName}} all user</h5>
                 </md-switch>-->
-                <md-switch ng-disabled="(collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1" ng-if="collaborator.subgroupID.length === 0"  ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID">
-                  <h5 class="">{{user.fullName}}
-                  <!--<span ng-if="(collaborator.createdBy.userID !=  user.id) && collaborator.isAdmin"> : Admin</span>
-                  <span ng-if="(collaborator.createdBy.userID ==  user.id) && !collaborator.isAdmin"> : Creater</span>
-                  <span ng-if="(collaborator.createdBy.userID ==  user.id) && collaborator.isAdmin"> : Admin & Creater</span>-->
-                 </h5>
-                </md-switch>
+
+                  <md-list-item ng-if="collaborator.subgroupID.length === 0"  ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+                  <md-switch  ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" ng-disabled="collaborator.permissionMembers[user.id] || ((collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers)" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1">
+                    <h5 class="">{{user.fullName}}
+                    <span ng-if="(collaborator.createdBy.userID !=  user.id) && collaborator.permissionMembers[user.id]"> : Admin</span>
+                    <span ng-if="(collaborator.createdBy.userID ==  user.id) && !collaborator.permissionMembers[user.id]"> : Creater</span>
+                    <span ng-if="(collaborator.createdBy.userID ==  user.id) && collaborator.permissionMembers[user.id]"> : Admin & Creater</span>
+                    </h5>
+                  </md-switch>
+                </md-list-item>
                 <br>
-              </div>
+              </md-list>
 
             </md-content>
           </md-tab>
