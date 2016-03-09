@@ -116,11 +116,14 @@
                 multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/title"] = obj['title'];
 
                 //for daily progress questions
-                if(obj['progressReport']){
-                     var newQuestionRef = refNodes.ref.child("policies").child(groupID).child(newPolicyKey).child('progressReportQuestions').push();
-                     var newQuestionID = newQuestionRef.key();
-                     multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/latestProgressReportQuestionID"] = newQuestionID;
-                     multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
+                if (obj['progressReport']) {
+                    //if question has been changed then do this else nuthing just true isProgressReport....
+                    if (obj['progressReportQuestions']) {
+                        var newQuestionRef = refNodes.ref.child("policies").child(groupID).child(newPolicyKey).child('progressReportQuestions').push();
+                        var newQuestionID = newQuestionRef.key();
+                        multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/latestProgressReportQuestionID"] = newQuestionID;
+                        multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
+                    } 
                 }
 
                 var subgroupPolicyActivity = {};

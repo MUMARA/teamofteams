@@ -165,7 +165,7 @@
                             <div layout="row" layout-align="start center">
                                 <md-input-container flex="50">
                                     <label>Question</label>
-                                    <input name="question" ng-model="policy.question" minlength="3" maxlength="40" required>
+                                    <input name="question" ng-model="policy.question" minlength="3" maxlength="100" required>
                                     <div ng-show="policy.$submitted" ng-messages="policyForm.policyTitle.$error">
                                         <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
                                         <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>

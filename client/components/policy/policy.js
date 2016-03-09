@@ -16,11 +16,11 @@
         'firebaseService',
         '$firebaseArray',
         "policyService",
-        function($mdSidenav,$state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
+        function($mdSidenav, $state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
 
             this.showPanel = false;
             var that = this;
-            this.showarrow = undefined ;
+            this.showarrow = undefined;
             this.isLocationbased = false;
             this.isTimebased = false;
             this.isProgressReport = false;
@@ -44,8 +44,8 @@
             var subgroupId = that.subgroupId = undefined;
 
             //checking is admin or not -- START
-            that.groupAdmin = false
-            firebaseService.getRefUserGroupMemberships().child(that.userId).child(that.groupId).once('value', function(group){
+            that.groupAdmin = false;
+            firebaseService.getRefUserGroupMemberships().child(that.userId).child(that.groupId).once('value', function(group) {
                 if (group.val()['membership-type'] == 1) {
                     that.groupAdmin = true;
                 } else if (group.val()['membership-type'] == 2) {
@@ -63,7 +63,7 @@
                 //getting user current location
                 checkinService.getCurrentLocation().then(function(location) {
                     if (location) { //if location found
-                        getLatLngByAddress(location.coords.latitude +', '+ location.coords.longitude);
+                        getLatLngByAddress(location.coords.latitude + ', ' + location.coords.longitude);
                     }
                 }, function(err) {
                     //messageService.showFailure(err.error.message);
@@ -74,7 +74,7 @@
             function setLocationMarker(lng, lat) {
                 that.center.lat = lat;
                 that.center.lng = lng;
-                that.center.zoom = 20
+                that.center.zoom = 20;
 
                 that.markers.mark.lat = lat;
                 that.markers.mark.lng = lng;
@@ -121,8 +121,8 @@
             this.openEditGroupPage = function() {
                 $state.go('user.edit-group', {
                     groupID: groupId
-                })
-            }
+                });
+            };
 
             this.openCreateSubGroupPage = function() {
                 $state.go('user.create-subgroup', {
@@ -165,27 +165,25 @@
 
             function wrapperGeoLoacation(sub) {
                 if (sub) {
-                    that.subgroupId = sub
+                    that.subgroupId = sub;
                 }
                 var _subgroupId = sub || subgroupId;
 
                 checkinService.createCurrentRefsBySubgroup(groupId, _subgroupId, userId).then(function() {
-                    that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations()
-                        .$loaded().then(function(data) {
-                            if (data.length > 0) {
+                    that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations().$loaded().then(function(data) {
+                         if (data.length > 0) {
+                            updatepostion(data[0].location.lat, data[0].location.lon, data[0].title);
+                            $timeout(function() {
                                 updatepostion(data[0].location.lat, data[0].location.lon, data[0].title);
-                                $timeout(function() {
-                                    updatepostion(data[0].location.lat, data[0].location.lon, data[0].title);
-                                }, 500)
-                            } else {
+                            }, 500);
+                        } else {
+                            updatepostion(24.8131137, 67.04971699999999, '34C Stadium Lane 3, Karachi, Pakistan');
+                            $timeout(function() {
                                 updatepostion(24.8131137, 67.04971699999999, '34C Stadium Lane 3, Karachi, Pakistan');
-                                $timeout(function() {
-                                    updatepostion(24.8131137, 67.04971699999999, '34C Stadium Lane 3, Karachi, Pakistan');
-                                }, 500)
-                            }
-                        })
+                            }, 500);
+                        }
+                    });
                 });
-
             }
 
             function getLatLngByAddress(newVal) {
@@ -203,10 +201,8 @@
                                 updatepostion(lat, lng, results[0].formatted_address);
                             }, 500);
                         }
-
                     });
                 }
-
             }
             that.setSubgroupLocation = setSubgroupLocation;
 
@@ -226,7 +222,7 @@
 
                 };
 
-                checkinService['addLocationBySubgroup'](that.groupId, that.subgroupId, that.userId, infoObj, false)
+                checkinService.addLocationBySubgroup (that.groupId, that.subgroupId, that.userId, infoObj, false)
                     .then(function(res) {
                         that.isProcessing = false;
                         that.submitting = false;
@@ -354,17 +350,17 @@
                 //On New/Create Policy Show Panel
                 that.showPanel = true;
 
-                if(saved){
+                if (saved) {
                     that.showPanel = false;
                     this.showarrow = undefined;
-                }else {
+                } else {
                     that.showPanel = true;
                     this.showarrow = undefined;
                 }
             };//this.newPolicy
 
 
-            this.selectedPolicy = function(policy,index) {
+            this.selectedPolicy = function(policy, index) {
                 that.showarrow = index;
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
@@ -381,7 +377,7 @@
                 loadSchaduler();
 
                 if (that.isLocationbased) {
-                    getLatLngByAddress(policy.location.lat +', '+ policy.location.lng);
+                    getLatLngByAddress(policy.location.lat + ', ' + policy.location.lng);
                     that.paths.c1.radius = policy.location.radius;
                     //that.center.lat = policy.locationObj.lat;
                     //that.center.lng = policy.locationObj.lng;
@@ -405,9 +401,14 @@
                     } //for day    policy.timeObj
                 } //policy.timeBased true
 
-                if(that.isProgressReport) {
-                     that.progressReportQuestions = arrayToObject(policy.progressReportQuestions[policy.latestProgressReportQuestionID]['questions']);        //when comes from firebase our question change into array from object.
-                     isQuestionExists();  //checking if questions exists
+                if (that.isProgressReport) {
+                    //when comes from firebase our question change into array from object.
+                    that.progressReportQuestions = arrayToObject(policy.progressReportQuestions[policy.latestProgressReportQuestionID]['questions']);
+                    //Selected Policy QuestionObject and LastestQuestionID (for checking questions are add/remove/change)
+                    that.selectedQuestionObject = arrayToObject(policy.progressReportQuestions[policy.latestProgressReportQuestionID]['questions']);
+                    that.selectedLastQuestionID = policy.latestProgressReportQuestionID;
+
+                    isQuestionExists();  //checking if questions exists
                 } //that.isDailyReport true
 
                 //now getting subgroup ids where this policy has implemented
@@ -437,10 +438,10 @@
             this.progressReportQuestions = {};
             // var dailyReportQuestionsLength = gettingQuestionsLength();
             this.addQuestion = function() {
-                if(that.question) {
+                if (that.question) {
 
                     var sr = 0;
-                    for(var i in that.progressReportQuestions) {
+                    for (var i in that.progressReportQuestions) {
                         that.progressReportQuestions[sr.toString()] = that.progressReportQuestions[i];
                         sr++;
                     }
@@ -453,8 +454,8 @@
                 }
             };
 
-            function isQuestionExists(){
-                if(Object.keys(that.progressReportQuestions).length > 0) {
+            function isQuestionExists() {
+                if (Object.keys(that.progressReportQuestions).length > 0) {
                     that.showQuestionList = true;
                 } else {
                     that.showQuestionList = false;
@@ -467,15 +468,15 @@
                 //Show Table of Question if question exists
                 isQuestionExists();
             };
-            function gettingQuestionsLength(){      //getting current question object length
+            function gettingQuestionsLength() {      //getting current question object length
                 return Object.keys(that.progressReportQuestions).length;
             }
             //when comes from firebase our question change into array from object.
             function arrayToObject(arr) {
-                if(arr instanceof Array){
+                if (arr instanceof Array) {
                     var rv = {};
                     for (var i = 0; i < arr.length; ++i)
-                      if (arr[i] !== undefined) rv[i] = arr[i];
+                        if (arr[i] !== undefined) rv[i] = arr[i];
                     return rv;
                 } else {
                     return arr;
@@ -488,10 +489,10 @@
 
                 if (that.policyTitle) {
 
-                    if(!that.isProgressReport && !that.isTimebased && !that.isLocationbased) {
+                    if (!that.isProgressReport && !that.isTimebased && !that.isLocationbased) {
                         //nothing have to do....
                         messageService.showFailure('Please Select your Criteria');
-                        this.showarrow = undefined ;
+                        this.showarrow = undefined;
                         return false;
 
                     }
@@ -510,7 +511,7 @@
                     obj["progressReportQuestions"] = "";
                     obj["latestProgressReportQuestionID"] = '';
 
-                     this.showarrow = undefined ;
+                    this.showarrow = undefined;
                     //if locationBased is selected
                     if (that.isLocationbased) {
                         //isLocationbased
@@ -521,28 +522,36 @@
                             radius: that.paths.c1.radius,
                             title: that.markers.mark.message
                         }
-                           this.showarrow = undefined ;
+                        this.showarrow = undefined;
                     }
 
                     //if timeBased is selected
                     if (that.isTimebased) {
                         //isTimebased
-                        if(Object.keys(that.selectedTimesForAllow).length > 0) {
+                        if (Object.keys(that.selectedTimesForAllow).length > 0) {
                             obj["timeBased"] = true;
                             obj["schedule"] = that.selectedTimesForAllow;
                         } else {
                             messageService.showFailure('Please add schedule/time slot!');
                             return false;
                         }
-                           this.showarrow = undefined ;
+                        this.showarrow = undefined;
                     }
 
                     //if dailyBased is selected
-                    if(that.isProgressReport) {
+                    if (that.isProgressReport) {
                         //isDailyReport
-                        if(Object.keys(that.progressReportQuestions).length > 0) {
-                            obj["progressReport"] = true;
-                            obj["progressReportQuestions"] = { questions: that.progressReportQuestions, timestamp: Firebase.ServerValue.TIMESTAMP }
+                        obj["progressReport"] = true;
+                        //checking if pogressReport is selected then question should have atleast one.
+                        if (Object.keys(that.progressReportQuestions).length > 0) {
+                            //checking current questions and saved questions are same or not.........
+                            if (JSON.stringify(that.selectedQuestionObject) === JSON.stringify(that.progressReportQuestions)) {
+                                //if questions are same //no changes in questions
+                                obj["progressReportQuestions"] = null; 
+                            } else {
+                                //if questions are not same or add/remove/chnage any question then add to firebase
+                                obj["progressReportQuestions"] = { questions: that.progressReportQuestions, timestamp: Firebase.ServerValue.TIMESTAMP }
+                            }
                         } else {
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
@@ -552,15 +561,24 @@
                     // console.log('members', that.selectedTeamMembers);
 
                     //calling policy service function to add in firebase
-                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid){
-                       //Load Group Policies from given GroupID
-                       //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
-                        if(that.activePolicyId) {  //if edit
-                            that.groupPolicies.forEach(function(val,index){
-                                if(val.policyID == that.activePolicyId) {
-                                    if(obj["progressReport"]){
-                                        obj['latestProgressReportQuestionID'] = lastQuestionid || '';
-                                        obj['progressReportQuestions'][lastQuestionid] = obj['progressReportQuestions'];
+                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
+                        //Load Group Policies from given GroupID
+                        //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
+                        if (that.activePolicyId) {  //if edit
+                            that.groupPolicies.forEach(function(val, index) {
+                                if (val.policyID == that.activePolicyId) {
+                                    if (obj["progressReport"]) {  //checking isProgressReport is true then do this else nuthing..
+                                        if (lastQuestionid) {
+                                        //if getting lastQuestionid then it means question has changed and now we getting lastQuestionId
+                                            obj['latestProgressReportQuestionID'] = lastQuestionid || '';
+                                            obj['progressReportQuestions'][lastQuestionid] = obj['progressReportQuestions'];
+                                        } else {
+                                            //pass on which we have done on selected policy
+                                            obj['latestProgressReportQuestionID'] = that.selectedLastQuestionID;
+                                            obj['progressReportQuestions'] = {};
+                                            obj['progressReportQuestions'][that.selectedLastQuestionID] = {};
+                                            obj['progressReportQuestions'][that.selectedLastQuestionID]['questions'] = that.selectedQuestionObject;
+                                        }
                                     }
                                     //reasign updated obj to our local array
                                     that.groupPolicies[index] = obj;
@@ -570,7 +588,7 @@
                             messageService.showSuccess('Policy Successfully Updated!');
                             //$state.go('user.policy', {groupID: groupId});
                             that.newPolicy('saved');
-                        } else{
+                        } else {
                             messageService.showSuccess('Policy Successfully Created!');
                             //after created reload initial page
                             that.newPolicy('saved');
@@ -592,7 +610,7 @@
                 that.selectedTeamMembers = {}; //onLoad or create empty selectedTeamMembers obj
                 that.isProgressReport = true;
                 //onLoad default qustion daily Report Questions obj
-                that.progressReportQuestions = {'0': 'What did you accomplish today?', '1': 'What will you do tomorrow?', '2': 'What obstacles are impeding your progress?'};
+                that.progressReportQuestions = { '0': 'What did you accomplish today?', '1': 'What will you do tomorrow?', '2': 'What obstacles are impeding your progress?' };
                 isQuestionExists();
 
                 //set default location
@@ -603,6 +621,33 @@
             }
             //run when controller load
             init();
+
+
+            //add prototype for comparission of array
+            Array.prototype.equals = function(array, strict) {
+                if (!array)
+                    return false;
+
+                if (arguments.length == 1)
+                    strict = true;
+
+                if (this.length != array.length)
+                    return false;
+
+                for (var i = 0; i < this.length; i++) {
+                    if (this[i] instanceof Array && array[i] instanceof Array) {
+                        if (!this[i].equals(array[i], strict))
+                            return false;
+                    }
+                    else if (strict && this[i] != array[i]) {
+                        return false;
+                    }
+                    else if (!strict) {
+                        return this.sort().equals(array.sort(), true);
+                    }
+                }
+                return true;
+            }
 
         } // controller function
     ]); //contoller
