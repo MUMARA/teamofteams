@@ -86,39 +86,6 @@ type ConnectionIDStatus{
       "started"  : CurrentTimeStamp
 }
 
-
-/*
-//===================================
-//          Personal Setting
-//===================================
-//      Path for Personal Setting
-//===================================
-
-
-path /users/{userid} is UserPersonalSetting {
-    read()   {     isAuthenticated()          }
-    update() {  isAuthenticatedUser($userid)  }
-
-}
-
-
-type UserPersonalSetting {
-
-    'contactNumber'   : ContactNumberLength,
-    'date-created'    : CurrentTimeStamp,
-    'desc'            : DescLenght,
-    'email'           : String,
-    'firstName'       : NameLengthGreaterThanThree,
-    'lastName'        : NameLengthGreaterThanThree,
-    'profession'      : String,
-    'profile-image'   : String,                                               //  ----------------------------------
-    'status'          : Number                                               // Discuss to sir what is -1 and what is 0
-}                                                                               //---------------------
-
-
-
-*/
-
 type ContactNumberLength extends String {
   validate() {
     this.length >= 5
@@ -651,7 +618,7 @@ path /group-membership-requests-by-user/{userid} {
                isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
                subGroupMembersMemberShipAnyType(groupid,subgroupid)    }*/
     /members-checked-in is SubGroupMembersCheckInInfo {
-    validate() { isUserUSerIDExist() }
+     validate() { isUserUSerIDExist() }
 
       update()    { isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) }
      }
@@ -1360,7 +1327,7 @@ type SubgroupAppliedPolicyType {
                isSubGroupGroupIDAdmin(this)  }
    }
 /*progress Report By User*/
-/*path /progress-reports-by-users/{userid} {
+path /progress-reports-by-users/{userid} {
 
   read() { isAuthenticated() }
 
@@ -1389,7 +1356,7 @@ type SubgroupAppliedPolicyType {
   questionID : String,
   policyID : String
 
- }*/
+ }
 /*Group Channel*/
 path /group-channel/{groupid} {
     read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
@@ -1542,7 +1509,9 @@ path /firepad-groups-access/{groupid}/{documentid}{
     }
 }
   /*firepad Group Rules */
-path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
+path /firepad-groups-rules/{groupid}{
+
+     /{documentid} is FirepadRulesType  {
       read() {
         isAuthenticated()
       }
@@ -1550,6 +1519,7 @@ path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
         isAuthenticated()
       }
 }
+  }
   /*firepad SubGroup Access */
 path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
   read() {
