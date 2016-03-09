@@ -222,7 +222,7 @@
 
                 };
 
-                checkinService.addLocationBySubgroup(that.groupId, that.subgroupId, that.userId, infoObj, false)
+                checkinService.addLocationBySubgroup (that.groupId, that.subgroupId, that.userId, infoObj, false)
                     .then(function(res) {
                         that.isProcessing = false;
                         that.submitting = false;
@@ -547,7 +547,7 @@
                             //checking current questions and saved questions are same or not.........
                             if (JSON.stringify(that.selectedQuestionObject) === JSON.stringify(that.progressReportQuestions)) {
                                 //if questions are same //no changes in questions
-                                obj["progressReportQuestions"] = null;
+                                obj["progressReportQuestions"] = null; 
                             } else {
                                 //if questions are not same or add/remove/chnage any question then add to firebase
                                 obj["progressReportQuestions"] = { questions: that.progressReportQuestions, timestamp: Firebase.ServerValue.TIMESTAMP }
