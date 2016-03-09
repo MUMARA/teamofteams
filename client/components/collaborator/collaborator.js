@@ -120,19 +120,20 @@
     }
 
     that.gotoDocument = function(openDoc) {
+      firepadRef = new Firebase(ref);
       if (that.subgroupID) {
         $state.go("user.group.subgroup-collaborator", {
           groupID: that.groupID,
           subgroupID: that.subgroupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(firepadRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
+        that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
       } else {
         $state.go("user.group.collaborator", {
           groupID: that.groupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(firepadRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+        that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
       }
 
       that.allUsers.$loaded(function() {
