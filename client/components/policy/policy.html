@@ -49,8 +49,10 @@
     <div flex layout-padding class="nomargin nopadding md-whiteframe-z2">
         <h1 style="color: #d3d3d3;" class="nomargin backColorWhite" layout-padding>Team of Teams Polices</h1>
         <md-divider md-outset class="nopadding"></md-divider>
-        <div autocomplete="off" layout="row" class="nopadding viewHeight-250" name="groupForm" novalidate>
-            <div class="nopadding" layout="column" layout-align="space-between center" style="min-width: 220px; border-right: 1px solid grey">
+        <md-progress-circular class="cirrcularGrey" ng-if="!policy.groupPolicies" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
+
+       <div autocomplete="off" layout="row" class="nopadding viewHeight-250" name="groupForm" novalidate>
+             <div class="nopadding" layout="column" layout-align="space-between center" style="min-width: 220px; border-right: 1px solid grey">
                 <div class="vscroll" ng-if="policy.groupPolicies">
                     <div ng-repeat="p in policy.groupPolicies track by $index" class="backColorWhite  bottommargin5px subgroupcard nooutline cursorPointer" layout="row" layout-align="center center" ng-click="policy.selectedindex = $index; policy.selectedPolicy(p,$index);" ng-class="(policy.selectedindex === $index) ? 'md-whiteframe-z4' : 'md-whiteframe-z1'">
                         <strong >{{p.title | characters:10}}
@@ -244,7 +246,7 @@
 
                     <div layout="row" layout-align="end end" style=>
                         <md-button layout="row" layout-align="center center" class="backColorSeaGreen foreColorWhite displayFlex" ng-click="policy.onSave()">
-                            <md-progress-circular ng-show="groupForm.$submitted" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                            <md-progress-circular ng-show="policy.isProcessing" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
                             <span> Save</span>
                         </md-button>
                     </div>

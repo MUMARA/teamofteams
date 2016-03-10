@@ -486,13 +486,16 @@
 
             //onclick save button
             this.onSave = function() {
-
+                that.isProcessing = true;
                 if (that.policyTitle) {
 
                     if (!that.isProgressReport && !that.isTimebased && !that.isLocationbased) {
                         //nothing have to do....
                         messageService.showFailure('Please Select your Criteria');
-                        this.showarrow = undefined;
+
+                        this.showarrow = undefined ;
+                        that.isProcessing = false;
+
                         return false;
 
                     }
@@ -522,7 +525,9 @@
                             radius: that.paths.c1.radius,
                             title: that.markers.mark.message
                         }
-                        this.showarrow = undefined;
+                           this.showarrow = undefined ;
+                           that.isProcessing = false;
+
                     }
 
                     //if timeBased is selected
@@ -533,6 +538,7 @@
                             obj["schedule"] = that.selectedTimesForAllow;
                         } else {
                             messageService.showFailure('Please add schedule/time slot!');
+                            that.isProcessing = false;
                             return false;
                         }
                         this.showarrow = undefined;
@@ -547,7 +553,7 @@
                             //checking current questions and saved questions are same or not.........
                             if (JSON.stringify(that.selectedQuestionObject) === JSON.stringify(that.progressReportQuestions)) {
                                 //if questions are same //no changes in questions
-                                obj["progressReportQuestions"] = null; 
+                                obj["progressReportQuestions"] = null;
                             } else {
                                 //if questions are not same or add/remove/chnage any question then add to firebase
                                 obj["progressReportQuestions"] = { questions: that.progressReportQuestions, timestamp: Firebase.ServerValue.TIMESTAMP }
@@ -556,6 +562,8 @@
                             messageService.showFailure('Please add some Questions for Daily Report!');
                             return false;
                         }
+                    //    that.isProcessing = false;
+
                     }
                     // console.log('team', that.selectedTeams);
                     // console.log('members', that.selectedTeamMembers);
@@ -588,14 +596,20 @@
                             messageService.showSuccess('Policy Successfully Updated!');
                             //$state.go('user.policy', {groupID: groupId});
                             that.newPolicy('saved');
-                        } else {
+                            that.isProcessing = false;
+
+                        } else{
+
                             messageService.showSuccess('Policy Successfully Created!');
                             //after created reload initial page
                             that.newPolicy('saved');
+                            that.isProcessing = false;
+
                         }
                     });
                 } else {//if that.title exists
                     messageService.showFailure('Please Write Policy Name');
+                    that.isProcessing = false;
                 }
 
             }; //onSave
