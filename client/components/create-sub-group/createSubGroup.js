@@ -20,7 +20,7 @@
         this.teamsettingpanel = false;
         var groupID = $stateParams.groupID;
         this.groupId = groupID;
-        var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID)
+        var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID);
             /*VM functions*/
             // this.searchUser = '';
             // this.processTeamAttendance =false;
@@ -66,21 +66,20 @@
 
 
         this.ActiveSideNavBar = function(sideNav) {
-            that.adminSideNav = true;
-            that.memberSideNav = true;
-            $mdSidenav(sideNav).toggle();
-
-           /* if(sideNav === 'admin') {
-                that.adminSideNav = false;
-                that.memberSideNav = true;
-            } else if(sideNav === 'member') {
-                that.adminSideNav = true;
-                that.memberSideNav = false;
-            } else {
-                this.adminSideNav = true;
-                this.memberSideNav = true;
-            }*/
-        }
+          $mdSidenav(sideNav).toggle()
+            // that.adminSideNav = true;
+            // that.memberSideNav = true;
+            // if(sideNav === 'admin') {
+            //     that.adminSideNav = false;
+            //     that.memberSideNav = true;
+            // } else if(sideNav === 'member') {
+            //     that.adminSideNav = true;
+            //     that.memberSideNav = false;
+            // } else {
+            //     this.adminSideNav = true;
+            //     this.memberSideNav = true;
+            // }
+        };
 
         this.createTeam = function(){
             that.subgroupData = {
@@ -93,7 +92,7 @@
             that.activeID = '';
             SubgroupObj = '';
             that.teamsettingpanel = true;
-        }
+        };
 
         /*VM properties*/
 
@@ -109,7 +108,7 @@
 
         this.openUserSettingPage = function() {
             // $location.path('/user/group/' + groupID + '/user-setting');
-            $state.go('user.user-setting', {groupID: groupID})
+            $state.go('user.user-setting', {groupID: groupID});
         };
         this.openEditGroup = function() {
             // $location.path('user/group/' + groupID + '/edit-group');
@@ -130,10 +129,12 @@
 
 
         this.veiwSubgroup = function(subgroupData, index) {
+
             // this.showEditSubGroup = true;
             // that.showTeamAttendace = false;
             that.selectedindex = index;
             that.activeID = subgroupData.$id;
+            that.activeSubgroupTitle = subgroupData.title;
 
             //will become a member array, for use on Save button
             that.becomeMemmber = [];
@@ -179,7 +180,7 @@
             /* $mdDialog.cancel();*/
             $rootScope.newImg = null;
             // $location.path('/user/group/' + groupID);
-            $state.go('user.group', {groupID: groupID})
+            $state.go('user.group', {groupID: groupID});
 
         }
 
@@ -479,9 +480,9 @@
 
             //publish an activity stream record -- START --
             var type = 'subgroup';
-            var targetinfo = {id: subgroupObj.$id, url: subgroupObj.$id, title: subgroupObj.title, type: 'subgroup' };
+            var targetinfo = {id: subgroupObj.$id, url: groupID+'/'+subgroupObj.$id, title: subgroupObj.title, type: 'subgroup' };
             var area = {type: areaType };
-            var group_id = groupID;
+            var group_id = groupID+'/'+subgroupObj.$id;
             var memberuserID = userObj.$id;
             //for group activity record
             activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
@@ -493,20 +494,41 @@
            that.submembers.forEach(function(val,indx){
                 if(val.userSyncObj.email == admin.email && val.membershipType != 1){
                     createSubGroupService.DeleteUserMemberShip(val.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
+
+                    //publish an activity stream record -- START --
+                    var type = 'subgroup';
+                    var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
+                    var area = {type: 'subgroup-admin-removed' };
+                    var group_id = groupID+'/'+that.activeID;
+                    var memberuserID = val.userSyncObj.$id;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
+
                 }
-           })
+           });
 
            that.selectedAdminArray.forEach(function(val, indx){
                 if(val.email == admin.email && val.membershipType != 1){
                     that.selectedAdminArray.splice(indx, 1);
                 }
-           })
+           });
 
-        }
+       };
 
         this.deleteMember = function(userID){
             createSubGroupService.DeleteUserMemberShip(userID,groupID,that.activeID,that.submembers.length);
-        }
+
+            //publish an activity stream record -- START --
+            var type = 'subgroup';
+            var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
+            var area = {type: 'subgroup-member-removed' };
+            var group_id = groupID+'/'+that.activeID;
+            var memberuserID = userID;
+            //for group activity record
+            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+            //for group activity stream record -- END --
+        };
 
         function loadAdminUSers(groupid, subgroupid, cb){
             createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
@@ -569,15 +591,13 @@
                                 that.processingSave = false;
                                 that.teamsettingpanel = false;
                                 that.selectedindex = undefined;
-
-                            })
+                            });
                         } else {
                             //create team
                             that.subgroupData.imgLogoUrl = data;
                             createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID,function(){
                                 that.teamsettingpanel = false;
                                 that.selectedindex = undefined;
-
                             });
                             that.processingSave = false;
                         }
@@ -588,7 +608,7 @@
                         that.processingSave = false;
                         that.teamsettingpanel = false;
 
-                        return messageService.showFailure('picture upload failed' + err)
+                        return messageService.showFailure('picture upload failed' + err);
                     });
                 // console.log(x);
             } else {

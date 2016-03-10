@@ -234,6 +234,14 @@ function isCurrentUserGroupOwner ($groupid) {
 
 path /group-members/{groupid} {
   read() { isGroupMembersIdExist(groupid) && groupMemberShipAnyType(groupid)  } // i think blockmember type is -1 so blockmembers cannot read the group for that we want member-shiptype should be greater than 0
+  create() {  isAuthenticated()                          &&
+              isCurrentUserGroupOwner(groupid)           ||
+              isCurrentUserGroupAdmin(groupid)
+  }
+  update() {  isAuthenticated()                          &&
+              isCurrentUserGroupOwner(groupid)           ||
+              isCurrentUserGroupAdmin(groupid)
+  }
 }
 
 path /group-members/{groupid}/{userid} is UserGroupSubGroupMemberShipType {
@@ -491,14 +499,14 @@ path /subgroup-activity-streams/{groupid}/{subgroupid} {
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
 
-  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
+  write()    {   ( isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
 
   // validate() { prior(root['groups'][$groupid].val() != null)     }
 
 /{activityid} is GroupActivityStreamsInfo {
     index()  {  "object/id" }
 write() {
-  (isAuthenticated() && isSubGroupJoined(this['verb']))
+  ( isAuthenticated() && isSubGroupJoined(this['verb']))
 }
  }
  }
@@ -794,7 +802,7 @@ path /subgroup-members/{groupid} {
 //==================================
 
 
-path  /subgroup-activity-streams/{groupid} {
+/*path  /subgroup-activity-streams/{groupid} {
 
     read() {
         isAuthenticated()                &&
@@ -835,7 +843,7 @@ path  /subgroup-activity-streams/{groupid} {
         validate() {
             this['actor']['id'].val() === auth.uid &&
             this.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb','profile-image'])  }
-  }
+  }*/
 
 
 
@@ -1360,7 +1368,7 @@ type SubgroupAppliedPolicyType {
                isSubGroupGroupIDAdmin(this)  }
    }
 /*progress Report By User*/
-path /progress-reports-by-users/{userid} {
+/*path /progress-reports-by-users/{userid} {
 
   read() { isAuthenticated() }
 
@@ -1389,7 +1397,7 @@ path /progress-reports-by-users/{userid} {
   questionID : String,
   policyID : String
 
- }
+ }*/
 /*Group Channel*/
 path /group-channel/{groupid} {
     read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
@@ -1542,7 +1550,7 @@ path /firepad-groups-access/{groupid}/{documentid}{
     }
 }
   /*firepad Group Rules */
-path /firepad-groups-rules/{groupid}/{documentid}/allUsers is Boolean  {
+path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
       read() {
         isAuthenticated()
       }
@@ -1569,13 +1577,16 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
 }
 /*firepad SubGroup Rules */
 
-path /firepad-subgroups-rules/{groupid}/{subgroupid}/{documentid}/allUsers is Boolean {
+path /firepad-subgroups-rules/{groupid}/{subgroupid}/{documentid} is FirepadRulesType {
   read() {
     isAuthenticated()
   }
   write() {
     isAuthenticated()
   }
+}
+type FirepadRulesType {
+  allUsers: Boolean;
 }
 
 /*type AllUserType {
