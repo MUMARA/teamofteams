@@ -36,7 +36,7 @@
 
     var globalRef = new Firebase(ref);
 
-    componentHandler.upgradeAllRegistered();
+    // componentHandler.upgradeAllRegistered();
     var firepadRef;
     var that = this;
 
