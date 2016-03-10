@@ -46,7 +46,7 @@
                             <tr md-row>
                                 <th md-column></th>
                                 <th md-column>Name</th>
-                                <th md-column>Phone</th>
+                                <th md-column>Membership No</th>
                                 <th md-column>Action</th>
                             </tr>
                         </thead>
@@ -61,7 +61,7 @@
                                         <span>{{member.userSyncObj.email}}</span>
                                     </div>
                                 </td>
-                                <td md-cell>{{member.userSyncObj.contactNumber}}</td>
+                                <td md-cell>{{member.membershipNo}}</td>
                                 <td md-cell style="width:10%">
                                     <md-select aria-label="userSetting" ng-model="member.membershipType" ng-disabled="member.membershipType == 1">
                                         <md-option value="1" ng-if="member.membershipType == 1">
@@ -103,7 +103,7 @@
                                 <tr md-row>
                                     <th md-column></th>
                                     <th md-column>Name</th>
-                                    <th md-column>Contact</th>
+                                    <th md-column>Membership No</th>
                                     <th md-column>Message</th>
                                     <th md-column>Team Request</th>
                                     <th md-column>Action</th>
@@ -120,7 +120,7 @@
                                             <span>{{request.userSyncObj.email}}</span>
                                         </div>
                                     </td>
-                                    <td md-cell>{{request.userSyncObj.contactNumber}}</td>
+                                    <td md-cell>{{request.membershipNo}}</td>
                                     <td md-cell>{{request.message}}</td>
                                     <td md-cell>
                                         <div ng-repeat="team in request.teamrequest">{{ team.subgrouptitle }}</div>

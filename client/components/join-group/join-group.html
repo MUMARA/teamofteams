@@ -23,9 +23,13 @@
                         <div>{{key['address-title']}}</div>
                     </div>
                 </div>
-                <md-input-container class="nomargin">
+                <md-input-container class="nomargin" layout="row">
                     <label>Message</label>
                     <input type="text" ng-model="joinGroup.message[key.$id]">
+                </md-input-container>
+                <md-input-container class="nomargin">
+                    <label>Membership No</label>
+                    <input type="text" ng-model="joinGroup.membershipNo[key.$id]">
                 </md-input-container>
                 <div flex="25" style="border-top: 2px solid #dddddd; position: relative; margin:0px" layout="row" layout-align="start center">
                     <div style="border-right: 2px solid #dddddd; padding-right:10px;" layout-margin>
