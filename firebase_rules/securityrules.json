@@ -283,7 +283,7 @@
       "$groupid": {
         "$subgroupid": {
           "$activityid": {
-            ".validate": "newData.hasChildren(['displayName', 'language', 'published', 'verb', 'actor']) && newData.child('actor').child('id').val() == auth.uid && newData.hasChildren(['actor', 'displayName', 'language', 'published', 'target', 'verb', 'profile-image'])",
+            ".validate": "newData.hasChildren(['displayName', 'language', 'published', 'verb', 'actor'])",
             "displayName": {
               ".validate": "newData.isString()"
             },
@@ -359,19 +359,17 @@
             "$other": {
               ".validate": "false"
             },
-            ".write": "auth != null && (newData.child('verb').val() == 'subgroup-join' ? true : false) && auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
+            ".write": "auth != null && (newData.child('verb').val() == 'subgroup-join' ? true : false)",
             ".indexOn": [
               "object/id"
             ]
           },
           ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
-          ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0 && (auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
+          ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
           ".indexOn": [
             "object/id"
           ]
-        },
-        ".read": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
-        ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2"
+        }
       }
     },
     "group-check-in-current": {

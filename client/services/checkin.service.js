@@ -63,6 +63,7 @@
                         if(hasPolicy) {
                             //hasPolicy true
                             checkinPolicy(Policy, locationObj, function(result, msg, teamLocationTitle){
+                                console.log('teamLocationTitle2', teamLocationTitle)
                                 if(result){
                                     saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, teamLocationTitle, function(result, cbMsg, reportMsg){
                                         //console.log('group', group); //group = {groupId: "hotmaill", subgroupId: "yahooemail", userId: "usuf52"}
@@ -240,6 +241,7 @@
             var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
             var checkinResultMsg = (checkoutFlag) ? "Checkout Successfully" : "Checkin Successfully";
             var statusType = (checkoutFlag) ? 2 : 1;
+            console.log('teamLocationTitle', teamLocationTitle)
             var _teamLocationTitle = (teamLocationTitle ? teamLocationTitle : 'Other');
             multipath["subgroup-check-in-records/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId+"/"+newPostKey] = {
                 "identified-location-id": _teamLocationTitle,

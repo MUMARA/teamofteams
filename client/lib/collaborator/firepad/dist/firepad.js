@@ -1743,7 +1743,7 @@ firepad.RichTextToolbar = (function(global) {
   RichTextToolbar.prototype.makeButton_ = function(eventName, iconName) {
     var self = this;
     iconName = iconName || eventName;
-    var btn = utils.elt('button', [utils.elt('span', '', { 'class': 'firepad-tb-' + iconName } )], { 'class': 'mdl-button mdl-js-button mdl-button--icon',id: eventName });
+    var btn = utils.elt('button', [utils.elt('span', '', { 'class': 'firepad-tb-' + iconName } )], { 'class': 'mui-btn mui-btn--fab mui-btn--small ',id: eventName });
     utils.on(btn, 'click', utils.stopEventAnd(function() { self.trigger(eventName); }));
     return btn;
   }
@@ -1891,17 +1891,14 @@ firepad.RichTextToolbar = (function(global) {
     var self = this;
     //var button = utils.elt('a', title + ' \u25be', { 'class': 'firepad-btn firepad-dropdown' });
     //var list = utils.elt('ul', [ ], { 'class': 'firepad-dropdown-menu' });
+    var muiDiv = document.getElementById('divList'+title);
     var button = document.getElementById("list"+title);
     button.innerHTML = title + ' \u25be';
-   // button.textContent = title;
     var list = document.getElementById('list-'+title);
-    //button.appendChild(list);
 
     var isShown = false;
     function showDropdown() {
       if (!isShown) {
-        //list.style.display = 'block';
-        //list.className = "md-open-menu-container md-whiteframe-z2 md-active md-clickable"
         utils.on(document, 'click', hideDropdown, /*capture=*/true);
         isShown = true;
       }
@@ -1910,10 +1907,14 @@ firepad.RichTextToolbar = (function(global) {
     var justDismissed = false;
     function hideDropdown() {
       if (isShown) {
-        //list.style.display = '';
-        //list.className = 'md-open-menu-container md-whiteframe-z2 md-leave'
+
         utils.off(document, 'click', hideDropdown, /*capture=*/true);
         isShown = false;
+        var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+        console.log(items.length);
+        for (var i = 0;i < items.length; i++) {
+          items[i].className = "mui-dropdown__menu";
+        }
       }
       // HACK so we can avoid re-showing the dropdown if you click on the dropdown header to dismiss it.
       justDismissed = true;
@@ -1925,18 +1926,22 @@ firepad.RichTextToolbar = (function(global) {
         content = document.createTextNode(String(content));
       }
 
-      //var mdMenu = utils.elt('md-menu-item');
-      //var div = utils.elt('div');
-      var element = utils.elt('li', [content]);
-      //element.style.display = 'block'
-      //element.style.textalign = 'center';
-      element.className = "mdl-menu__item";
-      //mdMenu.appendChild(div);
-      //div.appendChild(element);
-      list.appendChild(element);
+      var element = utils.elt('li',[]);
+      var a = utils.elt('a', [content]);
+      a.setAttribute('href','#');
+      element.appendChild(a);
+      a.onclick = function(){
+        console.log("onclick called");
+        var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+        for (item in items){
+          items[item].className = "mui-dropdown__menu";
+          // items[item].setAttribute('class','mui-dropdown__menu');
+        }
 
+      }
       utils.on(element, 'click', utils.stopEventAnd(function() {
         hideDropdown();
+        console.log("add item called");
         self.trigger(eventName, value + value_suffix);
       }));
 
@@ -1950,13 +1955,12 @@ firepad.RichTextToolbar = (function(global) {
 
     utils.on(button, 'click', utils.stopEventAnd(function() {
       if (!justDismissed) {
-        //list.style.top = '5%';
-        //list.style.left = '38%'
+        console.log("button clicked");
         showDropdown();
       }
     }));
 
-    return button;
+    return muiDiv;
   };
   return RichTextToolbar;
 })();

@@ -171,10 +171,10 @@
                 if (currentUserSubGroupsMembersAndMemberShips && currentUserSubGroupsMembersAndMemberShips[groupID]) {
 
                     if (currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID]) {
-                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] })
+                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] });
                     } else {
                         currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
-                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] })
+                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] });
                     }
 
                 } else {
@@ -358,14 +358,12 @@
                 //firbase node:
                 //if pass groupid in 'activityGroupOrSubGroupID' then save into firebase group-activity-streams
                 //else if pass subgroupid in 'activityGroupOrSubGroupID' then save into firebase subgroup-activity-streams
-
                 //checking if activityGroupOrSubGroupID contains / then location is subgroup-activity else group-activity
                 if (activityGroupOrSubGroupID.indexOf('/') > -1) {
                     multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
                 } else {
                     multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
                 }
-
             } else if (type === 'progressReport') {
                 //progress report belongs to subgroup then activityGroupOrSubGroupID will be subgroupID
                 multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
@@ -381,8 +379,6 @@
                     console.log('activityError', err);
                 }
             });
-
-
         } //saveToFirebase
 
         // function currentUserActivity() {

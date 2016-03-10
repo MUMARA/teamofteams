@@ -60,7 +60,8 @@
                 this.message = {};
                 this.group = {
                     groupID: "",
-                    message: "Please add me in your group."
+                    message: "Please add me in your Team.",
+                    membershipNo: ""
                 };
 
 
@@ -133,6 +134,7 @@
                 function answer(group) {
                     that.loadingData = true;
                     that.group.message = that.message[group.$id] || that.group.message;
+                    that.group.membershipNo = that.membershipNo[group.$id] || that.group.membershipNo;
                     that.group.groupID = group.$id;
                     that.group.grouptitle = group.title;
 
