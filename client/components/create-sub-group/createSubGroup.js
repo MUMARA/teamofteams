@@ -5,10 +5,10 @@
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['activityStreamService', '$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['activityStreamService','CollaboratorService', '$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController(activityStreamService, $scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController(activityStreamService,CollaboratorService, $scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -26,12 +26,12 @@
             // this.processTeamAttendance =false;
             // this.showEditSubGroup = false;
         this.groupid = groupID;
-        this.activeID;
+        this.activeID = null;
         this.subgroupData = 0;
         this.answer = answer;
         this.hide = hide;
-        this.saveFile = saveFile
-        this.upload_file = upload_file
+        this.saveFile = saveFile;
+        this.upload_file = upload_file;
         this.selectedMemberArray = [];
         this.selectedAdminArray = [];
         this.membersArray = [];
@@ -55,7 +55,7 @@
         this.adminSideNav = true;
         this.memberSideNav = true;
 
-        that.groupAdmin = false
+        that.groupAdmin = false;
         firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
             if (group.val()['membership-type'] == 1) {
                 that.groupAdmin = true;
@@ -66,19 +66,20 @@
 
 
         this.ActiveSideNavBar = function(sideNav) {
-          $mdSidenav(sideNav).toggle()
-            // that.adminSideNav = true;
-            // that.memberSideNav = true;
-            // if(sideNav === 'admin') {
-            //     that.adminSideNav = false;
-            //     that.memberSideNav = true;
-            // } else if(sideNav === 'member') {
-            //     that.adminSideNav = true;
-            //     that.memberSideNav = false;
-            // } else {
-            //     this.adminSideNav = true;
-            //     this.memberSideNav = true;
-            // }
+            that.adminSideNav = true;
+            that.memberSideNav = true;
+            $mdSidenav(sideNav).toggle();
+
+           /* if(sideNav === 'admin') {
+                that.adminSideNav = false;
+                that.memberSideNav = true;
+            } else if(sideNav === 'member') {
+                that.adminSideNav = true;
+                that.memberSideNav = false;
+            } else {
+                this.adminSideNav = true;
+                this.memberSideNav = true;
+            }*/
         };
 
         this.createTeam = function(){
@@ -150,27 +151,27 @@
                         // $scope.subgroupSyncObj.subgroupSyncObj.$bindTo($scope, "subgroup");
                         that.submembers = that.subgroupSyncObj.membersSyncArray;
                         // $timeout(function() {
-                            // $scope.subgroups = $scope.subgroupSyncObj.subgroupsSyncArray;
-                            //$scope.pendingRequests = $scope.subgroupSyncObj.pendingMembershipSyncArray;
-                            //$scope.activities = $scope.subgroupSyncObj.activitiesSyncArray;
-                            //$scope.groupMembersSyncArray = $scope.subgroupSyncObj.groupMembersSyncArray;
-                            SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
-                            // console.log(1)
-                            // console.log(SubgroupObj)
-                            SubgroupObj.$loaded().then(function(data) {
-                                that.subgroupData = data;
-                                //that.group.groupID = data.$id;
-                                that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
-                                that.teamsettingpanel = true;
+                        // $scope.subgroups = $scope.subgroupSyncObj.subgroupsSyncArray;
+                        //$scope.pendingRequests = $scope.subgroupSyncObj.pendingMembershipSyncArray;
+                        //$scope.activities = $scope.subgroupSyncObj.activitiesSyncArray;
+                        //$scope.groupMembersSyncArray = $scope.subgroupSyncObj.groupMembersSyncArray;
+                        SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
+                        // console.log(1)
+                        // console.log(SubgroupObj)
+                        SubgroupObj.$loaded().then(function(data) {
+                            that.subgroupData = data;
+                            //that.group.groupID = data.$id;
+                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
+                            that.teamsettingpanel = true;
 
-                                firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot){
-                                    that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
-                                })
-                        // },50000)
+                            firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot) {
+                                that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
+                            });
+                            // },50000)
                             // console.log(2)
                             // console.log(SubgroupObj)
-                        })
-                    })
+                        });
+                    });
             });
         };
 
@@ -303,11 +304,11 @@
             //}
 
             if(that.submembers.length > 0){
-                that.submembers.forEach(function(val, inx){
-                    if(val.userID == userObj.$id){
+                that.submembers.forEach(function(val, inx) {
+                    if (val.userID == userObj.$id) {
                         _flag = false;
                     }
-                })
+                });
             }
 
             if(_flag) {
@@ -379,6 +380,33 @@
 
         function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
             subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
+
+
+                    // .then(function(response) {
+                    //     // console.log("Adding Members Successful");
+                    //     var unlistedMembersArray = response.unlistedMembersArray,
+                    //         notificationString;
+                    //
+                    //     if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                    //         notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showFailure(notificationString);
+                    //     } else if (unlistedMembersArray.length) {
+                    //         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showSuccess(notificationString);
+                    //     } else {
+                    //         notificationString = 'Adding Members Successful.';
+                    //         console.log("SubgroupObj",subgroupObj); //subgroupID
+                    //         console.log("groupObj",groupData); // $id
+                    //         var members = memberIDs.split(',');
+                    //         for (var i = 0; i < members.length; i++) {
+                    //           CollaboratorService.addAccessUser(CollaboratorService.getCurrentDocumentId(),groupData.$id,subgroupObj.subgroupID,members[i]);
+                    //         }
+                    //         messageService.showFailure(notificationString);
+                    //     }
+                    // }, function(reason) {
+                    //     messageService.showFailure(reason);
+                    // }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+
                 .then(function(response) {
                     // console.log("Adding Members Successful");
                     var unlistedMembersArray = response.unlistedMembersArray,
@@ -397,6 +425,8 @@
                 }, function(reason) {
                     messageService.showFailure(reason);
                 }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+
+
         }
 
         this.selectedAdmin = function(newType, member) {
@@ -432,7 +462,7 @@
         this.selectedAdminSave = function(){
             if(that.becomeAdmin.length > 0){
                 var membersIDarray = [];    //for policy
-                that.becomeAdmin.forEach(function(val,index){
+                that.becomeAdmin.forEach(function(val, index) {
 
                     var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
                         groupID: groupID,
@@ -446,12 +476,12 @@
 
                     membersIDarray.push(val.member.userID);
                     //checking if team has policy then assigned policy to member
-                    if(that.becomeMember.length == index+1){
-                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg){
+                    if (that.becomeMember.length == index + 1) {
+                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg) {
 
-                        })
+                        });
                     }
-                }) //that.becomeMember.forEach
+                }); //that.becomeMember.forEach
             } //if
         }; //selectedAdminSave
 
@@ -702,7 +732,7 @@
             }, 300);
 
             return debounceFn;
-        };
+        }
 
         function AdminToggler(navID) {
             var debounceFnc = $mdUtil.debounce(function() {
@@ -714,7 +744,7 @@
             }, 300);
 
             return debounceFnc;
-        };
+        }
 
         function upload_file(file, signed_request, url) {
 
@@ -747,13 +777,13 @@
 
                 if (groupData['group-owner-id']) {
                     //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
-                    that.picRef = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']) /*.child('profile-image')*/ )
+                    that.picRef = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']) /*.child('profile-image')*/)
                         .$loaded()
                         .then(function(userData) {
 
                             that.userObj = userData;
 
-                        })
+                        });
 
                 }
             });
@@ -763,14 +793,14 @@
                 .then(function() {
                     // console.log("close LEFT is done");
                 });
-        };
+        }
 
         function closeToggleAdmin() {
             $mdSidenav('right').close()
                 .then(function() {
                     // console.log("close LEFT is done");
                 });
-        };
+        }
     }
 
     function DialogController($mdDialog) {
@@ -779,9 +809,9 @@
                 img: ''
             }
         };
-        this.openFileSelect = function(){
-          angular.element('#ImageUpload').click();
-        }
+        this.openFileSelect = function() {
+            angular.element('#ImageUpload').click();
+        };
         this.hide = function(picture) {
             // console.log("dialog box pic" + picture)
             $mdDialog.hide(picture);

@@ -43,14 +43,14 @@
               groupService.setActivePanel('collaborator');
             }
             that.panel.subgroupID = subgroupID;
-            if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {groupID: that.groupID, subgroupID: that.panel.subgroupID});
-                // $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
-                //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
+            if (that.panel.subgroupID) {
+                CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
+                    $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId });
+                })
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'),  {groupID: that.groupID, subgroupID: that.panel.subgroupID});
-                // $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
-                //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
+                CollaboratorService.getinitGroupDocument(that.groupID, function(docId) {
+                    $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID, docID: docId });
+                });
             }
         };
 
@@ -70,7 +70,8 @@
             that.errorMsg = false;
             that.reqObj = {
                 groupID: that.groupID,
-                message: ""
+                message: "Please add me in your Team.",
+                membershipNo: ""
             };
             if (that.subgroupID) {
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
@@ -99,6 +100,7 @@
                 if (grp.val()) {
                     that.group = {};
                     that.group.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
+                    that.reqObj.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
                     that.group.addresstitle = (grp.val() && grp.val()['address-title']) ? grp.val()['address-title'] : false;
                     that.group.groupImgUrl = (grp.val() && grp.val().groupImgUrl) ? grp.val().groupImgUrl : false;
                     that.group.ownerImgUrl = (grp.val() && grp.val().ownerImgUrl) ? grp.val().ownerImgUrl : false;

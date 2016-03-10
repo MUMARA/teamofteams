@@ -15,8 +15,7 @@
                      that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
                      // that.showReportData();
                      that.loadingData = false;
-                 // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
-
+                 	// console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
                  }, 2000);
              }else{
                  document.getElementById("#UserSearch").focus();
@@ -32,22 +31,22 @@
             }
         };
         this.returnGroupTitle = function(groupID) {
-            firebaseService.getRefGroupsNames().child(groupID).child('title').once('value', function(snapshot){
+            firebaseService.getRefGroupsNames().child(groupID).child('title').once('value', function(snapshot) {
                 that.grouptitle = snapshot.val();
-            })
-        }
+            });
+        };
         this.returnSubGroupTitle = function(groupID, subgroupID) {
             if (subgroupID) {
-                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).child('title').once('value', function(snapshot){
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).child('title').once('value', function(snapshot) {
                     that.subgrouptitle = snapshot.val();
-                })
+                });
             } else {
                 that.subgrouptitle = '';
             }
-        }
-        this.updatecheckinhours = function(value){
+        };
+        this.updatecheckinhours = function(value) {
             that.checkinHours = value;
-        }
+        };
         this.update = function(report) {
             // console.log(report);
             ProgressReportService.updateReport(report, function(result) {

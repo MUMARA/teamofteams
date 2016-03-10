@@ -6,6 +6,7 @@
     angular.module('app.JoinGroup', ['core'])
         .factory('joinGroupService', ['activityStreamService', '$timeout', '$firebaseArray', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService',
             function(activityStreamService, $timeout, $firebaseArray, userFirebaseService, $location, soundService, userService, messageService, firebaseService, $q, authService) {
+                var user = userService.getCurrentUser();
                 return {
                     'userData': function(pageUserID) {
                         return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
@@ -16,7 +17,7 @@
                     'joinGroupRequest': function(groupInfo, cb) {
                         groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '');
                             //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
-                        userFirebaseService.asyncGroupJoiningRequest(userService.getCurrentUser().userID, groupInfo.groupID, groupInfo.message, groupInfo.subgroupID, groupInfo.subgrouptitle)
+                        userFirebaseService.asyncGroupJoiningRequest(userService.getCurrentUser().userID, groupInfo.groupID, groupInfo.message, groupInfo.subgroupID, groupInfo.subgrouptitle, groupInfo.membershipNo)
                             .then(function() {
                                 //console.log("Group join request sent successfully");
                                 if(groupInfo.subgroupID){
@@ -24,9 +25,10 @@
                                     var type = 'subgroup';
                                     var targetinfo = {id: groupInfo.subgroupID, url: groupInfo.subgroupID, title: groupInfo.subgrouptitle, type: 'subgroup' };
                                     var area = {type: 'subgroup-join'};
-                                    var group_id = groupInfo.groupID;
-                                    var memberuser_id = null;
+                                    var group_id = groupInfo.groupID +'/'+ groupInfo.subgroupID;
+                                    var memberuser_id = user.userID;
                                     //for group activity record
+                                    console.log('groupInfo.groupID groupInfo.subgroupID: ', groupInfo.groupID +'/'+ groupInfo.subgroupID);
                                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id);
                                     //for group activity stream record -- END --
 
@@ -35,11 +37,12 @@
                                 } else{
                                     //for group activity stream record -- START --
                                     var _type = 'group';
-                                    var _targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.title, type: 'group' };
+                                    var _targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.grouptitle, type: 'group' };
                                     var _area = {type: 'group-join'};
                                     var _group_id = groupInfo.groupID;
-                                    var _memberuser_id = null;
+                                    var _memberuser_id = user.userID;
                                     //for group activity record
+                                    console.log('groupInfo.groupID: ', groupInfo.groupID);
                                     activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuser_id);
                                     //for group activity stream record -- END --
 
