@@ -6,8 +6,8 @@
     'use strict';
     angular
         .module('app.createSubGroup', ['core', 'ngMdIcons'])
-        .factory('createSubGroupService', ['activityStreamService','$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
-            function(activityStreamService, $firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
+        .factory('createSubGroupService', ['activityStreamService', '$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig','CollaboratorService',
+            function(activityStreamService, $firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig,CollaboratorService) {
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                 var groupAdminUsers = [];
 
@@ -39,6 +39,12 @@
                                 //for group activity stream record -- END --
                                     cb()
                                     messageService.showSuccess("Team creation Successful...");
+                                    // console.log(JSON.stringify());
+                                    console.log("this User is from createSubGroupService:",userService.getCurrentUser());
+                                    CollaboratorService.CreateDocument("Team of Teams Information",group.$id,SubgroupInfo.subgroupID,'Rich Text',userService.getCurrentUser())
+                                    .then(function(response){
+                                      CollaboratorService.addAccessUser(response.docId,group.$id,SubgroupInfo.subgroupID,userService.getCurrentUser().userID,1);
+                                    });
                                     $rootScope.newImg = null;
                                 // }
                             }, function(group) {
@@ -146,6 +152,7 @@
                                         //for group activity stream record -- END --
 
                                         messageService.showSuccess('Team Edited Successfully')
+
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");

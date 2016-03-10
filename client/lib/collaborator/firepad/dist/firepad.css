@@ -112,7 +112,7 @@ pre.firepad-lt-o, pre.firepad-lt-u, pre.firepad-lt-t, pre.firepad-lt-tc {
 }
 
 .firepad-btn-group {
-  margin: 1% 7px 0 0;
+  /*margin: 1% 7px 0 0;*/
   display: inline-block;
 }
 
@@ -282,7 +282,7 @@ a.firepad-btn:active {
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  font-size: 70%;
+  font-size: 90%;
   -webkit-font-smoothing: antialiased;
 }
 .firepad-tb-bold:before {
