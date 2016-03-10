@@ -364,12 +364,13 @@
               "object/id"
             ]
           },
-          ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
-          ".write": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
+          ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() != null",
+          ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2",
           ".indexOn": [
             "object/id"
           ]
-        }
+        },
+        ".read": "auth != null && root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0"
       }
     },
     "group-check-in-current": {
@@ -849,10 +850,10 @@
         }
       }
     },
-    "progress-reports-by-users": {
-      "$userid": {
-        "$groupid": {
-          "$subgroupid": {
+    "subgroup-progress-reports": {
+      "$groupid": {
+        "$subgroupid": {
+          "$userid": {
             "$reportid": {
               ".validate": "newData.hasChildren(['date', 'questionID', 'policyID'])",
               "answers": {
@@ -873,17 +874,17 @@
                 ".validate": "false"
               },
               ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
-              ".write": "auth != null && auth.uid == $userid"
+              ".write": "auth != null && auth.uid == $userid && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
             },
             ".indexOn": [
               "date"
             ]
           },
-          ".indexOn": [
-            "date"
-          ]
+          ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).val() != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
         },
-        ".read": "auth != null"
+        ".indexOn": [
+          "date"
+        ]
       }
     },
     "group-channel": {

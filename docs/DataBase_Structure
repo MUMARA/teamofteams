@@ -4,11 +4,11 @@ Firebase Nodes of Attendence System-------------------------------
 Signup
 -------------------------------------
 users
-	userid (uqutub)
+	userid (arsalan23)
 		date-created: 1452766698780
- 		email: "usuf@gmail.com"
- 		firstName: "usuf"
- 		lastName: "qutub"
+ 		email: "a4arshi@yahoo.com"
+ 		firstName: "Arsalan"
+ 		lastName: "Rajput"
  		status: 0
 --------------------------------------
 
@@ -16,63 +16,65 @@ users
 Signin
 --------------------------------------
 users-presence
- 	userid (uqutub)
+ 	userid (arsalan23)
  		connections
- 			-K7zejSAZQYPPcIqyfLD  
+ 			-K7zejSAZQYPPcIqyfLD
  				started: 1452767115404
  				type: 1
  		last-modified: 1452766925029
+    defined-status: 1
 --------------------------------------
 
 
 Signout
 --------------------------------------
-users-presence  
-	userid (uqutub)
+users-presence
+	userid (arsalan23)
  		last-modified: 1452766986235
+   defined-status: 1
 --------------------------------------
-
+git 
 
 Personal Setting on Save (status has been changed from 0 to -1)
 --------------------------------------
 users
- 	userid (uqutub)
- 		contactNumber: 1234561235
+ 	userid (arsalan23)
+ 		contactNumber: 03242821362
  		date-created: 1452766698780
  		desc: "MySelf"
- 		email: "usuf@gmail.com"
- 		firstName: "usuf"
- 		lastName: "qutub"
- 		profession: "IT"
+ 		email: "a4arshi@yahoo.com"
+ 		firstName: "Mohammad Arsalan"
+ 		lastName: "Rajput"
+ 		profession: "Developer"
  		profile-image: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
-		status: -1
+		status: 0
 --------------------------------------
 
 Create Group (teams)
 --------------------------------------
  user-group-memberships
- 	uqutub
- 		groupid (team1)
+ 	arsalan23
+ 		groupid (group01)
  			membership-type: 1
  			timestamp: 1452767752126
 
 
 group-members
- 	groupid (team1)
- 		uqutub
+ 	groupid (group01)
+ 		arsalan23
  			membership-type: 1
  			timestamp: 1452767752756
 
 
 groups
- 	groupid (team1)
+ 	groupid (group01)
  		address: "jhjkh"
  		address-title: "Karachi title"
  		desc: "werwerw"
- 		group-owner-id: "uqutub"
+ 		group-owner-id: "arsalan23"
  		logo-image
  			bucket-name: "test2pwow"
- 			id: "team1"
+ 			id: "group01"
  			mediaType: "image/png"
  			source: 1
  			url: "https://totsgroupimg.s3.amazonaws.com/team1.png..."
@@ -81,32 +83,33 @@ groups
  		members-count: 1
  		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		phone: "82172189372189719"
- 		privacy
- 			 invitationType: 2
+ 		privacy: 2	 //invitationType: 2
  		subgroups-count: 0
  		timeZone: " +5:00"
  		timestamp: 1452770633068
- 		title: "NAME 1"
+ 		title: "group01"
 
 
 groups-names
- 	groupid (team1)
+ 	groupid (group01)
  		groupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png..."
  		ownerImgUrl: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		title: "Name Team1"
+    address-title: "karachi"
 
 
 group-activity-streams
- 	groupid (team1)
+ 	groupid (group01)
  		-K7zhAMvfIVM7xw02zT8
 	 		actor
-	 			displayName: "usuf qutub"
-	 			email: "usuf@gmail.com"
-	 			id: "uqutub"
+	 			displayName: "Arsalan Rajput"
+	 			email: "a4arshi@yahoo.com"
+	 			id: "arsalan23"
 	 			type: "user"
-		displayName: "usuf qutub created Name Team1"
- 		language: "en" 
- 		object
+        profile-image: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+		displayName: "Arsalan Rajput created group01"
+ 		language: "en"
+ 		object //Group creation object donot create
  			displayName: "Name Team1"
  			id: "team1"
  			type: "group"
@@ -123,7 +126,7 @@ groups
  		address: "Pakistan Karachi"
  		address-title: "Karachi title2"
  		desc: "Descrtipionnnnnnnnnn"
- 		group-owner-id: "uqutub"
+ 		group-owner-id: "group01"
  		logo-image
  			bucket-name: "test2pwow"
  			id: "team1"
@@ -135,26 +138,45 @@ groups
  		members-count: 1
  		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		phone: "821721893720000000"
- 		privacy
- 			invitationType: 2
+ 		privacy //invitationType: 2
  		signupMode: "2"
  		subgroups-count: 0
  		timeZone: " +5:00"
  		timestamp: 1452771508721					//change timespan on edit...
- 		title: "Title Name 2"
+ 		title: "group001"
 
 
-groups-names										
- 	team1
+groups-names
+ 	group1
  		groupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png"
  		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
- 		title: "Title Name 2"
+ 		title: "group001"
+    address-title: "karachi"
+
+group-activity-streams
+     	groupid (group01)
+     		-K7zhAMvfIVM7xw02zT8
+    	 		actor
+    	 			displayName: "Arsalan Rajput"
+    	 			email: "a4arshi@yahoo.com"
+    	 			id: "arsalan23"
+    	 			type: "user"
+            profile-image: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+    		displayName: "Arsalan Rajput update group01"
+     		language: "en"
+     		object //Group creation object donot create
+     			displayName: "Name Team1"
+     			id: "team1"
+     			type: "group"
+     			url: "team1"
+     		published: 1452767754045
+     		verb: "group-updated"
 --------------------------------------
 
 
 Create SubGroup (teamofteams)
 --------------------------------------
-subgroup-members  
+subgroup-members
 	team1
  		subteam1
  			uqutub
@@ -162,7 +184,7 @@ subgroup-members
  				timestamp: 1452772505220
 
 
-subgroups-names  
+subgroups-names
 	team1
  		subteam1: "Sub Team Name 1"
 
@@ -174,7 +196,7 @@ flattened-groups
  				checkedin: false
 
 
-user-subgroup-memberships  
+user-subgroup-memberships
 	uqutub
  		team1
  			subteam1
@@ -274,7 +296,7 @@ group-membership-requests
  		w3w (userid)
  			message: "Please add me in your group."
  			timestamp: 1452774907046
- 
+
 
  group-membership-requests-by-user
  	w3w (userid)
@@ -309,15 +331,15 @@ group-membership-requests
 
 user-group-memberships
 	uqutub
- 	w3w  
+ 	w3w
  		team1
  			membership-type: 3
  			timestamp: 1452775115223
 
 groups
 	team1
-  		members-count: 2 					//this will be updates on add membershiop request 		
-		timestamp: 1452771796373 
+  		members-count: 2 					//this will be updates on add membershiop request
+		timestamp: 1452771796373
 
 
 group-activity-streams
@@ -409,14 +431,14 @@ group-activity-streams
  			language: "en"
  			object
  			published: 1452778705060
- 			target 
+ 			target
  			verb: "group-member-removed"
 --------------------------------------
 
 
 Add Admin of a Group (teamofteams) from User Request after adding a Member
 ----------------------------------------------------------------------
-user-group-memberships  
+user-group-memberships
  	uqutub
  	w4w
  		team1
@@ -474,7 +496,7 @@ subgroups
 Add in Admin Members in SubGroup after adding a member of a group
 --------------------------------------------------------------
 user-subgroup-memberships
-	uqutub  
+	uqutub
  	w3w
  		team1
  			subteam1
@@ -621,4 +643,3 @@ groups
 
 --------------------------------------
 --------------------------------------
-
