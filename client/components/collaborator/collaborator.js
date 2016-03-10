@@ -66,17 +66,22 @@
     that.document = "Create/Open Document";
     that.showLoader = false;
     that.admins = [];
+    that.permissionMembers = {};
 
     init();
-    if (!that.subgroupID) {
-      $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
-        data.forEach(function(member) {
-          if (member["membership-type"] == 1) {
-            that.admins.push(member);
-          }
-        });
-        console.log("that.admins", that.admins);
+    $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
+      data.forEach(function(member) {
+        if (member["membership-type"] == 1 || member["membership-type"] == 2) {
+          console.log("admins",member);
+          that.admins.push(member);
+          that.permissionMembers[member.$id] = true;
+        }
       });
+      console.log("that.admins", that.admins);
+      console.log("that.permissionMembers", that.permissionMembers);
+    });
+
+    if (!that.subgroupID) {
 
       firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups) {
         if (groups.val() && groups.val()['membership-type'] == 1) {
