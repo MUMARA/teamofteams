@@ -139,8 +139,8 @@ angular.module('core')
                                             }
                                         });
                                     });
-                                    firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
-                                        // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
+                                    // firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
+                                    //     // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
                                         userData.push({
                                             id: userdata.$id,
                                             type: type,
@@ -150,7 +150,7 @@ angular.module('core')
                                             groupTitle: groupsubgroupTitle[group.key()],
                                             subgroupID: subgroup.key(),
                                             subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                            membershipNo : snapshot.getPriority() || '',
+                                            //membershipNo : snapshot.getPriority() || '',
                                             contactNumber: usermasterdata.contactNumber || '',
                                             onlinestatus: false,
                                             /*onlineweb: 0,
@@ -163,7 +163,7 @@ angular.module('core')
                                             lastName: usermasterdata.lastName,
                                             fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
                                         });
-                                    });
+                                    // });
                                 });
                             });
                         });

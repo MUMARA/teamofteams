@@ -31,17 +31,17 @@
                         };
                         //var $groupRef = $firebaseObject(firebaseService.getRefGroups().child(groupInfo.groupID || groupInfo.$id));
                         angular.extend(groupRef, dataToSet);
-                        groupRef['logo-image'].url = groupInfo['logo-image'].url
+                        groupRef['logo-image'].url = groupInfo['logo-image'].url;
                         groupRef.$save().then(function(response) {
                             //console.log(groupNameRef);
                             groupNameRef['address-title'] = groupInfo['address-title'];
                             groupNameRef.title = groupInfo.title;
-                            groupNameRef.groupImgUrl = groupInfo['logo-image'].url
+                            groupNameRef.groupImgUrl = groupInfo['logo-image'].url;
                             groupNameRef.$save()
                                 .then(function() {
                                     $timeout(function() {
-                                        form.$submitted = false
-                                    })
+                                        form.$submitted = false;
+                                    });
                                     $rootScope.newImg = null;
 
                                     //for group activity stream record -- START --
@@ -54,28 +54,27 @@
                                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                     //for group activity stream record -- END --
 
-
                                     cb();
-                                    messageService.showSuccess('Team of Teams Edited Successfully')
+                                    messageService.showSuccess('Team of Teams Edited Successfully');
                                     // CollaboratorService.CreateDocument("Team of Teams Information",groupInfo.groupID,)
                                 }, function(group) {
                                     cb();
                                     messageService.showFailure("Team of Teams not edited");
-                                })
+                                });
 
                         }, function(group) {
                             $timeout(function() {
-                                form.$submitted = false
-                            })
+                                form.$submitted = false;
+                            });
                             cb();
                             messageService.showFailure("Team of Teams not edited");
-                        })
+                        });
                     },
 
                     'cancelGroupCreation': function(groupID) {
                         //console.log("Group Creation Cancelled");
                         soundService.playFail();
-                        $location.path('/user/group/' + groupID)
+                        $location.path('/user/group/' + groupID);
                     }
                 };
 
