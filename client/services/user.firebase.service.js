@@ -11,7 +11,7 @@ angular.module('core')
             //Firebase timeStamp object.
             var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
 
-            function groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, deferred) {
+            function groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred) {
                 var ref = firebaseService.getRefGroupMembershipRequests().child(groupID);
                 ref.child(userID).once("value", function(snap) {
                     var alreadyPending = snap.val();
@@ -25,10 +25,13 @@ angular.module('core')
                                         return
                                     };
                                     if(obj.length === (indx + 1)) {
+                                        // requestSaveToFirebase(groupID, subgroupID, subgrouptitle, userID, message, ref, deferred);
+
                                         var request = {};
                                         request[userID] = snap.val();
                                         request[userID]['timestamp'] = firebaseTimeStamp;
                                         request[userID]['message'] = message;
+                                        request[userID]['membershipNo'] = membershipNo;
                                         request[userID]['team-request'][obj.length] = {
                                             'subgroupID': subgroupID,
                                             'subgrouptitle': subgrouptitle
@@ -42,6 +45,7 @@ angular.module('core')
                                                 return
                                             }
                                         })
+
                                     }
                                 })
                             } else {
@@ -49,6 +53,7 @@ angular.module('core')
                                 request[userID] = {
                                     timestamp: firebaseTimeStamp,
                                     message: message,
+                                    membershipNo: membershipNo,
                                     'team-request': {
                                         '0': {
                                             'subgroupID': subgroupID,
@@ -70,45 +75,52 @@ angular.module('core')
                             deferred.reject("Request is already pending for this team of teams"); //just to double check here also, but no need if data is consistent
                         }
                     } else {
-                        var request = {};
-                        if (subgroupID) {
-                            request[userID] = {
-                                timestamp: firebaseTimeStamp,
-                                message: message,
-                                'team-request': {
-                                    '0': {
-                                        'subgroupID': subgroupID,
-                                        'subgrouptitle': subgrouptitle
-                                    }
-                                }
-                            };
-                        } else {
-                            request[userID] = {
-                                timestamp: firebaseTimeStamp,
-                                message: message
-                            };
-                        }
-                        ref.update(request, function(error) {
-                            if (error) {
-                                deferred.reject("Server Error, please try again");
-                            } else {
-                                ref.child(userID).once("value", function(snapshot) {
-                                    var timestamp = snapshot.val()["timestamp"]; //to get the server time
-                                    var refByUser = firebaseService.getRefGroupMembershipRequestsByUser().child(userID); //Step 4 add to pending by user
-                                    var requestByUser = {};
-                                    requestByUser[groupID] = {
-                                        timestamp: timestamp
-                                    };
-                                    refByUser.update(requestByUser, function(error) {
-                                        if (error) {
-                                            //roll back previous may be
-                                            deferred.reject("Server Error, please try again");
-                                        } else {
-                                            deferred.resolve();
-                                        }
-                                    });
-                                });
+                        requestSaveToFirebase(groupID, subgroupID, subgrouptitle, userID, message, membershipNo, ref, deferred);
+                    }
+                });
+            }
+
+            function requestSaveToFirebase (groupID, subgroupID, subgrouptitle, userID, message, membershipNo, ref, deferred) {
+                var request = {};
+                if (subgroupID) {
+                    request[userID] = {
+                        timestamp: firebaseTimeStamp,
+                        message: message,
+                        membershipNo: membershipNo,
+                        'team-request': {
+                            '0': {
+                                'subgroupID': subgroupID,
+                                'subgrouptitle': subgrouptitle
                             }
+                        }
+                    };
+                } else {
+                    request[userID] = {
+                        timestamp: firebaseTimeStamp,
+                        message: message,
+                        membershipNo: membershipNo
+                    };
+                    console.log(membershipNo)
+                }
+                ref.update(request, function(error) {
+                    if (error) {
+                        deferred.reject("Server Error, please try again");
+                    } else {
+                        ref.child(userID).once("value", function(snapshot) {
+                            var timestamp = snapshot.val()["timestamp"]; //to get the server time
+                            var refByUser = firebaseService.getRefGroupMembershipRequestsByUser().child(userID); //Step 4 add to pending by user
+                            var requestByUser = {};
+                            requestByUser[groupID] = {
+                                timestamp: timestamp
+                            };
+                            refByUser.update(requestByUser, function(error) {
+                                if (error) {
+                                    //roll back previous may be
+                                    deferred.reject("Server Error, please try again");
+                                } else {
+                                    deferred.resolve();
+                                }
+                            });
                         });
                     }
                 });
@@ -974,7 +986,7 @@ angular.module('core')
 
                     return verb;
                 },
-                asyncGroupJoiningRequest: function(userID, groupID, message, subgroupID, subgrouptitle) {
+                asyncGroupJoiningRequest: function(userID, groupID, message, subgroupID, subgrouptitle, membershipNo) {
                     var deferred = $q.defer();
                     var self = this;
                     firebaseService.asyncCheckIfGroupExists(groupID).then(function(response) {
@@ -990,19 +1002,19 @@ angular.module('core')
                                         deferred.reject("User is already a admin of this team of teams");
                                     } else if (membershipData["membership-type"] == 0) {
                                         if (subgroupID) {
-                                            groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, deferred);
+                                            groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred);
                                         } else {
                                             deferred.reject("Membership request is already pending for this team of teams");
                                         }
                                     } else {
                                         if (subgroupID) {
-                                            groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, deferred);
+                                            groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred);
                                         } else {
                                             deferred.reject("User is already a member of this team of teams");
                                         }
                                     }
                                 } else {
-                                    groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, deferred);
+                                    groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred);
                                 }
                             });
                         } else {

@@ -20,7 +20,16 @@
             } else {
                 return ''
             }
-        };
+        }
+        this.checkInMembershipNo = function(ev, user) {
+            var keyCode = ev.which || ev.keyCode;
+            console.log(keyCode)
+            if (keyCode === 13) {
+                if (user.length === 1) {
+                    that.CheckInuser(user[0].groupID, user[0].subgroupID, user[0].id, user[0].type);
+                }
+            }
+        }
         this.CheckInuser = function(grId, sgrId, userID, type) {
             // Do not change status of self login user
             if (user.userID === userID) {

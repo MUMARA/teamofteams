@@ -70,7 +70,8 @@
             that.errorMsg = false;
             that.reqObj = {
                 groupID: that.groupID,
-                message: ""
+                message: "Please add me in your Team.",
+                membershipNo: ""
             };
             if (that.subgroupID) {
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
