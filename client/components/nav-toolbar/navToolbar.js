@@ -33,8 +33,8 @@
             this.groups = {};
             this.ListGroupSubGroup = [];
             this.subgroups = [];
-            this.filteredGroups;
-            this.groupObj1;
+            this.filteredGroups = null;
+            this.groupObj1 = null;
             this.currentLocation = {};
             //this.userObj2;
             this.switchCheckIn = false;
@@ -218,50 +218,50 @@
                 return dist;
             };
 
-            //Show Dailogue Box for Daily Report Questions -- START --
-            var html = "<md-dialog aria-label=\"Daily Report\" ng-cloak> <form> <md-toolbar> <div class=\"md-toolbar-tools\"> <h2>Daily Progress Report</h2> <span flex></span> </div> </md-toolbar> <md-dialog-content> <div class=\"md-dialog-content\"> <h2>Questions List</h2> <p ng-repeat=\"(id, name) in questions\"> <strong>*</strong> {{name}} </p> <div layout=\"row\"> <md-input-container flex> <label>Please write...</label><textarea ng-model=\"reportText\"></textarea></md-input-container> </div> </div> </md-dialog-content> <md-dialog-actions layout=\"row\"> <span flex></span> <md-button ng-click=\"cancel('not useful')\"> Later </md-button> &nbsp; <md-button ng-click=\"report()\" style=\"margin-right:20px;\"> Submit </md-button> </md-dialog-actions> </form> </md-dialog>";
-            self.showAdvanced = function(ev) {
-                //var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
-                $mdDialog.show({
-                  controller: DailyReportController,
-                  // templateUrl: 'http://yahoo.com',
-                  template: html,
-                  //parent: angular.element(document.body),
-                  targetEvent: ev,
-                  locals: { questions: self.subGroupPolicy.dailyReportQuestions},
-                  clickOutsideToClose:false,
-                  //fullscreen: useFullScreen
-                })
-                .then(function(reportAnswer) {
+            // //Show Dailogue Box for Daily Report Questions -- START --
+            // var html = "<md-dialog aria-label=\"Daily Report\" ng-cloak> <form> <md-toolbar> <div class=\"md-toolbar-tools\"> <h2>Daily Progress Report</h2> <span flex></span> </div> </md-toolbar> <md-dialog-content> <div class=\"md-dialog-content\"> <h2>Questions List</h2> <p ng-repeat=\"(id, name) in questions\"> <strong>*</strong> {{name}} </p> <div layout=\"row\"> <md-input-container flex> <label>Please write...</label><textarea ng-model=\"reportText\"></textarea></md-input-container> </div> </div> </md-dialog-content> <md-dialog-actions layout=\"row\"> <span flex></span> <md-button ng-click=\"cancel('not useful')\"> Later </md-button> &nbsp; <md-button ng-click=\"report()\" style=\"margin-right:20px;\"> Submit </md-button> </md-dialog-actions> </form> </md-dialog>";
+            // self.showAdvanced = function(ev) {
+            //     //var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+            //     $mdDialog.show({
+            //       controller: DailyReportController,
+            //       // templateUrl: 'http://yahoo.com',
+            //       template: html,
+            //       //parent: angular.element(document.body),
+            //       targetEvent: ev,
+            //       locals: { questions: self.subGroupPolicy.dailyReportQuestions},
+            //       clickOutsideToClose:false,
+            //       //fullscreen: useFullScreen
+            //     })
+            //     .then(function(reportAnswer) {
 
-                    //save report in firebase
-                    firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').push({
-                        date: firebaseTimeStamp,
-                        answer: reportAnswer,
-                        questions: self.subGroupPolicy.dailyReportQuestions
-                    })
+            //         //save report in firebase
+            //         firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').push({
+            //             date: firebaseTimeStamp,
+            //             answer: reportAnswer,
+            //             questions: self.subGroupPolicy.dailyReportQuestions
+            //         });
 
-                    alert(reportAnswer);
-                    self.reportAnswer = 'You said the information was "' + reportAnswer + '".';
-                }, function() {
-                    // alert('Cancel - Later');
-                    $scope.status = 'You cancelled the dialog.';
-                });
-            };
+            //         alert(reportAnswer);
+            //         self.reportAnswer = 'You said the information was "' + reportAnswer + '".';
+            //     }, function() {
+            //         // alert('Cancel - Later');
+            //         $scope.status = 'You cancelled the dialog.';
+            //     });
+            // };
 
-            function DailyReportController($scope, $mdDialog, questions) {
-              $scope.questions = questions;
-              $scope.hide = function() {
-                $mdDialog.hide();
-              };
-              $scope.cancel = function() {
-                $mdDialog.cancel();
-              };
-              $scope.report = function() {
-                $mdDialog.hide($scope.reportText);
-              };
-            }
-            //Show Dailogue Box for Daily Report Questions -- END --
+            // function DailyReportController($scope, $mdDialog, questions) {
+            //   $scope.questions = questions;
+            //   $scope.hide = function() {
+            //     $mdDialog.hide();
+            //   };
+            //   $scope.cancel = function() {
+            //     $mdDialog.cancel();
+            //   };
+            //   $scope.report = function() {
+            //     $mdDialog.hide($scope.reportText);
+            //   };
+            // }
+            // //Show Dailogue Box for Daily Report Questions -- END --
 
             function updateStatus(group, checkoutFlag, event) {
                 var groupObj = {};
@@ -282,7 +282,7 @@
                             messageService.showSuccess('Checkout Successfully!');
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
-                                var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId }
+                                var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId };
                                 self.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(userObj, groupObj.groupId, groupObj.subgroupId);
 
                                 //open side nav bar for getting progress report
@@ -706,9 +706,9 @@
                     self.filteredGroups = Firebase.getAsArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
                 }
 
-                return
-                self.filteredGroups
-                self.groupObj1;
+                return;
+                // self.filteredGroups;
+                // self.groupObj1;
             }
             function PersonalSetting() {
                 // $location.path('/user/' + userID + '/personalSettings')

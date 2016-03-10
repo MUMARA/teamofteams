@@ -370,9 +370,9 @@
 
             }
 
-             console.log('activity_ activityGroupOrSubGroupID: ', activityGroupOrSubGroupID);
-             console.log('activity_  type: ', type);
-             console.log('activity_ : ', activity);
+            //  console.log('activity_ activityGroupOrSubGroupID: ', activityGroupOrSubGroupID);
+            //  console.log('activity_  type: ', type);
+            //  console.log('activity_ : ', activity);
 
             firebaseService.getRefMain().update(multipath, function (err) {
                 if (err) {
