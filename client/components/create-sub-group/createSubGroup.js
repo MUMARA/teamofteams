@@ -26,12 +26,12 @@
             // this.processTeamAttendance =false;
             // this.showEditSubGroup = false;
         this.groupid = groupID;
-        this.activeID;
+        this.activeID = null;
         this.subgroupData = 0;
         this.answer = answer;
         this.hide = hide;
-        this.saveFile = saveFile
-        this.upload_file = upload_file
+        this.saveFile = saveFile;
+        this.upload_file = upload_file;
         this.selectedMemberArray = [];
         this.selectedAdminArray = [];
         this.membersArray = [];
@@ -55,7 +55,7 @@
         this.adminSideNav = true;
         this.memberSideNav = true;
 
-        that.groupAdmin = false
+        that.groupAdmin = false;
         firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
             if (group.val()['membership-type'] == 1) {
                 that.groupAdmin = true;

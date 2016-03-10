@@ -52,6 +52,9 @@
 
                     //getting activities by groupID
                     getActivityOfCurrentUserByGroup(group.key());
+
+                    //getting activity by subgroup
+                    getActivityOfCurrentUserBySubGroup(group.key());                    
                 }
             });
             
@@ -110,14 +113,11 @@
 
                 for (var subgroup in snapshot.val()) {
                     if (currentUserSubGroupNamesAndMemberShips && currentUserSubGroupNamesAndMemberShips[snapshot.key()]) {
-                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type']
+                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type'];
                     } else {
-                        currentUserSubGroupNamesAndMemberShips[snapshot.key()] = {}
-                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type']
+                        currentUserSubGroupNamesAndMemberShips[snapshot.key()] = {};
+                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type'];
                     }
-
-                    //getting activity by subgroup
-                    getActivityOfCurrentUserBySubGroup(snapshot.key(), subgroup);
 
                     //getting subgroup members
                     getSubGroupsMembersOfCurrentUsers(snapshot.key(), subgroup);
@@ -140,25 +140,26 @@
                     // });    
                 }
             });
-
-
         }
         
         
         
         //for activity of subgroup
-        function getActivityOfCurrentUserBySubGroup(groupID, subgroupID) {
-            //getting activity streams from firebase node: group-activity-streams
-            firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroupID).orderByChild('published').on("child_added", function (snapshot) {
-                if (snapshot && snapshot.val()) {
-                    currentUserActivities.push({
-                        groupID: groupID,
-                        subgroupID: subgroupID,
-                        displayMessage: snapshot.val().displayName,
-                        activityID: snapshot.key(),
-                        published: snapshot.val().published
-                    });
-                }
+        function getActivityOfCurrentUserBySubGroup(groupID) {
+            //getting activity streams from firebase node: subgroup-activity-streams
+            firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
+                    if (snapshot && snapshot.val()) {
+                        currentUserActivities.push({
+                            groupID: groupID,
+                            subgroupID: subgroup.key(),
+                            displayMessage: snapshot.val().displayName,
+                            activityID: snapshot.key(),
+                            published: snapshot.val().published
+                        });
+                    }
+                });                
+
             });
         }
 
@@ -371,9 +372,9 @@
 
             }
 
-            //  console.log('activityGroupOrSubGroupID', activityGroupOrSubGroupID);
-            //  console.log('type', type);
-            //  console.log('activity_', activity);
+             console.log('activity_ activityGroupOrSubGroupID: ', activityGroupOrSubGroupID);
+             console.log('activity_  type: ', type);
+             console.log('activity_ : ', activity);
 
             firebaseService.getRefMain().update(multipath, function (err) {
                 if (err) {

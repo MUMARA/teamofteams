@@ -30,21 +30,21 @@
 
                                 //for group activity stream record -- START --
                                 var type = 'subgroup';
-                                var targetinfo = {id: SubgroupInfo.subgroupID, url: group.$id+'/'+SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
-                                var area = {type: 'subgroup-created'};
-                                var group_id = group.$id +'/'+ SubgroupInfo.subgroupID;
+                                var targetinfo = { id: SubgroupInfo.subgroupID, url: group.$id + '/' + SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
+                                var area = { type: 'subgroup-created' };
+                                var group_id = group.$id + '/' + SubgroupInfo.subgroupID;
                                 var memberuserID = null;
                                 //for group activity record
                                 activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                 //for group activity stream record -- END --
-                                    cb()
-                                    messageService.showSuccess("Team creation Successful...");
-                                    $rootScope.newImg = null;
+                                cb();
+                                messageService.showSuccess("Team creation Successful...");
+                                $rootScope.newImg = null;
                                 // }
                             }, function(group) {
                                 // form.$submitted = !form.$submitted
                                 messageService.showFailure("Team not created, " + SubgroupInfo.groupID + " already exists");
-                            })
+                            });
                     },
                     'cancelSubGroupCreation': function(userId) {
                         console.log("SubGroup Creation Cancelled");

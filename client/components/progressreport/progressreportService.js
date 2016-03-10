@@ -35,7 +35,7 @@
 							//adding questions into dailyProgressReport object of user report
 							dailyProgressReport.forEach(function(val, index){
 								if(val.reportID == ObjectIndex){
-									dailyProgressReport[index]['questions'] = snapshot.val().questions;
+									dailyProgressReport[index].questions = snapshot.val().questions;
 								}
 							});
 						}
@@ -44,7 +44,7 @@
 			});
 		}//getReportQuestion
     	function getSubGroupReportFromFirebase(user, groupID, subgroupID, limit){
-    		firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).child(subgroupID).orderByChild("date").limitToLast(limit)
+    		firebaseService.getRefDailyProgressReport().child(groupID).child(subgroupID).child(user.id).orderByChild("date").limitToLast(limit)
     		.on("value", function(snapshot){
     			var _flag = false;
 				// console.log('key', snapshot.key());
@@ -117,7 +117,7 @@
     	} //getDailyProgressReport
     	function updateReport(report, cb) {
     		// console.log('report', report)
-    		firebaseService.getRefDailyProgressReport().child(report.userID).child(report.groupID).child(report.subgroupID).child(report.reportID).update({'answers': report.answers}, function(err){
+    		firebaseService.getRefDailyProgressReport().child(report.groupID).child(report.subgroupID).child(report.userID).child(report.reportID).update({'answers': report.answers}, function(err){
 				if(err){
 					// console.log('err', err)
 					cb(false);
@@ -147,7 +147,7 @@
     	}
 			function getGroupReportByDateFromFirebase(user, groupID, subgroupID,startDate ,endDate) {
 
-					firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).child(subgroupID).orderByChild("date").startAt(startDate.setHours(0,0,0,0)).endAt(endDate.setHours(23,59,59,0))
+					firebaseService.getRefDailyProgressReport().child(groupID).child(subgroupID).child(user.id).orderByChild("date").startAt(startDate.setHours(0,0,0,0)).endAt(endDate.setHours(23,59,59,0))
 						.on("value", function(snapshot){
 						if(snapshot.val()){
 

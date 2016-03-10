@@ -15,8 +15,7 @@
                      that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
                      // that.showReportData();
                      that.loadingData = false;
-                 // console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
-
+                 	// console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
                  }, 2000);
              }else{
                  document.getElementById("#UserSearch").focus();
