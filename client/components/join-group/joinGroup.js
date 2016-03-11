@@ -58,6 +58,7 @@
 
                 /*VM properties*/
                 this.message = {};
+                this.membershipNo = [];
                 this.group = {
                     groupID: "",
                     message: "Please add me in your Team.",
