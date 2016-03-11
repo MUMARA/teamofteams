@@ -33,7 +33,7 @@ users-presence
  		last-modified: 1452766986235
    defined-status: 1
 --------------------------------------
-git 
+
 
 Personal Setting on Save (status has been changed from 0 to -1)
 --------------------------------------
@@ -54,20 +54,20 @@ Create Group (teams)
 --------------------------------------
  user-group-memberships
  	arsalan23
- 		groupid (group01)
+ 		totId (group01)
  			membership-type: 1
  			timestamp: 1452767752126
 
 
 group-members
- 	groupid (group01)
+ 	totId (group01)
  		arsalan23
  			membership-type: 1
  			timestamp: 1452767752756
 
 
 groups
- 	groupid (group01)
+ 	totId (group01)
  		address: "jhjkh"
  		address-title: "Karachi title"
  		desc: "werwerw"
@@ -91,7 +91,7 @@ groups
 
 
 groups-names
- 	groupid (group01)
+ 	totId (group01)
  		groupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png..."
  		ownerImgUrl: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		title: "Name Team1"
@@ -99,7 +99,7 @@ groups-names
 
 
 group-activity-streams
- 	groupid (group01)
+ 	totId (group01)
  		-K7zhAMvfIVM7xw02zT8
 	 		actor
 	 			displayName: "Arsalan Rajput"
@@ -122,7 +122,7 @@ group-activity-streams
 Edit Groups (teams)
 --------------------------------------
 groups
- 	team1
+ 	totId
  		address: "Pakistan Karachi"
  		address-title: "Karachi title2"
  		desc: "Descrtipionnnnnnnnnn"
@@ -147,14 +147,14 @@ groups
 
 
 groups-names
- 	group1
+ 	totId
  		groupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png"
  		owner-img-url: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
  		title: "group001"
     address-title: "karachi"
 
 group-activity-streams
-     	groupid (group01)
+     	totId (group01)
      		-K7zhAMvfIVM7xw02zT8
     	 		actor
     	 			displayName: "Arsalan Rajput"
@@ -177,18 +177,21 @@ group-activity-streams
 Create SubGroup (teamofteams)
 --------------------------------------
 subgroup-members
-	team1
- 		subteam1
- 			uqutub
+	totId
+ 		teamId
+ 			userid(arsalan)
  				membership-type: 1
  				timestamp: 1452772505220
 
 
 subgroups-names
-	team1
- 		subteam1: "Sub Team Name 1"
+	totId
+ 		teamId
+    subgroupImgUrl: "https://totsgroupimg.s3.amazonaws.com/team1.png..."
+    ownerImgUrl: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+    title: "totId"
 
-
+//Remove from app
 flattened-groups
 	uqutub
  		team1_subteam1
@@ -197,16 +200,16 @@ flattened-groups
 
 
 user-subgroup-memberships
-	uqutub
- 		team1
- 			subteam1
+	arsalan
+ 		totId
+ 			teamId
  				membership-type: 1
  				timestamp: 1452772505902
 
 
 subgroups
-	team1
- 		subteam1
+	totId
+ 	  teamId
  			desc: "subteam descripiton"
  			logo-image
  				bucket-name: "test2pwow"
@@ -220,19 +223,69 @@ subgroups
  			microgroups-count: 0
  			timestamp: 1452772505957
  			title: "Sub Team Name 1"
+      owner-img-url: "https://totsgroupimg.s3.amazonaws.com/subteam1.png"
+      subgroup-owner-id: "asralan"
 
 groups
- 	team1
+ 	totId
 		subgroups-count: 1
+
+  subgroup-activity-streams
+      totId
+         teamId
+            -KCVkLRJ0U-HyhaM-96t
+            actor
+              displayName: "Arsalan Rajput"
+              email: "a4arshi@yahoo.com"
+              id: "arsalan23"
+              type: "user"
+              profile-image: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+          displayName: "Arsalan Rajput created subgroup team"
+          language: "en"
+          object //SubGroup creation object donot create
+            displayName: "Name Team1"
+            id: "team1"
+            type: "group"
+            url: "team1"
+          published: 1452767754045
+          verb: "subgroup-creation"
+
+
+subgroup-policies
+   totId
+      teamId
+         hasPolicy: false
+         policy-title: ""
+         policyID: ""
+         subgroup-title: "subgroup01"
 --------------------------------------
 
 
 Edit SubGroups (teamofteams)
 --------------------------------------
+subgroup-activity-streams
+    totId
+       teamId
+          -KCVkLRJ0U-HyhaM-96t
+          actor
+            displayName: "Arsalan Rajput"
+            email: "a4arshi@yahoo.com"
+            id: "arsalan23"
+            type: "user"
+            profile-image: "https://totsuserimg.s3.amazonaws.com/uqutub.png"
+        displayName: "Arsalan Rajput updated subgroup team"
+        language: "en"
+        object //SubGroup creation object donot create
+          displayName: "Name Team1"
+          id: "team1"
+          type: "group"
+          url: "team1"
+        published: 1452767754045
+        verb: "subgroup-updated"
 subgroups
- 	team1
- 		subteam1
- 			desc: "subteam descripiton 2222"
+ 	totId
+ 		teamId
+ 			desc: "subteam descripiton 222029022"
 		logo-image
 			bucket-name: "test2pwow"
  			id: "subteam1"
@@ -245,12 +298,14 @@ subgroups
  		microgroups-count: 0
  		timestamp: 1452773847392
  		title: "Sub Team Name 2222"
+    owner-img-url: ""
+    subgroup-owner-id: "arsalan"
 
 
 subgroups-names
-	team1
- 		subteam1
- 			title: "Sub Team Name 2222"
+	totId
+ 		teamId
+ 			title: "Subgroup002902"
 --------------------------------------
 
 
@@ -540,9 +595,9 @@ subgroup-members
 Checkin
 --------------------------------------
 subgroup-check-in-records
-	team1
- 		subteam1
- 			uqutub
+	totId
+ 	teamId
+ 			arsalan
  				-K8-Ewy9ptGOIfrDHHwO
  					identified-location-id: "Other"
  					location
@@ -557,7 +612,7 @@ subgroup-check-in-records
 
 
 subgroup-check-in-current-by-user
-	uqutub
+	arsalan
  		groupID: "team1"
  		source-device-type: 1
  		source-type: 1
@@ -567,9 +622,9 @@ subgroup-check-in-current-by-user
 
 
 subgroup-check-in-current
-	team1
- 		subteam1
- 			uqutub
+	totId
+ 		teamId
+ 			arsalan
  				identified-location-id: "Other"
  				location
  					lat: 24.8137062
@@ -587,16 +642,20 @@ groups
 	team1
 		members-checked-in
 			count: 1 				//update count
+subgroups
+	totId
+    subgroupId
+		members-checked-in
+			count: 1 				//update count
 --------------------------------------
 
 
 Checkout
 --------------------------------------
 subgroup-check-in-records
-	team1
- 		subteam1
- 			uqutub
- 				-K8-Ewy9ptGOIfrDHHwO
+	totId
+ 		teamId
+ 			arsalan
  				-K8-GWsoiBH_qNLgnwye
  					identified-location-id: "Other"
  					location
@@ -607,16 +666,16 @@ subgroup-check-in-records
  					source-type: 1
  					subgroup-url: "team1/subteam1"
  					timestamp: 1452777283438
- 					type: 2
+ 					type: 2 //type updated form 1 to 2
 
 subgroup-check-in-current-by-user
-	uqutub
- 		groupID: "team1"
+	arsalan
+ 		groupID: "totId"
  		source-device-type: 1
  		source-type: 1
  		subgroupID: "subteam1"
- 		timestamp: 1452777301633
- 		type: 2
+ 		timestamp: 1452777301633 //timestamp updated
+ 		type: 2 //type updated form 1 to 2
 
 subgroup-check-in-current
 	team1
@@ -627,18 +686,24 @@ subgroup-check-in-current
  					lat: 24.813689999999998
  					lon: 67.0482741
  				message: "Checked-out"
- 				record-ref: "-K8-GaE2N-Yo6RwvUbsm"
+ 				record-ref: "-K8-GaE2N-Yo6RwvUbsm" //ref Id updated
  				source-device-type: 1
  				source-type: 1
  				subgroup-url: "team1/subteam1"
- 				timestamp: 1452777301961
- 				type: 2
+        timestamp: 1452777301633 //timestamp updated
+     		type: 2 //type updated form 1 to 2
 
 groups
-	team1
+	totId
 		members-checked-in
-			count: 0
-		timestamp: 1452771796373
+			count: 0   //updated from 1 to 0
+	  	timestamp: 1452771796373 //Not updated
+
+subgroups
+      	totId
+          subgroupId
+      		members-checked-in
+      			count: 0			//update count
 --------------------------------------
 
 --------------------------------------

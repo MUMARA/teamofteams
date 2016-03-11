@@ -1345,6 +1345,29 @@ type SubgroupAppliedPolicyType {
                isSubGroupGroupIDAdmin(this)  }
    }
 /*progress Report By User*/
+/*path /progress-reports-by-users/{userid} {
+
+  read() { isAuthenticated() }
+
+  /{groupid} {
+
+    index()  {  "date" }
+    /{subgroupid}{
+
+      /{reportid} is ProgressType {
+          read() {   isAuthenticated() &&
+                     isCurrentUserGroupOwner(groupid)    ||
+                     isCurrentUserGroupAdmin(groupid) ||
+                     subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+          write() {  isAuthenticatedUser(userid) }
+
+        }
+         index()  {  "date" }
+      }
+
+  }
+}*/
+//SubGroup progress Report
 path /subgroup-progress-reports/{groupid} {
  index()  {  "date" }
 
