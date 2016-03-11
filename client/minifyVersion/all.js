@@ -5424,6 +5424,7 @@ angular.module('core', [
 
                 /*VM properties*/
                 this.message = {};
+                this.membershipNo = [];
                 this.group = {
                     groupID: "",
                     message: "Please add me in your Team.",
@@ -8892,9 +8893,9 @@ angular.module('core', [
 
     "use strict";
 
-    angular.module('core').factory('activityStreamService', ["$http", "appConfig", '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+    angular.module('core').factory('activityStreamService', ['$timeout', '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
 
-    function activityStreamService($http, appConfig, $firebaseObject, firebaseService, userService, $rootScope) {
+    function activityStreamService($timeout, $firebaseObject, firebaseService, userService, $rootScope) {
         var user = '';
         var userID = '';
         var actor = '';
@@ -8932,16 +8933,18 @@ angular.module('core', [
         function getGroupsOfCurrentUser() {
             //child_added on user-group-memberships
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function (group) {
-
                 if (group && group.key()) {
                     //create a object of group name and membership-type
                     currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
 
-                    //getting activities by groupID
-                    getActivityOfCurrentUserByGroup(group.key());
+                    $timeout(function() {
+                        //getting activities by groupID
+                        getActivityOfCurrentUserByGroup(group.key());
 
-                    //getting activity by subgroup
-                    getActivityOfCurrentUserBySubGroup(group.key());                    
+                        //getting activity by subgroup
+                        getActivityOfCurrentUserBySubGroup(group.key());
+                    }, 1000);
+                                        
                 }
             });
             
@@ -8982,7 +8985,7 @@ angular.module('core', [
         //for activity group
         function getActivityOfCurrentUserByGroup(groupID) {
             //getting activity streams from firebase node: group-activity-streams
-            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function (snapshot) {
+            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function(snapshot) {
                 if (snapshot && snapshot.val()) {
                     currentUserActivities.push({
                         groupID: groupID,
@@ -9035,18 +9038,19 @@ angular.module('core', [
         function getActivityOfCurrentUserBySubGroup(groupID) {
             //getting activity streams from firebase node: subgroup-activity-streams
             firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
-                firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
-                    if (snapshot && snapshot.val()) {
-                        currentUserActivities.push({
-                            groupID: groupID,
-                            subgroupID: subgroup.key(),
-                            displayMessage: snapshot.val().displayName,
-                            activityID: snapshot.key(),
-                            published: snapshot.val().published
-                        });
-                    }
-                });                
-
+                if (subgroup && subgroup.val()) {
+                    firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
+                        if (snapshot && snapshot.val()) {
+                            currentUserActivities.push({
+                                groupID: groupID,
+                                subgroupID: subgroup.key(),
+                                displayMessage: snapshot.val().displayName,
+                                activityID: snapshot.key(),
+                                published: snapshot.val().published
+                            });
+                        }
+                    });                
+                }
             });
         }
 
@@ -10000,8 +10004,8 @@ angular.module('core')
                                             }
                                         });
                                     });
-                                    // firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
-                                    //     // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
+                                    firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
+                                        // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
                                         userData.push({
                                             id: userdata.$id,
                                             type: type,
@@ -10011,7 +10015,7 @@ angular.module('core')
                                             groupTitle: groupsubgroupTitle[group.key()],
                                             subgroupID: subgroup.key(),
                                             subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                            //membershipNo : snapshot.getPriority() || '',
+                                            membershipNo : snapshot.getPriority() || '',
                                             contactNumber: usermasterdata.contactNumber || '',
                                             onlinestatus: false,
                                             /*onlineweb: 0,
@@ -10024,7 +10028,7 @@ angular.module('core')
                                             lastName: usermasterdata.lastName,
                                             fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
                                         });
-                                    // });
+                                    });
                                 });
                             });
                         });

@@ -5,9 +5,9 @@
 
     "use strict";
 
-    angular.module('core').factory('activityStreamService', ["$http", "appConfig", '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+    angular.module('core').factory('activityStreamService', ['$timeout', '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
 
-    function activityStreamService($http, appConfig, $firebaseObject, firebaseService, userService, $rootScope) {
+    function activityStreamService($timeout, $firebaseObject, firebaseService, userService, $rootScope) {
         var user = '';
         var userID = '';
         var actor = '';
@@ -45,16 +45,18 @@
         function getGroupsOfCurrentUser() {
             //child_added on user-group-memberships
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function (group) {
-
                 if (group && group.key()) {
                     //create a object of group name and membership-type
                     currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
 
-                    //getting activities by groupID
-                    getActivityOfCurrentUserByGroup(group.key());
+                    $timeout(function() {
+                        //getting activities by groupID
+                        getActivityOfCurrentUserByGroup(group.key());
 
-                    //getting activity by subgroup
-                    getActivityOfCurrentUserBySubGroup(group.key());                    
+                        //getting activity by subgroup
+                        getActivityOfCurrentUserBySubGroup(group.key());
+                    }, 1000);
+                                        
                 }
             });
             
@@ -95,7 +97,7 @@
         //for activity group
         function getActivityOfCurrentUserByGroup(groupID) {
             //getting activity streams from firebase node: group-activity-streams
-            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function (snapshot) {
+            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function(snapshot) {
                 if (snapshot && snapshot.val()) {
                     currentUserActivities.push({
                         groupID: groupID,
@@ -148,18 +150,19 @@
         function getActivityOfCurrentUserBySubGroup(groupID) {
             //getting activity streams from firebase node: subgroup-activity-streams
             firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
-                firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
-                    if (snapshot && snapshot.val()) {
-                        currentUserActivities.push({
-                            groupID: groupID,
-                            subgroupID: subgroup.key(),
-                            displayMessage: snapshot.val().displayName,
-                            activityID: snapshot.key(),
-                            published: snapshot.val().published
-                        });
-                    }
-                });                
-
+                if (subgroup && subgroup.val()) {
+                    firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
+                        if (snapshot && snapshot.val()) {
+                            currentUserActivities.push({
+                                groupID: groupID,
+                                subgroupID: subgroup.key(),
+                                displayMessage: snapshot.val().displayName,
+                                activityID: snapshot.key(),
+                                published: snapshot.val().published
+                            });
+                        }
+                    });                
+                }
             });
         }
 
