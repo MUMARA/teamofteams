@@ -1900,6 +1900,19 @@ firepad.RichTextToolbar = (function(global) {
     function showDropdown() {
       if (!isShown) {
         utils.on(document, 'click', hideDropdown, /*capture=*/true);
+
+        if(eventName == "font")
+        {
+          document.getElementById('list-Font').classList.add('mui--is-open')
+        }
+        else if(eventName == "font-size")
+        {
+          document.getElementById('list-Size').classList.add('mui--is-open');
+        }
+        else
+        {
+          document.getElementById('list-Color').classList.add('mui--is-open');
+        }
         isShown = true;
       }
     }
@@ -1910,11 +1923,11 @@ firepad.RichTextToolbar = (function(global) {
 
         utils.off(document, 'click', hideDropdown, /*capture=*/true);
         isShown = false;
-        // var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
-        // console.log(items.length);
-        // for (var i = 0;i < items.length; i++) {
-        //   items[i].className = "mui-dropdown__menu";
-        // }
+         var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+         for (var i = 0;i < items.length; i++) {
+           items[i].className = "mui-dropdown__menu";
+           //document.getElementById('list-Font').classList.remove('mui--is-open')
+         }
       }
       // HACK so we can avoid re-showing the dropdown if you click on the dropdown header to dismiss it.
       justDismissed = true;
@@ -1930,18 +1943,16 @@ firepad.RichTextToolbar = (function(global) {
       var a = utils.elt('a', [content]);
       a.setAttribute('href','#');
       element.appendChild(a);
-      // a.onclick = function(){
-      //   console.log("onclick called");
-      //   var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
-      //   for (item in items){
-      //     items[item].className = "mui-dropdown__menu";
-      //     // items[item].setAttribute('class','mui-dropdown__menu');
-      //   }
-      //
-      // }
+       a.onclick = function(){
+         var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+         for (item in items){
+           items[item].className = "mui-dropdown__menu mui--is-open";
+           // items[item].setAttribute('class','mui-dropdown__menu');
+         }
+
+       }
       utils.on(element, 'click', utils.stopEventAnd(function() {
         hideDropdown();
-        console.log("add item called");
         self.trigger(eventName, value + value_suffix);
       }));
 
@@ -1955,7 +1966,6 @@ firepad.RichTextToolbar = (function(global) {
 
     utils.on(button, 'click', utils.stopEventAnd(function() {
       if (!justDismissed) {
-        console.log("button clicked");
         showDropdown();
       }
     }));
@@ -2684,7 +2694,6 @@ firepad.ACEAdapter = (function() {
         end = this.indexFromPos(this.lastCursorRange.end);
       } catch (_error) {
         e2 = _error;
-        console.log("Couldn't figure out the cursor range:", e2, "-- setting it to 0:0.");
         _ref = [0, 0], start = _ref[0], end = _ref[1];
       }
     }

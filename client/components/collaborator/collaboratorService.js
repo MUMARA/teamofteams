@@ -105,7 +105,6 @@
       }
       firepadRef.update(updateDocument, function(error) {
         if (error) {
-          console.log("Error From AccessUsers:", error);
         }
       });
     }
@@ -156,7 +155,6 @@
       }
       firebaseLocalRef.update(updateDocument, function(error) {
         if (error) {
-          console.log("error due to :", error);
           deferred.reject(error);
         }
         else {
