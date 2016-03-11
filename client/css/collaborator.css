@@ -505,6 +505,12 @@ ng-md-icon:hover {
   background-clip: padding-box;
 }
 
+
+.mui-dropdown {
+  display: inline-block;
+  position: relative;
+}
+
 .mui-dropdown__menu.mui--is-open {
   display: block;
 }

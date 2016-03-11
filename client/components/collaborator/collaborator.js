@@ -66,7 +66,9 @@
     that.document = "Create/Open Document";
     that.showLoader = false;
     that.admins = [];
+    that.permissionObj = {};
     that.permissionMembers = {};
+    that.allUsers;
 
     init();
     $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
@@ -394,7 +396,7 @@
      }*/
 
     function permissions() {
-      that.permissionObj = {};
+
       var firepadPermissions = new Firebase(ref);
       if (that.subgroupID) {
         firepadRef = firepadPermissions.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID);

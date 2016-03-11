@@ -1910,11 +1910,11 @@ firepad.RichTextToolbar = (function(global) {
 
         utils.off(document, 'click', hideDropdown, /*capture=*/true);
         isShown = false;
-        var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
-        console.log(items.length);
-        for (var i = 0;i < items.length; i++) {
-          items[i].className = "mui-dropdown__menu";
-        }
+        // var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+        // console.log(items.length);
+        // for (var i = 0;i < items.length; i++) {
+        //   items[i].className = "mui-dropdown__menu";
+        // }
       }
       // HACK so we can avoid re-showing the dropdown if you click on the dropdown header to dismiss it.
       justDismissed = true;
@@ -1930,15 +1930,15 @@ firepad.RichTextToolbar = (function(global) {
       var a = utils.elt('a', [content]);
       a.setAttribute('href','#');
       element.appendChild(a);
-      a.onclick = function(){
-        console.log("onclick called");
-        var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
-        for (item in items){
-          items[item].className = "mui-dropdown__menu";
-          // items[item].setAttribute('class','mui-dropdown__menu');
-        }
-
-      }
+      // a.onclick = function(){
+      //   console.log("onclick called");
+      //   var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+      //   for (item in items){
+      //     items[item].className = "mui-dropdown__menu";
+      //     // items[item].setAttribute('class','mui-dropdown__menu');
+      //   }
+      //
+      // }
       utils.on(element, 'click', utils.stopEventAnd(function() {
         hideDropdown();
         console.log("add item called");
