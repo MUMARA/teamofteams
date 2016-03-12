@@ -519,6 +519,7 @@ ng-md-icon:hover {
   display: block;
   padding: 3px 20px;
   clear: both;
+  text-decoration: none;
   font-weight: normal;
   line-height: 1.429;
   color: rgba(0, 0, 0, 0.87);
