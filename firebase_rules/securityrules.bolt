@@ -86,39 +86,6 @@ type ConnectionIDStatus{
       "started"  : CurrentTimeStamp
 }
 
-
-/*
-//===================================
-//          Personal Setting
-//===================================
-//      Path for Personal Setting
-//===================================
-
-
-path /users/{userid} is UserPersonalSetting {
-    read()   {     isAuthenticated()          }
-    update() {  isAuthenticatedUser($userid)  }
-
-}
-
-
-type UserPersonalSetting {
-
-    'contactNumber'   : ContactNumberLength,
-    'date-created'    : CurrentTimeStamp,
-    'desc'            : DescLenght,
-    'email'           : String,
-    'firstName'       : NameLengthGreaterThanThree,
-    'lastName'        : NameLengthGreaterThanThree,
-    'profession'      : String,
-    'profile-image'   : String,                                               //  ----------------------------------
-    'status'          : Number                                               // Discuss to sir what is -1 and what is 0
-}                                                                               //---------------------
-
-
-
-*/
-
 type ContactNumberLength extends String {
   validate() {
     this.length >= 5
@@ -493,23 +460,33 @@ type  ActorType {
  //   SubGroup Activity Streams
  //====================================
  //Please note when creating group using Multi path update donot add group creation activity seprately
-path /subgroup-activity-streams/{groupid}/{subgroupid} {
-  index()  {  "object/id" }
+path /subgroup-activity-streams/{groupid}{
+  read() {
+      isAuthenticated()                &&
+      isGroupMembersIdExist(groupid)          &&
+      isCurrentUserGroupMembersOwner(groupid) ||
+      groupMemberShipAnyType(groupid)  }
 
-  read()     {    isGroupMembersIdExist(groupid)       &&
-                  groupMemberShipAnyType(groupid) }
-
-  write()    {   ( isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
-
-  // validate() { prior(root['groups'][$groupid].val() != null)     }
-
-/{activityid} is GroupActivityStreamsInfo {
+  /{subgroupid} {
     index()  {  "object/id" }
-write() {
-  ( isAuthenticated() && isSubGroupJoined(this['verb']))
+
+    read()     {    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
+                    isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist($groupid,$subgroupid)  }
+
+    write()    {   (isAuthenticated()                        &&
+                    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
+                    isCurrentSubUserGroupMembersOwner(groupid,subgroupid)      ||
+                    isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)  ) }
+
+    // validate() { prior(root['groups'][$groupid].val() != null)     }
+
+      /{activityid} is GroupActivityStreamsInfo {
+                index()  {  "object/id" }
+                write() {  ( isAuthenticated() && isSubGroupJoined(this['verb'])) }
+        }
+    }
 }
- }
- }
+
  //====================================
  //   Group Check In Current
  //====================================
@@ -659,7 +636,7 @@ path /group-membership-requests-by-user/{userid} {
                isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
                subGroupMembersMemberShipAnyType(groupid,subgroupid)    }*/
     /members-checked-in is SubGroupMembersCheckInInfo {
-    validate() { isUserUSerIDExist() }
+     validate() { isUserUSerIDExist() }
 
       update()    { isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) }
      }
@@ -1368,27 +1345,30 @@ type SubgroupAppliedPolicyType {
                isSubGroupGroupIDAdmin(this)  }
    }
 /*progress Report By User*/
-/*path /progress-reports-by-users/{userid} {
+path /subgroup-progress-reports/{groupid} {
+ index()  {  "date" }
 
-  read() { isAuthenticated() }
 
-  /{groupid} {
-
-    index()  {  "date" }
     /{subgroupid}{
+      read()     {   isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
+                      subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
+      /{userid} {
 
       /{reportid} is ProgressType {
           read() {   isAuthenticated() &&
                      isCurrentUserGroupOwner(groupid)    ||
                      isCurrentUserGroupAdmin(groupid) ||
                      subGroupMembersMemberShipAnyType(groupid,subgroupid) }
-          write() {  isAuthenticatedUser(userid) }
+          write() {  isAuthenticatedUser(userid)  &&  isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
+                      subGroupMembersMemberShipAnyType(groupid,subgroupid)
+                  }
 
         }
          index()  {  "date" }
       }
+      }
 
-  }
+
 }
 
  type ProgressType {
@@ -1397,7 +1377,7 @@ type SubgroupAppliedPolicyType {
   questionID : String,
   policyID : String
 
- }*/
+ }
 /*Group Channel*/
 path /group-channel/{groupid} {
     read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
@@ -1550,7 +1530,9 @@ path /firepad-groups-access/{groupid}/{documentid}{
     }
 }
   /*firepad Group Rules */
-path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
+path /firepad-groups-rules/{groupid}{
+
+     /{documentid} is FirepadRulesType  {
       read() {
         isAuthenticated()
       }
@@ -1558,6 +1540,7 @@ path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
         isAuthenticated()
       }
 }
+  }
   /*firepad SubGroup Access */
 path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
   read() {

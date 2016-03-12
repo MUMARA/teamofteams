@@ -3,11 +3,11 @@
  */
 
 var gulp = require('gulp'),
-    url = require('url')
+    url = require('url'),
     concat = require('gulp-concat'),
     // minify = require('gulp-minify');
-    uglify = require('gulp-uglify');
-    fs = require('fs')
+    uglify = require('gulp-uglify'),
+    fs = require('fs');
 
 var webserver = require('gulp-webserver');
 
@@ -79,7 +79,7 @@ gulp.task("minifying", function() {
             "./config/appRoutes.js"
         ])
         .pipe(concat('all.js'))
-        // .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest("./minifyVersion/"));
 });
 

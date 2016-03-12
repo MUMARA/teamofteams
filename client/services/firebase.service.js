@@ -40,7 +40,7 @@ angular.module('core')
             var loggedUserRef = null;
             var policies = null;
             var userPolicies = null;
-            var dailyProgressReport = null;
+            var progressReport = null;
             var subgroupPolicies = null;
 
             return {
@@ -142,10 +142,10 @@ angular.module('core')
                     return groupLocsDefined;
                 },
                 getSignedinUserRef: function() {
-                    return loggedUserRef
+                    return loggedUserRef;
                 },
                 getRefFlattendGroups: function() {
-                    return flattenedGroups
+                    return flattenedGroups;
                 },
                 getRefPolicies: function() {
                     return policies;
@@ -153,8 +153,8 @@ angular.module('core')
                 getRefUserPolicies: function() {
                     return userPolicies;
                 },
-                getRefDailyProgressReport: function() {
-                    return dailyProgressReport;
+                getRefProgressReport: function() {
+                    return progressReport;
                 },
                 getRefSubgroupPolicies: function(){
                         return subgroupPolicies;
@@ -207,7 +207,7 @@ angular.module('core')
                                 flattenedGroups = ref.child("flattened-groups");
                                 policies = ref.child("policies");
                                 userPolicies = ref.child("user-policies");
-                                dailyProgressReport = ref.child('progress-reports-by-users');
+                                progressReport = ref.child('subgroup-progress-reports');
                                 subgroupPolicies = ref.child('subgroup-policies');
 
                                 /*presence API work*/

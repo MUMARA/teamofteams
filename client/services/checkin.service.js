@@ -63,7 +63,6 @@
                         if(hasPolicy) {
                             //hasPolicy true
                             checkinPolicy(Policy, locationObj, function(result, msg, teamLocationTitle){
-                                console.log('teamLocationTitle2', teamLocationTitle)
                                 if(result){
                                     saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, teamLocationTitle, function(result, cbMsg, reportMsg){
                                         //console.log('group', group); //group = {groupId: "hotmaill", subgroupId: "yahooemail", userId: "usuf52"}
@@ -126,7 +125,6 @@
 
         //checking Policy is Subgroup Has Policy (is that timebased or locationbased)
         function checkinPolicy(Policy, currentLocationObj, callback) {
-            console.log('policy', Policy)
             if(Policy && Policy.locationBased) {  //checking if location Based
 
                 //checking distance (RADIUS)
@@ -179,11 +177,12 @@
         function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb){
                if(Policy && Policy.progressReport) {
                 //checking daily progress report is exists or not -- START --
-                firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
+                //firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
+                firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).orderByChild('date')
                 .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
                     if(snapshot.val() === null) { //if null then create daily report dummy
                         //cerating Dummy Report Object on Checkin....
-                        var progressRprtObj = firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).push({
+                        var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push({
                             date: Firebase.ServerValue.TIMESTAMP,
                             //date: new Date().setHours(0,0,0,0),
                             questionID: Policy.latestProgressReportQuestionID,
@@ -191,16 +190,15 @@
                             answers: ''
                         });
 
-                        console.log('progressReport', 'activityStream runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
-
                         //for group activity stream record -- START --
                         var type = 'progressReport';
                         var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
                         var area = {type: 'progressReport-created'};
-                        var group_id = groupObj.groupId;
+                        var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
                         var memberuserID = groupObj.userId;
+                        var _object = null;
                         //for group activity record
-                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
                         //for group activity stream record -- END --
 
                         cb(false, 'notSubmitted');
@@ -242,7 +240,6 @@
             var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
             var checkinResultMsg = (checkoutFlag) ? "Checkout Successfully" : "Checkin Successfully";
             var statusType = (checkoutFlag) ? 2 : 1;
-            console.log('teamLocationTitle', teamLocationTitle)
             var _teamLocationTitle = (teamLocationTitle ? teamLocationTitle : 'Other');
             multipath["subgroup-check-in-records/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId+"/"+newPostKey] = {
                 "identified-location-id": _teamLocationTitle,
@@ -290,14 +287,14 @@
                             cb(false, 'Please contact to your administrator', null);
                         }
                         //checking Daily Progress Report
-                        checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes){
-                            if(rst) {
+                        checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes) {
+                            if (rst) {
                                 //calling callbAck....
                                 cb(true, checkinResultMsg, null);
                             } else {
                                 cb(true, checkinResultMsg, mes);
                             }
-                        })
+                        });
                     }); //ref update
                 }); //getting and update members-checked-in count - subgroup
             }); //getting and update members-checked-in count - group

@@ -100,6 +100,7 @@
                 if (grp.val()) {
                     that.group = {};
                     that.group.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
+                    that.reqObj.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
                     that.group.addresstitle = (grp.val() && grp.val()['address-title']) ? grp.val()['address-title'] : false;
                     that.group.groupImgUrl = (grp.val() && grp.val().groupImgUrl) ? grp.val().groupImgUrl : false;
                     that.group.ownerImgUrl = (grp.val() && grp.val().ownerImgUrl) ? grp.val().ownerImgUrl : false;
