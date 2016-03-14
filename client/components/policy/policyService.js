@@ -129,9 +129,11 @@
                 var subgroupPolicyActivity = {};
 
                 //getting subgroups which are selected....
-                selectedTeams.forEach(function(val, indx){
+                selectedTeams.forEach(function(val, indx) {
                     //add property hasPolicy in subgroupNames..
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
+                    multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/hasPolicy"] = true;
+                    multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policyID"] = newPolicyKey;
+                    multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policy-title"] = obj['title'];                    
 
                     //add policy id into subgroup node
                     multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;

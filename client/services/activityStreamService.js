@@ -297,6 +297,9 @@
                     'subgroup-member-removed': actor.displayName + " removed as member " + object.displayName + " from " + target.displayName,
                     'subgroup-admin-removed': actor.displayName + " removed as admin " + object.displayName + " from " + target.displayName,
                     'subgroup-join': actor.displayName + " sent team of teams join request of " + target.displayName,
+                    'subgroup-checkin': actor.displayName + " checkin " + target.displayName,
+                    'subgroup-checkout': actor.displayName + " checkout from " + target.displayName,
+
                 }, //subgroup
                 'policy': {
                     'policy-created': actor.displayName + " created policy " + target.displayName,

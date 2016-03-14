@@ -127,17 +127,17 @@
             this.openCreateSubGroupPage = function() {
                 $state.go('user.create-subgroup', {
                     groupID: groupId
-                })
-            }
+                });
+            };
             this.openUserSettingPage = function() {
                 $state.go('user.user-setting', {
                     groupID: groupId
-                })
+                });
             };
             this.openEditGroup = function() {
                 $state.go('user.edit-group', {
                     groupID: groupId
-                })
+                });
             };
 
             that.groupAdmin = false
@@ -288,7 +288,7 @@
                     // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
                 }
                 // console.log(that.selectedTimesForAllow);
-            }
+            };
             //scheduler for time base -- END --
 
 
@@ -297,7 +297,7 @@
             this.LoadSubGroupUsers = function(groupID, subgroupID) {
                 that.selectedTeamMembers[subgroupID] = policyService.getSubGroupMembers(groupID, subgroupID);
                 //that.selectedTeamMembers = policyService.getSubGroupMembers(that.groupId, 'hotemail');
-            }
+            };
             //Selected SubGroup Members for Assigning Policies
 
             //Selected SubGroup for Assign Policies
@@ -311,7 +311,7 @@
                 });
                 if (_flag) {
 
-                    //Add SubGroups    //-K91WU-ZDR8kujgvU9gZ
+                    //Add SubGroups  
                     that.selectedTeams.push(subgroup);
 
                     if (onEditPolicy) { //on click policy (edit mode)
@@ -327,6 +327,10 @@
                         that.subGroupNames.forEach(function(val, indx) {
                             if (val.subgroupID == subgroup.subgroupID) {
                                 that.subGroupNames[indx].hasPolicy = true;
+
+                                that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
+                        
                             } //else {
                             //     that.subGroupNames[indx].hasPolicy = false;
                             // }
@@ -336,7 +340,7 @@
                     //Load SubGropMemebrs
                     that.LoadSubGroupUsers(that.groupId, subgroup.subgroupID);
                 } //_flag
-            } //selectedTeam
+            }; //selectedTeam
             //Selected SubGroup for Assign Policies
 
             //on create policy
@@ -359,8 +363,8 @@
                 }
             };//this.newPolicy
 
-
             this.selectedPolicy = function(policy, index) {
+                that.selectedTeamNew = [];                      //for assign policy on subgroup, create a array when click from policy.html and then send to firebase
                 that.showarrow = index;
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
@@ -569,7 +573,8 @@
                     // console.log('members', that.selectedTeamMembers);
 
                     //calling policy service function to add in firebase
-                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
+                    //policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
+                    policyService.answer(obj, that.groupId, that.selectedTeamNew, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
                         //Load Group Policies from given GroupID
                         //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
                         if (that.activePolicyId) {  //if edit

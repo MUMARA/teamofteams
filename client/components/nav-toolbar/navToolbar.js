@@ -18,7 +18,7 @@
             self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
-            this.notifications = []
+            this.notifications = [];
            //filter Array in reverse
 
             /*VM properties*/
@@ -55,7 +55,7 @@
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart
+            this.quizStart = quizStart;
 
             //   notification activities
             self.showNotification = function(){
@@ -159,15 +159,15 @@
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
-                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
-                        self.showUrlObj.subgroupTitle = snapshot.val()
-                    })
-                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
-                        self.showUrlObj.groupTitle = snapshot.val()
-                    })
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot) {
+                        self.showUrlObj.groupTitle = snapshot.val();
+                    });
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot) {
+                        self.showUrlObj.subgroupTitle = snapshot.val();
+                    });
                     // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
-            })
+            });
 
             checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('child_changed', function(snapshot, prevChildKey) {
                 // console.log(snapshot.val());
@@ -269,17 +269,32 @@
                 if(group){
                     groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
                 } else {
-                     groupObj = {
+                    groupObj = {
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    }
+                    };
                 }
-                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject) {
                     if(result){
                         self.checkinSending = false;
-                        if(checkoutFlag){
+                        if (checkoutFlag) {
+                            //when successfully checkout then add activity Stream
+                            //for subgroup activity stream record -- START --
+                            var type = 'subgroup';
+                            var targetinfo = {id: groupObj.subgroupId, url: groupObj.groupId+'/'+groupObj.subgroupId, title: self.showUrlObj.subgroupTitle, type: 'subgroup-checkout' };
+                            var area = {type: 'subgroup-checkout'};
+                            var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
+                            var memberuserID = userID;
+                            var _object = null;
+                            //for group activity record
+                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+                            //for subgroup activity stream record -- END --
+
+                            //showing toaster of checkout
                             messageService.showSuccess('Checkout Successfully!');
+
+                            //checking is report is submitted or not.. if not then open side navbar for getting progress report
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
                                 var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId };
@@ -295,14 +310,29 @@
                                 // self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {
+                            //when successfully checkin successfully
+
                             self.checkinSending = false;
+
+                            //add activity Stream
+                            //for subgroup activity stream record -- START --
+                            var _type = 'subgroup';
+                            var _targetinfo = {id: group.subgroupId, url: group.pId+'/'+group.subgroupId, title: group.subgroupTitle, type: 'subgroup-checkin' };
+                            var _area = {type: 'subgroup-checkin'};
+                            var _group_id = group.pId+'/'+group.subgroupId;
+                            var _memberuserID = userID;
+                            var __object = null;
+                            //for group activity record
+                            activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuserID, __object);
+                            //for subgroup activity stream record -- END --
+
                             messageService.showSuccess('Checkin Successfully!');
-                        }
+                        } // else checkoutFlag 
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
                     }
-                });
+                }); // checkinService.ChekinUpdateSatatus
             }
 
             function updateStatus1(group, checkoutFlag, event) {
@@ -495,7 +525,7 @@
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    }
+                    };
                 }
 
                 // //checking daily progress report is exists or not -- START --
@@ -630,7 +660,7 @@
             }
             function shiftToUserPage() {
                 // $location.path('/user/' + userService.getCurrentUser().userID)
-                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
+                $state.go('user.dashboard', { userID: userService.getCurrentUser().userID });
             }
             this.checkTeamAvailable = function () {
                 if (self.groups.length === 0) {
@@ -643,19 +673,19 @@
                 self.show = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
-                    return
+                    return;
                 }
                 if (self.groups.length === 0) {
-                    return
+                    return;
                 }
                 if (!self.switchMsg) {
                     if (self.checkout) {
                         updateStatus(false, true, event);
                         //self.updateStatus(self.showUrlObj.group, true)
-                        return
+                        return;
                     }
                 }
-                self.switchMsg = !self.switchMsg
+                self.switchMsg = !self.switchMsg;
                 self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId) {
                     var tmp = {
@@ -670,11 +700,11 @@
                             temp.subgroupId = i;
                             temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
                             temp.data = group[i];
-                            tmp.subGroups.push(temp)
+                            tmp.subGroups.push(temp);
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);
-                })
+                });
             };
             function showSubGroup(group, pId) {
                 self.subgroups = [];
@@ -684,7 +714,7 @@
                         temp.pId = group.$id; // group Name == pId
                         temp.subgroupId = i;
                         temp.data = group[i];
-                        self.subgroups.push(temp)
+                        self.subgroups.push(temp);
                     }
                 }
             }

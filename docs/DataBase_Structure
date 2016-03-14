@@ -1,6 +1,978 @@
 Firebase Nodes of Attendence System-------------------------------
 
 
+######################       region version 02    ######################
+
+-------------------------------
+01. Sign-up:
+
+USERS
+	usuf52
+    ∘  date-created: 1457701453731
+    ∘  email: "usuf52@gmail.com"
+    ∘  firstName: "Usuf"
+    ∘  lastName: "Q."
+    ∘  status: 0
+-------------------------------
+
+
+-------------------------------
+02. After API Verify:
+
+USERS
+	usuf52
+    ∘  date-created: 1457701453731
+    ∘  email: "usuf52@gmail.com"
+    ∘  firstName: "Usuf"
+    ∘  lastName: "Q."
+    ∘  status: 1
+-------------------------------
+
+-------------------------------
+03. Sign-in:
+
+USERS-PRESENCE
+	usuf52
+    ∘  connections
+        ‣  -KC_m6CAty6ekHBFGlbr
+            •  started: 1457701549141
+            •  type: 1
+    ∘  defined-status: 1
+    ∘  last-modified: 1457701549141
+-------------------------------
+
+-------------------------------
+04. Sign-out:
+
+USERS-PRESENCE
+	usuf52
+		defined-status: 1
+		last-modified: 1457701901149
+-------------------------------
+
+-------------------------------
+05. Personal-Settings:
+
+USERS
+	usuf52
+		contactNumber: "00923008225852"
+		date-created: 1457701453731
+		desc: "Myself..."
+		email: "usuf52@gmail.com"
+		firstName: "Usuf"
+		lastName: "Qutubuddin"
+		profession: "Developer"
+		status: 0
+-------------------------------
+
+-------------------------------
+06. Create Group:
+
+USER-GROUP-MEMBERSHIPS
+	usuf52
+		t0t1
+			membership-type: 1
+			timestamp: 1457702951922
+
+
+GROUP-MEMBERS
+	t0t1
+		usuf52
+			membership-type: 1
+			timestamp: 1457702952508
+
+
+GROUPS
+	t0t1
+		address: ""
+		address-title: ""
+		desc: ""
+		group-owner-id: "usuf52"
+		logo-image
+			 bucket-name: "test2pwow"
+			 id: "t0t1"
+			 mediaType: "image/png"
+			 source: 1
+			 url: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		members-checked-in
+			count: 0
+		members-count: 1
+		owner-img-url: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		phone: ""
+		privacy: 2
+		subgroups-count: 0
+		timeZone: " +5:00"
+		timestamp: 1457702953062
+		title: "tot1"
+
+
+GROUPS-NAMES
+	t0t1
+		address-title: ""
+		groupImgUrl: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		ownerImgUrl: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		title: "tot1"
+
+
+GROUP-ACTIVITY-STREAMS
+	t0t1
+		-KC_rTE5yA3eRHL5jzAM
+			actor
+				 displayName: "Usuf Q."
+				 email: "usuf52@gmail.com"
+				 id: "usuf52"
+				 profile-image: ""
+				 type: "user"
+			displayName: "Usuf Q. created group tot1"
+			language: "en"
+			published: 1457702954511
+			verb: "group-created"
+
+-------------------------------
+
+-------------------------------
+07. Edit Group:
+
+GROUPS
+	t0t1
+		address: "Addreessssss"
+		address-title: "tot1 Add Title"
+		desc: "MyDescription"
+		group-owner-id: "usuf52"
+		logo-image
+			bucket-name: "test2pwow"
+			id: "t0t1"
+			mediaType: "image/png"
+			source: 1
+			url: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		members-checked-in
+			count: 0
+		members-count: 1
+		owner-img-url: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		phone: "00923008225852"
+		privacy: 2
+		subgroups-count: 0
+		timeZone: " +5:00"
+		timestamp: 1457703765935
+		title: "tot1"
+
+
+GROUPS-NAMES
+	t0t1
+		address-title: "tot1 Add Title"
+		groupImgUrl: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		ownerImgUrl: "https://s3-us-west-2.amazonaws.com/defaultimgs/..."
+		title: "tot1"
+
+
+GROUP-ACTIVITY-STREAMS
+	t0t1
+		-KC_rTE5yA3eRHL5jzAM
+		-KC_uZg4Td6OUSwSFOVN
+			actor
+				displayName: "Usuf Q."
+				email: "usuf52@gmail.com"
+				id: "usuf52"
+				profile-image: ""
+				type: "user"
+			displayName: "Usuf Q. udpated group tot1"
+			language: "en"
+			published: 1457703767170
+			verb: "group-updated"
+
+-------------------------------
+
+-------------------------------
+08. Create SubGroup:
+
+SUBGROUP-MEMBERS
+	t0t1
+		t0t1s1
+			usuf52
+				membership-type: 1
+				timestamp: 1457704171876
+
+
+SUBGROUP-NAMES
+	t0t1
+		t0t1s1
+			ownerImgUrl: ""
+			subgroupImgUrl: ""
+			title: "Subgroup 1"
+
+
+USER-SUBGROUP-MEMBERSHIPS
+	usuf52
+		t0t1
+			t0t1s1
+				membership-type: 1
+				timestamp: 1457704173001
+
+SUBGROUPS-NAMES
+	t0t1
+		t0t1s1
+			ownerImgUrl: ""
+			subgroupImgUrl: ""
+			title: "Subgroup 1"
+
+
+SUBGROUPS
+	t0t1
+		t0t1s1
+			desc: ""
+			logo-image
+				bucket-name: "test2pwow"
+				id: "t0t1s1"
+				mediaType: "image/png"
+				source: 1
+				url: ""
+			members-checked-in
+				count: 0
+			members-count: 1
+			microgroups-count: 0
+			owner-img-url: ""
+			subgroup-owner-id: "usuf52"
+			timestamp: 1457704173273
+			title: "Subgroup 1"
+
+
+SUBGROUP-POLICIES
+	t0t1
+		t0t1s1
+			hasPolicy: false
+			policy-title: ""
+			policyID: ""
+			subgroup-title: "Subgroup 1"
+
+
+SUBGROUP-MEMBERS
+	t0t1
+		t0t1s1
+			usuf52
+				membership-type: 1
+				timestamp: 1457704171876
+
+GROUPS
+	t0t1
+		subgroups-count: 1
+
+
+SUBGROUP-ACTIVITY-STREAMS
+	group01
+		t0t1
+			t0t1s1
+				 -KC_w7-8fkMLTGPzCR_e
+					actor
+						 displayName: "Usuf Q."
+						 email: "usuf52@gmail.com"
+						 id: "usuf52"
+						 profile-image: ""
+						 type: "user"
+					displayName: "Usuf Q. created subgroup Subgroup 1"
+					language: "en"
+					published: 1457704173959
+					verb: "subgroup-created"
+
+-------------------------------
+
+-------------------------------
+09. Edit Sub-Group:
+
+SUBGROUPS
+	t0t1
+		t0t1s1
+			desc: "Sub Description...."
+			logo-image
+				bucket-name: "test2pwow"
+				id: "t0t1s1"
+				mediaType: "image/png"
+				source: 1
+				url: ""
+			members-checked-in
+				count: 0
+			members-count: 1
+			microgroups-count: 0
+			owner-img-url: ""
+			subgroup-owner-id: "usuf52"
+			timestamp: 1457705062310
+			title: "Subgroup 1"
+
+
+SUBGROUPS-NAMES	
+	t0t1
+		t0t1s1
+			ownerImgUrl: ""	
+			subgroupImgUrl: ""
+			title: "Subgroup 1"
+
+
+SUBGROUP-ACTIVITY-STREAMS
+	group01
+		t0t1
+			t0t1s1
+				 -KC_w7-8fkMLTGPzCR_e
+				 -KC_zWEqJ-IqiqvR6Pnj
+					actor
+						 displayName: "Usuf Q."
+						 email: "usuf52@gmail.com"
+						 id: "usuf52"
+						 profile-image: ""
+						 type: "user"
+					displayName: "Usuf Q. updated subgroup Subgroup 1"
+					language: "en"
+					published: 1457705063753
+					verb: "subgroup-updated"
+-------------------------------
+
+-------------------------------
+10. Create Policy:
+
+POLICIES
+	t0t1
+		-KCa0mKFXEUGu3JajGd4
+			defined-by: "usuf52"
+			latestProgressReportQuestionID: "-KCa0mKGR4Z-C4dVuQ0J"
+			location
+				lat: 24.8615345
+				lng: 67.01004880000005
+				radius: 20
+				title: "Hira Lal Rd, Karachi, Pakistan"
+			locationBased: true
+			policyID: "-KCa0mKFXEUGu3JajGd4"
+			progressReport: true
+			progressReportQuestions
+				-KCa0mKGR4Z-C4dVuQ0J
+					questions
+						0: "What did you accomplish today?"
+						1: "What will you do tomorrow?"
+						2: "What obstacles are impeding your progress?"
+					timestamp: 1457705658089
+			timeBased: true
+			schedule
+				Sunday
+					9: true
+					10: true
+			timestamp: 1457705658089
+			title: "Policy_tot1"
+
+
+GROUP-ACTIVITY-STREAMS
+	t0t1
+		-KCa0mWPltOpEQ_RjUNV
+			actor
+				displayName: "Usuf Q."
+				email: "usuf52@gmail.com"
+				id: "usuf52"
+				profile-image: ""
+				type: "user"
+			displayName: "Usuf Q. created policy Policy_tot1"
+			language: "en"
+			object
+				displayName: "Policy_tot1"
+				id: "-KCa0mKFXEUGu3JajGd4"
+				type: "policy"
+				url: "-KCa0mKFXEUGu3JajGd4"
+			published: 1457705658794
+			target
+				displayName: "Policy_tot1"
+				id: "-KCa0mKFXEUGu3JajGd4"
+				type: "policy"
+				url: "t0t1/-KCa0mKFXEUGu3JajGd4"
+				verb: "policy-created"
+
+-------------------------------
+
+-------------------------------
+11. Update Policy:
+
+POLICIES
+	t0t1
+		-KCa0mKFXEUGu3JajGd4
+			defined-by: "usuf52"
+			latestProgressReportQuestionID: "-KCa0mKGR4Z-C4dVuQ0J"
+			location: ""
+			locationBased: false
+			policyID: "-KCa0mKFXEUGu3JajGd4"
+			progressReport: true
+			progressReportQuestions
+				-KCa0mKGR4Z-C4dVuQ0J
+					questions
+						0: "What did you accomplish today?"
+						1: "What will you do tomorrow?"
+						2: "What obstacles are impeding your progress?"
+					timestamp: 1457705658089
+			timeBased: false
+			schedule: ""
+			timestamp: 1457705658089
+			title: "Policy tot1"
+
+
+GROUP-ACTIVITY-STREAMS
+	t0t1
+		-KCa0mWPltOpEQ_RjUNV
+			actor
+				displayName: "Usuf Q."
+				email: "usuf52@gmail.com"
+				id: "usuf52"
+				profile-image: ""
+				type: "user"
+			displayName: "Usuf Q. updated policy Policy tot1"
+			language: "en"
+			object
+				displayName: "Policy tot1"
+				id: "-KCa0mKFXEUGu3JajGd4"
+				type: "policy"
+				url: "-KCa0mKFXEUGu3JajGd4"
+			published: 1457705994321
+			target
+				displayName: "Policy tot1"
+				id: "-KCa0mKFXEUGu3JajGd4"
+				type: "policy"
+				url: "t0t1/-KCa0mKFXEUGu3JajGd4"
+				verb: "policy-updated"
+-------------------------------
+
+-------------------------------
+12. Assign/Apply Policy on Team:
+
+
+USER-POLICIES
+	usuf52
+		t0t1
+			t0t1s1
+				hasPolicy: true
+				policyID: "-KCa0mKFXEUGu3JajGd4"
+				title: "Policy tot1"
+
+SUBGROUPS
+	t0t1			
+		t0t1s1
+			policyID:	"-KCa0mKFXEUGu3JajGd4"
+
+SUBGROUP-POLICIES									
+	t0t1
+		t0t1s1
+			hasPolicy: true
+			policy-title: "Policy tot1"
+			policyID: "-KCa0mKFXEUGu3JajGd4"
+			subgroup-title: "Subgroup 1" 							
+
+POLICIES
+	t0t1
+		-KCa0mKFXEUGu3JajGd4
+			defined-by: "usuf52"
+			latestProgressReportQuestionID: "-KCa0mKGR4Z-C4dVuQ0J"
+			location: ""
+			locationBased: false
+			policyID: "-KCa0mKFXEUGu3JajGd4"
+			progressReport: true
+			progressReportQuestions
+				-KCa0mKGR4Z-C4dVuQ0J
+					questions
+						0: "What did you accomplish today?"
+						1: "What will you do tomorrow?"
+						2: "What obstacles are impeding your progress?"
+					timestamp: 1457705658089
+			timeBased: false
+			schedule: ""
+			timestamp: 1457706273177
+			title: "Policy tot1"
+
+
+SUBGROUP-ACTIVITY-STREAMS
+	t0t1
+		t0t1s1
+			-KCa37fHTOKZCAvBpv2j
+				 actor
+					displayName: "Usuf Q."
+					email: "usuf52@gmail.com"
+					id: "usuf52"
+					profile-image: ""
+					type: "user"
+				displayName: "Usuf Q. assigned policy Policy tot1 to Subgroup 1"
+				language: "en"
+				object
+					displayName: "Subgroup 1"
+					id: "t0t1s1"
+					type: "subgroup"
+					url: "t0t1/t0t1s1"
+				published: 1457706273838
+				target
+					displayName: "Policy tot1"
+					id: "-KCa0mKFXEUGu3JajGd4"
+					type: "policy"
+					url: "t0t1/-KCa0mKFXEUGu3JajGd4"
+				verb: "policy-assigned-team"
+
+
+GROUP-ACTIVITY-STREAMS
+	t0t1
+		-KCa37ewOt_Cvc5nsRqi
+			actor
+				displayName: "Usuf Q."
+				email: "usuf52@gmail.com"
+				id: "usuf52"
+				profile-image: ""
+				type: "user"
+			displayName: "Usuf Q. updated policy Policy tot1"
+			language: "en"
+			object
+				displayName: "Policy tot1"
+				id: "-KCa0mKFXEUGu3JajGd4"
+				type: "policy"
+				url: "-KCa0mKFXEUGu3JajGd4"
+			published: 1457706273836
+			target
+				displayName: "Policy tot1"
+				id: "-KCa0mKFXEUGu3JajGd4"
+				type: "policy"
+				url: "t0t1/-KCa0mKFXEUGu3JajGd4"
+			verb: "policy-updated"
+-------------------------------
+
+-------------------------------
+13. Checkin:
+
+• GROUPS
+    ∘ t0t1
+        ‣ members-checked-in
+            • count: 1
+
+
+• SUBGROUP-CHECK-IN-CURRENT
+    ∘ t0t1
+        ‣ t0t1s2
+            •  usuf52
+                ∘  identified-location-id: "Other"
+                ∘  location  
+                    ‣ lat: 24.8614622
+                    ‣ lon: 67.0099388
+                ∘  message: "Checked-in"
+                ∘ record-ref: "-KCo7mPw9A9OgnLGvo5-"
+                ∘ source-device-type: 1
+                ∘ source-type: 1
+                ∘ subgroup-url: "t0t1/t0t1s2"
+                ∘ timestamp: 1457942374310
+                ∘ type: 1
+
+
+• SUBGROUP-CHECK-IN-CURRENT-BY-USER
+    ∘ usuf52
+        ‣  "t0t1"
+            ‣  source-device-type: 1
+            ‣  source-type: 1
+            ‣  subgroupID: "t0t1s2"
+            ‣  timestamp: 1457942374310
+            ‣  type: 1
+
+
+
+• SUBGROUP-CHECK-IN-RECORDS
+    ∘ t0t1
+        ‣ t0t1s2
+            •  usuf52
+                ∘  -KCo7mPw9A9OgnLGvo5-
+                    •  identified-location-id: "Other"
+                    •  location
+                        ∘  lat: 24.8614622
+                        ∘  lon: 67.0099388
+                    •  message: "Checked-in"
+                    •  source-device-type: 1
+                    •  source-type: 1
+                    •  subgroup-url: "t0t1/t0t1s2"
+                    •  timestamp: 1457942374310
+                    •  type: 1
+
+
+• SUBGROUPS
+    ∘ t0t1
+        ‣ t0t1s2
+            • members-checked-in
+                    ∘ count: 1
+
+
+• SUBGROUP-PROGRESS-REPORTS
+    ∘ t0t1
+        ‣  t0t1s2
+            •  usuf52
+                ∘  -KCo7maAdwNxGvKoYl8-
+                    ‣  answers: ""
+                    ‣  date: 1457942375021
+                    ‣  policyID: "-KCa0mKFXEUGu3JajGd4"
+                    ‣  questionID: "-KCa0mKGR4Z-C4dVuQ0J"
+
+
+
+• SUBGROUP-ACTIVITY-STREAMS
+    ∘ t0t1
+        ‣  t0t1s2
+            • -KCo7maGyQiKpxPZFsuP
+                ∘  actor
+                    ‣  displayName: "Usuf Qutubuddin"
+                    ‣  email: "usuf52@gmail.com"
+                    ‣  id: "usuf52"
+                    ‣  profile-image: ""
+                    ‣  type: "user"
+                ∘  displayName: "Usuf Qutubuddin Created progress report against..."
+                ∘  language: "en"
+                ∘  object
+                    ‣  displayName: "Usuf Qutubuddin"
+                    ‣  email: "usuf52@gmail.com"
+                    ‣  id: "usuf52"
+                    ‣  type: "progressReport"
+                ∘  published: 1457942375048
+                ∘  target
+                    ‣  displayName: "t0t1/t0t1s2"
+                    ‣  id: "-KCo7maAdwNxGvKoYl8-"
+                    ‣  type: "progressReport"
+                    ‣  url: "t0t1/t0t1s2"
+                ∘  verb: "progressReport-created"
+                
+            • -KCok8AxuQor9v9Gw9VZ
+                ∘  actor
+                    ‣  displayName: "Usuf Qutubuddin"
+                    ‣  email: "usuf52@gmail.com"
+                    ‣  id: "usuf52"
+                    ‣  profile-image: ""
+                    ‣  type: "user"
+                ∘  displayName: "Usuf Qutubuddin checkin Sub Group 2"
+                ∘  language: "en"
+                ∘  object
+                    ‣  displayName: "Usuf Qutubuddin"
+                    ‣  email: "usuf52@gmail.com"
+                    ‣  id: "usuf52"
+                    ‣  type: "subgroup"
+                ∘  published: 1457952691166
+                ∘  target
+                    ‣  displayName: "Sub Group 2"
+                    ‣  id: "t0t1sub2"
+                    ‣  type: "subgroup"
+                    ‣  url: "t0t1/t0t1sub2"
+                ∘  verb: "subgroup-checkin"
+-------------------------------
+
+-------------------------------
+14. Checkout:
+
+GROUPS
+	t0t1
+		members-checked-in
+			count: 0
+
+
+SUBGROUP-CHECK-IN-CURRENT
+	t0t1
+		 t0t1s2
+			 usuf52	
+				 identified-location-id: "Other"
+				 location
+					 lat: 24.8614622
+					 lon: 67.0099388
+				 message: "Checked-out"
+				 record-ref: "-KCoCooS6rPETA8-yYp_"
+				 source-device-type: 1
+				 source-type: 1
+				 subgroup-url: "t0t1/t0t1s2"
+				 timestamp: 1457943694857
+				 type: 2
+
+
+SUBGROUP-CHECK-IN-CURRENT-BY-USER
+	usuf52
+		 groupID: "t0t1"
+		 source-device-type: 1
+		 source-type: 1
+		 subgroupID: "t0t1s2"
+		 timestamp: 1457943694857
+		 type: 2
+
+
+SUBGROUP-CHECK-IN-RECORDS
+	t0t1
+		 t0t1s2
+			 usuf52
+				 -KCo7mPw9A9OgnLGvo5-
+				 -KCoCooS6rPETA8-yYp_  
+					 identified-location-id: "Other"
+					 location
+						 lat: 24.8614622
+						 lon: 67.0099388
+					 message: "Checked-out"
+					 source-device-type: 1
+					 source-type: 1
+ 					 subgroup-url: "t0t1/t0t1s2"
+					 timestamp: 1457943694857
+					 type: 2
+
+SUBGROUPS
+∘ t0t1
+    ‣ t0t1s2
+        • members-checked-in
+            ∘ count: 0
+
+
+SUBGROUP-ACTIVITY-STREAMS
+    ∘ t0t1
+        ‣  t0t1s2
+            • -KCojV9vEn4JTs_Ufiky
+                ∘  actor
+                    ‣  displayName: "Usuf Qutubuddin"
+                    ‣  email: "usuf52@gmail.com"
+                    ‣  id: "usuf52"
+                    ‣  profile-image: ""
+                    ‣  type: "user"
+                ∘  displayName: "Usuf Qutubuddin checkout from Sub Group 2"
+                ∘  language: "en"
+                ∘  object  
+                    ‣  displayName: "Usuf Qutubuddin"
+                    ‣  email: "usuf52@gmail.com"
+                    ‣  id: "usuf52"
+                    ‣  type: "subgroup"
+                ∘  published: 1457952523169
+                ∘  target
+                    ‣  displayName: "Sub Group 2"
+                    ‣  id: "t0t1sub2"
+                    ‣  type: "subgroup"
+                    ‣  url: "t0t1/t0t1sub2"
+                ∘  verb: "subgroup-checkout"
+
+-------------------------------
+
+-------------------------------
+15. Sending Group Membership Request (Join Group Request):
+
+(Sending request to group: group01 (Team of Teams))
+
+group-membership-requests
+• group01
+    ∘  usuf52
+        ‣  membershipNo: ""
+        ‣  message: "Please add me in your Team."
+        ‣  timestamp: 1457955415263
+
+
+group-membership-requests-by-user
+• usuf52
+    ∘  group01
+        ‣  timestamp: 1457955415263
+
+SUBGROUP-ACTIVITY-STREAMS		
+• group01
+    ∘ KCouXQUwem9s9XpkGNs
+        ‣  actor
+            •  displayName: "Usuf Qutubuddin"
+            •  email: "usuf52@gmail.com"
+            •  id: "usuf52"
+            •  profile-image: ""
+            •  type: "user"
+        ‣   displayName: "Usuf Qutubuddin sent team join request of group01"
+        ‣  language: "en"
+        ‣  object
+            •  displayName: "Usuf Qutubuddin"
+            •  email: "usuf52@gmail.com"
+            •  id: "usuf52"
+            •  type: "group"
+        ‣  published: 1457955416003
+        ‣  verb: "group-join"
+        
+ -------------------------------
+ 
+ -------------------------------
+16. Approve Group Membership Request:
+
+(Approved request from group: group01 (Team of Teams) )
+
+group-members
+• group01
+    ∘  usuf52
+        ‣ membership-type: 3
+        ‣ timestamp: 1457955815524
+
+user-group-memberships
+• usuf52
+    ∘  group01
+        ‣  membership-type: 3
+        ‣  timestamp: 1457955815524
+
+
+group-membership-requests								
+• group01 
+    ∘  usuf52                                            (remove this node after approved membership)
+        ‣  membershipNo: ""
+        ‣  message: "Please add me in your Team."
+        ‣  timestamp: 1457955816202
+
+groups
+• group01 
+    ∘ members-count: 2          (+1 from last count)
+
+
+group-activity-streams
+•  group01
+    ∘  -KCow3iOZ0eApXw3w5lr
+        ‣  actor
+            •  displayName: "arsalan rajput"
+            •  email: "a4arshi@yahoo.com"
+            •  id: "arsalan"
+            •  profile-image: ""
+            •  type: "user"
+        ‣  displayName: "arsalan rajput approved Usuf Qutubuddin as a me..."
+        ‣  language: "en"
+        ‣  object
+            •  displayName: "Usuf Qutubuddin"
+            •  email: "usuf52@gmail.com"
+            •  id: "usuf52"
+            •  type: "group"
+        ‣  published: 1457955818647
+        ‣  verb: "group-approve-member"
+        
+-------------------------------
+
+-------------------------------
+17. Reject Group Membership Request:
+
+(Sent request to group: group02 (Team of Teams) and now reject the membership request)
+
+group-membership-requests								
+• group02
+    ∘  usuf52                                            (remove this node after approved membership)
+        ‣  membershipNo: ""
+        ‣  message: "Please add me in your Team."
+        ‣  timestamp: 1457955816202
+
+
+group-activity-streams
+• group02
+    ∘  -KCp-OJbDtxhgTJMFphU
+        ‣  actor
+            •  displayName: "arsalan rajput"
+            •  email: "a4arshi@yahoo.com"
+            •  id: "arsalan"
+            •  profile-image: ""
+            •  type: "user"
+        ‣  displayName: "arsalan rajput rejected Usuf Qutubuddin's membe..."
+        ‣  language: "en"
+        ‣  object
+            •  displayName: "Usuf Qutubuddin"
+            •  email: "usuf52@gmail.com"
+            •  id: "usuf52"
+            •  type: "group"
+        ‣  published: 1457956951610
+        ‣  verb: "group-ignore-member"
+
+-------------------------------
+
+-------------------------------
+18. User to Admin Group Membership Request:
+
+group-members
+•  t0t1
+    ∘  arsalan
+        ‣  membership-type: 2
+        ‣  timestamp: 1457957344925
+
+user-group-memberships
+•  arsalan
+    ∘  t0t1
+        ‣  membership-type: 2
+        ‣  timestamp: 1457957315532
+
+group-activity-streams
+    • t0t1
+        ∘ -KCp0tPz-qd2pA6UeBXO
+            ‣  actor
+                •  displayName: "Usuf Qutubuddin"
+                •  email: "usuf52@gmail.com"
+                •  id: "usuf52"
+                •  profile-image: ""
+                •  type: "user"
+            ‣  displayName: "Usuf Qutubuddin changed arsalan rajput's member..."
+            ‣  language: "en"
+            ‣  object
+                •  displayName: "arsalan rajput"
+                •  email: "a4arshi@yahoo.com"
+                •  id: "arsalan"
+                •  type: "group"
+            ‣  published: 1457957345190
+            ‣  verb: "user-membership-from-member-to-admin"
+-------------------------------
+
+-------------------------------
+19. Block Group Membership Request:
+
+group-members
+•  t0t1
+    ∘  arsalan
+        ‣  membership-type: -1
+        ‣  timestamp: 1457959070508
+
+user-group-memberships
+•  arsalan
+    ∘  t0t1
+        ‣  membership-type: -1
+        ‣  timestamp: 1457959070508
+
+group-activity-streams
+• t0t1
+    ∘ KCp7TgjQvEeph70c2xu
+        ‣  actor
+            •  displayName: "Usuf Qutubuddin"
+            •  email: "usuf52@gmail.com"
+            •  id: "usuf52"
+            •  profile-image: ""
+            •  type: "user"
+        ‣  displayName: "Usuf Qutubuddin changed arsalan rajput's member..."
+        ‣  language: "en"
+        ‣  object
+            •  displayName: "arsalan rajput"
+            •  email: "a4arshi@yahoo.com"
+            •  id: "arsalan"
+            •  type: "group"
+        ‣  published: 1457959070736
+        ‣  verb: "user-membership-block"
+-------------------------------
+
+-------------------------------
+20. Delete Group Membership Request:
+
+user-group-memberships
+•  arsalan
+    ∘  t0t1                   (Delete this node on delete group membership)
+
+group-members
+•  t0t1
+    ∘  arsalan                   (Delete this node on delete group membership)
+
+groups
+• t0t1 
+    ∘ members-count: 1     (-1 from last count)
+
+group-activity-streams
+• t0t1
+    ∘ -KCp840D2WvRebVxhNsr
+        ‣  actor
+            •  displayName: "Usuf Qutubuddin"
+            •  email: "usuf52@gmail.com"
+            •  id: "usuf52"
+            •  profile-image: ""
+            •  type: "user"
+        ‣  displayName: "Usuf Qutubuddin removed arsalan rajput from tot1"
+        ‣  language: "en"
+        ‣  object
+            •  displayName: "arsalan rajput"
+            •  email: "a4arshi@yahoo.com"
+            •  id: "arsalan"
+            •  type: "group"
+        ‣  published: 1457959227702
+        ‣  verb: "group-member-removed"
+-------------------------------
+
+######################       end region version 02    ######################       
+
+ 
+
+##############       region version 01        ############## 
+
 Signup
 -------------------------------------
 users
@@ -641,5 +1613,5 @@ groups
 		timestamp: 1452771796373
 --------------------------------------
 
---------------------------------------
---------------------------------------
+
+##############        end version 01       ##############
