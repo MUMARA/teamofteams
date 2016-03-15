@@ -114,6 +114,11 @@
             this.subGroupNames = [];
             this.subGroupNames = policyService.getSubGroupNames(that.groupId);
 
+            // $timeout(function() {
+            //     console.log('watch', that.subGroupNames);
+            // }, 2000);
+            
+
             //on controller load...... END
 
 
@@ -323,18 +328,32 @@
                             }
                         });
                     } else {
-                        //after add in local selected team array chnage hasPolicy true in firebase team array
-                        that.subGroupNames.forEach(function(val, indx) {
-                            if (val.subgroupID == subgroup.subgroupID) {
-                                that.subGroupNames[indx].hasPolicy = true;
+                        //confrim prompt, checking policy is applied on selected subgroup or not... 
+                        if (subgroup.policyID.length > 2) {  // if subgroup.policyID 
+                            var doYouWant = confirm('Policy has already assigned on this team. Do you want to apply this policy?');
+                            if (doYouWant) {
+                                //after add in local selected team array chnage hasPolicy true in firebase team array
+                                that.subGroupNames.forEach(function(val, indx) {
+                                    if (val.subgroupID == subgroup.subgroupID) {
+                                        that.subGroupNames[indx].hasPolicy = true;
 
-                                that.selectedTeamNew.push(that.subGroupNames[indx]);
-                                console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
-                        
-                            } //else {
-                            //     that.subGroupNames[indx].hasPolicy = false;
-                            // }
-                        });
+                                        that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                        // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
+                                    }
+                                }); // that.subGroupNames
+                            } // doYouWant
+                        } else {
+                                //after add in local selected team array chnage hasPolicy true in firebase team array
+                                that.subGroupNames.forEach(function(val, indx) {
+                                    if (val.subgroupID == subgroup.subgroupID) {
+                                        that.subGroupNames[indx].hasPolicy = true;
+
+                                        that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                        // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
+                                    }
+                                }); // that.subGroupNames
+                        }
+
                     }
 
                     //Load SubGropMemebrs

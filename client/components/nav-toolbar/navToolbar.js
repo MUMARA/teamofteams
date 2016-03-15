@@ -9,13 +9,13 @@
       };
     })
 
-    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$interval','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $interval, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
             var self = this;
-            self.show = false;
+            self.displayNotificationBox = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
             this.notifications = [];
@@ -55,23 +55,18 @@
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart;
+            this.quizStart = quizStart;       
 
-            //   notification activities
-            self.showNotification = function(){
-                self.show = !self.show;
+            this.progressReport = function() {
+                $mdSidenav('right').toggle().then(function() {
+                    //self.openNav = !self.openNav;
+                });
             };
-
-            this.progressReport = function(){
-              $mdSidenav('right').toggle().then(function(){
-                //self.openNav = !self.openNav;
-              });
-            }
             //#document.onkey
             this.count = function(e){
               console.log(document);
               console.log(e);
-          };
+            };
                 // alert(this.test)
             this.setFocus = function() {
                 document.getElementById("#GroupSearch").focus();
@@ -670,7 +665,7 @@
                 }
             };
             this.checkinClick = function(event) {
-                self.show = false;
+                self.displayNotificationBox = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
                     return;
@@ -763,10 +758,24 @@
                 });
             };
 
+            // ## Notification -- START
+
             //getting notifications
             activityStreamService.init();
             this.notifications = activityStreamService.getActivities();
-        }
-    ]);
 
+            //   enable/disable notificaiton box and also on click will set seen notfication
+            self.showNotification = function() {
+                self.displayNotificationBox = !self.displayNotificationBox;
+                if (!self.displayNotificationBox) {
+
+                    //has seen activities..... update timestamp of seen
+                    activityStreamService.activityHasSeen();
+                }
+            };
+
+            // ## Notification -- END
+
+        } //NavToolbarController
+    ]);
 })();
