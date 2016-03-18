@@ -113,20 +113,20 @@
         };
         this.openEditGroup = function() {
             // $location.path('user/group/' + groupID + '/edit-group');
-            $state.go('user.edit-group', {groupID: groupID})
-        }
+            $state.go('user.edit-group', { groupID: groupID })
+        };
         this.openGeoFencingPage = function() {
             // $location.path('/user/group/' + groupID + '/geoFencing');
             $state.go('user.geo-fencing', {groupID: groupID})
         };
         this.subgroupPage = function() {
             // $location.path('user/group/' + this.groupid + '/subgroup');
-            $state.go('user.subgroup', {groupID: groupID})
-        }
+            $state.go('user.subgroup', { groupID: groupID })
+        };
         this.openPolicyPage = function() {
             // $location.path('/user/group/' + groupId + '/geoFencing');
-            $state.go('user.policy', {groupID: groupID})
-        }
+            $state.go('user.policy', { groupID: groupID })
+        };
 
 
         this.veiwSubgroup = function(subgroupData, index) {

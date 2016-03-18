@@ -4,10 +4,60 @@
 (function() {
     'use strict';
     angular.module('app.progressreport', ['core'])
-		.factory('ProgressReportService', ['activityStreamService', 'firebaseService', ProgressReportService]);
-    function ProgressReportService(activityStreamService, firebaseService) {
+		.factory('ProgressReportService', ['$q', 'activityStreamService', 'firebaseService', ProgressReportService]);
+    function ProgressReportService($q, activityStreamService, firebaseService) {
 
 		var dailyProgressReport = [];
+
+        //crearting progress Report
+        
+        function createProgressReport(obj, Policy, checkoutFlag) {     //obj = {groupId: '', subgroupId: '',userId; '' }
+            var deferred = $q.defer();
+            //checking daily progress report is exists or not -- START --
+            firebaseService.getRefMain().child('subgroup-progress-reports').child(obj.groupId).child(obj.subgroupId).child(obj.userId)
+                .orderByChild('date').startAt(new Date().setHours(0, 0, 0, 0)).endAt(new Date().setHours(23, 59, 59, 0)).once('value', function(snapshot) {
+
+                    if (snapshot.val() === null) { //if null then create daily report dummy
+                        //cerating Dummy Report Object on Checkin....
+                        var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(obj.groupId)
+                            .child(obj.subgroupId).child(obj.userId).push({
+                                date: Firebase.ServerValue.TIMESTAMP,
+                                //date: new Date().setHours(0,0,0,0),
+                                questionID: Policy.latestProgressReportQuestionID,
+                                policyID: Policy.policyID,
+                                answers: ''
+                        });
+
+                        //for progress activity stream record -- START --
+                        var type = 'progressReport';
+                        var targetinfo = {id: progressRprtObj.key(), url: obj.groupId+'/'+obj.subgroupId, title: obj.groupId+'/'+obj.subgroupId, type: 'progressReport' };
+                        var area = {type: 'progressReport-created'};
+                        var group_id = obj.groupId+'/'+obj.subgroupId;
+                        var memberuserID = obj.userId;
+                        var _object = null;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+                        //for progress activity stream record -- END --
+
+                        deferred.resolve({ 'result': false, 'message': 'notSubmitted' });
+
+                    } else {
+                        for(var object in snapshot.val()) {
+                            //console.log(snapshot.val()[obj])
+                            if(snapshot.val()[object].answers === "" && checkoutFlag === true) {  //now checking if answers has given or not on checkout
+                                //if not submited report then show msg
+                                deferred.resolve({ 'result': false, 'message': 'notSubmitted' });
+                            } else {
+                                //if submited report then nuthing
+                                deferred.resolve({ 'result': true, 'message': null });
+                            }
+                        }
+                    }
+
+                });
+
+            return deferred.promise;            
+        } //createProgressReport
 
 		//getting daily progress report
 		function getReports(userArray, groupID, subgroupID) {
@@ -298,7 +348,8 @@
 			updateReport: updateReport,
 			getGroupDailyProgressReport: getGroupDailyProgressReport,
 			getSingleSubGroupReport: getSingleSubGroupReport,
-			getGroupReportByDates: getGroupReportByDates
+            getGroupReportByDates: getGroupReportByDates,
+            createProgressReport: createProgressReport
         }
     }; //ProgressReportService
 })();
