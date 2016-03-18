@@ -146,7 +146,8 @@
     function initiateFirepad(refArgument, arg) {
       var codeMirror = CodeMirror(document.getElementById('firepad'), {
         lineNumbers: that.mode == "Rich Text" ? false : true,
-        mode: that.mode
+        mode: that.mode,
+        lineWrapping: true
       });
       firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
         richTextShortcuts: that.isNormal,
