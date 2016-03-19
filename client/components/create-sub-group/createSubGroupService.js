@@ -143,6 +143,9 @@
                                         //groupForm.$submitted = false;
                                         //$rootScope.newImg = null;
 
+                                        //update subgroup-policy
+                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );                                        
+
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
                                         var targetinfo = { id: subgroupInfo.$id, url: groupID + '/' + subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };

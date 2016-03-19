@@ -49,7 +49,7 @@
             var once = 0;
             firebaseService.getRefActivitySeen().child(userID).on('value', function(snapshot) {
 
-                lastSeenTimeStamp = snapshot.val().timestamp;
+                lastSeenTimeStamp = (snapshot.val() && snapshot.val().timestamp) ? snapshot.val().timestamp : ''  ;
 
                 if (once === 0 && onchnaged === 0) {
                     // console.log('activitiess', 'once');
@@ -148,19 +148,34 @@
         }
         //for activity group
         function getActivityOfCurrentUserByGroup(groupID, date) {
-            //getting activity streams from firebase node: group-activity-streams
-            //.startAt(startDate.setHours(0, 0, 0, 0))
-            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').startAt(date).on("child_added", function(snapshot) {
-                if (snapshot && snapshot.val()) {
-                    currentUserActivities.push({
-                        groupID: groupID,
-                        displayMessage: snapshot.val().displayName,
-                        activityID: snapshot.key(),
-                        published: snapshot.val().published,
-                        // seen: false
-                    });
-                }
-            });
+            //getting activity streams from firebase node: group-activity-streams.startAt(startDate.setHours(0, 0, 0, 0))
+            if (date) {
+                firebaseService.getRefGroupsActivityStreams().child(groupID)
+                    .orderByChild('published').startAt(date).on("child_added", function(snapshot) {
+                    if (snapshot && snapshot.val()) {
+                        currentUserActivities.push({
+                            groupID: groupID,
+                            displayMessage: snapshot.val().displayName,
+                            activityID: snapshot.key(),
+                            published: snapshot.val().published,
+                            // seen: false
+                        });
+                    }
+                });
+            } else {
+                firebaseService.getRefGroupsActivityStreams().child(groupID)
+                    .orderByChild('published').on("child_added", function(snapshot) {
+                    if (snapshot && snapshot.val()) {
+                        currentUserActivities.push({
+                            groupID: groupID,
+                            displayMessage: snapshot.val().displayName,
+                            activityID: snapshot.key(),
+                            published: snapshot.val().published,
+                            // seen: false
+                        });
+                    }
+                });
+            }
         }
 
         //for getting subgroups of current user
@@ -202,22 +217,43 @@
         //for activity of subgroup
         function getActivityOfCurrentUserBySubGroup(groupID, date) {
             //getting activity streams from firebase node: subgroup-activity-streams
-            firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
-                if (subgroup && subgroup.val()) {
-                    firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').startAt(date).on("child_added", function(snapshot) {
-                        if (snapshot && snapshot.val()) {
-                            currentUserActivities.push({
-                                groupID: groupID,
-                                subgroupID: subgroup.key(),
-                                displayMessage: snapshot.val().displayName,
-                                activityID: snapshot.key(),
-                                published: snapshot.val().published,
-                                // seen: false
-                            });
-                        }
-                    });                
-                }
-            });
+            if (date) {
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
+                    if (subgroup && subgroup.val()) {
+                        firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key())
+                            .orderByChild('published').startAt(date).on("child_added", function(snapshot) {
+                            if (snapshot && snapshot.val()) {
+                                currentUserActivities.push({
+                                    groupID: groupID,
+                                    subgroupID: subgroup.key(),
+                                    displayMessage: snapshot.val().displayName,
+                                    activityID: snapshot.key(),
+                                    published: snapshot.val().published,
+                                    // seen: false
+                                });
+                            }
+                        });                
+                    }
+                });
+            } else {
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
+                    if (subgroup && subgroup.val()) {
+                        firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key())
+                            .orderByChild('published').on("child_added", function(snapshot) {
+                            if (snapshot && snapshot.val()) {
+                                currentUserActivities.push({
+                                    groupID: groupID,
+                                    subgroupID: subgroup.key(),
+                                    displayMessage: snapshot.val().displayName,
+                                    activityID: snapshot.key(),
+                                    published: snapshot.val().published,
+                                    // seen: false
+                                });
+                            }
+                        });                
+                    }
+                });
+            }
         }
 
         //for getting subgroups members of current user

@@ -157,13 +157,13 @@
                                             subgroup['$id'] = subgroupData.key();
                                             if (that.subgroups.length > 0) {
                                                 for (var i = 0; i <= that.subgroups.length; i++) {
-                                                     if (that.subgroups[i].$id === subgroupData.key()) {
-                                                         that.subgroups[i] = subgroup;
-                                                         return false;
-                                                     }
-                                                     if (i == that.subgroups.length) {
-                                                         that.subgroups.push(subgroup);
-                                                     }
+                                                        if (that.subgroups[i].$id === subgroupData.key()) {
+                                                            that.subgroups[i] = subgroup;
+                                                            return false;
+                                                        }
+                                                        if (i + 1 == that.subgroups.length) {
+                                                            that.subgroups.push(subgroup);
+                                                        }
                                                 } //for loop
                                             // that.subgroups.forEach(function(subgrp, indx) {
                                             //     console.log('watch 3', subgrp);

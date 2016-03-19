@@ -558,7 +558,7 @@ GROUP-ACTIVITY-STREAMS
 
 • SUBGROUP-CHECK-IN-CURRENT-BY-USER
     ∘ usuf52
-        ‣  "t0t1"
+            ‣  groupID: "t0t1"
             ‣  source-device-type: 1
             ‣  source-type: 1
             ‣  subgroupID: "t0t1s2"
@@ -1013,6 +1013,52 @@ group-activity-streams
 -------------------------------
 
 ######################       end region version 02    ######################       
+
+
+ # invitation Type  -- START --
+ 
+group-invites: {//This will be created and deleted by group admin
+	groupid : {
+		auto-generated—invite-id: {//push will generate the id
+			user-id: “zeeshan”, //optional, if user has a account in team of teams
+			email-sent: “zeeshan@panacloud.com”,
+			timestamp: 134567543333,
+			message: “You are invited to join out beloved project”,
+			membership-id: 5436 //optional, this will assigned by admin e.g. Sir Syed University ID number
+
+
+		}
+	}
+
+}
+ 
+
+subgroup-invites: {//This will be created and deleted by admin or sub-group admin
+	groupid : {
+	   subgroupid: {
+		auto-generated—invite-id: {//push will generate the id
+			user-id: “zeeshan”, //optional, if user has a account in team of teams
+			email-sent: “zeeshan@panacloud.com”,
+			timestamp: 134567543333,
+			message: “You are invited to join out beloved project”,
+			membership-id: 5436 //optional, this will assigned by admin e.g. Sir Syed University ID number
+
+
+		}
+	   }
+	}
+
+}
+
+# invitation Type  -- END --
+
+
+
+
+
+
+
+
 
  
 
