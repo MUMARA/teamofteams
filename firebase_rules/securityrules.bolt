@@ -25,12 +25,20 @@ function isAuthenticated() {
 //  User path
 //===================================
 
-path /users/{userid} is UserType {
-
- update() { isAuthenticatedUser($userid)}
- read()   { isAuthenticated() }
-
+path /users {
+  validate() { this.length >= 3  && this.length <= 10  }
+  /{userid} is UserType {
+   update() { isAuthenticatedUser($userid)}
+   read()   { isAuthenticated() }
+  }
 }
+/*type UseridLength extends String {
+    validate() { this.length >= 3  && this.length <= 10 }
+}*/
+/*
+type UseridLengthEqualtoTen extends String {
+  validate() { this.length == 10 }
+}*/
 //===================================
 //  User Type
 //===================================
@@ -404,7 +412,7 @@ type LogoImageRequirement {
  //====================================
  //Please note when creating group using Multi path update donot add group creation activity seprately
 path /group-activity-streams/{groupid} {
-  index()  {  "object/id" }
+  index()  {  "published" }
 
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
@@ -414,7 +422,7 @@ path /group-activity-streams/{groupid} {
   // validate() { prior(root['groups'][$groupid].val() != null)     }
 
 /{activityid} is GroupActivityStreamsInfo {
-    index()  {  "object/id" }
+    index()  {  "published" }
 write() {
   (isAuthenticated() && isGroupJoined(this['verb']))
 }
@@ -468,7 +476,7 @@ path /subgroup-activity-streams/{groupid}{
       groupMemberShipAnyType(groupid)  }
 
   /{subgroupid} {
-    index()  {  "object/id" }
+    index()  {  "published" }
 
     read()     {    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
                     isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist($groupid,$subgroupid)  }
@@ -481,7 +489,7 @@ path /subgroup-activity-streams/{groupid}{
     // validate() { prior(root['groups'][$groupid].val() != null)     }
 
       /{activityid} is GroupActivityStreamsInfo {
-                index()  {  "object/id" }
+                index()  {  "published" }
                 write() {  ( isAuthenticated() && isSubGroupJoined(this['verb'])) }
         }
     }
@@ -1522,7 +1530,7 @@ type ChatChannelType {
 
 /*User Activity Streams*/
 
-path /user-activity-streams/{userid}{
+/*path /user-activity-streams/{userid}{
   read() {
     isAuthenticated()
    }
@@ -1534,7 +1542,7 @@ path /user-activity-streams/{userid}{
     isAuthenticated()
    }
  }
-  }
+  }*/
   /*firepad Group Access */
 path /firepad-groups-access/{groupid}/{documentid}{
       read() {
@@ -1595,6 +1603,13 @@ type FirepadRulesType {
   allUsers: Boolean;
 }
 
+path /activities-seen-by-user/{userid} is ActivityType {
+     read() { isAuthenticatedUser($userid)}
+     write() { isAuthenticatedUser($userid)}
+}
+type ActivityType {
+  timestamp: CurrentTimeStamp
+}
 /*type AllUserType {
   allUsers:  Boolean;
 }*/
