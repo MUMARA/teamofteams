@@ -4,7 +4,7 @@
  * it requires no server-side code and can be added to any web app simply by
  * including a couple JavaScript files.
  *
- * Firepad 1.3.0
+ * Firepad 0.0.0
  * http://www.firepad.io/
  * License: MIT
  * Copyright: 2014 Firebase
@@ -1723,15 +1723,12 @@ firepad.FirebaseAdapter = (function (global) {
 
 var firepad = firepad || { };
 
-
-
 firepad.RichTextToolbar = (function(global) {
   var utils = firepad.utils;
 
   function RichTextToolbar(imageInsertionUI) {
     this.imageInsertionUI = imageInsertionUI;
     this.element_ = this.makeElement_();
-    //this.myButton = this.makeMyButton_('bold');
   }
 
   utils.makeEventEmitter(RichTextToolbar, ['bold', 'italic', 'underline', 'strike', 'font', 'font-size', 'color',
@@ -1742,24 +1739,11 @@ firepad.RichTextToolbar = (function(global) {
 
   RichTextToolbar.prototype.makeButton_ = function(eventName, iconName) {
     var self = this;
-    iconName = iconName || eventName;
-    var btn = utils.elt('button', [utils.elt('span', '', { 'class': 'firepad-tb-' + iconName } )], { 'class': 'mui-btn mui-btn--fab mui-btn--small ',id: eventName });
-    utils.on(btn, 'click', utils.stopEventAnd(function() { self.trigger(eventName); }));
-    return btn;
+      iconName = iconName || eventName;
+      var btn = utils.elt('button', [utils.elt('span', '', { 'class': 'firepad-tb-' + iconName } )], { 'class': 'mui-btn mui-btn--fab mui-btn--small ',id: eventName || iconName });
+      utils.on(btn, 'click', utils.stopEventAnd(function() { self.trigger(eventName); }));
+      return btn;
   }
-
-
-
-  //
-  //
-  //RichTextToolbar.prototype.makeMyButton_ = function (eventName,iconName) {
-  //  var self = this;
-  //  var btn = document.getElementById("bt");
-  // // btn.onclick = onmyClick;
-  // // btn.className += ' firepad-tb-bold';
-  //  //utils.on(btn, 'click', utils.stopEventAnd(function() { self.trigger(''); }));
-  //}
-
 
   RichTextToolbar.prototype.makeElement_ = function() {
     var self = this;
@@ -1772,11 +1756,11 @@ firepad.RichTextToolbar = (function(global) {
       utils.elt('div', [font], { 'class': 'firepad-btn-group'}),
       utils.elt('div', [fontSize], { 'class': 'firepad-btn-group'}),
       utils.elt('div', [color], { 'class': 'firepad-btn-group'}),
-      utils.elt('div', [self.makeButton_('bold'), self.makeButton_('italic'),self.makeButton_('underline'), self.makeButton_('strike', 'strikethrough')], { 'class': 'firepad-btn-group'}),
+      utils.elt('div', [self.makeButton_('bold'), self.makeButton_('italic'), self.makeButton_('underline'), self.makeButton_('strike', 'strikethrough')], { 'class': 'firepad-btn-group'}),
       utils.elt('div', [self.makeButton_('unordered-list', 'list-2'), self.makeButton_('ordered-list', 'numbered-list'), self.makeButton_('todo-list', 'list')], { 'class': 'firepad-btn-group'}),
       utils.elt('div', [self.makeButton_('indent-decrease'), self.makeButton_('indent-increase')], { 'class': 'firepad-btn-group'}),
       utils.elt('div', [self.makeButton_('left', 'paragraph-left'), self.makeButton_('center', 'paragraph-center'), self.makeButton_('right', 'paragraph-right')], { 'class': 'firepad-btn-group'}),
-      utils.elt('div', [self.makeButton_('undo'), self.makeButton_('redo')], { 'class': 'firepad-btn-group'}),
+      utils.elt('div', [self.makeButton_('undo'), self.makeButton_('redo')], { 'class': 'firepad-btn-group'})
     ];
 
     if (self.imageInsertionUI) {
@@ -1828,6 +1812,94 @@ firepad.RichTextToolbar = (function(global) {
     }
     return this.makeMyDropdown_('Color', 'color', items);
   };
+  RichTextToolbar.prototype.makeMyDropdown_ = function(title, eventName, items, value_suffix) {
+      value_suffix = value_suffix || "";
+      var self = this;
+      //var button = utils.elt('a', title + ' \u25be', { 'class': 'firepad-btn firepad-dropdown' });
+      //var list = utils.elt('ul', [ ], { 'class': 'firepad-dropdown-menu' });
+      var muiDiv = document.getElementById('divList'+title);
+      var button = document.getElementById("list"+title);
+      button.innerHTML = title + ' \u25be';
+      var list = document.getElementById('list-'+title);
+
+      var isShown = false;
+      function showDropdown() {
+        if (!isShown) {
+          utils.on(document, 'click', hideDropdown, /*capture=*/true);
+
+          if(eventName == "font")
+          {
+            document.getElementById('list-Font').classList.add('mui--is-open')
+          }
+          else if(eventName == "font-size")
+          {
+            document.getElementById('list-Size').classList.add('mui--is-open');
+          }
+          else
+          {
+            document.getElementById('list-Color').classList.add('mui--is-open');
+          }
+          isShown = true;
+        }
+      }
+
+      var justDismissed = false;
+      function hideDropdown() {
+        if (isShown) {
+
+          utils.off(document, 'click', hideDropdown, /*capture=*/true);
+          isShown = false;
+           var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+           for (var i = 0;i < items.length; i++) {
+             items[i].className = "mui-dropdown__menu";
+             //document.getElementById('list-Font').classList.remove('mui--is-open')
+           }
+        }
+        // HACK so we can avoid re-showing the dropdown if you click on the dropdown header to dismiss it.
+        justDismissed = true;
+        setTimeout(function() { justDismissed = false; }, 0);
+      }
+
+      function addItem(content, value) {
+        if (typeof content !== 'object') {
+          content = document.createTextNode(String(content));
+        }
+
+        var element = utils.elt('li',[]);
+        var a = utils.elt('a', [content]);
+        a.setAttribute('href','#');
+        element.appendChild(a);
+         a.onclick = function(){
+           var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
+           for (item in items){
+             items[item].className = "mui-dropdown__menu mui--is-open";
+             // items[item].setAttribute('class','mui-dropdown__menu');
+           }
+
+         }
+        utils.on(element, 'click', utils.stopEventAnd(function() {
+          hideDropdown();
+          self.trigger(eventName, value + value_suffix);
+        }));
+
+        list.appendChild(element);
+      }
+
+      for(var i = 0; i < items.length; i++) {
+        var content = items[i].content, value = items[i].value;
+        addItem(content, value);
+      }
+
+      utils.on(button, 'click', utils.stopEventAnd(function() {
+        if (!justDismissed) {
+          showDropdown();
+        }
+      }));
+
+      return muiDiv;
+    };
+
+
 
   RichTextToolbar.prototype.makeDropdown_ = function(title, eventName, items, value_suffix) {
     value_suffix = value_suffix || "";
@@ -1885,87 +1957,8 @@ firepad.RichTextToolbar = (function(global) {
     return button;
   };
 
-
-  RichTextToolbar.prototype.makeMyDropdown_ = function(title, eventName, items, value_suffix) {
-    value_suffix = value_suffix || "";
-    var self = this;
-    //var button = utils.elt('a', title + ' \u25be', { 'class': 'firepad-btn firepad-dropdown' });
-    //var list = utils.elt('ul', [ ], { 'class': 'firepad-dropdown-menu' });
-    var muiDiv = document.getElementById('divList'+title);
-    var button = document.getElementById("list"+title);
-    button.innerHTML = title + ' \u25be';
-    var list = document.getElementById('list-'+title);
-
-    var isShown = false;
-    function showDropdown() {
-      if (!isShown) {
-        utils.on(document, 'click', hideDropdown, /*capture=*/true);
-        isShown = true;
-      }
-    }
-
-    var justDismissed = false;
-    function hideDropdown() {
-      if (isShown) {
-
-        utils.off(document, 'click', hideDropdown, /*capture=*/true);
-        isShown = false;
-        var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
-        console.log(items.length);
-        for (var i = 0;i < items.length; i++) {
-          items[i].className = "mui-dropdown__menu";
-        }
-      }
-      // HACK so we can avoid re-showing the dropdown if you click on the dropdown header to dismiss it.
-      justDismissed = true;
-      setTimeout(function() { justDismissed = false; }, 0);
-    }
-
-    function addItem(content, value) {
-      if (typeof content !== 'object') {
-        content = document.createTextNode(String(content));
-      }
-
-      var element = utils.elt('li',[]);
-      var a = utils.elt('a', [content]);
-      a.setAttribute('href','#');
-      element.appendChild(a);
-      a.onclick = function(){
-        console.log("onclick called");
-        var items = document.getElementsByClassName("mui-dropdown__menu mui--is-open");
-        for (item in items){
-          items[item].className = "mui-dropdown__menu";
-          // items[item].setAttribute('class','mui-dropdown__menu');
-        }
-
-      }
-      utils.on(element, 'click', utils.stopEventAnd(function() {
-        hideDropdown();
-        console.log("add item called");
-        self.trigger(eventName, value + value_suffix);
-      }));
-
-      list.appendChild(element);
-    }
-
-    for(var i = 0; i < items.length; i++) {
-      var content = items[i].content, value = items[i].value;
-      addItem(content, value);
-    }
-
-    utils.on(button, 'click', utils.stopEventAnd(function() {
-      if (!justDismissed) {
-        console.log("button clicked");
-        showDropdown();
-      }
-    }));
-
-    return muiDiv;
-  };
   return RichTextToolbar;
 })();
-
-
 
 var firepad = firepad || { };
 firepad.WrappedOperation = (function (global) {
@@ -2996,7 +2989,7 @@ firepad.RichTextCodeMirror = (function () {
     'c' : 'color',
     'bc': 'background-color',
     'fs' : 'font-size',
-    'li' : function(indent) { return 'padding-left: ' + (indent * 40) + 'px'; }
+    'li' : function(indent) { return 'padding-left: ' + (indent * 40) + 'px !important'; }
   };
 
   // A cache of dynamically-created styles so we can re-use them.
@@ -5632,18 +5625,20 @@ firepad.Firepad = (function(global) {
       textPieces = [textPieces];
     }
 
-    // TODO: Batch this all into a single operation.
-    // HACK: We should check if we're actually at the beginning of a line; but checking for index == 0 is sufficient
-    // for the setText() case.
-    var atNewLine = index === 0;
-    var inserts = firepad.textPiecesToInserts(atNewLine, textPieces);
+    var self = this;
+    self.codeMirror_.operation(function() {
+      // HACK: We should check if we're actually at the beginning of a line; but checking for index == 0 is sufficient
+      // for the setText() case.
+      var atNewLine = index === 0;
+      var inserts = firepad.textPiecesToInserts(atNewLine, textPieces);
 
-    for (var i = 0; i < inserts.length; i++) {
-      var string     = inserts[i].string;
-      var attributes = inserts[i].attributes;
-      this.richTextCodeMirror_.insertText(index, string, attributes);
-      index += string.length;
-    }
+      for (var i = 0; i < inserts.length; i++) {
+        var string     = inserts[i].string;
+        var attributes = inserts[i].attributes;
+        self.richTextCodeMirror_.insertText(index, string, attributes);
+        index += string.length;
+      }
+    });
   };
 
   Firepad.prototype.getOperationForSpan = function(start, end) {
