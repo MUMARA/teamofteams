@@ -524,29 +524,6 @@
             </div>
         </md-toolbar>
         <div class="quiz-md-card-1">
-            <!-- <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-3">
-                 <div class="md-toolbar-tools quiz-search-box-3">
-                     <h2 ng-hide="quiz.questionSearch" flex="80" style="color: white ">
-                         <span>Questions</span>
-                     </h2>
-
-                     <div>
-                         <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.questionSearch">
-                             <input style="font-size: 12px;color: #FFFFFF;width: 159px;" type="text"
-                                    ng-model="qSearch" aria-label="Quiz Search Box"/>
-                             <img ng-click="quiz.questionSearch = false;" src="img/closeIcon.png"
-                                  style="width: 20px;height: 20px;margin-top: 10%;margin-left: -12%">
-                         </md-input-container>
-                     </div>
-                     <span flex="" style="">
-                         <img ng-click="quiz.questionSearch = !quiz.questionSearch" src="img/1search.svg"
-                              style="height: 16px; width: 16px; margin-left: 24px"/>
-                     </span>
-                     <span flex="" style="">
-                         <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-                     </span>
-                 </div>
-             </md-toolbar>-->
             <div class="md-whiteframe-2dp quiz-md-card-item"
                  ng-repeat="question in quiz.questions | filter:qSearch"
                  ng-click="quiz.setSelectedQuestion(this,$index); quiz.showQuestionView(question)"
@@ -571,7 +548,7 @@
         </md-button>
     </md-content>
 
-    <!--<md-content flex>
+    <md-content flex>
         <md-card ng-show="quiz.showView"
                  style="margin:0;word-wrap: break-word;box-shadow: none; background-color: #F2F2F2;">
             <md-card-content>
@@ -584,26 +561,26 @@
                 <div>
                     <span ng-repeat="option in quiz.questionView.QuestionOptions">
                         <div ng-if="option.rightAnswer == true">
-                            &lt;!&ndash; remove from style line 651 and 652 of  white-space: pre;&ndash;&gt;
+                            <!-- remove from style line 651 and 652 of  white-space: pre;-->
                             <span style="margin-left: -1%!important;white-space: pre">Option {{$index+1}} : {{option.optionText}}
-                                &lt;!&ndash;<ng-md-icon icon="done" style="fill: green"></ng-md-icon></span>&ndash;&gt;
+                                <!--<ng-md-icon icon="done" style="fill: green"></ng-md-icon></span>-->
                         </div>
                         <div ng-if="option.rightAnswer != true">
                             <span style="margin-left: -1%;white-space: pre"> Option {{$index+1}} : {{option.optionText}} </span>
                         </div>
                     </span>
                 </div>
-                &lt;!&ndash;<div ng-if="quiz.questionView.Type === 'Radio Button'">
+                <!--<div ng-if="quiz.questionView.Type === 'Radio Button'">
     <h4>Correct Answer</h4>
     <h6>{{quiz.questionView.Answer}}</h6>
 </div>
 <div ng-if="quiz.questionView.Type === 'CheckBox'">
     <h4>Correct Answers</h4>
     <h6 ng-repeat="answer in quiz.questionView.Answer">{{answer}}</h6>
-</div>&ndash;&gt;
+</div>-->
             </md-card-content>
         </md-card>
-    </md-content>-->
+    </md-content>
 </div>
 
 
