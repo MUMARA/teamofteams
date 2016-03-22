@@ -33,7 +33,7 @@
         "$other": {
           ".validate": "false"
         },
-        ".write": "data.val() == null && $userid.length >= 3 && $userid.length <= 10 || data.val() != null && newData.val() != null && (auth != null && auth.uid == $userid)",
+        ".write": "data.val() != null && newData.val() != null && (auth != null && auth.uid == $userid)",
         ".read": "auth != null"
       },
       ".validate": "newData.val().length >= 3 && newData.val().length <= 10"
