@@ -1,237 +1,3 @@
-<style>
-    .md-toolbar-books {
-        box-sizing: border-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        position: relative;
-        z-index: 2;
-        font-size: 25px;
-        min-height: 56px;
-        width: 100%;
-        font-weight: inherit;
-        background: #8AC441 !important;
-        text-rendering: optimizelegibility;
-    }
-
-    .tools-quiz {
-        font-weight: 400;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-align-items: center;
-        -ms-flex-align: center;
-        align-items: center;
-        -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-        flex-direction: row;
-        width: 100%;
-        height: 54px;
-        max-height: 54px;
-        padding: 0;
-        margin: 0;
-        font-size: 25px;
-        text-rendering: optimizelegibility;
-        border-right: 3px solid #468D0E;
-        border-top: 3px solid #468D0E;
-        box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
-        -moz-box-shadow: 0px 0px 2px 2px rgba(119, 119, 119, 0.75);
-        -webkit-box-shadow: 0px 0px 2px 2px rgba(119, 119, 119, 0.75);
-    }
-
-    .quiz-sidenav-g {
-        z-index: 0 !important;
-        width: 18%;
-        max-width: 18%;
-        height: 93vh;
-        overflow-x: hidden;
-    }
-
-    .quiz-sidebar-nav {
-        padding: 0 !important;
-        list-style: none;
-        height: 100%;
-        border: none;
-    }
-
-    .quiz-sidebar-nav md-list-item {
-        padding: 0 !important;
-    }
-
-    .quiz-sidebar-nav md-list-item button {
-        padding: 0 !important;
-    }
-
-    .book-img {
-        height: 120px;
-        width: 100%;
-    }
-
-    .tab-heading {
-        margin-left: 15px;
-        color: white
-    }
-
-    .quiz-col {
-        overflow-x: hidden;
-        height: 93vh;
-        width: 18%;
-    }
-
-    .quiz-md-card-1 {
-        height: 99.8%;
-        margin-top: 1px;
-        margin-bottom: 1px;
-        margin-right: -1px;
-        margin-left: -7px;
-        border-bottom: 1px solid grey;
-        background-color: #F2F2F2;
-    }
-
-    .quiz-md-card-2 {
-        height: 99.8%;
-        margin-top: 1px;
-        margin-bottom: 1px;
-        margin-right: -1px;
-        margin-left: 1px;;
-        border-bottom: 1px solid #9604AC;
-        background-color: #F2F2F2
-    }
-
-    .quiz-md-card-3 {
-        height: 99.8%;
-        margin-top: 1px;
-        margin-bottom: 1px;
-        margin-right: -1px;
-        margin-left: 1px;
-        border-bottom: 1px solid grey;
-        background-color: #F2F2F2;
-    }
-
-    .quiz-search-bar-books {
-        background: #8AC441 !important;
-        margin-bottom: 2px;
-        margin-left: -1px;
-        border-right: 3px solid #468D0E;
-        border-top: 3px solid #468D0E;
-        min-height: 52px;
-        height: 52px
-    }
-
-    .quiz-search-bar-1 {
-        background-color: #FF9800;
-        margin-bottom: 30px;
-        margin-left: -1px;
-        border-top: 3px solid #FA5200;
-        border-left: 3px solid #FA5200;
-        min-height: 52px;
-        height: 52px
-    }
-
-    .quiz-search-bar-2 {
-        background-color: #fff;
-        margin-bottom: 30px;
-        margin-left: -1px;
-        border-top: 3px solid #9604AC;
-        border-left: 3px solid #9604AC;
-        min-height: 52px;
-        height: 52px
-    }
-
-    .quiz-search-bar-3 {
-        background-color: #00A7F8;
-        margin-bottom: 30px;
-        margin-left: 0px;
-        min-height: 52px;
-        height: 52px;
-        border-top: 3px solid #006BEE;
-        border-left: 3px solid #006BEE
-    }
-
-    .quiz-search-box-1 {
-        background-color: #FF9800;
-        box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
-        -moz-box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
-        -webkit-box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
-        max-height: 49px;
-    }
-
-    .quiz-search-box-2 {
-        background-color: #C851DB;
-        box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
-        -moz-box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
-        -webkit-box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
-        max-height: 49px;
-    }
-
-    .quiz-search-box-3 {
-        border-bottom: 0px #dddddd;
-        background-color: #00A7F8;
-        box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.50);
-        -moz-box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.50);
-        -webkit-box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.50);
-        max-height: 49px;
-    }
-
-    .add-books-nav {
-        margin-left: 45px;
-        width: 50%;
-        min-width: 50%;
-        max-width: 100%;
-        background-color: #ed4757;
-    }
-
-    .add-chapter-nav {
-        margin-left: 45px;
-        width: 50%;
-        min-width: 50%;
-        max-width: 100%;
-        background-color: #ed4757
-    }
-
-    .add-topic-nav {
-        margin-left: 45px;
-        width: 50%;
-        min-width: 50%;
-        max-width: 100%;
-        background-color: #ed4757
-    }
-
-    .add-question-nav {
-        margin-left: 45px;
-        width: 50%;
-        min-width: 50%;
-        max-width: 100%;
-        background-color: #ed4757;
-        color: #2b2b2b;
-    }
-
-    .quiz-menu-col {
-        position: absolute;
-        height: 100%;
-    }
-
-    .menu-item-btn {
-        border: 1px none;
-        padding-bottom: 10px;
-        padding-top: 10px;
-    }
-
-    .menu-item-btn .quiz-menu-btn {
-        width: 39px;
-        height: 63px;
-        margin-left: 16px
-    }
-
-    .menu-item-btn img {
-        height: 39px;
-        margin-top: 4px;
-        margin-left: 14px;
-    }
-</style>
 <!--<style>
 
 
@@ -468,91 +234,116 @@
         border-color: white;
     }
 </style>-->
+
+
 <!--left side-->
-<div layout="row">
-    <md-sidenav flex="18" class="md-sidenav-left md-whiteframe-z2 quiz-sidenav-g" md-component-id="left"
-                md-is-locked-open="quiz.booksNav">
-        <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-books">
-            <div class="md-toolbar-tools quiz-search-box-1" style="background: #8AC441">
-                <h2 ng-hide="quiz.booksSearch" flex="80" style="color:white">
-                    <span>Books</span>
-                </h2>
+<div layout="row" class="backColorLightGrey2 quiz-columns-content">
+    <md-sidenav class="md-sidenav-left quiz-sidenav-g" md-component-id="left" md-is-locked-open="quiz.booksNav">
+        <!--<md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-books">
+              <div class="md-toolbar-tools quiz-search-box-1" style="background: #8AC441">
+                  <h2 ng-hide="quiz.booksSearch" flex="80" style="color:white">
+                      <span>Books</span>
+                  </h2>
 
-                <div>
-                    <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
-                        <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
-                               ng-model="cSearch" aria-label="Chapter Search Box">
-                        <img ng-click="quiz.booksSearch = false;" src="img/closeIcon.png"
-                             style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
-                    </md-input-container>
-                </div>
-                                        <span flex="" style="">
-                    <img ng-click="quiz.booksSearch = !quiz.booksSearch" src="img/1search.svg"
-                         style="height: 16px; width: 16px; margin-left: 24px"/>
+                  <div>
+                      <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
+                          <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
+                                 ng-model="cSearch" aria-label="Chapter Search Box">
+                          <img ng-click="quiz.booksSearch = false;" src="img/closeIcon.png"
+                               style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+                      </md-input-container>
+                  </div>
+                                          <span flex="" style="">
+                      <img ng-click="quiz.booksSearch = !quiz.booksSearch" src="img/1search.svg"
+                           style="height: 16px; width: 16px; margin-left: 24px"/>
+                    </span>
+                                          <span flex="" style="">
+                      <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
                   </span>
-                                        <span flex="" style="">
-                    <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-                </span>
-            </div>
-        </md-toolbar>
+              </div>
+          </md-toolbar>-->
+        <md-content layout-margin class="quiz-col md-whiteframe-1dp" style="width:95%">
+            <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
+                <div class="md-toolbar-tools quiz-search-box-0">
+                    <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+                        <span>Question Banks</span>
+                    </h2>
 
+                    <div>
+                        <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
+                            <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
+                                   ng-model="cSearch" aria-label="Chapter Search Box">
+                            <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
+                                 style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+                        </md-input-container>
+                    </div>
+               <span flex="" style="">
+               <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
+                    style="height: 16px; width: 16px; margin-left: 24px"/>
+               </span>
+               <span flex="" style="">
+               <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
+               </span>
+                </div>
+            </md-toolbar>
+            <div class="quiz-md-card-1">
+                <md-list class="quiz-sidebar-nav">
+                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quiz.books"
+                                  id="bookId{{$index}}"
+                                  ng-click="quiz.setSelectedBook(this, $index); quiz.showChapters($index); quiz.showQuizes($index);"
+                                  ng-class="{selectedBook: $index == quiz.selectedBookIndex,previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}">
+                        <!-- Books Side-->
+                        <div layout="row" class="subgroupcard" style="height: 120px">
+                            <div class="subgrouplogo" style="height: 120px">
+                                <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
+                            </div>
+                            <div layout="column" flex>
+                                <div layout="row" layout-align="space-between center">
+                                    <div layout-padding>{{book.title}}</div>
+                                </div>
+                                <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
+                                    <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                         class="icon40px imageRound" alt="user" layout-margin/>
+                                </div>
+                            </div>
+                        </div>
 
-        <md-content style="height: 87vh;">
-            <md-list class="quiz-sidebar-nav">
-                <md-list-item class="sidebar-brand" ng-repeat="book in quiz.books" id="bookId{{$index}}"
+                        <!-- <div style="background-color: #f7f7f7;border-bottom:solid #E5E5E5 "
+                              layout="column" layout-align="center center"
                               ng-click="quiz.setSelectedBook(this, $index); quiz.showChapters($index); quiz.showQuizes($index);"
                               ng-class="{selectedBook: $index == quiz.selectedBookIndex,previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}">
-                    <!-- Books Side-->
-                    <div layout="row" class="subgroupcard" style="height: 120px">
-                        <div class="subgrouplogo" style="height: 120px">
-                            <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
-                        </div>
-                        <div layout="column" flex>
-                            <div layout="row" layout-align="space-between center">
-                                <div layout-padding>{{book.title}}</div>
-                            </div>
-                            <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
-                                <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                                     class="icon40px imageRound" alt="user" layout-margin/>
-                            </div>
-                        </div>
-                    </div>
+                             &lt;!&ndash;class="{{selected}}" (tahir Changes) ng-click="quiz.setSelectedBook(this, $index); !quiz.showQuizList && quiz.showChapters($index); quiz.showQuizList && quiz.showQuizes($index);"&ndash;&gt;
 
-                    <!-- <div style="background-color: #f7f7f7;border-bottom:solid #E5E5E5 "
-                          layout="column" layout-align="center center"
-                          ng-click="quiz.setSelectedBook(this, $index); quiz.showChapters($index); quiz.showQuizes($index);"
-                          ng-class="{selectedBook: $index == quiz.selectedBookIndex,previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}">
-                         &lt;!&ndash;class="{{selected}}" (tahir Changes) ng-click="quiz.setSelectedBook(this, $index); !quiz.showQuizList && quiz.showChapters($index); quiz.showQuizList && quiz.showQuizes($index);"&ndash;&gt;
+                             <div layout="row" style="width: 100%">
+                                 <img flex="33" ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}"
+                                      class="md-card-image" alt="Washed Out">
 
-                         <div layout="row" style="width: 100%">
-                             <img flex="33" ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}"
-                                  class="md-card-image" alt="Washed Out">
-
-                             <div flex="67" style="background-color: #F7F7F7;">
-                                 <span><b>{{book.title}}</b></span>
-                                 <br/>
-                                 &lt;!&ndash;<span style="font-size: 12px">{{book.description}}</span>&ndash;&gt;
-                                 &lt;!&ndash;<img src="img/1dropdown.svg" style="height: 25px; width: 25px; margin-left: 134px">&ndash;&gt;
-                                 <img style="border-radius: 50%;height: 50px; margin-top: 30px; align:right"
-                                      ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                                      class="userImg"/>
+                                 <div flex="67" style="background-color: #F7F7F7;">
+                                     <span><b>{{book.title}}</b></span>
+                                     <br/>
+                                     &lt;!&ndash;<span style="font-size: 12px">{{book.description}}</span>&ndash;&gt;
+                                     &lt;!&ndash;<img src="img/1dropdown.svg" style="height: 25px; width: 25px; margin-left: 134px">&ndash;&gt;
+                                     <img style="border-radius: 50%;height: 50px; margin-top: 30px; align:right"
+                                          ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                          class="userImg"/>
+                                 </div>
                              </div>
-                         </div>
-                         <div layout="row" layout-align="center center"
-                              style="margin-top:5%;position: relative;">
-                         </div>
-                     </div> -->
+                             <div layout="row" layout-align="center center"
+                                  style="margin-top:5%;position: relative;">
+                             </div>
+                         </div> -->
+                        <md-divider></md-divider>
+                    </md-list-item>
                     <md-divider></md-divider>
-                </md-list-item>
-                <md-divider></md-divider>
-            </md-list>
-
+                </md-list>
+            </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Add book" ng-click="quiz.addBook()">
                 <ng-md-icon icon="add" style="fill: #fff"></ng-md-icon>
             </md-button>
         </md-content>
     </md-sidenav>
+
     <div class="gradient2 quiz-menu-col">
         <a ng-click="quiz.booksNav = !quiz.booksNav" id="menu-toggle" class="menu-item-btn">
             <img ng-src="img/menu.svg" style=" height: 45px;">
@@ -579,69 +370,111 @@
         </div>
     </div>
     <!--Chapter Side-->
-    <md-content class="quiz-col" flex="18" style="margin-left: 78px !important;">
-        <md-card class="quiz-md-card-1">
-            <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-1">
-                <div class="md-toolbar-tools quiz-search-box-1">
-                    <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
-                        <span>Chapters</span>
-                    </h2>
+    <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
 
-                    <div>
-                        <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
-                            <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
-                                   ng-model="cSearch" aria-label="Chapter Search Box">
-                            <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
-                                 style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
-                        </md-input-container>
+
+        <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
+            <div class="md-toolbar-tools quiz-search-box-1">
+                <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+                    <span>Chapters</span>
+                </h2>
+
+                <div layout="row" style="width:100%">
+                    <md-input-container class="search-input-quiz" ng-show="quiz.chapterSearch">
+                        <input style="font-size: 12px;color: #FFFFFF;margin-top: 30px" type="text" ng-model="cSearch"
+                               aria-label="Chapter Search Box">
+                    </md-input-container>
+
+                    <img ng-click="quiz.chapterSearch = !quiz.chapterSearch;"
+                         ng-if="quiz.chapterSearch"
+                         src="img/closeIcon.png" class="close-img">
+
+                    <div class="img-div">
+                        <img ng-if="!quiz.chapterSearch" src="img/1dropdown.svg"/>
+                        <img ng-if="!quiz.chapterSearch" ng-click="quiz.chapterSearch = !quiz.chapterSearch"src="img/1search.svg"/>
                     </div>
-                                        <span flex="" style="">
-                    <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
-                         style="height: 16px; width: 16px; margin-left: 24px"/>
-                  </span>
-                                        <span flex="" style="">
-                    <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-                </span>
                 </div>
-            </md-toolbar>
-            <md-card-content style="overflow: auto; padding:0px;margin-top: -30px">
-                <md-card style="margin: 1px !important;height:49px; background-color: #FAFAFA;"
-                         ng-repeat="chapter in quiz.chapters | filter:cSearch"
-                         ng-click="quiz.setSelectedChapter(this, $index); quiz.showTopics($index);"
-                         id="chapid{{$index}}" ng-mouseenter="quiz.hover(chapter)"
-                         ng-mouseleave="quiz.hover(chapter)" ng-class="{selectedChapter: $index == quiz.selectedChapterIndex,
-                                                   previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}"
-                         on-chapter-render>
-                    <md-card-content style="padding: 0 !important; "
-                                     title="{{chapter.description}}">
-                        <div layout="row"
-                             style="position: relative;border:1px none; margin-top: 14px"><img
-                                src="img/1chapter.svg"
-                                style="margin-left: 15px;margin-top: -4px; height: 30px; width: 30px; float: right">
+            </div>
+        </md-toolbar>
 
-                            <div flex style="margin:5px;margin-left: -10px" layout="row"
-                                 layout-align="start center">
-                                <span flex="10"></span>
-                                <span style="font-size:9px"><b>{{chapter.title}}</b></span>
-                            </div>
-                            <img src="img/1dots.svg"
-                                 style="margin-left: 15px;margin-top: 5px; height: 30px; width: 30px; float: right">
-                        </div>
-                    </md-card-content>
-                </md-card>
-            </md-card-content>
-            <md-button class="md-button md-fab md-mini md-fab-bottom-right" aria-label="Eat cake"
+
+        <div class="quiz-md-card-1">
+            <!--   <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-1">
+               <div class="md-toolbar-tools quiz-search-box-1">
+               <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+               <span>Chapters</span>
+               </h2>
+
+               <div>
+               <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
+               <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
+               ng-model="cSearch" aria-label="Chapter Search Box">
+               <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
+               style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+               </md-input-container>
+               </div>
+               <span flex="" style="">
+               <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
+               style="height: 16px; width: 16px; margin-left: 24px"/>
+               </span>
+               <span flex="" style="">
+               <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
+               </span>
+               </div>
+               </md-toolbar>-->
+            <div class="md-whiteframe-2dp quiz-md-card-item"
+                 ng-repeat="chapter in quiz.chapters | filter:cSearch"
+                 ng-click="quiz.setSelectedChapter(this, $index); quiz.showTopics($index);"
+                 id="chapid{{$index}}" ng-mouseenter="quiz.hover(chapter)"
+                 ng-mouseleave="quiz.hover(chapter)"
+                 ng-class="{selectedChapter: $index == quiz.selectedChapterIndex,
+                 previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}"
+                 on-chapter-render>
+                <div title="{{chapter.description}}" layout="row" class="item-content">
+                    <img src="img/1chapter.svg">
+
+                    <div flex layout="row" layout-align="start center">
+                        <span flex="10"></span>
+                        <span><b>{{chapter.title}}</b></span>
+                    </div>
+                    <img src="img/1dots.svg" class="img-dots">
+                </div>
+            </div>
+            <md-button class="md-button md-fab md-mini md-fab-bottom-right"
+                       aria-label="Eat cake"
                        ng-hide="quiz.showQuizList"
-                       ng-click="quiz.addChapter()" style="">
+                       ng-click="quiz.addChapter()">
                 <ng-md-icon icon="add" style="fill: #fff;"></ng-md-icon>
             </md-button>
-        </md-card>
-
+        </div>
     </md-content>
     <!--Topic side-->
-    <md-content class="quiz-col" flex="18">
-        <md-card class="quiz-md-card-2">
-            <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-2">
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex="18">
+        <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
+            <div class="md-toolbar-tools quiz-search-box-2">
+                <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+                    <span>Topics</span>
+                </h2>
+
+                <div>
+                    <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
+                        <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
+                               ng-model="cSearch" aria-label="Chapter Search Box">
+                        <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
+                             style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+                    </md-input-container>
+                </div>
+               <span flex="" style="">
+               <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
+                    style="height: 16px; width: 16px; margin-left: 24px"/>
+               </span>
+               <span flex="" style="">
+               <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
+               </span>
+            </div>
+        </md-toolbar>
+        <div class="quiz-md-card-1">
+            <!--<md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-2">
                 <div class="md-toolbar-tools quiz-search-box-2">
                     <h2 ng-hide="quiz.topicSearch" flex="80" style="color: white">
                         <span>Topics</span>
@@ -663,33 +496,25 @@
                     <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
                 </span>
                 </div>
-            </md-toolbar>
-            <md-card-content style="overflow: auto; padding: 0px;margin-top: -30px">
-                <md-card style="margin: 1px !important;height:49px"
-                         ng-repeat="topic in quiz.topics | filter:tSearch"
-                         ng-click="quiz.setSelectedTopic(this,$index);quiz.showQuestions($index);"
-                         ng-mouseenter="quiz.hover(chapter)" ng-mouseleave="quiz.hover(chapter)"
-                         ng-class="{selectedTopic: $index == quiz.selectedTopicIndex,
-                                                   previousSelected: $index == quiz.selectedTopicIndex && quiz.selectedQuestionIndex !== null}">
-                    <!--class="{{selectedTopic}}"   >-->
-                    <md-card-content style="padding: 0px !important;" title="{{topic.description}}">
-                        <div layout="row"
-                             style="position: relative;border:1px none;margin-top: 14px"><img
-                                src="img/1topic.svg"
-                                style="margin-left: 15px;margin-top: -4px; height: 30px; width: 30px; float: right">
+            </md-toolbar>-->
+            <div class="md-whiteframe-2dp quiz-md-card-item"
+                 ng-repeat="topic in quiz.topics | filter:tSearch"
+                 ng-click="quiz.setSelectedTopic(this,$index);quiz.showQuestions($index);"
+                 ng-mouseenter="quiz.hover(chapter)" ng-mouseleave="quiz.hover(chapter)"
+                 ng-class="{selectedTopic: $index == quiz.selectedTopicIndex,
+                 previousSelected: $index == quiz.selectedTopicIndex && quiz.selectedQuestionIndex !== null}">
+                <!--class="{{selectedTopic}}"   >-->
+                <div layout="row" title="{{topic.description}}" class="item-content">
+                    <img src="img/1topic.svg">
 
-                            <div flex style="margin:5px;margin-left: -10px" layout="row"
-                                 layout-align="start center">
-                                <span flex="10"></span>
-                                <span style="font-size: 9px"><b>{{topic.title}}</b></span>
-                            </div>
-                            <img src="img/1dots.svg"
-                                 style="margin-left: 15px;margin-top: 5px; height: 30px; width: 30px; float: right">
-                        </div>
-                    </md-card-content>
-                </md-card>
-            </md-card-content>
-        </md-card>
+                    <div flex layout="row" layout-align="start center">
+                        <span flex="10"></span>
+                        <span><b>{{topic.title}}</b></span>
+                    </div>
+                    <img src="img/1dots.svg" class="img-dots">
+                </div>
+            </div>
+        </div>
         <md-button class="md-button md-fab md-mini md-fab-bottom-right" aria-label="Eat cake"
                    ng-hide="quiz.showQuizList"
                    ng-click="quiz.addTopic()">
@@ -697,59 +522,111 @@
         </md-button>
     </md-content>
     <!--Questions side-->
-    <md-content class="quiz-col" flex="18">
-        <md-card class="quiz-md-card-3">
-            <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-3">
-                <div class="md-toolbar-tools quiz-search-box-3">
-                    <h2 ng-hide="quiz.questionSearch" flex="80" style="color: white ">
-                        <span>Questions</span>
-                    </h2>
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex="18">
+        <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
+            <div class="md-toolbar-tools quiz-search-box-3">
+                <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+                    <span>Questions</span>
+                </h2>
 
-                    <div>
-                        <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.questionSearch">
-                            <input style="font-size: 12px;color: #FFFFFF;width: 159px;" type="text"
-                                   ng-model="qSearch" aria-label="Quiz Search Box"/>
-                            <img ng-click="quiz.questionSearch = false;" src="img/closeIcon.png"
-                                 style="width: 20px;height: 20px;margin-top: 10%;margin-left: -12%">
-                        </md-input-container>
-                    </div>
-                    <span flex="" style="">
-                        <img ng-click="quiz.questionSearch = !quiz.questionSearch" src="img/1search.svg"
-                             style="height: 16px; width: 16px; margin-left: 24px"/>
-                    </span>
-                    <span flex="" style="">
-                        <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-                    </span>
+                <div>
+                    <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
+                        <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
+                               ng-model="cSearch" aria-label="Chapter Search Box">
+                        <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
+                             style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+                    </md-input-container>
                 </div>
-            </md-toolbar>
-            <md-card-content style="overflow: auto; padding: 0px;margin-top: -30px">
-                <md-card style="margin: 1px !important;height:49px"
-                         ng-repeat="question in quiz.questions | filter:qSearch"
-                         ng-click="quiz.setSelectedQuestion(this,$index); quiz.showQuestionView(question)"
-                         ng-mouseenter="quiz.hover(chapter)" ng-mouseleave="quiz.hover(chapter)"
-                         ng-class="{selectedQuestion: $index == quiz.selectedQuestionIndex}">
-                    <!--class="{{selectedQuestion}}"  -->
-                    <md-card-content style="padding: 0px !important;" title="{{question.Description}}">
-                        <div layout="row"
-                             style="position: relative;border:1px none;margin-top: 14px"><img src="img/1questions.svg"
-                                                                                              style="margin-left: 15px;margin-top: -4px; height: 30px; width: 30px; float: right">
+               <span flex="" style="">
+               <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
+                    style="height: 16px; width: 16px; margin-left: 24px"/>
+               </span>
+               <span flex="" style="">
+               <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
+               </span>
+            </div>
+        </md-toolbar>
+        <div class="quiz-md-card-1">
+            <!-- <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-3">
+                 <div class="md-toolbar-tools quiz-search-box-3">
+                     <h2 ng-hide="quiz.questionSearch" flex="80" style="color: white ">
+                         <span>Questions</span>
+                     </h2>
 
-                            <div flex style="margin:5px;margin-left: -10px" layout="row" layout-align="start center">
-                                <span flex="10"></span>
-                                <span style="font-size: 9px"><b>{{question.Title}}</b></span>
-                            </div>
-                            <img src="img/1dots.svg"
-                                 style="margin-left: 15px;margin-top: 5px; height: 30px; width: 30px; float: right">
-                        </div>
-                    </md-card-content>
-                </md-card>
-            </md-card-content>
-        </md-card>
+                     <div>
+                         <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.questionSearch">
+                             <input style="font-size: 12px;color: #FFFFFF;width: 159px;" type="text"
+                                    ng-model="qSearch" aria-label="Quiz Search Box"/>
+                             <img ng-click="quiz.questionSearch = false;" src="img/closeIcon.png"
+                                  style="width: 20px;height: 20px;margin-top: 10%;margin-left: -12%">
+                         </md-input-container>
+                     </div>
+                     <span flex="" style="">
+                         <img ng-click="quiz.questionSearch = !quiz.questionSearch" src="img/1search.svg"
+                              style="height: 16px; width: 16px; margin-left: 24px"/>
+                     </span>
+                     <span flex="" style="">
+                         <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
+                     </span>
+                 </div>
+             </md-toolbar>-->
+            <div class="md-whiteframe-2dp quiz-md-card-item"
+                 ng-repeat="question in quiz.questions | filter:qSearch"
+                 ng-click="quiz.setSelectedQuestion(this,$index); quiz.showQuestionView(question)"
+                 ng-mouseenter="quiz.hover(chapter)"
+                 ng-mouseleave="quiz.hover(chapter)"
+                 ng-class="{selectedQuestion: $index == quiz.selectedQuestionIndex}">
+                <!--class="{{selectedQuestion}}"  -->
+                <div layout="row" title="{{question.Description}}" class="item-content">
+                    <img src="img/1questions.svg">
+
+                    <div flex layout="row" layout-align="start center">
+                        <span flex="10"></span>
+                        <span><b>{{question.Title}}</b></span>
+                    </div>
+                    <img src="img/1dots.svg" class="img-dots">
+                </div>
+            </div>
+        </div>
         <md-button class="md-button md-fab md-mini md-fab-bottom-right" aria-label="Eat cake"
                    ng-hide="quiz.showQuizList" ng-click="quiz.addQuestion()">
             <ng-md-icon icon="add" style="fill: #fff"></ng-md-icon>
         </md-button>
     </md-content>
+
+    <!--<md-content flex>
+        <md-card ng-show="quiz.showView"
+                 style="margin:0;word-wrap: break-word;box-shadow: none; background-color: #F2F2F2;">
+            <md-card-content>
+                <p><b>Type :</b> {{quiz.questionView.Type}}</p>
+
+                <p><b>Q : {{quiz.questionView.Description}}</b></p>
+
+                <p><b>Options :</b></p>
+
+                <div>
+                    <span ng-repeat="option in quiz.questionView.QuestionOptions">
+                        <div ng-if="option.rightAnswer == true">
+                            &lt;!&ndash; remove from style line 651 and 652 of  white-space: pre;&ndash;&gt;
+                            <span style="margin-left: -1%!important;white-space: pre">Option {{$index+1}} : {{option.optionText}}
+                                &lt;!&ndash;<ng-md-icon icon="done" style="fill: green"></ng-md-icon></span>&ndash;&gt;
+                        </div>
+                        <div ng-if="option.rightAnswer != true">
+                            <span style="margin-left: -1%;white-space: pre"> Option {{$index+1}} : {{option.optionText}} </span>
+                        </div>
+                    </span>
+                </div>
+                &lt;!&ndash;<div ng-if="quiz.questionView.Type === 'Radio Button'">
+    <h4>Correct Answer</h4>
+    <h6>{{quiz.questionView.Answer}}</h6>
+</div>
+<div ng-if="quiz.questionView.Type === 'CheckBox'">
+    <h4>Correct Answers</h4>
+    <h6 ng-repeat="answer in quiz.questionView.Answer">{{answer}}</h6>
+</div>&ndash;&gt;
+            </md-card-content>
+        </md-card>
+    </md-content>-->
 </div>
 
 
@@ -1168,10 +1045,10 @@
 <div ng-hide="true" id="groupPage">
     <div id="wrapper" style="height: calc(100vh - 58px);border: none darkgoldenrod;">
         <!-- Sidebar -->
-        <!--<div id="quiz-sidebar-wrapper" style="z-index:0;height: 100%;border:none;">
+        <div id="quiz-sidebar-wrapper" style="z-index:0;height: 100%;border:none;">
             <ul class="quiz-sidebar-nav" style="height: 100%;border: none blue;">
                 <li class="sidebar-brand" style="height: 100%;border: none red;">
-                    &lt;!&ndash; Books Side&ndash;&gt;
+                    <!-- Books Side-->
                     <md-toolbar1 md-scroll-shrink style="background-color: #8AC441; width: 252px;">
                         <div class="md-toolbar-tools1" style="border-right: 3px solid #468D0E;border-top: 3px solid #468D0E; box-shadow: 0px 0px 5px 2px rgba(119, 119, 119, 0.75);
 -moz-box-shadow: 0px 0px 2px 2px rgba(119, 119, 119, 0.75);
@@ -1189,7 +1066,7 @@
                         </div>
                     </md-toolbar1>
                     <div style="border: 1px none ; background-color: #F2F2F2;overflow:auto">
-                        &lt;!&ndash; height: 400%;&ndash;&gt;
+                        <!-- height: 400%;-->
                         <div style="background-color: #f2f2f2; overflow:auto">
                             <div style=" " ng-repeat="book in quiz.books" id="bookId{{$index}}">
                                 <div style=" background-color: #f7f7f7; height: 126px">
@@ -1197,7 +1074,7 @@
                                          layout="column" layout-align="center center"
                                          ng-click="quiz.setSelectedBook(this, $index); quiz.showChapters($index); quiz.showQuizes($index);"
                                          ng-class="{selectedBook: $index == quiz.selectedBookIndex,previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}">
-                                        &lt;!&ndash;class="{{selected}}" (tahir Changes) ng-click="quiz.setSelectedBook(this, $index); !quiz.showQuizList && quiz.showChapters($index); quiz.showQuizList && quiz.showQuizes($index);"&ndash;&gt;
+                                        <!--class="{{selected}}" (tahir Changes) ng-click="quiz.setSelectedBook(this, $index); !quiz.showQuizList && quiz.showChapters($index); quiz.showQuizList && quiz.showQuizes($index);"-->
                                         <div layout="row" style="width: 240px">
                                             <img flex="33" style="height: 126px"
                                                  ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}"
@@ -1206,8 +1083,8 @@
                                             <div flex="67" style="background-color: #F7F7F7;">
                                                 <span><b>{{book.title}}</b></span>
                                                 <br/>
-                                                &lt;!&ndash;<span style="font-size: 12px">{{book.description}}</span>&ndash;&gt;
-                                                &lt;!&ndash;<img src="img/1dropdown.svg" style="height: 25px; width: 25px; margin-left: 134px">&ndash;&gt;
+                                                <!--<span style="font-size: 12px">{{book.description}}</span>-->
+                                                <!--<img src="img/1dropdown.svg" style="height: 25px; width: 25px; margin-left: 134px">-->
                                                 <img style="border-radius: 50%; align:right"
                                                      ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                                      class="userImg"/>
@@ -1231,7 +1108,7 @@
                                 left:75% ">
                 <ng-md-icon icon="add" style="fill: #ffffff;position: absolute;bottom: 22%;left: 20%"></ng-md-icon>
             </md-button>
-        </div>-->
+        </div>
         <!-- Main Content side-->
         <div id="quiz-page-content-wrapper"
              style="padding-left: 0px;padding-top: 0px;padding-right: 0px; margin-left: -18px">
@@ -2575,12 +2452,9 @@
                     <!-- quiz assign div end -->
                 </div>
                 <!-- --------------------------------------- ------------>
-                <md-sidenav class="md-sidenav-right md-whiteframe-z2" style="
-  margin-left:45px ;
-  width: 80%;
-  min-width: 60%;
-  max-width: 100%;
-  background-color:#ed4757; color: #ffffff;" md-component-id="nav6">
+                <md-sidenav class="md-sidenav-right md-whiteframe-z2"
+                            style="margin-left:45px ;width: 80%;min-width: 60%;max-width: 100%;background-color:#ed4757; color: #ffffff;"
+                            md-component-id="nav6">
                     <ng-md-icon icon="close" size="30"
                                 style="fill:white;outline: none; margin-top: 53px; position: relative; top: 20%"
                                 ng-click="quiz.closeAssignQuiz()">
@@ -2735,9 +2609,8 @@
                     </md-input-container>
                 </md-sidenav>
                 <!--Questions View side-->
-                <div flex style="height:100% !important; margin-left: -3px ">
-                    <md-card
-                            style="margin-top:1px; margin-bottom: 1px;  margin-right: -48px ; overflow-y: auto; color: #000000;height: 104.8%;border-bottom: 1px solid grey; background-color: #F2F2F2">
+                <!--<div flex style="height:100% !important; margin-left: -3px ">
+                    <md-card style="margin-top:1px; margin-bottom: 1px;  margin-right: -48px ; overflow-y: auto; color: #000000;height: 104.8%;border-bottom: 1px solid grey; background-color: #F2F2F2">
                         <md-card-content>
                             <md-card ng-show="quiz.showView"
                                      style="word-wrap: break-word;box-shadow: none; background-color: #F2F2F2; margin: -6%">
@@ -2750,7 +2623,7 @@
                                     <ul>
                                         <li ng-repeat="option in quiz.questionView.QuestionOptions">
                                             <div ng-if="option.rightAnswer == true">
-                                                <!-- remove from style line 651 and 652 of  white-space: pre;-->
+                                                &lt;!&ndash; remove from style line 651 and 652 of  white-space: pre;&ndash;&gt;
                                                 <span style="margin-left: -17%;white-space: pre">Option {{$index+1}} : {{option.optionText}} <ng-md-icon
                                                         icon="done" style="fill: green"></ng-md-icon></span>
                                             </div>
@@ -2759,19 +2632,19 @@
                                             </div>
                                         </li>
                                     </ul>
-                                    <!--<div ng-if="quiz.questionView.Type === 'Radio Button'">
+                                    &lt;!&ndash;<div ng-if="quiz.questionView.Type === 'Radio Button'">
                         <h4>Correct Answer</h4>
                         <h6>{{quiz.questionView.Answer}}</h6>
                     </div>
                     <div ng-if="quiz.questionView.Type === 'CheckBox'">
                         <h4>Correct Answers</h4>
                         <h6 ng-repeat="answer in quiz.questionView.Answer">{{answer}}</h6>
-                    </div>-->
+                    </div>&ndash;&gt;
                                 </md-card-content>
                             </md-card>
                         </md-card-content>
                     </md-card>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
