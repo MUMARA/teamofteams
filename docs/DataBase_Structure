@@ -324,6 +324,203 @@ SUBGROUP-ACTIVITY-STREAMS
 					verb: "subgroup-updated"
 -------------------------------
 
+
+-------------------------------
+09 - A. Add Member in SubGroup 
+
+subgroup-activity-streams
+     t0t1
+        t0t1s1
+            -KDONSilTQMprBONWYnR
+                    actor
+                            displayName: "Usuf Qutubuddin"
+                            email: "usuf52@gmail.com"
+                            id: "usuf52"
+                            profile-image: ""
+                            type:  "user"
+                    displayName:  "Usuf Qutubuddin assigned arsalan rajput as a me..."
+                    language:  "en"
+                    object
+                            displayName: "arsalan rajput"
+                            email: "a4arshi@yahoo.com"
+                            id: "arsalan"
+                            type: "subgroup"
+                    published: 1458567240878
+                    target
+                            displayName:  "Subgroup 1"
+                            id:  "t0t1s1"
+                            type:  "subgroup"
+                            url:  "t0t1/t0t1s1"
+                    verb: "subgroup-member-assigned"
+
+                -KDONSzULVGGMN1Sw225
+                        actor  
+                                displayName: "Usuf Qutubuddin"
+                                email: "usuf52@gmail.com"
+                                id: "usuf52"
+                                profile-image: ""
+                                type: "user"
+                        displayName: "Usuf Qutubuddin updated subgroup Subgroup 1"
+                        language: "en"
+                        published: 1458567241948
+                        verb: "subgroup-updated"
+
+
+subgroup-members
+    t0t1
+        t0t1s1  
+            arsalan
+                membership-type: 3
+                timestamp: 1458567240884
+
+
+subgroups
+    t0t1
+        t0t1s1
+             members-count: 2
+
+
+user-subgroup-memberships  
+    arsalan
+         t0t1
+            t0t1s1
+                 membership-type: 3
+                 timestamp: 1458567240882
+
+-------------------------------
+
+-------------------------------
+09 - B. Add Admin in SubGroup                  ##  ISSUE not updated subgroup member count
+
+subgroup-activity-streams
+     t0t1
+        t0t1s1
+            -KDOSyWwZ3Fwqe7W8kZ
+                    actor
+                            displayName: "Usuf Qutubuddin"
+                            email: "usuf52@gmail.com"
+                            id: "usuf52"
+                            profile-image: ""
+                            type: "user"
+                    displayName: "Usuf Qutubuddin assigned arsalan rajput as a ad..."
+                    language: "en"
+                    object
+                            displayName: "arsalan rajput"
+                            email: "a4arshi@yahoo.com"
+                            id: "arsalan"
+                            type: "subgroup"
+                    published: 1458568685945
+                    target
+                            displayName: "Subgroup 1"
+                            id: "t0t1s1"
+                            type: "subgroup"
+                            url: "t0t1/t0t1s1"
+                    verb: "subgroup-admin-assigned"
+
+                -KDONSzULwdd23MN1Sw225
+                    actor
+                            displayName:  "Usuf Qutubuddin"
+                            email:  "usuf52@gmail.com"
+                            id:  "usuf52"
+                            profile-image:  ""
+                            type: "user"
+                    displayName: "Usuf Qutubuddin updated subgroup Subgroup 1"
+                    language: "en"
+                    published: 1458568685221
+                    verb: "subgroup-updated"
+
+subgroup-members
+    t0t1
+        t0t1s1  
+            arsalan
+                membership-type: 2
+                timestamp: 1458567240852
+
+
+subgroups
+    t0t1
+        t0t1s1
+             members-count: 2                       (should be two but not updated yet)
+
+
+user-subgroup-memberships  
+    arsalan
+         t0t1
+            t0t1s1
+                 membership-type: 2
+                 timestamp: 1458567240852
+
+
+-------------------------------
+
+-------------------------------
+09 - C. Remove Member from SubGroup
+-------------------------------
+subgroup-activity-streams
+     t0t1
+        t0t1s1
+                -KDONSzULVGGMN1Sw225
+                        actor
+                                displayName: "Usuf Qutubuddin"
+                                email: "usuf52@gmail.com"
+                                id: "usuf52"
+                                profile-image: ""
+                                type: "user"
+                        displayName: "Usuf Qutubuddin updated subgroup Subgroup 1"
+                        language: "en"
+                        published: 1458567241948
+                        verb: "subgroup-updated"
+
+                -KDOPl2gqHSeL487hRMc
+                        actor
+                                displayName: "Usuf Qutubuddin"
+                                email: "usuf52@gmail.com"
+                                id: "usuf52"
+                                profile-image: ""
+                                type: "user"
+                                
+                        displayName: "Usuf Qutubuddin removed as member arsalan rajpu..."
+                        language: "en"
+                        object
+                                displayName: "arsalan rajput"
+                                email: "a4arshi@yahoo.com"
+                                id: "arsalan"
+                                type: "subgroup"
+                    published:1458567844336
+                    target
+                            displayName: "Subgroup 1"
+                            id: "t0t1s1"
+                            type: "subgroup"
+                            url: "t0t1/t0t1s1"
+                    verb: "subgroup-member-removed"
+
+subgroup-members
+    t0t1
+        t0t1s1  
+            arsalan             (Will be Removed)
+                membership-type: 3
+                timestamp: 1458567240884
+
+
+subgroups
+    t0t1
+        t0t1s1
+             members-count: 1       
+
+
+user-subgroup-memberships  
+    arsalan
+         t0t1
+            t0t1s1              (Will be Removed)
+                 membership-type: 3
+                 timestamp: 1458567240882
+
+
+
+-------------------------------
+09 - D. Remove Admin from SubGroup
+-------------------------------
+
 -------------------------------
 10. Create Policy:
 
