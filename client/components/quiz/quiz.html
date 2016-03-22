@@ -526,7 +526,7 @@
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
                  ng-repeat="question in quiz.questions | filter:qSearch"
-                 ng-click="quiz.setSelectedQuestion(this,$index); quiz.showQuestionView(question)"
+                 ng-click="quiz.setSelectedQuestion(this,$index); quiz.showQuestionView(question);quiz.booksNav = false"
                  ng-mouseenter="quiz.hover(chapter)"
                  ng-mouseleave="quiz.hover(chapter)"
                  ng-class="{selectedQuestion: $index == quiz.selectedQuestionIndex}">
@@ -548,38 +548,41 @@
         </md-button>
     </md-content>
 
-    <md-content flex>
-        <md-card ng-show="quiz.showView"
-                 style="margin:0;word-wrap: break-word;box-shadow: none; background-color: #F2F2F2;">
-            <md-card-content>
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex>
+        <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
+            <div class="md-toolbar-tools quiz-search-box-4">
+                <h2>
+                    <span>Chapters</span>
+                </h2>
+            </div>
+        </md-toolbar>
+        <div layout-padding class="show-question-section-main-div" ng-show="quiz.showView">
+            <div>
                 <p><b>Type :</b> {{quiz.questionView.Type}}</p>
 
                 <p><b>Q : {{quiz.questionView.Description}}</b></p>
 
                 <p><b>Options :</b></p>
 
-                <div>
-                    <span ng-repeat="option in quiz.questionView.QuestionOptions">
-                        <div ng-if="option.rightAnswer == true">
-                            <!-- remove from style line 651 and 652 of  white-space: pre;-->
-                            <span style="margin-left: -1%!important;white-space: pre">Option {{$index+1}} : {{option.optionText}}
-                                <!--<ng-md-icon icon="done" style="fill: green"></ng-md-icon></span>-->
-                        </div>
-                        <div ng-if="option.rightAnswer != true">
-                            <span style="margin-left: -1%;white-space: pre"> Option {{$index+1}} : {{option.optionText}} </span>
-                        </div>
-                    </span>
+                <div ng-repeat="option in quiz.questionView.QuestionOptions">
+                    <div ng-if="option.rightAnswer" class="options-question">
+                        <span>Option {{$index+1}} : {{option.optionText}}</span>
+                        <ng-md-icon icon="done" style="fill: green"></ng-md-icon>
+                    </div>
+                    <div ng-if="!option.rightAnswer" class="options-question">
+                        <span> Option {{$index+1}} : {{option.optionText}} </span>
+                    </div>
                 </div>
-                <!--<div ng-if="quiz.questionView.Type === 'Radio Button'">
-    <h4>Correct Answer</h4>
-    <h6>{{quiz.questionView.Answer}}</h6>
-</div>
-<div ng-if="quiz.questionView.Type === 'CheckBox'">
-    <h4>Correct Answers</h4>
-    <h6 ng-repeat="answer in quiz.questionView.Answer">{{answer}}</h6>
-</div>-->
-            </md-card-content>
-        </md-card>
+            </div>
+        </div>
+        <div ng-if="quiz.questionView.Type === 'Radio Button'">
+            <h4>Correct Answer</h4>
+            <h6>{{quiz.questionView.Answer}}</h6>
+        </div>
+        <div ng-if="quiz.questionView.Type === 'CheckBox'">
+            <h4>Correct Answers</h4>
+            <h6 ng-repeat="answer in quiz.questionView.Answer">{{answer}}</h6>
+        </div>
     </md-content>
 </div>
 
