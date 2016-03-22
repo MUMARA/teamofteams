@@ -239,51 +239,29 @@
 <!--left side-->
 <div layout="row" class="backColorLightGrey2 quiz-columns-content">
     <md-sidenav class="md-sidenav-left quiz-sidenav-g" md-component-id="left" md-is-locked-open="quiz.booksNav">
-        <!--<md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-books">
-              <div class="md-toolbar-tools quiz-search-box-1" style="background: #8AC441">
-                  <h2 ng-hide="quiz.booksSearch" flex="80" style="color:white">
-                      <span>Books</span>
-                  </h2>
-
-                  <div>
-                      <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
-                          <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
-                                 ng-model="cSearch" aria-label="Chapter Search Box">
-                          <img ng-click="quiz.booksSearch = false;" src="img/closeIcon.png"
-                               style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
-                      </md-input-container>
-                  </div>
-                                          <span flex="" style="">
-                      <img ng-click="quiz.booksSearch = !quiz.booksSearch" src="img/1search.svg"
-                           style="height: 16px; width: 16px; margin-left: 24px"/>
-                    </span>
-                                          <span flex="" style="">
-                      <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-                  </span>
-              </div>
-          </md-toolbar>-->
         <md-content layout-margin class="quiz-col md-whiteframe-1dp" style="width:95%">
             <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
-                <div class="md-toolbar-tools quiz-search-box-0">
-                    <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+                <div class="md-toolbar-tools quiz-search-box-0" layout="row">
+                    <h2 ng-hide="quiz.booksSearch">
                         <span>Question Banks</span>
                     </h2>
 
-                    <div>
-                        <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
-                            <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
-                                   ng-model="cSearch" aria-label="Chapter Search Box">
-                            <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
-                                 style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+                    <div flex layout="row">
+                        <md-input-container class="search-input-quiz" ng-show="quiz.booksSearch">
+                            <input type="text" ng-model="bSearch"
+                                   aria-label="Chapter Search Box">
                         </md-input-container>
+
+                        <img ng-click="quiz.booksSearch = !quiz.booksSearch;"
+                             ng-if="quiz.booksSearch"
+                             src="img/closeIcon.png" class="close-img">
+
+                        <div class="img-div">
+                            <img ng-if="!quiz.booksSearch" src="img/1dropdown.svg"/>
+                            <img ng-if="!quiz.booksSearch" src="img/1search.svg"
+                                 ng-click="quiz.booksSearch = !quiz.booksSearch"/>
+                        </div>
                     </div>
-               <span flex="" style="">
-               <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
-                    style="height: 16px; width: 16px; margin-left: 24px"/>
-               </span>
-               <span flex="" style="">
-               <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-               </span>
                 </div>
             </md-toolbar>
             <div class="quiz-md-card-1">
@@ -371,17 +349,15 @@
     </div>
     <!--Chapter Side-->
     <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
-
-
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
-            <div class="md-toolbar-tools quiz-search-box-1">
-                <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+            <div class="md-toolbar-tools quiz-search-box-1" layout="row">
+                <h2 ng-hide="quiz.chapterSearch">
                     <span>Chapters</span>
                 </h2>
 
-                <div layout="row" style="width:100%">
+                <div flex layout="row">
                     <md-input-container class="search-input-quiz" ng-show="quiz.chapterSearch">
-                        <input style="font-size: 12px;color: #FFFFFF;margin-top: 30px" type="text" ng-model="cSearch"
+                        <input type="text" ng-model="cSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
@@ -391,13 +367,12 @@
 
                     <div class="img-div">
                         <img ng-if="!quiz.chapterSearch" src="img/1dropdown.svg"/>
-                        <img ng-if="!quiz.chapterSearch" ng-click="quiz.chapterSearch = !quiz.chapterSearch"src="img/1search.svg"/>
+                        <img ng-if="!quiz.chapterSearch" src="img/1search.svg"
+                             ng-click="quiz.chapterSearch = !quiz.chapterSearch"/>
                     </div>
                 </div>
             </div>
         </md-toolbar>
-
-
         <div class="quiz-md-card-1">
             <!--   <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-1">
                <div class="md-toolbar-tools quiz-search-box-1">
@@ -451,26 +426,27 @@
     <!--Topic side-->
     <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex="18">
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
-            <div class="md-toolbar-tools quiz-search-box-2">
-                <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
+            <div class="md-toolbar-tools quiz-search-box-2" layout="row">
+                <h2 ng-hide="quiz.topicSearch">
                     <span>Topics</span>
                 </h2>
 
-                <div>
-                    <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
-                        <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
-                               ng-model="cSearch" aria-label="Chapter Search Box">
-                        <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
-                             style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+                <div flex layout="row">
+                    <md-input-container class="search-input-quiz" ng-show="quiz.topicSearch">
+                        <input type="text" ng-model="tSearch"
+                               aria-label="Chapter Search Box">
                     </md-input-container>
+
+                    <img ng-click="quiz.topicSearch = !quiz.topicSearch;"
+                         ng-if="quiz.topicSearch"
+                         src="img/closeIcon.png" class="close-img">
+
+                    <div class="img-div">
+                        <img ng-if="!quiz.topicSearch" src="img/1dropdown.svg"/>
+                        <img ng-if="!quiz.topicSearch" src="img/1search.svg"
+                             ng-click="quiz.topicSearch = !quiz.topicSearch"/>
+                    </div>
                 </div>
-               <span flex="" style="">
-               <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
-                    style="height: 16px; width: 16px; margin-left: 24px"/>
-               </span>
-               <span flex="" style="">
-               <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-               </span>
             </div>
         </md-toolbar>
         <div class="quiz-md-card-1">
@@ -524,26 +500,27 @@
     <!--Questions side-->
     <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex="18">
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
-            <div class="md-toolbar-tools quiz-search-box-3">
-                <h2 ng-hide="quiz.chapterSearch" flex="80" style="color:white">
-                    <span>Questions</span>
+            <div class="md-toolbar-tools quiz-search-box-3" layout="row">
+                <h2 ng-hide="quiz.questionSearch">
+                    <span>Qusetions</span>
                 </h2>
 
-                <div>
-                    <md-input-container style="margin: 0 0 0 0;" ng-show="quiz.chapterSearch">
-                        <input style="font-size: 12px;width: 166px;color: #FFFFFF;" type="text"
-                               ng-model="cSearch" aria-label="Chapter Search Box">
-                        <img ng-click="quiz.chapterSearch = false;" src="img/closeIcon.png"
-                             style="width: 20px;height: 20px;margin-top: 12%;margin-left: -12%;">
+                <div flex layout="row">
+                    <md-input-container class="search-input-quiz" ng-show="quiz.questionSearch">
+                        <input type="text" ng-model="qSearch"
+                               aria-label="Chapter Search Box">
                     </md-input-container>
+
+                    <img ng-click="quiz.questionSearch = !quiz.questionSearch;"
+                         ng-if="quiz.questionSearch"
+                         src="img/closeIcon.png" class="close-img">
+
+                    <div class="img-div">
+                        <img ng-if="!quiz.questionSearch" src="img/1dropdown.svg"/>
+                        <img ng-if="!quiz.questionSearch" src="img/1search.svg"
+                             ng-click="quiz.questionSearch = !quiz.questionSearch"/>
+                    </div>
                 </div>
-               <span flex="" style="">
-               <img ng-click="quiz.chapterSearch = !quiz.chapterSearch" src="img/1search.svg"
-                    style="height: 16px; width: 16px; margin-left: 24px"/>
-               </span>
-               <span flex="" style="">
-               <img src="img/1dropdown.svg" style="height: 15px; width: 15px; margin-left: 20px"/>
-               </span>
             </div>
         </md-toolbar>
         <div class="quiz-md-card-1">
