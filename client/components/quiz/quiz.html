@@ -552,36 +552,29 @@
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-4">
                 <h2>
-                    <span>Chapters</span>
+                    <span>{{quiz.questionView.Title}}</span>
                 </h2>
             </div>
         </md-toolbar>
         <div layout-padding class="show-question-section-main-div" ng-show="quiz.showView">
-            <div>
-                <p><b>Type :</b> {{quiz.questionView.Type}}</p>
+          <p><b>Type :</b> {{quiz.questionView.Type}}</p>
 
-                <p><b>Q : {{quiz.questionView.Description}}</b></p>
+          <p><b>Q : {{quiz.questionView.Description}}</b></p>
 
-                <p><b>Options :</b></p>
+          <p><b>Options :</b></p>
 
-                <div ng-repeat="option in quiz.questionView.QuestionOptions">
-                    <div ng-if="option.rightAnswer" class="options-question">
-                        <span>Option {{$index+1}} : {{option.optionText}}</span>
-                        <ng-md-icon icon="done" style="fill: green"></ng-md-icon>
-                    </div>
-                    <div ng-if="!option.rightAnswer" class="options-question">
-                        <span> Option {{$index+1}} : {{option.optionText}} </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div ng-if="quiz.questionView.Type === 'Radio Button'">
-            <h4>Correct Answer</h4>
-            <h6>{{quiz.questionView.Answer}}</h6>
-        </div>
-        <div ng-if="quiz.questionView.Type === 'CheckBox'">
-            <h4>Correct Answers</h4>
-            <h6 ng-repeat="answer in quiz.questionView.Answer">{{answer}}</h6>
+          <div class="options-question" ng-repeat="option in quiz.questionView.QuestionOptions">
+            <span ng-if="!option.rightAnswer">Option {{$index+1}} : {{option.optionText}}</span>
+            <span ng-if="option.rightAnswer">Option {{$index+1}} : {{option.optionText}}<ng-md-icon icon="done"></ng-md-icon></span>
+          </div>
+          <div ng-if="quiz.questionView.Type === 'Radio Button'">
+              <h4>Correct Answer</h4>
+              <h6>{{quiz.questionView.Answer}}</h6>
+          </div>
+          <div ng-if="quiz.questionView.Type === 'CheckBox'">
+              <h4>Correct Answers</h4>
+              <h6 ng-repeat="answer in quiz.questionView.Answer">{{answer}}</h6>
+          </div>
         </div>
     </md-content>
 </div>

@@ -169,11 +169,16 @@
     margin: 0;
     word-wrap: break-word;
     box-shadow: none;
-    background-color: #F2F2F2;
+    /*background-color: #F2F2F2;*/
 }
 
 .options-question span{
-    margin-left: -1%!important;white-space: pre
+    /*margin-left: -1%!important;*/
+    white-space: pre
+}
+
+.options-question ng-md-icon{
+  fill: green
 }
 
 /*  OLD CSS */
