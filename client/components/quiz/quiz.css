@@ -184,11 +184,11 @@
 /*  OLD CSS */
 
 .add-books-nav {
-    margin-left: 45px;
+    margin-left: 10px;
     width: 50%;
     min-width: 50%;
     max-width: 100%;
-    background-color: #ed4757;
+    background-color: #fff;
 }
 
 .add-chapter-nav {
@@ -196,7 +196,7 @@
     width: 50%;
     min-width: 50%;
     max-width: 100%;
-    background-color: #ed4757
+    background-color: #fff
 }
 
 .add-topic-nav {
@@ -204,7 +204,7 @@
     width: 50%;
     min-width: 50%;
     max-width: 100%;
-    background-color: #ed4757
+    background-color: #fff
 }
 
 .add-question-nav {
@@ -212,6 +212,6 @@
     width: 50%;
     min-width: 50%;
     max-width: 100%;
-    background-color: #ed4757;
+    background-color: #fff;
     color: #2b2b2b;
 }

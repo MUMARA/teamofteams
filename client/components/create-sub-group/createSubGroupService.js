@@ -6,14 +6,14 @@
     'use strict';
     angular
         .module('app.createSubGroup', ['core', 'ngMdIcons'])
-        .factory('createSubGroupService', ['activityStreamService','$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
-            function(activityStreamService, $firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
+        .factory('createSubGroupService', ['activityStreamService', '$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'CollaboratorService',
+            function(activityStreamService, $firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, CollaboratorService) {
                 var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
                 var groupAdminUsers = [];
 
                 return {
 
-                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID,cb) {
+                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID, cb) {
                         //var pageUserId = userService.getCurrentUser().userID;
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
                         SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
@@ -30,21 +30,27 @@
 
                                 //for group activity stream record -- START --
                                 var type = 'subgroup';
-                                var targetinfo = {id: SubgroupInfo.subgroupID, url: SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
-                                var area = {type: 'subgroup-created'};
-                                var group_id = group.$id;
+                                var targetinfo = { id: SubgroupInfo.subgroupID, url: group.$id + '/' + SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
+                                var area = { type: 'subgroup-created' };
+                                var group_id = group.$id + '/' + SubgroupInfo.subgroupID;
                                 var memberuserID = null;
                                 //for group activity record
                                 activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                 //for group activity stream record -- END --
-                                    cb()
-                                    messageService.showSuccess("Team creation Successful...");
-                                    $rootScope.newImg = null;
+                                cb();
+                                messageService.showSuccess("Team creation Successful...");
+                                // console.log(JSON.stringify());
+                                console.log("this User is from createSubGroupService:", userService.getCurrentUser());
+                                CollaboratorService.CreateDocument("Team of Teams Information", group.$id, SubgroupInfo.subgroupID, 'Rich Text', userService.getCurrentUser())
+                                    .then(function(response) {
+                                        CollaboratorService.addAccessUser(response.docId, group.$id, SubgroupInfo.subgroupID, userService.getCurrentUser().userID, 1);
+                                    });
+                                $rootScope.newImg = null;
                                 // }
                             }, function(group) {
                                 // form.$submitted = !form.$submitted
                                 messageService.showFailure("Team not created, " + SubgroupInfo.groupID + " already exists");
-                            })
+                            });
                     },
                     'cancelSubGroupCreation': function(userId) {
                         console.log("SubGroup Creation Cancelled");
@@ -89,16 +95,16 @@
                     'getGroupImgFromServer': function() {
                         var defer = $q.defer();
                         $http({
-                                url: appConfig.apiBaseUrl + '/api/profilepicture/mmm',
-                                method: "GET",
-                                params: {
-                                    token: userService.getCurrentUser().token
-                                }
-                            })
+                            url: appConfig.apiBaseUrl + '/api/profilepicture/mmm',
+                            method: "GET",
+                            params: {
+                                token: userService.getCurrentUser().token
+                            }
+                        })
                             .then(function(data) {
                                 var reader = new FileReader();
                                 reader.onload = function() {
-                                    defer.resolve(reader.result)
+                                    defer.resolve(reader.result);
                                 };
                                 reader.readAsDataURL(data.data.profilePicture);
 
@@ -129,35 +135,41 @@
 
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
                                 subgroupNameRef.title = subgroupRef.title;
+                                subgroupNameRef.subgroupImgUrl = subgroupInfo.imgLogoUrl || '';
+                                subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();
                                         //groupForm.$submitted = false;
                                         //$rootScope.newImg = null;
 
+                                        //update subgroup-policy
+                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );                                        
+
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
-                                        var targetinfo = {id: subgroupInfo.$id, url: subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };
-                                        var area = {type: 'subgroup-updated'};
-                                        var group_id = groupID;
+                                        var targetinfo = { id: subgroupInfo.$id, url: groupID + '/' + subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };
+                                        var area = { type: 'subgroup-updated' };
+                                        var group_id = groupID + '/' + subgroupInfo.$id;
                                         var memberuserID = null;
                                         //for group activity record
                                         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                         //for group activity stream record -- END --
 
-                                        messageService.showSuccess('Team Edited Successfully')
+                                        messageService.showSuccess('Team Edited Successfully');
+
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");
-                                    })
-                                }, function(group) {
-                                    cb();
-                                    // groupForm.$submitted = false;
-                                    messageService.showFailure("Team not edited");
-                                })
+                                    });
+                            }, function(group) {
+                                cb();
+                                // groupForm.$submitted = false;
+                                messageService.showFailure("Team not edited");
+                            })
                         } else {
-                            firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id).set({title: subgroupInfo.title, timestamp: firebaseTimeStamp}, function(error){
-                                if(error){
+                            firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id).set({ title: subgroupInfo.title, timestamp: firebaseTimeStamp }, function(error) {
+                                if (error) {
                                     messageService.showFailure("Team not created");
                                 } else {
                                     messageService.showSuccess('Team Created Successfully')
@@ -254,12 +266,12 @@
                         return deferred.promise;
                     },
 
-                    getAdminUsers: function(groupid, subgroupid, cb){
+                    getAdminUsers: function(groupid, subgroupid, cb) {
                         groupAdminUsers = [];
-                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_added', function(snapshot){
-                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
+                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_added', function(snapshot) {
+                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData) {
 
-                                if(snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2){
+                                if (snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2) {
                                     // console.log(userData.val());
                                     // console.log(snapshot.val());
                                     groupAdminUsers.push(userData.val());
@@ -268,22 +280,22 @@
 
                             })
                         })
-                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_changed', function(snapshot){
-                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData){
-                                if(snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2){
+                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_changed', function(snapshot) {
+                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData) {
+                                if (snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2) {
                                     // console.log(userData.val());
                                     // console.log(snapshot.val());
 
                                     var _flag = false;
                                     groupAdminUsers.forEach(function(val, indx) {
-                                        if(val.email == userData.val().email) {
+                                        if (val.email == userData.val().email) {
                                             _flag = true;
                                         }
                                     }) //groupAdminUsers.forEach
 
-                                    if(_flag){
+                                    if (_flag) {
                                         cb(groupAdminUsers);
-                                    } else{
+                                    } else {
                                         groupAdminUsers.push(userData.val());
                                         cb(groupAdminUsers);
                                     }
@@ -293,7 +305,7 @@
                         })
                     }, //groupAdminUsers
 
-                    DeleteUserMemberShip: function(userID, groupID, subgroupID, submembers){
+                    DeleteUserMemberShip: function(userID, groupID, subgroupID, submembers) {
                         // var deleteUserMemberShip = {};
                         // deleteUserMemberShip["user-subgroup-memberships/"+userID+"/"+groupID+"/"+subgroupID+"/"] = null;
                         // deleteUserMemberShip["subgroup-members/"+groupID+"/"+subgroupID+"/"+userID+"/"] = null;
@@ -311,15 +323,15 @@
                         //     }
                         // });
 
-                        firebaseService.getRefMain().child("user-subgroup-memberships/"+userID+"/"+groupID+"/"+subgroupID+"/").remove(function(err){
-                            console.log(err);
+                        firebaseService.getRefMain().child("user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID + "/").remove(function(err) {
+                            // console.log(err);
 
-                            firebaseService.getRefMain().child("subgroup-members/"+groupID+"/"+subgroupID+"/"+userID+"/").remove(function(err){
-                                console.log(err);
+                            firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
+                                // console.log(err);
 
-                                firebaseService.getRefMain().child("subgroups/"+groupID+"/"+subgroupID+"/members-count").set(submembers-1, function(err){
-                                    console.log(err);
-                                })
+                                firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                    // console.log(err);
+                                });
 
 
 
@@ -342,6 +354,6 @@
 
                 }
             }
-        ])
+        ]);
 
 })();

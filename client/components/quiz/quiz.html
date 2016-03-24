@@ -583,75 +583,56 @@
 <!--Create Book Navigation Start-->
 <md-sidenav class="md-sidenav-right add-books-nav" md-component-id="nav1">
     <ng-md-icon icon="close" size="30"
-                style="fill:white;outline: none; margin-top: 53px; position: relative; top: 20%"
+                style="fill:#d3d3d3;outline: none;"
                 ng-click="quiz.closeBook()">
     </ng-md-icon>
-    <div class="div1">
-        <h1 style="color: #ffffff">Create Book</h1>
-        <md-content layout-padding style="background-color:#ed4757">
-            <form name="bookForm">
-                <md-input-container>
-                    <label style="color: #eeacb4">Book ID</label>
-                    <input style="border-color: white;color:#ffffff" name="bookID"
-                           ng-model="quiz.bookID" ng-pattern="/^([a-z0-9]){3,20}$/"
-                           minlength="3" maxlength="50" check-book-existance="" required
-                           md-sidenav-focus>
-
-                    <div ng-show="bookForm.$submitted || bookForm.bookID.$touched"
+    <div>
+        <h1 style="color: #d3d3d3;padding-left:8px;">Create Book</h1>
+        <md-content >
+            <form name="bookForm" layout-padding>
+                <div layout="row">
+                  <md-input-container flex>
+                    <label >Book ID</label>
+                    <input name="bookID" ng-model="quiz.bookID" required
+                           ng-pattern="/^([a-z0-9]){3,20}$/" minlength="3" maxlength="50"
+                           check-book-existance="" md-sidenav-focus>
+                        <div ng-show="bookForm.$submitted || bookForm.bookID.$touched"
                          ng-messages="bookForm.bookID.$error">
-                        <div class="invalid_color" ng-message="required">This is required.
-                        </div>
-                        <div class="invalid_color" ng-message="minlength">Required minimum
-                            length 3
-                        </div>
-                        <div class="invalid_color" ng-message="pattern">Lowercase-alpha
-                            numeric only - length 3 to 20
-                        </div>
-                        <div class="invalid_color" ng-message="maxlength">Required maximum
-                            length 50
-                        </div>
-                        <div class="invalid_color id_Error" ng-message="checkBookExistance">
-                            This book ID is not available.
-                        </div>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 3 </div>
+                        <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20 </div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 50 </div>
+                        <div class="invalid_color id_Error" ng-message="checkBookExistance">This book ID is not available.</div>
                     </div>
                 </md-input-container>
-                <md-input-container>
-                    <label style="color: #eeacb4">Book Title</label>
-                    <input style="border-color: white;color: #ffffff" name="bookTitle"
+                <md-input-container flex >
+                    <label >Book Title</label>
+                    <input name="bookTitle"
                            ng-model="quiz.name" minlength="3" maxlength="50" required
                            md-sidenav-focus>
-
                     <div ng-show="bookForm.$submitted || bookForm.bookTitle.$touched"
                          ng-messages="bookForm.bookTitle.$error">
-                        <div class="invalid_color" ng-message="required">This is required.
-                        </div>
-                        <div class="invalid_color" ng-message="minlength">Required minimum
-                            length 3
-                        </div>
-                        <div class="invalid_color" ng-message="maxlength">Required maximum
-                            length 50
-                        </div>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 50 </div>
                     </div>
                 </md-input-container>
-                <md-input-container>
-                    <label style="color: #eeacb4">Description</label>
-                                                <textarea style="border-color: white;color: #ffffff" minlength="10"
-                                                          maxlength="200" name="bookDesc" required ng-model="quiz.desc"
-                                                          cols="25" rows="1"></textarea>
-
+            </div>
+             <div layout="row">
+                 <md-input-container flex>
+                    <label >Description</label>
+                    <textarea minlength="10"
+                              maxlength="200" name="bookDesc" required ng-model="quiz.desc"
+                              cols="25" rows="3"></textarea>
                     <div ng-show="bookForm.$submitted || bookForm.bookDesc.$touched"
                          ng-messages="bookForm.bookDesc.$error">
-                        <div class="invalid_color" ng-message="required">This is required.
-                        </div>
-                        <div class="invalid_color" ng-message="minlength">Required minimum
-                            length 10
-                        </div>
-                        <div class="invalid_color" ng-message="maxlength">Required maximum
-                            length 200
-                        </div>
+                        <span class="invalid_color" ng-message="required">This is required.</span>
+                        <span class="invalid_color" ng-message="minlength">Required minimum length 10 </span>
+                        <span class="invalid_color" ng-message="maxlength">Required maximum length 200 </span>
                     </div>
                 </md-input-container>
-                <h3 class="text">Set Book Poster
+            </div>
+                <h3 >Set Book Poster
                     <ng-md-icon style="fill:white" icon="info_outline"></ng-md-icon>
                 </h3>
                 <div class="dialog-demo-content cropper-main-button" id="cropperDialogue"
@@ -667,24 +648,21 @@
                 <image-cropper></image-cropper>
             </form>
         </md-content>
-    </div>
-    <div layout="row">
-        <div>
-            <md-progress-circular class="" ng-show="bookForm.$submitted"
-                                  md-mode="indeterminate"></md-progress-circular>
-        </div>
-        <div style="margin: 40px 0px 0px 305px; width: 220px">
-            <!--<md-button class="md-raised md-primary">Submit</md-button>-->
-            <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
-            <md-button style="color: #ffffff;background-color:#a043ef"
-                       ng-disabled="bookForm.$invalid || !newImg" class="md-primary"
-                       ng-click="quiz.createBook(bookForm, $root.newImg); $root.newImg = null">
-                Create
-            </md-button>
-            <md-button style="color: #ffffff" ng-click="quiz.closeBook()"
-                       class="md-primary">
-                Close
-            </md-button>
+        <div layout="row" layout-align="center end">
+                <md-progress-circular class="" ng-show="bookForm.$submitted"
+                                      md-mode="indeterminate"></md-progress-circular>
+                <!--<md-button class="md-raised md-primary">Submit</md-button>-->
+                <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
+                <md-button style="color: #ffffff;" class="backColorSeaGreen"
+                           ng-disabled="bookForm.$invalid || !newImg" class="md-primary"
+                           ng-click="quiz.createBook(bookForm, $root.newImg); $root.newImg = null">
+                    Create
+                </md-button>
+                <md-button style="color: #ffffff" ng-click="quiz.closeBook()"
+                           class="backColorSeaGreen">
+                    Close
+                </md-button>
+            </div>
         </div>
     </div>
 </md-sidenav>
@@ -693,65 +671,53 @@
 <!--Create Chapter Navigation Start-->
 <md-sidenav class="md-sidenav-right add-chapter-nav" md-component-id="nav2">
     <ng-md-icon icon="close" size="30"
-                style="fill:white;outline: none; margin-top: 53px; position: relative; top: 20%"
+                style="fill:#d3d3d3;outline: none;"
                 ng-click="quiz.closeChapter()">
     </ng-md-icon>
-    <div class="div1">
-        <h1 style="color: #ffffff">Add Chapter</h1>
-        <md-content layout-padding style="background-color:#ed4757">
+    <div>
+        <h1 style="color: #d3d3d3;padding-left:8px;">Add Chapter</h1>
+        <md-content layout-padding>
             <form name="chapterForm">
-                <md-input-container>
-                    <label style="color: #eeacb4">
-                        <!--Title-->Chapter Title</label>
-                    <input style="border-color: white;color: #ffffff" name="chapterTitle"
+                <div layout="column">
+                    <md-input-container >
+                    <label >Chapter Title</label>
+                    <input name="chapterTitle"
                            ng-model="quiz.Title" minlength="3" maxlength="40" required>
                     <!--check-chapter-existance=""-->
                     <div ng-show="chapterForm.$submitted || chapterForm.chapterTitle.$touched"
                          ng-messages="chapterForm.chapterTitle.$error">
-                        <div class="invalid_color" ng-message="required"
-                             style="color: aliceblue">This is required.
-                        </div>
-                        <div class="invalid_color" ng-message="minlength"
-                             style="color: aliceblue">Required minimum length 3
-                        </div>
-                        <div class="invalid_color" ng-message="maxlength"
-                             style="color: aliceblue">Required maximum length 30
-                        </div>
-                        <!--<div class="invalid_color id_Error" ng-message="checkChapterExistance">This name is not available.</div>-->
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 30</div>
                     </div>
                 </md-input-container>
-                <md-input-container>
-                    <label style="color: #eeacb4">
-                        <!--Title-->Chapter Description</label>
-                                                <textarea style="border-color: white;color: #ffffff"
-                                                          name="chapterDescription" ng-model="quiz.Description"
-                                                          minlength="8" maxlength="200" required></textarea>
-
+                <md-input-container >
+                    <label>Chapter Description</label>
+                    <textarea name="chapterDescription" ng-model="quiz.Description"
+                              minlength="10" maxlength="200" required>
+                    </textarea>
                     <div ng-show="chapterForm.$submitted || chapterForm.chapterDescription.$touched"
                          ng-messages="chapterForm.chapterDescription.$error">
-                        <div class="invalid_color" ng-message="required"
-                             style="color: aliceblue">This is required.
-                        </div>
-                        <div class="invalid_color" ng-message="minlength"
-                             style="color: aliceblue">Required minimum length 3
-                        </div>
-                        <div class="invalid_color" ng-message="maxlength"
-                             style="color: aliceblue">Required maximum length 40
-                        </div>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 10</div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                     </div>
                 </md-input-container>
+            </div>
             </form>
         </md-content>
     </div>
-    <div style="margin: 260px 0px 0px 305px; width: 220px">
+    <div layout="row" layout-align="start center">
+        <md-progress-circular ng-show="bookForm.$submitted"
+                              md-mode="indeterminate"></md-progress-circular>
         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
         <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
-        <md-button style="color: #ffffff;background-color:#a043ef"
-                   ng-disabled="chapterForm.$invalid" class="md-primary"
-                   style="margin-left: 80%;" ng-click="quiz.createChapter()">Create
+        <md-button style="color: #ffffff;" ng-disabled="chapterForm.$invalid"
+                   class="backColorSeaGreen"  ng-click="quiz.createChapter()">
+                   Create
         </md-button>
         </md-button>
-        <md-button style="color: #ffffff" ng-click="quiz.closeChapter()" class="md-primary">
+        <md-button style="color: #ffffff" ng-click="quiz.closeChapter()" class="backColorSeaGreen">
             Close
         </md-button>
     </div>
@@ -761,65 +727,54 @@
 <!--Create Topic Navigation Start-->
 <md-sidenav class="md-sidenav-right add-topic-nav" md-component-id="nav4">
     <ng-md-icon icon="close" size="30"
-                style="fill:white;outline: none; margin-top: 53px; position: relative; top: 20%"
+                style="fill:#d3d3d3;outline: none;"
                 ng-click="quiz.closeTopic()">
     </ng-md-icon>
-    <div class="div1" style="margin-left:70px ">
-        <h1 style="color: #ffffff">Add Topic</h1>
-        <md-content layout-padding style="background-color:#ed4757">
+    <div>
+        <h1 style="color: #d3d3d3;padding-left:8px;">Add Topic</h1>
+        <md-content layout-padding>
             <form name="topicForm">
-                <md-input-container>
-                    <label style="color: #eeacb4">Topic Title
-                        <ng-md-icon style="fill:white" icon="info_outline"></ng-md-icon>
+              <div layout="row">
+                <md-input-container flex>
+                    <label>Topic Title
+                        <ng-md-icon style="fill:#d3d3d3" icon="info_outline"></ng-md-icon>
                     </label>
-                    <input style="border-color: white;color: #ffffff" name="chapterTitle"
-                           ng-model="quiz.Title" minlength="3" maxlength="30" required>
+                    <input  name="chapterTitle" ng-model="quiz.Title" minlength="3" maxlength="30" required>
                     <!--check-chapter-existance=""-->
                     <div ng-show="topicForm.$submitted || topicForm.chapterTitle.$touched"
                          ng-messages="chapterForm.chapterTitle.$error">
-                        <div class="invalid_color" ng-message="required"
-                             style="color: aliceblue">This is required.
-                        </div>
-                        <div class="invalid_color" ng-message="minlength"
-                             style="color: aliceblue">Required minimum length 3
-                        </div>
-                        <div class="invalid_color" ng-message="maxlength"
-                             style="color: aliceblue">Required maximum length 30
-                        </div>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 30</div>
                         <!--<div class="invalid_color id_Error" ng-message="checkChapterExistance">This name is not available.</div>-->
                     </div>
                 </md-input-container>
-                <md-input-container>
-                    <label style="color: #eeacb4">Description</label>
-                                                <textarea style="border-color: white;color: #ffffff"
-                                                          name="chapterDescription" ng-model="quiz.Description"
-                                                          minlength="8" maxlength="200" required></textarea>
+                <md-input-container flex>
+                    <label>Description</label>
+                    <textarea name="chapterDescription" ng-model="quiz.Description"
+                              minlength="8" maxlength="200" required></textarea>
 
                     <div ng-show="topicForm.$submitted || chapterForm.chapterDescription.$touched"
                          ng-messages="chapterForm.chapterDescription.$error">
-                        <div class="invalid_color" ng-message="required"
-                             style="color: aliceblue">This is required.
-                        </div>
-                        <div class="invalid_color" ng-message="minlength"
-                             style="color: aliceblue">Required minimum length 3
-                        </div>
-                        <div class="invalid_color" ng-message="maxlength"
-                             style="color: aliceblue">Required maximum length 40
-                        </div>
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
+                        <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
                     </div>
                 </md-input-container>
+            </div>
             </form>
         </md-content>
     </div>
-    <div style="margin: 260px 0px 0px 305px; width: 220px">
+    <div layout="row" layout-align="start center">
+        <md-progress-circular ng-show="bookForm.$submitted" md-mode="indeterminate"></md-progress-circular>
         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
         <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
-        <md-button style="color: #ffffff;background-color:#a043ef"
-                   ng-disabled="topicForm.$invalid" class="md-primary"
-                   style="margin-left: 80%;" ng-click="quiz.createTopic()">Create
+        <md-button style="color: #ffffff";
+                   ng-disabled="topicForm.$invalid" class="backColorSeaGreen"
+                   ng-click="quiz.createTopic()">Create
         </md-button>
         </md-button>
-        <md-button style="color: #ffffff" ng-click="quiz.closeTopic()" class="md-primary">
+        <md-button style="color: #ffffff" ng-click="quiz.closeTopic()" class="backColorSeaGreen">
             Close
         </md-button>
     </div>
@@ -828,73 +783,53 @@
 
 <!--Add Question Sidenav Start-->
 <md-sidenav class="md-sidenav-right add-question-nav md-whiteframe-z2" md-component-id="nav3">
-    <ng-md-icon icon="close" size="30"
-                style="fill:white;outline: none; margin-top: 53px; position: relative; top: 20%"
+    <ng-md-icon icon="close" size="30"style="fill: #d3d3d3;outline: none;"
                 ng-click="quiz.closeQuestion()">
     </ng-md-icon>
     <div>
         <md-content layout-padding>
             <form>
-                <div class="div1">
-                    <h1 style="color: #ffffff">Add Question</h1>
+                <div >
+                    <h1 style="color: #d3d3d3">Add Question</h1>
                     <!--Question Title-->
                     <md-input-container>
-                        <label style="color: #EF9BA3">
-                            <!--Title-->Question Title</label>
-                        <input style="color: #ffffff;border-color:#FFFFFF;"
-                               name="questionTitle" ng-model="quiz.question.Title"
+                        <label>Question Title</label>
+                        <input name="questionTitle" ng-model="quiz.question.Title"
                                minlength="3" maxlength="30" required
                                ng-change="quiz.showButton1 = true" autofocus="true">
 
-                        <div style="color: #ffffff"
-                             ng-show="groupForm.$submitted || groupForm.questionTitle.$touched"
+                        <div ng-show="groupForm.$submitted || groupForm.questionTitle.$touched"
                              ng-messages="groupForm.questionTitle.$error">
-                            <div class="invalid_color" ng-message="required">This is
-                                required.
-                            </div>
-                            <div class="invalid_color" ng-message="minlength">Required
-                                minimum length 3
-                            </div>
-                            <div class="invalid_color" ng-message="maxlength">Required
-                                minimum length 30
-                            </div>
+                            <div class="invalid_color" ng-message="required">This is required.</div>
+                            <div class="invalid_color" ng-message="minlength">Required minimum length 3 </div>
+                            <div class="invalid_color" ng-message="maxlength">Required minimum length 30</div>
                         </div>
                     </md-input-container>
                     <!--Question Description-->
                     <md-input-container>
-                        <label style="color: #EF9BA3; font-weight:lighter;">
-                            <!--Title-->Question Description</label>
-                                                    <textarea style="color: #ffffff;border-color:#FFFFFF;"
-                                                              name="questionDescription"
-                                                              ng-model="quiz.question.Description" minlength="10"
-                                                              maxlength="200" required></textarea>
+                        <label style="font-weight:lighter;">Question Description</label>
+                        <textarea name="questionDescription" ng-model="quiz.question.Description"
+                                  minlength="10" maxlength="200" required>
+                       </textarea>
 
                         <div ng-show="groupForm.$submitted || groupForm.questionDescription.$touched"
                              ng-messages="groupForm.questionDescription.$error">
-                            <div class="invalid_color" ng-message="required">This is
-                                required.
-                            </div>
-                            <div class="invalid_color" ng-message="minlength">Required
-                                minimum length 10
-                            </div>
-                            <div class="invalid_color" ng-message="md-maxlength">Required
-                                minimum length 200
-                            </div>
+                            <div class="invalid_color" ng-message="required">This is required.</div>
+                            <div class="invalid_color" ng-message="minlength">Required minimum length 10</div>
+                            <div class="invalid_color" ng-message="md-maxlength">Required minimum length 200</div>
                         </div>
                     </md-input-container>
                 </div>
                 <!--Answer Type-->
                 <div class="div1">
                     <div>
-                        <md-select ng-model="user"
-                                   style="color: #EF9BA3;border-color:#FFFFFF; min-width: 200px;"
+                        <md-select ng-model="user" style="min-width: 200px;"
                                    md-on-close="quiz.setBoxValue()"
                                    ng-change="quiz.typeChanged()">
-                            <md-select-label style="color: #FFFFFF;border-color:#FFFFFF;"
-                                             ng-value="quiz.myType = user">
-                                <span style="color:#EF9BA3;">{{ user ? user.name : 'Select Type'}}</span>
+                            <md-select-label ng-value="quiz.myType = user">
+                                <span >{{ user ? user.name : 'Select Type'}}</span>
                             </md-select-label>
-                            <md-option ng-value="user" style="color: white;"
+                            <md-option ng-value="user"
                                        ng-repeat="user in quiz.types">
                                 {{user.name}}
                             </md-option>
@@ -903,9 +838,8 @@
                     <!--RadioBoxes InputFields-->
                     <div ng-show="quiz.showRadioOptions">
                         <div layout="row">
-                            <md-radio-group ng-model="quiz.myAnswer" class="md-primary">
-                                <md-radio-button
-                                        ng-repeat="option in quiz.question.QuestionOptions"
+                            <md-radio-group ng-model="quiz.myAnswer" >
+                                <md-radio-button ng-repeat="option in quiz.question.QuestionOptions"
                                         ng-value="option" ng-disabled="!option.optionText"
                                         aria-label="Radio-Button"
                                         style="margin-bottom: 78%; margin-left: 10%;"
@@ -916,25 +850,17 @@
                                 <md-input-container
                                         ng-repeat="option in quiz.question.QuestionOptions">
                                     <div layout="row">
-                                        <div>
-                                            <label style="color: #EF9BA3; margin-top: 10px;">Option
-                                                {{$index+1}}</label>
-                                                                        <textarea
-                                                                                style="color: #FFFFFF;border-color:#FFFFFF; width: 400px"
-                                                                                ng-model="option.optionText"
-                                                                                required="required"></textarea>
-                                        </div>
-                                        <div>
-                                            <img src="./components/quiz/images/deleteIcon.png"
+                                            <label>Option {{$index+1}}</label>
+                                            <textarea ng-model="option.optionText" required="required"></textarea>
+                                            <!-- <img src="./components/quiz/images/deleteIcon.png"
                                                  ng-click="quiz.deleteOption($index)"
                                                  role="button" tabindex="0"
-                                                 style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;">
-                                        </div>
+                                                 style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
                                     </div>
                                 </md-input-container>
                             </div>
                         </div>
-                        <md-button ng-click="quiz.addOption();">
+                        <md-button class="backColorSeaGreen"ng-click="quiz.addOption();">
                             Add Option...
                         </md-button>
                     </div>

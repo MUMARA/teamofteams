@@ -207,6 +207,7 @@ angular.module('core')
                             userID: snapshot.key(),
                             membershipType: snapshot.val()["membership-type"],
                             timestamp: snapshot.val()["timestamp"],
+                            membershipNo: snapshot.getPriority(),
                             userSyncObj: userSyncObj,
                             //FIXME when implementing in client2 , eliminate userSyncObj to avoid duplicate listeners.
                             user: userPresenceService.getUserSyncObject(snapshot.key())
@@ -264,6 +265,7 @@ angular.module('core')
                             message: snapshot.val()["message"],
                             timestamp: snapshot.val()["timestamp"],
                             "teamrequest": snapshot.val()["team-request"],
+                            "membershipNo": snapshot.val()["membershipNo"],
                             userSyncObj: userSyncObj
                         });
                     });
@@ -332,15 +334,15 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
-                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot) {
                                                         var countsubgroup = snapshot.val()["subgroups-count"] + 1;
-                                                        console.log(countsubgroup, 'testing')
-                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
+                                                        // console.log(countsubgroup, 'testing')
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function() {
                                                             if (error) {
                                                                 errorHandler();
                                                             }
-                                                        })
-                                                    })
+                                                        });
+                                                    });
                                                     // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
@@ -419,7 +421,7 @@ angular.module('core')
                                                                 })
                                                                 .catch(function(d) {
                                                                     //debugger;
-                                                                })
+                                                                });
                                                             // for (var member in mems) {
                                                             //
                                                             //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
@@ -948,6 +950,7 @@ angular.module('core')
                             if (err) {
                                 errorHandler();
                             } else {
+                                firebaseService.getRefGroupMembers().child(groupID).child(userID).setPriority(requestedMember.membershipNo);
                                 //step1: change membership-type of user in user-membership list
                                 firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
                                     .set(userMembershipObj[userID], function(err) {

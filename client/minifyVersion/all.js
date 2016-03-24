@@ -1,8 +1,15963 @@
-e.name==t&&e.topics.forEach(function(e,t){e.quizes.forEach(function(e,t){he.shceduleQuizQuizes.push(e)})})}),console.log("length: "+he.shceduleQuizQuizes.length+"|"+JSON.stringify(he.shceduleQuizQuizes))}))}})}function L(){c.path("/user/"+l.getCurrentUser().userID+"/quiz/quiz-attempting"),document.getElementById("navBar").style.display="none"}function P(e,t){he.selectedQuestionIndex=t,u.setSelectedQuestion(t)}function M(e,t){he.selectedQuestionIndex=null,he.selectedTopicIndex=t,u.setSelectedTopic(t),u.setSelectedQuestion(null)}function k(e,t){he.selectedQuestionIndex=null,he.selectedTopicIndex=null,he.selectedChapterIndex=t,u.setSelectedChapter(t),u.setSelectedTopic(null),u.setSelectedQuestion(null)}function T(e,t){he.selectedBookIndex=t,u.setSelectedBook(t),he.selectedQuestionIndex=null,he.selectedTopicIndex=null,he.selectedChapterIndex=null,u.setSelectedChapter(null),u.setSelectedTopic(null),u.setSelectedQuestion(null)}function x(e){he.selectedQuizes=e}function A(e){u.setQuestionObject(null),u.setChapter(null,null),u.setTopic(null,null),console.log("showing Chapters"),u.setQuestionObject(null),he.showView=!1,he.questionView=null,he.bookId=he.booksId[e],u.setBook(he.bookId,e),he.chapterId=null,he.topicId=null,he.show=!0,he.chapters=[],he.topics=[],he.questions=[],he.chaptersId=[],he.topicsId=[],he.questionsId=[],pe.child("question-bank-chapters").child(he.bookId).on("child_added",function(e){d(function(){he.chapters.push(e.val()),he.chaptersId.push(e.key())},0)})}function R(e){u.setTopic(null,null),u.setQuestionObject(null),he.topics=[],he.questions=[],he.topicsId=[],he.questionsId=[],he.showView=!1,he.topicId=null,he.questionView=null,he.chapterId=he.chaptersId[e],u.setChapter(he.chapterId,e),he.topics=[],he.questions=[],pe.child("question-bank-topic").child(he.bookId).child(he.chapterId).on("child_added",function(e){d(function(){he.topics.push(e.val()),he.topicsId.push(e.key())},0)})}function U(e){he.showView=!1,he.questionView=null,he.topicId=he.topicsId[e],u.setTopic(he.topicId,e),u.setQuestionObject(null),he.questions=[],pe.child("questions").child(he.bookId).child(he.chapterId).child(he.topicId).on("child_added",function(e){d(function(){he.questions.push(e.val())},0)})}function O(e){null!==e&&u.setQuestionObject(e),console.log("Showing Question View "+e),he.showView=!0,he.questionView=e}function E(e){he.quizes=[],pe.child("quiz-create").child(u.getBook()).on("child_added",function(e){var t={details:e.val().quizDetails,key:e.key()};he.quizes.push(t)})}function G(e){he.Array=[];var t=0,i="";console.log("showing quiz Questions"),pe.child("quiz-create").child(u.getBook()).child(he.quizes[e].key).child("quizQuestion").on("child_added",function(n){i=n.key();var o=n.val().ChapterDetails;pe.child("quiz-create").child(u.getBook()).child(he.quizes[e].key).child("quizQuestion").child(i).child("ChapterTopics").on("child_added",function(n){var r=n.val().TopicDetails;pe.child("quiz-create").child(u.getBook()).child(he.quizes[e].key).child("quizQuestion").child(i).child("ChapterTopics").child(n.key()).child("TopicQuestions").on("child_added",function(e){he.Array[t]={chapterDetails:o,topicDetails:r,question:e.val()},t++})})})}function j(){p(m.getRefUserGroupMemberships().child(l.getCurrentUser().userID)).$loaded().then(function(e){fe=e.$watch(function(){j()}),he.userObj=e,e.forEach(function(e,t){var i=t;g(m.getRefGroups().child(e.$id)).$loaded().then(function(e){me[i]=e.$watch(function(){he.userObj[i].groupUrl=e["logo-image"]?e["logo-image"].url:""}),he.userObj[i].groupUrl=e["logo-image"]?e["logo-image"].url:"",e["group-owner-id"]&&g(m.getRefUsers().child(e["group-owner-id"]).child("profile-image")).$loaded().then(function(e){he.userObj[i].userImg=b.trustAsResourceUrl(e.$value),ge[i]=e.$watch(function(t){he.userObj[i].userImg=b.trustAsResourceUrl(e)})})})})})["catch"](function(e){})}function z(){he.subGroup=[],d(function(){he.showQuizSceduling=h.toggleRight6,he.showQuizSceduling()},0),he.quizesList=[],pe.child("quiz-create").child(u.getBook()).on("child_added",function(e){he.quizesListKey.push(e.key()),he.quizesList.push(e.val().quizDetails),console.log(e.val())}),console.log(he.quizesListKey);for(var e=0;e<he.userObj.length;e++)he.myDatabase[e]={groupId:he.userObj[e].$id,subGroupId:null,subGroupIdIndex:null,bookId:u.getBook(),quizId:null};console.log(he.myDatabase)}function B(e){he.seclectedQuizID=e;for(var t=0;t<he.userObj.length;t++)he.myDatabase[t].groupId==he.selectedGroup&&(he.myDatabase[t].quizId=he.seclectedQuizID),console.log(he.myDatabase[t])}function N(e,t){he.selectedGroup=e,he.selectedGroupIndex=t,he.subGroup=[],de.child("subgroups").child(e).on("child_added",function(e){he.subGroup.push(e.key()),console.log(he.subGroup)})}function q(e,t){he.subGroupId=e;for(var i=0;i<he.userObj.length;i++)he.myDatabase[i].groupId==he.selectedGroup&&(he.myDatabase[i].subGroupId=e,he.myDatabase[i].quizId=he.seclectedQuizID,he.myDatabase[i].subGroupIdIndex=t);console.log(he.myDatabase)}function F(){for(var e=0;e<he.userObj.length;e++)if(null!=he.myDatabase[e].subGroupId&&null!=he.myDatabase[e].quizId)for(var t=0;t<he.quizesList.length;t++)he.quizesList[t].title==he.myDatabase[e].quizId&&(alert("yes"),pe.child("quiz-schedule").child(he.myDatabase[e].groupId).child(he.myDatabase[e].subGroupId).child(he.myDatabase[e].bookId).push({quizName:he.quizesList[t].title,quizUid:he.quizesListKey[t]}),console.log(he.myDatabase[e]));Z()}function Z(){he.showQuizSceduling=h.toggleRight6,he.showQuizSceduling()}function Q(e){console.log("showing quiz Chapters"),he.bookId=he.booksId[e],u.setBook(he.bookId,e)}function H(){console.log("showing quiz Topics")}function V(){he.showbook=h.toggleRight1,he.showbook()}function W(t,i){if(console.log(he.imgLogoUrl),console.log(e.newImg),he.temps={title:he.name,description:he.desc,imgLogoUrl:i},console.log("tmp: "+JSON.stringify(he.temps)),ve.child("user-question-banks").child(l.getCurrentUser().userID).child(he.bookID).set({"membership-type":1}),ve.child("question-bank-memberships").child(he.bookID).child(l.getCurrentUser().userID).set({"membership-type":1}),ve.child("question-bank").child(he.bookID).set(he.temps),console.log(he.temps),e.newImg){var n=o.base64ToBlob(e.newImg),r=e.newImg.split(",")[0],s=r.split(":")[1].split(";")[0];console.log(n),console.log(r),console.log(s),console.log(he.bookID),he.saveFile(n,s,he.bookID).then(function(e){ve.child("user-question-banks").child(l.getCurrentUser().userID).child(he.bookID).set({"membership-type":1}),ve.child("question-bank-memberships").child(he.bookID).child(l.getCurrentUser().userID).set({"membership-type":1}),ve.child("question-bank").child(he.bookID).set(he.temps),console.log(he.temps),he.name="",he.desc="",he.bookID="",alert("book creation successful")})["catch"](function(){alert("picture upload failed")})}}function J(e,t,n){var o=r.defer(),s=new XMLHttpRequest;return s.open("PUT",t),s.setRequestHeader("x-amz-acl","public-read"),s.onload=function(e){console.log(s.status),200===s.status&&(i.showSuccess("Picture uploaded...."),console.log("picture upload successful"),console.log(n),o.resolve(n))},s.onerror=function(e){o.reject(i.showSuccess("Could not upload file."))},s.send(e),console.log(e),o.promise}function K(){he.showbook=h.toggleRight1,he.showbook()}function X(){console.log(he.Title+" "+he.Description),pe.child("question-bank-chapters").child(he.bookId).push({title:he.Title,description:he.Description},function(){he.Title="",he.Description=""})}function Y(){he.bookId?d(function(){he.showChapter=h.toggleRight2,he.showChapter()},0):f.show({template:'<md-toast style="z-index:3;">Please Select Book</md-toast>',hideDelay:5e3})}function ee(){he.showChapter=h.toggleRight2,he.showChapter()}function te(){pe.child("question-bank-topic").child(u.getBook()).child(he.chapterId).push({description:he.Description,title:he.Title})}function ie(){he.chapterId?d(function(){he.showTopic=h.toggleRight4,he.showTopic()},0):f.show({template:'<md-toast style="z-index:3;">Please Select Chapter</md-toast>',hideDelay:5e3})}function ne(){he.showTopic=h.toggleRight4,he.showTopic()}function oe(){he.topicId?d(function(){he.showQuestion=h.toggleRight3,he.showQuestion()},0):f.show({template:'<md-toast style="z-index:3;">Please Select Topic</md-toast>',hideDelay:5e3})}function re(){he.showQuestion=h.toggleRight3,he.showQuestion()}function se(e){alert(e.name),e.showEdit=!e.showEdit}function ae(){he.bookId?d(function(){he.showQuize=h.toggleRight5,he.showQuize();var e="";he.awaisObject={},he.flagChapters=[],he.flagTopics=[],he.showQuestionView1=!1,he.quizObject={},he.showTick=!0,he.buttonText="Next",he.quizTitle="";var t=0;he.quizDescription="",he.quizTime="";var i=0;he.questionIndex=0,he.tempQuestions=[],he.myChapterIndex=0,he.viewAllQuestions=[],he.viewAllTopics=[],he.secondBookName="angular101",he.secondChapters=[],he.secondChaptersKey=[];var n=[],o="";he.myChapters=[],he.myChaptersKey=[],he.thirdTopics=[],he.chapters=[],he.chaptersId=[],he.nestedQuestions=[],he.topics=[],he.topicsId=[],he.questions=[],he.questionsId=[],he.showOne=!1,he.showTwo=!0,he.showThree=!1,he.show=!1,he.showView=!1,he.showQuizBar=!1,he.showTick=!1,he.bookId="",he.chapterId="",he.topicId=null,he.SelectedBook=null,he.SelectedChapter=null,he.SelectedTopic=null,he.SelectedQuestion=null,he.chaptersId=[],he.chapters=[],he.topicsId=[],he.topics=[],he.questions=[],he.questionView="",he.latestNode=[],he.setSelectedQuestion=function(e){he.lastSelectedTopic.selectedTopic&&($(".selectedTopic").addClass("previousSelected"),he.lastSelectedQuestion&&(he.lastSelectedQuestion.selectedQuestion=""),e.selectedQuestion="selectedQuestion",he.lastSelectedQuestion=e)},he.setSelectedTopics=function(e){he.lastSelectedChapter.selected&&($(".previousSelected").removeClass("previousSelected"),$(".selectedChapter").addClass("previousSelected"),he.lastSelectedTopic&&(he.lastSelectedTopic.selectedTopic=""),e.selectedTopic="selectedTopic",he.lastSelectedTopic=e)},he.setSelectedChapters=function(e){$(".selectedChapter").removeClass("previousSelected"),he.lastSelectedChapter&&(he.lastSelectedChapter.selected=""),a.setSelectedChapter(e),e.selected="selectedChapter",he.lastSelectedChapter=e};var r=0;pe.child("question-bank-chapters").child(u.getBook()).on("child_added",function(e){he.chapters.push(e.val()),he.chaptersId.push(e.key()),he.chaptersSnapData=e.val(),he.nestedQuestions.push([]),he.flagChapters[r]={},he.flagChapters[r].id=!0,he.viewAllTopics.push([]),he.flagTopics.push([]),r++}),e=u.getBook(),he.bookId=u.getBook(),he.quizObject[u.getBook()]={},he.awaisObject[u.getBook()]={},he.showTopics=function(i){he.showQuestionView1=!1,void 0==he.quizObject[e].quizQuestion&&(he.quizObject[e].quizQuestion={}),he.quizObject[e].quizQuestion[he.chaptersId[i]]={},he.awaisObject[e][he.chaptersId[i]]={},he.quizObject[e].quizQuestion[he.chaptersId[i]].ChapterDetails={title:he.chapters[i].title,description:he.chapters[i].description},he.quizObject[e].quizQuestion[he.chaptersId[i]].ChapterTopics={},he.awaisObject[e][he.chaptersId[i]]={},console.log("Chapter Details"),console.log(he.quizObject[e].quizQuestion[he.chaptersId[i]].ChapterDetails),he.chapterId=he.chaptersId[i],he.myChapterIndex=i,a.setChapter(he.chapterId,i),1==he.flagChapters[i].id?(he.nestedQuestions[i]=[],he.tempQuestions[i]=[],he.flagChapters[i].id=!1,he.topics=[],he.topicsId=[],he.topicId=null,t=0,pe.child("question-bank-topic").child(u.getBook()).child(a.getChapter()).on("child_added",function(e){d(function(){he.topics.push(e.val()),he.viewAllTopics[i].push(e.val()),he.topicsId.push(e.key()),he.flagTopics[i][t]={},he.flagTopics[i][t].id=!0,he.nestedQuestions[i].push([]),he.tempQuestions[i].push([]),t++},0)})):(he.topics=he.viewAllTopics[i],he.myChapterIndex=i)},he.showQuestions=function(t){he.showQuestionView1=!1,void 0==he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[t]]&&(he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[t]]={},he.awaisObject[e][he.chaptersId[he.myChapterIndex]][he.topicsId[t]]={},he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[t]].TopicDetails={title:he.topics[t].title,description:he.topics[t].description},he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[t]].TopicQuestions={},he.awaisObject[e][he.chaptersId[he.myChapterIndex]][he.topicsId[t]]={},console.log("Topic Details"),console.log(he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[t]])),1==he.flagTopics[he.myChapterIndex][t].id?(he.flagTopics[he.myChapterIndex][t].id=!1,he.nestedQuestions[he.myChapterIndex][t]=[],i=0,he.questionIndex=t,he.showView=!1,he.topicId=he.topicsId[t],he.tempQuestions[he.myChapterIndex][t]=[],a.setTopic(he.topicId,t),pe.child("questions").child(u.getBook()).child(a.getChapter()).child(a.getTopic()).on("child_added",function(e){d(function(){he.questions.push(e.val()),he.questionsId.push(e.key()),he.nestedQuestions[he.myChapterIndex][t].push(e.val()),he.tempQuestions[he.myChapterIndex][t].push(e.val()),he.tempQuestions[he.myChapterIndex][t][i].id=!1,he.nestedQuestions[he.myChapterIndex][t][i].id=!1,i++},0)})):(he.questionIndex=t,he.nestedQuestions[he.myChapterIndex][t]=he.tempQuestions[he.myChapterIndex][t])},he.showQuestionView=function(e){he.showQuestionView1=!0,null!==e&&u.setQuestionObject(e),he.questionView=e},he.checkArray=[],he.showTickIcon=function(t,i){console.log(he.tickArray),0==t?(console.log("Checking"),he.checkArray.push(i),he.showQuestionView1=!0,he.nestedQuestions[he.myChapterIndex][he.questionIndex][i].id=!0,he.tempQuestions[he.myChapterIndex][he.questionIndex][i].id=!0,he.viewAllQuestions.push(he.nestedQuestions[he.myChapterIndex][he.questionIndex][i]),void 0==he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[he.questionIndex]].TopicQuestions&&(he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[he.questionIndex]].TopicQuestions={},he.awaisObject[e][he.chaptersId[he.myChapterIndex]][he.topicsId[he.questionIndex]]={}),he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[he.questionIndex]].TopicQuestions[he.questionsId[i]]=he.tempQuestions[he.myChapterIndex][he.questionIndex][i],he.awaisObject[e][he.chaptersId[he.myChapterIndex]][he.topicsId[he.questionIndex]][he.questionsId[i]]=he.tempQuestions[he.myChapterIndex][he.questionIndex][i]):1==t&&(he.checkArray.splice(he.checkArray.indexOf(i),1),he.nestedQuestions[he.myChapterIndex][he.questionIndex][i].id=!1,he.tempQuestions[he.myChapterIndex][he.questionIndex][i].id=!1,n=he.viewAllQuestions,o=he.nestedQuestions[he.myChapterIndex][he.questionIndex][i].Title,angular.forEach(n,function(e,t){e.Title==o&&n.splice(t,1)}),he.viewAllQuestions=n,delete he.quizObject[e].quizQuestion[he.chaptersId[he.myChapterIndex]].ChapterTopics[he.topicsId[he.questionIndex]].TopicQuestions[he.questionsId[i]],delete he.awaisObject[e][he.chaptersId[he.myChapterIndex]][he.topicsId[he.questionIndex]][he.questionsId[i]])},he.createQuiz=function(){console.log(he.quizObject[e].quizQuestion),angular.forEach(he.quizObject[e].quizQuestion,function(t,i,n){angular.forEach(t.ChapterTopics,function(t,n){0==Object.keys(t.TopicQuestions).length&&delete he.quizObject[e].quizQuestion[i].ChapterTopics[n]})}),angular.forEach(he.quizObject[e].quizQuestion,function(t,i){0==Object.keys(t.ChapterTopics).length&&delete he.quizObject[e].quizQuestion[i]}),angular.forEach(he.awaisObject[e],function(t,i){angular.forEach(t,function(t,n){0==Object.keys(t).length&&delete he.awaisObject[e][i][n]})}),angular.forEach(he.awaisObject[e],function(t,i){0==Object.keys(t).length&&delete he.awaisObject[e][i]}),he.quizObject[e].quizDetails={title:he.quizTitle,description:he.quizDescription,time:he.quizTime},pe.child("quiz-create").child(e).push(he.quizObject[e],function(){angular.forEach(he.awaisObject[e],function(e){angular.forEach(e,function(e){angular.forEach(e,function(e){angular.forEach(e.QuestionOptions,function(e){delete e.rightAnswer})})})}),angular.forEach(he.viewAllQuestions,function(t){delete t.$$hashKey,angular.forEach(t.QuestionOptions,function(e){delete e.$$hashKey}),pe.child("quiz-create").child(e).on("child_added",function(e){he.latestNode.push(e.key())}),pe.child("quiz-attempt").child(e).child(he.latestNode[he.latestNode.length-1]).set(he.awaisObject[e])})})}},0):f.show({template:'<md-toast style="z-index:3;">Please Select Book</md-toast>',hideDelay:5e3}),console.log(he.quizes)}function ue(){he.showbook=h.toggleRight5,he.showbook()}function ce(e){}function le(e){return alert("Deleting the "+e.name),e.show=!1}var he=this;he.img="../../img/userImg1.svg",he.show=!1,he.showView=!1,he.showQuizBank=!0,he.showQuizList=!1,he.showQuizAssign=!1,he.questionView=null,he.chapterSearch=!1,he.topicSearch=!1,he.questionSearch=!1,he.quizSearch=!1,he.quizQuestionSearch=!1,he.chaptersSideNavSearch=!1,he.topicSideNavSearch=!1,he.questionSideNavSearch=!1,he.inputEnter=!1,he.selectedQuestionIndex=null,he.selectedTopicIndex=null,he.selectedChapterIndex=null,he.addBook=V,he.createBook=W,he.addChapter=Y,he.createChapter=X,he.closeChapter=ee,he.addTopic=ie,he.createTopic=te,he.closeTopic=ne,he.closeBook=K,he.closeQuestion=re,he.addQuestion=oe,he.editChapter=se,he.hover=ce,he.editHover=le,he.showChapters=A,he.showTopics=R,he.showQuestions=U,he.showQuestionView=O,he.showQuizChapters=Q,he.showQuizTopics=H,he.setSelectedBook=T,he.setSelectedChapter=k,he.setSelectedTopic=M,he.setSelectedQuestion=P,he.setSelectedQuizes=x,he.SelectedBook=null,he.SelectedChapter=null,he.SelectedTopic=null,he.SelectedQuestion=null,he.showQuizBankFunc=C,he.showQuiz=D,he.showAssignQuiz=I,he.showAttemptQuiz=L,he.addQuiz=ae,he.closeQuiz=ue,he.afterLoad=w,he.bookId="",he.chapterId="",he.topicId="";var pe=new Firebase("https://pspractice.firebaseio.com"),de=new Firebase("https://luminous-torch-4640.firebaseio.com");he.books=[],he.booksId=[],he.quizes=[],he.chaptersId=[],he.chapters=[],he.topicsId=[],he.topics=[],he.questions=[],he.groups=[],he.closeAssignQuiz=Z,he.setSelectedGroup=N,he.setSelectedSubGroup=q,he.quizesList=[],he.quizesListKey=[],he.subGroup=[],he.myDatabase=[],he.selectedGroup=null,he.dataPush=F,he.setSelectedQuiz=B,_(),y.resolveUserPage().then(function(e){j(),S()},function(e){alert("Error in Line 86: "+e)}),_(),he.showQuizes=E,he.showQuizesQuestions=G,he.quizes=[],he.assignQuiz=z,he.userID="123654789";var fe,me={},ge={};he.userObj=[],he.desc="",he.newImg=null,he.imgLogoUrl;var ve=new Firebase("https://pspractice.firebaseio.com/");he.showAdvanced1=function(t){s.show({controller:"DialogController as ctrl",templateUrl:"directives/dilogue.tmpl.html",targetEvent:t}).then(function(t){e.newImg=t,console.log("this is image"+t)},function(e){console.log(e)})},he.saveFile=function(e,i,n){console.log(e),console.log(i),console.log(n);var o=r.defer(),s=new XMLHttpRequest;return s.open("GET",t.apiBaseUrl+"/api/savequizBookPicture?quizID="+n+"&file_type="+i),s.onreadystatechange=function(){if(4===s.readyState)if(200===s.status){var t=JSON.parse(s.responseText);o.resolve(J(e,t.signed_request,t.url))}else o.reject(alert("Could not get signed URL."))},o.resolve(!0),o.promise};var pe=new Firebase("https://pspractice.firebaseio.com/");he.bookId=n.id,he.Title="",he.Description="",he.Title="",he.Description="",he.chapterId=n.id;var be=this,ye=new Firebase("https://pspractice.firebaseio.com/"),_e=3;this.showRadioOptions=!1,this.showCheckOptions=!1,this.showAddButton=!1,this.myAnswer=void 0,this.myType="",be.answerTag=[],be.myTop=["40px","50px"];var Se=50;this.showCheckText=!1,this.topicId=n.id,this.types=[{name:"Radio Button"},{name:"CheckBox"}],this.question={Title:"",Description:"",Type:"",QuestionOptions:[{optionText:"",id:2,rightAnswer:!1},{optionText:"",id:3,rightAnswer:!1}]},this.typeChanged=function(){be.radioValue="",be.myAnswer=void 0,be.myTop=["40px","90px"],Se=50,angular.forEach(be.question.QuestionOptions,function(e){e.id===!0&&(e.id=!1)})},this.setBoxValue=function(){this.showAddButton=!0,be.question.QuestionOptions=[{optionText:"",id:2,rightAnswer:!1},{optionText:"",id:3,rightAnswer:!1}],"Radio Button"===be.myType.name?(be.showRadioOptions=!0,be.showCheckOptions=!1,be.answerTag=[],be.myAnswer=void 0):"CheckBox"===be.myType.name&&(be.showCheckOptions=!0,be.showRadioOptions=!1,be.answerTag=[],be.myAnswer=void 0)},this.addOption=function(){100>Se&&(Se+=50),be.myTop.push(Se+"px"),_e++,be.question.QuestionOptions.push({optionText:"",id:_e,rightAnswer:!1})},this.deleteOption=function(e){e>-1&&be.question.QuestionOptions.splice(e,1)},be.setCheckBoxValue=function(e){1==be.question.QuestionOptions[e].id?(be.question.QuestionOptions[e].rightAnswer=!0,be.answerTag.push("one")):0==be.question.QuestionOptions[e].id&&(be.question.QuestionOptions[e].rightAnswer=!1,be.answerTag.pop())},be.addQuestionsAndContinue=function(){be.showRadioOptions=!1,be.showCheckOptions=!1,be.showAddButton=!1,"Radio Button"===be.myType.name&&angular.forEach(be.question.QuestionOptions,function(e){e.optionText==be.myAnswer.optionText?e.rightAnswer=!0:e.rightAnswer=!1}),angular.forEach(be.question.QuestionOptions,function(e){delete e.$$hashKey,delete e.$$mdSelectId,delete e.id}),be.question.Type=be.myType.name,ye.child("questions").child(u.getBook()).child(u.getChapter()).child(u.getTopic()).push(be.question),be.question={Title:"",Description:"",Type:"",Answer:[],QuestionOptions:[{optionText:"",id:2,rightAnswer:!1},{optionText:"",id:3,rightAnswer:!1}]},be.myAnswer=void 0},this.prev=function(){d(function(){c.path("/user/"+l.getCurrentUser().userID+"/quiz")})},this.showAnswer=function(){"Radio Button"===be.myType.name&&angular.forEach(be.question.QuestionOptions,function(e){e.optionText==be.myAnswer.optionText?e.rightAnswer=!0:e.rightAnswer=!1}),angular.forEach(be.question.QuestionOptions,function(e){delete e.$$hashKey,delete e.$$mdSelectId,delete e.id}),be.question.Type=be.myType.name,ye.child("questions").child(u.getBook()).child(u.getChapter()).child(u.getTopic()).push(be.question,function(){be.question={},abc()}),be.myAnswer=void 0},this.showAdvanced=function(e){be.question.Type=be.myType.name,"Radio Button"===be.myType.name&&angular.forEach(be.question.QuestionOptions,function(e){e.optionText==be.myAnswer.optionText?e.rightAnswer=!0:e.rightAnswer=!1}),s.show({controller:DialogController,templateUrl:"./components/quiz-add-question/dialog.tmpl.html",parent:angular.element(document.body),targetEvent:e,locals:{questionData:be.question}}).then(function(e){},function(){})}}angular.module("app.quiz").controller("QuizController",e),e.$inject=["$rootScope","appConfig","messageService","$stateParams","utilService","$q","$mdDialog","quizCreateService","quizService","$location","userService","navService","$firebaseArray","$timeout","$mdToast","firebaseService","$firebaseObject","$localStorage","$sce","authService"]}(),function(){"use strict";angular.module("components",["app.createChannels","app.createTeamsChannels","app.createGroup","app.subgroup","app.editGroup","app.createSubGroup","app.home","app.signin","app.sign-up","app.user","app.group","app.navToolbar","app.navLoginbar","app.forgot","app.JoinGroup","app.personalSettings","app.userSetting","app.geoFencing","app.quiz"])}(),angular.module("core").factory("authService",["$q","$http","appConfig","$firebaseAuth","$localStorage","$location","$sessionStorage","firebaseService",function(e,t,i,n,o,r,s,a){return{login:function(e,n,r){t.post(i.apiBaseUrl+"/api/signin",e).success(function(e,t,i,s){0!=e.statusCode?(o.loggedInUser=e.user,a.asyncLogin(o.loggedInUser.userID,o.loggedInUser.token).then(function(t){n(e,t)},function(e){e&&(console.error("Firebase Authentication failed: ",e),r())})):r(e)}).error(function(e,t,i,n){console.log("login error response object: "+JSON.stringify(t)),r()})},forgotPassword:function(n){var o=e.defer();return t.post(i.apiBaseUrl+"/api/forgotpassword",n).success(function(e,t,i,n){1===e.statusCode?o.resolve(e.statusDesc):o.reject(e.statusDesc)}).error(function(e,t,i,n){console.log("forgot error response object: "+JSON.stringify(e)),o.reject("Error occurred in sending data. Please try again.")}),o.promise},signup:function(e,n,o){t.post(i.apiBaseUrl+"/api/signup",{email:e.email,firstName:e.firstName,lastName:e.lastName,password:e.password,userID:e.userID}).success(function(e,t,i,o){n(e)}).error(function(e,t,i,n){o()})},logout:function(){r.path("/"),a.getRefMain().unauth(),Firebase.goOffline(),delete o.loggedInUser},resolveUserPage:function(){var t=e.defer();return o.loggedInUser?i.firebaseAuth?t.resolve():a.asyncLogin(o.loggedInUser.userID,o.loggedInUser.token).then(function(e){a.addUpdateHandler(),t.resolve()},function(e){e&&(console.log("Firebase Authentication failed: ",e),r.path("/signin"))}):(console.log("No user logged in"),r.path("/signin")),t.promise},test:function(){var t=e.defer();return t.promise}}}]),function(){"use strict";function e(e,t,i){var n,o;return o=Firebase.ServerValue.TIMESTAMP,n={main:t.getRefMain()},n.refGroupChats=n.main.child("group-chats"),n.refTeamChats=n.main.child("subgroup-chats"),{asyncCreateChannel:function(t,i,r){var s=this,a=e.defer();return s.asyncCheckIfChannelExists(t,i.channelID).then(function(e){if(e.exists)return a.reject("Channel creation failed. "+i.channelID+"already exists.");n.refGroupChats.child(t).child(i.channelID).set({title:i.title,timestamp:o,"created-by":r.$id,messages:{}},function(e){if(e)a.reject("error occurred in creating channel");else{n.refGroupChats.child(t).child(i.channelID).child("messages").push({from:r.$id,timestamp:o,text:"Welcome to "+i.title+" Group"},function(e){e?a.reject("error occurred in creating channel"):s.asyncRecordChannelCreationActivity(i,r,t).then(a.resolve("channel created successfully and also pushed activity."))})}})}),a.promise},SendMessages:function(t,i,r,s){var a=e.defer();n.refGroupChats.child(t+"/"+i+"/messages").push({from:r.$id,timestamp:o,text:s.msg},function(e){e?a.reject("error occurred in sending msg"):a.resolve("msg sucessfully sent")});return a.promise},asyncCheckIfChannelExists:function(t,i){var o=e.defer();return n.refGroupChats.child(t+"/"+i).once("value",function(e){var t=null!==e.val();o.resolve({exists:t,channel:e.val()})}),o.promise},getGroupChannelsSyncArray:function(e){return Firebase.getAsArray(n.refGroupChats.child(e))},getChannelMessagesArray:function(e,t){var i=n.refGroupChats.child(e+"/"+t+"/messages");return Firebase.getAsArray(i)},asyncRecordChannelCreationActivity:function(i,n,r){var s=e.defer(),a=t.getRefGroupsActivityStreams().child(r),u={type:"user",id:n.$id,email:n.email,displayName:n.firstName+" "+n.lastName},c={type:"group",id:r},l={type:"channel",id:i.channelID,displayName:i.title},h={language:"en",verb:"group-channel-creation",published:o,displayName:u.displayName+" created "+i.title+"channel in "+c.id+" group.",actor:u,object:l,target:c},p=a.push();return p.set(h,function(e){if(e)s.reject();else{var t=p.key(),i=a.child(t);i.once("value",function(e){var t=e.val().published;p.setPriority(0-t,function(e){e?s.reject():s.resolve()})})}}),s.promise},getUserEmails:function(e){return i(n.main.child("users").child(e))},CreateTeamChannel:function(t,i,r,s){var a=e.defer();n.refTeamChats.child(t).child(r).child(i.channelID).set({title:i.title,timestamp:o,"created-by":s.$id,messages:{}},function(e){if(e)a.reject("error occurred in creating channel");else{n.refTeamChats.child(t).child(r).child(i.channelID).child("messages").push({from:s.$id,timestamp:o,text:"Welcome to "+i.title+" Group"},function(e){e?a.reject("error occurred in creating channel"):a.resolve("channel created successfully and also pushed activity.")})}});return a.promise},geTeamChannelsSyncArray:function(e,t){return Firebase.getAsArray(n.refTeamChats.child(e).child(t))},getTeamChannelMessagesArray:function(e,t,i){var o=n.refTeamChats.child(e+"/"+t+"/"+i+"/messages");return Firebase.getAsArray(o)},TeamSendMessages:function(t,i,r,s,a){var u=e.defer();n.refTeamChats.child(t+"/"+i+"/"+r+"/messages").push({from:s.$id,timestamp:o,text:a.msg},function(e){e?u.reject("error occurred in sending msg"):u.resolve("msg sucessfully sent")});return u.promise}}}angular.module("core").factory("chatService",e),e.$inject=["$q","firebaseService","$firebaseObject"]}(),angular.module("core").factory("userService",["$http","appConfig","$sessionStorage","$localStorage",function(e,t,i,n){return{getCurrentUser:function(){return n.loggedInUser},isUserAccessingOwnHome:function(e,t){return!0},isUserGroupAdmin:function(){},isUserGroupMember:function(){}}}]),angular.module("core").factory("utilService",["$q",function(e){return{trim:function(e,t){for(var i=t.split(""),n="",o=0;o<t.length;o++)n+="\\"+i[o];return e.replace(new RegExp("^["+n+"]+|["+n+"]+$","g"),"")},trimID:function(e){return this.trim(e,"/")},base64ToBlob:function(e){for(var t=atob(e.split(",")[1]),i=[],n=0;n<t.length;n++)i.push(t.charCodeAt(n));return new Blob([new Uint8Array(i)],{type:"image/png"})}}}]),angular.module("core").factory("messageService",["$mdToast","soundService",function(e,t){var i="top left";return{show:function(t){e.show({template:'<md-toast class="md-toast-animating">'+t+"</md-toast>",hideDelay:3e3,position:"top left right"})},showSuccess:function(e){this.show(e||"Process successful."),t.playSuccess()},showFailure:function(e){this.show(e||"Process failed."),t.playFail()},changePosition:function(e){e=e},reset:function(){i="top left"}}}]),function(){"use strict";function e(e){return function(t){return e.show({templateUrl:"core/views/confirmDialog.tmpl.html",controller:"ConfirmDialogCtrl",locals:{cautionString:t||"Are you sure ?"}})}}angular.module("core").factory("confirmDialogService",e),e.$inject=["$mdDialog"]}(),angular.module("core").factory("firebaseService",["$firebaseAuth","$sessionStorage","appConfig","$q","$location","$timeout","messageService","$firebaseObject","userPresenceService","$localStorage",function(e,t,i,n,o,r,s,a,u,c){var l=new Firebase(i.myFirebase),h=null,p=null,d=null,f=null,m=null,g=null,v=null,b=null,y=null,_=null,S=null,w=null,C=null,D=null,I=null,L=null,P=null,M=null,k=null,T=null,x=null,A=null,R=null,U=null,O=null,E=null,G=null,$=null;return{addUpdateHandler:function(){l.onAuth(function(e){e?h=e:(delete c.loggedInUser,i.firebaseAuth=!1,s.showFailure("logged out or session destroyed, please login again."))})},getRefMain:function(){return l},getAuthData:function(){return l.getAuth()},getRefUsers:function(){return p},getRefUserGroupMemberships:function(){return g},getRefUserSubGroupMemberships:function(){return v},getRefUserMicroGroupMemberships:function(){return b},getRefGroupsUserInvites:function(){return y},getRefGroupMembershipRequests:function(){return _},getRefGroupMembershipRequestsByUser:function(){return S},getRefSubgroupMembershipRequests:function(){return w},getRefSubgroupMembershipRequestsByUser:function(){return C},getRefGroupMembers:function(){return D},getRefSubGroupMembers:function(){return I},getRefMicroGroupMembers:function(){return L},getRefGroupsNames:function(){return P},getRefSubGroupsNames:function(){return M},getRefMicroGroupsNames:function(){return k},getRefGroupsActivityStreams:function(){return T},getRefSubGroupsActivityStreams:function(){return x},getRefMicroGroupsActivityStreams:function(){return A},getRefGroups:function(){return d},getRefSubGroups:function(){return f},getRefMicroGroups:function(){return m},getRefGroupCheckinCurrent:function(){return R},getRefGroupCheckinRecords:function(){return U},getRefGroupLocsDefined:function(){return O},getSignedinUserRef:function(){return G},getSignedinUserObj:function(){return $},getRefFlattendGroups:function(){return E},asyncLogin:function(t,o){var r=n.defer();if(o){Firebase.goOnline();var s=e(l);s.$authWithCustomToken(o).then(function(e){e.uid==t?(i.firebaseAuth=!0,h=e,p=l.child("users"),d=l.child("groups"),f=l.child("subgroups"),m=l.child("microgroups"),g=l.child("user-group-memberships"),v=l.child("user-subgroup-memberships"),b=l.child("user-microgroup-memberships"),
-y=l.child("groups-user-invites"),_=l.child("group-membership-requests"),S=l.child("group-membership-requests-by-user"),w=l.child("subgroup-membership-requests"),C=l.child("subgroup-membership-requests-by-user"),D=l.child("group-members"),I=l.child("subgroup-members"),L=l.child("microgroup-members"),P=l.child("groups-names"),M=l.child("subgroups-names"),k=l.child("microgroups-names"),T=l.child("group-activity-streams"),x=l.child("subgroup-activity-streams"),A=l.child("microgroup-activity-streams"),R=l.child("group-check-in-current"),U=l.child("group-check-in-records"),O=l.child("group-locations-defined"),E=l.child("flattened-groups"),G=p.child(t),$=a(G),u.init({main:l,users:p}),u.syncUserPresence(t),r.resolve({loggedUserRef:G})):r.reject()})["catch"](function(e){console.error("Firebase Authentication failed: ",e),r.reject(e)})}else r.reject();return r.promise},asyncCheckIfGroupExists:function(e){var t=n.defer();return P.child(e).once("value",function(e){var i=null!==e.val();t.resolve({exists:i,group:e.val()})}),t.promise},asyncCheckIfUserExists:function(e){var t=n.defer();return p.child(e).once("value",function(i){var n=null!==i.val();t.resolve({exists:n,userID:e,user:i.val()})}),t.promise}}}]),angular.module("core").factory("userFirebaseService",["firebaseService","$q","$timeout","$http","$sessionStorage","$firebaseObject","appConfig","$localStorage","userService",function(e,t,i,n,o,r,s,a,u){var c=Firebase.ServerValue.TIMESTAMP;return{getUserMembershipsSyncObj:function(t){var n={groupArray:[],userActivityStream:[]},o=this;return n.userGroupMembershipRef=e.getRefUserGroupMemberships().child(t),n.userGroupMembershipRef.on("child_added",function(t){i(function(){var i=r(e.getRefGroups().child(t.key())),s=e.getRefGroupsActivityStreams().child(t.key());o.getGroupActivityStream(s,n.userActivityStream),n.groupArray.push({groupID:t.key(),membershipType:t.val()["membership-type"],timestamp:t.val().timestamp,groupData:i})},1e3)}),n.userGroupMembershipRef.on("child_changed",function(e){var t=e.key(),o=e.val();n.groupArray.forEach(function(e){e.groupID==t&&i(function(){e.membershipType=o["membership-type"]})})}),n.userGroupMembershipRef.on("child_removed",function(e){var t=e.key();e.val();n.groupArray.forEach(function(e,o){e.groupID==t&&i(function(){n.groupArray.splice(o,1)})})}),n},uploadProfilePicture:function(e,t){return n.post(s.apiBaseUrl+"/"+e,t,{withCredentials:!1,headers:{"Content-Type":void 0},transformRequest:angular.identity})},asyncCreateGroup:function(i,n,o,r){var s=this,l=t.defer();return e.asyncCheckIfGroupExists(n.groupID).then(function(o){o.exists?l.reject(n):e.getRefUserGroupMemberships().child(i).child(n.groupID).update({"membership-type":1,timestamp:c},function(o){o?l.reject():e.getRefGroupMembers().child(n.groupID).child(i).set({"membership-type":1,timestamp:c},function(o){if(o)l.reject();else{var r={"group-owner-id":u.getCurrentUser().userID,title:n.title,desc:n.desc,address:n.address,phone:n.phone,timeZone:n.timeZone,timestamp:c,"members-count":1,"subgroups-count":0,"members-checked-in":{count:0},privacy:{invitationType:+n.signupMode},"logo-image":{url:n.imgLogoUrl||"https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png",id:n.groupID,"bucket-name":"test2pwow",source:1,mediaType:"image/png"}};e.getRefGroups().child(n.groupID).set(r,function(o){if(o)l.reject();else{var r=e.getRefGroupsNames().child(n.groupID),u={title:n.title,groupImgUrl:n.imgLogoUrl||"https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png",ownerImgUrl:n.ownerImgUrl};r.set(u,function(o){if(o)l.reject();else{var r=e.getRefGroupMembers().child(n.groupID);s.asyncCreateGroupMembersJSON(i,n.members).then(function(i){var o=i.memberJSON;r.update(o,function(o){if(o)l.reject();else{var r=[],u=i.members;u.forEach(function(e,t){r.push(s.asyncAddUserMembership(e,n.groupID,3))}),t.all(r).then(function(){s.asyncRecordGroupCreationActivity(n,a.loggedInUser).then(function(){var t=e.getRefGroups().child(n.groupID).child("members-count");u.length>0&&t.transaction(function(e){return(e||0)+u.length}),1==u.length?s.asyncRecordGroupMemberAdditionActivity(n,a.loggedInUser,i.members[0]).then(function(){l.resolve({unlistedMembersArray:i.unlisted})}):u.length>1?s.asyncRecordManyGroupMembersAdditionActivity(n,a.loggedInUser,i.members).then(function(){l.resolve({unlistedMembersArray:i.unlisted})}):l.resolve({unlistedMembersArray:i.unlisted})})},function(){l.reject()})}})})}})}})}})})}),l.promise},asyncAddUserMembership:function(i,n,o){var r=t.defer(),s=e.getRefGroupMembers().child(n+"/"+i+"/timestamp");return s.once("value",function(t){var s=t.val()||c,a={};a[n]={"membership-type":o,timestamp:s};var u=e.getRefUserGroupMemberships().child(i);u.update(a,function(e){e?r.reject():r.resolve()})}),r.promise},asyncCreateGroupMembersJSON:function(i,n,o){var r=t.defer(),s={},a=[],u=[];if(n.length<2)r.resolve({memberJSON:s,unlisted:a,members:u});else{o=o||{};var l=n.split(","),h=[];l.forEach(function(t,n){t=t.trim();var r=e.asyncCheckIfUserExists(t);r.then(function(e){e.exists?t==i||o[t]?a.push(t):(s[t]={"membership-type":3,timestamp:c},u.push(t)):a.push(t)}),h.push(r)}),t.all(h).then(function(){r.resolve({memberJSON:s,unlisted:a,members:u})},function(){r.reject()})}return r.promise},asyncRecordMemberLeft:function(i,n){var o=t.defer(),r=e.getRefGroupsActivityStreams().child(n.$id),s={type:"user",id:i.$id,email:i.email,displayName:i.firstName+" "+i.lastName},a={type:"group",id:n.$id,url:n.$id,displayName:n.title},u={language:"en",verb:"group-member-left",published:c,displayName:s.displayName+" left "+a.displayName,actor:s,target:a},l=r.push();return l.set(u,function(e){if(e)o.reject();else{var t=l.key(),i=r.child(t);i.once("value",function(e){var t=e.val().published;l.setPriority(0-t,function(e){e?o.reject():o.resolve("You have left "+a.displayName+" successfully.")})})}}),o.promise},asyncRecordGroupCreationActivity:function(i,n){var o=t.defer(),r=e.getRefGroupsActivityStreams().child(i.groupID),s={type:"user",id:n.userID,email:n.email,displayName:n.firstName+" "+n.lastName},a={type:"group",id:i.groupID,url:i.groupID,displayName:i.title},u={language:"en",verb:"group-creation",published:{".sv":"timestamp"},displayName:s.displayName+" created "+i.title,actor:s,object:a},c=r.push();return c.set(u,function(e){if(e)o.reject();else{var t=c.key(),i=r.child(t);i.once("value",function(e){var t=e.val().published;c.setPriority(0-t,function(e){e?o.reject():o.resolve()})})}}),o.promise},asyncRecordGroupMemberAdditionActivity:function(i,n,o){var r=t.defer(),s=e.getRefGroupsActivityStreams().child(i.groupID),a={type:"user",id:n.userID,email:n.email,displayName:n.firstName+" "+n.lastName},u={type:"group",id:i.groupID,url:i.groupID,displayName:i.title};return e.asyncCheckIfUserExists(o).then(function(e){var t={type:"user",id:o,email:e.user.email,displayName:e.user.firstName+" "+e.user.lastName},n={language:"en",verb:"group-added-member",published:c,displayName:a.displayName+" added "+t.displayName+" as a member in "+i.title,actor:a,object:t,target:u},l=s.push();l.set(n,function(e){if(e)r.reject();else{var t=l.key(),i=s.child(t);i.once("value",function(e){var t=e.val().published;l.setPriority(0-t,function(e){e?r.reject():r.resolve()})})}})}),r.promise},asyncRecordManyGroupMembersAdditionActivity:function(i,n,o){var r=t.defer(),s=e.getRefGroupsActivityStreams().child(i.groupID),a={type:"user",id:n.userID,email:n.email,displayName:n.firstName+" "+n.lastName},u={type:"UserCollection",totalItems:o.length,items:{}},l={type:"group",id:i.groupID,url:i.groupID,displayName:i.title},h=[];return o.forEach(function(t){h.push(e.asyncCheckIfUserExists(t))}),t.all(h).then(function(e){e.forEach(function(e){u.items[e.userID]={verb:"group-added-member",object:{type:"user",id:e.userID,email:e.user.email,displayName:e.user.firstName+" "+e.user.lastName}}});var t={language:"en",verb:"group-added-many-members",published:c,displayName:a.displayName+" added members to "+i.title+" group",actor:a,object:u,target:l},n=s.push();n.set(t,function(e){if(e)r.reject();else{var t=n.key(),i=s.child(t);i.once("value",function(e){var t=e.val().published;n.setPriority(0-t,function(e){e?r.reject():r.resolve()})})}})}),r.promise},asyncRecordGroupMemberApproveRejectActivity:function(i,n,o,r){var s=t.defer(),a=e.getRefGroupsActivityStreams().child(n.groupID),u={type:"user",id:o.userID,email:o.email,displayName:o.firstName+" "+o.lastName},l={type:"group",id:n.groupID,url:n.groupID,displayName:n.title};return e.asyncCheckIfUserExists(r).then(function(e){var t,o={type:"user",id:r,email:e.user.email,displayName:e.user.firstName+" "+e.user.lastName};t="approve"===i?u.displayName+" approved "+o.displayName+" as a member in "+n.title+".":u.displayName+" rejected "+o.displayName+"'s membership request for "+n.title+"group.";var h={language:"en",verb:"approve"===i?"group-approve-member":"group-reject-member",published:c,displayName:u.displayName+" approved "+o.displayName+" as a member in "+n.title,actor:u,object:o,target:l},p=a.push();p.set(h,function(e){if(e)s.reject();else{var i=p.key(),n=a.child(i);n.once("value",function(e){var i=e.val().published;p.setPriority(0-i,function(e){e?s.reject():s.resolve(t)})})}})}),s.promise},asyncRecordSubGroupMemberApproveRejectActivity:function(i,n,o,r){var s=t.defer(),a=e.getRefSubGroupsActivityStreams().child(n.groupID).child(n.subgroupID),u={type:"user",id:o.userID,email:o.email,displayName:o.firstName+" "+o.lastName},l={type:"subgroup",id:n.subgroupID,url:n.subgroupID,displayName:n.title};return e.asyncCheckIfUserExists(r).then(function(e){var t,o={type:"user",id:r,email:e.user.email,displayName:e.user.firstName+" "+e.user.lastName};t="approve"===i?u.displayName+" approved "+o.displayName+" as a member in "+n.title+"subgroup.":u.displayName+" rejected "+o.displayName+"'s membership request for "+n.title+"subgroup.";var h={language:"en",verb:"approve"===i?"subgroup-approve-member":"subgroup-reject-member",published:c,displayName:u.displayName+("approve"===i?" approved ":" rejected ")+o.displayName+" as a member in "+n.title,actor:u,object:o,target:l},p=a.push();p.set(h,function(e){if(e)s.reject();else{var i=p.key(),n=a.child(i);n.once("value",function(e){var i=e.val().published;p.setPriority(0-i,function(e){e?s.reject():s.resolve(t)})})}})}),s.promise},asyncRecordMembershipChangeActivity:function(i,n,o,r,s){var a=t.defer(),u=e.getRefGroupsActivityStreams().child(r.$id),l={type:"user",id:s.$id,email:s.email,displayName:s.firstName+" "+s.lastName},h={type:"group",id:r.$id,url:r.$id,displayName:r.title},p={type:"user-membership-change",id:o.$id,url:o.$id,from:this.getRoleTitleByType(i),to:this.getRoleTitleByType(n),displayName:o.firstName+" "+o.lastName},d=s.firstName+" "+s.lastName+" changed "+o.firstName+" "+o.lastName+"'s membership from \""+p.from+'" to "'+p.to+'" for '+r.title+" group.",f={language:"en",verb:"user-membership-change",published:c,displayName:d,actor:l,object:p,target:h},m=u.push();return m.set(f,function(e){if(e)a.reject();else{var t=m.key(),i=u.child(t);i.once("value",function(e){var t=e.val().published;m.setPriority(0-t,function(e){e?a.reject():a.resolve(d)})})}}),a.promise},asyncRecordMemberRemoved:function(i,n,o,r,s){var a=t.defer(),u=e.getRefGroupsActivityStreams().child(r.$id),l={type:"user",id:s.$id,email:s.email,displayName:s.firstName+" "+s.lastName},h={type:"group",id:r.$id,url:r.$id,displayName:r.title},p={type:"user",id:o.$id,url:o.$id,displayName:o.firstName+" "+o.lastName},d=s.firstName+" "+s.lastName+" removed "+o.firstName+" "+o.lastName+' from "'+r.title+'" group.',f={language:"en",verb:"group-member-removed",published:c,displayName:d,from:this.getRoleTitleByType(i),to:null,actor:l,object:p,target:h},m=u.push();return m.set(f,function(e){if(e)a.reject();else{var t=m.key(),i=u.child(t);i.once("value",function(e){var t=e.val().published;m.setPriority(0-t,function(e){e?a.reject():a.resolve(d)})})}}),a.promise},getGroupActivityStream:function(e,t){var n=this;e.orderByPriority().on("child_added",function(e){var o=e.val();if(o)if(0==t.length)i(function(){t.push(o)});else{var r=n.insertionPosition(t,o.published);i(function(){t.splice(r,0,o)})}})},insertionPosition:function(e,t){for(var i=0;i<e.length;i++)if(t>=e[i].published)return i;return e.length},getRoleTitleByType:function(e){var t="unknown";switch(e){case-1:t="suspend";break;case 2:t="admin";break;case 3:t="member"}return t},asyncGroupJoiningRequest:function(i,n,o){var r=t.defer();return e.asyncCheckIfGroupExists(n).then(function(t){if(t.exists){var s=e.getRefUserGroupMemberships().child(i).child(n);s.once("value",function(t){var s=t.val();if(s)1==s["membership-type"]?r.reject("User is already an owner of this group"):2==s["membership-type"]?r.reject("User is already a admin of this group"):0==s["membership-type"]?r.reject("Membership request is already pending for this group"):r.reject("User is already a member of this group");else{var a=e.getRefGroupMembershipRequests().child(n);a.child(i).once("value",function(t){var s=t.val();if(s)r.reject("Request is already pending for this group");else{var u={};u[i]={timestamp:c,message:o},a.update(u,function(t){t?r.reject("Server Error, please try again"):a.child(i).once("value",function(t){var o=t.val().timestamp,s=e.getRefGroupMembershipRequestsByUser().child(i),a={};a[n]={timestamp:o},s.update(a,function(e){e?r.reject("Server Error, please try again"):r.resolve()})})})}})}})}else r.reject(n+" does not exist!")}),r.promise},asyncSubgroupJoiningRequest:function(i,n,o,r){var s=t.defer(),a=e.getRefUserSubGroupMemberships().child(i+"/"+n+"/"+o);return a.once("value",function(t){var a=t.val();if(a)1==a["membership-type"]?s.reject("User is already an owner of this group"):2==a["membership-type"]?s.reject("User is already a admin of this group"):s.reject("User is already a member of this group");else{var u=e.getRefSubgroupMembershipRequests().child(n+"/"+o+"/"+i);u.once("value",function(t){var a=t.val();a?s.reject("Request is already pending for this subgroup"):u.set({timestamp:c,message:r},function(t){t?s.reject("Server Error, please try again"):u.once("value",function(t){var r=t.val().timestamp,a=e.getRefSubgroupMembershipRequestsByUser().child(i+"/"+n+"/"+o);a.set({timestamp:r},function(e){e?s.reject("Server Error, please try again"):s.resolve()})})})})}}),s.promise}}}]),angular.module("core").factory("groupFirebaseService",["firebaseService","$q","$timeout","$sessionStorage","userFirebaseService","checkinService","confirmDialogService","$firebaseObject","userPresenceService","$localStorage",function(e,t,i,n,o,r,s,a,u,c){var l=Firebase.ServerValue.TIMESTAMP;return{getSignedinUserObj:e.getSignedinUserObj,getGroupSyncObjAsync:function(i,n){var o=t.defer(),r=this,s={subgroupsSyncArray:[],membersSyncArray:[],pendingMembershipSyncArray:[],activitiesSyncArray:[]};return s.self=this,s.viewerUserID=n,s.groupID=i,s.userGroupMembershipRef=e.getRefUserGroupMemberships().child(n).child(i),s.groupSyncObj=a(e.getRefGroups().child(i)),s.userGroupMembershipRef.once("value",function(t){t.val()?(s.membershipType=t.val()["membership-type"],s.timestamp=t.val().timestamp,s.userGroupMembershipRef.on("child_changed",r.membershipChanged,s),s.userGroupMembershipRef.on("child_removed",r.membershipDeleted,s),r.addListeners(s)):(s.membershipType=-100,e.getRefUserGroupMemberships().on("child_added",r.membershipAddedLater,s)),o.resolve(s)}),o.promise},addListeners:function(e){e.membershipType>=1&&(e.subgroupRef=this.syncSubgroups(e.groupID,e.subgroupsSyncArray,e),e.groupMembershipRef=e.self.syncGroupMembers(e.groupID,e.membersSyncArray,e),e.groupActivitiesRef=e.self.syncGroupActivities(e.groupID,e.activitiesSyncArray,e)),(1==e.membershipType||2==e.membershipType)&&(e.groupPendingMembershipRequestsRef=e.self.syncGroupPendingMembershipRequests(e.groupID,e.pendingMembershipSyncArray,e))},membershipAddedLater:function(e){this.groupID==e.key()&&(this.membershipType=e.val()["membership-type"],this.timestamp=e.val().timestamp,this.userGroupMembershipRef.on("child_changed",this.self.membershipChanged,this),this.userGroupMembershipRef.on("child_removed",this.self.membershipDeleted,this),this.self.addListeners(this))},membershipChanged:function(e){var t=e.val();if(t!=this.membershipType){if(3==this.membershipType&&(2==t?this.groupPendingMembershipRequestsRef=this.self.syncGroupPendingMembershipRequests(this.groupID,this.pendingMembershipSyncArray,this):-1==t&&this.self.removeConfidentialGroupData.call(this,this.groupID)),2==this.membershipType)if(3==t)for(this.groupPendingMembershipRequestsRef&&(this.groupPendingMembershipRequestsRef.off("child_added",this.self.groupMembershipRequestAdded,this.pendingMembershipSyncArray),this.groupPendingMembershipRequestsRef.off("child_removed",this.self.groupMembershipRequestDeleted,this.pendingMembershipSyncArray));this.pendingMembershipSyncArray.length>0;)this.pendingMembershipSyncArray.pop();else-1==t&&this.self.removeConfidentialGroupData.call(this,this.groupID);this.membershipType=t}},removeConfidentialGroupData:function(e){if(this.groupID==e){for(this.membershipType=-100,this.timestamp=void 0,this.userGroupMembershipRef&&(this.userGroupMembershipRef.off("child_changed",this.self.membershipChanged,this),this.userGroupMembershipRef.off("child_removed",this.self.membershipDeleted,this)),this.subgroupRef&&(this.subgroupsRefContext&&this.subgroupRef.off("child_added",this.self.groupUserMembershipAdded,this.subgroupsRefContext),this.subgroupRef.off("child_removed",this.self.groupUserMembershipAdded,this.subgroupsArray)),this.subgroupsRefContext&&(this.subgroupsRefContext.subgroupsMembershipRef.off("child_added",this.self.subgroupsAdded,this.subgroupsRefContext),this.subgroupsRefContext.subgroupsMembershipRef.off("child_removed",this.self.subgroupsDeleted,this.subgroupsRefContext)),this.groupMembershipRef&&(this.groupMembershipRef.off("child_added",this.self.groupUserMembershipAdded,this.membersSyncArray),this.groupMembershipRef.off("child_changed",this.self.groupUserMembershipChanged,this.membersSyncArray),this.groupMembershipRef.off("child_removed",this.self.groupUserMembershipDeleted,this.membersSyncArray)),this.groupActivitiesRef&&this.groupActivitiesRef.off("child_added",this.self.groupActivityAdded,this.activitiesSyncArray),this.groupPendingMembershipRequestsRef&&(this.groupPendingMembershipRequestsRef.off("child_added",this.self.groupMembershipRequestAdded,this.pendingMembershipSyncArray),this.groupPendingMembershipRequestsRef.off("child_removed",this.self.groupMembershipRequestDeleted,this.pendingMembershipSyncArray));this.subgroupsSyncArray.length>0;)this.subgroupsSyncArray.pop();for(;this.membersSyncArray.length>0;)this.membersSyncArray.pop();for(;this.pendingMembershipSyncArray.length>0;)this.pendingMembershipSyncArray.pop();for(;this.activitiesSyncArray.length>0;)this.activitiesSyncArray.pop()}},membershipDeleted:function(e){var t=e.key();this.self.removeConfidentialGroupData.call(this,t)},syncSubgroups:function(t,i,n){var o=e.getRefSubGroups().child(t),r=e.getRefUserSubGroupMemberships().child(n.viewerUserID).child(t);return n.subgroupsRefContext={subgroupsMembershipRef:r,subgroupRef:o,subgroupsArray:i},r.on("child_added",this.subgroupsAdded,n.subgroupsRefContext),r.on("child_removed",this.subgroupsDeleted,n.subgroupsRefContext),o},subgroupsAdded:function(e){var t=this,n=a(this.subgroupRef.child(e.key()));i(function(){t.subgroupsArray.push(n)})},subgroupsDeleted:function(e){var t=this,n=e.key();this.subgroupsArray.forEach(function(e,o){e.$id==n&&i(function(){t.subgroupsArray.splice(o,1)})})},syncGroupMembers:function(t,i){var n=e.getRefGroupMembers().child(t);return n.on("child_added",this.groupUserMembershipAdded,i),n.on("child_changed",this.groupUserMembershipChanged,i),n.on("child_removed",this.groupUserMembershipDeleted,i),n},groupUserMembershipAdded:function(t){var n=this,o=a(e.getRefUsers().child(t.key()));i(function(){n.push({userID:t.key(),membershipType:t.val()["membership-type"],timestamp:t.val().timestamp,userSyncObj:o,user:u.getUserSyncObject(t.key())})})},groupUserMembershipChanged:function(e){var t=e.key(),n=e.val();this.forEach(function(e){e.userID==t&&i(function(){e.membershipType=n["membership-type"]})})},groupUserMembershipDeleted:function(e){var t=this,n=e.key();this.forEach(function(e,o){e.userID==n&&i(function(){t.splice(o,1)})})},syncGroupActivities:function(t,i){var n=e.getRefGroupsActivityStreams().child(t).orderByPriority();return n.on("child_added",this.groupActivityAdded,i),n},groupActivityAdded:function(e){var t=this,n=e.val();i(function(){n&&t.push(n)})},syncGroupPendingMembershipRequests:function(t,i){var n=e.getRefGroupMembershipRequests().child(t);return n.on("child_added",this.groupMembershipRequestAdded,i),n.on("child_removed",this.groupMembershipRequestDeleted,i),n},groupMembershipRequestAdded:function(t){var n=this,o=a(e.getRefUsers().child(t.key()));i(function(){n.push({userID:t.key(),message:t.val().message,timestamp:t.val().timestamp,userSyncObj:o})})},groupMembershipRequestDeleted:function(e){var t=this,n=e.key();this.forEach(function(e,o){e.userID==n&&i(function(){t.splice(o,1)})})},asyncCreateSubgroup:function(i,n,o,s){var u=this,c=t.defer(),h=!1,p=function(e){c.reject(e||"Subgroup creation failed. error occurred in accessing server.")};return s.forEach(function(e){e.subgroupID==o.subgroupID&&(p("Subgroup not created, "+o.subgroupID+" already exists"),h=!0)}),h?c.promise:(u.asyncCreateSubGroupMembersJSON(i,o.members).then(function(s){var h=e.getRefSubGroupMembers().child(n.$id).child(o.subgroupID),d=s.memberJSON;h.set(d,function(h){if(h)p();else{var f=e.getRefSubGroupsNames().child(n.$id).child(o.subgroupID);f.set(o.title,function(h){h?c.reject():u.asyncCreateUserSubgroupMemberships(n.$id,o.subgroupID,d).then(function(){var u=e.getRefSubGroups().child(n.$id).child(o.subgroupID);u.set({title:o.title,desc:o.desc,timestamp:l,"members-count":s.membersCount,"microgroups-count":0,"members-checked-in":{count:0},"logo-image":{url:o.imgLogoUrl||"",id:o.subgroupID,"bucket-name":"test2pwow",source:1,mediaType:"image/png"}},function(u){if(u)p();else{var l=[],h=[],f=t.defer();f.promise.then(function(e){return e.forEach(function(e){1==e[1].type?e[0].checkedin=!0:e[0].checkedin=!1,h.push(e[0].$save())}),t.all(h)}).then(function(){c.resolve({unlistedMembersArray:s.unlisted})})["catch"](function(e){});for(var m in d){var g=a(e.getRefFlattendGroups().child(i).child(n.$id+"_"+o.subgroupID).child(m)).$loaded(),v=a(r.getRefSubgroupCheckinCurrentByUser().child(m)).$loaded();l.push(t.all([g,v]))}f.resolve(t.all(l))}})},p)})}})}),c.promise)},asyncCreateSubGroupMembersJSON:function(i,n,o){var r=t.defer(),s={},a=[],u=[];if(s[i]={"membership-type":1,timestamp:l},n.length<2)r.resolve({memberJSON:s,unlisted:a,members:u,membersCount:1});else{o=o||{};var c=n.split(","),h=[];c.forEach(function(t,n){t=t.trim();var r=e.asyncCheckIfUserExists(t);r.then(function(e){e.exists?t==i||o[t]?a.push(t):(s[t]={"membership-type":3,timestamp:l},u.push(t)):a.push(t)}),h.push(r)}),t.all(h).then(function(){r.resolve({memberJSON:s,membersCount:c.length,unlisted:a,members:u})},function(){r.reject()})}return r.promise},asyncCreateUserSubgroupMemberships:function(i,n,o){var r,s=t.defer(),a=[],u=e.getRefUserSubGroupMemberships();return angular.forEach(o,function(e,o){r=t.defer(),u.child(o+"/"+i+"/"+n).set(e,function(e){e?r.reject():r.resolve()}),a.push(r)}),t.all(a).then(function(){s.resolve()},function(){s.reject()}),s.promise},asyncCreateGroupMembersJSON:function(i,n,o){var r=t.defer(),s={},a=[],u=[];if(o.length<2)r.resolve({memberJSON:s,unlisted:a,members:u});else{var c=o.split(","),h=[];c.forEach(function(t,o){t=t.trim();var r=e.asyncCheckIfUserExists(t);r.then(function(e){if(e.exists)if(t!=i){var o=!1;n.forEach(function(e){if(e.userID==t){var i=t;s[i]={"membership-type":3,timestamp:l},u.push(t),o=!0}}),o||a.push(t)}else a.push(t);else a.push(t)}),h.push(r)}),t.all(h).then(function(){r.resolve({memberJSON:s,unlisted:a,members:u})},function(){r.reject()})}return r.promise},asyncRecordSubgroupCreationActivity:function(i,n,o){var r=t.defer(),s=e.getRefSubGroupsActivityStreams().child(n.$id).child(o.subgroupID),a={type:"user",id:i.userID,email:i.email,displayName:i.firstName+" "+i.lastName},u={type:"subgroup",id:o.subgroupID,url:n.$id+"/"+o.subgroupID,displayName:o.title},c={type:"group",id:n.$id,url:n.$id,displayName:n.title},h={language:"en",verb:"subgroup-creation",published:l,displayName:a.displayName+" created "+o.title+" in "+n.title,actor:a,object:u,target:c},p=s.push();return p.set(h,function(e){if(e);else{var t=p.key(),i=s.child(t);i.once("value",function(e){var t=e.val().published;p.setPriority(0-t,function(e){e||r.resolve()})})}}),r.promise},asyncRecordSubgroupMemberAdditionActivity:function(i,n,o,r){var s=t.defer(),a=e.getRefSubGroupsActivityStreams().child(n.$id).child(o.subgroupID),u={type:"user",id:i.userID,email:i.email,displayName:i.firstName+" "+i.lastName},c={type:"subgroup",id:o.subgroupID,url:n.$id+"/"+o.subgroupID,displayName:o.title,parent:{type:"group",id:n.$id,displayName:n.title,url:n.$id}};return e.asyncCheckIfUserExists(r).then(function(e){var t={type:"user",id:r,email:e.user.email,displayName:e.user.firstName+" "+e.user.lastName},i={language:"en",verb:"subgroup-added-member",published:l,displayName:u.displayName+" added "+t.displayName+" as a member in "+o.title,actor:u,object:t,target:c},n=a.push();n.set(i,function(e){if(e);else{var t=n.key(),i=a.child(t);i.once("value",function(e){var t=e.val().published;n.setPriority(0-t,function(e){e||s.resolve()})})}})}),s.promise},asyncRecordManySubgroupsMembersAdditionActivity:function(i,n,o,r){var s=t.defer(),a=e.getRefSubGroupsActivityStreams().child(n.$id).child(o.subgroupID),u={type:"user",id:i.userID,email:i.email,displayName:i.firstName+" "+i.lastName},c={type:"UserCollection",totalItems:r.length,items:{}},h={type:"subgroup",id:o.subgroupID,url:n.$id+"/"+o.subgroupID,displayName:o.title,parent:{type:"group",id:n.$id,displayName:n.title,url:n.$id}},p=[];return r.forEach(function(t){p.push(e.asyncCheckIfUserExists(t))}),t.all(p).then(function(e){e.forEach(function(e){c.items[e.userID]={verb:"subgroup-added-member",object:{type:"user",id:e.userID,email:e.user.email,displayName:e.user.firstName+" "+e.user.lastName}}});var t={language:"en",verb:"subgroup-added-many-members",published:l,displayName:u.displayName+" added members to "+o.title+" team",actor:u,object:c,target:h},i=a.push();i.set(t,function(e){if(e);else{var t=i.key(),n=a.child(t);n.once("value",function(e){var t=e.val().published;i.setPriority(0-t,function(e){e||s.resolve()})})}})}),s.promise},asyncUpdateGroupMembers:function(i,n,r,s){var a=t.defer(),u={};return angular.forEach(s,function(e){u[e.userID]=!0}),o.asyncCreateGroupMembersJSON(i.userID,r,u).then(function(r){var s,u=[],c=r.members;c.forEach(function(e){s=o.asyncAddUserMembership(e,n.groupID,3),u.push(s)});var l=t.defer();e.getRefGroupMembers().child(n.groupID).update(r.memberJSON,function(e){e?console.log("adding membersJSON to group failed",e):l.resolve()}),u.push(l.promise),t.all(u).then(function(){var t=e.getRefGroups().child(n.groupID+"/members-count");t.transaction(function(e){return(e||0)+c.length}),1==c.length?o.asyncRecordGroupMemberAdditionActivity(n,i,r.members[0]).then(function(){a.resolve({unlistedMembersArray:r.unlisted})}):c.length>1?o.asyncRecordManyGroupMembersAdditionActivity(n,i,r.members).then(function(){a.resolve({unlistedMembersArray:r.unlisted})}):a.resolve({unlistedMembersArray:r.unlisted})})},function(){a.reject()}),a.promise},approveMembership:function(i,n,r){var s,a,u,c,h;return s=t.defer(),u=3,a=r.userID,h=function(e){s.reject("Error occurred in accessing server.")},c={},c[a]={"membership-type":u,timestamp:l},e.getRefGroupMembers().child(i).update(c,function(t){t?h():e.getRefUserGroupMemberships().child(a+"/"+i).set(c[a],function(t){t?h():e.getRefGroupMembershipRequests().child(i+"/"+a).remove(function(t){var r;t?h():(r=e.getRefGroups().child(i+"/members-count"),r.once("value",function(t){var u=t.val();u=(u||0)+1,r.set(u,function(t){t?h():e.getRefGroups().child(i).once("value",function(e){var t=e.val();t.groupID=i,o.asyncRecordGroupMemberApproveRejectActivity("approve",t,n,a).then(function(e){s.resolve(e)},h)})})}))})})}),s.promise},rejectMembership:function(i,n,r){var s,a,u;return s=t.defer(),a=r.userID,u=function(e){s.reject("Error occurred in accessing server.")},e.getRefUserGroupMemberships().child(a+"/"+i).remove(function(t){t?u():e.getRefGroupMembershipRequests().child(i+"/"+a).remove(function(t){t?u():e.getRefGroups().child(i).once("value",function(e){var t=e.val();t.groupID=i,o.asyncRecordGroupMemberApproveRejectActivity("reject",t,n,a).then(function(e){s.resolve(e)},u)})})}),s.promise},changeMemberRole:function(i,n,r,s){var a,u,c,h;return a=t.defer(),u=this,c=n.membershipType,h=function(e){a.reject("Error occurred in accessing server.")},i?o.asyncAddUserMembership(n.userSyncObj.$id,r.$id,i).then(function(){var t={};t[n.userSyncObj.$id]={"membership-type":i,timestamp:l},e.getRefGroupMembers().child(r.$id).update(t,function(e){e?h():o.asyncRecordMembershipChangeActivity(c,i,n.userSyncObj,r,s).then(function(e){a.resolve(e)},h)})},h):u.asyncRemoveUserFromGroup(n.userSyncObj.$id,r.$id).then(function(){o.asyncRecordMemberRemoved(c,i,n.userSyncObj,r,s).then(function(e){a.resolve(e)},h)},h),a.promise},asyncRemoveUserFromGroup:function(e,i){var n,o,r;return o=this,n=t.defer(),r=function(){n.reject("Error occurred in accessing server.")},o.asyncRemoveUserCheckin(e,i).then(function(t){o.asyncUpdateGroupDataForRemoveUser(t,i).then(function(){o.asyncRemoveUserMembership(e,i).then(function(){n.resolve()},r)},r)},r),n.promise},asyncRemoveUserCheckin:function(e,i){var n=t.defer(),o=r.getRefCheckinCurrent().child(i+"/"+e);return o.once("value",function(e){var t=e.val();t?o.remove(function(e){e?n.reject():n.resolve(t)}):n.resolve(null)}),n.promise},asyncRemoveUserMembership:function(i,n){var o,r;return o=t.defer(),r=function(){o.reject("Error occurred in accessing server.")},e.getRefGroupMembers().child(n+"/"+i).remove(function(t){t?r():e.getRefUserGroupMemberships().child(i+"/"+n).remove(function(e){e?r():o.resolve()})}),o.promise},asyncUpdateGroupDataForRemoveUser:function(i,n){var o=t.defer(),r=e.getRefGroups().child(n);return r.once("value",function(e){var t={},n=e.val();i&&1==i.type&&(t["members-checked-in"]={count:n["members-checked-in"].count-1}),t["members-count"]=n["members-count"]-1,r.update(t,function(e){e?o.reject():o.resolve()})}),o.promise},asyncLeaveGroup:function(e,i){var n,r,s;return n=t.defer(),s=this,r=function(){n.reject("could not access server data")},o.asyncRecordMemberLeft(e,i).then(function(t){s.asyncRemoveUserFromGroup(e.$id,i.$id).then(function(){n.resolve(t)},r)},r),n.promise},asyncRemoveGroup:function(e,i){var n,o,r,s,a;return n=t.defer(),o=this,s=[],r=function(e){n.reject(e||"could not access server data")},o.asyncRemoveGroupActivityStreams(i.$id).then(function(){o.asyncRemoveGroupCheckin(i.$id).then(function(){o.asyncRemoveGroupDefLocs(i.$id).then(function(){o.asyncRemoveGroupMembershipRequests(i.$id).then(function(){o.asyncRemoveGroupNames(i.$id).then(function(){o.asyncRemoveGroupMetaDeta(i.$id).then(function(){o.asyncGetGroupMembersArray(i.$id).then(function(e){a=t.defer(),angular.forEach(e,function(e){o.asyncRemoveUserMembership(e,i.$id).then(function(){a.resolve('You have removed "'+i.title+'" group successfully.')},function(){a.reject()}),s.push(a.promise)}),t.all(s).then(function(){n.resolve("group has been removed successfully.")},r)})},r)},r)},r)},r)},r)},r),n.promise},asyncRemoveGroupCheckin:function(i){var n=t.defer();return e.getRefGroupCheckinCurrent().child(i).remove(function(t){t?n.reject():e.getRefGroupCheckinRecords().child(i).remove(function(e){e?n.reject():n.resolve()})}),n.promise},asyncRemoveGroupDefLocs:function(i){var n=t.defer();return e.getRefGroupLocsDefined().child(i).remove(function(e){e?n.reject():n.resolve()}),n.promise},asyncRemoveGroupActivityStreams:function(i){var n=t.defer();
-return e.getRefGroupsActivityStreams().child(i).remove(function(e){e?n.reject():n.resolve()}),n.promise},asyncRemoveGroupMembershipRequests:function(i){var n,o,r,s;return n=t.defer(),r=[],e.getRefGroupMembershipRequests().child(i).on("value",function(a){o=a.val()||{},o=Object.keys(o),o.length?(angular.forEach(o,function(n){s=t.defer(),r.push(s.promise),e.getRefGroupMembershipRequestsByUser().child(n+"/"+i).remove(function(e){e?s.reject():s.resolve()})}),t.all(r).then(function(){n.resolve()},function(){n.reject()})):n.resolve()},function(){n.reject("permission denied to access data.")}),n.promise},asyncRemoveGroupNames:function(i){var n=t.defer();return e.getRefGroupsNames().child(i).remove(function(e){e?n.reject():n.resolve()}),n.promise},asyncRemoveGroupMetaDeta:function(i){var n=t.defer();return e.getRefGroups().child(i).remove(function(e){e?n.reject():n.resolve()}),n.promise},asyncGetGroupMembersArray:function(i){var n=t.defer();return e.getRefGroupMembers().child(i).on("value",function(e){var t=e.val()||{};n.resolve(Object.keys(t))},function(){n.reject("permission denied to access data.")}),n.promise}}}]),angular.module("core").factory("soundService",["ngAudio",function(e){var t=e.load("sounds/guitar_success.mp3"),i=e.load("sounds/piano_fail.mp3");return{playSuccess:function(){t.play()},playFail:function(){i.play()}}}]),function(){"use strict";function e(e,t){function i(e){r.main=e.main,r.users=e.users,r.fireConnection=e.main.child(".info/connected"),r.usersPresence=e.main.child("users-presence")}function n(e){r.fireConnection.on("value",function(t){if(t.val()){var i=r.usersPresence.child(e),n=i.child("connections").push();n.onDisconnect().remove(),n.set({type:3,started:Firebase.ServerValue.TIMESTAMP}),i.child("last-modified").onDisconnect().set(Firebase.ServerValue.TIMESTAMP)}})}function o(i){function n(e){var i,n;i=e.val()||{},t(function(){if(o.availability={},o.availability.lastSeen=i["last-modified"],i.connections){switch(i["defined-status"]){case 1:o.availability.status="Online";break;case 2:o.availability.status="Away";break;case 3:o.availability.status="Busy";break;default:o.availability.status="Online"}switch(n=Object.keys(i.connections),n=n[n.length-1],i.connections[n].type){case 1:o.availability.device="Mobile";break;case 2:o.availability.device="Tablet";break;case 3:o.availability.device="Web";break;case 4:o.availability.device="iWatch";break;case 5:o.availability.device="HoloLens";break;default:o.availability.device="Unknown"}}else o.availability.status="Offline"})}var o,s,a;return o={},s=r.users.child(i),o.profile=e(s),a=r.usersPresence.child(i),a.on("value",n),o.off=function(){a.off("value",n)},o}var r={};return{init:i,syncUserPresence:n,getUserSyncObject:o}}angular.module("core").service("userPresenceService",e),e.$inject=["$firebaseObject","$timeout"]}(),function(){"use strict";angular.module("core").factory("userHelperService",["$q","$http","appConfig","$firebaseAuth","$localStorage","$location","$firebaseArray","$sessionStorage","firebaseService",function(e,t,i,n,o,r,s,a,u){return{getAllUsers:function(){return s(toDoListRef)(u.getRefUsers())},getUserGroupMemberShip:function(){return Firebase.getAsArray(u.getRefGroupMembers())}}}])}(),angular.module("core").factory("subgroupFirebaseService",["checkinService","$firebaseArray","firebaseService","$q","$timeout","$sessionStorage","$firebaseObject","userFirebaseService","groupFirebaseService","$localStorage",function(e,t,i,n,o,r,s,a,u,c){var l=Firebase.ServerValue.TIMESTAMP;return{getSubgroupSyncObjAsync:function(e,t,o){var r=n.defer(),a=this,u={subgroupsSyncArray:[],membersSyncArray:[],pendingMembershipSyncArray:[],activitiesSyncArray:[],groupMembersSyncArray:[]};return u.self=this,u.viewerUserID=o,u.groupID=e,u.subgroupID=t,u.userSubgroupMembershipRef=i.getRefUserSubGroupMemberships().child(o).child(e).child(t),u.userGroupMembershipRef=i.getRefUserGroupMemberships().child(o).child(e),u.subgroupSyncObj=s(i.getRefSubGroups().child(e).child(t)),u.groupObj=u.userGroupMembershipRef.once("value",function(e){u.userSubgroupMembershipRef.once("value",function(t){if(u.groupMembership=e.val(),u.subgroupMembership=t.val(),u.subgroupMembership){var i=t.val()["membership-type"];u.membershipType=i,u.timestamp=u.subgroupMembership.timestamp,i>0&&3>=i&&a.addListeners(u),u.userSubgroupMembershipRef.on("child_changed",a.subgroupMembershipChanged,u),u.userSubgroupMembershipRef.on("child_removed",a.subgroupMembershipDeleted,u)}else if(u.groupMembership){var n=e.val()["membership-type"];1==n||2==n?(u.membershipType=n,1==n?u.timestamp=u.subgroupSyncObj.timestamp:u.timestamp=t.val().timestamp,a.addListeners(u),u.userGroupMembershipRef.on("child_changed",a.groupMembershipChanged,u),u.userGroupMembershipRef.on("child_removed",a.groupMembershipDeleted,u)):(u.membershipType=-100,u.userSubgroupMembershipRef.on("child_added",a.subgroupMembershipAddedLater,u))}else u.membershipType=-1e3;r.resolve(u)})},u),r.promise},removeSubgroupMembershipHandlers:function(){this.userSubgroupMembershipRef.off("child_changed",this.self.subgroupMembershipChanged,this),this.userSubgroupMembershipRef.off("child_removed",this.self.subgroupMembershipDeleted,this)},removeGroupMembershipHandlers:function(){this.userGroupMembershipRef.off("child_changed",this.self.groupMembershipChanged,this),this.userGroupMembershipRef.off("child_removed",this.self.groupMembershipDeleted,this),this.self.userSubgroupMembershipRef.off("child_added",this.self.subgroupMembershipAddedLater,this)},reloadController:function(){},addListeners:function(e){e.membershipType>=1&&(e.groupMembershipRef=u.syncGroupMembers(e.groupID,e.groupMembersSyncArray),e.subgroupMembershipRef=e.self.syncSubgroupMembers(e.groupID,e.subgroupID,e.membersSyncArray,e),e.groupActivitiesRef=e.self.syncSubgroupActivities(e.groupID,e.subgroupID,e.activitiesSyncArray,e)),(1==e.membershipType||2==e.membershipType)&&(e.teamPendingMembershipRequestsRef=e.self.syncSubgroupPendingMembershipRequests(e.groupID,e.subgroupID,e.pendingMembershipSyncArray,e))},removeListeners:function(){this.membershipType>=1,1==this.membershipType||2==this.membershipType},subgroupMembershipAddedLater:function(e){this.spaceID+">"+this.teamID==e.key()&&(this.self.removeGroupMembershipHandlers.apply(this),this.self.removeListeners.apply(this),this.self.reloadController.apply(this))},groupMembershipChanged:function(e){var t=e.val();t!=this.groupMembership.membershipType&&(this.self.removeGroupMembershipHandlers.apply(this),this.self.removeListeners.apply(this),this.self.reloadController.apply(this))},subgroupMembershipChanged:function(e){var t=e.val();t!=this.subgroupMembership.membershipType&&(this.self.removeSubgroupMembershipHandlers.apply(this),this.self.removeListeners.apply(this),this.self.reloadController.apply(this))},groupMembershipDeleted:function(e){this.self.removeGroupMembershipHandlers.apply(this),this.self.removeListeners.apply(this),this.self.reloadController.apply(this)},subgroupMembershipDeleted:function(e){this.self.removeSubgroupMembershipHandlers.apply(this),this.self.removeListeners.apply(this),this.self.reloadController.apply(this)},syncSubgroupMembers:function(e,t,n){var o=i.getRefSubGroupMembers().child(e+"/"+t);return o.on("child_added",this.subgroupUserMembershipAdded,n),o.on("child_changed",this.subgroupUserMembershipChanged,n),o.on("child_removed",this.subgroupUserMembershipDeleted,n),o},subgroupUserMembershipAdded:function(e){var t=this,n=s(i.getRefUsers().child(e.key()));o(function(){t.push({userID:e.key(),membershipType:e.val()["membership-type"],timestamp:e.val().timestamp,userSyncObj:n})})},subgroupUserMembershipChanged:function(e){var t=e.key(),i=e.val();this.forEach(function(e){e.userID==t&&o(function(){e.membershipType=i["membership-type"]})})},subgroupUserMembershipDeleted:function(e){var t=this,i=e.key();this.forEach(function(e,n){e.userID==i&&o(function(){t.splice(n,1)})})},syncSubgroupActivities:function(e,t,n){var o=i.getRefSubGroupsActivityStreams().child(e).child(t).orderByPriority();return o.on("child_added",this.groupActivityAdded,{array:n,groupID:e,subgroupID:t,self:this}),o},groupActivityAdded:function(e){var t=this,i=e.val();o(function(){i&&t.array.push(i)})},syncSubgroupPendingMembershipRequests:function(e,t,n){var o=i.getRefSubgroupMembershipRequests().child(e+"/"+t);return o.on("child_added",this.subgroupMembershipRequestAdded,n),o.on("child_removed",this.subgroupMembershipRequestDeleted,n),o},subgroupMembershipRequestAdded:function(e){var t=this,n=s(i.getRefUsers().child(e.key()));o(function(){t.push({userID:e.key(),message:e.val().message,timestamp:e.val().timestamp,userSyncObj:n})})},subgroupMembershipRequestDeleted:function(e){var t=this,i=e.key();this.forEach(function(e,n){e.userID==i&&o(function(){t.splice(n,1)})})},asyncAddUserMembershipToSubgroup:function(e,t,o,r){var s=n.defer(),a=i.getRefSubGroupMembers().child(t+"/"+o+"/"+e+"/timestamp");return a.once("value",function(n){var a=n.val()||l,u={};u[o]={"membership-type":r,timestamp:a};var c=i.getRefUserSubGroupMemberships().child(e).child(t);c.update(u,function(e){e?s.reject():s.resolve()})}),s.promise},asyncUpdateSubgroupMembers:function(t,o,r,u,c){var l=n.defer(),h=this,p={};return angular.forEach(u,function(e){p[e.userID]=!0}),a.asyncCreateGroupMembersJSON(t.userID,r,p).then(function(r){var a,u=[],c=r.members;c.forEach(function(e){a=h.asyncAddUserMembershipToSubgroup(e,o.groupID,o.subgroupID,3),u.push(a)});var p=n.defer();i.getRefSubGroupMembers().child(o.groupID).child(o.subgroupID).update(r.memberJSON,function(e){e?console.log("adding membersJSON to group failed",e):p.resolve()}),u.push(p.promise),n.all(u).then(function(){var a=i.getRefSubGroups().child(o.groupID+"/"+o.subgroupID+"/members-count");a.transaction(function(e){return(e||0)+c.length});var u=[],h=[],p=n.defer();p.promise.then(function(e){return e.forEach(function(e){1==e[1].type?e[0].checkedin=!0:e[0].checkedin=!1,h.push(e[0].$save())}),n.all(h)}).then(function(){l.resolve({unlistedMembersArray:r.unlisted})})["catch"](function(e){console.log(e)});for(var d in c)var f=s(i.getRefFlattendGroups().child(t.userID).child(o.groupID+"_"+o.subgroupID).child(d)).$loaded().then(function(){var t=s(e.getRefSubgroupCheckinCurrentByUser().child(d)).$loaded().then(function(){u.push(n.all([f,t]))})});p.resolve(n.all(u))})},function(){l.reject()}),l.promise},getFirebaseGroupObj:function(e){var t=i.getRefGroups().child(e);return s(t)},getFirebaseGroupSubGroupMemberObj:function(e,n){var o=i.getRefSubGroupMembers().child(e).child(n);return t(o)},approveMembership:function(e,t,o,r){var s,u,c,h,p;return s=n.defer(),c=3,u=r.userID,p=function(e){s.reject("Error occurred in accessing server.")},h={},h[u]={"membership-type":c,timestamp:l},i.getRefGroupMembers().child(e).update(h,function(n){n?p():i.getRefUserSubGroupMemberships().child(u+"/"+e+"/"+t).set(h[u],function(n){n?p():i.getRefSubgroupMembershipRequests().child(e+"/"+t+"/"+u).remove(function(n){var r;n?p():(r=i.getRefSubGroups().child(e+"/"+t+"/members-count"),r.once("value",function(n){var c=n.val();c=(c||0)+1,r.set(c,function(n){n?p():i.getRefSubGroups().child(e).child(t).once("value",function(i){var n=i.val();n.groupID=e,n.subgroupID=t,a.asyncRecordSubGroupMemberApproveRejectActivity("approve",n,o,u).then(function(e){s.resolve(e)},p)})})}))})})}),s.promise},rejectMembership:function(e,t,o,r){var s,u,c;return s=n.defer(),u=r.userID,c=function(e){s.reject("Error occurred in accessing server.")},i.getRefUserSubGroupMemberships().child(u+"/"+e+"/"+t).remove(function(n){n?c():i.getRefSubgroupMembershipRequests().child(e+"/"+t+"/"+u).remove(function(n){n?c():i.getRefSubGroups().child(e).child(t).once("value",function(i){var n=i.val();n.groupID=e,n.subgroupID=t,a.asyncRecordSubGroupMemberApproveRejectActivity("reject",n,o,u).then(function(e){s.resolve(e)},c)})})}),s.promise}}}]),function(){"use strict";function e(e,t,i){var n=function(n){var o=t.defer();return e.get(i.apiBaseUrl+"/api/checkuserid/"+n).success(function(e){1===e.statusCode?o.resolve():2===e.statusCode?o.reject():o.resolve()}).error(function(e){o.resolve()}),o.promise};return{require:"ngModel",link:function(e,t,i,o){o.$asyncValidators.checkUserId=n}}}function t(e,t,i){var n,o=function(o){var r=t.defer(),s={userID:n.scope().personalSettings.userData.$id,password:o};return e.post(i.apiBaseUrl+"/api/checkpassword",s).success(function(e){1===e.statusCode?r.resolve():r.reject()}).error(function(e){r.reject()}),r.promise};return{require:"ngModel",link:function(e,t,i,r){n=t,r.$asyncValidators._oldPassword=o}}}angular.module("core").directive("checkUserId",e).directive("checkUserPassword",t),e.$inject=["$http","$q","appConfig"]}(),angular.module("core").directive("activitiesList",function(){return{restrict:"A",templateUrl:"core/views/activitiesList.view.html",link:function(e,t,i){}}}),angular.module("core").directive("getGravatar",function(){return{restrict:"A",link:function(e,t,n){var o=function(e){function t(e){for(str="",j=0;j<=3;j++)str+=m.charAt(e>>8*j+4&15)+m.charAt(e>>8*j&15);return str}function n(e){for(nblk=(e.length+8>>6)+1,blks=new Array(16*nblk),i=0;i<16*nblk;i++)blks[i]=0;for(i=0;i<e.length;i++)blks[i>>2]|=e.charCodeAt(i)<<i%4*8;return blks[i>>2]|=128<<i%4*8,blks[16*nblk-2]=8*e.length,blks}function o(e,t){var i=(65535&e)+(65535&t),n=(e>>16)+(t>>16)+(i>>16);return n<<16|65535&i}function r(e,t){return e<<t|e>>>32-t}function s(e,t,i,n,s,a){return o(r(o(o(t,e),o(n,a)),s),i)}function u(e,t,i,n,o,r,a){return s(t&i|~t&n,e,t,o,r,a)}function l(e,t,i,n,o,r,a){return s(t&n|i&~n,e,t,o,r,a)}function h(e,t,i,n,o,r,a){return s(t^i^n,e,t,o,r,a)}function p(e,t,i,n,o,r,a){return s(i^(t|~n),e,t,o,r,a)}function f(e){for(x=n(e),a=1732584193,b=-271733879,c=-1732584194,d=271733878,i=0;i<x.length;i+=16)olda=a,oldb=b,oldc=c,oldd=d,a=u(a,b,c,d,x[i+0],7,-680876936),d=u(d,a,b,c,x[i+1],12,-389564586),c=u(c,d,a,b,x[i+2],17,606105819),b=u(b,c,d,a,x[i+3],22,-1044525330),a=u(a,b,c,d,x[i+4],7,-176418897),d=u(d,a,b,c,x[i+5],12,1200080426),c=u(c,d,a,b,x[i+6],17,-1473231341),b=u(b,c,d,a,x[i+7],22,-45705983),a=u(a,b,c,d,x[i+8],7,1770035416),d=u(d,a,b,c,x[i+9],12,-1958414417),c=u(c,d,a,b,x[i+10],17,-42063),b=u(b,c,d,a,x[i+11],22,-1990404162),a=u(a,b,c,d,x[i+12],7,1804603682),d=u(d,a,b,c,x[i+13],12,-40341101),c=u(c,d,a,b,x[i+14],17,-1502002290),b=u(b,c,d,a,x[i+15],22,1236535329),a=l(a,b,c,d,x[i+1],5,-165796510),d=l(d,a,b,c,x[i+6],9,-1069501632),c=l(c,d,a,b,x[i+11],14,643717713),b=l(b,c,d,a,x[i+0],20,-373897302),a=l(a,b,c,d,x[i+5],5,-701558691),d=l(d,a,b,c,x[i+10],9,38016083),c=l(c,d,a,b,x[i+15],14,-660478335),b=l(b,c,d,a,x[i+4],20,-405537848),a=l(a,b,c,d,x[i+9],5,568446438),d=l(d,a,b,c,x[i+14],9,-1019803690),c=l(c,d,a,b,x[i+3],14,-187363961),b=l(b,c,d,a,x[i+8],20,1163531501),a=l(a,b,c,d,x[i+13],5,-1444681467),d=l(d,a,b,c,x[i+2],9,-51403784),c=l(c,d,a,b,x[i+7],14,1735328473),b=l(b,c,d,a,x[i+12],20,-1926607734),a=h(a,b,c,d,x[i+5],4,-378558),d=h(d,a,b,c,x[i+8],11,-2022574463),c=h(c,d,a,b,x[i+11],16,1839030562),b=h(b,c,d,a,x[i+14],23,-35309556),a=h(a,b,c,d,x[i+1],4,-1530992060),d=h(d,a,b,c,x[i+4],11,1272893353),c=h(c,d,a,b,x[i+7],16,-155497632),b=h(b,c,d,a,x[i+10],23,-1094730640),a=h(a,b,c,d,x[i+13],4,681279174),d=h(d,a,b,c,x[i+0],11,-358537222),c=h(c,d,a,b,x[i+3],16,-722521979),b=h(b,c,d,a,x[i+6],23,76029189),a=h(a,b,c,d,x[i+9],4,-640364487),d=h(d,a,b,c,x[i+12],11,-421815835),c=h(c,d,a,b,x[i+15],16,530742520),b=h(b,c,d,a,x[i+2],23,-995338651),a=p(a,b,c,d,x[i+0],6,-198630844),d=p(d,a,b,c,x[i+7],10,1126891415),c=p(c,d,a,b,x[i+14],15,-1416354905),b=p(b,c,d,a,x[i+5],21,-57434055),a=p(a,b,c,d,x[i+12],6,1700485571),d=p(d,a,b,c,x[i+3],10,-1894986606),c=p(c,d,a,b,x[i+10],15,-1051523),b=p(b,c,d,a,x[i+1],21,-2054922799),a=p(a,b,c,d,x[i+8],6,1873313359),d=p(d,a,b,c,x[i+15],10,-30611744),c=p(c,d,a,b,x[i+6],15,-1560198380),b=p(b,c,d,a,x[i+13],21,1309151649),a=p(a,b,c,d,x[i+4],6,-145523070),d=p(d,a,b,c,x[i+11],10,-1120210379),c=p(c,d,a,b,x[i+2],15,718787259),b=p(b,c,d,a,x[i+9],21,-343485551),a=o(a,olda),b=o(b,oldb),c=o(c,oldc),d=o(d,oldd);return t(a)+t(b)+t(c)+t(d)}var m="0123456789abcdef";return f(e)};e.$watch(n.watch,function(){t.attr("src","http://www.gravatar.com/avatar/"+o(n.getGravatar)+"?s=50")})}}}),function(){"use strict";function e(){return{require:"ngModel",scope:{otherModelValue:"=compareTo"},link:function(e,t,i,n){n.$validators.compareTo=function(t){return t==e.otherModelValue},e.$watch("otherModelValue",function(){n.$validate()})}}}function t(){return{require:"ngModel",scope:{otherModelValue:"=compareAgainst"},link:function(e,t,i,n){n.$validators.compareAgainst=function(t){return t!==e.otherModelValue},e.$watch("otherModelValue",function(){n.$validate()})}}}angular.module("core").directive("compareTo",e).directive("compareAgainst",t)}(),function(){"use strict";function e(e,t,i){function n(e){return o?o+"/"+e:e}var o,r=function(i,o,r){var s=t.defer();return e.asyncCheckIfGroupExists(n(i)).then(function(e){e.exists?s.reject():s.resolve()}),s.promise};return{require:"ngModel",link:function(e,t,i,n){o=i.grouppath,n.$asyncValidators.checkGroupExistance=r}}}angular.module("core").directive("checkGroupExistance",e),e.$inject=["firebaseService","$q","appConfig"]}(),angular.module("core").directive("dragZone",function(e){return{restrict:"A",link:function(t,i,n){function o(t){t.stopPropagation(),t.preventDefault();var i=t.dataTransfer.files;e.$emit("File:Received",{files:i})}function r(e){e.stopPropagation(),e.preventDefault(),e.dataTransfer.dropEffect="copy"}i[0].addEventListener("dragover",r,!1),i[0].addEventListener("drop",o,!1)}}}).directive("cropperDirective",function(e,t,i,n,t,o){return{scope:{},restrict:"AE",transclude:!0,link:function(e,t,n){i.ShowCropperEl=!1;var o=e;o.image={src:"",name:""},o.model={img:""},e.$watch("model.img",function(e,t){i.newImg=e},!0),o.selectFile=function(e){var t=e.files[0];if(!t)return!1;var n=new FileReader;o.image.name=t.name.replace(" ",""),o.image.name=o.image.name.replace(/[`~!@#$%^&*()_|+\-=?;:'",<>\{\}\[\]\\\/]/gi,""),n.readAsDataURL(t),n.onload=function(){var e,t,r=$("#fileCropEl");o.image.src=n.result,i.$digest(),r.cropper({autoCropArea:.75,strict:!0,guides:!1,highlight:!1,dragCrop:!1,movable:!0,resizable:!0,zoomable:!1,built:function(){r.cropper("setCanvasData",e),r.cropper("setCropBoxData",t)}}),i.ShowCropperEl=!0,i.$$phase||i.$digest()}},o.crop=function(){var e=$("#fileCropEl");o.model.img=e.cropper("getCroppedCanvas").toDataURL(),e.cropper("destroy"),i.ShowCropperEl=!1,i.$$phase||i.$digest()},o.reset=function(){$("#fileCropEl").cropper("reset")},o.close=function(){$("#fileCropEl").cropper("destroy"),i.ShowCropperEl=!1,i.$$phase||i.$digest()}},replace:!0,templateUrl:"directives/my-cropper.html"}}),function(e,t,i){var n=e.L,o={};o.version="0.7.3","object"==typeof module&&"object"==typeof module.exports?module.exports=o:"function"==typeof define&&define.amd&&define(o),o.noConflict=function(){return e.L=n,this},e.L=o,o.Util={extend:function(e){var t,i,n,o,r=Array.prototype.slice.call(arguments,1);for(i=0,n=r.length;n>i;i++){o=r[i]||{};for(t in o)o.hasOwnProperty(t)&&(e[t]=o[t])}return e},bind:function(e,t){var i=arguments.length>2?Array.prototype.slice.call(arguments,2):null;return function(){return e.apply(t,i||arguments)}},stamp:function(){var e=0,t="_leaflet_id";return function(i){return i[t]=i[t]||++e,i[t]}}(),invokeEach:function(e,t,i){var n,o;if("object"==typeof e){o=Array.prototype.slice.call(arguments,3);for(n in e)t.apply(i,[n,e[n]].concat(o));return!0}return!1},limitExecByInterval:function(e,t,i){var n,o;return function r(){var s=arguments;return n?void(o=!0):(n=!0,setTimeout(function(){n=!1,o&&(r.apply(i,s),o=!1)},t),void e.apply(i,s))}},falseFn:function(){return!1},formatNum:function(e,t){var i=Math.pow(10,t||5);return Math.round(e*i)/i},trim:function(e){return e.trim?e.trim():e.replace(/^\s+|\s+$/g,"")},splitWords:function(e){return o.Util.trim(e).split(/\s+/)},setOptions:function(e,t){return e.options=o.extend({},e.options,t),e.options},getParamString:function(e,t,i){var n=[];for(var o in e)n.push(encodeURIComponent(i?o.toUpperCase():o)+"="+encodeURIComponent(e[o]));return(t&&-1!==t.indexOf("?")?"&":"?")+n.join("&")},template:function(e,t){return e.replace(/\{ *([\w_]+) *\}/g,function(e,n){var o=t[n];if(o===i)throw new Error("No value provided for variable "+e);return"function"==typeof o&&(o=o(t)),o})},isArray:Array.isArray||function(e){return"[object Array]"===Object.prototype.toString.call(e)},emptyImageUrl:"data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="},function(){function t(t){var i,n,o=["webkit","moz","o","ms"];for(i=0;i<o.length&&!n;i++)n=e[o[i]+t];return n}function i(t){var i=+new Date,o=Math.max(0,16-(i-n));return n=i+o,e.setTimeout(t,o)}var n=0,r=e.requestAnimationFrame||t("RequestAnimationFrame")||i,s=e.cancelAnimationFrame||t("CancelAnimationFrame")||t("CancelRequestAnimationFrame")||function(t){e.clearTimeout(t)};o.Util.requestAnimFrame=function(t,n,s,a){return t=o.bind(t,n),s&&r===i?void t():r.call(e,t,a)},o.Util.cancelAnimFrame=function(t){t&&s.call(e,t)}}(),o.extend=o.Util.extend,o.bind=o.Util.bind,o.stamp=o.Util.stamp,o.setOptions=o.Util.setOptions,o.Class=function(){},o.Class.extend=function(e){var t=function(){this.initialize&&this.initialize.apply(this,arguments),this._initHooks&&this.callInitHooks()},i=function(){};i.prototype=this.prototype;var n=new i;n.constructor=t,t.prototype=n;for(var r in this)this.hasOwnProperty(r)&&"prototype"!==r&&(t[r]=this[r]);e.statics&&(o.extend(t,e.statics),delete e.statics),e.includes&&(o.Util.extend.apply(null,[n].concat(e.includes)),delete e.includes),e.options&&n.options&&(e.options=o.extend({},n.options,e.options)),o.extend(n,e),n._initHooks=[];var s=this;return t.__super__=s.prototype,n.callInitHooks=function(){if(!this._initHooksCalled){s.prototype.callInitHooks&&s.prototype.callInitHooks.call(this),this._initHooksCalled=!0;for(var e=0,t=n._initHooks.length;t>e;e++)n._initHooks[e].call(this)}},t},o.Class.include=function(e){o.extend(this.prototype,e)},o.Class.mergeOptions=function(e){o.extend(this.prototype.options,e)},o.Class.addInitHook=function(e){var t=Array.prototype.slice.call(arguments,1),i="function"==typeof e?e:function(){this[e].apply(this,t)};this.prototype._initHooks=this.prototype._initHooks||[],this.prototype._initHooks.push(i)};var r="_leaflet_events";o.Mixin={},o.Mixin.Events={addEventListener:function(e,t,i){if(o.Util.invokeEach(e,this.addEventListener,this,t,i))return this;var n,s,a,u,c,l,h,p=this[r]=this[r]||{},d=i&&i!==this&&o.stamp(i);for(e=o.Util.splitWords(e),n=0,s=e.length;s>n;n++)a={action:t,context:i||this},u=e[n],d?(c=u+"_idx",l=c+"_len",h=p[c]=p[c]||{},h[d]||(h[d]=[],p[l]=(p[l]||0)+1),h[d].push(a)):(p[u]=p[u]||[],p[u].push(a));return this},hasEventListeners:function(e){var t=this[r];return!!t&&(e in t&&t[e].length>0||e+"_idx"in t&&t[e+"_idx_len"]>0)},removeEventListener:function(e,t,i){if(!this[r])return this;if(!e)return this.clearAllEventListeners();if(o.Util.invokeEach(e,this.removeEventListener,this,t,i))return this;var n,s,a,u,c,l,h,p,d,f=this[r],m=i&&i!==this&&o.stamp(i);for(e=o.Util.splitWords(e),n=0,s=e.length;s>n;n++)if(a=e[n],l=a+"_idx",h=l+"_len",p=f[l],t){if(u=m&&p?p[m]:f[a]){for(c=u.length-1;c>=0;c--)u[c].action!==t||i&&u[c].context!==i||(d=u.splice(c,1),d[0].action=o.Util.falseFn);i&&p&&0===u.length&&(delete p[m],f[h]--)}}else delete f[a],delete f[l],delete f[h];return this},clearAllEventListeners:function(){return delete this[r],this},fireEvent:function(e,t){if(!this.hasEventListeners(e))return this;var i,n,s,a,u,c=o.Util.extend({},t,{type:e,target:this}),l=this[r];if(l[e])for(i=l[e].slice(),n=0,s=i.length;s>n;n++)i[n].action.call(i[n].context,c);a=l[e+"_idx"];for(u in a)if(i=a[u].slice())for(n=0,s=i.length;s>n;n++)i[n].action.call(i[n].context,c);return this},addOneTimeEventListener:function(e,t,i){if(o.Util.invokeEach(e,this.addOneTimeEventListener,this,t,i))return this;var n=o.bind(function(){this.removeEventListener(e,t,i).removeEventListener(e,n,i)},this);return this.addEventListener(e,t,i).addEventListener(e,n,i)}},o.Mixin.Events.on=o.Mixin.Events.addEventListener,o.Mixin.Events.off=o.Mixin.Events.removeEventListener,o.Mixin.Events.once=o.Mixin.Events.addOneTimeEventListener,o.Mixin.Events.fire=o.Mixin.Events.fireEvent,function(){var n="ActiveXObject"in e,r=n&&!t.addEventListener,s=navigator.userAgent.toLowerCase(),a=-1!==s.indexOf("webkit"),u=-1!==s.indexOf("chrome"),c=-1!==s.indexOf("phantom"),l=-1!==s.indexOf("android"),h=-1!==s.search("android [23]"),p=-1!==s.indexOf("gecko"),d=typeof orientation!=i+"",f=e.navigator&&e.navigator.msPointerEnabled&&e.navigator.msMaxTouchPoints&&!e.PointerEvent,m=e.PointerEvent&&e.navigator.pointerEnabled&&e.navigator.maxTouchPoints||f,g="devicePixelRatio"in e&&e.devicePixelRatio>1||"matchMedia"in e&&e.matchMedia("(min-resolution:144dpi)")&&e.matchMedia("(min-resolution:144dpi)").matches,v=t.documentElement,b=n&&"transition"in v.style,y="WebKitCSSMatrix"in e&&"m11"in new e.WebKitCSSMatrix&&!h,_="MozPerspective"in v.style,S="OTransition"in v.style,w=!e.L_DISABLE_3D&&(b||y||_||S)&&!c,C=!e.L_NO_TOUCH&&!c&&function(){var e="ontouchstart";if(m||e in v)return!0;var i=t.createElement("div"),n=!1;return i.setAttribute?(i.setAttribute(e,"return;"),"function"==typeof i[e]&&(n=!0),i.removeAttribute(e),i=null,n):!1}();o.Browser={ie:n,ielt9:r,webkit:a,gecko:p&&!a&&!e.opera&&!n,android:l,android23:h,chrome:u,ie3d:b,webkit3d:y,gecko3d:_,opera3d:S,any3d:w,mobile:d,mobileWebkit:d&&a,mobileWebkit3d:d&&y,mobileOpera:d&&e.opera,touch:C,msPointer:f,pointer:m,retina:g}}(),o.Point=function(e,t,i){this.x=i?Math.round(e):e,this.y=i?Math.round(t):t},o.Point.prototype={clone:function(){return new o.Point(this.x,this.y)},add:function(e){return this.clone()._add(o.point(e))},_add:function(e){return this.x+=e.x,this.y+=e.y,this},subtract:function(e){return this.clone()._subtract(o.point(e))},_subtract:function(e){return this.x-=e.x,this.y-=e.y,this},divideBy:function(e){return this.clone()._divideBy(e)},_divideBy:function(e){return this.x/=e,this.y/=e,this},multiplyBy:function(e){return this.clone()._multiplyBy(e)},_multiplyBy:function(e){return this.x*=e,this.y*=e,this},round:function(){return this.clone()._round()},_round:function(){return this.x=Math.round(this.x),this.y=Math.round(this.y),this},floor:function(){return this.clone()._floor()},_floor:function(){return this.x=Math.floor(this.x),this.y=Math.floor(this.y),this},distanceTo:function(e){e=o.point(e);var t=e.x-this.x,i=e.y-this.y;return Math.sqrt(t*t+i*i)},equals:function(e){return e=o.point(e),e.x===this.x&&e.y===this.y},contains:function(e){return e=o.point(e),Math.abs(e.x)<=Math.abs(this.x)&&Math.abs(e.y)<=Math.abs(this.y)},toString:function(){return"Point("+o.Util.formatNum(this.x)+", "+o.Util.formatNum(this.y)+")"}},o.point=function(e,t,n){return e instanceof o.Point?e:o.Util.isArray(e)?new o.Point(e[0],e[1]):e===i||null===e?e:new o.Point(e,t,n)},o.Bounds=function(e,t){if(e)for(var i=t?[e,t]:e,n=0,o=i.length;o>n;n++)this.extend(i[n])},o.Bounds.prototype={extend:function(e){return e=o.point(e),this.min||this.max?(this.min.x=Math.min(e.x,this.min.x),this.max.x=Math.max(e.x,this.max.x),this.min.y=Math.min(e.y,this.min.y),this.max.y=Math.max(e.y,this.max.y)):(this.min=e.clone(),this.max=e.clone()),this},getCenter:function(e){return new o.Point((this.min.x+this.max.x)/2,(this.min.y+this.max.y)/2,e)},getBottomLeft:function(){return new o.Point(this.min.x,this.max.y)},getTopRight:function(){return new o.Point(this.max.x,this.min.y)},getSize:function(){return this.max.subtract(this.min)},contains:function(e){var t,i;return e="number"==typeof e[0]||e instanceof o.Point?o.point(e):o.bounds(e),e instanceof o.Bounds?(t=e.min,i=e.max):t=i=e,t.x>=this.min.x&&i.x<=this.max.x&&t.y>=this.min.y&&i.y<=this.max.y},intersects:function(e){e=o.bounds(e);var t=this.min,i=this.max,n=e.min,r=e.max,s=r.x>=t.x&&n.x<=i.x,a=r.y>=t.y&&n.y<=i.y;return s&&a},isValid:function(){return!(!this.min||!this.max)}},o.bounds=function(e,t){return!e||e instanceof o.Bounds?e:new o.Bounds(e,t)},o.Transformation=function(e,t,i,n){this._a=e,this._b=t,this._c=i,this._d=n},o.Transformation.prototype={transform:function(e,t){return this._transform(e.clone(),t)},_transform:function(e,t){return t=t||1,e.x=t*(this._a*e.x+this._b),e.y=t*(this._c*e.y+this._d),e},untransform:function(e,t){return t=t||1,new o.Point((e.x/t-this._b)/this._a,(e.y/t-this._d)/this._c)}},o.DomUtil={get:function(e){return"string"==typeof e?t.getElementById(e):e},getStyle:function(e,i){var n=e.style[i];if(!n&&e.currentStyle&&(n=e.currentStyle[i]),(!n||"auto"===n)&&t.defaultView){var o=t.defaultView.getComputedStyle(e,null);n=o?o[i]:null}return"auto"===n?null:n},getViewportOffset:function(e){var i,n=0,r=0,s=e,a=t.body,u=t.documentElement;do{if(n+=s.offsetTop||0,r+=s.offsetLeft||0,n+=parseInt(o.DomUtil.getStyle(s,"borderTopWidth"),10)||0,r+=parseInt(o.DomUtil.getStyle(s,"borderLeftWidth"),10)||0,i=o.DomUtil.getStyle(s,"position"),s.offsetParent===a&&"absolute"===i)break;if("fixed"===i){n+=a.scrollTop||u.scrollTop||0,r+=a.scrollLeft||u.scrollLeft||0;break}if("relative"===i&&!s.offsetLeft){var c=o.DomUtil.getStyle(s,"width"),l=o.DomUtil.getStyle(s,"max-width"),h=s.getBoundingClientRect();("none"!==c||"none"!==l)&&(r+=h.left+s.clientLeft),n+=h.top+(a.scrollTop||u.scrollTop||0);break}s=s.offsetParent}while(s);s=e;do{if(s===a)break;n-=s.scrollTop||0,r-=s.scrollLeft||0,s=s.parentNode}while(s);return new o.Point(r,n)},documentIsLtr:function(){return o.DomUtil._docIsLtrCached||(o.DomUtil._docIsLtrCached=!0,o.DomUtil._docIsLtr="ltr"===o.DomUtil.getStyle(t.body,"direction")),o.DomUtil._docIsLtr},create:function(e,i,n){var o=t.createElement(e);return o.className=i,n&&n.appendChild(o),o},hasClass:function(e,t){if(e.classList!==i)return e.classList.contains(t);var n=o.DomUtil._getClass(e);return n.length>0&&new RegExp("(^|\\s)"+t+"(\\s|$)").test(n)},addClass:function(e,t){if(e.classList!==i)for(var n=o.Util.splitWords(t),r=0,s=n.length;s>r;r++)e.classList.add(n[r]);else if(!o.DomUtil.hasClass(e,t)){var a=o.DomUtil._getClass(e);o.DomUtil._setClass(e,(a?a+" ":"")+t)}},removeClass:function(e,t){e.classList!==i?e.classList.remove(t):o.DomUtil._setClass(e,o.Util.trim((" "+o.DomUtil._getClass(e)+" ").replace(" "+t+" "," ")))},_setClass:function(e,t){e.className.baseVal===i?e.className=t:e.className.baseVal=t},_getClass:function(e){return e.className.baseVal===i?e.className:e.className.baseVal},setOpacity:function(e,t){if("opacity"in e.style)e.style.opacity=t;else if("filter"in e.style){var i=!1,n="DXImageTransform.Microsoft.Alpha";try{i=e.filters.item(n)}catch(o){if(1===t)return}t=Math.round(100*t),i?(i.Enabled=100!==t,i.Opacity=t):e.style.filter+=" progid:"+n+"(opacity="+t+")"}},testProp:function(e){for(var i=t.documentElement.style,n=0;n<e.length;n++)if(e[n]in i)return e[n];return!1},getTranslateString:function(e){var t=o.Browser.webkit3d,i="translate"+(t?"3d":"")+"(",n=(t?",0":"")+")";return i+e.x+"px,"+e.y+"px"+n},getScaleString:function(e,t){var i=o.DomUtil.getTranslateString(t.add(t.multiplyBy(-1*e))),n=" scale("+e+") ";return i+n},setPosition:function(e,t,i){e._leaflet_pos=t,!i&&o.Browser.any3d?e.style[o.DomUtil.TRANSFORM]=o.DomUtil.getTranslateString(t):(e.style.left=t.x+"px",e.style.top=t.y+"px")},getPosition:function(e){return e._leaflet_pos}},o.DomUtil.TRANSFORM=o.DomUtil.testProp(["transform","WebkitTransform","OTransform","MozTransform","msTransform"]),o.DomUtil.TRANSITION=o.DomUtil.testProp(["webkitTransition","transition","OTransition","MozTransition","msTransition"]),o.DomUtil.TRANSITION_END="webkitTransition"===o.DomUtil.TRANSITION||"OTransition"===o.DomUtil.TRANSITION?o.DomUtil.TRANSITION+"End":"transitionend",function(){if("onselectstart"in t)o.extend(o.DomUtil,{disableTextSelection:function(){o.DomEvent.on(e,"selectstart",o.DomEvent.preventDefault)},enableTextSelection:function(){o.DomEvent.off(e,"selectstart",o.DomEvent.preventDefault)}});else{var i=o.DomUtil.testProp(["userSelect","WebkitUserSelect","OUserSelect","MozUserSelect","msUserSelect"]);o.extend(o.DomUtil,{
-disableTextSelection:function(){if(i){var e=t.documentElement.style;this._userSelect=e[i],e[i]="none"}},enableTextSelection:function(){i&&(t.documentElement.style[i]=this._userSelect,delete this._userSelect)}})}o.extend(o.DomUtil,{disableImageDrag:function(){o.DomEvent.on(e,"dragstart",o.DomEvent.preventDefault)},enableImageDrag:function(){o.DomEvent.off(e,"dragstart",o.DomEvent.preventDefault)}})}(),o.LatLng=function(e,t,n){if(e=parseFloat(e),t=parseFloat(t),isNaN(e)||isNaN(t))throw new Error("Invalid LatLng object: ("+e+", "+t+")");this.lat=e,this.lng=t,n!==i&&(this.alt=parseFloat(n))},o.extend(o.LatLng,{DEG_TO_RAD:Math.PI/180,RAD_TO_DEG:180/Math.PI,MAX_MARGIN:1e-9}),o.LatLng.prototype={equals:function(e){if(!e)return!1;e=o.latLng(e);var t=Math.max(Math.abs(this.lat-e.lat),Math.abs(this.lng-e.lng));return t<=o.LatLng.MAX_MARGIN},toString:function(e){return"LatLng("+o.Util.formatNum(this.lat,e)+", "+o.Util.formatNum(this.lng,e)+")"},distanceTo:function(e){e=o.latLng(e);var t=6378137,i=o.LatLng.DEG_TO_RAD,n=(e.lat-this.lat)*i,r=(e.lng-this.lng)*i,s=this.lat*i,a=e.lat*i,u=Math.sin(n/2),c=Math.sin(r/2),l=u*u+c*c*Math.cos(s)*Math.cos(a);return 2*t*Math.atan2(Math.sqrt(l),Math.sqrt(1-l))},wrap:function(e,t){var i=this.lng;return e=e||-180,t=t||180,i=(i+t)%(t-e)+(e>i||i===t?t:e),new o.LatLng(this.lat,i)}},o.latLng=function(e,t){return e instanceof o.LatLng?e:o.Util.isArray(e)?"number"==typeof e[0]||"string"==typeof e[0]?new o.LatLng(e[0],e[1],e[2]):null:e===i||null===e?e:"object"==typeof e&&"lat"in e?new o.LatLng(e.lat,"lng"in e?e.lng:e.lon):t===i?null:new o.LatLng(e,t)},o.LatLngBounds=function(e,t){if(e)for(var i=t?[e,t]:e,n=0,o=i.length;o>n;n++)this.extend(i[n])},o.LatLngBounds.prototype={extend:function(e){if(!e)return this;var t=o.latLng(e);return e=null!==t?t:o.latLngBounds(e),e instanceof o.LatLng?this._southWest||this._northEast?(this._southWest.lat=Math.min(e.lat,this._southWest.lat),this._southWest.lng=Math.min(e.lng,this._southWest.lng),this._northEast.lat=Math.max(e.lat,this._northEast.lat),this._northEast.lng=Math.max(e.lng,this._northEast.lng)):(this._southWest=new o.LatLng(e.lat,e.lng),this._northEast=new o.LatLng(e.lat,e.lng)):e instanceof o.LatLngBounds&&(this.extend(e._southWest),this.extend(e._northEast)),this},pad:function(e){var t=this._southWest,i=this._northEast,n=Math.abs(t.lat-i.lat)*e,r=Math.abs(t.lng-i.lng)*e;return new o.LatLngBounds(new o.LatLng(t.lat-n,t.lng-r),new o.LatLng(i.lat+n,i.lng+r))},getCenter:function(){return new o.LatLng((this._southWest.lat+this._northEast.lat)/2,(this._southWest.lng+this._northEast.lng)/2)},getSouthWest:function(){return this._southWest},getNorthEast:function(){return this._northEast},getNorthWest:function(){return new o.LatLng(this.getNorth(),this.getWest())},getSouthEast:function(){return new o.LatLng(this.getSouth(),this.getEast())},getWest:function(){return this._southWest.lng},getSouth:function(){return this._southWest.lat},getEast:function(){return this._northEast.lng},getNorth:function(){return this._northEast.lat},contains:function(e){e="number"==typeof e[0]||e instanceof o.LatLng?o.latLng(e):o.latLngBounds(e);var t,i,n=this._southWest,r=this._northEast;return e instanceof o.LatLngBounds?(t=e.getSouthWest(),i=e.getNorthEast()):t=i=e,t.lat>=n.lat&&i.lat<=r.lat&&t.lng>=n.lng&&i.lng<=r.lng},intersects:function(e){e=o.latLngBounds(e);var t=this._southWest,i=this._northEast,n=e.getSouthWest(),r=e.getNorthEast(),s=r.lat>=t.lat&&n.lat<=i.lat,a=r.lng>=t.lng&&n.lng<=i.lng;return s&&a},toBBoxString:function(){return[this.getWest(),this.getSouth(),this.getEast(),this.getNorth()].join(",")},equals:function(e){return e?(e=o.latLngBounds(e),this._southWest.equals(e.getSouthWest())&&this._northEast.equals(e.getNorthEast())):!1},isValid:function(){return!(!this._southWest||!this._northEast)}},o.latLngBounds=function(e,t){return!e||e instanceof o.LatLngBounds?e:new o.LatLngBounds(e,t)},o.Projection={},o.Projection.SphericalMercator={MAX_LATITUDE:85.0511287798,project:function(e){var t=o.LatLng.DEG_TO_RAD,i=this.MAX_LATITUDE,n=Math.max(Math.min(i,e.lat),-i),r=e.lng*t,s=n*t;return s=Math.log(Math.tan(Math.PI/4+s/2)),new o.Point(r,s)},unproject:function(e){var t=o.LatLng.RAD_TO_DEG,i=e.x*t,n=(2*Math.atan(Math.exp(e.y))-Math.PI/2)*t;return new o.LatLng(n,i)}},o.Projection.LonLat={project:function(e){return new o.Point(e.lng,e.lat)},unproject:function(e){return new o.LatLng(e.y,e.x)}},o.CRS={latLngToPoint:function(e,t){var i=this.projection.project(e),n=this.scale(t);return this.transformation._transform(i,n)},pointToLatLng:function(e,t){var i=this.scale(t),n=this.transformation.untransform(e,i);return this.projection.unproject(n)},project:function(e){return this.projection.project(e)},scale:function(e){return 256*Math.pow(2,e)},getSize:function(e){var t=this.scale(e);return o.point(t,t)}},o.CRS.Simple=o.extend({},o.CRS,{projection:o.Projection.LonLat,transformation:new o.Transformation(1,0,-1,0),scale:function(e){return Math.pow(2,e)}}),o.CRS.EPSG3857=o.extend({},o.CRS,{code:"EPSG:3857",projection:o.Projection.SphericalMercator,transformation:new o.Transformation(.5/Math.PI,.5,-.5/Math.PI,.5),project:function(e){var t=this.projection.project(e),i=6378137;return t.multiplyBy(i)}}),o.CRS.EPSG900913=o.extend({},o.CRS.EPSG3857,{code:"EPSG:900913"}),o.CRS.EPSG4326=o.extend({},o.CRS,{code:"EPSG:4326",projection:o.Projection.LonLat,transformation:new o.Transformation(1/360,.5,-1/360,.5)}),o.Map=o.Class.extend({includes:o.Mixin.Events,options:{crs:o.CRS.EPSG3857,fadeAnimation:o.DomUtil.TRANSITION&&!o.Browser.android23,trackResize:!0,markerZoomAnimation:o.DomUtil.TRANSITION&&o.Browser.any3d},initialize:function(e,t){t=o.setOptions(this,t),this._initContainer(e),this._initLayout(),this._onResize=o.bind(this._onResize,this),this._initEvents(),t.maxBounds&&this.setMaxBounds(t.maxBounds),t.center&&t.zoom!==i&&this.setView(o.latLng(t.center),t.zoom,{reset:!0}),this._handlers=[],this._layers={},this._zoomBoundLayers={},this._tileLayersNum=0,this.callInitHooks(),this._addLayers(t.layers)},setView:function(e,t){return t=t===i?this.getZoom():t,this._resetView(o.latLng(e),this._limitZoom(t)),this},setZoom:function(e,t){return this._loaded?this.setView(this.getCenter(),e,{zoom:t}):(this._zoom=this._limitZoom(e),this)},zoomIn:function(e,t){return this.setZoom(this._zoom+(e||1),t)},zoomOut:function(e,t){return this.setZoom(this._zoom-(e||1),t)},setZoomAround:function(e,t,i){var n=this.getZoomScale(t),r=this.getSize().divideBy(2),s=e instanceof o.Point?e:this.latLngToContainerPoint(e),a=s.subtract(r).multiplyBy(1-1/n),u=this.containerPointToLatLng(r.add(a));return this.setView(u,t,{zoom:i})},fitBounds:function(e,t){t=t||{},e=e.getBounds?e.getBounds():o.latLngBounds(e);var i=o.point(t.paddingTopLeft||t.padding||[0,0]),n=o.point(t.paddingBottomRight||t.padding||[0,0]),r=this.getBoundsZoom(e,!1,i.add(n)),s=n.subtract(i).divideBy(2),a=this.project(e.getSouthWest(),r),u=this.project(e.getNorthEast(),r),c=this.unproject(a.add(u).divideBy(2).add(s),r);return r=t&&t.maxZoom?Math.min(t.maxZoom,r):r,this.setView(c,r,t)},fitWorld:function(e){return this.fitBounds([[-90,-180],[90,180]],e)},panTo:function(e,t){return this.setView(e,this._zoom,{pan:t})},panBy:function(e){return this.fire("movestart"),this._rawPanBy(o.point(e)),this.fire("move"),this.fire("moveend")},setMaxBounds:function(e){return e=o.latLngBounds(e),this.options.maxBounds=e,e?(this._loaded&&this._panInsideMaxBounds(),this.on("moveend",this._panInsideMaxBounds,this)):this.off("moveend",this._panInsideMaxBounds,this)},panInsideBounds:function(e,t){var i=this.getCenter(),n=this._limitCenter(i,this._zoom,e);return i.equals(n)?this:this.panTo(n,t)},addLayer:function(e){var t=o.stamp(e);return this._layers[t]?this:(this._layers[t]=e,!e.options||isNaN(e.options.maxZoom)&&isNaN(e.options.minZoom)||(this._zoomBoundLayers[t]=e,this._updateZoomLevels()),this.options.zoomAnimation&&o.TileLayer&&e instanceof o.TileLayer&&(this._tileLayersNum++,this._tileLayersToLoad++,e.on("load",this._onTileLayerLoad,this)),this._loaded&&this._layerAdd(e),this)},removeLayer:function(e){var t=o.stamp(e);return this._layers[t]?(this._loaded&&e.onRemove(this),delete this._layers[t],this._loaded&&this.fire("layerremove",{layer:e}),this._zoomBoundLayers[t]&&(delete this._zoomBoundLayers[t],this._updateZoomLevels()),this.options.zoomAnimation&&o.TileLayer&&e instanceof o.TileLayer&&(this._tileLayersNum--,this._tileLayersToLoad--,e.off("load",this._onTileLayerLoad,this)),this):this},hasLayer:function(e){return e?o.stamp(e)in this._layers:!1},eachLayer:function(e,t){for(var i in this._layers)e.call(t,this._layers[i]);return this},invalidateSize:function(e){if(!this._loaded)return this;e=o.extend({animate:!1,pan:!0},e===!0?{animate:!0}:e);var t=this.getSize();this._sizeChanged=!0,this._initialCenter=null;var i=this.getSize(),n=t.divideBy(2).round(),r=i.divideBy(2).round(),s=n.subtract(r);return s.x||s.y?(e.animate&&e.pan?this.panBy(s):(e.pan&&this._rawPanBy(s),this.fire("move"),e.debounceMoveend?(clearTimeout(this._sizeTimer),this._sizeTimer=setTimeout(o.bind(this.fire,this,"moveend"),200)):this.fire("moveend")),this.fire("resize",{oldSize:t,newSize:i})):this},addHandler:function(e,t){if(!t)return this;var i=this[e]=new t(this);return this._handlers.push(i),this.options[e]&&i.enable(),this},remove:function(){this._loaded&&this.fire("unload"),this._initEvents("off");try{delete this._container._leaflet}catch(e){this._container._leaflet=i}return this._clearPanes(),this._clearControlPos&&this._clearControlPos(),this._clearHandlers(),this},getCenter:function(){return this._checkIfLoaded(),this._initialCenter&&!this._moved()?this._initialCenter:this.layerPointToLatLng(this._getCenterLayerPoint())},getZoom:function(){return this._zoom},getBounds:function(){var e=this.getPixelBounds(),t=this.unproject(e.getBottomLeft()),i=this.unproject(e.getTopRight());return new o.LatLngBounds(t,i)},getMinZoom:function(){return this.options.minZoom===i?this._layersMinZoom===i?0:this._layersMinZoom:this.options.minZoom},getMaxZoom:function(){return this.options.maxZoom===i?this._layersMaxZoom===i?1/0:this._layersMaxZoom:this.options.maxZoom},getBoundsZoom:function(e,t,i){e=o.latLngBounds(e);var n,r=this.getMinZoom()-(t?1:0),s=this.getMaxZoom(),a=this.getSize(),u=e.getNorthWest(),c=e.getSouthEast(),l=!0;i=o.point(i||[0,0]);do r++,n=this.project(c,r).subtract(this.project(u,r)).add(i),l=t?n.x<a.x||n.y<a.y:a.contains(n);while(l&&s>=r);return l&&t?null:t?r:r-1},getSize:function(){return(!this._size||this._sizeChanged)&&(this._size=new o.Point(this._container.clientWidth,this._container.clientHeight),this._sizeChanged=!1),this._size.clone()},getPixelBounds:function(){var e=this._getTopLeftPoint();return new o.Bounds(e,e.add(this.getSize()))},getPixelOrigin:function(){return this._checkIfLoaded(),this._initialTopLeftPoint},getPanes:function(){return this._panes},getContainer:function(){return this._container},getZoomScale:function(e){var t=this.options.crs;return t.scale(e)/t.scale(this._zoom)},getScaleZoom:function(e){return this._zoom+Math.log(e)/Math.LN2},project:function(e,t){return t=t===i?this._zoom:t,this.options.crs.latLngToPoint(o.latLng(e),t)},unproject:function(e,t){return t=t===i?this._zoom:t,this.options.crs.pointToLatLng(o.point(e),t)},layerPointToLatLng:function(e){var t=o.point(e).add(this.getPixelOrigin());return this.unproject(t)},latLngToLayerPoint:function(e){var t=this.project(o.latLng(e))._round();return t._subtract(this.getPixelOrigin())},containerPointToLayerPoint:function(e){return o.point(e).subtract(this._getMapPanePos())},layerPointToContainerPoint:function(e){return o.point(e).add(this._getMapPanePos())},containerPointToLatLng:function(e){var t=this.containerPointToLayerPoint(o.point(e));return this.layerPointToLatLng(t)},latLngToContainerPoint:function(e){return this.layerPointToContainerPoint(this.latLngToLayerPoint(o.latLng(e)))},mouseEventToContainerPoint:function(e){return o.DomEvent.getMousePosition(e,this._container)},mouseEventToLayerPoint:function(e){return this.containerPointToLayerPoint(this.mouseEventToContainerPoint(e))},mouseEventToLatLng:function(e){return this.layerPointToLatLng(this.mouseEventToLayerPoint(e))},_initContainer:function(e){var t=this._container=o.DomUtil.get(e);if(!t)throw new Error("Map container not found.");if(t._leaflet)throw new Error("Map container is already initialized.");t._leaflet=!0},_initLayout:function(){var e=this._container;o.DomUtil.addClass(e,"leaflet-container"+(o.Browser.touch?" leaflet-touch":"")+(o.Browser.retina?" leaflet-retina":"")+(o.Browser.ielt9?" leaflet-oldie":"")+(this.options.fadeAnimation?" leaflet-fade-anim":""));var t=o.DomUtil.getStyle(e,"position");"absolute"!==t&&"relative"!==t&&"fixed"!==t&&(e.style.position="relative"),this._initPanes(),this._initControlPos&&this._initControlPos()},_initPanes:function(){var e=this._panes={};this._mapPane=e.mapPane=this._createPane("leaflet-map-pane",this._container),this._tilePane=e.tilePane=this._createPane("leaflet-tile-pane",this._mapPane),e.objectsPane=this._createPane("leaflet-objects-pane",this._mapPane),e.shadowPane=this._createPane("leaflet-shadow-pane"),e.overlayPane=this._createPane("leaflet-overlay-pane"),e.markerPane=this._createPane("leaflet-marker-pane"),e.popupPane=this._createPane("leaflet-popup-pane");var t=" leaflet-zoom-hide";this.options.markerZoomAnimation||(o.DomUtil.addClass(e.markerPane,t),o.DomUtil.addClass(e.shadowPane,t),o.DomUtil.addClass(e.popupPane,t))},_createPane:function(e,t){return o.DomUtil.create("div",e,t||this._panes.objectsPane)},_clearPanes:function(){this._container.removeChild(this._mapPane)},_addLayers:function(e){e=e?o.Util.isArray(e)?e:[e]:[];for(var t=0,i=e.length;i>t;t++)this.addLayer(e[t])},_resetView:function(e,t,i,n){var r=this._zoom!==t;n||(this.fire("movestart"),r&&this.fire("zoomstart")),this._zoom=t,this._initialCenter=e,this._initialTopLeftPoint=this._getNewTopLeftPoint(e),i?this._initialTopLeftPoint._add(this._getMapPanePos()):o.DomUtil.setPosition(this._mapPane,new o.Point(0,0)),this._tileLayersToLoad=this._tileLayersNum;var s=!this._loaded;this._loaded=!0,this.fire("viewreset",{hard:!i}),s&&(this.fire("load"),this.eachLayer(this._layerAdd,this)),this.fire("move"),(r||n)&&this.fire("zoomend"),this.fire("moveend",{hard:!i})},_rawPanBy:function(e){o.DomUtil.setPosition(this._mapPane,this._getMapPanePos().subtract(e))},_getZoomSpan:function(){return this.getMaxZoom()-this.getMinZoom()},_updateZoomLevels:function(){var e,t=1/0,n=-(1/0),o=this._getZoomSpan();for(e in this._zoomBoundLayers){var r=this._zoomBoundLayers[e];isNaN(r.options.minZoom)||(t=Math.min(t,r.options.minZoom)),isNaN(r.options.maxZoom)||(n=Math.max(n,r.options.maxZoom))}e===i?this._layersMaxZoom=this._layersMinZoom=i:(this._layersMaxZoom=n,this._layersMinZoom=t),o!==this._getZoomSpan()&&this.fire("zoomlevelschange")},_panInsideMaxBounds:function(){this.panInsideBounds(this.options.maxBounds)},_checkIfLoaded:function(){if(!this._loaded)throw new Error("Set map center and zoom first.")},_initEvents:function(t){if(o.DomEvent){t=t||"on",o.DomEvent[t](this._container,"click",this._onMouseClick,this);var i,n,r=["dblclick","mousedown","mouseup","mouseenter","mouseleave","mousemove","contextmenu"];for(i=0,n=r.length;n>i;i++)o.DomEvent[t](this._container,r[i],this._fireMouseEvent,this);this.options.trackResize&&o.DomEvent[t](e,"resize",this._onResize,this)}},_onResize:function(){o.Util.cancelAnimFrame(this._resizeRequest),this._resizeRequest=o.Util.requestAnimFrame(function(){this.invalidateSize({debounceMoveend:!0})},this,!1,this._container)},_onMouseClick:function(e){!this._loaded||!e._simulated&&(this.dragging&&this.dragging.moved()||this.boxZoom&&this.boxZoom.moved())||o.DomEvent._skipped(e)||(this.fire("preclick"),this._fireMouseEvent(e))},_fireMouseEvent:function(e){if(this._loaded&&!o.DomEvent._skipped(e)){var t=e.type;if(t="mouseenter"===t?"mouseover":"mouseleave"===t?"mouseout":t,this.hasEventListeners(t)){"contextmenu"===t&&o.DomEvent.preventDefault(e);var i=this.mouseEventToContainerPoint(e),n=this.containerPointToLayerPoint(i),r=this.layerPointToLatLng(n);this.fire(t,{latlng:r,layerPoint:n,containerPoint:i,originalEvent:e})}}},_onTileLayerLoad:function(){this._tileLayersToLoad--,this._tileLayersNum&&!this._tileLayersToLoad&&this.fire("tilelayersload")},_clearHandlers:function(){for(var e=0,t=this._handlers.length;t>e;e++)this._handlers[e].disable()},whenReady:function(e,t){return this._loaded?e.call(t||this,this):this.on("load",e,t),this},_layerAdd:function(e){e.onAdd(this),this.fire("layeradd",{layer:e})},_getMapPanePos:function(){return o.DomUtil.getPosition(this._mapPane)},_moved:function(){var e=this._getMapPanePos();return e&&!e.equals([0,0])},_getTopLeftPoint:function(){return this.getPixelOrigin().subtract(this._getMapPanePos())},_getNewTopLeftPoint:function(e,t){var i=this.getSize()._divideBy(2);return this.project(e,t)._subtract(i)._round()},_latLngToNewLayerPoint:function(e,t,i){var n=this._getNewTopLeftPoint(i,t).add(this._getMapPanePos());return this.project(e,t)._subtract(n)},_getCenterLayerPoint:function(){return this.containerPointToLayerPoint(this.getSize()._divideBy(2))},_getCenterOffset:function(e){return this.latLngToLayerPoint(e).subtract(this._getCenterLayerPoint())},_limitCenter:function(e,t,i){if(!i)return e;var n=this.project(e,t),r=this.getSize().divideBy(2),s=new o.Bounds(n.subtract(r),n.add(r)),a=this._getBoundsOffset(s,i,t);return this.unproject(n.add(a),t)},_limitOffset:function(e,t){if(!t)return e;var i=this.getPixelBounds(),n=new o.Bounds(i.min.add(e),i.max.add(e));return e.add(this._getBoundsOffset(n,t))},_getBoundsOffset:function(e,t,i){var n=this.project(t.getNorthWest(),i).subtract(e.min),r=this.project(t.getSouthEast(),i).subtract(e.max),s=this._rebound(n.x,-r.x),a=this._rebound(n.y,-r.y);return new o.Point(s,a)},_rebound:function(e,t){return e+t>0?Math.round(e-t)/2:Math.max(0,Math.ceil(e))-Math.max(0,Math.floor(t))},_limitZoom:function(e){var t=this.getMinZoom(),i=this.getMaxZoom();return Math.max(t,Math.min(i,e))}}),o.map=function(e,t){return new o.Map(e,t)},o.Projection.Mercator={MAX_LATITUDE:85.0840591556,R_MINOR:6356752.314245179,R_MAJOR:6378137,project:function(e){var t=o.LatLng.DEG_TO_RAD,i=this.MAX_LATITUDE,n=Math.max(Math.min(i,e.lat),-i),r=this.R_MAJOR,s=this.R_MINOR,a=e.lng*t*r,u=n*t,c=s/r,l=Math.sqrt(1-c*c),h=l*Math.sin(u);h=Math.pow((1-h)/(1+h),.5*l);var p=Math.tan(.5*(.5*Math.PI-u))/h;return u=-r*Math.log(p),new o.Point(a,u)},unproject:function(e){for(var t,i=o.LatLng.RAD_TO_DEG,n=this.R_MAJOR,r=this.R_MINOR,s=e.x*i/n,a=r/n,u=Math.sqrt(1-a*a),c=Math.exp(-e.y/n),l=Math.PI/2-2*Math.atan(c),h=15,p=1e-7,d=h,f=.1;Math.abs(f)>p&&--d>0;)t=u*Math.sin(l),f=Math.PI/2-2*Math.atan(c*Math.pow((1-t)/(1+t),.5*u))-l,l+=f;return new o.LatLng(l*i,s)}},o.CRS.EPSG3395=o.extend({},o.CRS,{code:"EPSG:3395",projection:o.Projection.Mercator,transformation:function(){var e=o.Projection.Mercator,t=e.R_MAJOR,i=.5/(Math.PI*t);return new o.Transformation(i,.5,-i,.5)}()}),o.TileLayer=o.Class.extend({includes:o.Mixin.Events,options:{minZoom:0,maxZoom:18,tileSize:256,subdomains:"abc",errorTileUrl:"",attribution:"",zoomOffset:0,opacity:1,unloadInvisibleTiles:o.Browser.mobile,updateWhenIdle:o.Browser.mobile},initialize:function(e,t){t=o.setOptions(this,t),t.detectRetina&&o.Browser.retina&&t.maxZoom>0&&(t.tileSize=Math.floor(t.tileSize/2),t.zoomOffset++,t.minZoom>0&&t.minZoom--,this.options.maxZoom--),t.bounds&&(t.bounds=o.latLngBounds(t.bounds)),this._url=e;var i=this.options.subdomains;"string"==typeof i&&(this.options.subdomains=i.split(""))},onAdd:function(e){this._map=e,this._animated=e._zoomAnimated,this._initContainer(),e.on({viewreset:this._reset,moveend:this._update},this),this._animated&&e.on({zoomanim:this._animateZoom,zoomend:this._endZoomAnim},this),this.options.updateWhenIdle||(this._limitedUpdate=o.Util.limitExecByInterval(this._update,150,this),e.on("move",this._limitedUpdate,this)),this._reset(),this._update()},addTo:function(e){return e.addLayer(this),this},onRemove:function(e){this._container.parentNode.removeChild(this._container),e.off({viewreset:this._reset,moveend:this._update},this),this._animated&&e.off({zoomanim:this._animateZoom,zoomend:this._endZoomAnim},this),this.options.updateWhenIdle||e.off("move",this._limitedUpdate,this),this._container=null,this._map=null},bringToFront:function(){var e=this._map._panes.tilePane;return this._container&&(e.appendChild(this._container),this._setAutoZIndex(e,Math.max)),this},bringToBack:function(){var e=this._map._panes.tilePane;return this._container&&(e.insertBefore(this._container,e.firstChild),this._setAutoZIndex(e,Math.min)),this},getAttribution:function(){return this.options.attribution},getContainer:function(){return this._container},setOpacity:function(e){return this.options.opacity=e,this._map&&this._updateOpacity(),this},setZIndex:function(e){return this.options.zIndex=e,this._updateZIndex(),this},setUrl:function(e,t){return this._url=e,t||this.redraw(),this},redraw:function(){return this._map&&(this._reset({hard:!0}),this._update()),this},_updateZIndex:function(){this._container&&this.options.zIndex!==i&&(this._container.style.zIndex=this.options.zIndex)},_setAutoZIndex:function(e,t){var i,n,o,r=e.children,s=-t(1/0,-(1/0));for(n=0,o=r.length;o>n;n++)r[n]!==this._container&&(i=parseInt(r[n].style.zIndex,10),isNaN(i)||(s=t(s,i)));this.options.zIndex=this._container.style.zIndex=(isFinite(s)?s:0)+t(1,-1)},_updateOpacity:function(){var e,t=this._tiles;if(o.Browser.ielt9)for(e in t)o.DomUtil.setOpacity(t[e],this.options.opacity);else o.DomUtil.setOpacity(this._container,this.options.opacity)},_initContainer:function(){var e=this._map._panes.tilePane;if(!this._container){if(this._container=o.DomUtil.create("div","leaflet-layer"),this._updateZIndex(),this._animated){var t="leaflet-tile-container";this._bgBuffer=o.DomUtil.create("div",t,this._container),this._tileContainer=o.DomUtil.create("div",t,this._container)}else this._tileContainer=this._container;e.appendChild(this._container),this.options.opacity<1&&this._updateOpacity()}},_reset:function(e){for(var t in this._tiles)this.fire("tileunload",{tile:this._tiles[t]});this._tiles={},this._tilesToLoad=0,this.options.reuseTiles&&(this._unusedTiles=[]),this._tileContainer.innerHTML="",this._animated&&e&&e.hard&&this._clearBgBuffer(),this._initContainer()},_getTileSize:function(){var e=this._map,t=e.getZoom()+this.options.zoomOffset,i=this.options.maxNativeZoom,n=this.options.tileSize;return i&&t>i&&(n=Math.round(e.getZoomScale(t)/e.getZoomScale(i)*n)),n},_update:function(){if(this._map){var e=this._map,t=e.getPixelBounds(),i=e.getZoom(),n=this._getTileSize();if(!(i>this.options.maxZoom||i<this.options.minZoom)){var r=o.bounds(t.min.divideBy(n)._floor(),t.max.divideBy(n)._floor());this._addTilesFromCenterOut(r),(this.options.unloadInvisibleTiles||this.options.reuseTiles)&&this._removeOtherTiles(r)}}},_addTilesFromCenterOut:function(e){var i,n,r,s=[],a=e.getCenter();for(i=e.min.y;i<=e.max.y;i++)for(n=e.min.x;n<=e.max.x;n++)r=new o.Point(n,i),this._tileShouldBeLoaded(r)&&s.push(r);var u=s.length;if(0!==u){s.sort(function(e,t){return e.distanceTo(a)-t.distanceTo(a)});var c=t.createDocumentFragment();for(this._tilesToLoad||this.fire("loading"),this._tilesToLoad+=u,n=0;u>n;n++)this._addTile(s[n],c);this._tileContainer.appendChild(c)}},_tileShouldBeLoaded:function(e){if(e.x+":"+e.y in this._tiles)return!1;var t=this.options;if(!t.continuousWorld){var i=this._getWrapTileNum();if(t.noWrap&&(e.x<0||e.x>=i.x)||e.y<0||e.y>=i.y)return!1}if(t.bounds){var n=t.tileSize,o=e.multiplyBy(n),r=o.add([n,n]),s=this._map.unproject(o),a=this._map.unproject(r);if(t.continuousWorld||t.noWrap||(s=s.wrap(),a=a.wrap()),!t.bounds.intersects([s,a]))return!1}return!0},_removeOtherTiles:function(e){var t,i,n,o;for(o in this._tiles)t=o.split(":"),i=parseInt(t[0],10),n=parseInt(t[1],10),(i<e.min.x||i>e.max.x||n<e.min.y||n>e.max.y)&&this._removeTile(o)},_removeTile:function(e){var t=this._tiles[e];this.fire("tileunload",{tile:t,url:t.src}),this.options.reuseTiles?(o.DomUtil.removeClass(t,"leaflet-tile-loaded"),this._unusedTiles.push(t)):t.parentNode===this._tileContainer&&this._tileContainer.removeChild(t),o.Browser.android||(t.onload=null,t.src=o.Util.emptyImageUrl),delete this._tiles[e]},_addTile:function(e,t){var i=this._getTilePos(e),n=this._getTile();o.DomUtil.setPosition(n,i,o.Browser.chrome),this._tiles[e.x+":"+e.y]=n,this._loadTile(n,e),n.parentNode!==this._tileContainer&&t.appendChild(n)},_getZoomForUrl:function(){var e=this.options,t=this._map.getZoom();return e.zoomReverse&&(t=e.maxZoom-t),t+=e.zoomOffset,e.maxNativeZoom?Math.min(t,e.maxNativeZoom):t},_getTilePos:function(e){var t=this._map.getPixelOrigin(),i=this._getTileSize();return e.multiplyBy(i).subtract(t)},getTileUrl:function(e){return o.Util.template(this._url,o.extend({s:this._getSubdomain(e),z:e.z,x:e.x,y:e.y},this.options))},_getWrapTileNum:function(){var e=this._map.options.crs,t=e.getSize(this._map.getZoom());return t.divideBy(this._getTileSize())._floor()},_adjustTilePoint:function(e){var t=this._getWrapTileNum();this.options.continuousWorld||this.options.noWrap||(e.x=(e.x%t.x+t.x)%t.x),this.options.tms&&(e.y=t.y-e.y-1),e.z=this._getZoomForUrl()},_getSubdomain:function(e){var t=Math.abs(e.x+e.y)%this.options.subdomains.length;return this.options.subdomains[t]},_getTile:function(){if(this.options.reuseTiles&&this._unusedTiles.length>0){var e=this._unusedTiles.pop();return this._resetTile(e),e}return this._createTile()},_resetTile:function(){},_createTile:function(){var e=o.DomUtil.create("img","leaflet-tile");return e.style.width=e.style.height=this._getTileSize()+"px",e.galleryimg="no",e.onselectstart=e.onmousemove=o.Util.falseFn,o.Browser.ielt9&&this.options.opacity!==i&&o.DomUtil.setOpacity(e,this.options.opacity),o.Browser.mobileWebkit3d&&(e.style.WebkitBackfaceVisibility="hidden"),e},_loadTile:function(e,t){e._layer=this,e.onload=this._tileOnLoad,e.onerror=this._tileOnError,this._adjustTilePoint(t),e.src=this.getTileUrl(t),this.fire("tileloadstart",{tile:e,url:e.src})},_tileLoaded:function(){this._tilesToLoad--,this._animated&&o.DomUtil.addClass(this._tileContainer,"leaflet-zoom-animated"),this._tilesToLoad||(this.fire("load"),this._animated&&(clearTimeout(this._clearBgBufferTimer),this._clearBgBufferTimer=setTimeout(o.bind(this._clearBgBuffer,this),500)))},_tileOnLoad:function(){var e=this._layer;this.src!==o.Util.emptyImageUrl&&(o.DomUtil.addClass(this,"leaflet-tile-loaded"),e.fire("tileload",{tile:this,url:this.src})),e._tileLoaded()},_tileOnError:function(){var e=this._layer;e.fire("tileerror",{tile:this,url:this.src});var t=e.options.errorTileUrl;t&&(this.src=t),e._tileLoaded()}}),o.tileLayer=function(e,t){return new o.TileLayer(e,t)},o.TileLayer.WMS=o.TileLayer.extend({defaultWmsParams:{service:"WMS",request:"GetMap",version:"1.1.1",layers:"",styles:"",format:"image/jpeg",transparent:!1},initialize:function(e,t){this._url=e;var i=o.extend({},this.defaultWmsParams),n=t.tileSize||this.options.tileSize;t.detectRetina&&o.Browser.retina?i.width=i.height=2*n:i.width=i.height=n;for(var r in t)this.options.hasOwnProperty(r)||"crs"===r||(i[r]=t[r]);this.wmsParams=i,o.setOptions(this,t)},onAdd:function(e){this._crs=this.options.crs||e.options.crs,this._wmsVersion=parseFloat(this.wmsParams.version);var t=this._wmsVersion>=1.3?"crs":"srs";this.wmsParams[t]=this._crs.code,o.TileLayer.prototype.onAdd.call(this,e)},getTileUrl:function(e){var t=this._map,i=this.options.tileSize,n=e.multiplyBy(i),r=n.add([i,i]),s=this._crs.project(t.unproject(n,e.z)),a=this._crs.project(t.unproject(r,e.z)),u=this._wmsVersion>=1.3&&this._crs===o.CRS.EPSG4326?[a.y,s.x,s.y,a.x].join(","):[s.x,a.y,a.x,s.y].join(","),c=o.Util.template(this._url,{s:this._getSubdomain(e)});return c+o.Util.getParamString(this.wmsParams,c,!0)+"&BBOX="+u},setParams:function(e,t){return o.extend(this.wmsParams,e),t||this.redraw(),this}}),o.tileLayer.wms=function(e,t){return new o.TileLayer.WMS(e,t)},o.TileLayer.Canvas=o.TileLayer.extend({options:{async:!1},initialize:function(e){o.setOptions(this,e)},redraw:function(){this._map&&(this._reset({hard:!0}),this._update());for(var e in this._tiles)this._redrawTile(this._tiles[e]);return this},_redrawTile:function(e){this.drawTile(e,e._tilePoint,this._map._zoom)},_createTile:function(){var e=o.DomUtil.create("canvas","leaflet-tile");return e.width=e.height=this.options.tileSize,e.onselectstart=e.onmousemove=o.Util.falseFn,e},_loadTile:function(e,t){e._layer=this,e._tilePoint=t,this._redrawTile(e),this.options.async||this.tileDrawn(e)},drawTile:function(){},tileDrawn:function(e){this._tileOnLoad.call(e)}}),o.tileLayer.canvas=function(e){return new o.TileLayer.Canvas(e)},o.ImageOverlay=o.Class.extend({includes:o.Mixin.Events,options:{opacity:1},initialize:function(e,t,i){this._url=e,this._bounds=o.latLngBounds(t),o.setOptions(this,i)},onAdd:function(e){this._map=e,this._image||this._initImage(),e._panes.overlayPane.appendChild(this._image),e.on("viewreset",this._reset,this),e.options.zoomAnimation&&o.Browser.any3d&&e.on("zoomanim",this._animateZoom,this),this._reset()},onRemove:function(e){e.getPanes().overlayPane.removeChild(this._image),e.off("viewreset",this._reset,this),e.options.zoomAnimation&&e.off("zoomanim",this._animateZoom,this)},addTo:function(e){return e.addLayer(this),this},setOpacity:function(e){return this.options.opacity=e,this._updateOpacity(),this},bringToFront:function(){return this._image&&this._map._panes.overlayPane.appendChild(this._image),this},bringToBack:function(){var e=this._map._panes.overlayPane;return this._image&&e.insertBefore(this._image,e.firstChild),this},setUrl:function(e){this._url=e,this._image.src=this._url},getAttribution:function(){return this.options.attribution},_initImage:function(){this._image=o.DomUtil.create("img","leaflet-image-layer"),this._map.options.zoomAnimation&&o.Browser.any3d?o.DomUtil.addClass(this._image,"leaflet-zoom-animated"):o.DomUtil.addClass(this._image,"leaflet-zoom-hide"),this._updateOpacity(),o.extend(this._image,{galleryimg:"no",onselectstart:o.Util.falseFn,onmousemove:o.Util.falseFn,onload:o.bind(this._onImageLoad,this),src:this._url})},_animateZoom:function(e){var t=this._map,i=this._image,n=t.getZoomScale(e.zoom),r=this._bounds.getNorthWest(),s=this._bounds.getSouthEast(),a=t._latLngToNewLayerPoint(r,e.zoom,e.center),u=t._latLngToNewLayerPoint(s,e.zoom,e.center)._subtract(a),c=a._add(u._multiplyBy(.5*(1-1/n)));i.style[o.DomUtil.TRANSFORM]=o.DomUtil.getTranslateString(c)+" scale("+n+") "},_reset:function(){var e=this._image,t=this._map.latLngToLayerPoint(this._bounds.getNorthWest()),i=this._map.latLngToLayerPoint(this._bounds.getSouthEast())._subtract(t);o.DomUtil.setPosition(e,t),e.style.width=i.x+"px",e.style.height=i.y+"px"},_onImageLoad:function(){this.fire("load")},_updateOpacity:function(){o.DomUtil.setOpacity(this._image,this.options.opacity)}}),o.imageOverlay=function(e,t,i){return new o.ImageOverlay(e,t,i)},o.Icon=o.Class.extend({options:{className:""},initialize:function(e){o.setOptions(this,e)},createIcon:function(e){return this._createIcon("icon",e)},createShadow:function(e){return this._createIcon("shadow",e)},_createIcon:function(e,t){var i=this._getIconUrl(e);if(!i){if("icon"===e)throw new Error("iconUrl not set in Icon options (see the docs).");return null}var n;return n=t&&"IMG"===t.tagName?this._createImg(i,t):this._createImg(i),this._setIconStyles(n,e),n},_setIconStyles:function(e,t){var i,n=this.options,r=o.point(n[t+"Size"]);i="shadow"===t?o.point(n.shadowAnchor||n.iconAnchor):o.point(n.iconAnchor),!i&&r&&(i=r.divideBy(2,!0)),e.className="leaflet-marker-"+t+" "+n.className,i&&(e.style.marginLeft=-i.x+"px",e.style.marginTop=-i.y+"px"),r&&(e.style.width=r.x+"px",e.style.height=r.y+"px")},_createImg:function(e,i){return i=i||t.createElement("img"),i.src=e,i},_getIconUrl:function(e){return o.Browser.retina&&this.options[e+"RetinaUrl"]?this.options[e+"RetinaUrl"]:this.options[e+"Url"];
-}}),o.icon=function(e){return new o.Icon(e)},o.Icon.Default=o.Icon.extend({options:{iconSize:[25,41],iconAnchor:[12,41],popupAnchor:[1,-34],shadowSize:[41,41]},_getIconUrl:function(e){var t=e+"Url";if(this.options[t])return this.options[t];o.Browser.retina&&"icon"===e&&(e+="-2x");var i=o.Icon.Default.imagePath;if(!i)throw new Error("Couldn't autodetect L.Icon.Default.imagePath, set it manually.");return i+"/marker-"+e+".png"}}),o.Icon.Default.imagePath=function(){var e,i,n,o,r,s=t.getElementsByTagName("script"),a=/[\/^]leaflet[\-\._]?([\w\-\._]*)\.js\??/;for(e=0,i=s.length;i>e;e++)if(n=s[e].src,o=n.match(a))return r=n.split(a)[0],(r?r+"/":"")+"images"}(),o.Marker=o.Class.extend({includes:o.Mixin.Events,options:{icon:new o.Icon.Default,title:"",alt:"",clickable:!0,draggable:!1,keyboard:!0,zIndexOffset:0,opacity:1,riseOnHover:!1,riseOffset:250},initialize:function(e,t){o.setOptions(this,t),this._latlng=o.latLng(e)},onAdd:function(e){this._map=e,e.on("viewreset",this.update,this),this._initIcon(),this.update(),this.fire("add"),e.options.zoomAnimation&&e.options.markerZoomAnimation&&e.on("zoomanim",this._animateZoom,this)},addTo:function(e){return e.addLayer(this),this},onRemove:function(e){this.dragging&&this.dragging.disable(),this._removeIcon(),this._removeShadow(),this.fire("remove"),e.off({viewreset:this.update,zoomanim:this._animateZoom},this),this._map=null},getLatLng:function(){return this._latlng},setLatLng:function(e){return this._latlng=o.latLng(e),this.update(),this.fire("move",{latlng:this._latlng})},setZIndexOffset:function(e){return this.options.zIndexOffset=e,this.update(),this},setIcon:function(e){return this.options.icon=e,this._map&&(this._initIcon(),this.update()),this._popup&&this.bindPopup(this._popup),this},update:function(){if(this._icon){var e=this._map.latLngToLayerPoint(this._latlng).round();this._setPos(e)}return this},_initIcon:function(){var e=this.options,t=this._map,i=t.options.zoomAnimation&&t.options.markerZoomAnimation,n=i?"leaflet-zoom-animated":"leaflet-zoom-hide",r=e.icon.createIcon(this._icon),s=!1;r!==this._icon&&(this._icon&&this._removeIcon(),s=!0,e.title&&(r.title=e.title),e.alt&&(r.alt=e.alt)),o.DomUtil.addClass(r,n),e.keyboard&&(r.tabIndex="0"),this._icon=r,this._initInteraction(),e.riseOnHover&&o.DomEvent.on(r,"mouseover",this._bringToFront,this).on(r,"mouseout",this._resetZIndex,this);var a=e.icon.createShadow(this._shadow),u=!1;a!==this._shadow&&(this._removeShadow(),u=!0),a&&o.DomUtil.addClass(a,n),this._shadow=a,e.opacity<1&&this._updateOpacity();var c=this._map._panes;s&&c.markerPane.appendChild(this._icon),a&&u&&c.shadowPane.appendChild(this._shadow)},_removeIcon:function(){this.options.riseOnHover&&o.DomEvent.off(this._icon,"mouseover",this._bringToFront).off(this._icon,"mouseout",this._resetZIndex),this._map._panes.markerPane.removeChild(this._icon),this._icon=null},_removeShadow:function(){this._shadow&&this._map._panes.shadowPane.removeChild(this._shadow),this._shadow=null},_setPos:function(e){o.DomUtil.setPosition(this._icon,e),this._shadow&&o.DomUtil.setPosition(this._shadow,e),this._zIndex=e.y+this.options.zIndexOffset,this._resetZIndex()},_updateZIndex:function(e){this._icon.style.zIndex=this._zIndex+e},_animateZoom:function(e){var t=this._map._latLngToNewLayerPoint(this._latlng,e.zoom,e.center).round();this._setPos(t)},_initInteraction:function(){if(this.options.clickable){var e=this._icon,t=["dblclick","mousedown","mouseover","mouseout","contextmenu"];o.DomUtil.addClass(e,"leaflet-clickable"),o.DomEvent.on(e,"click",this._onMouseClick,this),o.DomEvent.on(e,"keypress",this._onKeyPress,this);for(var i=0;i<t.length;i++)o.DomEvent.on(e,t[i],this._fireMouseEvent,this);o.Handler.MarkerDrag&&(this.dragging=new o.Handler.MarkerDrag(this),this.options.draggable&&this.dragging.enable())}},_onMouseClick:function(e){var t=this.dragging&&this.dragging.moved();(this.hasEventListeners(e.type)||t)&&o.DomEvent.stopPropagation(e),t||(this.dragging&&this.dragging._enabled||!this._map.dragging||!this._map.dragging.moved())&&this.fire(e.type,{originalEvent:e,latlng:this._latlng})},_onKeyPress:function(e){13===e.keyCode&&this.fire("click",{originalEvent:e,latlng:this._latlng})},_fireMouseEvent:function(e){this.fire(e.type,{originalEvent:e,latlng:this._latlng}),"contextmenu"===e.type&&this.hasEventListeners(e.type)&&o.DomEvent.preventDefault(e),"mousedown"!==e.type?o.DomEvent.stopPropagation(e):o.DomEvent.preventDefault(e)},setOpacity:function(e){return this.options.opacity=e,this._map&&this._updateOpacity(),this},_updateOpacity:function(){o.DomUtil.setOpacity(this._icon,this.options.opacity),this._shadow&&o.DomUtil.setOpacity(this._shadow,this.options.opacity)},_bringToFront:function(){this._updateZIndex(this.options.riseOffset)},_resetZIndex:function(){this._updateZIndex(0)}}),o.marker=function(e,t){return new o.Marker(e,t)},o.DivIcon=o.Icon.extend({options:{iconSize:[12,12],className:"leaflet-div-icon",html:!1},createIcon:function(e){var i=e&&"DIV"===e.tagName?e:t.createElement("div"),n=this.options;return n.html!==!1?i.innerHTML=n.html:i.innerHTML="",n.bgPos&&(i.style.backgroundPosition=-n.bgPos.x+"px "+-n.bgPos.y+"px"),this._setIconStyles(i,"icon"),i},createShadow:function(){return null}}),o.divIcon=function(e){return new o.DivIcon(e)},o.Map.mergeOptions({closePopupOnClick:!0}),o.Popup=o.Class.extend({includes:o.Mixin.Events,options:{minWidth:50,maxWidth:300,autoPan:!0,closeButton:!0,offset:[0,7],autoPanPadding:[5,5],keepInView:!1,className:"",zoomAnimation:!0},initialize:function(e,t){o.setOptions(this,e),this._source=t,this._animated=o.Browser.any3d&&this.options.zoomAnimation,this._isOpen=!1},onAdd:function(e){this._map=e,this._container||this._initLayout();var t=e.options.fadeAnimation;t&&o.DomUtil.setOpacity(this._container,0),e._panes.popupPane.appendChild(this._container),e.on(this._getEvents(),this),this.update(),t&&o.DomUtil.setOpacity(this._container,1),this.fire("open"),e.fire("popupopen",{popup:this}),this._source&&this._source.fire("popupopen",{popup:this})},addTo:function(e){return e.addLayer(this),this},openOn:function(e){return e.openPopup(this),this},onRemove:function(e){e._panes.popupPane.removeChild(this._container),o.Util.falseFn(this._container.offsetWidth),e.off(this._getEvents(),this),e.options.fadeAnimation&&o.DomUtil.setOpacity(this._container,0),this._map=null,this.fire("close"),e.fire("popupclose",{popup:this}),this._source&&this._source.fire("popupclose",{popup:this})},getLatLng:function(){return this._latlng},setLatLng:function(e){return this._latlng=o.latLng(e),this._map&&(this._updatePosition(),this._adjustPan()),this},getContent:function(){return this._content},setContent:function(e){return this._content=e,this.update(),this},update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updateLayout(),this._updatePosition(),this._container.style.visibility="",this._adjustPan())},_getEvents:function(){var e={viewreset:this._updatePosition};return this._animated&&(e.zoomanim=this._zoomAnimation),("closeOnClick"in this.options?this.options.closeOnClick:this._map.options.closePopupOnClick)&&(e.preclick=this._close),this.options.keepInView&&(e.moveend=this._adjustPan),e},_close:function(){this._map&&this._map.closePopup(this)},_initLayout:function(){var e,t="leaflet-popup",i=t+" "+this.options.className+" leaflet-zoom-"+(this._animated?"animated":"hide"),n=this._container=o.DomUtil.create("div",i);this.options.closeButton&&(e=this._closeButton=o.DomUtil.create("a",t+"-close-button",n),e.href="#close",e.innerHTML="&#215;",o.DomEvent.disableClickPropagation(e),o.DomEvent.on(e,"click",this._onCloseButtonClick,this));var r=this._wrapper=o.DomUtil.create("div",t+"-content-wrapper",n);o.DomEvent.disableClickPropagation(r),this._contentNode=o.DomUtil.create("div",t+"-content",r),o.DomEvent.disableScrollPropagation(this._contentNode),o.DomEvent.on(r,"contextmenu",o.DomEvent.stopPropagation),this._tipContainer=o.DomUtil.create("div",t+"-tip-container",n),this._tip=o.DomUtil.create("div",t+"-tip",this._tipContainer)},_updateContent:function(){if(this._content){if("string"==typeof this._content)this._contentNode.innerHTML=this._content;else{for(;this._contentNode.hasChildNodes();)this._contentNode.removeChild(this._contentNode.firstChild);this._contentNode.appendChild(this._content)}this.fire("contentupdate")}},_updateLayout:function(){var e=this._contentNode,t=e.style;t.width="",t.whiteSpace="nowrap";var i=e.offsetWidth;i=Math.min(i,this.options.maxWidth),i=Math.max(i,this.options.minWidth),t.width=i+1+"px",t.whiteSpace="",t.height="";var n=e.offsetHeight,r=this.options.maxHeight,s="leaflet-popup-scrolled";r&&n>r?(t.height=r+"px",o.DomUtil.addClass(e,s)):o.DomUtil.removeClass(e,s),this._containerWidth=this._container.offsetWidth},_updatePosition:function(){if(this._map){var e=this._map.latLngToLayerPoint(this._latlng),t=this._animated,i=o.point(this.options.offset);t&&o.DomUtil.setPosition(this._container,e),this._containerBottom=-i.y-(t?0:e.y),this._containerLeft=-Math.round(this._containerWidth/2)+i.x+(t?0:e.x),this._container.style.bottom=this._containerBottom+"px",this._container.style.left=this._containerLeft+"px"}},_zoomAnimation:function(e){var t=this._map._latLngToNewLayerPoint(this._latlng,e.zoom,e.center);o.DomUtil.setPosition(this._container,t)},_adjustPan:function(){if(this.options.autoPan){var e=this._map,t=this._container.offsetHeight,i=this._containerWidth,n=new o.Point(this._containerLeft,-t-this._containerBottom);this._animated&&n._add(o.DomUtil.getPosition(this._container));var r=e.layerPointToContainerPoint(n),s=o.point(this.options.autoPanPadding),a=o.point(this.options.autoPanPaddingTopLeft||s),u=o.point(this.options.autoPanPaddingBottomRight||s),c=e.getSize(),l=0,h=0;r.x+i+u.x>c.x&&(l=r.x+i-c.x+u.x),r.x-l-a.x<0&&(l=r.x-a.x),r.y+t+u.y>c.y&&(h=r.y+t-c.y+u.y),r.y-h-a.y<0&&(h=r.y-a.y),(l||h)&&e.fire("autopanstart").panBy([l,h])}},_onCloseButtonClick:function(e){this._close(),o.DomEvent.stop(e)}}),o.popup=function(e,t){return new o.Popup(e,t)},o.Map.include({openPopup:function(e,t,i){if(this.closePopup(),!(e instanceof o.Popup)){var n=e;e=new o.Popup(i).setLatLng(t).setContent(n)}return e._isOpen=!0,this._popup=e,this.addLayer(e)},closePopup:function(e){return e&&e!==this._popup||(e=this._popup,this._popup=null),e&&(this.removeLayer(e),e._isOpen=!1),this}}),o.Marker.include({openPopup:function(){return this._popup&&this._map&&!this._map.hasLayer(this._popup)&&(this._popup.setLatLng(this._latlng),this._map.openPopup(this._popup)),this},closePopup:function(){return this._popup&&this._popup._close(),this},togglePopup:function(){return this._popup&&(this._popup._isOpen?this.closePopup():this.openPopup()),this},bindPopup:function(e,t){var i=o.point(this.options.icon.options.popupAnchor||[0,0]);return i=i.add(o.Popup.prototype.options.offset),t&&t.offset&&(i=i.add(t.offset)),t=o.extend({offset:i},t),this._popupHandlersAdded||(this.on("click",this.togglePopup,this).on("remove",this.closePopup,this).on("move",this._movePopup,this),this._popupHandlersAdded=!0),e instanceof o.Popup?(o.setOptions(e,t),this._popup=e):this._popup=new o.Popup(t,this).setContent(e),this},setPopupContent:function(e){return this._popup&&this._popup.setContent(e),this},unbindPopup:function(){return this._popup&&(this._popup=null,this.off("click",this.togglePopup,this).off("remove",this.closePopup,this).off("move",this._movePopup,this),this._popupHandlersAdded=!1),this},getPopup:function(){return this._popup},_movePopup:function(e){this._popup.setLatLng(e.latlng)}}),o.LayerGroup=o.Class.extend({initialize:function(e){this._layers={};var t,i;if(e)for(t=0,i=e.length;i>t;t++)this.addLayer(e[t])},addLayer:function(e){var t=this.getLayerId(e);return this._layers[t]=e,this._map&&this._map.addLayer(e),this},removeLayer:function(e){var t=e in this._layers?e:this.getLayerId(e);return this._map&&this._layers[t]&&this._map.removeLayer(this._layers[t]),delete this._layers[t],this},hasLayer:function(e){return e?e in this._layers||this.getLayerId(e)in this._layers:!1},clearLayers:function(){return this.eachLayer(this.removeLayer,this),this},invoke:function(e){var t,i,n=Array.prototype.slice.call(arguments,1);for(t in this._layers)i=this._layers[t],i[e]&&i[e].apply(i,n);return this},onAdd:function(e){this._map=e,this.eachLayer(e.addLayer,e)},onRemove:function(e){this.eachLayer(e.removeLayer,e),this._map=null},addTo:function(e){return e.addLayer(this),this},eachLayer:function(e,t){for(var i in this._layers)e.call(t,this._layers[i]);return this},getLayer:function(e){return this._layers[e]},getLayers:function(){var e=[];for(var t in this._layers)e.push(this._layers[t]);return e},setZIndex:function(e){return this.invoke("setZIndex",e)},getLayerId:function(e){return o.stamp(e)}}),o.layerGroup=function(e){return new o.LayerGroup(e)},o.FeatureGroup=o.LayerGroup.extend({includes:o.Mixin.Events,statics:{EVENTS:"click dblclick mouseover mouseout mousemove contextmenu popupopen popupclose"},addLayer:function(e){return this.hasLayer(e)?this:("on"in e&&e.on(o.FeatureGroup.EVENTS,this._propagateEvent,this),o.LayerGroup.prototype.addLayer.call(this,e),this._popupContent&&e.bindPopup&&e.bindPopup(this._popupContent,this._popupOptions),this.fire("layeradd",{layer:e}))},removeLayer:function(e){return this.hasLayer(e)?(e in this._layers&&(e=this._layers[e]),e.off(o.FeatureGroup.EVENTS,this._propagateEvent,this),o.LayerGroup.prototype.removeLayer.call(this,e),this._popupContent&&this.invoke("unbindPopup"),this.fire("layerremove",{layer:e})):this},bindPopup:function(e,t){return this._popupContent=e,this._popupOptions=t,this.invoke("bindPopup",e,t)},openPopup:function(e){for(var t in this._layers){this._layers[t].openPopup(e);break}return this},setStyle:function(e){return this.invoke("setStyle",e)},bringToFront:function(){return this.invoke("bringToFront")},bringToBack:function(){return this.invoke("bringToBack")},getBounds:function(){var e=new o.LatLngBounds;return this.eachLayer(function(t){e.extend(t instanceof o.Marker?t.getLatLng():t.getBounds())}),e},_propagateEvent:function(e){e=o.extend({layer:e.target,target:this},e),this.fire(e.type,e)}}),o.featureGroup=function(e){return new o.FeatureGroup(e)},o.Path=o.Class.extend({includes:[o.Mixin.Events],statics:{CLIP_PADDING:function(){var t=o.Browser.mobile?1280:2e3,i=(t/Math.max(e.outerWidth,e.outerHeight)-1)/2;return Math.max(0,Math.min(.5,i))}()},options:{stroke:!0,color:"#0033ff",dashArray:null,lineCap:null,lineJoin:null,weight:5,opacity:.5,fill:!1,fillColor:null,fillOpacity:.2,clickable:!0},initialize:function(e){o.setOptions(this,e)},onAdd:function(e){this._map=e,this._container||(this._initElements(),this._initEvents()),this.projectLatlngs(),this._updatePath(),this._container&&this._map._pathRoot.appendChild(this._container),this.fire("add"),e.on({viewreset:this.projectLatlngs,moveend:this._updatePath},this)},addTo:function(e){return e.addLayer(this),this},onRemove:function(e){e._pathRoot.removeChild(this._container),this.fire("remove"),this._map=null,o.Browser.vml&&(this._container=null,this._stroke=null,this._fill=null),e.off({viewreset:this.projectLatlngs,moveend:this._updatePath},this)},projectLatlngs:function(){},setStyle:function(e){return o.setOptions(this,e),this._container&&this._updateStyle(),this},redraw:function(){return this._map&&(this.projectLatlngs(),this._updatePath()),this}}),o.Map.include({_updatePathViewport:function(){var e=o.Path.CLIP_PADDING,t=this.getSize(),i=o.DomUtil.getPosition(this._mapPane),n=i.multiplyBy(-1)._subtract(t.multiplyBy(e)._round()),r=n.add(t.multiplyBy(1+2*e)._round());this._pathViewport=new o.Bounds(n,r)}}),o.Path.SVG_NS="http://www.w3.org/2000/svg",o.Browser.svg=!(!t.createElementNS||!t.createElementNS(o.Path.SVG_NS,"svg").createSVGRect),o.Path=o.Path.extend({statics:{SVG:o.Browser.svg},bringToFront:function(){var e=this._map._pathRoot,t=this._container;return t&&e.lastChild!==t&&e.appendChild(t),this},bringToBack:function(){var e=this._map._pathRoot,t=this._container,i=e.firstChild;return t&&i!==t&&e.insertBefore(t,i),this},getPathString:function(){},_createElement:function(e){return t.createElementNS(o.Path.SVG_NS,e)},_initElements:function(){this._map._initPathRoot(),this._initPath(),this._initStyle()},_initPath:function(){this._container=this._createElement("g"),this._path=this._createElement("path"),this.options.className&&o.DomUtil.addClass(this._path,this.options.className),this._container.appendChild(this._path)},_initStyle:function(){this.options.stroke&&(this._path.setAttribute("stroke-linejoin","round"),this._path.setAttribute("stroke-linecap","round")),this.options.fill&&this._path.setAttribute("fill-rule","evenodd"),this.options.pointerEvents&&this._path.setAttribute("pointer-events",this.options.pointerEvents),this.options.clickable||this.options.pointerEvents||this._path.setAttribute("pointer-events","none"),this._updateStyle()},_updateStyle:function(){this.options.stroke?(this._path.setAttribute("stroke",this.options.color),this._path.setAttribute("stroke-opacity",this.options.opacity),this._path.setAttribute("stroke-width",this.options.weight),this.options.dashArray?this._path.setAttribute("stroke-dasharray",this.options.dashArray):this._path.removeAttribute("stroke-dasharray"),this.options.lineCap&&this._path.setAttribute("stroke-linecap",this.options.lineCap),this.options.lineJoin&&this._path.setAttribute("stroke-linejoin",this.options.lineJoin)):this._path.setAttribute("stroke","none"),this.options.fill?(this._path.setAttribute("fill",this.options.fillColor||this.options.color),this._path.setAttribute("fill-opacity",this.options.fillOpacity)):this._path.setAttribute("fill","none")},_updatePath:function(){var e=this.getPathString();e||(e="M0 0"),this._path.setAttribute("d",e)},_initEvents:function(){if(this.options.clickable){(o.Browser.svg||!o.Browser.vml)&&o.DomUtil.addClass(this._path,"leaflet-clickable"),o.DomEvent.on(this._container,"click",this._onMouseClick,this);for(var e=["dblclick","mousedown","mouseover","mouseout","mousemove","contextmenu"],t=0;t<e.length;t++)o.DomEvent.on(this._container,e[t],this._fireMouseEvent,this)}},_onMouseClick:function(e){this._map.dragging&&this._map.dragging.moved()||this._fireMouseEvent(e)},_fireMouseEvent:function(e){if(this.hasEventListeners(e.type)){var t=this._map,i=t.mouseEventToContainerPoint(e),n=t.containerPointToLayerPoint(i),r=t.layerPointToLatLng(n);this.fire(e.type,{latlng:r,layerPoint:n,containerPoint:i,originalEvent:e}),"contextmenu"===e.type&&o.DomEvent.preventDefault(e),"mousemove"!==e.type&&o.DomEvent.stopPropagation(e)}}}),o.Map.include({_initPathRoot:function(){this._pathRoot||(this._pathRoot=o.Path.prototype._createElement("svg"),this._panes.overlayPane.appendChild(this._pathRoot),this.options.zoomAnimation&&o.Browser.any3d?(o.DomUtil.addClass(this._pathRoot,"leaflet-zoom-animated"),this.on({zoomanim:this._animatePathZoom,zoomend:this._endPathZoom})):o.DomUtil.addClass(this._pathRoot,"leaflet-zoom-hide"),this.on("moveend",this._updateSvgViewport),this._updateSvgViewport())},_animatePathZoom:function(e){var t=this.getZoomScale(e.zoom),i=this._getCenterOffset(e.center)._multiplyBy(-t)._add(this._pathViewport.min);this._pathRoot.style[o.DomUtil.TRANSFORM]=o.DomUtil.getTranslateString(i)+" scale("+t+") ",this._pathZooming=!0},_endPathZoom:function(){this._pathZooming=!1},_updateSvgViewport:function(){if(!this._pathZooming){this._updatePathViewport();var e=this._pathViewport,t=e.min,i=e.max,n=i.x-t.x,r=i.y-t.y,s=this._pathRoot,a=this._panes.overlayPane;o.Browser.mobileWebkit&&a.removeChild(s),o.DomUtil.setPosition(s,t),s.setAttribute("width",n),s.setAttribute("height",r),s.setAttribute("viewBox",[t.x,t.y,n,r].join(" ")),o.Browser.mobileWebkit&&a.appendChild(s)}}}),o.Path.include({bindPopup:function(e,t){return e instanceof o.Popup?this._popup=e:((!this._popup||t)&&(this._popup=new o.Popup(t,this)),this._popup.setContent(e)),this._popupHandlersAdded||(this.on("click",this._openPopup,this).on("remove",this.closePopup,this),this._popupHandlersAdded=!0),this},unbindPopup:function(){return this._popup&&(this._popup=null,this.off("click",this._openPopup).off("remove",this.closePopup),this._popupHandlersAdded=!1),this},openPopup:function(e){return this._popup&&(e=e||this._latlng||this._latlngs[Math.floor(this._latlngs.length/2)],this._openPopup({latlng:e})),this},closePopup:function(){return this._popup&&this._popup._close(),this},_openPopup:function(e){this._popup.setLatLng(e.latlng),this._map.openPopup(this._popup)}}),o.Browser.vml=!o.Browser.svg&&function(){try{var e=t.createElement("div");e.innerHTML='<v:shape adj="1"/>';var i=e.firstChild;return i.style.behavior="url(#default#VML)",i&&"object"==typeof i.adj}catch(n){return!1}}(),o.Path=o.Browser.svg||!o.Browser.vml?o.Path:o.Path.extend({statics:{VML:!0,CLIP_PADDING:.02},_createElement:function(){try{return t.namespaces.add("lvml","urn:schemas-microsoft-com:vml"),function(e){return t.createElement("<lvml:"+e+' class="lvml">')}}catch(e){return function(e){return t.createElement("<"+e+' xmlns="urn:schemas-microsoft.com:vml" class="lvml">')}}}(),_initPath:function(){var e=this._container=this._createElement("shape");o.DomUtil.addClass(e,"leaflet-vml-shape"+(this.options.className?" "+this.options.className:"")),this.options.clickable&&o.DomUtil.addClass(e,"leaflet-clickable"),e.coordsize="1 1",this._path=this._createElement("path"),e.appendChild(this._path),this._map._pathRoot.appendChild(e)},_initStyle:function(){this._updateStyle()},_updateStyle:function(){var e=this._stroke,t=this._fill,i=this.options,n=this._container;n.stroked=i.stroke,n.filled=i.fill,i.stroke?(e||(e=this._stroke=this._createElement("stroke"),e.endcap="round",n.appendChild(e)),e.weight=i.weight+"px",e.color=i.color,e.opacity=i.opacity,i.dashArray?e.dashStyle=o.Util.isArray(i.dashArray)?i.dashArray.join(" "):i.dashArray.replace(/( *, *)/g," "):e.dashStyle="",i.lineCap&&(e.endcap=i.lineCap.replace("butt","flat")),i.lineJoin&&(e.joinstyle=i.lineJoin)):e&&(n.removeChild(e),this._stroke=null),i.fill?(t||(t=this._fill=this._createElement("fill"),n.appendChild(t)),t.color=i.fillColor||i.color,t.opacity=i.fillOpacity):t&&(n.removeChild(t),this._fill=null)},_updatePath:function(){var e=this._container.style;e.display="none",this._path.v=this.getPathString()+" ",e.display=""}}),o.Map.include(o.Browser.svg||!o.Browser.vml?{}:{_initPathRoot:function(){if(!this._pathRoot){var e=this._pathRoot=t.createElement("div");e.className="leaflet-vml-container",this._panes.overlayPane.appendChild(e),this.on("moveend",this._updatePathViewport),this._updatePathViewport()}}}),o.Browser.canvas=function(){return!!t.createElement("canvas").getContext}(),o.Path=o.Path.SVG&&!e.L_PREFER_CANVAS||!o.Browser.canvas?o.Path:o.Path.extend({statics:{CANVAS:!0,SVG:!1},redraw:function(){return this._map&&(this.projectLatlngs(),this._requestUpdate()),this},setStyle:function(e){return o.setOptions(this,e),this._map&&(this._updateStyle(),this._requestUpdate()),this},onRemove:function(e){e.off("viewreset",this.projectLatlngs,this).off("moveend",this._updatePath,this),this.options.clickable&&(this._map.off("click",this._onClick,this),this._map.off("mousemove",this._onMouseMove,this)),this._requestUpdate(),this.fire("remove"),this._map=null},_requestUpdate:function(){this._map&&!o.Path._updateRequest&&(o.Path._updateRequest=o.Util.requestAnimFrame(this._fireMapMoveEnd,this._map))},_fireMapMoveEnd:function(){o.Path._updateRequest=null,this.fire("moveend")},_initElements:function(){this._map._initPathRoot(),this._ctx=this._map._canvasCtx},_updateStyle:function(){var e=this.options;e.stroke&&(this._ctx.lineWidth=e.weight,this._ctx.strokeStyle=e.color),e.fill&&(this._ctx.fillStyle=e.fillColor||e.color)},_drawPath:function(){var e,t,i,n,r,s;for(this._ctx.beginPath(),e=0,i=this._parts.length;i>e;e++){for(t=0,n=this._parts[e].length;n>t;t++)r=this._parts[e][t],s=(0===t?"move":"line")+"To",this._ctx[s](r.x,r.y);this instanceof o.Polygon&&this._ctx.closePath()}},_checkIfEmpty:function(){return!this._parts.length},_updatePath:function(){if(!this._checkIfEmpty()){var e=this._ctx,t=this.options;this._drawPath(),e.save(),this._updateStyle(),t.fill&&(e.globalAlpha=t.fillOpacity,e.fill()),t.stroke&&(e.globalAlpha=t.opacity,e.stroke()),e.restore()}},_initEvents:function(){this.options.clickable&&(this._map.on("mousemove",this._onMouseMove,this),this._map.on("click",this._onClick,this))},_onClick:function(e){this._containsPoint(e.layerPoint)&&this.fire("click",e)},_onMouseMove:function(e){this._map&&!this._map._animatingZoom&&(this._containsPoint(e.layerPoint)?(this._ctx.canvas.style.cursor="pointer",this._mouseInside=!0,this.fire("mouseover",e)):this._mouseInside&&(this._ctx.canvas.style.cursor="",this._mouseInside=!1,this.fire("mouseout",e)))}}),o.Map.include(o.Path.SVG&&!e.L_PREFER_CANVAS||!o.Browser.canvas?{}:{_initPathRoot:function(){var e,i=this._pathRoot;i||(i=this._pathRoot=t.createElement("canvas"),i.style.position="absolute",e=this._canvasCtx=i.getContext("2d"),e.lineCap="round",e.lineJoin="round",this._panes.overlayPane.appendChild(i),this.options.zoomAnimation&&(this._pathRoot.className="leaflet-zoom-animated",this.on("zoomanim",this._animatePathZoom),this.on("zoomend",this._endPathZoom)),this.on("moveend",this._updateCanvasViewport),this._updateCanvasViewport())},_updateCanvasViewport:function(){if(!this._pathZooming){this._updatePathViewport();var e=this._pathViewport,t=e.min,i=e.max.subtract(t),n=this._pathRoot;o.DomUtil.setPosition(n,t),n.width=i.x,n.height=i.y,n.getContext("2d").translate(-t.x,-t.y)}}}),o.LineUtil={simplify:function(e,t){if(!t||!e.length)return e.slice();var i=t*t;return e=this._reducePoints(e,i),e=this._simplifyDP(e,i)},pointToSegmentDistance:function(e,t,i){return Math.sqrt(this._sqClosestPointOnSegment(e,t,i,!0))},closestPointOnSegment:function(e,t,i){return this._sqClosestPointOnSegment(e,t,i)},_simplifyDP:function(e,t){var n=e.length,o=typeof Uint8Array!=i+""?Uint8Array:Array,r=new o(n);r[0]=r[n-1]=1,this._simplifyDPStep(e,r,t,0,n-1);var s,a=[];for(s=0;n>s;s++)r[s]&&a.push(e[s]);return a},_simplifyDPStep:function(e,t,i,n,o){var r,s,a,u=0;for(s=n+1;o-1>=s;s++)a=this._sqClosestPointOnSegment(e[s],e[n],e[o],!0),a>u&&(r=s,u=a);u>i&&(t[r]=1,this._simplifyDPStep(e,t,i,n,r),this._simplifyDPStep(e,t,i,r,o))},_reducePoints:function(e,t){for(var i=[e[0]],n=1,o=0,r=e.length;r>n;n++)this._sqDist(e[n],e[o])>t&&(i.push(e[n]),o=n);return r-1>o&&i.push(e[r-1]),i},clipSegment:function(e,t,i,n){var o,r,s,a=n?this._lastCode:this._getBitCode(e,i),u=this._getBitCode(t,i);for(this._lastCode=u;;){if(!(a|u))return[e,t];if(a&u)return!1;o=a||u,r=this._getEdgeIntersection(e,t,o,i),s=this._getBitCode(r,i),o===a?(e=r,a=s):(t=r,u=s)}},_getEdgeIntersection:function(e,t,i,n){var r=t.x-e.x,s=t.y-e.y,a=n.min,u=n.max;return 8&i?new o.Point(e.x+r*(u.y-e.y)/s,u.y):4&i?new o.Point(e.x+r*(a.y-e.y)/s,a.y):2&i?new o.Point(u.x,e.y+s*(u.x-e.x)/r):1&i?new o.Point(a.x,e.y+s*(a.x-e.x)/r):void 0},_getBitCode:function(e,t){var i=0;return e.x<t.min.x?i|=1:e.x>t.max.x&&(i|=2),e.y<t.min.y?i|=4:e.y>t.max.y&&(i|=8),i},_sqDist:function(e,t){var i=t.x-e.x,n=t.y-e.y;return i*i+n*n},_sqClosestPointOnSegment:function(e,t,i,n){var r,s=t.x,a=t.y,u=i.x-s,c=i.y-a,l=u*u+c*c;return l>0&&(r=((e.x-s)*u+(e.y-a)*c)/l,r>1?(s=i.x,a=i.y):r>0&&(s+=u*r,a+=c*r)),u=e.x-s,c=e.y-a,n?u*u+c*c:new o.Point(s,a)}},o.Polyline=o.Path.extend({initialize:function(e,t){o.Path.prototype.initialize.call(this,t),this._latlngs=this._convertLatLngs(e)},options:{smoothFactor:1,noClip:!1},projectLatlngs:function(){this._originalPoints=[];for(var e=0,t=this._latlngs.length;t>e;e++)this._originalPoints[e]=this._map.latLngToLayerPoint(this._latlngs[e])},getPathString:function(){for(var e=0,t=this._parts.length,i="";t>e;e++)i+=this._getPathPartStr(this._parts[e]);return i},getLatLngs:function(){return this._latlngs},setLatLngs:function(e){return this._latlngs=this._convertLatLngs(e),this.redraw()},addLatLng:function(e){return this._latlngs.push(o.latLng(e)),this.redraw()},spliceLatLngs:function(){var e=[].splice.apply(this._latlngs,arguments);return this._convertLatLngs(this._latlngs,!0),this.redraw(),e},closestLayerPoint:function(e){for(var t,i,n=1/0,r=this._parts,s=null,a=0,u=r.length;u>a;a++)for(var c=r[a],l=1,h=c.length;h>l;l++){t=c[l-1],i=c[l];var p=o.LineUtil._sqClosestPointOnSegment(e,t,i,!0);n>p&&(n=p,s=o.LineUtil._sqClosestPointOnSegment(e,t,i))}return s&&(s.distance=Math.sqrt(n)),s},getBounds:function(){return new o.LatLngBounds(this.getLatLngs())},_convertLatLngs:function(e,t){var i,n,r=t?e:[];for(i=0,n=e.length;n>i;i++){if(o.Util.isArray(e[i])&&"number"!=typeof e[i][0])return;r[i]=o.latLng(e[i])}return r},_initEvents:function(){o.Path.prototype._initEvents.call(this)},_getPathPartStr:function(e){for(var t,i=o.Path.VML,n=0,r=e.length,s="";r>n;n++)t=e[n],i&&t._round(),s+=(n?"L":"M")+t.x+" "+t.y;return s},_clipPoints:function(){var e,t,i,n=this._originalPoints,r=n.length;if(this.options.noClip)return void(this._parts=[n]);this._parts=[];var s=this._parts,a=this._map._pathViewport,u=o.LineUtil;for(e=0,t=0;r-1>e;e++)i=u.clipSegment(n[e],n[e+1],a,e),i&&(s[t]=s[t]||[],s[t].push(i[0]),(i[1]!==n[e+1]||e===r-2)&&(s[t].push(i[1]),t++))},_simplifyPoints:function(){for(var e=this._parts,t=o.LineUtil,i=0,n=e.length;n>i;i++)e[i]=t.simplify(e[i],this.options.smoothFactor)},_updatePath:function(){this._map&&(this._clipPoints(),this._simplifyPoints(),o.Path.prototype._updatePath.call(this))}}),o.polyline=function(e,t){return new o.Polyline(e,t)},o.PolyUtil={},o.PolyUtil.clipPolygon=function(e,t){var i,n,r,s,a,u,c,l,h,p=[1,4,2,8],d=o.LineUtil;for(n=0,c=e.length;c>n;n++)e[n]._code=d._getBitCode(e[n],t);for(s=0;4>s;s++){for(l=p[s],i=[],n=0,c=e.length,r=c-1;c>n;r=n++)a=e[n],u=e[r],a._code&l?u._code&l||(h=d._getEdgeIntersection(u,a,l,t),h._code=d._getBitCode(h,t),i.push(h)):(u._code&l&&(h=d._getEdgeIntersection(u,a,l,t),h._code=d._getBitCode(h,t),i.push(h)),i.push(a));e=i}return e},o.Polygon=o.Polyline.extend({options:{fill:!0},initialize:function(e,t){o.Polyline.prototype.initialize.call(this,e,t),this._initWithHoles(e)},_initWithHoles:function(e){var t,i,n;if(e&&o.Util.isArray(e[0])&&"number"!=typeof e[0][0])for(this._latlngs=this._convertLatLngs(e[0]),this._holes=e.slice(1),t=0,i=this._holes.length;i>t;t++)n=this._holes[t]=this._convertLatLngs(this._holes[t]),n[0].equals(n[n.length-1])&&n.pop();e=this._latlngs,e.length>=2&&e[0].equals(e[e.length-1])&&e.pop()},projectLatlngs:function(){if(o.Polyline.prototype.projectLatlngs.call(this),this._holePoints=[],this._holes){var e,t,i,n;for(e=0,i=this._holes.length;i>e;e++)for(this._holePoints[e]=[],t=0,n=this._holes[e].length;n>t;t++)this._holePoints[e][t]=this._map.latLngToLayerPoint(this._holes[e][t])}},setLatLngs:function(e){return e&&o.Util.isArray(e[0])&&"number"!=typeof e[0][0]?(this._initWithHoles(e),this.redraw()):o.Polyline.prototype.setLatLngs.call(this,e)},_clipPoints:function(){var e=this._originalPoints,t=[];if(this._parts=[e].concat(this._holePoints),!this.options.noClip){for(var i=0,n=this._parts.length;n>i;i++){var r=o.PolyUtil.clipPolygon(this._parts[i],this._map._pathViewport);r.length&&t.push(r)}this._parts=t}},_getPathPartStr:function(e){var t=o.Polyline.prototype._getPathPartStr.call(this,e);return t+(o.Browser.svg?"z":"x")}}),o.polygon=function(e,t){return new o.Polygon(e,t)},function(){function e(e){return o.FeatureGroup.extend({initialize:function(e,t){this._layers={},this._options=t,this.setLatLngs(e)},setLatLngs:function(t){var i=0,n=t.length;for(this.eachLayer(function(e){n>i?e.setLatLngs(t[i++]):this.removeLayer(e)},this);n>i;)this.addLayer(new e(t[i++],this._options));return this},getLatLngs:function(){var e=[];return this.eachLayer(function(t){e.push(t.getLatLngs())}),e}})}o.MultiPolyline=e(o.Polyline),o.MultiPolygon=e(o.Polygon),o.multiPolyline=function(e,t){return new o.MultiPolyline(e,t)},o.multiPolygon=function(e,t){return new o.MultiPolygon(e,t)}}(),o.Rectangle=o.Polygon.extend({initialize:function(e,t){
-o.Polygon.prototype.initialize.call(this,this._boundsToLatLngs(e),t)},setBounds:function(e){this.setLatLngs(this._boundsToLatLngs(e))},_boundsToLatLngs:function(e){return e=o.latLngBounds(e),[e.getSouthWest(),e.getNorthWest(),e.getNorthEast(),e.getSouthEast()]}}),o.rectangle=function(e,t){return new o.Rectangle(e,t)},o.Circle=o.Path.extend({initialize:function(e,t,i){o.Path.prototype.initialize.call(this,i),this._latlng=o.latLng(e),this._mRadius=t},options:{fill:!0},setLatLng:function(e){return this._latlng=o.latLng(e),this.redraw()},setRadius:function(e){return this._mRadius=e,this.redraw()},projectLatlngs:function(){var e=this._getLngRadius(),t=this._latlng,i=this._map.latLngToLayerPoint([t.lat,t.lng-e]);this._point=this._map.latLngToLayerPoint(t),this._radius=Math.max(this._point.x-i.x,1)},getBounds:function(){var e=this._getLngRadius(),t=this._mRadius/40075017*360,i=this._latlng;return new o.LatLngBounds([i.lat-t,i.lng-e],[i.lat+t,i.lng+e])},getLatLng:function(){return this._latlng},getPathString:function(){var e=this._point,t=this._radius;return this._checkIfEmpty()?"":o.Browser.svg?"M"+e.x+","+(e.y-t)+"A"+t+","+t+",0,1,1,"+(e.x-.1)+","+(e.y-t)+" z":(e._round(),t=Math.round(t),"AL "+e.x+","+e.y+" "+t+","+t+" 0,23592600")},getRadius:function(){return this._mRadius},_getLatRadius:function(){return this._mRadius/40075017*360},_getLngRadius:function(){return this._getLatRadius()/Math.cos(o.LatLng.DEG_TO_RAD*this._latlng.lat)},_checkIfEmpty:function(){if(!this._map)return!1;var e=this._map._pathViewport,t=this._radius,i=this._point;return i.x-t>e.max.x||i.y-t>e.max.y||i.x+t<e.min.x||i.y+t<e.min.y}}),o.circle=function(e,t,i){return new o.Circle(e,t,i)},o.CircleMarker=o.Circle.extend({options:{radius:10,weight:2},initialize:function(e,t){o.Circle.prototype.initialize.call(this,e,null,t),this._radius=this.options.radius},projectLatlngs:function(){this._point=this._map.latLngToLayerPoint(this._latlng)},_updateStyle:function(){o.Circle.prototype._updateStyle.call(this),this.setRadius(this.options.radius)},setLatLng:function(e){return o.Circle.prototype.setLatLng.call(this,e),this._popup&&this._popup._isOpen&&this._popup.setLatLng(e),this},setRadius:function(e){return this.options.radius=this._radius=e,this.redraw()},getRadius:function(){return this._radius}}),o.circleMarker=function(e,t){return new o.CircleMarker(e,t)},o.Polyline.include(o.Path.CANVAS?{_containsPoint:function(e,t){var i,n,r,s,a,u,c,l=this.options.weight/2;for(o.Browser.touch&&(l+=10),i=0,s=this._parts.length;s>i;i++)for(c=this._parts[i],n=0,a=c.length,r=a-1;a>n;r=n++)if((t||0!==n)&&(u=o.LineUtil.pointToSegmentDistance(e,c[r],c[n]),l>=u))return!0;return!1}}:{}),o.Polygon.include(o.Path.CANVAS?{_containsPoint:function(e){var t,i,n,r,s,a,u,c,l=!1;if(o.Polyline.prototype._containsPoint.call(this,e,!0))return!0;for(r=0,u=this._parts.length;u>r;r++)for(t=this._parts[r],s=0,c=t.length,a=c-1;c>s;a=s++)i=t[s],n=t[a],i.y>e.y!=n.y>e.y&&e.x<(n.x-i.x)*(e.y-i.y)/(n.y-i.y)+i.x&&(l=!l);return l}}:{}),o.Circle.include(o.Path.CANVAS?{_drawPath:function(){var e=this._point;this._ctx.beginPath(),this._ctx.arc(e.x,e.y,this._radius,0,2*Math.PI,!1)},_containsPoint:function(e){var t=this._point,i=this.options.stroke?this.options.weight/2:0;return e.distanceTo(t)<=this._radius+i}}:{}),o.CircleMarker.include(o.Path.CANVAS?{_updateStyle:function(){o.Path.prototype._updateStyle.call(this)}}:{}),o.GeoJSON=o.FeatureGroup.extend({initialize:function(e,t){o.setOptions(this,t),this._layers={},e&&this.addData(e)},addData:function(e){var t,i,n,r=o.Util.isArray(e)?e:e.features;if(r){for(t=0,i=r.length;i>t;t++)n=r[t],(n.geometries||n.geometry||n.features||n.coordinates)&&this.addData(r[t]);return this}var s=this.options;if(!s.filter||s.filter(e)){var a=o.GeoJSON.geometryToLayer(e,s.pointToLayer,s.coordsToLatLng,s);return a.feature=o.GeoJSON.asFeature(e),a.defaultOptions=a.options,this.resetStyle(a),s.onEachFeature&&s.onEachFeature(e,a),this.addLayer(a)}},resetStyle:function(e){var t=this.options.style;t&&(o.Util.extend(e.options,e.defaultOptions),this._setLayerStyle(e,t))},setStyle:function(e){this.eachLayer(function(t){this._setLayerStyle(t,e)},this)},_setLayerStyle:function(e,t){"function"==typeof t&&(t=t(e.feature)),e.setStyle&&e.setStyle(t)}}),o.extend(o.GeoJSON,{geometryToLayer:function(e,t,i,n){var r,s,a,u,c="Feature"===e.type?e.geometry:e,l=c.coordinates,h=[];switch(i=i||this.coordsToLatLng,c.type){case"Point":return r=i(l),t?t(e,r):new o.Marker(r);case"MultiPoint":for(a=0,u=l.length;u>a;a++)r=i(l[a]),h.push(t?t(e,r):new o.Marker(r));return new o.FeatureGroup(h);case"LineString":return s=this.coordsToLatLngs(l,0,i),new o.Polyline(s,n);case"Polygon":if(2===l.length&&!l[1].length)throw new Error("Invalid GeoJSON object.");return s=this.coordsToLatLngs(l,1,i),new o.Polygon(s,n);case"MultiLineString":return s=this.coordsToLatLngs(l,1,i),new o.MultiPolyline(s,n);case"MultiPolygon":return s=this.coordsToLatLngs(l,2,i),new o.MultiPolygon(s,n);case"GeometryCollection":for(a=0,u=c.geometries.length;u>a;a++)h.push(this.geometryToLayer({geometry:c.geometries[a],type:"Feature",properties:e.properties},t,i,n));return new o.FeatureGroup(h);default:throw new Error("Invalid GeoJSON object.")}},coordsToLatLng:function(e){return new o.LatLng(e[1],e[0],e[2])},coordsToLatLngs:function(e,t,i){var n,o,r,s=[];for(o=0,r=e.length;r>o;o++)n=t?this.coordsToLatLngs(e[o],t-1,i):(i||this.coordsToLatLng)(e[o]),s.push(n);return s},latLngToCoords:function(e){var t=[e.lng,e.lat];return e.alt!==i&&t.push(e.alt),t},latLngsToCoords:function(e){for(var t=[],i=0,n=e.length;n>i;i++)t.push(o.GeoJSON.latLngToCoords(e[i]));return t},getFeature:function(e,t){return e.feature?o.extend({},e.feature,{geometry:t}):o.GeoJSON.asFeature(t)},asFeature:function(e){return"Feature"===e.type?e:{type:"Feature",properties:{},geometry:e}}});var s={toGeoJSON:function(){return o.GeoJSON.getFeature(this,{type:"Point",coordinates:o.GeoJSON.latLngToCoords(this.getLatLng())})}};o.Marker.include(s),o.Circle.include(s),o.CircleMarker.include(s),o.Polyline.include({toGeoJSON:function(){return o.GeoJSON.getFeature(this,{type:"LineString",coordinates:o.GeoJSON.latLngsToCoords(this.getLatLngs())})}}),o.Polygon.include({toGeoJSON:function(){var e,t,i,n=[o.GeoJSON.latLngsToCoords(this.getLatLngs())];if(n[0].push(n[0][0]),this._holes)for(e=0,t=this._holes.length;t>e;e++)i=o.GeoJSON.latLngsToCoords(this._holes[e]),i.push(i[0]),n.push(i);return o.GeoJSON.getFeature(this,{type:"Polygon",coordinates:n})}}),function(){function e(e){return function(){var t=[];return this.eachLayer(function(e){t.push(e.toGeoJSON().geometry.coordinates)}),o.GeoJSON.getFeature(this,{type:e,coordinates:t})}}o.MultiPolyline.include({toGeoJSON:e("MultiLineString")}),o.MultiPolygon.include({toGeoJSON:e("MultiPolygon")}),o.LayerGroup.include({toGeoJSON:function(){var t,i=this.feature&&this.feature.geometry,n=[];if(i&&"MultiPoint"===i.type)return e("MultiPoint").call(this);var r=i&&"GeometryCollection"===i.type;return this.eachLayer(function(e){e.toGeoJSON&&(t=e.toGeoJSON(),n.push(r?t.geometry:o.GeoJSON.asFeature(t)))}),r?o.GeoJSON.getFeature(this,{geometries:n,type:"GeometryCollection"}):{type:"FeatureCollection",features:n}}})}(),o.geoJson=function(e,t){return new o.GeoJSON(e,t)},o.DomEvent={addListener:function(e,t,i,n){var r,s,a,u=o.stamp(i),c="_leaflet_"+t+u;return e[c]?this:(r=function(t){return i.call(n||e,t||o.DomEvent._getEvent())},o.Browser.pointer&&0===t.indexOf("touch")?this.addPointerListener(e,t,r,u):(o.Browser.touch&&"dblclick"===t&&this.addDoubleTapListener&&this.addDoubleTapListener(e,r,u),"addEventListener"in e?"mousewheel"===t?(e.addEventListener("DOMMouseScroll",r,!1),e.addEventListener(t,r,!1)):"mouseenter"===t||"mouseleave"===t?(s=r,a="mouseenter"===t?"mouseover":"mouseout",r=function(t){return o.DomEvent._checkMouse(e,t)?s(t):void 0},e.addEventListener(a,r,!1)):"click"===t&&o.Browser.android?(s=r,r=function(e){return o.DomEvent._filterClick(e,s)},e.addEventListener(t,r,!1)):e.addEventListener(t,r,!1):"attachEvent"in e&&e.attachEvent("on"+t,r),e[c]=r,this))},removeListener:function(e,t,i){var n=o.stamp(i),r="_leaflet_"+t+n,s=e[r];return s?(o.Browser.pointer&&0===t.indexOf("touch")?this.removePointerListener(e,t,n):o.Browser.touch&&"dblclick"===t&&this.removeDoubleTapListener?this.removeDoubleTapListener(e,n):"removeEventListener"in e?"mousewheel"===t?(e.removeEventListener("DOMMouseScroll",s,!1),e.removeEventListener(t,s,!1)):"mouseenter"===t||"mouseleave"===t?e.removeEventListener("mouseenter"===t?"mouseover":"mouseout",s,!1):e.removeEventListener(t,s,!1):"detachEvent"in e&&e.detachEvent("on"+t,s),e[r]=null,this):this},stopPropagation:function(e){return e.stopPropagation?e.stopPropagation():e.cancelBubble=!0,o.DomEvent._skipped(e),this},disableScrollPropagation:function(e){var t=o.DomEvent.stopPropagation;return o.DomEvent.on(e,"mousewheel",t).on(e,"MozMousePixelScroll",t)},disableClickPropagation:function(e){for(var t=o.DomEvent.stopPropagation,i=o.Draggable.START.length-1;i>=0;i--)o.DomEvent.on(e,o.Draggable.START[i],t);return o.DomEvent.on(e,"click",o.DomEvent._fakeStop).on(e,"dblclick",t)},preventDefault:function(e){return e.preventDefault?e.preventDefault():e.returnValue=!1,this},stop:function(e){return o.DomEvent.preventDefault(e).stopPropagation(e)},getMousePosition:function(e,t){if(!t)return new o.Point(e.clientX,e.clientY);var i=t.getBoundingClientRect();return new o.Point(e.clientX-i.left-t.clientLeft,e.clientY-i.top-t.clientTop)},getWheelDelta:function(e){var t=0;return e.wheelDelta&&(t=e.wheelDelta/120),e.detail&&(t=-e.detail/3),t},_skipEvents:{},_fakeStop:function(e){o.DomEvent._skipEvents[e.type]=!0},_skipped:function(e){var t=this._skipEvents[e.type];return this._skipEvents[e.type]=!1,t},_checkMouse:function(e,t){var i=t.relatedTarget;if(!i)return!0;try{for(;i&&i!==e;)i=i.parentNode}catch(n){return!1}return i!==e},_getEvent:function(){var t=e.event;if(!t)for(var i=arguments.callee.caller;i&&(t=i.arguments[0],!t||e.Event!==t.constructor);)i=i.caller;return t},_filterClick:function(e,t){var i=e.timeStamp||e.originalEvent.timeStamp,n=o.DomEvent._lastClick&&i-o.DomEvent._lastClick;return n&&n>100&&500>n||e.target._simulatedClick&&!e._simulated?void o.DomEvent.stop(e):(o.DomEvent._lastClick=i,t(e))}},o.DomEvent.on=o.DomEvent.addListener,o.DomEvent.off=o.DomEvent.removeListener,o.Draggable=o.Class.extend({includes:o.Mixin.Events,statics:{START:o.Browser.touch?["touchstart","mousedown"]:["mousedown"],END:{mousedown:"mouseup",touchstart:"touchend",pointerdown:"touchend",MSPointerDown:"touchend"},MOVE:{mousedown:"mousemove",touchstart:"touchmove",pointerdown:"touchmove",MSPointerDown:"touchmove"}},initialize:function(e,t){this._element=e,this._dragStartTarget=t||e},enable:function(){if(!this._enabled){for(var e=o.Draggable.START.length-1;e>=0;e--)o.DomEvent.on(this._dragStartTarget,o.Draggable.START[e],this._onDown,this);this._enabled=!0}},disable:function(){if(this._enabled){for(var e=o.Draggable.START.length-1;e>=0;e--)o.DomEvent.off(this._dragStartTarget,o.Draggable.START[e],this._onDown,this);this._enabled=!1,this._moved=!1}},_onDown:function(e){if(this._moved=!1,!e.shiftKey&&(1===e.which||1===e.button||e.touches)&&(o.DomEvent.stopPropagation(e),!o.Draggable._disabled&&(o.DomUtil.disableImageDrag(),o.DomUtil.disableTextSelection(),!this._moving))){var i=e.touches?e.touches[0]:e;this._startPoint=new o.Point(i.clientX,i.clientY),this._startPos=this._newPos=o.DomUtil.getPosition(this._element),o.DomEvent.on(t,o.Draggable.MOVE[e.type],this._onMove,this).on(t,o.Draggable.END[e.type],this._onUp,this)}},_onMove:function(e){if(e.touches&&e.touches.length>1)return void(this._moved=!0);var i=e.touches&&1===e.touches.length?e.touches[0]:e,n=new o.Point(i.clientX,i.clientY),r=n.subtract(this._startPoint);(r.x||r.y)&&(o.Browser.touch&&Math.abs(r.x)+Math.abs(r.y)<3||(o.DomEvent.preventDefault(e),this._moved||(this.fire("dragstart"),this._moved=!0,this._startPos=o.DomUtil.getPosition(this._element).subtract(r),o.DomUtil.addClass(t.body,"leaflet-dragging"),this._lastTarget=e.target||e.srcElement,o.DomUtil.addClass(this._lastTarget,"leaflet-drag-target")),this._newPos=this._startPos.add(r),this._moving=!0,o.Util.cancelAnimFrame(this._animRequest),this._animRequest=o.Util.requestAnimFrame(this._updatePosition,this,!0,this._dragStartTarget)))},_updatePosition:function(){this.fire("predrag"),o.DomUtil.setPosition(this._element,this._newPos),this.fire("drag")},_onUp:function(){o.DomUtil.removeClass(t.body,"leaflet-dragging"),this._lastTarget&&(o.DomUtil.removeClass(this._lastTarget,"leaflet-drag-target"),this._lastTarget=null);for(var e in o.Draggable.MOVE)o.DomEvent.off(t,o.Draggable.MOVE[e],this._onMove).off(t,o.Draggable.END[e],this._onUp);o.DomUtil.enableImageDrag(),o.DomUtil.enableTextSelection(),this._moved&&this._moving&&(o.Util.cancelAnimFrame(this._animRequest),this.fire("dragend",{distance:this._newPos.distanceTo(this._startPos)})),this._moving=!1}}),o.Handler=o.Class.extend({initialize:function(e){this._map=e},enable:function(){this._enabled||(this._enabled=!0,this.addHooks())},disable:function(){this._enabled&&(this._enabled=!1,this.removeHooks())},enabled:function(){return!!this._enabled}}),o.Map.mergeOptions({dragging:!0,inertia:!o.Browser.android23,inertiaDeceleration:3400,inertiaMaxSpeed:1/0,inertiaThreshold:o.Browser.touch?32:18,easeLinearity:.25,worldCopyJump:!1}),o.Map.Drag=o.Handler.extend({addHooks:function(){if(!this._draggable){var e=this._map;this._draggable=new o.Draggable(e._mapPane,e._container),this._draggable.on({dragstart:this._onDragStart,drag:this._onDrag,dragend:this._onDragEnd},this),e.options.worldCopyJump&&(this._draggable.on("predrag",this._onPreDrag,this),e.on("viewreset",this._onViewReset,this),e.whenReady(this._onViewReset,this))}this._draggable.enable()},removeHooks:function(){this._draggable.disable()},moved:function(){return this._draggable&&this._draggable._moved},_onDragStart:function(){var e=this._map;e._panAnim&&e._panAnim.stop(),e.fire("movestart").fire("dragstart"),e.options.inertia&&(this._positions=[],this._times=[])},_onDrag:function(){if(this._map.options.inertia){var e=this._lastTime=+new Date,t=this._lastPos=this._draggable._newPos;this._positions.push(t),this._times.push(e),e-this._times[0]>200&&(this._positions.shift(),this._times.shift())}this._map.fire("move").fire("drag")},_onViewReset:function(){var e=this._map.getSize()._divideBy(2),t=this._map.latLngToLayerPoint([0,0]);this._initialWorldOffset=t.subtract(e).x,this._worldWidth=this._map.project([0,180]).x},_onPreDrag:function(){var e=this._worldWidth,t=Math.round(e/2),i=this._initialWorldOffset,n=this._draggable._newPos.x,o=(n-t+i)%e+t-i,r=(n+t+i)%e-t-i,s=Math.abs(o+i)<Math.abs(r+i)?o:r;this._draggable._newPos.x=s},_onDragEnd:function(e){var t=this._map,i=t.options,n=+new Date-this._lastTime,r=!i.inertia||n>i.inertiaThreshold||!this._positions[0];if(t.fire("dragend",e),r)t.fire("moveend");else{var s=this._lastPos.subtract(this._positions[0]),a=(this._lastTime+n-this._times[0])/1e3,u=i.easeLinearity,c=s.multiplyBy(u/a),l=c.distanceTo([0,0]),h=Math.min(i.inertiaMaxSpeed,l),p=c.multiplyBy(h/l),d=h/(i.inertiaDeceleration*u),f=p.multiplyBy(-d/2).round();f.x&&f.y?(f=t._limitOffset(f,t.options.maxBounds),o.Util.requestAnimFrame(function(){t.panBy(f,{duration:d,easeLinearity:u,noMoveStart:!0})})):t.fire("moveend")}}}),o.Map.addInitHook("addHandler","dragging",o.Map.Drag),o.Map.mergeOptions({doubleClickZoom:!0}),o.Map.DoubleClickZoom=o.Handler.extend({addHooks:function(){this._map.on("dblclick",this._onDoubleClick,this)},removeHooks:function(){this._map.off("dblclick",this._onDoubleClick,this)},_onDoubleClick:function(e){var t=this._map,i=t.getZoom()+(e.originalEvent.shiftKey?-1:1);"center"===t.options.doubleClickZoom?t.setZoom(i):t.setZoomAround(e.containerPoint,i)}}),o.Map.addInitHook("addHandler","doubleClickZoom",o.Map.DoubleClickZoom),o.Map.mergeOptions({scrollWheelZoom:!0}),o.Map.ScrollWheelZoom=o.Handler.extend({addHooks:function(){o.DomEvent.on(this._map._container,"mousewheel",this._onWheelScroll,this),o.DomEvent.on(this._map._container,"MozMousePixelScroll",o.DomEvent.preventDefault),this._delta=0},removeHooks:function(){o.DomEvent.off(this._map._container,"mousewheel",this._onWheelScroll),o.DomEvent.off(this._map._container,"MozMousePixelScroll",o.DomEvent.preventDefault)},_onWheelScroll:function(e){var t=o.DomEvent.getWheelDelta(e);this._delta+=t,this._lastMousePos=this._map.mouseEventToContainerPoint(e),this._startTime||(this._startTime=+new Date);var i=Math.max(40-(+new Date-this._startTime),0);clearTimeout(this._timer),this._timer=setTimeout(o.bind(this._performZoom,this),i),o.DomEvent.preventDefault(e),o.DomEvent.stopPropagation(e)},_performZoom:function(){var e=this._map,t=this._delta,i=e.getZoom();t=t>0?Math.ceil(t):Math.floor(t),t=Math.max(Math.min(t,4),-4),t=e._limitZoom(i+t)-i,this._delta=0,this._startTime=null,t&&("center"===e.options.scrollWheelZoom?e.setZoom(i+t):e.setZoomAround(this._lastMousePos,i+t))}}),o.Map.addInitHook("addHandler","scrollWheelZoom",o.Map.ScrollWheelZoom),o.extend(o.DomEvent,{_touchstart:o.Browser.msPointer?"MSPointerDown":o.Browser.pointer?"pointerdown":"touchstart",_touchend:o.Browser.msPointer?"MSPointerUp":o.Browser.pointer?"pointerup":"touchend",addDoubleTapListener:function(e,i,n){function r(e){var t;if(o.Browser.pointer?(f.push(e.pointerId),t=f.length):t=e.touches.length,!(t>1)){var i=Date.now(),n=i-(a||i);u=e.touches?e.touches[0]:e,c=n>0&&l>=n,a=i}}function s(e){if(o.Browser.pointer){var t=f.indexOf(e.pointerId);if(-1===t)return;f.splice(t,1)}if(c){if(o.Browser.pointer){var n,r={};for(var s in u)n=u[s],"function"==typeof n?r[s]=n.bind(u):r[s]=n;u=r}u.type="dblclick",i(u),a=null}}var a,u,c=!1,l=250,h="_leaflet_",p=this._touchstart,d=this._touchend,f=[];e[h+p+n]=r,e[h+d+n]=s;var m=o.Browser.pointer?t.documentElement:e;return e.addEventListener(p,r,!1),m.addEventListener(d,s,!1),o.Browser.pointer&&m.addEventListener(o.DomEvent.POINTER_CANCEL,s,!1),this},removeDoubleTapListener:function(e,i){var n="_leaflet_";return e.removeEventListener(this._touchstart,e[n+this._touchstart+i],!1),(o.Browser.pointer?t.documentElement:e).removeEventListener(this._touchend,e[n+this._touchend+i],!1),o.Browser.pointer&&t.documentElement.removeEventListener(o.DomEvent.POINTER_CANCEL,e[n+this._touchend+i],!1),this}}),o.extend(o.DomEvent,{POINTER_DOWN:o.Browser.msPointer?"MSPointerDown":"pointerdown",POINTER_MOVE:o.Browser.msPointer?"MSPointerMove":"pointermove",POINTER_UP:o.Browser.msPointer?"MSPointerUp":"pointerup",POINTER_CANCEL:o.Browser.msPointer?"MSPointerCancel":"pointercancel",_pointers:[],_pointerDocumentListener:!1,addPointerListener:function(e,t,i,n){switch(t){case"touchstart":return this.addPointerListenerStart(e,t,i,n);case"touchend":return this.addPointerListenerEnd(e,t,i,n);case"touchmove":return this.addPointerListenerMove(e,t,i,n);default:throw"Unknown touch event type"}},addPointerListenerStart:function(e,i,n,r){var s="_leaflet_",a=this._pointers,u=function(e){o.DomEvent.preventDefault(e);for(var t=!1,i=0;i<a.length;i++)if(a[i].pointerId===e.pointerId){t=!0;break}t||a.push(e),e.touches=a.slice(),e.changedTouches=[e],n(e)};if(e[s+"touchstart"+r]=u,e.addEventListener(this.POINTER_DOWN,u,!1),!this._pointerDocumentListener){var c=function(e){for(var t=0;t<a.length;t++)if(a[t].pointerId===e.pointerId){a.splice(t,1);break}};t.documentElement.addEventListener(this.POINTER_UP,c,!1),t.documentElement.addEventListener(this.POINTER_CANCEL,c,!1),this._pointerDocumentListener=!0}return this},addPointerListenerMove:function(e,t,i,n){function o(e){if(e.pointerType!==e.MSPOINTER_TYPE_MOUSE&&"mouse"!==e.pointerType||0!==e.buttons){for(var t=0;t<s.length;t++)if(s[t].pointerId===e.pointerId){s[t]=e;break}e.touches=s.slice(),e.changedTouches=[e],i(e)}}var r="_leaflet_",s=this._pointers;return e[r+"touchmove"+n]=o,e.addEventListener(this.POINTER_MOVE,o,!1),this},addPointerListenerEnd:function(e,t,i,n){var o="_leaflet_",r=this._pointers,s=function(e){for(var t=0;t<r.length;t++)if(r[t].pointerId===e.pointerId){r.splice(t,1);break}e.touches=r.slice(),e.changedTouches=[e],i(e)};return e[o+"touchend"+n]=s,e.addEventListener(this.POINTER_UP,s,!1),e.addEventListener(this.POINTER_CANCEL,s,!1),this},removePointerListener:function(e,t,i){var n="_leaflet_",o=e[n+t+i];switch(t){case"touchstart":e.removeEventListener(this.POINTER_DOWN,o,!1);break;case"touchmove":e.removeEventListener(this.POINTER_MOVE,o,!1);break;case"touchend":e.removeEventListener(this.POINTER_UP,o,!1),e.removeEventListener(this.POINTER_CANCEL,o,!1)}return this}}),o.Map.mergeOptions({touchZoom:o.Browser.touch&&!o.Browser.android23,bounceAtZoomLimits:!0}),o.Map.TouchZoom=o.Handler.extend({addHooks:function(){o.DomEvent.on(this._map._container,"touchstart",this._onTouchStart,this)},removeHooks:function(){o.DomEvent.off(this._map._container,"touchstart",this._onTouchStart,this)},_onTouchStart:function(e){var i=this._map;if(e.touches&&2===e.touches.length&&!i._animatingZoom&&!this._zooming){var n=i.mouseEventToLayerPoint(e.touches[0]),r=i.mouseEventToLayerPoint(e.touches[1]),s=i._getCenterLayerPoint();this._startCenter=n.add(r)._divideBy(2),this._startDist=n.distanceTo(r),this._moved=!1,this._zooming=!0,this._centerOffset=s.subtract(this._startCenter),i._panAnim&&i._panAnim.stop(),o.DomEvent.on(t,"touchmove",this._onTouchMove,this).on(t,"touchend",this._onTouchEnd,this),o.DomEvent.preventDefault(e)}},_onTouchMove:function(e){var t=this._map;if(e.touches&&2===e.touches.length&&this._zooming){var i=t.mouseEventToLayerPoint(e.touches[0]),n=t.mouseEventToLayerPoint(e.touches[1]);this._scale=i.distanceTo(n)/this._startDist,this._delta=i._add(n)._divideBy(2)._subtract(this._startCenter),1!==this._scale&&(t.options.bounceAtZoomLimits||!(t.getZoom()===t.getMinZoom()&&this._scale<1||t.getZoom()===t.getMaxZoom()&&this._scale>1))&&(this._moved||(o.DomUtil.addClass(t._mapPane,"leaflet-touching"),t.fire("movestart").fire("zoomstart"),this._moved=!0),o.Util.cancelAnimFrame(this._animRequest),this._animRequest=o.Util.requestAnimFrame(this._updateOnMove,this,!0,this._map._container),o.DomEvent.preventDefault(e))}},_updateOnMove:function(){var e=this._map,t=this._getScaleOrigin(),i=e.layerPointToLatLng(t),n=e.getScaleZoom(this._scale);e._animateZoom(i,n,this._startCenter,this._scale,this._delta,!1,!0)},_onTouchEnd:function(){if(!this._moved||!this._zooming)return void(this._zooming=!1);var e=this._map;this._zooming=!1,o.DomUtil.removeClass(e._mapPane,"leaflet-touching"),o.Util.cancelAnimFrame(this._animRequest),o.DomEvent.off(t,"touchmove",this._onTouchMove).off(t,"touchend",this._onTouchEnd);var i=this._getScaleOrigin(),n=e.layerPointToLatLng(i),r=e.getZoom(),s=e.getScaleZoom(this._scale)-r,a=s>0?Math.ceil(s):Math.floor(s),u=e._limitZoom(r+a),c=e.getZoomScale(u)/this._scale;e._animateZoom(n,u,i,c)},_getScaleOrigin:function(){var e=this._centerOffset.subtract(this._delta).divideBy(this._scale);return this._startCenter.add(e)}}),o.Map.addInitHook("addHandler","touchZoom",o.Map.TouchZoom),o.Map.mergeOptions({tap:!0,tapTolerance:15}),o.Map.Tap=o.Handler.extend({addHooks:function(){o.DomEvent.on(this._map._container,"touchstart",this._onDown,this)},removeHooks:function(){o.DomEvent.off(this._map._container,"touchstart",this._onDown,this)},_onDown:function(e){if(e.touches){if(o.DomEvent.preventDefault(e),this._fireClick=!0,e.touches.length>1)return this._fireClick=!1,void clearTimeout(this._holdTimeout);var i=e.touches[0],n=i.target;this._startPos=this._newPos=new o.Point(i.clientX,i.clientY),n.tagName&&"a"===n.tagName.toLowerCase()&&o.DomUtil.addClass(n,"leaflet-active"),this._holdTimeout=setTimeout(o.bind(function(){this._isTapValid()&&(this._fireClick=!1,this._onUp(),this._simulateEvent("contextmenu",i))},this),1e3),o.DomEvent.on(t,"touchmove",this._onMove,this).on(t,"touchend",this._onUp,this)}},_onUp:function(e){if(clearTimeout(this._holdTimeout),o.DomEvent.off(t,"touchmove",this._onMove,this).off(t,"touchend",this._onUp,this),this._fireClick&&e&&e.changedTouches){var i=e.changedTouches[0],n=i.target;n&&n.tagName&&"a"===n.tagName.toLowerCase()&&o.DomUtil.removeClass(n,"leaflet-active"),this._isTapValid()&&this._simulateEvent("click",i)}},_isTapValid:function(){return this._newPos.distanceTo(this._startPos)<=this._map.options.tapTolerance},_onMove:function(e){var t=e.touches[0];this._newPos=new o.Point(t.clientX,t.clientY)},_simulateEvent:function(i,n){var o=t.createEvent("MouseEvents");o._simulated=!0,n.target._simulatedClick=!0,o.initMouseEvent(i,!0,!0,e,1,n.screenX,n.screenY,n.clientX,n.clientY,!1,!1,!1,!1,0,null),n.target.dispatchEvent(o)}}),o.Browser.touch&&!o.Browser.pointer&&o.Map.addInitHook("addHandler","tap",o.Map.Tap),o.Map.mergeOptions({boxZoom:!0}),o.Map.BoxZoom=o.Handler.extend({initialize:function(e){this._map=e,this._container=e._container,this._pane=e._panes.overlayPane,this._moved=!1},addHooks:function(){o.DomEvent.on(this._container,"mousedown",this._onMouseDown,this)},removeHooks:function(){o.DomEvent.off(this._container,"mousedown",this._onMouseDown),this._moved=!1},moved:function(){return this._moved},_onMouseDown:function(e){return this._moved=!1,!e.shiftKey||1!==e.which&&1!==e.button?!1:(o.DomUtil.disableTextSelection(),o.DomUtil.disableImageDrag(),this._startLayerPoint=this._map.mouseEventToLayerPoint(e),void o.DomEvent.on(t,"mousemove",this._onMouseMove,this).on(t,"mouseup",this._onMouseUp,this).on(t,"keydown",this._onKeyDown,this))},_onMouseMove:function(e){this._moved||(this._box=o.DomUtil.create("div","leaflet-zoom-box",this._pane),o.DomUtil.setPosition(this._box,this._startLayerPoint),this._container.style.cursor="crosshair",this._map.fire("boxzoomstart"));var t=this._startLayerPoint,i=this._box,n=this._map.mouseEventToLayerPoint(e),r=n.subtract(t),s=new o.Point(Math.min(n.x,t.x),Math.min(n.y,t.y));o.DomUtil.setPosition(i,s),this._moved=!0,i.style.width=Math.max(0,Math.abs(r.x)-4)+"px",i.style.height=Math.max(0,Math.abs(r.y)-4)+"px"},_finish:function(){this._moved&&(this._pane.removeChild(this._box),this._container.style.cursor=""),o.DomUtil.enableTextSelection(),o.DomUtil.enableImageDrag(),o.DomEvent.off(t,"mousemove",this._onMouseMove).off(t,"mouseup",this._onMouseUp).off(t,"keydown",this._onKeyDown)},_onMouseUp:function(e){this._finish();var t=this._map,i=t.mouseEventToLayerPoint(e);if(!this._startLayerPoint.equals(i)){var n=new o.LatLngBounds(t.layerPointToLatLng(this._startLayerPoint),t.layerPointToLatLng(i));t.fitBounds(n),t.fire("boxzoomend",{boxZoomBounds:n})}},_onKeyDown:function(e){27===e.keyCode&&this._finish()}}),o.Map.addInitHook("addHandler","boxZoom",o.Map.BoxZoom),o.Map.mergeOptions({keyboard:!0,keyboardPanOffset:80,keyboardZoomOffset:1}),o.Map.Keyboard=o.Handler.extend({keyCodes:{left:[37],right:[39],down:[40],up:[38],zoomIn:[187,107,61,171],zoomOut:[189,109,173]},initialize:function(e){this._map=e,this._setPanOffset(e.options.keyboardPanOffset),this._setZoomOffset(e.options.keyboardZoomOffset)},addHooks:function(){var e=this._map._container;-1===e.tabIndex&&(e.tabIndex="0"),o.DomEvent.on(e,"focus",this._onFocus,this).on(e,"blur",this._onBlur,this).on(e,"mousedown",this._onMouseDown,this),this._map.on("focus",this._addHooks,this).on("blur",this._removeHooks,this)},removeHooks:function(){this._removeHooks();var e=this._map._container;o.DomEvent.off(e,"focus",this._onFocus,this).off(e,"blur",this._onBlur,this).off(e,"mousedown",this._onMouseDown,this),this._map.off("focus",this._addHooks,this).off("blur",this._removeHooks,this)},_onMouseDown:function(){if(!this._focused){var i=t.body,n=t.documentElement,o=i.scrollTop||n.scrollTop,r=i.scrollLeft||n.scrollLeft;this._map._container.focus(),e.scrollTo(r,o)}},_onFocus:function(){this._focused=!0,this._map.fire("focus")},_onBlur:function(){this._focused=!1,this._map.fire("blur")},_setPanOffset:function(e){var t,i,n=this._panKeys={},o=this.keyCodes;for(t=0,i=o.left.length;i>t;t++)n[o.left[t]]=[-1*e,0];for(t=0,i=o.right.length;i>t;t++)n[o.right[t]]=[e,0];for(t=0,i=o.down.length;i>t;t++)n[o.down[t]]=[0,e];for(t=0,i=o.up.length;i>t;t++)n[o.up[t]]=[0,-1*e]},_setZoomOffset:function(e){var t,i,n=this._zoomKeys={},o=this.keyCodes;for(t=0,i=o.zoomIn.length;i>t;t++)n[o.zoomIn[t]]=e;for(t=0,i=o.zoomOut.length;i>t;t++)n[o.zoomOut[t]]=-e},_addHooks:function(){o.DomEvent.on(t,"keydown",this._onKeyDown,this)},_removeHooks:function(){o.DomEvent.off(t,"keydown",this._onKeyDown,this)},_onKeyDown:function(e){var t=e.keyCode,i=this._map;if(t in this._panKeys){if(i._panAnim&&i._panAnim._inProgress)return;i.panBy(this._panKeys[t]),i.options.maxBounds&&i.panInsideBounds(i.options.maxBounds)}else{if(!(t in this._zoomKeys))return;i.setZoom(i.getZoom()+this._zoomKeys[t])}o.DomEvent.stop(e)}}),o.Map.addInitHook("addHandler","keyboard",o.Map.Keyboard),o.Handler.MarkerDrag=o.Handler.extend({initialize:function(e){this._marker=e},addHooks:function(){var e=this._marker._icon;this._draggable||(this._draggable=new o.Draggable(e,e)),this._draggable.on("dragstart",this._onDragStart,this).on("drag",this._onDrag,this).on("dragend",this._onDragEnd,this),this._draggable.enable(),o.DomUtil.addClass(this._marker._icon,"leaflet-marker-draggable")},removeHooks:function(){this._draggable.off("dragstart",this._onDragStart,this).off("drag",this._onDrag,this).off("dragend",this._onDragEnd,this),this._draggable.disable(),o.DomUtil.removeClass(this._marker._icon,"leaflet-marker-draggable")},moved:function(){return this._draggable&&this._draggable._moved},_onDragStart:function(){this._marker.closePopup().fire("movestart").fire("dragstart")},_onDrag:function(){var e=this._marker,t=e._shadow,i=o.DomUtil.getPosition(e._icon),n=e._map.layerPointToLatLng(i);t&&o.DomUtil.setPosition(t,i),e._latlng=n,e.fire("move",{latlng:n}).fire("drag")},_onDragEnd:function(e){this._marker.fire("moveend").fire("dragend",e)}}),o.Control=o.Class.extend({options:{position:"topright"},initialize:function(e){o.setOptions(this,e)},getPosition:function(){return this.options.position},setPosition:function(e){var t=this._map;return t&&t.removeControl(this),this.options.position=e,t&&t.addControl(this),this},getContainer:function(){return this._container},addTo:function(e){this._map=e;var t=this._container=this.onAdd(e),i=this.getPosition(),n=e._controlCorners[i];return o.DomUtil.addClass(t,"leaflet-control"),-1!==i.indexOf("bottom")?n.insertBefore(t,n.firstChild):n.appendChild(t),this},removeFrom:function(e){var t=this.getPosition(),i=e._controlCorners[t];return i.removeChild(this._container),this._map=null,this.onRemove&&this.onRemove(e),this},_refocusOnMap:function(){this._map&&this._map.getContainer().focus()}}),o.control=function(e){return new o.Control(e)},o.Map.include({addControl:function(e){return e.addTo(this),this},removeControl:function(e){return e.removeFrom(this),this},_initControlPos:function(){function e(e,r){var s=i+e+" "+i+r;t[e+r]=o.DomUtil.create("div",s,n)}var t=this._controlCorners={},i="leaflet-",n=this._controlContainer=o.DomUtil.create("div",i+"control-container",this._container);e("top","left"),e("top","right"),e("bottom","left"),e("bottom","right")},_clearControlPos:function(){this._container.removeChild(this._controlContainer)}}),o.Control.Zoom=o.Control.extend({options:{position:"topleft",zoomInText:"+",zoomInTitle:"Zoom in",zoomOutText:"-",zoomOutTitle:"Zoom out"},onAdd:function(e){var t="leaflet-control-zoom",i=o.DomUtil.create("div",t+" leaflet-bar");return this._map=e,this._zoomInButton=this._createButton(this.options.zoomInText,this.options.zoomInTitle,t+"-in",i,this._zoomIn,this),this._zoomOutButton=this._createButton(this.options.zoomOutText,this.options.zoomOutTitle,t+"-out",i,this._zoomOut,this),this._updateDisabled(),e.on("zoomend zoomlevelschange",this._updateDisabled,this),i},onRemove:function(e){e.off("zoomend zoomlevelschange",this._updateDisabled,this)},_zoomIn:function(e){this._map.zoomIn(e.shiftKey?3:1)},_zoomOut:function(e){this._map.zoomOut(e.shiftKey?3:1)},_createButton:function(e,t,i,n,r,s){var a=o.DomUtil.create("a",i,n);
-a.innerHTML=e,a.href="#",a.title=t;var u=o.DomEvent.stopPropagation;return o.DomEvent.on(a,"click",u).on(a,"mousedown",u).on(a,"dblclick",u).on(a,"click",o.DomEvent.preventDefault).on(a,"click",r,s).on(a,"click",this._refocusOnMap,s),a},_updateDisabled:function(){var e=this._map,t="leaflet-disabled";o.DomUtil.removeClass(this._zoomInButton,t),o.DomUtil.removeClass(this._zoomOutButton,t),e._zoom===e.getMinZoom()&&o.DomUtil.addClass(this._zoomOutButton,t),e._zoom===e.getMaxZoom()&&o.DomUtil.addClass(this._zoomInButton,t)}}),o.Map.mergeOptions({zoomControl:!0}),o.Map.addInitHook(function(){this.options.zoomControl&&(this.zoomControl=new o.Control.Zoom,this.addControl(this.zoomControl))}),o.control.zoom=function(e){return new o.Control.Zoom(e)},o.Control.Attribution=o.Control.extend({options:{position:"bottomright",prefix:'<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'},initialize:function(e){o.setOptions(this,e),this._attributions={}},onAdd:function(e){this._container=o.DomUtil.create("div","leaflet-control-attribution"),o.DomEvent.disableClickPropagation(this._container);for(var t in e._layers)e._layers[t].getAttribution&&this.addAttribution(e._layers[t].getAttribution());return e.on("layeradd",this._onLayerAdd,this).on("layerremove",this._onLayerRemove,this),this._update(),this._container},onRemove:function(e){e.off("layeradd",this._onLayerAdd).off("layerremove",this._onLayerRemove)},setPrefix:function(e){return this.options.prefix=e,this._update(),this},addAttribution:function(e){return e?(this._attributions[e]||(this._attributions[e]=0),this._attributions[e]++,this._update(),this):void 0},removeAttribution:function(e){return e?(this._attributions[e]&&(this._attributions[e]--,this._update()),this):void 0},_update:function(){if(this._map){var e=[];for(var t in this._attributions)this._attributions[t]&&e.push(t);var i=[];this.options.prefix&&i.push(this.options.prefix),e.length&&i.push(e.join(", ")),this._container.innerHTML=i.join(" | ")}},_onLayerAdd:function(e){e.layer.getAttribution&&this.addAttribution(e.layer.getAttribution())},_onLayerRemove:function(e){e.layer.getAttribution&&this.removeAttribution(e.layer.getAttribution())}}),o.Map.mergeOptions({attributionControl:!0}),o.Map.addInitHook(function(){this.options.attributionControl&&(this.attributionControl=(new o.Control.Attribution).addTo(this))}),o.control.attribution=function(e){return new o.Control.Attribution(e)},o.Control.Scale=o.Control.extend({options:{position:"bottomleft",maxWidth:100,metric:!0,imperial:!0,updateWhenIdle:!1},onAdd:function(e){this._map=e;var t="leaflet-control-scale",i=o.DomUtil.create("div",t),n=this.options;return this._addScales(n,t,i),e.on(n.updateWhenIdle?"moveend":"move",this._update,this),e.whenReady(this._update,this),i},onRemove:function(e){e.off(this.options.updateWhenIdle?"moveend":"move",this._update,this)},_addScales:function(e,t,i){e.metric&&(this._mScale=o.DomUtil.create("div",t+"-line",i)),e.imperial&&(this._iScale=o.DomUtil.create("div",t+"-line",i))},_update:function(){var e=this._map.getBounds(),t=e.getCenter().lat,i=6378137*Math.PI*Math.cos(t*Math.PI/180),n=i*(e.getNorthEast().lng-e.getSouthWest().lng)/180,o=this._map.getSize(),r=this.options,s=0;o.x>0&&(s=n*(r.maxWidth/o.x)),this._updateScales(r,s)},_updateScales:function(e,t){e.metric&&t&&this._updateMetric(t),e.imperial&&t&&this._updateImperial(t)},_updateMetric:function(e){var t=this._getRoundNum(e);this._mScale.style.width=this._getScaleWidth(t/e)+"px",this._mScale.innerHTML=1e3>t?t+" m":t/1e3+" km"},_updateImperial:function(e){var t,i,n,o=3.2808399*e,r=this._iScale;o>5280?(t=o/5280,i=this._getRoundNum(t),r.style.width=this._getScaleWidth(i/t)+"px",r.innerHTML=i+" mi"):(n=this._getRoundNum(o),r.style.width=this._getScaleWidth(n/o)+"px",r.innerHTML=n+" ft")},_getScaleWidth:function(e){return Math.round(this.options.maxWidth*e)-10},_getRoundNum:function(e){var t=Math.pow(10,(Math.floor(e)+"").length-1),i=e/t;return i=i>=10?10:i>=5?5:i>=3?3:i>=2?2:1,t*i}}),o.control.scale=function(e){return new o.Control.Scale(e)},o.Control.Layers=o.Control.extend({options:{collapsed:!0,position:"topright",autoZIndex:!0},initialize:function(e,t,i){o.setOptions(this,i),this._layers={},this._lastZIndex=0,this._handlingClick=!1;for(var n in e)this._addLayer(e[n],n);for(n in t)this._addLayer(t[n],n,!0)},onAdd:function(e){return this._initLayout(),this._update(),e.on("layeradd",this._onLayerChange,this).on("layerremove",this._onLayerChange,this),this._container},onRemove:function(e){e.off("layeradd",this._onLayerChange,this).off("layerremove",this._onLayerChange,this)},addBaseLayer:function(e,t){return this._addLayer(e,t),this._update(),this},addOverlay:function(e,t){return this._addLayer(e,t,!0),this._update(),this},removeLayer:function(e){var t=o.stamp(e);return delete this._layers[t],this._update(),this},_initLayout:function(){var e="leaflet-control-layers",t=this._container=o.DomUtil.create("div",e);t.setAttribute("aria-haspopup",!0),o.Browser.touch?o.DomEvent.on(t,"click",o.DomEvent.stopPropagation):o.DomEvent.disableClickPropagation(t).disableScrollPropagation(t);var i=this._form=o.DomUtil.create("form",e+"-list");if(this.options.collapsed){o.Browser.android||o.DomEvent.on(t,"mouseover",this._expand,this).on(t,"mouseout",this._collapse,this);var n=this._layersLink=o.DomUtil.create("a",e+"-toggle",t);n.href="#",n.title="Layers",o.Browser.touch?o.DomEvent.on(n,"click",o.DomEvent.stop).on(n,"click",this._expand,this):o.DomEvent.on(n,"focus",this._expand,this),o.DomEvent.on(i,"click",function(){setTimeout(o.bind(this._onInputClick,this),0)},this),this._map.on("click",this._collapse,this)}else this._expand();this._baseLayersList=o.DomUtil.create("div",e+"-base",i),this._separator=o.DomUtil.create("div",e+"-separator",i),this._overlaysList=o.DomUtil.create("div",e+"-overlays",i),t.appendChild(i)},_addLayer:function(e,t,i){var n=o.stamp(e);this._layers[n]={layer:e,name:t,overlay:i},this.options.autoZIndex&&e.setZIndex&&(this._lastZIndex++,e.setZIndex(this._lastZIndex))},_update:function(){if(this._container){this._baseLayersList.innerHTML="",this._overlaysList.innerHTML="";var e,t,i=!1,n=!1;for(e in this._layers)t=this._layers[e],this._addItem(t),n=n||t.overlay,i=i||!t.overlay;this._separator.style.display=n&&i?"":"none"}},_onLayerChange:function(e){var t=this._layers[o.stamp(e.layer)];if(t){this._handlingClick||this._update();var i=t.overlay?"layeradd"===e.type?"overlayadd":"overlayremove":"layeradd"===e.type?"baselayerchange":null;i&&this._map.fire(i,t)}},_createRadioElement:function(e,i){var n='<input type="radio" class="leaflet-control-layers-selector" name="'+e+'"';i&&(n+=' checked="checked"'),n+="/>";var o=t.createElement("div");return o.innerHTML=n,o.firstChild},_addItem:function(e){var i,n=t.createElement("label"),r=this._map.hasLayer(e.layer);e.overlay?(i=t.createElement("input"),i.type="checkbox",i.className="leaflet-control-layers-selector",i.defaultChecked=r):i=this._createRadioElement("leaflet-base-layers",r),i.layerId=o.stamp(e.layer),o.DomEvent.on(i,"click",this._onInputClick,this);var s=t.createElement("span");s.innerHTML=" "+e.name,n.appendChild(i),n.appendChild(s);var a=e.overlay?this._overlaysList:this._baseLayersList;return a.appendChild(n),n},_onInputClick:function(){var e,t,i,n=this._form.getElementsByTagName("input"),o=n.length;for(this._handlingClick=!0,e=0;o>e;e++)t=n[e],i=this._layers[t.layerId],t.checked&&!this._map.hasLayer(i.layer)?this._map.addLayer(i.layer):!t.checked&&this._map.hasLayer(i.layer)&&this._map.removeLayer(i.layer);this._handlingClick=!1,this._refocusOnMap()},_expand:function(){o.DomUtil.addClass(this._container,"leaflet-control-layers-expanded")},_collapse:function(){this._container.className=this._container.className.replace(" leaflet-control-layers-expanded","")}}),o.control.layers=function(e,t,i){return new o.Control.Layers(e,t,i)},o.PosAnimation=o.Class.extend({includes:o.Mixin.Events,run:function(e,t,i,n){this.stop(),this._el=e,this._inProgress=!0,this._newPos=t,this.fire("start"),e.style[o.DomUtil.TRANSITION]="all "+(i||.25)+"s cubic-bezier(0,0,"+(n||.5)+",1)",o.DomEvent.on(e,o.DomUtil.TRANSITION_END,this._onTransitionEnd,this),o.DomUtil.setPosition(e,t),o.Util.falseFn(e.offsetWidth),this._stepTimer=setInterval(o.bind(this._onStep,this),50)},stop:function(){this._inProgress&&(o.DomUtil.setPosition(this._el,this._getPos()),this._onTransitionEnd(),o.Util.falseFn(this._el.offsetWidth))},_onStep:function(){var e=this._getPos();return e?(this._el._leaflet_pos=e,void this.fire("step")):void this._onTransitionEnd()},_transformRe:/([-+]?(?:\d*\.)?\d+)\D*, ([-+]?(?:\d*\.)?\d+)\D*\)/,_getPos:function(){var t,i,n,r=this._el,s=e.getComputedStyle(r);if(o.Browser.any3d){if(n=s[o.DomUtil.TRANSFORM].match(this._transformRe),!n)return;t=parseFloat(n[1]),i=parseFloat(n[2])}else t=parseFloat(s.left),i=parseFloat(s.top);return new o.Point(t,i,!0)},_onTransitionEnd:function(){o.DomEvent.off(this._el,o.DomUtil.TRANSITION_END,this._onTransitionEnd,this),this._inProgress&&(this._inProgress=!1,this._el.style[o.DomUtil.TRANSITION]="",this._el._leaflet_pos=this._newPos,clearInterval(this._stepTimer),this.fire("step").fire("end"))}}),o.Map.include({setView:function(e,t,n){if(t=t===i?this._zoom:this._limitZoom(t),e=this._limitCenter(o.latLng(e),t,this.options.maxBounds),n=n||{},this._panAnim&&this._panAnim.stop(),this._loaded&&!n.reset&&n!==!0){n.animate!==i&&(n.zoom=o.extend({animate:n.animate},n.zoom),n.pan=o.extend({animate:n.animate},n.pan));var r=this._zoom!==t?this._tryAnimatedZoom&&this._tryAnimatedZoom(e,t,n.zoom):this._tryAnimatedPan(e,n.pan);if(r)return clearTimeout(this._sizeTimer),this}return this._resetView(e,t),this},panBy:function(e,t){if(e=o.point(e).round(),t=t||{},!e.x&&!e.y)return this;if(this._panAnim||(this._panAnim=new o.PosAnimation,this._panAnim.on({step:this._onPanTransitionStep,end:this._onPanTransitionEnd},this)),t.noMoveStart||this.fire("movestart"),t.animate!==!1){o.DomUtil.addClass(this._mapPane,"leaflet-pan-anim");var i=this._getMapPanePos().subtract(e);this._panAnim.run(this._mapPane,i,t.duration||.25,t.easeLinearity)}else this._rawPanBy(e),this.fire("move").fire("moveend");return this},_onPanTransitionStep:function(){this.fire("move")},_onPanTransitionEnd:function(){o.DomUtil.removeClass(this._mapPane,"leaflet-pan-anim"),this.fire("moveend")},_tryAnimatedPan:function(e,t){var i=this._getCenterOffset(e)._floor();return(t&&t.animate)===!0||this.getSize().contains(i)?(this.panBy(i,t),!0):!1}}),o.PosAnimation=o.DomUtil.TRANSITION?o.PosAnimation:o.PosAnimation.extend({run:function(e,t,i,n){this.stop(),this._el=e,this._inProgress=!0,this._duration=i||.25,this._easeOutPower=1/Math.max(n||.5,.2),this._startPos=o.DomUtil.getPosition(e),this._offset=t.subtract(this._startPos),this._startTime=+new Date,this.fire("start"),this._animate()},stop:function(){this._inProgress&&(this._step(),this._complete())},_animate:function(){this._animId=o.Util.requestAnimFrame(this._animate,this),this._step()},_step:function(){var e=+new Date-this._startTime,t=1e3*this._duration;t>e?this._runFrame(this._easeOut(e/t)):(this._runFrame(1),this._complete())},_runFrame:function(e){var t=this._startPos.add(this._offset.multiplyBy(e));o.DomUtil.setPosition(this._el,t),this.fire("step")},_complete:function(){o.Util.cancelAnimFrame(this._animId),this._inProgress=!1,this.fire("end")},_easeOut:function(e){return 1-Math.pow(1-e,this._easeOutPower)}}),o.Map.mergeOptions({zoomAnimation:!0,zoomAnimationThreshold:4}),o.DomUtil.TRANSITION&&o.Map.addInitHook(function(){this._zoomAnimated=this.options.zoomAnimation&&o.DomUtil.TRANSITION&&o.Browser.any3d&&!o.Browser.android23&&!o.Browser.mobileOpera,this._zoomAnimated&&o.DomEvent.on(this._mapPane,o.DomUtil.TRANSITION_END,this._catchTransitionEnd,this)}),o.Map.include(o.DomUtil.TRANSITION?{_catchTransitionEnd:function(e){this._animatingZoom&&e.propertyName.indexOf("transform")>=0&&this._onZoomTransitionEnd()},_nothingToAnimate:function(){return!this._container.getElementsByClassName("leaflet-zoom-animated").length},_tryAnimatedZoom:function(e,t,i){if(this._animatingZoom)return!0;if(i=i||{},!this._zoomAnimated||i.animate===!1||this._nothingToAnimate()||Math.abs(t-this._zoom)>this.options.zoomAnimationThreshold)return!1;var n=this.getZoomScale(t),o=this._getCenterOffset(e)._divideBy(1-1/n),r=this._getCenterLayerPoint()._add(o);return i.animate===!0||this.getSize().contains(o)?(this.fire("movestart").fire("zoomstart"),this._animateZoom(e,t,r,n,null,!0),!0):!1},_animateZoom:function(e,t,i,n,r,s,a){a||(this._animatingZoom=!0),o.DomUtil.addClass(this._mapPane,"leaflet-zoom-anim"),this._animateToCenter=e,this._animateToZoom=t,o.Draggable&&(o.Draggable._disabled=!0),o.Util.requestAnimFrame(function(){this.fire("zoomanim",{center:e,zoom:t,origin:i,scale:n,delta:r,backwards:s})},this)},_onZoomTransitionEnd:function(){this._animatingZoom=!1,o.DomUtil.removeClass(this._mapPane,"leaflet-zoom-anim"),this._resetView(this._animateToCenter,this._animateToZoom,!0,!0),o.Draggable&&(o.Draggable._disabled=!1)}}:{}),o.TileLayer.include({_animateZoom:function(e){this._animating||(this._animating=!0,this._prepareBgBuffer());var t=this._bgBuffer,i=o.DomUtil.TRANSFORM,n=e.delta?o.DomUtil.getTranslateString(e.delta):t.style[i],r=o.DomUtil.getScaleString(e.scale,e.origin);t.style[i]=e.backwards?r+" "+n:n+" "+r},_endZoomAnim:function(){var e=this._tileContainer,t=this._bgBuffer;e.style.visibility="",e.parentNode.appendChild(e),o.Util.falseFn(t.offsetWidth),this._animating=!1},_clearBgBuffer:function(){var e=this._map;!e||e._animatingZoom||e.touchZoom._zooming||(this._bgBuffer.innerHTML="",this._bgBuffer.style[o.DomUtil.TRANSFORM]="")},_prepareBgBuffer:function(){var e=this._tileContainer,t=this._bgBuffer,i=this._getLoadedTilesPercentage(t),n=this._getLoadedTilesPercentage(e);return t&&i>.5&&.5>n?(e.style.visibility="hidden",void this._stopLoadingImages(e)):(t.style.visibility="hidden",t.style[o.DomUtil.TRANSFORM]="",this._tileContainer=t,t=this._bgBuffer=e,this._stopLoadingImages(t),void clearTimeout(this._clearBgBufferTimer))},_getLoadedTilesPercentage:function(e){var t,i,n=e.getElementsByTagName("img"),o=0;for(t=0,i=n.length;i>t;t++)n[t].complete&&o++;return o/i},_stopLoadingImages:function(e){var t,i,n,r=Array.prototype.slice.call(e.getElementsByTagName("img"));for(t=0,i=r.length;i>t;t++)n=r[t],n.complete||(n.onload=o.Util.falseFn,n.onerror=o.Util.falseFn,n.src=o.Util.emptyImageUrl,n.parentNode.removeChild(n))}}),o.Map.include({_defaultLocateOptions:{watch:!1,setView:!1,maxZoom:1/0,timeout:1e4,maximumAge:0,enableHighAccuracy:!1},locate:function(e){if(e=this._locateOptions=o.extend(this._defaultLocateOptions,e),!navigator.geolocation)return this._handleGeolocationError({code:0,message:"Geolocation not supported."}),this;var t=o.bind(this._handleGeolocationResponse,this),i=o.bind(this._handleGeolocationError,this);return e.watch?this._locationWatchId=navigator.geolocation.watchPosition(t,i,e):navigator.geolocation.getCurrentPosition(t,i,e),this},stopLocate:function(){return navigator.geolocation&&navigator.geolocation.clearWatch(this._locationWatchId),this._locateOptions&&(this._locateOptions.setView=!1),this},_handleGeolocationError:function(e){var t=e.code,i=e.message||(1===t?"permission denied":2===t?"position unavailable":"timeout");this._locateOptions.setView&&!this._loaded&&this.fitWorld(),this.fire("locationerror",{code:t,message:"Geolocation error: "+i+"."})},_handleGeolocationResponse:function(e){var t=e.coords.latitude,i=e.coords.longitude,n=new o.LatLng(t,i),r=180*e.coords.accuracy/40075017,s=r/Math.cos(o.LatLng.DEG_TO_RAD*t),a=o.latLngBounds([t-r,i-s],[t+r,i+s]),u=this._locateOptions;if(u.setView){var c=Math.min(this.getBoundsZoom(a),u.maxZoom);this.setView(n,c)}var l={latlng:n,bounds:a,timestamp:e.timestamp};for(var h in e.coords)"number"==typeof e.coords[h]&&(l[h]=e.coords[h]);this.fire("locationfound",l)}})}(window,document),L.Google=L.Class.extend({includes:L.Mixin.Events,options:{minZoom:0,maxZoom:18,tileSize:256,subdomains:"abc",errorTileUrl:"",attribution:"",opacity:1,continuousWorld:!1,noWrap:!1,mapOptions:{backgroundColor:"#dddddd"}},initialize:function(e,t){L.Util.setOptions(this,t),this._ready=void 0!==google.maps.Map,this._ready||L.Google.asyncWait.push(this),this._type=e||"SATELLITE"},onAdd:function(e,t){this._map=e,this._insertAtTheBottom=t,this._initContainer(),this._initMapObject(),e.on("viewreset",this._resetCallback,this),this._limitedUpdate=L.Util.limitExecByInterval(this._update,150,this),e.on("move",this._update,this),e.on("zoomanim",this._handleZoomAnim,this),e._controlCorners.bottomright.style.marginBottom="20px",this._reset(),this._update()},onRemove:function(e){e._container.removeChild(this._container),e.off("viewreset",this._resetCallback,this),e.off("move",this._update,this),e.off("zoomanim",this._handleZoomAnim,this),e._controlCorners.bottomright.style.marginBottom="0em"},getAttribution:function(){return this.options.attribution},setOpacity:function(e){this.options.opacity=e,1>e&&L.DomUtil.setOpacity(this._container,e)},setElementSize:function(e,t){e.style.width=t.x+"px",e.style.height=t.y+"px"},_initContainer:function(){var e=this._map._container,t=e.firstChild;this._container||(this._container=L.DomUtil.create("div","leaflet-google-layer leaflet-top leaflet-left"),this._container.id="_GMapContainer_"+L.Util.stamp(this),this._container.style.zIndex="auto"),e.insertBefore(this._container,t),this.setOpacity(this.options.opacity),this.setElementSize(this._container,this._map.getSize())},_initMapObject:function(){if(this._ready){this._google_center=new google.maps.LatLng(0,0);var e=new google.maps.Map(this._container,{center:this._google_center,zoom:0,tilt:0,mapTypeId:google.maps.MapTypeId[this._type],disableDefaultUI:!0,keyboardShortcuts:!1,draggable:!1,disableDoubleClickZoom:!0,scrollwheel:!1,streetViewControl:!1,styles:this.options.mapOptions.styles,backgroundColor:this.options.mapOptions.backgroundColor}),t=this;this._reposition=google.maps.event.addListenerOnce(e,"center_changed",function(){t.onReposition()}),this._google=e,google.maps.event.addListenerOnce(e,"idle",function(){t._checkZoomLevels()}),google.maps.event.addListenerOnce(e,"tilesloaded",function(){t.fire("load")}),this.fire("MapObjectInitialized",{mapObject:e})}},_checkZoomLevels:function(){this._google.getZoom()!==this._map.getZoom()&&this._map.setZoom(this._google.getZoom())},_resetCallback:function(e){this._reset(e.hard)},_reset:function(e){this._initContainer()},_update:function(e){if(this._google){this._resize();var t=this._map.getCenter(),i=new google.maps.LatLng(t.lat,t.lng);this._google.setCenter(i),this._google.setZoom(Math.round(this._map.getZoom())),this._checkZoomLevels()}},_resize:function(){var e=this._map.getSize();(this._container.style.width!==e.x||this._container.style.height!==e.y)&&(this.setElementSize(this._container,e),this.onReposition())},_handleZoomAnim:function(e){var t=e.center,i=new google.maps.LatLng(t.lat,t.lng);this._google.setCenter(i),this._google.setZoom(Math.round(e.zoom))},onReposition:function(){this._google&&google.maps.event.trigger(this._google,"resize")}}),L.Google.asyncWait=[],L.Google.asyncInitialize=function(){var e;for(e=0;e<L.Google.asyncWait.length;e++){var t=L.Google.asyncWait[e];t._ready=!0,t._container&&(t._initMapObject(),t._update())}L.Google.asyncWait=[]},function(){"use strict";angular.module("checkin",["angularGeoFire","core","leaflet-directive","angularMoment"])}(),function(){"use strict";function e(e,t,i,n,o){function r(t,i){var n=e.defer(),o=new Firebase(s.refSubGroupLocationsDefined.child(t+"/"+i).toString());return o.orderByValue().on("value",function(e){e.forEach(function(e){s.$currentSubGroupLocationsObject=e.val()}),n.resolve()}),n.promise}var s,a;return a=Firebase.ServerValue.TIMESTAMP,s={main:i.getRefMain()},s.refGroupCheckinCurrent=s.main.child("group-check-in-current"),s.refGroupCheckinRecords=s.main.child("group-check-in-records"),s.refGroupLocationsDefined=s.main.child("group-locations-defined"),s.refSubGroupCheckinCurrent=s.main.child("subgroup-check-in-current"),s.refSubGroupCheckinRecords=s.main.child("subgroup-check-in-records"),s.refSubGroupLocationsDefined=s.main.child("subgroup-locations-defined"),s.refSubGroupCheckinCurrentByUser=s.main.child("subgroup-check-in-current-by-user"),{getRefUsers:i.getRefUsers,getRefGroups:i.getRefGroups,getRefUserGroupMemberships:i.getRefUserGroupMemberships,getRefUserSubGroupMemberships:i.getRefUserGroupMemberships,createCurrentRefs:function(e,t){s.$currentGroupLocations=Firebase.getAsArray(s.refGroupLocationsDefined.child(e)),s.refCurrentGroupCheckinCurrent=s.refGroupCheckinCurrent.child(e);var i=s.refGroupCheckinRecords.child(e+"/"+t);s.$userCheckinRecords=Firebase.getAsArray(i)},createCurrentRefsBySubgroup:function(t,i,n){var a=e.defer();return r(t,i).then(function(e){s.$currentSubGroupLocations=o(s.refSubGroupLocationsDefined.child(t+"/"+i));var r=s.refSubGroupCheckinRecords.child(t+"/"+i+"/"+n);s.$userCheckinRecords=Firebase.getAsArray(r),a.resolve("test")}),a.promise},getRefSubgroupCheckinCurrentByUser:function(){return s.refSubGroupCheckinCurrentByUser},getFireAsObject:function(e){return n(e)},getRefGroupLocationsDefined:function(e){return s.refGroupLocationsDefined.child(e)},getRefCheckinCurrent:function(){return s.refGroupCheckinCurrent},getRefCheckinCurrentBySubgroup:function(){return s.refSubGroupCheckinCurrent},getRefGroupCheckinCurrent:function(e){return s.refGroupCheckinCurrent.child(e)},getRefSubGroupCheckinCurrent:function(e,t,i){return s.refSubGroupCheckinCurrent.child(e+"/"+t+"/"+i)},getFireCurrentGroupLocations:function(){return s.$currentGroupLocations},getFireCurrentSubGroupLocations:function(){return s.$currentSubGroupLocations},getFireCurrentSubGroupLocationsObject:function(){return s.$currentSubGroupLocationsObject},getFireGroup:function(e){var t=this.getRefGroups();return this.getFireAsObject(t.child(e))},geoLocationSupport:function(){return"undefined"!=typeof window.navigator&&"undefined"!=typeof window.navigator.geolocation},getCurrentLocation:function(){return t.getCurrentPosition({timeout:6e4,maximumAge:250,enableHighAccuracy:!0})},updateUserStatusBySubGroup:function(t,i,r,u,c,l){var h=e.defer(),p=function(e){h.reject("error occurred in connecting to the server",e)},d=this,f=u.location?this.getDefinedLocationByLatLng(u.location,c).$id:"Other",m={"subgroup-url":t+"/"+i,timestamp:a,type:+u.type,"source-type":1,"source-device-type":1,location:u.location,"identified-location-id":f};m.message=u.message||(1==u.type?"Checked-in":"Checked-out");var g=s.refSubGroupCheckinCurrent.child(t+"/"+i+"/"+r),v=n(g);return v.$loaded().then(function(){var e=s.refSubGroupCheckinRecords.child(t+"/"+i+"/"+r),a=new Firebase(e.toString()),u=o(a);u.$add(m).then(function(e){n(s.refSubGroupCheckinCurrentByUser.child(r)).$loaded().then(function(e){m["record-ref"]="snapShot.key()",angular.extend(v,m),v.$save().then(function(){d.updateSubGroupCount(t,i,m.type).then(function(){h.resolve("Status updated successfully.")},p)},p)},p)},p)},p),h.promise},updateUserStatus:function(t,i,o,r,u){var c=e.defer(),l=function(e){c.reject("error occurred in connecting to the server",e)},h=this,p=o.location?this.getDefinedLocationByLatLng(o.location,r).$id:"Other",d={"group-url":t,timestamp:a,type:+o.type,"source-type":1,"source-device-type":1,location:o.location,"identified-location-id":p};d.message=o.message||(1==o.type?"Checked-in":"Checked-out");var f=s.refGroupCheckinCurrent.child(t+"/"+i),m=n(f);return m.$loaded().then(function(){var e=s.refGroupCheckinRecords.child(t+"/"+i),n=Firebase.getAsArray(e),o=n.$add(d);d.id=o.key(),angular.extend(m,d),m.$save().then(function(){h.updateGroupCount(t,d.type).then(function(){h.asyncRecordUserCheckGroupActivity(d,i,t,u,r).then(function(){c.resolve("Status updated successfully.")},l)},l)},l)},l),c.promise},updateGroupCount:function(t,o){var r=e.defer(),s=i.getRefGroups().child(t+"/members-checked-in"),a=n(s);return a.$loaded().then(function(){a.count=(a.count||0)+(1==o?1:-1),a.$save().then(function(){r.resolve()},function(){r.reject()})},function(){r.reject()}),r.promise},updateAllSubGroupCount:function(t,o,r){var s=e.defer(),a=i.getRefGroups().child(t+"/"+o+"/members-checked-in"),u=n(a);return u.$loaded().then(function(){u.count=(u.count||0)-r,u.$save().then(function(){s.resolve()},function(){s.reject()})},function(){s.reject()}),s.promise},updateSubGroupCount:function(t,o,r){var s=e.defer(),a=i.getRefGroups().child(t+"/"+o+"/members-checked-in"),u=n(a);return u.$loaded().then(function(){u.count=(u.count||0)+(1==r?1:-1),u.$save().then(function(){s.resolve()},function(){s.reject()})},function(){s.reject()}),s.promise},asyncRecordUserCheckGroupActivity:function(t,n,o,r,s){var u=e.defer(),c=i.getSignedinUserObj(),l=this.getLocationName(t,s),h=i.getRefGroupsActivityStreams().child(o),p={type:"user",id:n,email:c.email,displayName:c.firstName+" "+c.lastName,image:null},d={type:"location",id:null,url:null,displayName:l,image:null},f={type:"group",id:o,url:o,displayName:r.title},m=p.displayName+(1==t.type?" checked-in":" checked-out")+' at "'+l+'" location of '+r.title+".",g={language:"en",verb:1==t.type?"check-in":"check-out",published:a,displayName:m,actor:p,object:d,target:f},v=h.push();return v.set(g,function(e){if(e)u.reject(),console.log("error occurred in check-in activity",e);else{var t=v.key(),i=h.child(t);i.once("value",function(e){var t=e.val();v.setPriority(0-t.published,function(e){e?(u.reject(),console.log("error occurred in check-in activity",e)):u.resolve()})})}}),u.promise},asyncRecordUserCheckSubGroupActivity:function(t,n,o,r,s,u){var c=e.defer(),l=i.getSignedinUserObj(),h=this.getLocationName(t,u),p=i.getRefSubGroupsActivityStreams().child(o+"/"+r),d={type:"user",id:n,email:l.email,displayName:l.firstName+" "+l.lastName,image:null},f={type:"location",id:null,url:null,displayName:h,image:null},m={type:"group",id:r,url:r,displayName:s.title},g=d.displayName+(1==t.type?" checked-in":" checked-out")+' at "'+h+'" location of '+s.title+".",v={language:"en",verb:1==t.type?"check-in":"check-out",published:a,displayName:g,actor:d,object:f,target:m},b=p.push();return b.set(v,function(e){if(e)c.reject(),console.log("error occurred in check-in activity",e);else{var t=b.key(),i=p.child(t);i.once("value",function(e){var t=e.val();b.setPriority(0-t.published,function(e){e?(c.reject(),console.log("error occurred in check-in activity",e)):c.resolve()})})}}),c.promise},addLocation:function(t,i,n){var o=e.defer(),r={"group-url":t,title:n.title,type:1,location:{lat:n.lat,lon:n.lng,radius:n.radius},"defined-by":i,timestamp:a},u=s.$currentGroupLocations.$add(r);return u.key()?o.resolve('Location has been added to "'+t+'".'):o.reject("Error occurred in saving on server."),o.promise},addLocationBySubgroup:function(t,i,n,o,r,u){var c=e.defer(),l={"subgroup-url":t+"/"+i,title:o.title,type:1,location:{lat:o.locationObj.lat,lon:o.locationObj.lng,radius:o.locationObj.radius},"defined-by":n,timestamp:a};return!r&&s.$currentSubGroupLocations.length?(angular.extend(s.$currentSubGroupLocations[0],l),s.$currentSubGroupLocations.$save(0).then(function(){c.resolve('Location has been added to "'+i+'".')},function(){c.reject("Error occurred in saving on server.")})):s.$currentSubGroupLocations.$add(l).then(function(){c.resolve('Location has been added to "'+i+'".')},function(){c.reject("Error occurred in saving on server.")}),c.promise},getDefinedLocationByLatLng:function(e,t,i){var n,o,r,s;return r={title:"Other",$id:"Other"},i=i||0,s=new L.LatLng(e.lat,e.lon||e.lng),angular.forEach(t,function(e){o=new L.LatLng(e.location.lat,e.location.lon),n=s.distanceTo(o),n<=e.location.radius+i&&(r=e)}),r},getLocationName:function(e,t){if(e){var i="Other",n=e["identified-location-id"];return angular.forEach(t,function(e){n===e.$id&&(i=e.title)}),i}}}}angular.module("checkin").factory("checkinService",e),e.$inject=["$q","$geolocation","firebaseService","$firebaseObject","$firebaseArray"]}(),function(){"use strict";angular.module("checkin").filter("array",function(){return function(e){var t=[];for(var i in e)t.push(e[i]);return t}})}(),function(){"use strict";function e(e){return function(t,i){return e.getLocationName(t,i)}}angular.module("checkin").filter("getLocationNameByID",e),e.$inject=["checkinService"]}(),function(){"use strict";function e(e,t,i,n,o,r,s){function a(){t.cancel()}function u(){if(p&&e.markers.current.lat&&e.markers.current.lng){var t=new L.LatLng(e.markers.current.lat,e.markers.current.lng);p.setLatLng(t)}}function c(t){p&&t&&e.markers.current.lat&&e.markers.current.lng&&p.setRadius(t)}function l(){e.location.title=e.markers.current.message;var n=o.getDefinedLocationByLatLng(e.markers.current,i.definedLocations,e.location.radius);return n.$id?void s.showFailure('location already acquired by "'+n.title+'"! please adjust the marker for new location.'):(e.submitting=!0,angular.extend(e.location,e.markers.current),e.$parent.subgroupID,void o[i.bySubgroup?"addLocationBySubgroup":"addLocation"](i.groupID,i.subgroupID,i.userID,e.location).then(function(i){e.submitting=!1,s.showSuccess(i),t.hide()},function(t){e.submitting=!1,s.showFailure(t)}))}function h(){return i.definedLocations.length?"Update Location":"Create Location"}e.$watch("location.radius",c),e.$watch("markers.current.lat",u),e.$watch("markers.current.lng",u),angular.extend(e,{center:{lat:n.coords.latitude,lng:n.coords.longitude,zoom:16},location:{radius:i.definedLocations.length?i.definedLocations[0].location.radius:22},markers:{},groupLocations:[],addLocation:l,hide:a,getBtnStatus:h});var p;r.getMap().then(function(t){var o;o={color:"green",fillColor:"green",fillOpacity:.5},i.definedLocations.length?e.markers.current={lat:i.definedLocations[0].location.lat,lng:i.definedLocations[0].location.lon,draggable:!0,focus:!0,message:"location title"}:e.markers.current={lat:n.coords.latitude,lng:n.coords.longitude,draggable:!0,focus:!0,message:"location title"},p=L.circle([e.markers.current.lat,e.markers.current.lng],e.location.radius,o).addTo(t)})}angular.module("checkin").controller("DefineLocationCtrl",e),e.$inject=["$scope","$mdDialog","infoObj","currentLocation","checkinService","leafletData","messageService"]}(),function(){"use strict";function e(e,t,i,n,o,r,s,a){function u(){var t=r.getFireAsObject(g.child(p));t.$loaded().then(function(i){var n=t[d];e.isAdmin=n&&(1==n["membership-type"]||2==n["membership-type"])})}function c(e,t,i){var n;n=i?{location:t.currentStatus.location,timestamp:t.currentStatus.timestamp,message:t.profile.firstName+" "+t.profile.lastName}:{location:t.location,timestamp:t.timestamp,message:t.title},o.show({controller:l,templateUrl:"core/views/dialogMap.tmpl.html",targetEvent:e,locals:{detailsObj:n}})}function l(e,t,i,n){var o=i(n.timestamp,"medium");e.hide=function(){t.cancel()},e.mapDefault={center:{lat:n.location.lat,lng:n.location.lon,zoom:16}},e.markers={userMarker:{lat:n.location.lat,lng:n.location.lon,message:"<strong>"+n.message+"</strong><br/><span>"+o+"</span>",focus:!0,draggable:!1}}}function h(t){o.show({controller:"DefineLocationCtrl",templateUrl:"./checkin/views/defineLocation.tmpl.html",targetEvent:t,locals:{infoObj:{groupID:d,userID:p,definedLocations:e.definedGroupLocations}},resolve:{currentLocation:function(){return r.getCurrentLocation()}}})}e.showLocation=c,e.showAddLocation=h,e.getLocationName=r.getLocationName,e.members={},e.user=a.loggedInUser;var p,d,f,m,g;p=e.user.userID,d=i.path(),d=s.trimID(d),r.createCurrentRefs(d,p),e.definedGroupLocations=r.getFireCurrentGroupLocations(),f=r.getRefGroupCheckinCurrent(d),m=r.getRefUsers(),g=r.getRefUserGroupMemberships(),e.filterIn=function(e){return 1===e.currentStatus.type},e.filterOut=function(e){return 2===e.currentStatus.type},u(),f.on("child_added",function(t){var i=t.key();e.members[i]={profile:r.getFireAsObject(m.child(i)),currentStatus:r.getFireAsObject(f.child(i))}}),f.on("child_removed",function(t){var i=t.key();delete e.members[i];
-})}angular.module("checkin").controller("CheckinHomeCtrl",e),e.$inject=["$scope","$sessionStorage","$location","messageService","$mdDialog","checkinService","utilService","$localStorage"]}(),function(){"use strict";function e(e,t,i,n,o,r,s,a){function u(){var t=r.getFireAsObject(b.child(d));t.$loaded().then(function(i){var n=t[f][m];e.isAdmin=n&&(1==n["membership-type"]||2==n["membership-type"])})}function c(e,t,i){var n;n=i?{location:t.currentStatus.location,timestamp:t.currentStatus.timestamp,message:t.profile.firstName+" "+t.profile.lastName}:{location:t.location,timestamp:t.timestamp,message:t.title},o.show({controller:l,templateUrl:"core/views/dialogMap.tmpl.html",targetEvent:e,locals:{detailsObj:n}})}function l(e,t,i,n){var o=i(n.timestamp,"medium");e.hide=function(){t.cancel()},e.mapDefault={center:{lat:n.location.lat,lng:n.location.lon,zoom:16}},e.markers={userMarker:{lat:n.location.lat,lng:n.location.lon,message:"<strong>"+n.message+"</strong><br/><span>"+o+"</span>",focus:!0,draggable:!1}}}function h(t){o.show({controller:"DefineLocationCtrl",templateUrl:"./checkin/views/defineLocation.tmpl.html",targetEvent:t,locals:{infoObj:{groupID:f,subgroupID:m,userID:d,definedLocations:e.definedSubGroupLocations,bySubgroup:!0}},resolve:{currentLocation:function(){return r.getCurrentLocation()}}})}function p(){return e.definedSubGroupLocations.length?"Edit defined Location":"Add a new location"}e.showLocation=c,e.showAddLocation=h,e.getLocationName=r.getLocationName,e.getLocationStatus=p,e.members={},e.user=a.loggedInUser;var d,f,m,g,v,b;d=e.user.userID,f=i.path().split("/")[1],m=i.path().split("/")[2],r.createCurrentRefsBySubgroup(f,m,d),e.definedSubGroupLocations=r.getFireCurrentSubGroupLocations(),g=r.getRefSubGroupCheckinCurrent(f,m),v=r.getRefUsers(),b=r.getRefUserSubGroupMemberships(),e.filterIn=function(e){return 1===e.currentStatus.type},e.filterOut=function(e){return 2===e.currentStatus.type},u(),g.on("child_added",function(t){var i=t.key();e.members[i]={profile:r.getFireAsObject(v.child(i)),currentStatus:r.getFireAsObject(g.child(i))}}),g.on("child_removed",function(t){var i=t.key();delete e.members[i]})}angular.module("checkin").controller("CheckinBySubgroupHomeCtrl",e),e.$inject=["$scope","$sessionStorage","$location","messageService","$mdDialog","checkinService","utilService","$localStorage"]}(),function(){"use strict";function e(e,t,i){function n(t){f=t,t?e.newStatus.type=1==e.subscribedGroups[t].checkin.type?2:1:e.newStatus.type=""}function o(e){return e.checkin&&1==e.checkin.type}function r(i){var n=h.child(i+"/"+e.userID);e.subscribedGroups[i].checkin=t.getFireAsObject(n)}function s(t){var i=t.key();delete e.subscribedGroups[i]}function a(i){var n,o,s;o=i.key(),n=i.val(),s=t.getFireAsObject(l.child(o)),s.$loaded().then(function(){return n["membership-type"]<=0?void delete e.subscribedGroups[o]:(e.subscribedGroups[o]={groupInfo:s,locations:Firebase.getAsArray(t.getRefGroupLocationsDefined(o))},void r(o))},function(){console.log("error occurred in fetching data from server.")})}function u(){if(!f||!e.newStatus.type)return void console.log("group or status type is missing");var n=e.subscribedGroups[f],o=function(){e.checkinSending=!0,t.updateUserStatus(f,e.userID,e.newStatus,n.locations,n.groupInfo).then(function(t){i.showSuccess(t),c(),e.newStatus.message="",e.checkinSending=!1},function(t){i.showFailure(t),e.checkinSending=!1})};e.selectLocation?t.getCurrentLocation().then(function(t){e.newStatus.location={lat:t.coords.latitude,lon:t.coords.longitude},o()},function(e){i.showFailure(e.error.message)}):(e.newStatus.location=null,o())}function c(){m.ref&&m.ref.off("value",m.handler),m.ref=h.child(f+"/"+e.userID),m.groupID=f,m.handler=m.ref.on("value",function(t){if(m.groupID===f){var i=t.val();e.newStatus.type=1===i.type?2:1}})}e.updateStatus=u,e.filterCheckin=o,e.setSelectedGroup=n,e.geoLocationSupport=t.geoLocationSupport(),e.subscribedGroups={},e.currentCheckins={},e.newStatus={},e.userCurrentStatusTypeInGroup=null,e.selectLocation=!0,e.selectedGroup=null;var l,h,p,d,f,m;m={},l=t.getRefGroups(),h=t.getRefCheckinCurrent(),p=t.getRefUserGroupMemberships(),d=p.child(e.userID),d.on("child_added",a),d.on("child_changed",a),d.on("child_removed",s)}angular.module("checkin").controller("UserHomeCheckinCtrl",e),e.$inject=["$scope","checkinService","messageService"]}(),function(){"use strict";function e(e,t,i){function n(i){var n=i.val();t(function(){e.chartGroupActive=!0,e.totalMembers=n["members-count"],e.checkedInUsers=n["members-checked-in"].count,e.checkedOutUsers=e.totalMembers-e.checkedInUsers,e.chartGroupData={data:[{x:"Checked In",y:[e.checkedInUsers],tooltip:"Checked-In Users: "+e.checkedInUsers},{x:"Checked out",y:[e.checkedOutUsers],tooltip:"Checked-Out Users: "+e.checkedOutUsers}]}})}var o=i.getRefGroups().child(e.groupID);o.on("value",n),e.chartActive=!0,e.chartType="pie",e.chartData={data:[{x:"PanaCloud",y:[5],tooltip:"from panaCloud"},{x:"Swift",y:[2],tooltip:"form Swift"},{x:"Meet one",y:[3],tooltip:"from Meetone"},{x:"Other location",y:[1],tooltip:"from Other location"},{x:"Not available",y:[3],tooltip:"not available"}]},e.chartGroupConfig={title:e.groupID+" summary",tooltips:!0,labels:!1,legend:{display:!0,position:"left"},waitForHeightAndWidth:!0}}angular.module("checkin").controller("ChartsCheckinCtrl",e),e.$inject=["$scope","$timeout","firebaseService"]}();var mainApplicationModuleName="myApp",mainApplicationModule=angular.module(mainApplicationModuleName,["ngMaterial","components","core"]).run(["authService",function(e){}]);mainApplicationModule.value("appConfig",{apiBaseUrl:"https://panacloudapi.herokuapp.com",myFirebase:"https://luminous-torch-4640.firebaseio.com",firebaseAuth:!1,serverPostApi:{userProfilePictureUpload:"api/groupProfilepicture",groupProfilePictureUpload:"api/groupProfilepicture"}}),mainApplicationModule.constant("angularMomentConfig",{preprocess:"unix"});
+/**
+ * Created by ZiaKhan on 16/12/14.
+ */
+
+// Invoke 'strict' JavaScript mode
+'use strict';
+
+angular.module('core', [
+    'ngAudio',
+    'ngAnimate',
+    'ngAria',
+    'ngMdIcons',
+    'ngMaterial',
+    'firebase',
+    'ngStorage',
+    'ngGeolocation',
+    'ngMessages',
+    'ng-mfb',
+    'ui.router',
+    'angular-img-cropper',
+    'md.data.table',
+    'ui-leaflet',
+    'angular.filter',
+    'ngFileSaver',
+    'truncate'
+  ]).filter('trustUrl', ['$sce', function($sce) {
+    return function(url) {
+      /*var temp;
+       $.get(url).success(function(data){
+       temp = 'data:image/jpeg;base64' + data;
+       });
+
+       //var temp = webkitURL.createObjectURL(url)*/
+      return url
+    };
+  }])
+  .filter('emptyString', [
+    function() {
+      return function(input, param) {
+        if (!param) return input
+
+        var ret = [];
+        if (!angular.isDefined(param)) param = true;
+
+
+        if (param) {
+          angular.forEach(input, function(v) {
+            if (angular.isDefined(v.comment) && v.comment) {
+              v.comment = v.comment.replace(/^\s*/g, '');
+              ret.push(v);
+            }
+
+          });
+        }
+        return ret;
+      };
+    }
+  ])
+  .filter('millSecondsToTimeString', [function() {
+    return function(millseconds) {
+      var seconds = Math.floor(millseconds / 1000);
+      var days = Math.floor(seconds / 86400);
+      var hours = Math.floor((seconds % 86400) / 3600);
+      var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
+      var timeString = '';
+      if (days > 0) timeString += (days > 1) ? (days + " days ") : (days + " day ");
+      if (hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (hours + " hour ");
+      if (minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
+      return timeString;
+    }
+  }])
+  .filter('glt', [function() {
+    return function(items, field, maxvalue, minvalue) {
+      if (maxvalue && minvalue) {
+        var filteredItems = []
+        angular.forEach(items, function(item) {
+          if (item[field] >= maxvalue && item[field] <= minvalue) {
+            filteredItems.push(item);
+          }
+        });
+        return filteredItems;
+      } else if (maxvalue) {
+        var filteredItems = []
+        angular.forEach(items, function(item) {
+          if (item[field] >= maxvalue) {
+            filteredItems.push(item);
+          }
+        });
+        return filteredItems;
+      } else {
+        return items
+      }
+
+    }
+  }])
+  .filter('multilineFilter', ['$sce', function($sce) {
+    return function(text) {
+      if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g, '<br />'));
+    }
+  }]);
+
+/*! Firebase.getAsArray - v0.1.0 - 2014-04-21
+* Copyright (c) 2014 Kato
+* MIT LICENSE */
+
+(function(exports) {
+
+  exports.getAsArray = function(ref, eventCallback) {
+    return new ReadOnlySynchronizedArray(ref, eventCallback).getList();
+  };
+
+  function ReadOnlySynchronizedArray(ref, eventCallback) {
+    this.list = [];
+    this.subs = []; // used to track event listeners for dispose()
+    this.ref = ref;
+    this.eventCallback = eventCallback;
+    this._wrapList();
+    this._initListeners();
+  }
+
+  ReadOnlySynchronizedArray.prototype = {
+    getList: function() {
+      return this.list;
+    },
+
+    add: function(data, customKey) {
+      if(customKey){
+        var ref = this.ref.child(customKey);
+        if (arguments.length > 0) {
+          ref.set(parseForJson(data), this._handleErrors.bind(this, customKey));
+        }
+        return ref;
+      }
+      else {
+        var key = this.ref.push().key();
+        var ref = this.ref.child(key);
+        if (arguments.length > 0) {
+          ref.set(parseForJson(data), this._handleErrors.bind(this, key));
+        }
+        return ref;
+      }
+    },
+
+    set: function(key, newValue) {
+      this.ref.child(key).set(parseForJson(newValue), this._handleErrors.bind(this, key));
+    },
+
+    update: function(key, newValue) {
+      this.ref.child(key).update(parseForJson(newValue), this._handleErrors.bind(this, key));
+    },
+
+    setPriority: function(key, newPriority) {
+      this.ref.child(key).setPriority(newPriority);
+    },
+
+    remove: function(key) {
+      this.ref.child(key).remove(this._handleErrors.bind(null, key));
+    },
+
+    posByKey: function(key) {
+      return findKeyPos(this.list, key);
+    },
+
+    placeRecord: function(key, prevId) {
+      if( prevId === null ) {
+        return 0;
+      }
+      else {
+        var i = this.posByKey(prevId);
+        if( i === -1 ) {
+          return this.list.length;
+        }
+        else {
+          return i+1;
+        }
+      }
+    },
+
+    getRecord: function(key) {
+      var i = this.posByKey(key);
+      if( i === -1 ) return null;
+      return this.list[i];
+    },
+
+    dispose: function() {
+      var ref = this.ref;
+      this.subs.forEach(function(s) {
+        ref.off(s[0], s[1]);
+      });
+      this.subs = [];
+    },
+
+    _serverAdd: function(snap, prevId) {
+      var data = parseVal(snap.key(), snap.val());
+      this._moveTo(snap.key(), data, prevId);
+      this._handleEvent('child_added', snap.key(), data);
+    },
+
+    _serverRemove: function(snap) {
+      var pos = this.posByKey(snap.key());
+      if( pos !== -1 ) {
+        this.list.splice(pos, 1);
+        this._handleEvent('child_removed', snap.key(), this.list[pos]);
+      }
+    },
+
+    _serverChange: function(snap) {
+      var pos = this.posByKey(snap.key());
+      if( pos !== -1 ) {
+        this.list[pos] = applyToBase(this.list[pos], parseVal(snap.key(), snap.val()));
+        this._handleEvent('child_changed', snap.key(), this.list[pos]);
+      }
+    },
+
+    _serverMove: function(snap, prevId) {
+      var id = snap.key();
+      var oldPos = this.posByKey(id);
+      if( oldPos !== -1 ) {
+        var data = this.list[oldPos];
+        this.list.splice(oldPos, 1);
+        this._moveTo(id, data, prevId);
+        this._handleEvent('child_moved', snap.key(), data);
+      }
+    },
+
+    _moveTo: function(id, data, prevId) {
+      var pos = this.placeRecord(id, prevId);
+      this.list.splice(pos, 0, data);
+    },
+
+    _handleErrors: function(key, err) {
+      if( err ) {
+        this._handleEvent('error', null, key);
+        console.error(err);
+      }
+    },
+
+    _handleEvent: function(eventType, recordId, data) {
+      // console.log(eventType, recordId);
+      this.eventCallback && this.eventCallback(eventType, recordId, data);
+    },
+
+    _wrapList: function() {
+      this.list.$indexOf = this.posByKey.bind(this);
+      this.list.$add = this.add.bind(this);
+      this.list.$remove = this.remove.bind(this);
+      this.list.$set = this.set.bind(this);
+      this.list.$update = this.update.bind(this);
+      this.list.$move = this.setPriority.bind(this);
+      this.list.$rawData = function(key) { return parseForJson(this.getRecord(key)) }.bind(this);
+      this.list.$off = this.dispose.bind(this);
+    },
+
+    _initListeners: function() {
+      this._monit('child_added', this._serverAdd);
+      this._monit('child_removed', this._serverRemove);
+      this._monit('child_changed', this._serverChange);
+      this._monit('child_moved', this._serverMove);
+    },
+
+    _monit: function(event, method) {
+      this.subs.push([event, this.ref.on(event, method.bind(this))]);
+    }
+  };
+
+  function applyToBase(base, data) {
+    // do not replace the reference to objects contained in the data
+    // instead, just update their child values
+    if( isObject(base) && isObject(data) ) {
+      var key;
+      for(key in base) {
+        if( key !== '$id' && base.hasOwnProperty(key) && !data.hasOwnProperty(key) ) {
+          delete base[key];
+        }
+      }
+      for(key in data) {
+        if( data.hasOwnProperty(key) ) {
+          base[key] = data[key];
+        }
+      }
+      return base;
+    }
+    else {
+      return data;
+    }
+  }
+
+  function isObject(x) {
+    return typeof(x) === 'object' && x !== null;
+  }
+
+  function findKeyPos(list, key) {
+    for(var i = 0, len = list.length; i < len; i++) {
+      if( list[i].$id === key ) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  function parseForJson(data) {
+    if( data && typeof(data) === 'object' ) {
+      delete data['$id'];
+      if( data.hasOwnProperty('.value') ) {
+        data = data['.value'];
+      }
+    }
+    if( data === undefined ) {
+      data = null;
+    }
+    return data;
+  }
+
+  function parseVal(id, data) {
+    if( typeof(data) !== 'object' || !data ) {
+      data = { '.value': data };
+    }
+    data['$id'] = id;
+    return data;
+  }
+})(typeof(window)==='undefined'? exports : window.Firebase);
+(function() {
+    'use strict';
+    angular
+        .module('app.user', ['core'])
+        .factory('userCompService', ['$state', '$interval', 'userService', '$location', 'authService', '$http', '$q', 'appConfig', '$firebaseObject', 'firebaseService', 'userFirebaseService', '$firebaseArray',
+            function($state, $interval, userService, $location, authService, $http, $q, appConfig, $firebaseObject, firebaseService, userFirebaseService, $firebaseArray) {
+                var FlattendGroupDataByUser = (function() {
+                    var _cb, self, pending = true;
+                    var $loadedDefer, _count = 0;
+                    var flattenedsubGroupsByuser = {};
+
+                    window.temp = {};
+
+                    function FlattendGroupDataByUser(userID) {
+
+                        self = this;
+
+                        self.data = {
+                            get flattenedsubGroupsByuser() {
+                                return flattenedsubGroupsByuser
+                            }
+                        };
+                        pending = true;
+                        self.refs = {
+                            flattendGroup: ''
+                        };
+
+                        self.init(userID);
+
+                    };
+
+                    function setData(data, containerRef) {
+                        var temp2;
+                        //self.counter.outer = Object.keys(data).length
+                        self.counter.loopDepth = Object.keys(data).length;
+                        angular.forEach(data, function(el, i, a, b) {
+
+                            var temp2 = i
+
+                            self.counter.loopDepth--
+                                self.counter.total += Object.keys(el).length
+
+                            angular.forEach(el, function(el2, i2) {
+                                var names = temp2.split('_')
+                                var tempUserRef = firebaseService.getRefMain().child('users').child(i2)
+                                var $tempUserRef = $firebaseObject(tempUserRef).$loaded()
+                                var tempUserCheckinStatus = firebaseService.getRefMain().child('subgroup-check-in-current').child(names[0]).child(names[1]).child(i2);
+                                var $tempUserCheckinStatus = $firebaseObject(tempUserCheckinStatus).$loaded();
+                                $q.all([$tempUserRef, $tempUserCheckinStatus]).then(function(arr) {
+                                    var _el2 = el2;
+                                    var _temp2 = temp2;
+                                    var _i2 = i2;
+                                    //userCash[_i2] = _el2;
+                                    angular.extend(_el2, arr[0], arr[1]);
+                                    containerRef[_temp2 + '_' + _i2] = _el2;
+                                    containerRef[_temp2 + '_' + _i2].show = true
+
+                                    containerRef[_temp2 + '_' + _i2].groupID = names[0]
+                                    containerRef[_temp2 + '_' + _i2].subgroupID = names[1]
+                                    window.temp[_temp2 + '_' + _i2] = _el2
+
+                                    self.counter.count++;
+                                    if (self.counter.count == self.counter.total && !self.counter.loopDepth) {
+                                        $loadedDefer.resolve(self.data.flattenedsubGroupsByuser);
+                                        self.counter.count = 0;
+                                        self.counter.total = 0;
+                                    }
+                                    tempUserRef.on('child_changed', function(snapshotChanged) {
+                                        containerRef[_temp2 + '_' + _i2][snapshotChanged.key()] = snapshotChanged.val();
+                                        window.temp[_temp2 + '_' + _i2][snapshotChanged.key()] = snapshotChanged.val();
+                                    })
+                                    tempUserCheckinStatus.on('child_changed', function(snapshotChangedstatus) {
+                                        containerRef[_temp2 + '_' + _i2][snapshotChangedstatus.key()] = snapshotChangedstatus.val();
+                                        window.temp[_temp2 + '_' + _i2][snapshotChangedstatus.key()] = snapshotChangedstatus.val();
+
+                                    })
+                                })
+
+                            })
+                        })
+
+                    }
+
+                    FlattendGroupDataByUser.prototype = {
+
+                        'init': function(userID) {
+                            flattenedsubGroupsByuser = {};
+                            self.counter = {
+                                total: 0,
+                                loopDepth: 0,
+                                count: 0
+                            };
+
+                            self.refs.flattendGroup = firebaseService.getRefFlattendGroups().child(userID)
+                            self.refs.flattendGroup.once('value', self.flattendGroupHandler)
+
+                        },
+                        'flattendGroupHandler': function(snapshot) {
+                            // //debugger;
+                            //
+                            //
+                            // if (snapshot.val() && Object.keys(snapshot.val()).length) {
+                            //     self.data.groupSubgroupData = snapshot.val()
+                            //     setData(snapshot.val(), flattenedsubGroupsByuser);
+                            // } else {
+                            //     // console.log('no data')
+                            // }
+
+
+                        },
+
+                        $loaded: function() {
+                            $loadedDefer = $q.defer()
+
+                            return $loadedDefer.promise;
+                        }
+                    }
+                    return FlattendGroupDataByUser;
+
+                })()
+
+
+
+                return {
+                    InitFlatData: FlattendGroupDataByUser,
+
+                    'openCreateGroupPage': function() {
+
+                        $location.path('/user/' + userService.getCurrentUser().userID + '/create-group');
+
+
+                    },
+                    'openJoinGroupPage': function() {
+                        // $location.path('/user/joingroup')
+                        $location.path('/user/' + userService.getCurrentUser().userID + '/join-group');
+                        //$state.go('user.join-group');
+
+                    }
+
+                }
+
+            }
+        ])
+
+
+})();
+
+/**
+ * on 2/02/2016.
+ */
+(function() {
+    'use strict';
+    angular.module('app.activity', ['core']).controller('ActivityController', ['groupService', 'dataService', 'userService', '$stateParams', ActivityController]);
+
+    function ActivityController(groupService, dataService, userService, $stateParams) {
+        var that = this;
+
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        }
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().to(timestamp);
+            } else {
+                return ''
+            }
+        }
+        function init(){
+            groupService.setActivePanel('activity');
+            that.groupID = $stateParams.groupID;
+            that.subgroupID = $stateParams.subgroupID;
+            that.users = dataService.getUserData();         //load users
+        }
+        init();
+
+    } // ActivityController
+})();
+
+/**
+ * on 2/02/2016.
+ */
+(function() {
+    'use strict';
+    angular.module('app.report', ['core']).controller('ReportController', ['firebaseService', 'groupService', 'dataService', 'userService', '$stateParams', ReportController]);
+
+    function ReportController(firebaseService, groupService, dataService, userService, $stateParams) {
+        var that = this;
+
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().to(timestamp);
+            } else {
+                return ''
+            }
+        };
+        this.showReportData = function (user) {
+            this.report = [];
+            that.showParams = false;
+            this.count = -1;
+            that.reportParam = {
+                fullName: user.fullName,
+                groupsubgroupTitle: user.groupsubgroupTitle,
+            };
+            firebaseService.getRefsubgroupCheckinRecords().child(user.groupID).child(user.subgroupID).child(user.id).on('child_added', function(snapshot){
+                var fullDate = new Date(snapshot.val().timestamp);
+                var newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), fullDate.getDate());
+                if (snapshot.val().message == 'Checked-in') {
+                    that.report.push({
+                        checkin: snapshot.val().timestamp,
+                        checkindate: newDate,
+                        checkout: 0
+                    });
+                    that.count++;
+                } else if (snapshot.val().message == 'Checked-out') {
+                    that.report[that.count].checkout = snapshot.val().timestamp;
+                    that.report[that.count].checkoutdate = newDate;
+                }
+            });
+        };
+        function init(){
+            groupService.setActivePanel('report');
+            that.groupID = $stateParams.groupID;
+            that.subgroupID = $stateParams.subgroupID;
+            that.showParams = true;
+            that.report = [];
+            that.reportParam = {};
+            that.users = dataService.getUserData();         //load users
+        }
+        init();
+
+    } //ReportController
+})();
+
+/**
+ * on 2/02/2016.
+ */
+(function() {
+    'use strict';
+    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', ChatController]);
+
+    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state) {
+        var that = this;
+        var user = userService.getCurrentUser();
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().from(timestamp);
+            } else {
+                return ''
+            }
+        }
+        this.showNewChannel = function(ev) {
+            if (that.subgroupID) {
+                $state.go('user.create-teams-channels', {groupID: that.groupID, teamID: that.subgroupID});
+            } else {
+                $state.go('user.create-channels', {groupID: that.groupID});
+            }
+        };
+        this.gotoChannel = function(channel){
+            if (that.subgroupID) {
+                $state.go('user.group.subgroup-chat', {channelID : channel.$id, channelTitle: channel.title});
+            } else {
+                $state.go('user.group.chat', {channelID : channel.$id, channelTitle: channel.title});
+            }
+        };
+        this.viewChannelMessages = function(channelID) {
+            if (that.subgroupID) {
+                that.messagesArray = chatService.getTeamChannelMessagesArray(that.groupID, that.subgroupID, channelID);
+            } else {
+                that.messagesArray = chatService.getChannelMessagesArray(that.groupID, channelID);
+            }
+        };
+        this.ScrollToMessage = function() {
+            var element = document.getElementById('messagebox');
+            element.scrollTop = element.scrollHeight - element.clientHeight;
+        };
+        this.SendMsg = function() {
+            if (that.subgroupID) {
+                chatService.TeamSendMessages(that.groupID, that.subgroupID, that.activeChannelID, user, that.text).then(function() {
+                    that.text.msg = "";
+                    that.ScrollToMessage();
+                }, function(reason) {
+                    messageService.showFailure(reason);
+                });
+            } else {
+                chatService.SendMessages(that.groupID, that.activeChannelID, user, that.text).then(function() {
+                    that.text.msg = "";
+                    that.ScrollToMessage();
+                }, function(reason) {
+                    messageService.showFailure(reason);
+                });
+            }
+
+        };
+        this.filterchatters = function(chatterID) {
+            var sender = false;
+            if (chatterID === user.userID) {
+                sender = true;
+            }
+            return sender;
+        };
+        this.getUserProfile = function(userID) {
+            var profileObj;
+            if (that.profilesCacheObj[userID]) {
+                profileObj = that.profilesCacheObj[userID];
+            } else {
+                profileObj = that.profilesCacheObj[userID] = chatService.getUserEmails(userID);
+            }
+            return profileObj;
+        };
+        this.showChannelBottomSheet = function(){
+            that.channelBottomSheet = true;
+        };
+        this.createChannel = function () {
+            if (that.subgroupID) {
+                chatService.checkSubGroupChannelExists(that.groupID, that.subgroupID, that.channelTitle).then(function(exists){
+                    if(exists){
+                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle);
+                    } else {
+                        chatService.createSubGroupChannel(that.groupID, that.subgroupID, that.channelTitle, user.userID, onSuccessErrorChannelCreation);
+                    }
+                });
+            } else {
+                chatService.checkGroupChannelExists(that.groupID, that.channelTitle).then(function(exists){
+                    if(exists){
+                        onSuccessErrorChannelCreation('Channel already exists with the Name: ' + that.channelTitle);
+                    } else {
+                        chatService.createGroupChannel(that.groupID, that.channelTitle, user.userID, onSuccessErrorChannelCreation);
+                    }
+                });
+            }
+        };
+        function onSuccessErrorChannelCreation(err){
+            if (err) {
+                messageService.showFailure(err);
+            } else {
+                messageService.showSuccess('Channel created Successfullly!');
+            }
+            that.channelTitle = null;
+            that.channelBottomSheet = false;
+        }
+        function init(){
+            groupService.setActivePanel('chat');
+            that.groupID = $stateParams.groupID;
+            that.subgroupID = $stateParams.subgroupID;
+            if (that.subgroupID) {
+                that.channels = chatService.getSubGroupChannel(that.groupID, that.subgroupID);
+            } else {
+                that.channels = chatService.getGroupChannel(that.groupID);
+            }
+            that.activeTitle = 'Select Channel to Start Chat';
+            that.activeChannelID = null;
+            that.activeTeamChannelID = null;
+            that.messagesArray = [];
+            that.profilesCacheObj = {};
+            that.text = { msg: "" };
+            that.channelBottomSheet = false;
+            that.channelTitle = null;
+            that.activeChannelID = $stateParams.channelID;
+            that.activeTitle = $stateParams.channelTitle;
+            if (that.activeChannelID) {
+                that.viewChannelMessages(that.activeChannelID);
+            }
+            that.ScrollToMessage();
+        }
+        init();
+
+    } // ChatController
+})();
+
+
+/**
+ * on 2/02/2016.
+ */
+(function() {
+    'use strict';
+    angular.module('app.manualattendace', ['core']).controller('ManualAttendaceController', ['groupService', 'checkinService', '$firebaseArray', 'messageService', 'dataService', 'userService', '$stateParams', ManualAttendaceController]);
+
+    function ManualAttendaceController(groupService, checkinService, $firebaseArray, messageService, dataService, userService, $stateParams) {
+        var that = this;
+        var userCurrentCheckinRefBySubgroup;
+        var user = userService.getCurrentUser();
+
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        }
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().to(timestamp);
+            } else {
+                return ''
+            }
+        }
+        this.checkInMembershipNo = function(ev, user) {
+            var keyCode = ev.which || ev.keyCode;
+            console.log(keyCode)
+            if (keyCode === 13) {
+                if (user.length === 1) {
+                    that.CheckInuser(user[0].groupID, user[0].subgroupID, user[0].id, user[0].type);
+                }
+            }
+        }
+        this.CheckInuser = function(grId, sgrId, userID, type) {
+            // Do not change status of self login user
+            if (user.userID === userID) {
+                messageService.showFailure('To change your status, please use toolbar!');
+                dataService.setUserCheckInOut(grId, sgrId, userID, type)
+                return;
+            }
+            that.processTeamAttendance = true;
+
+            // check if user is already checked in
+            $firebaseArray(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(userdata) {
+                // console.log(userdata);
+                // console.log(userdata[5]);
+                // console.log(type)
+                if (!type) {
+                    // console.log(userdata)
+                    if (userdata[5] && userdata[5].$value === 1) {
+                        messageService.showFailure('User already checked in at : ' + userdata[0].$value + '/' + userdata[3].$value);
+                        that.processTeamAttendance = false;
+                        dataService.setUserCheckInOut(grId, sgrId, userID, true)
+                        return;
+                    }
+                }
+                // console.log('Note (on switch off condition), Checkin: ', !type, 'Checkout: ', type);
+                // check in the user
+                var groupObj = {groupId: grId, subgroupId: sgrId, userId: userID};
+                checkinService.ChekinUpdateSatatus(groupObj, userID, type, function(result, msg){   //type is checkoutflag
+                    if(result){
+                        messageService.showSuccess(msg);
+                    } else {
+                        messageService.showFailure(msg)
+                        dataService.setUserCheckInOut(grId, sgrId, userID, false)
+                    }
+                    that.processTeamAttendance = false;
+                });
+            });
+        }
+        function init(){
+            groupService.setActivePanel('manualattendace');
+            that.groupID = $stateParams.groupID;
+            that.subgroupID = $stateParams.subgroupID;
+            that.processTeamAttendance = false;
+            that.checkinObj = {
+                newStatus: {}
+            };
+            that.users = dataService.getUserData();         //load users
+        }
+        init();
+
+    } // ActivityController
+})();
+
+/**
+ * Created on 2/2/2016.
+ */
+(function() {
+    'use strict';
+    angular.module('app.progressreport', ['core'])
+		.factory('ProgressReportService', ['activityStreamService', 'firebaseService', ProgressReportService]);
+    function ProgressReportService(activityStreamService, firebaseService) {
+
+		var dailyProgressReport = [];
+
+		//getting daily progress report
+		function getReports(userArray, groupID, subgroupID) {
+			if (subgroupID) {
+				userArray.forEach(function(val, indx) {
+					if (val.groupID == groupID && val.subgroupID == subgroupID) {
+						getSubGroupReportFromFirebase(val, groupID, subgroupID, 1);
+					}
+				});
+			} else {
+				userArray.forEach(function(val, indx) {
+					if (val.groupID == groupID) {
+						getGroupReportFromFirebase(val, groupID, 1);
+					}
+				});
+			}
+		} //getReports
+		function getReportQuestion(groupID, subgroupID, questionID, ObjectIndex) {
+			firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupID).once('value', function(policyObj) {
+				if (policyObj.val() && policyObj.val().hasPolicy === true) {
+					firebaseService.getRefPolicies().child(groupID).child(policyObj.val().policyID).child('progressReportQuestions').child(questionID)
+						.once('value', function(snapshot) {
+							if (snapshot.val()) {
+								//console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
+								//adding questions into dailyProgressReport object of user report
+								dailyProgressReport.forEach(function(val, index) {
+									if (val.reportID == ObjectIndex) {
+										dailyProgressReport[index].questions = snapshot.val().questions;
+									}
+								});
+							}
+						});
+				}
+			});
+		}//getReportQuestion
+		function getSubGroupReportFromFirebase(user, groupID, subgroupID, limit) {
+			firebaseService.getRefProgressReport().child(groupID).child(subgroupID).child(user.id).orderByChild("date").limitToLast(limit)
+				.on("value", function(snapshot) {
+					var _flag = false;
+					// console.log('key', snapshot.key());
+					// console.log('val', snapshot.val());
+
+					if (dailyProgressReport.length > 0) {
+						dailyProgressReport.forEach(function(val, index) {
+							if (snapshot.val()) {
+								for (var key in snapshot.val()) {
+									// console.log(val.reportID, key)
+									if (val.reportID === key) {
+										//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
+										dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
+										_flag = true;
+										break;
+									}
+								}
+							}
+
+							if (_flag) {
+								return;
+							}
+
+							if (dailyProgressReport.length == index + 1) {
+								if (snapshot.val()) {
+									var obj = {};
+									for (var key in snapshot.val()) {
+										obj = snapshot.val()[key];
+										obj['reportID'] = key;
+										obj['userID'] = user.id;
+										obj['fullName'] = user.fullName || '';
+										obj['profileImage'] = user.profileImage || '';
+										obj['groupID'] = user.groupID;
+										obj['subgroupID'] = user.subgroupID;
+										dailyProgressReport.push(obj);
+										getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+									}
+								}
+							}
+						});
+					} else {
+						if (snapshot.val()) {
+							var obj = {};
+							for (var key in snapshot.val()) {
+								// console.log('subkey', key)
+								obj = snapshot.val()[key];
+								obj['reportID'] = key;
+								obj['userID'] = user.id;
+								obj['fullName'] = user.fullName;
+								obj['profileImage'] = user.profileImage;
+								obj['groupID'] = user.groupID;
+								obj['subgroupID'] = user.subgroupID;
+								dailyProgressReport.push(obj);
+								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+							}
+						}
+					}
+				});
+		} //getFromFirebase
+		function getSubGroupDailyProgressReport(userArray, groupID, subgroupID) {
+			dailyProgressReport = [];
+			getReports(userArray, groupID, subgroupID);
+			return dailyProgressReport;
+		} //getDailyProgressReport
+		function updateReport(report, cb) {
+			// console.log('report', report)
+			firebaseService.getRefProgressReport().child(report.groupID).child(report.subgroupID).child(report.userID).child(report.reportID).update({ 'answers': report.answers }, function(err) {
+				if (err) {
+					// console.log('err', err)
+					cb(false);
+				} else {
+
+                    //for group activity stream record -- START --
+                    var type = 'progressReport';
+                    var targetinfo = { id: report.reportID, url: report.groupID + '/' + report.subgroupID, title: report.groupID + '/' + report.subgroupID, type: 'progressReport' };
+                    var area = { type: 'progressReport-updated' };
+                    var group_id = report.groupID + '/' + report.subgroupID;
+                    var memberuserID = report.userID;
+                    var _object = null;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+                    //for group activity stream record -- END --
+
+                    cb(true);
+                }
+			});
+		} //updateReport
+		function getGroupReports(userArray, groupID) {
+			userArray.forEach(function(val, indx) {
+				if (val.groupID == groupID) {
+					getGroupReportFromFirebase(val, groupID, 1);
+				}
+			});
+		}
+		function getGroupReportByDateFromFirebase(user, groupID, subgroupID, startDate, endDate) {
+
+			firebaseService.getRefProgressReport().child(groupID).child(subgroupID).child(user.id).orderByChild("date").startAt(startDate.setHours(0, 0, 0, 0)).endAt(endDate.setHours(23, 59, 59, 0))
+				.on("value", function(snapshot) {
+					if (snapshot.val()) {
+
+						var _flag = false;
+						// console.log('key', snapshot.key());
+						// console.log('val', snapshot.val());
+
+						if (dailyProgressReport.length > 0) {
+							dailyProgressReport.forEach(function(val, index) {
+								if (snapshot.val()) {
+									for (var key in snapshot.val()) {
+										// console.log(val.reportID, key)
+										if (val.reportID === key) {
+											//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
+											dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
+											_flag = true;
+											break;
+										}
+									}
+								}
+
+								if (_flag) {
+									return;
+								}
+
+								if (dailyProgressReport.length == index + 1) {
+									if (snapshot.val()) {
+										var obj = {};
+										for (var key in snapshot.val()) {
+											obj = snapshot.val()[key];
+											obj['reportID'] = key;
+											obj['userID'] = user.id;
+											obj['fullName'] = user.fullName;
+											obj['profileImage'] = user.profileImage;
+											obj['groupID'] = user.groupID;
+											obj['subgroupID'] = user.subgroupID;
+											dailyProgressReport.push(obj);
+											getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+										}
+									}
+								}
+							});
+						} else {
+							if (snapshot.val()) {
+								var obj = {};
+								for (var key in snapshot.val()) {
+									obj = snapshot.val()[key];
+									obj['reportID'] = key;
+									obj['userID'] = user.id;
+									obj['fullName'] = user.fullName;
+									obj['profileImage'] = user.profileImage;
+									obj['groupID'] = user.groupID;
+									obj['subgroupID'] = user.subgroupID;
+									dailyProgressReport.push(obj);
+									getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
+								}
+							}
+						}
+					}
+				});
+		}
+
+		function getGroupReportFromFirebase(user, groupID, limit) {
+            firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).orderByChild("date").limitToLast(limit)
+				.on("value", function(snapshot) {
+					var _flag = false;
+
+					if (dailyProgressReport.length > 0) {
+
+						dailyProgressReport.forEach(function(val, index) {
+							if (snapshot.val()) {
+								for (var k in snapshot.val()) {
+									for (var key in snapshot.val()[k]) {
+										// console.log('Obj', snapshot.val()[k][key], key);
+										if (val.reportID == key) {
+											dailyProgressReport[index]['answers'] = snapshot.val()[k][key]['answers'];
+											_flag = true;
+											break;
+										}
+									}
+
+								}
+							}
+
+							if (_flag) {
+								return
+							}
+
+							if (dailyProgressReport.length == index + 1) {
+								if (snapshot.val()) {
+									var obj = {};
+									for (var k in snapshot.val()) {
+										for (var key in snapshot.val()[k]) {
+											obj = snapshot.val()[k][key];
+											obj['reportID'] = key;
+											obj['userID'] = user.id;
+											obj['fullName'] = user.fullName;
+											obj['profileImage'] = user.profileImage;
+											obj['groupID'] = user.groupID;
+											obj['subgroupID'] = k;
+											dailyProgressReport.push(obj);
+											getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
+										}
+									}
+								}
+							}
+						});
+					} else {
+						if (snapshot.val()) {
+							var obj = {};
+							for (var k in snapshot.val()) {
+								for (var key in snapshot.val()[k]) {
+									obj = snapshot.val()[k][key];
+									obj['reportID'] = key;
+									obj['userID'] = user.id;
+									obj['fullName'] = user.fullName;
+									obj['profileImage'] = user.profileImage;
+									obj['groupID'] = user.groupID;
+									obj['subgroupID'] = k;
+									dailyProgressReport.push(obj);
+									getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
+								}
+							}
+						}
+					}
+				});
+		}
+		function getGroupDailyProgressReport(userArray, groupID) {
+			dailyProgressReport = [];
+			getReports(userArray, groupID);
+			return dailyProgressReport;
+		} //getDailyProgressReport
+
+		function getSingleSubGroupReport(user, groupID, subgroupID) {
+			dailyProgressReport = [];
+			getSubGroupReportFromFirebase(user, groupID, subgroupID, 1);
+			return dailyProgressReport;
+
+		} //getSingleSubGroupReport
+
+		function getGroupReportByDates(userArray, groupID, startDate, endDate) {
+			//console.log(userArray);
+			dailyProgressReport = [];
+			userArray.forEach(function(val, indx) {
+				//	console.log(val)
+				if (val.groupID == groupID) {
+					getGroupReportByDateFromFirebase(val, groupID, val.subgroupID, startDate, endDate);
+				}
+			});
+			return dailyProgressReport;
+		}
+        return {
+			getSubGroupDailyProgressReport: getSubGroupDailyProgressReport,
+			updateReport: updateReport,
+			getGroupDailyProgressReport: getGroupDailyProgressReport,
+			getSingleSubGroupReport: getSingleSubGroupReport,
+			getGroupReportByDates: getGroupReportByDates
+        }
+    }; //ProgressReportService
+})();
+
+/**
+ * on 2/02/2016.
+ */
+(function() {
+    'use strict';
+    angular.module('app.progressreport').controller('ProgressReportController', ['firebaseService', '$state', 'messageService', '$timeout', 'groupService', 'ProgressReportService', 'dataService', 'userService', '$stateParams', ProgressReportController]);
+
+    function ProgressReportController(firebaseService, $state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
+        var that = this;
+        this.loadingData = false;
+        this.setFocus = function(startDate , endDate) {
+            that.loadingData = true;
+             if(startDate && endDate) {
+                 $timeout(function() {
+                     that.dailyProgressReport = ProgressReportService.getGroupReportByDates(that.users, that.groupID, that.startDate ,that.endDate);
+                     // that.showReportData();
+                     that.loadingData = false;
+                 	// console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
+                 }, 2000);
+             }else{
+                 document.getElementById("#UserSearch").focus();
+                 that.loadingData = false;
+             }
+
+        };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().to(timestamp);
+            } else {
+                return '';
+            }
+        };
+        this.returnGroupTitle = function(groupID) {
+            firebaseService.getRefGroupsNames().child(groupID).child('title').once('value', function(snapshot) {
+                that.grouptitle = snapshot.val();
+            });
+        };
+        this.returnSubGroupTitle = function(groupID, subgroupID) {
+            if (subgroupID) {
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).child('title').once('value', function(snapshot) {
+                    that.subgrouptitle = snapshot.val();
+                });
+            } else {
+                that.subgrouptitle = '';
+            }
+        };
+        this.updatecheckinhours = function(value) {
+            that.checkinHours = value;
+        };
+        this.update = function(report) {
+            // console.log(report);
+            ProgressReportService.updateReport(report, function(result) {
+                if (result) {
+                    messageService.showSuccess('Update Successfully!');
+                    $state.go('user.group.subgroup-progressreport', {groupID: that.groupID, subgroupID: that.subgroupID, u: ''});
+                } else {
+                    messageService.showFailure('Update Failure!');
+                }
+            });
+        };
+        this.everyone = function(){
+            that.activeUser = '';
+        };
+        this.showReportData = function () {
+            that.attendancereport = [];
+            that.count = -1;
+            that.checkinHours = 0;
+            // that.reportParam = {
+            //     fullName: user.fullName,
+            //     groupsubgroupTitle: user.groupsubgroupTitle,
+            // };
+            firebaseService.getRefsubgroupCheckinRecords()
+                .child(that.groupID)
+                .child(that.subgroupID)
+                .child(that.activeUser)
+                .orderByChild('timestamp')
+                .startAt(new Date().setHours(0,0,0,0))
+                .endAt(new Date().setHours(23,59,59,0))
+                .on('child_added', function(snapshot){
+                    var fullDate = new Date(snapshot.val().timestamp);
+                    var newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), fullDate.getDate());
+                    if (snapshot.val().message == 'Checked-in') {
+                        that.attendancereport.push({
+                            checkin: snapshot.val().timestamp,
+                            checkindate: newDate,
+                            location: snapshot.val()['identified-location-id'],
+                            checkout: 0
+                        });
+                        that.count++;
+                    } else if (snapshot.val().message == 'Checked-out') {
+                        that.attendancereport[that.count].checkout = snapshot.val().timestamp;
+                        that.attendancereport[that.count].checkoutdate = newDate;
+                        that.attendancereport[that.count].checkoutlocation = snapshot.val()['identified-location-id'];
+                    }
+            });
+        }
+        function init() {
+            groupService.setActivePanel('progressreport');
+            that.groupID = $stateParams.groupID;
+            that.subgroupID = $stateParams.subgroupID || '';
+            that.returnGroupTitle(that.groupID);
+            that.returnSubGroupTitle(that.groupID, that.subgroupID);
+            that.user = userService.getCurrentUser();
+            that.users = dataService.getUserData();
+            //that.activeUser = ($stateParams.u) ? that.user.userID : '';
+            that.activeUser = that.user.userID;
+            that.activeTitle = "Progress Report";
+
+            if ($stateParams.u) {
+                $timeout(function() {
+                    that.users.forEach(function(val, index){
+                        if(val.id === that.user.userID && val.groupID == that.groupID &&  val.subgroupID == that.subgroupID){
+                            that.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(val, that.groupID, that.subgroupID);
+                        }
+                    });
+                }, 2000);
+            } else {
+                if ($stateParams.subgroupID) {
+                    //sub group report
+                    $timeout(function() {
+                        that.dailyProgressReport = ProgressReportService.getSubGroupDailyProgressReport(that.users, that.groupID, that.subgroupID);
+                        that.showReportData();
+                         // $timeout(function() {
+                         //     console.log('xxxx',that.dailyProgressReport);
+                         // }, 5000);
+                    }, 2000);
+                } else {
+                    that.dailyProgressReport = true;
+                    //group report
+                    // $timeout(function() {
+                    //     that.dailyProgressReport = ProgressReportService.getGroupDailyProgressReport(that.users, that.groupID);
+                    //     that.activeUser = '';
+                    // }, 2000);
+                }
+
+            }
+
+
+
+        }
+        init();
+
+    } // ProgressReportController
+})();
+
+/**
+ * Created on 2/2/2016.
+ */
+(function() {
+  'use strict';
+  angular.module('app.collaborator', ['core'])
+    .factory('CollaboratorService', ['$q', '$firebaseArray', 'ref','$rootScope', CollaboratorService]);
+
+  function CollaboratorService($q, $firebaseArray, ref,$rootScope) {
+    var currentGroup,currentSubGroup,subGroupUsers =[];
+    var currentDocumentId ="";
+    var firepadRef, pushDocumentNode, firebaseDocumentId, filteredUsers = [];
+    return {
+      getCurrentDocumentId :getCurrentDocumentId,
+      setCurrentDocumentId:setCurrentDocumentId,
+      CreateDocument: CreateDocument,
+      addAccessUser: addAccessUser,
+      setCurrentTeam : setCurrentTeam,
+      getinitGroupDocument : getinitGroupDocument,
+      getinitSubGroupDocument: getinitSubGroupDocument,
+      getGroupMembers:getGroupMembers,
+      getSubGroupUsers:getSubGroupUsers
+    }
+
+
+    function getSubGroupUsers(users,subgroupID){
+      users.forEach(function(user){
+        if(user.subgroupID == subgroupID)
+          subGroupUsers.push(user);
+      })
+      return subGroupUsers;
+    }
+
+    function getCurrentDocumentId() {
+      return currentDocumentId;
+    }
+
+    function setCurrentDocumentId(documentId){
+      currentDocumentId = documentId;
+    }
+    function setCurrentTeam(id,type) {
+      if(type == "Group"){
+        currentGroup = id;
+      }
+      else {
+        currentSubGroup = id;
+      }
+    }
+
+    var abc = '';
+
+    function getinitGroupDocument(groupID, cb) {
+      var val = "";
+      firepadRef = new Firebase(ref).child("firepad-groups/"+groupID);
+      firepadRef.limitToFirst(1).once('value',function(snapshot){
+        for(var a in snapshot.val()){
+           val = a;
+        }
+        cb(val);
+      })
+    }
+
+    function getGroupMembers(groupID,subgroupID) {
+      if(subgroupID){
+        firepadRef = new Firebase(ref).child("group-members/"+subgroupID+"/"+groupID);
+        $firebaseArray(firepadRef).$loaded().then(function(x){
+           return x;
+        });
+      }
+      else {
+        firepadRef = new Firebase(ref).child("group-members/"+groupID);
+        $firebaseArray(firepadRef).$loaded().then(function(x){
+           return x;
+         });
+      }
+    }
+
+
+    function getinitSubGroupDocument(groupID,subgroupID,cb){
+      var val = "";
+      firepadRef = new Firebase(ref).child("firepad-subgroups/"+groupID+'/'+subgroupID);
+      firepadRef.limitToFirst(1).once('value',function(snapshot){
+        for(var a in snapshot.val()){
+           val = a;
+        }
+        cb(val);
+      })
+    }
+
+
+
+    function addAccessUser(documentId, groupID, subgroupID, userID,access) {
+      var firebaseLocalRef;
+      firepadRef = new Firebase(ref);
+      var updateDocument = {};
+      if (subgroupID) {
+        firebaseLocalRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId);
+          updateDocument['firepad-subgroups-rules/' + groupID + '/' + subgroupID + '/' + documentId + '/allUsers'] = true;
+          updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/' + userID] = access;
+      }
+      else {
+        firebaseLocalRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + documentId);
+          updateDocument['firepad-groups-rules/' + groupID + '/' + documentId + '/allUsers'] = true;
+          updateDocument['firepad-groups-access/' + groupID +  '/' + documentId + '/' + userID] = access;
+      }
+      firepadRef.update(updateDocument, function(error) {
+        if (error) {
+          console.log("Error From AccessUsers:", error);
+        }
+      });
+    }
+
+    function CreateDocument(documentTitle, groupID, subgroupID,documentType,user) {
+      var deferred = $q.defer();
+      var firebaseLocalRef,pushDocumentNode,firebaseDocumentId;
+      var updateDocument = {},
+      createdBy = {
+        firstName:user.firstName,
+        userID:user.userID,
+        lastName:user.lastName,
+        imgUrl:$rootScope.userImg || ""
+
+      };
+      if (subgroupID) {
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
+        pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID).push();
+        firebaseDocumentId = pushDocumentNode.key();
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument['firepad-subgroups-access/' + groupID + "/" + subgroupID + '/' + firebaseDocumentId + '/' + user.userID] = 1;
+        updateDocument['firepad-subgroups-rules/' + groupID + "/" + subgroupID + '/' + firebaseDocumentId + '/allUsers'] = true;
+
+      } else {
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
+        pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
+        firebaseDocumentId = pushDocumentNode.key();
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument['firepad-groups-access/' + groupID + "/" + firebaseDocumentId + '/' + user.userID] = 1;
+        updateDocument['firepad-groups-rules/' + groupID + "/" + firebaseDocumentId + '/allUsers'] = true;
+
+      }
+      firebaseLocalRef.update(updateDocument, function(error) {
+        if (error) {
+          console.log("error due to :", error);
+          deferred.reject(error);
+        }
+        else {
+          deferred.resolve({status:"Updated Successfully",docId:firebaseDocumentId});
+        }
+      });
+      return deferred.promise;
+    }
+  };
+})();
+
+/**
+ * on 2/02/2016.
+ */
+(function() {
+  'use strict';
+  angular.module('app.collaborator')
+    .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
+    .filter('collaboratorUsers', function() {
+      return function(users, groupID) {
+        var filteredUsers = [];
+        // console.log(JSON.stringify(users));
+        users.forEach(function(user) {
+          if (user.groupID == groupID) {
+            var userNew = findWithAttr(filteredUsers, 'fullName', user.fullName) == -1;
+            if (userNew) {
+              filteredUsers.push(user);
+            }
+          }
+        });
+        return filteredUsers;
+      };
+
+      function findWithAttr(array, attr, value) {
+        for (var i = 0; i < array.length; i += 1) {
+          if (array[i][attr] === value) {
+            return i;
+          }
+        }
+        return -1;
+      }
+    })
+    .controller('CollaboratorController', ['firebaseService', 'ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', '$state', '$firebaseObject', '$rootScope', 'CollaboratorService', '$q', collaboratorFunction]);
+
+
+  function collaboratorFunction(firebaseService, ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope, $state, $firebaseObject, $rootScope, CollaboratorService, $q) {
+
+    var globalRef = new Firebase(ref);
+
+    // componentHandler.upgradeAllRegistered();
+    var firepadRef;
+    var that = this;
+
+    that.documentTypes = [{
+      displayName: "Rich Text",
+      codeMirrorName: "Rich Text"
+    }, {
+      displayName: "JavaScript",
+      codeMirrorName: "text/javascript"
+    }, {
+      displayName: "Swift",
+      codeMirrorName: "text/x-swift"
+    }, {
+      displayName: "Java",
+      codeMirrorName: "text/x-java"
+    }, {
+      displayName: "C#",
+      codeMirrorName: "text/x-csharp"
+    }, ];
+    that.isNormal = true;
+    that.mode = "Rich Text";
+    var pushDocumentNode, firebaseDocumentId, firepad;
+    that.ready = true;
+    that.clicked = false;
+    that.channelBottomSheet = false;
+    that.default = true;
+    that.document = "Create/Open Document";
+    that.showLoader = false;
+    that.admins = [];
+    that.permissionMembers = {};
+
+    init();
+    $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
+      data.forEach(function(member) {
+        if (member["membership-type"] == 1 || member["membership-type"] == 2) {
+          console.log("admins",member);
+          that.admins.push(member);
+          that.permissionMembers[member.$id] = true;
+        }
+      });
+      console.log("that.admins", that.admins);
+      console.log("that.permissionMembers", that.permissionMembers);
+    });
+
+    if (!that.subgroupID) {
+
+      firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups) {
+        if (groups.val() && groups.val()['membership-type'] == 1) {
+          that.isOwner = true;
+          that.isAdmin = true;
+          that.isMember = true;
+          that.adminOf = "Group"
+        } else if (groups.val() && groups.val()['membership-type'] == 2) {
+          that.isAdmin = true;
+          that.isMember = true;
+          that.adminOf = "Group"
+        } else if (groups.val() && groups.val()['membership-type'] == 3) {
+          that.isMember = true;
+        }
+      });
+
+
+    } else {
+      firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgroups) {
+        // console.log("abc:", subgroups.val());
+        if (subgroups.val()['membership-type'] == 1) {
+          that.isOwner = true;
+          that.isAdmin = true;
+          that.isMember = true;
+          that.adminOf = that.adminOf || 'Subgroup';
+        } else if (subgroups.val()['membership-type'] == 2) {
+          that.isAdmin = true;
+          that.isMember = true;
+          that.adminOf = that.adminOf || 'Subgroup';
+        } else if (subgroups.val()['membership-type'] == 3) {
+          that.isMember = true;
+        }
+      });
+    }
+
+    function clearDiv() {
+      var div = document.getElementById("firepad");
+      while (div.firstChild) {
+        div.removeChild(div.firstChild);
+      }
+    }
+
+    that.gotoDocument = function(openDoc) {
+      firepadRef = new Firebase(ref);
+      if (that.subgroupID) {
+        $state.go("user.group.subgroup-collaborator", {
+          groupID: that.groupID,
+          subgroupID: that.subgroupID,
+          docID: openDoc.$id
+        });
+        that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
+      } else {
+        $state.go("user.group.collaborator", {
+          groupID: that.groupID,
+          docID: openDoc.$id
+        });
+        that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+      }
+
+      that.allUsers.$loaded(function() {
+        console.log(openDoc.$id, that.allUsers)
+      });
+    };
+
+
+    function initiateFirepad(refArgument, arg) {
+      var codeMirror = CodeMirror(document.getElementById('firepad'), {
+        lineNumbers: that.mode == "Rich Text" ? false : true,
+        mode: that.mode
+      });
+      firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
+        richTextShortcuts: that.isNormal,
+        richTextToolbar: that.isNormal,
+        // userId: null,
+        defaultText: null
+          /*'Welcome to firepad!'*/
+      });
+      firepad.on("ready", function() {
+        that.ready = false;
+        console.log("Usera", that.user);
+        firepad.setUserId(that.user.userID);
+        firepad.setUserColor("#ccccc");
+        that.showLoader = false;
+        if (arg) {
+          that.document = $stateParams.docID;
+        }
+      })
+    }
+
+
+    that.toggleAllUser = function(val) {
+      var firepadRef = new Firebase(ref);
+      var obj;
+      if (that.subgroupID) {
+        obj = $firebaseObject(firepadRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers"));
+      } else {
+        obj = $firebaseObject(firepadRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+      }
+      obj.$value = val;
+      obj.$save();
+    };
+
+    that.checkboxClicked = function(userStatus, user) {
+      console.log("called");
+      if (userStatus) {
+        user.id == that.createdBy.userID ? userStatus = 1 : userStatus = 2;
+      } else {
+        user.id == that.createdBy.userID ? userStatus = 1 : userStatus = null;
+      }
+      that.admins.forEach(function(admin) {
+        if (admin.$id == user.id) {
+          userStatus = 1
+        }
+      });
+      console.log(user);
+      firepadRef = new Firebase(ref);
+      var updateDocument = {};
+      if (that.subgroupID) {
+        updateDocument["firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
+        // globalRef.child('firepad-subgroups-access/finalyear/morning/-KCJfxThRM2tRXE9q_Vh').on('child_added', function (snapshot) {
+        //    console.log("child_added val ", snapshot.val());
+        //    console.log("child_added key ", snapshot.key());
+        //  });
+        //that.allUsers = $firebaseObject(firepadRef.child("firepad-subgroups-rules/"+that.groupID+"/"+that.subgroupID+'/'+$stateParams.docID+"/allUsers")).$value;
+        firepadRef.update(updateDocument, function(err) {
+          if (err) {
+            console.log(err);
+          }
+        })
+      } else {
+        updateDocument["firepad-groups-access/" + that.groupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
+        // globalRef.child('firepad-groups-access/finalyear/-KCJZdghiEKGV7C9NRfj').on('child_added', function (snapshot) {
+        //    console.log("child_added val ", snapshot.val());
+        //    console.log("child_added key ", snapshot.key());
+        //  });
+        //that.allUsers = $firebaseObject(firepadRef.child("firepad-groups-rules/"+that.groupID+"/"+$stateParams.docID+"/allUsers"));
+        firepadRef.update(updateDocument, function(err) {
+          if (err) {
+            console.log(err);
+          }
+        })
+      }
+      console.log(that.allUsers);
+      // that.backdrop = userStatus;
+      // console.log(that.permission[user]);
+    };
+    that.createDocument = function() {
+      var firebaseLocalRef;
+      var updateDocument = {};
+      that.showLoader = true;
+      that.createdBy = {
+        firstName: that.user.firstName,
+        lastName: that.user.lastName,
+        userID: that.user.userID,
+        imgUrl: $rootScope.userImg || ""
+      };
+
+      if (that.subgroupID) {
+        CollaboratorService.CreateDocument(that.documentTitle, that.groupID, that.subgroupID, that.documentType, that.user)
+          .then(function(response) {
+            if (response.status) {
+              $state.go("user.group.subgroup-collaborator", {
+                groupID: that.groupID,
+                subgroupID: that.subgroupID,
+                docID: response.docId
+              });
+            }
+          });
+      } else {
+        CollaboratorService.CreateDocument(that.documentTitle, that.groupID, that.subgroupID, that.documentType, that.user)
+          .then(function(response) {
+            if (response.status) {
+              $state.go("user.group.collaborator", {
+                groupID: that.groupID,
+                docID: response.docId
+              });
+            }
+          });
+      }
+    };
+
+    that.channelBottomSheetfunc = function() {
+      if (that.channelBottomSheet)
+        that.channelBottomSheet = false;
+      else
+        that.channelBottomSheet = true;
+    };
+    that.export = function() {
+      if (that.clicked) {
+        that.clicked = false;
+      } else {
+        that.clicked = true;
+        var content = firepad.getHtml();
+        var data = new Blob([content], {
+          type: 'html;charset=utf-8'
+        });
+        FileSaver.saveAs(data, 'data.html');
+        console.log(firepad.getHtml())
+      }
+
+    };
+
+    that.filterTeams = function(player) {
+      var teamIsNew = indexedTeams.indexOf(player.team) == -1;
+      if (teamIsNew) {
+        indexedTeams.push(player.team);
+      }
+      return teamIsNew;
+    };
+
+
+    function backdropPermission(fireRef) {
+      if (that.subgroupID) {
+        fireRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+          that.backdrop = snapshot.exists();
+          that.permissionObj[that.user.userID] = snapshot.exists();
+          console.log("backdrop", that.backdrop);
+        });
+      } else {
+        fireRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+          that.backdrop = snapshot.exists();
+          that.permissionObj[that.user.userID] = snapshot.exists();
+          console.log("backdrop", that.backdrop);
+        });
+      }
+
+    }
+
+    function init() {
+
+      groupService.setActivePanel('collaborator');
+      groupService.setSubgroupIDPanel($stateParams.subgroupID);
+      that.subgroupID = $stateParams.subgroupID || '';
+      that.currentDocument = $stateParams.docID;
+      CollaboratorService.setCurrentDocumentId(that.currentDocument);
+      that.groupID = $stateParams.groupID;
+      that.user = userService.getCurrentUser();
+      that.users = dataService.getUserData();
+      console.log("All Users:", that.users);
+      that.activeTitle = "Collaborator";
+      var accessRef = new Firebase(ref);
+      // that.groupMembers = CollaboratorService.getGroupMembers(that.groupID);
+      // console.log(that.groupMembers);
+      if ($stateParams.docID) {
+        if (that.subgroupID) {
+          that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
+          globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID); //this will be the user created documents
+          console.log('subgrouppppppppppppppppppppppppppp');
+          accessRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
+          });
+          accessRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
+          });
+          accessRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
+            console.log("For all users", snapshot.val());
+            that.backdrop = that.allUsers = snapshot.val();
+          });
+        } else {
+          that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
+          globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child($stateParams.docID);
+          console.log('grouppppppppppppppppppppppppppp');
+          accessRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
+          });
+          accessRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
+          });
+          accessRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
+            console.log("For all users", snapshot.val());
+            that.backdrop = that.allUsers = snapshot.val();
+
+          });
+        }
+        globalRef.once('value', function(snapshot) {
+          that.document = snapshot.val().title;
+          that.createdBy = snapshot.val().createdBy;
+          that.mode = snapshot.val().type;
+          that.isNormal = that.mode == "Rich Text" ? true : false;
+          initiateFirepad(globalRef);
+          permissions();
+        });
+      }
+
+      // that.allUsers = false;
+      that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
+    }
+
+    /* function getUserPermissions(userID) {
+       //var defered = $q.defer();
+
+       // firepadRef.once("value",function(snapshot){
+       //   if(that.allUsers){
+       //     that.backdrop = true;
+       //   }
+       // });
+       //$firebaseArray(firepadRef).$loaded().then(function(arr) {
+       //    cb(arr);
+       //  })
+       return firepadRef;
+         // return $firebaseArray(firepadRef);
+     }*/
+
+    function permissions() {
+      that.permissionObj = {};
+      var firepadPermissions = new Firebase(ref);
+      if (that.subgroupID) {
+        firepadRef = firepadPermissions.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID);
+        console.log(firepadRef.toString());
+      } else {
+        firepadRef = firepadPermissions.child("firepad-groups-rules").child(that.groupID).child($stateParams.docID);
+        console.log(firepadRef.toString());
+      }
+
+      firepadRef.once('value', function(snapshot) {
+        that.allUsers = snapshot.val().allUsers;
+        if (!that.allUsers) {
+          var firepadPermissions = new Firebase(ref);
+          if (that.subgroupID) {
+            firepadPermissions.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+              that.backdrop = snapshot.exists();
+              console.log("backdrop", that.backdrop);
+            });
+            $firebaseArray(firepadPermissions.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
+              that.permission = data;
+              console.log("permissions:", that.permission);
+              that.permission.forEach(function(val) {
+                that.permissionObj[val.$id] = true;
+              });
+            })
+          } else {
+            firepadPermissions.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+              that.backdrop = snapshot.exists();
+              console.log("backdrop", that.backdrop);
+            })
+            $firebaseArray(firepadPermissions.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
+              that.permission = data;
+              console.log("permissions:", that.permission);
+              console.log("permissions:", that.permission[0]["$id"]);
+              that.permission.forEach(function(val) {
+                that.permissionObj[val.$id] = true;
+              });
+              console.log(that.permissionObj);
+            })
+          }
+
+
+
+
+
+          //console.log(that.permission);
+          //console.log(that.permission[0].$id);
+          //that.permission.forEach(function(user){
+          //  if(user.$id == that.user.userID)
+          //    that.backdrop = true;
+          //})
+          // that.backdrop = that.permission[that.user.userID];
+        } else {
+          that.backdrop = true;
+        }
+      })
+
+    }
+  }
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('app.user', ['core'])
+        .controller('UserController', ['dataService', '$q', '$state', '$location', 'checkinService', '$rootScope', 'subgroupFirebaseService', '$firebaseArray', "firebaseService", 'userService', 'authService', '$timeout', '$firebaseObject', 'userPresenceService', '$sce', UserController]);
+
+    function UserController(dataService, $q, $state, $location, checkinService, $rootScope, subgroupFirebaseService, $firebaseArray, firebaseService, userService, authService, $timeout, $firebaseObject, userPresenceService, $sce) {
+        //$rootScope.fl= 'hello'
+        var $scope = this;
+        var that = this;
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().to(timestamp);
+                // return moment.duration(-timestamp, "day").humanize(true);
+            } else {
+                return ''
+            }
+        }
+        //window.userScope = this;
+        this.pageUserId = userService.getCurrentUser();
+        this.createGroup = function() {
+            // $location.path('/user/:userID/create-group');
+            $state.go('user.create-group', {userID: userService.getCurrentUser().userID})
+        }
+        var userData;
+        this.time= new Date();
+        this.groupMembers;
+        this.onlineGroupMembers = [];
+        this.offlineGroupMembers = [];
+
+        // if($location.path.indexOf(this.pageUserId) == -1) {
+        //     $location.path('/user/'+this.pageUserId+'/')
+        // }
+        // else {
+        // console.log(this.pageUserId.userID);
+        // $location.path('#/user/'+this.pageUserId.userID+'/')
+        // }
+
+
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        }
+        $scope.openCreateGroupPage = function() {
+            userCompService.openCreateGroupPage();
+        };
+        $scope.openJoinGroupPage = function() {
+            userCompService.openJoinGroupPage();
+        };
+
+        //$scope.userMemData = new userCompService.InitFlatData($scope.pageUserId.userID);
+        //$scope.userMemData.$loaded().then(function(data) {
+
+        //console.log(data)
+        //debugger;
+        //})
+
+        window.fData = $scope.userMemData
+
+        var profileImgRef = {};
+
+        function profileImgRefCb(snapshot) {
+            var self = this;
+            if (snapshot.key() == 'logo-image') {
+                $timeout(function() {
+                    $scope.userObj[self.ind].userImg = $sce.trustAsResourceUrl(snapshot.val())
+                        //getUserObj()
+                })
+            }
+
+        }
+        var groupDataUbind = {};
+        var userDataUbind = {};
+        var userObjUbind;
+        this.userObj = [];
+
+
+        that.users = []
+        that.users = dataService.getUserData();
+
+
+        // function getUserObj() {
+        //     var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.pageUserId.userID))
+        //         .$loaded()
+        //         .then(function(data) {
+        //             userObjUbind = data.$watch(function() {
+        //                 getUserObj()
+        //             });
+        //             $scope.userObj = data;
+        //             data.forEach(function(el, i) {
+        //                 var j = i;
+        //                 $firebaseObject(firebaseService.getRefGroups().child(el.$id))
+        //                     .$loaded()
+        //                     .then(function(groupData) {
+        //                         groupDataUbind[j] = groupData.$watch(function() {
+        //                             $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
+        //                             $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
+        //                             $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
+        //                             $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;
+        //                             if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
+        //                                 $scope.userObj[j].membersPercentage = 0
+        //                             }
+        //                         });
+        //                         $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
+        //                         $scope.userObj[j].membersCount = groupData['members-count'] ? groupData['members-count'] : ""
+        //                         $scope.userObj[j].membersOnline = groupData['members-checked-in'] ? groupData['members-checked-in'].count : ""
+        //                         $scope.userObj[j].membersPercentage = Math.round((($scope.userObj[j].membersOnline / $scope.userObj[j].membersCount) * 100)).toString() ;
+        //                         // if(!angular.isNumber($scope.userObj[j].membersPercentage)) {
+        //                         //     $scope.userObj[j].membersPercentage = 0
+        //                         // }
+        //                         if (groupData['group-owner-id']) {
+        //                             //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
+        //                             $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))
+        //                                 .$loaded()
+        //                                 .then(function(img) {
+
+        //                                     $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
+        //                                     userDataUbind[j] = img.$watch(function(dataVal) {
+
+        //                                         $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value)
+        //                                     })
+        //                                 })
+        //                         }
+        //                     }, function(e) {
+        //                         console.log(e)
+        //                     });
+        //             });
+
+        //         })
+        //         .catch(function() {});
+        // }
+
+        // getUserObj();
+        this.groups = []
+        this.groups = dataService.getUserGroups();
+        // this.GetGroupsData = function(groupsData) {
+        //     // var defer = $q.defer()
+        //     // var groups = []
+        //     that.groups = []
+        //     groupsData.forEach(function(val, index) {
+        //         // console.log(val.$id);
+        //         $firebaseObject(firebaseService.getRefGroups().child(val.$id)).$loaded().then(function(groupData) {
+        //             // console.log(groupData);
+        //             that.groups.push(groupData);
+        //         })
+        //         // if (groupsData.length == (index + 1)) {
+        //            // defer.resolve(groups);
+        //         // }
+        //     })
+        //     // return defer.promise;
+        // }
+        // $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.pageUserId.userID)).$loaded().then(function(groupsData) {
+        //     // console.log(groupsData);
+        //     that.GetGroupsData(groupsData)/*.then(function(groupsData){
+        //         that.groups = []
+        //         that.groups = groupsData;
+        //     })*/
+        //     groupsData.$watch(function(){
+        //         that.GetGroupsData(groupsData)
+        //     })
+        // })
+
+        this.showGroupDetails = function(key) {
+            //console.log(key)
+            var getGroupMembers = $firebaseObject(firebaseService.getRefGroupMembers().child(key));
+            getGroupMembers.$loaded()
+                .then(function(data) {
+                    var x = Object.keys(data);
+                    $scope.groupMembers = x;
+                    $scope.groupMembers.splice(0, 3);
+                    // console.log($scope.groupMembers);
+                    x.forEach(function(el, i) {
+                        if ((el != '$$conf') && (el != '$id') && (el != '$priority')) {
+                            var z = $firebaseObject(firebaseService.getRefMain().child('users-presence').child(el));
+                            z.$loaded().then(function(data) {
+                                    //console.log(data)
+                                    if (z.presence) {
+                                        console.log('online');
+                                        $scope.onlineGroupMembers.push(data)
+                                    } else {
+                                        // console.log('offline');
+                                        $scope.offlineGroupMembers.push(data)
+                                    }
+                                })
+                                .catch(function(err) {
+                                    console.log(err)
+                                })
+                        }
+                        // console.log(el+' '+i)
+
+                    })
+                })
+
+        };
+        this.changeShow1 = function(key, prop, flag, index, that) {
+            var ctx = {
+                self: that,
+                key: key,
+                prop: prop,
+                flag: flag,
+                index: index
+            };
+
+            function bound() {
+                var dom = $('#gCard' + this.index);
+                angular.element(dom).scope().flags = {};
+                angular.element(dom).scope().flags[flag] = true;
+            }
+
+            var x = bound.bind(ctx);
+            $timeout(x, 2000);
+            this.selectValue = key;
+            this.noShow = !this.noShow;
+            return prop;
+        };
+        this.changeShow2 = function(key, prop) {
+            this.selectValue = key;
+            console.log("hello");
+            this.noShow = !this.noShow;
+        };
+        this.changeShow3 = function(key, prop) {
+            this.selectValue = key;
+        };
+        this.deleteAll = function() {
+            $scope.groupMembers = [];
+            $scope.onlineGroupMembers = [];
+            $scope.offlineGroupMembers = [];
+            // console.log($scope.groupMembers + $scope.onlineGroupMembers + $scope.offlineGroupMembers)
+        };
+
+
+        $rootScope.searchFn = function(option, flag) {
+
+            angular.forEach($scope.userMemData.data.flattenedsubGroupsByuser, function(el, key) {
+                if (flag == 1) {
+
+                    if (option == 'any') {
+                        el.show = true;
+
+                    } else {
+
+                        (el.groupID + '_' + el.subgroupID) == option ? el.show = true : el.show = false
+                    }
+
+                } else {
+
+                    var str = el.firstName + el.lastName;
+                    var reg = new RegExp('^' + option, 'i');
+                    reg.test(str) ? el.show = true : el.show = false;
+
+                }
+            });
+        }
+    }
+
+})();
+/*
+ */
+
+/**
+ * Created by sj on 6/6/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.group', ['core'])
+        .factory('groupService', ['userService', '$location', 'authService', '$http', '$q', 'appConfig', '$firebaseObject', 'firebaseService', 'userFirebaseService', function(userService, $location, authService, $http, $q, appConfig, $firebaseObject, firebaseService, userFirebaseService) {
+
+            var $scope = this;
+            var panel = { active: '', subgroupID: ''};
+            return {
+                'getPanelInfo': function(){
+                        return panel;
+                },
+                'setActivePanel': function(pname){
+                        panel.active = pname;
+                },
+                'setSubgroupIDPanel': function(subgroupID){
+                        panel.subgroupID = subgroupID;
+                },
+                'openCreateSubGroupPage': function() {
+
+                    $location.path('/user/group/create-subgroup');
+
+                },
+                'openJoinGroupPage': function() {
+
+                    $location.path('/user/joinGroup');
+
+                },
+                'canActivate': function() {
+                    return authService.resolveUserPage();
+                },
+                'getOwnerImg': function(groupID){
+                    $firebaseObject(firebaseService.getRefGroups().child(groupID))
+                        .$loaded()
+                        .then(function(groupData) {
+                            if (groupData['group-owner-id']) {
+                                $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']))
+                                    .$loaded()
+                                    .then(function(userData) {
+                                        return userData;
+                                    });
+                            }
+                        });
+                },
+                'uploadPicture': function(file) {
+                    var defer = $q.defer();
+                    var reader = new FileReader();
+                    reader.onload = function() {
+
+                        var data = new FormData();
+                        data.append('userID', userService.getCurrentUser().userID);
+                        data.append('token', userService.getCurrentUser().token);
+
+                        var blobBin = atob(reader.result.split(',')[1]);
+                        var array = [];
+                        for (var i = 0; i < blobBin.length; i++) {
+                            array.push(blobBin.charCodeAt(i));
+                        }
+
+                        var fileBlob = new Blob([new Uint8Array(array)], {
+                            type: 'image/png'
+                        });
+                        data.append("source", fileBlob, file.name);
+                        defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {
+                            withCredentials: true,
+                            headers: {
+                                'Content-Type': undefined
+                            },
+                            transformRequest: angular.identity
+                        }));
+
+                    };
+                    reader.readAsDataURL(file);
+                    return defer.promise;
+
+                },
+                'userObj': function(pageUserId) {
+                    return $firebaseObject(firebaseService.getRefUserGroupMemberships().child(pageUserId.userID));
+                    //var userData = userFirebaseService.getUserMembershipsSyncObj(pageUserId.userID);
+                    /* objUser.$loaded()
+                     .then(function(data) {
+                     console.log(data)
+                     /!*objUser.$bindTo($scope, "user");
+
+                     $scope.groups = userData.groupArray;
+                     $scope.activities = userData.userActivityStream;*!/
+                     })
+                     .catch(function(error) {
+                     console.error("Error:", error);
+                     soundService.playFail();
+                     });*/
+                }
+
+            };
+
+
+        }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.group')
+        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
+
+    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
+        var that = this;
+        //adminof subgroup checkin member
+        this.openSetting = function () {
+            if (that.adminOf === 'Group') {
+                $state.go('user.edit-group', {groupID: that.groupID});
+            } else if (that.adminOf === 'Subgroup') {
+                $state.go('user.create-subgroup', {groupID: that.groupID});
+            }
+        };
+
+        this.sendRequest = function () {
+            joinGroupService.joinGroupRequest(that.reqObj, function(){
+                $state.go('user.dashboard', {userID: that.user.userID});
+            });
+        }
+
+        this.showPanel = function(pname, subgroupID) {
+            if(pname === 'report') {
+                groupService.setActivePanel('report');
+            }
+            if(pname === 'activity') {
+                groupService.setActivePanel('activity');
+            }
+            if (pname === 'chat') {
+                groupService.setActivePanel('chat');
+            }
+            if (pname === 'manualattendace') {
+                groupService.setActivePanel('manualattendace');
+            }
+            if(pname === 'progressreport') {
+                groupService.setActivePanel('progressreport');
+            }
+            // firepad tab condition
+            if(pname === 'collaborator') {
+              groupService.setActivePanel('collaborator');
+            }
+            that.panel.subgroupID = subgroupID;
+            if (that.panel.subgroupID) {
+                CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
+                    $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId });
+                })
+            } else {
+                CollaboratorService.getinitGroupDocument(that.groupID, function(docId) {
+                    $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID, docID: docId });
+                });
+            }
+        };
+
+        init();
+
+        function init () {
+            that.isOwner = false;
+            that.isMember = false;
+            that.isAdmin = false;
+            that.user = userService.getCurrentUser();
+            that.panel = groupService.getPanelInfo();
+            that.adminOf = false;
+            that.groupID = $stateParams.groupID;
+            that.subgroupID = $stateParams.subgroupID ? $stateParams.subgroupID : that.panel.subgroupID;
+            that.group = false;
+            that.subgroups = [];
+            that.errorMsg = false;
+            that.reqObj = {
+                groupID: that.groupID,
+                message: "Please add me in your Team.",
+                membershipNo: ""
+            };
+            if (that.subgroupID) {
+                firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
+                    if (subg.val()) {
+                        firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgrp){
+                            if (subgrp.val() && subgrp.val()['membership-type'] > 0) {
+                                checkGroup()
+                            } else {
+                                that.reqObj.subgroupID = subg.key();
+                                that.reqObj.subgrouptitle = (subg.val() && subg.val().title) ? subg.val().title : false;
+                                loadGroup(function(){
+                                    that.errorMsg = "You have to be Member of Team before access";
+                                })
+                            }
+                        });
+                    } else {
+                        that.errorMsg = "Requested Team not found!";
+                    }
+                });
+            } else {
+                checkGroup()
+            }
+        }
+        function loadGroup (cb) {
+            firebaseService.getRefGroupsNames().child(that.groupID).once('value', function(grp){
+                if (grp.val()) {
+                    that.group = {};
+                    that.group.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
+                    that.reqObj.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
+                    that.group.addresstitle = (grp.val() && grp.val()['address-title']) ? grp.val()['address-title'] : false;
+                    that.group.groupImgUrl = (grp.val() && grp.val().groupImgUrl) ? grp.val().groupImgUrl : false;
+                    that.group.ownerImgUrl = (grp.val() && grp.val().ownerImgUrl) ? grp.val().ownerImgUrl : false;
+                    cb();
+                } else {
+                    that.errorMsg = "Requested Team of Team not found!";
+                }
+            });
+        }
+        function checkGroup () {
+            if (that.groupID) {
+                loadGroup(function(){
+                    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups){
+                        if (groups.val() && groups.val()['membership-type'] == 1) {
+                            that.isOwner = true;
+                            that.isAdmin = true;
+                            that.isMember = true;
+                            that.adminOf = "Group"
+                        } else if (groups.val() && groups.val()['membership-type'] == 2) {
+                            that.isAdmin = true;
+                            that.isMember = true;
+                            that.adminOf = "Group"
+                        } else if (groups.val() && groups.val()['membership-type'] == 3) {
+                            that.isMember = true;
+                        }
+                        if (!that.isMember) {
+                            that.errorMsg = "You have to be Member of Team before access";
+                        } else {
+                            if (that.isMember) {
+                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo){
+                                    that.group.onlinemember = (groupinfo.val() && groupinfo.val().count) ? groupinfo.val().count : 0;
+                                })
+                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo){
+                                    that.group.members = groupinfo.val() ? groupinfo.val() : 0;
+                                })
+                            }
+                            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
+                                for (var subgroup in subgroups.val()) {
+                                    if (subgroups.val()[subgroup]['membership-type'] == 1) {
+                                        that.isOwner = true;
+                                        that.isAdmin = true;
+                                        that.isMember = true;
+                                        that.adminOf = that.adminOf || 'Subgroup';
+                                    } else if (subgroups.val()[subgroup]['membership-type'] == 2) {
+                                        that.isAdmin = true;
+                                        that.isMember = true;
+                                        that.adminOf = that.adminOf || 'Subgroup';
+                                    } else if (subgroups.val()[subgroup]['membership-type'] == 3) {
+                                        that.isMember = true;
+                                    }
+                                    if (that.isMember) {
+                                        firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).on('value', function(subgroupData){
+                                            var subgroup = subgroupData.val();
+                                            subgroup['$id'] = subgroupData.key();
+                                            if (that.subgroups.length > 0) {
+                                                that.subgroups.forEach(function(subgrp, indx){
+                                                    if (subgrp.$id === subgroupData.key()) {
+                                                        subgrp = subgroup
+                                                    }
+                                                    if (that.subgroups.length === (indx + 1) ) {
+                                                        that.subgroups.push(subgroup);
+                                                    }
+                                                });
+                                            } else {
+                                                that.subgroups.push(subgroup);
+                                            }
+                                        });
+                                    }
+                                }
+                                // that.subgroups = $firebaseArray(firebaseService.getRefSubGroups().child(that.groupID));
+                            });
+                        }
+                    });
+                })
+            }
+        }
+    }
+})();
+
+/**
+ * Created by admin on 5/13/2015.
+ */
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.home', [])
+        .controller('HomeController', HomeController);
+
+    HomeController.$inject = ['authService', 'userService', "$state"];
+
+    function HomeController(authService, userService, $state) {
+
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.navLoginbar', ['ngMdIcons', 'core'])
+        .controller('NavLoginbarController', NavLoginbarController);
+
+    NavLoginbarController.$inject = ['authService'];
+
+    function NavLoginbarController(authService) {
+        this.showmenu = false;
+        //console.log('test')
+        /*this.canActivate = function(){
+            return authService.resolveUserPage();
+        }*/
+    }
+
+})();
+
+/**
+ * Created by Mehmood on 5/21/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.navToolbar', ['core'])
+        .factory('navToolbarService', ['$q', 'authService', "$location", "messageService", 'userService', '$firebaseObject', 'firebaseService', 'checkinService',
+            function($q, authService, $location, messageService, userService, $firebaseObject, firebaseService, checkinService) {
+
+                return {}
+            }
+        ]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('app.navToolbar')
+    //Filter Array in reverse
+    .filter('reverse', function() {
+      return function(items) {
+        return items.slice().reverse();
+      };
+    })
+
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+            /*private variables*/
+            // alert('inside controller');
+
+            var self = this;
+            self.show = false;
+            var userID = userService.getCurrentUser().userID;
+            self.myUserId = userID;
+            this.notifications = []
+           //filter Array in reverse
+
+            /*VM properties*/
+
+            this.checkinObj = {
+                newStatus: {}
+            };
+            this.checkout = false;
+            this.showUrlObj = {};
+            this.switchMsg = false;
+            this.userImgClickCard = false;
+            this.groups = {};
+            this.ListGroupSubGroup = [];
+            this.subgroups = [];
+            this.filteredGroups = null;
+            this.groupObj1 = null;
+            this.currentLocation = {};
+            //this.userObj2;
+            this.switchCheckIn = false;
+            this.isProgressReport = false;
+            var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;     //Firebase TimeStamp
+
+            /*VM function ref*/
+            this.logout = logout;
+            this.PersonalSetting = PersonalSetting;
+            this.showSubGroup = showSubGroup;
+            this.shiftToUserPage = shiftToUserPage;
+            //this.doChange = doChange;
+            this.updateStatus = updateStatus;
+
+            //if report not submitted show switchMsg
+            this.isDailyProgessSubmit = false;
+            this.todayDate = Date.now();
+
+            //this.logout = logout;
+            this.queryGroups = queryGroups;
+            this.quizStart = quizStart
+
+            //   notification activities
+            self.showNotification = function(){
+                self.show = !self.show;
+            };
+
+            this.progressReport = function(){
+              $mdSidenav('right').toggle().then(function(){
+                //self.openNav = !self.openNav;
+              });
+            }
+            //#document.onkey
+            this.count = function(e){
+              console.log(document);
+              console.log(e);
+          };
+                // alert(this.test)
+            this.setFocus = function() {
+                document.getElementById("#GroupSearch").focus();
+            };
+
+            function quizStart() {
+                // console.log('done')
+                // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
+                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
+            }
+
+            //moment.js
+            this.returnMoment = function (timestamp) {
+                if (timestamp) {
+                    return moment().to(timestamp);
+                } else {
+                    return '';
+                }
+            };
+
+            //this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
+
+            $firebaseObject(firebaseService.getRefUsers().child(userID))
+                .$loaded().then(function(data) {
+                    //debugger;
+                    $rootScope.userImg = data['profile-image'];
+                    // console.log(data)
+                })
+                .catch(function(error) {
+                    console.error("Error:", error);
+                    soundService.playFail('Error occurred.');
+            });
+
+            // $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(userID)).$loaded().then(function(snapshot) {
+            //     if (snapshot.type == 1 && snapshot.groupID && snapshot.subgroupID) {
+            //         self.checkout = true;
+            //         self.switchCheckIn = true;
+            //         self.showUrlObj.userID = userID;
+            //         self.showUrlObj.groupID = snapshot.groupID;
+            //         self.showUrlObj.subgroupID = snapshot.subgroupID;
+            //     }
+            // }, function(e) {
+            //     console.log(e)
+            // });
+
+        //using multipath -- START --
+
+            self.subGroupHasPolicy = false;
+            self.subGroupPolicy = {};
+            function checkingHasPolicy(groupID, subgroupID, cb) {
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
+                    self.subGroupHasPolicy = (snapshot.val() && snapshot.val().hasPolicy) ? snapshot.val().hasPolicy : false;
+                    // console.log('subGroupHasPolicy', self.subGroupHasPolicy);
+
+                    if(self.subGroupHasPolicy) {
+                        firebaseService.getRefPolicies().child(groupID).child(snapshot.val().policyID).once('value', function(policy){
+                            self.subGroupPolicy = policy.val();
+                            cb(true);
+                            // console.log('policy key', policy.key());
+                            // console.log('policy val', policy.val());
+                        }); //getting policy
+                    } else {//self.subGroupHasPolicy if true
+                        cb(false);
+                    }
+                });
+            } //subgroupHasPolicy
+
+
+            //using multipath -- END --
+
+
+            checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('value', function(snapshot, prevChildKey) {
+                // console.log(snapshot.val());
+                // console.log(snapshot.val().type);
+                if (snapshot.val() && snapshot.val().type == 2) {
+                    self.checkout = false;
+                    self.switchCheckIn = false;
+                    self.showUrlObj.userID = '';
+                    self.showUrlObj.groupID = '';
+                    self.showUrlObj.subgroupID = '';
+                    // self.showUrlObj.recordref = '';
+                } else if (snapshot.val() && snapshot.val().type == 1) {
+                    self.checkout = true;
+                    self.switchCheckIn = true;
+                    self.showUrlObj.userID = userID;
+                    self.showUrlObj.groupID = snapshot.val().groupID;
+                    self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.subgroupTitle = snapshot.val()
+                    })
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.groupTitle = snapshot.val()
+                    })
+                    // self.showUrlObj.recordref = snapshot.val()['record-ref'];
+                }
+            })
+
+            checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('child_changed', function(snapshot, prevChildKey) {
+                // console.log(snapshot.val());
+                // console.log(snapshot.val().type);
+                if (snapshot.val() && snapshot.val().type == 2) {
+                    self.checkout = false;
+                    self.switchCheckIn = false;
+                    self.showUrlObj.userID = '';
+                    self.showUrlObj.groupID = '';
+                    self.showUrlObj.subgroupID = '';
+                    // self.showUrlObj.recordref = '';
+                } else if (snapshot.val() && snapshot.val().type == 1) {
+                    self.checkout = true;
+                    self.switchCheckIn = true;
+                    self.showUrlObj.userID = userID;
+                    self.showUrlObj.groupID = snapshot.val().groupID;
+                    self.showUrlObj.subgroupID = snapshot.val().subgroupID;
+                    // self.showUrlObj.recordref = snapshot.val()['record-ref'];
+                }
+            })
+
+            self.groups = $firebaseArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
+
+            /* VM and Helper Functions*/
+            // this.userLocation = {};
+            this.groupLocation = {};
+            this.CalculateDistance = function(lat1, lon1, lat2, lon2, unit) {
+                //:::    unit = the unit you desire for results                               :::
+                //:::           where: 'M' is statute miles (default)                         :::
+                //:::                  'K' is kilometers                                      :::
+                //:::                  'N' is nautical miles                                  :::
+                var radlat1 = Math.PI * lat1 / 180;
+                var radlat2 = Math.PI * lat2 / 180;
+                var radlon1 = Math.PI * lon1 / 180;
+                var radlon2 = Math.PI * lon2 / 180;
+                var theta = lon1 - lon2;
+                var radtheta = Math.PI * theta / 180;
+                var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                dist = Math.acos(dist);
+                dist = dist * 180 / Math.PI;
+                dist = dist * 60 * 1.1515;
+                if (unit == "K") {
+                    dist = dist * 1.609344;
+                }
+                if (unit == "N") {
+                    dist = dist * 0.8684;
+                }
+                return dist;
+            };
+
+            // //Show Dailogue Box for Daily Report Questions -- START --
+            // var html = "<md-dialog aria-label=\"Daily Report\" ng-cloak> <form> <md-toolbar> <div class=\"md-toolbar-tools\"> <h2>Daily Progress Report</h2> <span flex></span> </div> </md-toolbar> <md-dialog-content> <div class=\"md-dialog-content\"> <h2>Questions List</h2> <p ng-repeat=\"(id, name) in questions\"> <strong>*</strong> {{name}} </p> <div layout=\"row\"> <md-input-container flex> <label>Please write...</label><textarea ng-model=\"reportText\"></textarea></md-input-container> </div> </div> </md-dialog-content> <md-dialog-actions layout=\"row\"> <span flex></span> <md-button ng-click=\"cancel('not useful')\"> Later </md-button> &nbsp; <md-button ng-click=\"report()\" style=\"margin-right:20px;\"> Submit </md-button> </md-dialog-actions> </form> </md-dialog>";
+            // self.showAdvanced = function(ev) {
+            //     //var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+            //     $mdDialog.show({
+            //       controller: DailyReportController,
+            //       // templateUrl: 'http://yahoo.com',
+            //       template: html,
+            //       //parent: angular.element(document.body),
+            //       targetEvent: ev,
+            //       locals: { questions: self.subGroupPolicy.dailyReportQuestions},
+            //       clickOutsideToClose:false,
+            //       //fullscreen: useFullScreen
+            //     })
+            //     .then(function(reportAnswer) {
+
+            //         //save report in firebase
+            //         firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').push({
+            //             date: firebaseTimeStamp,
+            //             answer: reportAnswer,
+            //             questions: self.subGroupPolicy.dailyReportQuestions
+            //         });
+
+            //         alert(reportAnswer);
+            //         self.reportAnswer = 'You said the information was "' + reportAnswer + '".';
+            //     }, function() {
+            //         // alert('Cancel - Later');
+            //         $scope.status = 'You cancelled the dialog.';
+            //     });
+            // };
+
+            // function DailyReportController($scope, $mdDialog, questions) {
+            //   $scope.questions = questions;
+            //   $scope.hide = function() {
+            //     $mdDialog.hide();
+            //   };
+            //   $scope.cancel = function() {
+            //     $mdDialog.cancel();
+            //   };
+            //   $scope.report = function() {
+            //     $mdDialog.hide($scope.reportText);
+            //   };
+            // }
+            // //Show Dailogue Box for Daily Report Questions -- END --
+
+            function updateStatus(group, checkoutFlag, event) {
+                var groupObj = {};
+                self.checkinSending = true;
+                if(group){
+                    groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
+                } else {
+                     groupObj = {
+                        groupId: self.showUrlObj.groupID,
+                        subgroupId: self.showUrlObj.subgroupID,
+                        userId: self.showUrlObj.userID
+                    }
+                }
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
+                    if(result){
+                        self.checkinSending = false;
+                        if(checkoutFlag){
+                            messageService.showSuccess('Checkout Successfully!');
+                            if(isSubmitted){
+                                //if daily progress report is not submitted load progress Report side nav bar..
+                                var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId };
+                                self.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(userObj, groupObj.groupId, groupObj.subgroupId);
+
+                                //open side nav bar for getting progress report
+                                self.progressReportSideNav();
+
+                                // self.switchCheckIn = true;
+                                // self.switchMsg = true;
+                                // self.isDailyProgessSubmit = true
+                                // self.isDailyProgessgroupID = groupObject.groupId;
+                                // self.isDailyProgesssubgroupID = groupObject.subgroupId;
+                            }
+                        } else {
+                            self.checkinSending = false;
+                            messageService.showSuccess('Checkin Successfully!');
+                        }
+                    } else {
+                        self.checkinSending = false;
+                        messageService.showFailure(msg);
+                    }
+                });
+            }
+
+            function updateStatus1(group, checkoutFlag, event) {
+                // console.log('group', group)
+                // console.log('checkoutFlag', checkoutFlag)
+                self.checkinSending = true;
+
+                 //getting Current Location
+                checkinService.getCurrentLocation().then(function(location) {
+                    // console.log('current location', location.coords);
+
+                    if(location.coords) {
+                        self.currentLocation = { lat: location.coords.latitude, lng: location.coords.longitude };
+
+                        if(group) { //if group (on checkin)
+                            checkinService.subgroupHasPolicy(group.pId, group.subgroupId, function(hasPolicy, Policy) {
+                                if(hasPolicy){ //if has policy
+                                    // console.log('hasPolicy', true)
+                                    checkinPolicy(function(){
+                                        updateHelper(group, false, event, function(bool){
+                                            if(bool) {
+                                                chekinSwitch(group, false);
+                                                messageService.showSuccess('Checkin Successfully!');
+                                            } else {
+                                                messageService.showFailure('Please contact to your administrator');
+                                            }
+                                        });
+                                    });
+                                } else {    //if no policy
+                                    // console.log('hasPolicy', false)
+                                    updateHelper(group, false, event, function(bool){
+                                        if(bool){
+                                            chekinSwitch(group, false);
+                                            messageService.showSuccess('Checkin Successfully!');
+                                        } else {
+                                            messageService.showFailure('Please contact to your administrator');
+                                        }
+                                    });
+                                }
+                            })
+                            // checkingHasPolicy(group.pId, group.subgroupId, function(result) {
+                            //     if(hasPolicy){ //if has policy
+                            //         // console.log('hasPolicy', true)
+                            //         checkinPolicy(function(){
+                            //             updateHelper(group, false, event, function(bool){
+                            //                 if(bool) {
+                            //                     chekinSwitch(group, false);
+                            //                     messageService.showSuccess('Checkin Successfully!');
+                            //                 } else {
+                            //                     messageService.showFailure('Please contact to your administrator');
+                            //                 }
+                            //             });
+                            //         });
+                            //     } else {    //if no policy
+                            //         // console.log('hasPolicy', false)
+                            //         updateHelper(group, false, event, function(bool){
+                            //             if(bool){
+                            //                 chekinSwitch(group, false);
+                            //                 messageService.showSuccess('Checkin Successfully!');
+                            //             } else {
+                            //                 messageService.showFailure('Please contact to your administrator');
+                            //             }
+                            //         });
+                            //     }
+                            // }); // checkingHasPolicy
+                        } else {    //if no group (on checkout)
+                            // console.log('Checkout', true)
+                            updateHelper(false, true, event, function(bool){
+                                if(bool){
+                                    self.showAdvanced(event); //show dailogue box to take progress report
+                                    //chekinSwitch(false, true);    //checkinswitch(group, checkoutFlag)
+                                    messageService.showSuccess('Checkout Successfully!');
+                                    self.subGroupHasPolicy = false; self.subGroupPolicy = {};
+                                 } else {
+                                    messageService.showFailure('Please contact to your administrator');
+                                }
+                            }); // update data on firebase
+
+                        } //else group
+
+                    } else { //if not location.coords
+                        chekinSwitch(false, true);
+                        self.switchCheckIn = false;
+                        messageService.showFailure('Please allow your location (not getting current location)!');
+                        return false;
+                    }
+                }); //checkinService.getCurrentLocation()
+            } // updateStatus
+            this.laterReport = function(){
+                self.checkout = false;
+                self.checkinSending = false;
+                self.switchMsg = false;
+                self.isDailyProgessSubmit = false;
+                self.switchCheckIn = false;
+            };
+            this.submitReport = function(){
+                //self.showUrlObj.userID
+                //self.showUrlObj.groupID
+                //self.showUrlObj.subgroupID
+                //$location
+                self.switchCheckIn = false;
+                self.switchMsg = false;
+                self.isDailyProgessSubmit = false;
+                $state.go('user.group.subgroup-progressreport', {groupID: self.isDailyProgessgroupID, subgroupID: self.isDailyProgesssubgroupID, u: true});
+            };
+            function checkinPolicy(callback) {
+                if(self.subGroupPolicy.locationBased) {  //checking if location Based
+
+                    //checking distance (RADIUS)
+                    var distance = self.CalculateDistance(self.subGroupPolicy.location.lat, self.subGroupPolicy.location.lng, self.currentLocation.lat, self.currentLocation.lng, 'K');
+                    // console.log('distance:' + distance);
+                    // console.log('distance in meter:' + distance * 1000);
+
+                    if ((distance * 1000) > self.subGroupPolicy.location.radius) {  //checking lcoation radius
+                        chekinSwitch(false, true);
+                        self.switchCheckIn = false;
+                        messageService.showFailure('Current Location does not near to the Team Location');
+                        return false;
+                    } else { // if within radius
+
+                        checkinTimeBased(function(d) {  //policy has also timeBased
+                            if(d) {
+                                callback();     //if result true (checkin allow)
+                            }
+                        }); //checking if time based
+                    } //if within radius
+
+                } else if(self.subGroupPolicy.timeBased) { //policy has timeBased
+                    checkinTimeBased(function(d) {
+                        if(d) {
+                            callback();      //if result true (checkin allow)
+                        }
+                    }); //checking if time based
+                } else {    //checking others like if dailyReport
+                    callback();      //result true (checkin allow) (might be only dailyReport has checked)
+                }
+            } //checkinLocationBased
+            function checkinTimeBased(callback) {
+                var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+                //if timeBased true
+                if(self.subGroupPolicy.timeBased) {
+                    var today = new Date();
+                    var Schduleday = days[today.getDay()];
+
+                    //(self.subGroupPolicy.schedule[Schduleday] && self.subGroupPolicy.schedule[Schduleday][today.getHours()]) ?  console.log('t') : console.log('f');
+                    if(self.subGroupPolicy.schedule[Schduleday] && self.subGroupPolicy.schedule[Schduleday][today.getHours()]) {
+                        //if allow then checkin
+                        callback(true);
+                    } else {   //checking allow in days with hours
+                        chekinSwitch(false, true);
+                        self.switchCheckIn = false;
+                        messageService.showFailure('You Don\'t have to permission to checkin at this day/hour');
+                        return false;
+                    }
+
+                } else {//timeBased false
+                    callback(true);    //if not timebased then return true....
+                }
+            } //checkinTimeBased
+            function chekinSwitch(group, checkoutFlag){
+                var grId = group && group.pId || self.showUrlObj.groupID;
+                var sgrId = group && group.subgroupId || self.showUrlObj.subgroupID;
+                if (!checkoutFlag) {
+                    // console.log('on checkin -- checkoutflag false')
+                    self.showUrlObj.userID = userID;
+                    self.showUrlObj.groupID = grId;
+                    self.showUrlObj.subgroupID = sgrId;
+                    self.checkout = true;
+                    self.checkinSending = false;
+                } else {
+                    // console.log('on checkout -- checkoutflag true')
+                    self.checkout = false;
+                    self.checkinSending = false;
+                    self.switchMsg = false;
+                    // console.log('switchCheckIn', self.switchCheckIn)
+                }
+            }
+            function updateHelper(group, checkoutFlag, event, cb) {
+                var groupObj = {};
+
+                if(group) { //on checkin
+                    groupObj = {
+                        groupId: group.pId,
+                        subgroupId: group.subgroupId,
+                        userId: userID
+                    }
+                } else {    //on checkout
+                    groupObj = {
+                        groupId: self.showUrlObj.groupID,
+                        subgroupId: self.showUrlObj.subgroupID,
+                        userId: self.showUrlObj.userID
+                    }
+                }
+
+                // //checking daily progress report is exists or not -- START --
+                // firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').orderByChild('date')
+                // .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
+                //     console.log(snapshot.val());
+                //     if(snapshot.val() == null){
+                //         //if null then show alert for add daily progress report
+                //         self.showAdvanced(event); //show dailogue box for getting progress report
+                //         //add/updatcde in firebase...
+                //         checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, cb);
+                //         //updateFirebase(groupObj, checkoutFlag, cb);
+                //     } else {
+                //         //add/update in firebase...
+                //         //updateFirebase(groupObj, checkoutFlag, cb);
+                //         checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, cb);
+                //     }
+                // });
+                // //checking daily progress report is exists or not -- END --
+
+                //add/update in firebase...
+                checkinService.saveFirebaseCheckInOut(groupObj, checkoutFlag, self.currentLocation, cb);
+                //updateFirebase(groupObj, checkoutFlag, cb);
+
+            } //updateHelper
+            function updateStatusHelper(groupID, subgroupID, userID, checkoutFlag) {
+                checkinService.getCurrentLocation().then(function(location) {
+                    if (location) {
+                        self.checkinObj.newStatus.location = {
+                            lat: location.coords.latitude,
+                            lon: location.coords.longitude
+                        };
+                    } else {
+                        self.checkinObj.newStatus.location = {
+                            lat: 0,
+                            lon: 0
+                        };
+                    }
+
+                    checkinService.updateUserStatusBySubGroup(groupID, subgroupID, userID, self.checkinObj.newStatus, self.definedSubGroupLocations, null)
+                        .then(function(res) {
+                            $timeout(function() {
+                                self.checkinObj.newStatus.message = '';
+                                self.checkinSending = false;
+                                if (!checkoutFlag) {
+                                    self.showUrlObj.userID = userID;
+                                    self.showUrlObj.groupID = groupID;
+                                    self.showUrlObj.subgroupID = subgroupID;
+                                    self.checkout = true;
+                                } else {
+                                    self.checkout = false;
+                                    self.switchCheckIn = false;
+                                    self.switchMsg = false;
+                                }
+                            });
+
+                            messageService.showSuccess(res);
+                        }, function(reason) {
+                            self.checkinSending = false;
+                            messageService.showFailure(reason);
+                        });
+                }, function(err) {
+                    messageService.showFailure(err.error.message);
+                    self.checkinSending = false;
+                });
+            }
+            //update firebase on checkin or checkout
+            function updateFirebase(groupObj, checkoutFlag, cb) { //on checkout checkoutFlag is true, on checkin checkoutFlag is false
+
+                var multipath = {};
+                var dated = Date.now();
+                var ref = firebaseService.getRefMain();         //firebase main reference
+                var refGroup = firebaseService.getRefGroups();  //firebase groups reference
+
+                //generate key
+                var newPostRef = firebaseService.getRefsubgroupCheckinRecords().child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push();
+                var newPostKey = newPostRef.key();
+
+                var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
+                var statusType = (checkoutFlag) ? 2 : 1;
+
+                multipath["subgroup-check-in-records/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId+"/"+newPostKey] = {
+                "identified-location-id": "Other",
+                "location": {
+                    "lat": self.currentLocation.lat,
+                    "lon": self.currentLocation.lng
+                },
+                "message": checkinMessage,
+                "source-device-type": 1,
+                "source-type": 1,
+                "subgroup-url": groupObj.groupId+"/"+groupObj.subgroupId,
+                "timestamp": dated,
+                "type": statusType
+                }
+                multipath["subgroup-check-in-current-by-user/"+groupObj.userId] = {
+                    "groupID": groupObj.groupId,
+                    "source-device-type": 1,
+                    "source-type": 1,
+                    "subgroupID": groupObj.subgroupId,
+                    "timestamp": dated,
+                    "type": statusType
+                }
+                multipath["subgroup-check-in-current/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId] = {
+                    "identified-location-id": "Other",
+                    "location": {
+                        "lat": self.currentLocation.lat,
+                        "lon": self.currentLocation.lng
+                    },
+                    "message": checkinMessage,
+                    "record-ref": newPostKey,
+                    "source-device-type": 1,
+                    "source-type": 1,
+                    "subgroup-url": groupObj.groupId+"/"+groupObj.subgroupId,
+                    "timestamp": dated,
+                    "type": statusType
+                }
+                //multipath["groups/"+groupObj.groupId+"/members-checked-in-count"] = 0;
+                refGroup.child(groupObj.groupId).child('members-checked-in').child('count').once('value', function(snapshot){
+                    multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+                    ref.update(multipath, function(err){
+                        if(err) {
+                            console.log('err', err);
+                            cb(false);
+                        }
+                        //calling callbAck....
+                         cb(true);
+                    }); //ref update
+                }); //getting and update members-checked-in count
+            } //updateFirebase
+            function logout() {
+                authService.logout();
+            }
+            function shiftToUserPage() {
+                // $location.path('/user/' + userService.getCurrentUser().userID)
+                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
+            }
+            this.checkTeamAvailable = function () {
+                if (self.groups.length === 0) {
+                    messageService.showFailure('Currently you are not a member of any Team!');
+                    self.switchCheckIn = false;
+                    return
+                }
+            };
+            this.checkinClick = function(event) {
+                self.show = false;
+                if (self.checkinSending) {
+                    self.switchCheckIn = !self.switchCheckIn;
+                    return
+                }
+                if (self.groups.length === 0) {
+                    return
+                }
+                if (!self.switchMsg) {
+                    if (self.checkout) {
+                        updateStatus(false, true, event);
+                        //self.updateStatus(self.showUrlObj.group, true)
+                        return
+                    }
+                }
+                self.switchMsg = !self.switchMsg
+                self.ListGroupSubGroup = [];
+                self.groups.forEach(function(group, groupId) {
+                    var tmp = {
+                        group: group.$id,
+                        groupTitle: checkinService.getGroupTitle(group.$id),
+                        subGroups: []
+                    }
+                    for (var i in group) {
+                        if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
+                            var temp = {};
+                            temp.pId = group.$id; // group Name == pId
+                            temp.subgroupId = i;
+                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
+                            temp.data = group[i];
+                            tmp.subGroups.push(temp)
+                        }
+                    }
+                    self.ListGroupSubGroup.push(tmp);
+                })
+            };
+            function showSubGroup(group, pId) {
+                self.subgroups = [];
+                for (var i in group) {
+                    if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
+                        var temp = {};
+                        temp.pId = group.$id; // group Name == pId
+                        temp.subgroupId = i;
+                        temp.data = group[i];
+                        self.subgroups.push(temp)
+                    }
+                }
+            }
+            function queryGroups() {
+                if (self.search) {
+                    var filteredGroupsNamesRef = firebaseService.getRefUserSubGroupMemberships().child(userID)
+                        .orderByKey()
+                        .startAt(self.search)
+                        .endAt(self.search + '~');
+
+                    self.filteredGroups = Firebase.getAsArray(filteredGroupsNamesRef);
+                    self.groupObj1 = self.filteredGroups;
+                    // console.log(self.filteredGroups);
+                    // console.log(self.groupObj1);
+
+
+                } else {
+                    // self.filteredGroups = [];
+                    self.filteredGroups = Firebase.getAsArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
+                }
+
+                return;
+                // self.filteredGroups;
+                // self.groupObj1;
+            }
+            function PersonalSetting() {
+                // $location.path('/user/' + userID + '/personalSettings')
+                $state.go('user.personal-settings', {userID: userService.getCurrentUser().userID})
+            }
+
+            this.progressReportSideNav = function(){
+            //side nav bar for daily progress report
+              $mdSidenav('right').toggle().then(function(){
+              });
+            };
+
+            this.updateProgressReport = function() {
+                //console.log(self.dailyProgressReport[0]);
+                ProgressReportService.updateReport(self.dailyProgressReport[0], function(result) {
+                    if (result) {
+                        messageService.showSuccess('Progress Report Updated!');
+                        self.progressReportSideNav();
+                    } else {
+                        messageService.showFailure('Progress Report Update Failure!');
+                    }
+                });
+            };
+
+            //getting notifications
+            activityStreamService.init();
+            this.notifications = activityStreamService.getActivities();
+        }
+    ]);
+
+})();
+
+/**
+ * Created by Mehmood on 5/21/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.signin', ['core'])
+        .factory('singInService', ['$state', '$q', 'authService', "$location", "messageService", function($state, $q, authService, $location, messageService) {
+
+            return {
+                'login': function(user, location) {
+
+                    var defer = $q.defer();
+                    authService.login(user, function(data) {
+                        messageService.showSuccess('Login successful');
+                        //firebaseService.addUpdateHandler();
+                        // $location.path(location + data.user.userID);
+                        $state.go('user.dashboard', {userID: data.user.userID})
+                        defer.resolve()
+                    }, function(data) {
+                        if (data) {
+                            if (data.statusCode == 0) {
+                                messageService.showFailure(data.statusDesc);
+                            } else {
+                                messageService.showFailure('Network Error Please Submit Again');
+                            }
+                        } else {
+                            messageService.showFailure('Network Error Please Submit Again');
+                        }
+                        defer.reject(data)
+                    });
+                    return defer.promise;
+
+
+                }
+            }
+        }]);
+
+})();
+
+/**
+ * Created by admin on 5/13/2015.
+ */
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.signin')
+        .controller('SigninController', SigninController);
+
+    SigninController.$inject = ["singInService", '$mdToast', 'authService'];
+
+    function SigninController(singInService, $mdToast, authService) {
+        /*Private Variables*/
+        var that = this;
+        var pageToRoutAfterLoginSuccess = "/";
+        /* VM variables*/
+        this.user = {
+            email: "",
+            password: ""
+        };
+        this.submitting = false;
+
+        /*VM functions*/
+        this.login = loginFn;
+
+
+        /*private functions*/
+
+        function loginFn(form) {
+            that.submitting = true;
+            singInService.login(form.user, pageToRoutAfterLoginSuccess)
+                .then(function(data) {
+                    that.submitting = false;
+                })
+                .catch(function() {
+                    that.submitting = false;
+                });
+
+        }
+        /*this.canActivate = function(){
+            return authService.resolveUserPage();
+        }*/
+
+    }
+
+})();
+
+/**
+ * Created by Mehmood on 5/21/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.sign-up', ['core'])
+        .factory('signUpService', ['$q', 'authService', "$location", "messageService", function($q, authService, $location, messageService) {
+
+            return {
+                'signup': function(user, location) {
+                    var defer = $q.defer();
+                    authService.signup(user, function(data, firebaseData) {
+                            if (data.statusCode == 1) {
+                                messageService.showSuccess('Email has been sent please verify.');
+                                $location.path(location);
+                            } else {
+                                messageService.showFailure(data.statusDesc);
+                                defer.reject();
+                            }
+                        },
+                        function() {
+                            messageService.showFailure('Network Error Please Submit Again.');
+                        });
+                    return defer.promise;
+
+
+                }
+            }
+        }]);
+
+})();
+
+/**
+ * Created by admin on 5/13/2015.
+ */
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.sign-up')
+        .controller('SignUpController', SignUpController);
+
+    SignUpController.$inject = ['signUpService', 'authService'];
+
+    function SignUpController(signUpService, authService) {
+        //
+
+        /*private properties*/
+        var that = this;
+        var routeToRedirectAfterSuccess = '/signin';
+        this.process = false;
+
+        /*VM properties*/
+        this.user = {
+            email: "",
+            userID: "",
+            firstName: "",
+            lastName: "",
+            password: "",
+            confirmPassword: ""
+        };
+        /*VM function*/
+        this.signup = signup;
+
+        /*function declarations*/
+        function signup() {
+
+            that.process = true;
+            that.user.userID = that.user.userID.toLowerCase();
+            that.user.userID = that.user.userID.replace(/[^a-zA-Z0-9]/g, '');
+
+            signUpService.signup(that.user, routeToRedirectAfterSuccess)
+                .then(function() {
+                    that.process = false;
+                    // console.log('Success')
+                })
+                .catch(function() {
+                    that.process = false;
+                    // console.log('failed')
+                })
+        };
+        /*this.canActivate = function(){
+            return authService.resolveUserPage();
+        }
+*/
+    }
+
+})();
+
+/**
+ * Created by Mehmood on 5/21/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.forgot', ['core'])
+        .factory('forgotService', ['$q', 'authService', "$location", "messageService", function($q, authService, $location, messageService) {
+
+            return {
+                'forgotPassword': function(user) {
+                    var defer = $q.defer();
+                    authService.forgotPassword(user)
+                        .then(function(res) {
+                            messageService.showSuccess(res);
+                            defer.resolve();
+                        }, function(reason) {
+                            defer.reject();
+                            messageService.showFailure(reason);
+                        });
+                    return defer.promise;
+
+
+                }
+            }
+        }]);
+
+})();
+
+/**
+ * Created by admin on 5/13/2015.
+ */
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.forgot')
+        .controller('ForgotController', ForgotController);
+
+    ForgotController.$inject = ["forgotService", "$state"];
+
+    function ForgotController(forgotService, $state) {
+
+        /*private properties*/
+        var that = this;
+
+        /*VM functions*/
+        this.forgotPassword = forgotPassword;
+
+        this.submitting = false;
+
+        /*VM properties*/
+        this.user = {
+            email: ''
+        };
+
+        /*function declarations*/
+        //sends email address to get password via that email address
+        function forgotPassword() {
+            that.submitting = true;
+            forgotService.forgotPassword(that.user)
+                .then(function(res) {
+                    $state.go("signin");
+                    that.submitting = false;
+
+                }, function(reason) {
+                    that.submitting = false;
+                });
+        }
+    }
+
+})();
+
+/**
+ * Created by Shahzad on 5/23/2015.
+ */
+
+(function() {
+    'use strict';
+    angular
+        .module('app.createGroup', ['core', 'ngMdIcons'])
+        .factory('createGroupService', ['userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', '$rootScope','CollaboratorService',
+            function(userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, $rootScope,CollaboratorService) {
+
+                var pageUserId = userService.getCurrentUser().userID;
+                return {
+                    'userData': function(pageUserID) {
+                        return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
+                    },
+                    'createGroup': function(groupInfo, formDataFlag, form) {
+                        groupInfo.groupID = groupInfo.groupID.toLowerCase();
+                        groupInfo.groupID = groupInfo.groupID.replace(/[^a-z0-9]/g, '');
+                        userFirebaseService.asyncCreateGroup(pageUserId, groupInfo, this.userData(pageUserId), formDataFlag)
+                            .then(function(response) {
+                                form.$submitted = false;
+
+                                $rootScope.newImg = null
+                                var unlistedMembersArray = response.unlistedMembersArray;
+                                if (unlistedMembersArray.length > 0) {
+
+                                    messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                } else {
+                                    messageService.showSuccess("Team of Teams creation Successful");
+                                    console.log("this User is from createSubGroupService:",userService.getCurrentUser());
+                                    CollaboratorService.CreateDocument("Team Information",groupInfo.groupID,"",'Rich Text',userService.getCurrentUser())
+                                    .then(function(response){
+                                      CollaboratorService.addAccessUser(response.docId,groupInfo.groupID,"",pageUserId,1);
+                                    });
+                                }
+                                $location.path('/user/' + pageUserId);
+                            }, function(group) {
+                                form.$submitted = false;
+                                $rootScope.newImg = null;
+                                messageService.showFailure("Team of Teams not created, " + " already exists");
+                            })
+                    },
+                    'cancelGroupCreation': function(userId) {
+                        //console.log("Group Creation Cancelled");
+                        soundService.playFail();
+                        $location.path('/user/' + pageUserId)
+                    },
+                    'uploadPicture': function(file, groupID) {
+                        var defer = $q.defer();
+                        var reader = new FileReader();
+                        reader.onload = function() {
+
+                            var blobBin = atob(reader.result.split(',')[1]);
+                            var array = [];
+                            for (var i = 0; i < blobBin.length; i++) {
+                                array.push(blobBin.charCodeAt(i));
+                            }
+                            var fileBlob = new Blob([new Uint8Array(array)], {
+                                type: 'image/png'
+                            });
+
+
+                            var data = new FormData();
+                            data.append('userID', pageUserId);
+                            data.append('token', userService.getCurrentUser().token);
+                            data.append("source", fileBlob, file.name);
+
+                            defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {
+                                withCredentials: true,
+                                headers: {
+                                    'Content-Type': undefined
+                                },
+                                transformRequest: angular.identity
+                            }));
+
+                        };
+                        reader.readAsDataURL(file);
+                        return defer.promise;
+
+                    },
+
+                    'getGroupImgFromServer': function() {
+                        var defer = $q.defer();
+                        $http({
+                                url: appConfig.apiBaseUrl + '/api/profilepicture/mmm',
+                                method: "GET",
+                                params: {
+                                    token: userService.getCurrentUser().token
+                                }
+                            })
+                            .then(function(data) {
+                                var reader = new FileReader();
+                                reader.onload = function() {
+                                    defer.resolve(reader.result)
+                                };
+                                reader.readAsDataURL(data.data.profilePicture);
+
+                            })
+                            .catch(function(err) {
+                                defer.reject(err)
+                            });
+
+                        return defer.promise;
+
+                    }
+
+                };
+
+                function Uint8ToString(u8a) {
+                    var CHUNK_SZ = 0x8000;
+                    var c = [];
+                    for (var i = 0; i < u8a.length; i += CHUNK_SZ) {
+                        c.push(String.fromCharCode.apply(null, u8a.slice(i, i + CHUNK_SZ)));
+                    }
+
+                    return c.join("");
+
+                }
+            }
+        ])
+
+})();
+
+(function() {
+        'use strict';
+        angular
+            .module('app.createGroup')
+            .controller('CreateGroupController', ['messageService', '$http', '$rootScope', 'firebaseService', '$firebaseObject', '$location', 'createGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', CreateGroupController]);
+
+        function CreateGroupController(messageService, $http, $rootScope, firebaseService, $firebaseObject, $location, createGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q) {
+
+
+            $rootScope.newImg = '';
+
+            /*private variables*/
+
+            var that = this;
+            var user = userService.getCurrentUser();
+            this.user = user;
+            var fileUrl;
+            var ownerImg;
+            $firebaseObject(firebaseService.getRefUsers().child(userService.getCurrentUser().userID).child('profile-image'))
+                .$loaded()
+                .then(function(img) {
+                    ownerImg = img.$value
+                })
+
+
+            /*VM functions*/
+            this.groupPath = '';
+            this.queryUsers = queryUsers;
+            this.answer = answer;
+            this.hide = hide;
+
+
+            /*VM properties*/
+            this.filteredUsers = [];
+            this.group = {
+                groupID: "",
+                title: "",
+                desc: "",
+                members: "",
+                membersArray: [],
+                signupMode: "2",
+                address: '',
+                phone: ''
+            };
+            this.group.timeZone = getTiemZoneOffset()
+
+            //query for users names list
+            function queryUsers(val) {
+                if (val) {
+                    var filteredUsersRef = firebaseService.getRefUsers()
+                        .orderByKey()
+                        .startAt(val)
+                        .endAt(val + '~');
+
+                    that.filteredUsers = Firebase.getAsArray(filteredUsersRef);
+                } else {
+                    that.filteredUsers = [];
+                }
+            }
+
+            //cancels create group modal
+            function hide() {
+                createGroupService.cancelGroupCreation();
+            }
+
+
+
+            this.saveFile = function(file, type, groupID) {
+                var defer = $q.defer();
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + "&file_type=" + type);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            defer.resolve(upload_file(file, response.signed_request, response.url));
+                        } else {
+                            defer.reject(alert("Could not get signed URL."))
+                        }
+                    }
+                };
+                xhr.send();
+                return defer.promise;
+            };
+
+            function upload_file(file, signed_request, url) {
+
+                var defer = $q.defer();
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", signed_request);
+                xhr.setRequestHeader('x-amz-acl', 'public-read');
+                xhr.onload = function(data) {
+                    //alert(xhr.responseText);
+                    if (xhr.status === 200) {
+                        messageService.showSuccess('Picture uploaded....');
+                        that.group.imgLogoUrl = url + '?random=' + new Date();
+                        defer.resolve(url);
+
+                    }
+                };
+                xhr.onerror = function(error) {
+                    defer.reject(messageService.showSuccess("Could not upload file."));
+                };
+                xhr.send(file);
+                return defer.promise;
+            }
+
+
+            function answer(groupForm) {
+                var allowedDomain = {};
+                var fromDataFlag;
+                 groupForm.$submitted = true;
+                //return if form has invalid model.
+                if (groupForm.$invalid) {
+                    return;
+                }
+                that.group.ownerImgUrl = ownerImg || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png';
+                that.group.members = that.group.membersArray.join();
+                if (that.group.domain) {
+                    that.group.allowedDomain = {};
+
+                    var temp = that.group.domain.split(',');
+                    temp.forEach(function(el, i) {
+                        that.group.allowedDomain[i] = el;
+                    })
+
+                }
+                if ($rootScope.newImg) {
+                    var x = utilService.base64ToBlob($rootScope.newImg);
+                    var temp = $rootScope.newImg.split(',')[0];
+                    var mimeType = temp.split(':')[1].split(';')[0];
+                    that.saveFile(x, mimeType, that.group.groupID).then(function(data) {
+                            createGroupService.createGroup(that.group, fromDataFlag, groupForm);
+
+                            // collaborator variable to identity that a New group has been created
+                            $rootScope.groupIDCollaborator = that.group.groupID;
+
+                            //$location.path('/user/' + user.userID);
+                        })
+                        .catch(function() {
+                            groupForm.$submitted = false;
+                            return messageService.showSuccess('picture upload failed')
+                        });
+                } else {
+                    fromDataFlag = false;
+                    createGroupService.createGroup(that.group, fromDataFlag, groupForm);
+                    //$location.path('/user/' + user.userID);
+                }
+
+            }
+
+
+
+
+            this.selectFile = function(_this) {
+                var file = _this.files[0];
+                //console.log(file.name);
+
+            };
+
+            this.signupModeDisabled = function(val) {
+                return val === '3'
+            };
+
+            //Cropper Code start
+            this.showAdvanced = function(ev) {
+                $rootScope.tmpImg = $rootScope.newImg;
+                $rootScope.newImg = '';
+                $mdDialog.show({
+                    controller: "DialogController as ctrl",
+                    templateUrl: 'directives/dilogue1.tmpl.html',
+                    targetEvent: ev,
+                    escapeToClose: false
+                }).then(function(picture) {
+                    $rootScope.newImg = picture;
+                    // console.log("this is image" + picture)
+                }, function(err) {
+                    // console.log(err)
+
+                })
+
+            };
+
+
+            //Cropper Code End
+
+            this.canActivate = function() {
+                return authService.resolveUserPage();
+            }
+
+
+        }
+
+        function getTiemZoneOffset() {
+            return ' +' + (new Date().getTimezoneOffset() / 60) * -1 + ':' + '00';
+        }
+
+        function DialogController($mdDialog) {
+            // Start Image Crop
+                this.cropper = {};
+                this.cropper.sourceImage = null;
+                this.cropper.croppedImage   = null;
+                this.bounds = {};
+                this.bounds.left = 0;
+                this.bounds.right = 0;
+                this.bounds.top = 0;
+                this.bounds.bottom = 0;
+                $rootScope.newImg = this.cropper.croppedImage
+            // End Image Crop
+            this.my = {
+                model: {
+                    img: ''
+                }
+            };
+            this.hide = function(picture) {
+                //console.log(picture)
+                $mdDialog.hide(picture);
+            };
+
+
+        }
+    }
+
+)();
+
+/**
+ * Created by Shahzad on 5/23/2015.
+ */
+
+(function() {
+    'use strict';
+    angular
+        .module('app.editGroup', ['core', 'ngMdIcons'])
+        .factory('editGroupService', ['activityStreamService', '$timeout', '$rootScope', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'firebaseService', '$firebaseObject', '$stateParams',
+            function(activityStreamService, $timeout, $rootScope, userFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, firebaseService, $firebaseObject, $stateParams) {
+
+                var pageUserId = userService.getCurrentUser().userID;
+
+                return {
+                    'userData': function(pageUserID) {
+                        return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
+                    },
+
+                    'editGroup': function(groupInfo, groupRef, form, cb) {
+                        var groupNameRef = $firebaseObject(firebaseService.getRefGroupsNames().child(groupInfo.$id));
+                        var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+                        var dataToSet = {
+                            title: groupInfo.title,
+                            desc: groupInfo.desc,
+                            'address-title': groupInfo['address-title'],
+                            address: groupInfo.address,
+                            phone: groupInfo.phone,
+                            timeZone: groupInfo.timeZone,
+                            timestamp: firebaseTimeStamp
+
+                        };
+                        //var $groupRef = $firebaseObject(firebaseService.getRefGroups().child(groupInfo.groupID || groupInfo.$id));
+                        angular.extend(groupRef, dataToSet);
+                        groupRef['logo-image'].url = groupInfo['logo-image'].url;
+                        groupRef.$save().then(function(response) {
+                            //console.log(groupNameRef);
+                            groupNameRef['address-title'] = groupInfo['address-title'];
+                            groupNameRef.title = groupInfo.title;
+                            groupNameRef.groupImgUrl = groupInfo['logo-image'].url;
+                            groupNameRef.$save()
+                                .then(function() {
+                                    $timeout(function() {
+                                        form.$submitted = false;
+                                    });
+                                    $rootScope.newImg = null;
+
+                                    //for group activity stream record -- START --
+                                    var type = 'group';
+                                    var targetinfo = {id: groupInfo.$id, url: groupInfo.$id, title: groupInfo.title, type: 'group' };
+                                    var area = {type: 'group-updated'};
+                                    var group_id = groupInfo.$id;
+                                    var memberuserID = null;
+                                    //for group activity record
+                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                    //for group activity stream record -- END --
+
+                                    cb();
+                                    messageService.showSuccess('Team of Teams Edited Successfully');
+                                    // CollaboratorService.CreateDocument("Team of Teams Information",groupInfo.groupID,)
+                                }, function(group) {
+                                    cb();
+                                    messageService.showFailure("Team of Teams not edited");
+                                });
+
+                        }, function(group) {
+                            $timeout(function() {
+                                form.$submitted = false;
+                            });
+                            cb();
+                            messageService.showFailure("Team of Teams not edited");
+                        });
+                    },
+
+                    'cancelGroupCreation': function(groupID) {
+                        //console.log("Group Creation Cancelled");
+                        soundService.playFail();
+                        $location.path('/user/group/' + groupID);
+                    }
+                };
+
+                function Uint8ToString(u8a) {
+                    var CHUNK_SZ = 0x8000;
+                    var c = [];
+                    for (var i = 0; i < u8a.length; i += CHUNK_SZ) {
+                        c.push(String.fromCharCode.apply(null, u8a.slice(i, i + CHUNK_SZ)));
+                    }
+
+                    return c.join("");
+
+                }
+            }
+        ])
+
+})();
+
+(function() {
+    'use strict';
+    angular
+        .module('app.editGroup')
+        .controller('EditGroupController', ['messageService', '$http', '$rootScope', 'firebaseService', '$state', '$location', 'editGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', 'appConfig', '$q', '$firebaseObject', '$stateParams', EditGroupController]);
+
+    function EditGroupController(messageService, $http, $rootScope, firebaseService, $state, $location, editGroupService, userService, authService, $timeout, utilService, $mdDialog, appConfig, $q, $firebaseObject, $stateParams) {
+
+
+        $rootScope.croppedImage = {};
+        //debugger;
+        /*private variables*/
+        var that = this;
+        var user = userService.getCurrentUser();
+        var groupId = $stateParams.groupID;
+        this.groupId = groupId;
+        $rootScope.newImg = '';
+        /*VM functions*/
+        this.groupPath = '';
+        this.queryUsers = queryUsers;
+        this.answer = answer;
+        this.hide = hide;
+        this.submitProgress = false;
+
+
+
+        /*VM properties*/
+        this.filteredUsers = [];
+        var groupObj = $firebaseObject(firebaseService.getRefGroups().child(groupId));
+        groupObj.$loaded().then(function(data) {
+            $timeout(function() {
+
+            //     console.log(data);
+                that.group = data;
+            //  that.group.privacy = 2;
+
+
+                //debugger
+            })
+
+
+        })
+
+        this.openCreateSubGroupPage = function() {
+            // $location.path('/user/group/' + groupId + '/create-subgroup');
+            $state.go('user.create-subgroup', {groupID: groupId})
+        }
+        this.openUserSettingPage = function() {
+            // $location.path('/user/group/' + groupId + '/user-setting');
+            $state.go('user.user-setting', {groupID: groupId})
+        };
+        this.subgroupPage = function() {
+            // $location.path('user/group/' + groupId + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupId})
+        }
+
+        this.openGeoFencingPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupId})
+        }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupId})
+        }
+
+        //query for users names list
+        function queryUsers(val) {
+            if (val) {
+                var filteredUsersRef = firebaseService.getRefUsers()
+                    .orderByKey()
+                    .startAt(val)
+                    .endAt(val + '~');
+
+                that.filteredUsers = Firebase.getAsArray(filteredUsersRef);
+            } else {
+                that.filteredUsers = [];
+            }
+        }
+
+        //cancels create group modal
+        function hide() {
+            editGroupService.cancelGroupCreation(groupId);
+
+
+        }
+        var fileUrl;
+
+        this.saveFile = function(file, type, groupID) {
+            var defer = $q.defer();
+
+            var xhr = new XMLHttpRequest();
+
+            //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + "." + type.split('/')[1]+ "&file_type=" + type);
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + "&file_type=" + type);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        defer.resolve(upload_file(file, response.signed_request, response.url));
+                    } else {
+                        defer.reject(alert("Could not get signed URL."))
+                    }
+                }
+            };
+            xhr.send();
+            return defer.promise;
+        };
+
+        function upload_file(file, signed_request, url) {
+
+            var defer = $q.defer();
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT", signed_request);
+            xhr.setRequestHeader('x-amz-acl', 'public-read');
+            xhr.onload = function(data) {
+                //alert(xhr.status);
+                //alert(xhr.responseText);
+                if (xhr.status === 200) {
+                    messageService.showSuccess('Picture uploaded ....')
+                    that.group['logo-image'].url = url || '';
+                        //debugger
+                    defer.resolve(url)
+                }
+            };
+            xhr.onerror = function(error) {
+                defer.reject(alert("Could not upload file."));
+            };
+            xhr.send(file);
+            return defer.promise;
+        }
+        //answers create group modal and sends back some data modal.
+        function answer(groupForm) {
+            that.submitProgress = true;
+            var fromDataFlag;
+            //return if form has invalid model.
+            if (groupForm.$invalid) {
+                return;
+                that.submitProgress = false;
+            }
+            //that.group.members = that.group.membersArray.join();
+            if (that.group.domain) {
+                var temp = that.group.domain.split(',');
+                that.group.domain = temp
+            }
+            if ($rootScope.newImg) {
+                var x = utilService.base64ToBlob($rootScope.newImg);
+                var temp = $rootScope.newImg.split(',')[0];
+                var mimeType = temp.split(':')[1].split(';')[0];
+                that.saveFile(x, mimeType, that.group.$id).then(function(data) {
+                    editGroupService.editGroup(that.group, groupObj, groupForm, function(){
+                        that.submitProgress = false;
+                    })
+                })
+                .catch(function() {
+                    groupForm.$submitted = false;
+                    that.submitProgress = false;
+                    return messageService.showFailure('picture upload failed')
+                });
+
+
+                //console.log(x);
+
+            } else {
+
+                editGroupService.editGroup(that.group, groupObj, groupForm, function(){
+                    that.submitProgress = false;
+                })
+
+            }
+
+
+        }
+
+        /*haseeb works*/
+
+        this.getTiemZoneOffset = function() {
+            return new Date().getTimezoneOffset().toString()
+        }
+
+
+        this.signupModeDisabled = function(val) {
+            return val === '3'
+        }
+
+        //Cropper Code start
+        this.showAdvanced = function(ev) {
+            $rootScope.tmpImg = $rootScope.newImg;
+            $rootScope.newImg = '';
+            $mdDialog.show({
+                controller: "DialogController as ctrl",
+                templateUrl: 'directives/dilogue1.tmpl.html',
+                targetEvent: ev,
+                escapeToClose: false
+            }).then(function(picture) {
+                $rootScope.newImg = picture;
+                // console.log("this is image" + picture)
+            }, function(err) {
+                // console.log(err)
+
+            })
+
+        };
+
+
+        //Cropper Code End
+
+        /*this.canActivate  = function(){
+            return authService.resolveUserPage();
+        }*/
+
+
+
+    }
+
+})();
+
+/**
+ * Created by sj on 6/10/2015.
+ */
+
+(function() {
+    'use strict';
+    angular
+        .module('app.createSubGroup', ['core', 'ngMdIcons'])
+        .factory('createSubGroupService', ['activityStreamService', '$firebaseArray', '$rootScope', 'groupFirebaseService', '$firebaseObject', 'firebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig', 'CollaboratorService',
+            function(activityStreamService, $firebaseArray, $rootScope, groupFirebaseService, $firebaseObject, firebaseService, $location, soundService, userService, messageService, $q, $http, appConfig, CollaboratorService) {
+                var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+                var groupAdminUsers = [];
+
+                return {
+
+                    'createSubGroup': function(userID, group, SubgroupInfo, subgroupList, formDataFlag, groupID, cb) {
+                        //var pageUserId = userService.getCurrentUser().userID;
+                        SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
+                        SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
+                        groupFirebaseService.asyncCreateSubgroup(userID, group, SubgroupInfo, subgroupList, formDataFlag)
+                            .then(function(response) {
+                                // //form.$submitted = !form.$submitted
+                                // // console.log("Group Creation Successful");
+                                // var unlistedMembersArray = response.unlistedMembersArray;
+                                // if (unlistedMembersArray.length > 0) {
+                                //
+                                //     messageService.showSuccess("Team creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                // } else {
+                                //     // $location.path('/' + groupID);
+
+                                //for group activity stream record -- START --
+                                var type = 'subgroup';
+                                var targetinfo = { id: SubgroupInfo.subgroupID, url: group.$id + '/' + SubgroupInfo.subgroupID, title: SubgroupInfo.title, type: 'subgroup' };
+                                var area = { type: 'subgroup-created' };
+                                var group_id = group.$id + '/' + SubgroupInfo.subgroupID;
+                                var memberuserID = null;
+                                //for group activity record
+                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                //for group activity stream record -- END --
+                                cb();
+                                messageService.showSuccess("Team creation Successful...");
+                                // console.log(JSON.stringify());
+                                console.log("this User is from createSubGroupService:", userService.getCurrentUser());
+                                CollaboratorService.CreateDocument("Team of Teams Information", group.$id, SubgroupInfo.subgroupID, 'Rich Text', userService.getCurrentUser())
+                                    .then(function(response) {
+                                        CollaboratorService.addAccessUser(response.docId, group.$id, SubgroupInfo.subgroupID, userService.getCurrentUser().userID, 1);
+                                    });
+                                $rootScope.newImg = null;
+                                // }
+                            }, function(group) {
+                                // form.$submitted = !form.$submitted
+                                messageService.showFailure("Team not created, " + SubgroupInfo.groupID + " already exists");
+                            });
+                    },
+                    'cancelSubGroupCreation': function(userId) {
+                        console.log("SubGroup Creation Cancelled");
+                        soundService.playFail();
+                        $location.path('/user/' + userService.getCurrentUser().userID)
+                    },
+                    'uploadPicture': function(file, groupID) {
+                        var defer = $q.defer();
+                        var reader = new FileReader();
+                        reader.onload = function() {
+
+                            var blobBin = atob(reader.result.split(',')[1]);
+                            var array = [];
+                            for (var i = 0; i < blobBin.length; i++) {
+                                array.push(blobBin.charCodeAt(i));
+                            }
+                            var fileBlob = new Blob([new Uint8Array(array)], {
+                                type: 'image/png'
+                            });
+
+
+                            var data = new FormData();
+                            data.append('userID', pageUserId);
+                            //data.append('token', $sessionStorage.loggedInUser.token);
+                            data.append('token', userService.getCurrentUser().token);
+                            data.append("source", fileBlob, file.name);
+
+                            defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {
+                                withCredentials: true,
+                                headers: {
+                                    'Content-Type': undefined
+                                },
+                                transformRequest: angular.identity
+                            }));
+
+                        };
+                        reader.readAsDataURL(file);
+                        return defer.promise;
+
+                    },
+
+                    'getGroupImgFromServer': function() {
+                        var defer = $q.defer();
+                        $http({
+                            url: appConfig.apiBaseUrl + '/api/profilepicture/mmm',
+                            method: "GET",
+                            params: {
+                                token: userService.getCurrentUser().token
+                            }
+                        })
+                            .then(function(data) {
+                                var reader = new FileReader();
+                                reader.onload = function() {
+                                    defer.resolve(reader.result)
+                                };
+                                reader.readAsDataURL(data.data.profilePicture);
+
+                            })
+                            .catch(function(err) {
+                                defer.reject(err)
+                            });
+
+                        return defer.promise;
+
+                    },
+                    // 'editSubgroup': function(subgroupInfo, subgroupRef, groupID, groupForm) {
+                    'editSubgroup': function(subgroupInfo, subgroupRef, groupID, cb) {
+                        var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+                        //  var dataToSet = ;
+                        var dataToSet = {
+                            title: subgroupInfo.title,
+                            desc: (subgroupInfo.desc ? subgroupInfo.desc : ''),
+                            timestamp: firebaseTimeStamp
+                        };
+                        if (subgroupRef) {
+                            // var $subgroupRef = firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id);
+                            angular.extend(subgroupRef, dataToSet);
+
+                            subgroupRef.$save().then(function(response) {
+                                //var subgroupNames_ = firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id);
+                                ///subgroupNames_.set(subgroupInfo.title, function(error) { console.log(error); });
+
+                                var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
+                                subgroupNameRef.title = subgroupRef.title;
+                                subgroupNameRef.$save()
+                                    .then(function() {
+                                        cb();
+                                        //groupForm.$submitted = false;
+                                        //$rootScope.newImg = null;
+
+                                        //for group activity stream record -- START --
+                                        var type = 'subgroup';
+                                        var targetinfo = { id: subgroupInfo.$id, url: groupID + '/' + subgroupInfo.$id, title: subgroupInfo.title, type: 'subgroup' };
+                                        var area = { type: 'subgroup-updated' };
+                                        var group_id = groupID + '/' + subgroupInfo.$id;
+                                        var memberuserID = null;
+                                        //for group activity record
+                                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                        //for group activity stream record -- END --
+
+                                        messageService.showSuccess('Team Edited Successfully')
+
+                                    }, function(group) {
+                                        cb();
+                                        messageService.showFailure("Team not edited");
+                                    })
+                            }, function(group) {
+                                cb();
+                                // groupForm.$submitted = false;
+                                messageService.showFailure("Team not edited");
+                            })
+                        } else {
+                            firebaseService.getRefSubGroups().child(groupID).child(subgroupInfo.$id).set({ title: subgroupInfo.title, timestamp: firebaseTimeStamp }, function(error) {
+                                if (error) {
+                                    messageService.showFailure("Team not created");
+                                } else {
+                                    messageService.showSuccess('Team Created Successfully')
+                                }
+                            });
+                        }
+
+
+
+
+
+                        /*                        $subgroupRef.update({
+                         title: subgroupInfo.title,
+                         desc: subgroupInfo.desc,
+                         timestamp: firebaseTimeStamp,
+                         'logo-image':{
+                         url:subgroupInfo.imgLogoUrl, // pID is going to be changed with userID for single profile picture only
+                         id: subgroupInfo.$id,
+                         'bucket-name': 'test2pwow',
+                         source: 1,// 1 = google cloud storage
+                         mediaType: 'image/png' //image/jpeg
+                         }
+
+                         },function(error) {
+                         if (error) {
+                         console.log('Synchronization failed');
+                         } else {
+                         messageService.showSuccess("SubGroup creation Successful");
+                         }
+                         })*/
+                    },
+
+                    changeMemberRole: function(newType, member, groupID, subID) {
+                        var defer, self, prevType,
+                            errorHandler;
+
+                        defer = $q.defer();
+                        self = this;
+                        prevType = member.membershipType;
+
+                        errorHandler = function(err) {
+                            defer.reject('Error occurred in accessing server.');
+                        };
+
+
+                        //update membership type in user memberships
+                        this.asyncAddUserMembership(member.userSyncObj.$id, groupID, newType, subID)
+                            .then(function() {
+                                var userMem = {};
+                                userMem[member.userSyncObj.$id] = {
+                                    'membership-type': newType,
+                                    timestamp: firebaseTimeStamp
+                                };
+
+                                //update membership type in Subgroup memberships
+                                firebaseService.getRefSubGroupMembers().child(groupID).child(subID)
+                                    .update(userMem, function(err) {
+                                        if (err) {
+                                            errorHandler();
+                                        } else {
+                                            defer.resolve();
+                                        }
+                                    });
+
+                            }, errorHandler);
+
+
+
+                        return defer.promise;
+                    },
+                    asyncAddUserMembership: function(userID, groupID, typeNum, subID) {
+                        var deferred = $q.defer();
+                        var timestampRef = firebaseService.getRefSubGroupMembers().child(groupID + '/' + subID + '/' + userID + '/timestamp');
+
+                        timestampRef.once("value", function(snapshot) {
+                            var timestamp = snapshot.val() || firebaseTimeStamp;
+                            var userMem = {};
+
+                            userMem[subID] = {
+                                "membership-type": typeNum,
+                                timestamp: timestamp
+                            };
+
+                            var userMemRef = firebaseService.getRefUserSubGroupMemberships().child(userID).child(groupID);
+                            userMemRef.update(userMem, function(error) {
+                                if (error) {
+                                    deferred.reject();
+                                } else {
+                                    deferred.resolve();
+                                }
+                            });
+                        });
+
+                        return deferred.promise;
+                    },
+
+                    getAdminUsers: function(groupid, subgroupid, cb) {
+                        groupAdminUsers = [];
+                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_added', function(snapshot) {
+                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData) {
+
+                                if (snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2) {
+                                    // console.log(userData.val());
+                                    // console.log(snapshot.val());
+                                    groupAdminUsers.push(userData.val());
+                                    cb(groupAdminUsers);
+                                }
+
+                            })
+                        })
+                        firebaseService.getRefSubGroupMembers().child(groupid + '/' + subgroupid).on('child_changed', function(snapshot) {
+                            firebaseService.getRefUsers().child(snapshot.key()).once('value', function(userData) {
+                                if (snapshot.val()['membership-type'] == 1 || snapshot.val()['membership-type'] == 2) {
+                                    // console.log(userData.val());
+                                    // console.log(snapshot.val());
+
+                                    var _flag = false;
+                                    groupAdminUsers.forEach(function(val, indx) {
+                                        if (val.email == userData.val().email) {
+                                            _flag = true;
+                                        }
+                                    }) //groupAdminUsers.forEach
+
+                                    if (_flag) {
+                                        cb(groupAdminUsers);
+                                    } else {
+                                        groupAdminUsers.push(userData.val());
+                                        cb(groupAdminUsers);
+                                    }
+                                }
+
+                            })
+                        })
+                    }, //groupAdminUsers
+
+                    DeleteUserMemberShip: function(userID, groupID, subgroupID, submembers) {
+                        // var deleteUserMemberShip = {};
+                        // deleteUserMemberShip["user-subgroup-memberships/"+userID+"/"+groupID+"/"+subgroupID+"/"] = null;
+                        // deleteUserMemberShip["subgroup-members/"+groupID+"/"+subgroupID+"/"+userID+"/"] = null;
+                        // deleteUserMemberShip["subgroups/"+groupID+"/"+subgroupID+"/"] = {
+                        //     "members-count": submembers-1
+                        // };
+
+                        // for(var x in deleteUserMemberShip){
+                        //     console.log(x);
+                        // }
+                        // // Do a deep-path update
+                        // firebaseService.getRefMain().update(deleteUserMemberShip, function(error) {
+                        //     if (error) {
+                        //         console.log("Error updating data:", error);
+                        //     }
+                        // });
+
+                        firebaseService.getRefMain().child("user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID + "/").remove(function(err) {
+                            // console.log(err);
+
+                            firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
+                                // console.log(err);
+
+                                firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                    // console.log(err);
+                                });
+
+
+
+                            });
+                        });
+
+
+
+                    } //DeleteUserMemberShip
+                };
+
+                function Uint8ToString(u8a) {
+                    var CHUNK_SZ = 0x8000;
+                    var c = [];
+                    for (var i = 0; i < u8a.length; i += CHUNK_SZ) {
+                        c.push(String.fromCharCode.apply(null, u8a.slice(i, i + CHUNK_SZ)));
+                    }
+
+                    return c.join("");
+
+                }
+            }
+        ]);
+
+})();
+
+/**
+ * Created by sj on 6/10/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.createSubGroup')
+        .controller('CreateSubGroupController', ['activityStreamService','CollaboratorService', '$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller("DialogController", ["$mdDialog", DialogController]);
+
+    function CreateSubGroupController(activityStreamService,CollaboratorService, $scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+
+
+        $rootScope.croppedImage = {};
+        //debugger;
+        /*private variables*/
+        var that = this;
+        var user = userService.getCurrentUser();
+        $rootScope.newImg = '';
+        this.teamsettingpanel = false;
+        var groupID = $stateParams.groupID;
+        this.groupId = groupID;
+        var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID);
+            /*VM functions*/
+            // this.searchUser = '';
+            // this.processTeamAttendance =false;
+            // this.showEditSubGroup = false;
+        this.groupid = groupID;
+        this.activeID = null;
+        this.subgroupData = 0;
+        this.answer = answer;
+        this.hide = hide;
+        this.saveFile = saveFile;
+        this.upload_file = upload_file;
+        this.selectedMemberArray = [];
+        this.selectedAdminArray = [];
+        this.membersArray = [];
+        var SubgroupObj;
+        this.selectedindex = undefined;
+        this.selectedindex2 = 0;
+        this.filterUser = filterUser;
+        this.filterUser2 = filterUser2;
+        this.submembers = 0;
+        this.closeToggleAdmin = closeToggleAdmin;
+        this.closeAdminToggler = closeAdminToggler;
+        this.processingSave = false;
+        this.becomeMember = [];
+        this.becomeAdmin = [];
+        this.memberss = {
+            memberIDs: "",
+            selectedUsersArray: []
+
+        };
+
+        this.adminSideNav = true;
+        this.memberSideNav = true;
+
+        that.groupAdmin = false;
+        firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
+            if (group.val()['membership-type'] == 1) {
+                that.groupAdmin = true;
+            } else if (group.val()['membership-type'] == 2) {
+                that.groupAdmin = true;
+            }
+        })
+
+
+        this.ActiveSideNavBar = function(sideNav) {
+            that.adminSideNav = true;
+            that.memberSideNav = true;
+            $mdSidenav(sideNav).toggle();
+
+           /* if(sideNav === 'admin') {
+                that.adminSideNav = false;
+                that.memberSideNav = true;
+            } else if(sideNav === 'member') {
+                that.adminSideNav = true;
+                that.memberSideNav = false;
+            } else {
+                this.adminSideNav = true;
+                this.memberSideNav = true;
+            }*/
+        };
+
+        this.createTeam = function(){
+            that.subgroupData = {
+                // subgroupID: "",
+                // title: "",
+                desc: "",
+                members: "",
+                membersArray: []
+            };
+            that.activeID = '';
+            SubgroupObj = '';
+            that.teamsettingpanel = true;
+        };
+
+        /*VM properties*/
+
+        /*   this.Subgroup = {
+         subgroupID: "",
+         title: "",
+         desc: "",
+         members: "",
+         membersArray: []
+
+         };*/
+
+
+        this.openUserSettingPage = function() {
+            // $location.path('/user/group/' + groupID + '/user-setting');
+            $state.go('user.user-setting', {groupID: groupID});
+        };
+        this.openEditGroup = function() {
+            // $location.path('user/group/' + groupID + '/edit-group');
+            $state.go('user.edit-group', {groupID: groupID})
+        }
+        this.openGeoFencingPage = function() {
+            // $location.path('/user/group/' + groupID + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupID})
+        };
+        this.subgroupPage = function() {
+            // $location.path('user/group/' + this.groupid + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupID})
+        }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupID})
+        }
+
+
+        this.veiwSubgroup = function(subgroupData, index) {
+
+            // this.showEditSubGroup = true;
+            // that.showTeamAttendace = false;
+            that.selectedindex = index;
+            that.activeID = subgroupData.$id;
+            that.activeSubgroupTitle = subgroupData.title;
+
+            //will become a member array, for use on Save button
+            that.becomeMemmber = [];
+            that.becomeAdmin = [];
+
+            //load user Admins
+            loadAdminUSers(this.groupid, that.activeID, function(){
+                subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, user.userID)
+                    .then(function(syncObj) {
+                        that.subgroupSyncObj = syncObj;
+                        // console.log(syncObj);
+                        //console.log(data === obj); // true
+                        // $scope.subgroupSyncObj.subgroupSyncObj.$bindTo($scope, "subgroup");
+                        that.submembers = that.subgroupSyncObj.membersSyncArray;
+                        // $timeout(function() {
+                        // $scope.subgroups = $scope.subgroupSyncObj.subgroupsSyncArray;
+                        //$scope.pendingRequests = $scope.subgroupSyncObj.pendingMembershipSyncArray;
+                        //$scope.activities = $scope.subgroupSyncObj.activitiesSyncArray;
+                        //$scope.groupMembersSyncArray = $scope.subgroupSyncObj.groupMembersSyncArray;
+                        SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
+                        // console.log(1)
+                        // console.log(SubgroupObj)
+                        SubgroupObj.$loaded().then(function(data) {
+                            that.subgroupData = data;
+                            //that.group.groupID = data.$id;
+                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
+                            that.teamsettingpanel = true;
+
+                            firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot) {
+                                that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
+                            });
+                            // },50000)
+                            // console.log(2)
+                            // console.log(SubgroupObj)
+                        });
+                    });
+            });
+        };
+
+        //cancels create group modal
+        function hide() {
+            /*   createGroupService.cancelGroupCreation();*/
+            /* $mdDialog.cancel();*/
+            $rootScope.newImg = null;
+            // $location.path('/user/group/' + groupID);
+            $state.go('user.group', {groupID: groupID});
+
+        }
+
+
+        this.showAdvanced = function(ev) {
+            $rootScope.tmpImg = $rootScope.newImg;
+            $rootScope.newImg = '';
+            $mdDialog.show({
+                controller: "DialogController as ctrl",
+                templateUrl: 'directives/dilogue2.tmpl.html',
+                targetEvent: ev,
+                escapeToClose: false
+            }).then(function(picture) {
+                $rootScope.newImg = picture;
+                //console.log("this is image" + picture)
+            }, function(err) {
+                //console.log(err)
+
+            })
+
+        };
+
+
+        groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
+            .then(function(syncObj) {
+                $timeout(function() {
+
+                    that.groupSyncObj = syncObj;
+                    // that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
+                    that.group = that.groupSyncObj.groupSyncObj;
+                    that.members = that.groupSyncObj.membersSyncArray;
+                    that.subgroups = that.groupSyncObj.subgroupsSyncArray;
+                    that.pendingRequests = that.groupSyncObj.pendingMembershipSyncArray;
+                    that.activities = that.groupSyncObj.activitiesSyncArray;
+                    // that.veiwSubgroup(that.subgroups[0])
+                    // console.log(that.subgroups)
+                });
+
+
+            });
+
+        this.assignMemberClick = function() {
+            that.members.forEach(function(val, index){
+                //if is member
+                if(that.submembers.length > 0) {
+                    for (var i = 0; i < that.submembers.length; i++) {
+                        if (val.userID === that.submembers[i].userID) {
+                            that.members[index].isMember = true;
+                            that.members[index].isAdmin = (that.members[index].membershipType == 1 || that.members[index].membershipType == 2) ? true : false;
+                            break;
+                        }
+                    }
+                }
+                //if is admin member
+                if(that.selectedAdminArray.length > 0) {
+                    for (var i = 0; i < that.selectedAdminArray.length; i++) {
+                        if (val.user.profile.email === that.selectedAdminArray[i].email) {
+                            that.members[index].isAdmin = true;
+                            break;
+                        }
+                    }
+                }
+            }); //that.members.forEach
+        };
+
+        this.afterSelectMember = function(id){
+            var _flag = false;
+            that.members.forEach(function(val, index){
+                // console.log('that.members', val)
+                if(_flag){
+                    return;
+                }
+
+                if(id === val.userID){
+                    //if is member
+                    if(that.becomeMember.length > 0) {
+                        for (var i = 0; i < that.becomeMember.length; i++) {
+                            if(id == that.becomeMember[i].$id) {
+                                that.members[index].isMember = true;
+                                _flag = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }); //that.members.forEach
+        };
+
+        this.afterSelectAdmin = function(email){
+            var _flag = false;
+            that.members.forEach(function(val, index){
+                if(_flag){
+                    return false;
+                }
+                if(email == val.user.profile.email){
+                    //if is admin member
+                    if(that.becomeAdmin.length > 0) {
+                        for (var i = 0; i < that.becomeAdmin.length; i++) {
+                            // console.log('that.becomeAdminmembers', that.becomeAdmin[i])
+                            if (email === that.becomeAdmin[i].member.user.profile.email && email === val.user.profile.email) {
+                                that.members[index].isAdmin = true;
+                                _flag = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }); //that.members.forEach
+        };
+
+        this.selectedMember = function(userObj, index) {
+            var _flag = true;
+            //if(that.memberss.length > 0) {
+            that.becomeMember.forEach(function(val, i){
+                if(val == userObj){
+                    _flag = false;
+                }
+            });//checking if userobj is exists or not
+            //}
+
+            if(that.submembers.length > 0){
+                that.submembers.forEach(function(val, inx) {
+                    if (val.userID == userObj.$id) {
+                        _flag = false;
+                    }
+                });
+            }
+
+            if(_flag) {
+                that.becomeMember.push(userObj);
+                that.memberss.selectedUsersArray.push(userObj.$id);
+                that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
+                var membersArray = that.memberss.memberIDs.split(',');
+
+                //after add in  becomeMember chnage arrow css
+                that.afterSelectMember(userObj.$id);
+            }
+        };
+
+
+
+
+        // this.checkingIsSelectedMember = function(mmbrid) {
+        //     that.becomeMember.forEach(function(val,index){
+        //         console.log('val', val.$id, mmbrid);
+        //         if(mmbrid === val.$id){
+        //             console.log('trrrrrrue');
+        //             return true;
+        //         }
+        //     });
+        //     return false;
+        // };
+
+        this.selectedMemberSave = function(){
+            if(that.becomeMember.length > 0){
+                var membersIDarray = [];    //for policy
+                that.becomeMember.forEach(function(userObj,index){
+
+                    var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
+                        groupID: groupID,
+                        subgroupID: that.activeID
+                    });
+
+                    //for coluser checking
+                    saveMemberToFirebase(user, subgroupObj, that.memberss.memberIDs, that.subgroupSyncObj.membersSyncArray, groupData);
+
+                    //for activity Stream Array
+                    //now checking is user is also exist in selectedAdminList then not publish activity stream by member
+                    var _flag_notInBecomeAdminArray = true;
+                    if(that.becomeAdmin.length > 0){
+                        that.becomeAdmin.forEach(function(val,index){
+                            if(val.member.user.profile == userObj.$id) {
+                                _flag_notInBecomeAdminArray = false;
+                            }
+                        });
+                    }
+                    //publish activity Stream
+                    if(_flag_notInBecomeAdminArray){        //if not exists in becomeAdminArray then publish activity as member
+                        userActivityStreamOnAddMemberOrAdmin(userObj, subgroupObj, true, false);
+                    }
+                    //for activity Stream Array
+
+                    membersIDarray.push(userObj.$id);
+
+                    //checking if team has policy then assigned policy to member
+                    if(that.becomeMember.length == index+1){
+                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg){
+
+                        });
+                    }
+
+                }); //that.becomeMember.forEach
+            } //if
+        }; //this.selectedMemberSave
+
+        function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
+            subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
+
+
+                    // .then(function(response) {
+                    //     // console.log("Adding Members Successful");
+                    //     var unlistedMembersArray = response.unlistedMembersArray,
+                    //         notificationString;
+                    //
+                    //     if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                    //         notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showFailure(notificationString);
+                    //     } else if (unlistedMembersArray.length) {
+                    //         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showSuccess(notificationString);
+                    //     } else {
+                    //         notificationString = 'Adding Members Successful.';
+                    //         console.log("SubgroupObj",subgroupObj); //subgroupID
+                    //         console.log("groupObj",groupData); // $id
+                    //         var members = memberIDs.split(',');
+                    //         for (var i = 0; i < members.length; i++) {
+                    //           CollaboratorService.addAccessUser(CollaboratorService.getCurrentDocumentId(),groupData.$id,subgroupObj.subgroupID,members[i]);
+                    //         }
+                    //         messageService.showFailure(notificationString);
+                    //     }
+                    // }, function(reason) {
+                    //     messageService.showFailure(reason);
+                    // }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+
+                .then(function(response) {
+                    // console.log("Adding Members Successful");
+                    var unlistedMembersArray = response.unlistedMembersArray,
+                        notificationString;
+
+                    if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                        notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        messageService.showFailure(notificationString);
+                    } else if (unlistedMembersArray.length) {
+                        notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        messageService.showSuccess(notificationString);
+                    } else {
+                        notificationString = 'Adding Members Successful.';
+                        messageService.showFailure(notificationString);
+                    }
+                }, function(reason) {
+                    messageService.showFailure(reason);
+                }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+
+
+        }
+
+        this.selectedAdmin = function(newType, member) {
+            var obj = {type: newType, member: member};
+            var _flag = true;
+
+            //if(that.memberss.length > 0) {
+            that.becomeAdmin.forEach(function(val, i){
+                if(val.member == member){
+                    _flag = false;
+                }
+            }); //checking if admin is exists or not
+            //}
+
+            if(that.selectedAdminArray.length > 0) {
+                that.selectedAdminArray.forEach(function(val,i){
+                    if(val == member.user.profile.email){
+                        _flag = false;
+                    }
+                });
+            }
+
+            if(_flag) {
+                that.becomeAdmin.push(obj);
+
+                //after add in  becomeMember chnage arrow css
+                this.afterSelectAdmin(obj.member.user.profile.email)
+            }
+
+
+        };
+
+        this.selectedAdminSave = function(){
+            if(that.becomeAdmin.length > 0){
+                var membersIDarray = [];    //for policy
+                that.becomeAdmin.forEach(function(val, index) {
+
+                    var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
+                        groupID: groupID,
+                        subgroupID: that.activeID
+                    });
+
+                    //for coluser checking
+                    saveAdminToFirebase(val.type, val.member, groupID, that.activeID, subgroupObj);
+
+
+
+                    membersIDarray.push(val.member.userID);
+                    //checking if team has policy then assigned policy to member
+                    if (that.becomeMember.length == index + 1) {
+                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg) {
+
+                        });
+                    }
+                }); //that.becomeMember.forEach
+            } //if
+        }; //selectedAdminSave
+
+        function saveAdminToFirebase(newType, member, groupID, activeID, subgroupObj){
+            createSubGroupService.changeMemberRole(newType, member, groupID, activeID).then(function() {
+                messageService.showSuccess("New Admin selected");
+                //publish activity Stream
+                $timeout(function(){
+                    userActivityStreamOnAddMemberOrAdmin(member.user.profile, subgroupObj, false, true);
+                },1000);
+            }, function(reason) {
+                messageService.showFailure(reason);
+            });
+        }
+
+        function userActivityStreamOnAddMemberOrAdmin (userObj, subgroupObj, isMember, isAdmin) {
+            var areaType;
+
+            if(isMember){
+                areaType = 'subgroup-member-assigned';
+            }
+
+            if(isAdmin){
+                areaType = 'subgroup-admin-assigned';
+            }
+
+            //publish an activity stream record -- START --
+            var type = 'subgroup';
+            var targetinfo = {id: subgroupObj.$id, url: groupID+'/'+subgroupObj.$id, title: subgroupObj.title, type: 'subgroup' };
+            var area = {type: areaType };
+            var group_id = groupID+'/'+subgroupObj.$id;
+            var memberuserID = userObj.$id;
+            //for group activity record
+            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+            //for group activity stream record -- END --
+        }
+
+        this.deleteAdminMember = function(admin){
+           var adminMemberId = '';
+           that.submembers.forEach(function(val,indx){
+                if(val.userSyncObj.email == admin.email && val.membershipType != 1){
+                    createSubGroupService.DeleteUserMemberShip(val.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
+
+                    //publish an activity stream record -- START --
+                    var type = 'subgroup';
+                    var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
+                    var area = {type: 'subgroup-admin-removed' };
+                    var group_id = groupID+'/'+that.activeID;
+                    var memberuserID = val.userSyncObj.$id;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
+
+                }
+           });
+
+           that.selectedAdminArray.forEach(function(val, indx){
+                if(val.email == admin.email && val.membershipType != 1){
+                    that.selectedAdminArray.splice(indx, 1);
+                }
+           });
+
+       };
+
+        this.deleteMember = function(userID){
+            createSubGroupService.DeleteUserMemberShip(userID,groupID,that.activeID,that.submembers.length);
+
+            //publish an activity stream record -- START --
+            var type = 'subgroup';
+            var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
+            var area = {type: 'subgroup-member-removed' };
+            var group_id = groupID+'/'+that.activeID;
+            var memberuserID = userID;
+            //for group activity record
+            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+            //for group activity stream record -- END --
+        };
+
+        function loadAdminUSers(groupid, subgroupid, cb){
+            createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
+                that.selectedAdminArray = data;
+                cb();
+            })
+        }
+
+
+        function filterUser(userID) {
+            var disableItem = false;
+            for (var i = 0; i < that.submembers.length; i++) {
+                if (userID === that.submembers[i].userID) {
+                    disableItem = true;
+                } else if (that.membersArray.indexOf(userID) >= 0) {
+                    disableItem = true;
+                }
+            }
+            return disableItem;
+        }
+
+        function filterUser2(email) {
+        	// console.log(that.selectedAdminArray[0].email);
+            var disableItem = false;
+            if(that.selectedAdminArray && that.selectedAdminArray.length > 0) {
+	            for (var i = 0; i < that.selectedAdminArray.length; i++) {
+	                if (email === that.selectedAdminArray[i].email) {
+	                    disableItem = true;
+	                }
+
+	            }
+            }
+            return disableItem;
+        }
+
+        function answer(groupForm) {
+           that.processingSave = true;
+            var fromDataFlag;
+            //return if form has invalid model.
+            if (groupForm.$invalid) {
+                 that.processingSave = false;
+                return;
+            }
+            //if ($rootScope.croppedImage && $rootScope.croppedImage.src) {
+            if ($rootScope.newImg) {
+                var x = utilService.base64ToBlob($rootScope.newImg);
+                var temp = $rootScope.newImg.split(',')[0];
+                var mimeType = temp.split(':')[1].split(';')[0];
+                that.saveFile(x, mimeType, that.subgroupData.$id).then(function(data) {
+                        // console.log('subgroup img  uploaded ' + data)
+                        // console.log(3)
+                        //console.log(SubgroupObj)
+
+                        if(SubgroupObj) {
+                            //edit team
+                            SubgroupObj['logo-image'].url = data;
+                            that.selectedMemberSave();
+                            that.selectedAdminSave();
+                            createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
+                                that.processingSave = false;
+                                that.teamsettingpanel = false;
+                                that.selectedindex = undefined;
+                            });
+                        } else {
+                            //create team
+                            that.subgroupData.imgLogoUrl = data;
+                            createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID,function(){
+                                that.teamsettingpanel = false;
+                                that.selectedindex = undefined;
+                            });
+                            that.processingSave = false;
+                        }
+                            // $rootScope.newImg=null;
+                    })
+                    .catch(function(err) {
+                        // return alert('picture upload failed' + err)
+                        that.processingSave = false;
+                        that.teamsettingpanel = false;
+
+                        return messageService.showFailure('picture upload failed' + err);
+                    });
+                // console.log(x);
+            } else {
+                fromDataFlag = false;
+                if(SubgroupObj) {
+                    //edit team
+                    that.selectedMemberSave();
+                    that.selectedAdminSave();
+                    createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
+                        that.processingSave = false;
+                        that.teamsettingpanel = false;
+                        that.selectedindex = undefined;
+
+
+                    });
+                } else {
+                    //create team
+                    createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
+                        that.selectedindex = undefined;
+                       that.teamsettingpanel = false;
+                    });
+                    that.processingSave = false;
+
+                }
+            }
+        }
+
+        function saveFile(file, type, groupID) {
+            var defer = $q.defer();
+            //if(!that.group.groupID)return alert('Pleas provide group url firstt');
+            //var groupID= that.group.groupID;
+            var xhr = new XMLHttpRequest();
+
+            //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.subgroupData.$id + "&file_type=" + type);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+
+                        var response = JSON.parse(xhr.responseText);
+                        defer.resolve(that.upload_file(file, response.signed_request, response.url));
+                    } else {
+                        defer.reject(essageService.showFailure("Could not get signed URL."))
+                    }
+                }
+            };
+            xhr.send();
+            return defer.promise;
+        }
+
+
+        //Cropper Code start
+        // this.showAdvanced = function(ev) {
+        //     $rootScope.tmpImg = $rootScope.newImg;
+        //     $rootScope.newImg = '';
+        //     $mdDialog.show({
+        //         controller: "DialogController",
+        //         controllerAs: "ctrl",
+        //         templateUrl: 'directives/dilogue1.tmpl.html',
+        //         targetEvent: ev
+        //     }).then(function(picture) {
+        //         $rootScope.newImg = picture;
+        //         // console.log("this is image" + picture)
+        //     }, function(err) {
+        //         //console.log(err)
+        //
+        //     })
+        //
+        // };
+
+
+        //Cropper Code End
+
+        this.canActivate = function() {
+            return authService.resolveUserPage();
+        }
+
+
+        // side navigation
+
+        this.toggleRight = buildToggler('right');
+        this.toggleAdmin = AdminToggler('rights');
+
+        function buildToggler(navID) {
+            var debounceFn = $mdUtil.debounce(function() {
+                $mdSidenav(navID)
+                    .toggle()
+                    .then(function() {
+                        // console.log("toggle " + navID + " is done");
+                    });
+            }, 300);
+
+            return debounceFn;
+        }
+
+        function AdminToggler(navID) {
+            var debounceFnc = $mdUtil.debounce(function() {
+                $mdSidenav(navID)
+                    .toggle()
+                    .then(function() {
+                        // console.log("toggle " + navID + " is done");
+                    });
+            }, 300);
+
+            return debounceFnc;
+        }
+
+        function upload_file(file, signed_request, url) {
+
+            var defer = $q.defer();
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT", signed_request);
+            xhr.setRequestHeader('x-amz-acl', 'public-read');
+            xhr.onload = function(data) {
+                // alert(xhr.status);
+                //alert(xhr.responseText);
+                if (xhr.status === 200) {
+                    messageService.showSuccess('Picture uploaded....')
+                        // console.log(url);
+                        //document.getElementById("preview").src = url;
+                        // that.subgroupData.imgLogoUrl = url;
+                    defer.resolve(url + '?random=' + new Date())
+                        //document.getElementById("avatar_url").value = url;
+                }
+            };
+            xhr.onerror = function(error) {
+                defer.reject(messageService.showSuccess('Could not upload file.'));
+            };
+            xhr.send(file);
+            return defer.promise;
+        }
+
+        that.OwnerRef = $firebaseObject(firebaseService.getRefGroups().child(groupID))
+            .$loaded()
+            .then(function(groupData) {
+
+                if (groupData['group-owner-id']) {
+                    //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
+                    that.picRef = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']) /*.child('profile-image')*/)
+                        .$loaded()
+                        .then(function(userData) {
+
+                            that.userObj = userData;
+
+                        });
+
+                }
+            });
+
+        function closeAdminToggler() {
+            $mdSidenav('rights').close()
+                .then(function() {
+                    // console.log("close LEFT is done");
+                });
+        }
+
+        function closeToggleAdmin() {
+            $mdSidenav('right').close()
+                .then(function() {
+                    // console.log("close LEFT is done");
+                });
+        }
+    }
+
+    function DialogController($mdDialog) {
+        this.my = {
+            model: {
+                img: ''
+            }
+        };
+        this.openFileSelect = function() {
+            angular.element('#ImageUpload').click();
+        };
+        this.hide = function(picture) {
+            // console.log("dialog box pic" + picture)
+            $mdDialog.hide(picture);
+        };
+    }
+})();
+
+/**
+ * Created by Mehmood on 5/21/2015.
+ */
+(function() {
+    'use strict';
+    angular.module('app.JoinGroup', ['core'])
+        .factory('joinGroupService', ['activityStreamService', '$timeout', '$firebaseArray', 'userFirebaseService', '$location', 'soundService', 'userService', "messageService", 'firebaseService', '$q', 'authService',
+            function(activityStreamService, $timeout, $firebaseArray, userFirebaseService, $location, soundService, userService, messageService, firebaseService, $q, authService) {
+                var user = userService.getCurrentUser();
+                return {
+                    'userData': function(pageUserID) {
+                        return userFirebaseService.getUserMembershipsSyncObj(pageUserID);
+                    },
+                    'canActivate': function() {
+                        return authService.resolveUserPage();
+                    },
+                    'joinGroupRequest': function(groupInfo, cb) {
+                        groupInfo.groupID = groupInfo.groupID.toLowerCase().replace(/[^a-z0-9]/g, '');
+                            //userFirebaseService.asyncGroupJoiningRequest($sessionStorage.loggedInUser.userID, groupInfo.groupID, groupInfo.message)
+                        userFirebaseService.asyncGroupJoiningRequest(userService.getCurrentUser().userID, groupInfo.groupID, groupInfo.message, groupInfo.subgroupID, groupInfo.subgrouptitle, groupInfo.membershipNo)
+                            .then(function() {
+                                //console.log("Group join request sent successfully");
+                                if(groupInfo.subgroupID){
+                                    //for group activity stream record -- START --
+                                    var type = 'subgroup';
+                                    var targetinfo = {id: groupInfo.subgroupID, url: groupInfo.subgroupID, title: groupInfo.subgrouptitle, type: 'subgroup' };
+                                    var area = {type: 'subgroup-join'};
+                                    var group_id = groupInfo.groupID +'/'+ groupInfo.subgroupID;
+                                    var memberuser_id = user.userID;
+                                    //for group activity record
+                                    console.log('groupInfo.groupID groupInfo.subgroupID: ', groupInfo.groupID +'/'+ groupInfo.subgroupID);
+                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuser_id);
+                                    //for group activity stream record -- END --
+
+                                    cb();
+                                    messageService.showSuccess("Team of Teams and Team joining request sent successfully");
+                                } else{
+                                    //for group activity stream record -- START --
+                                    var _type = 'group';
+                                    var _targetinfo = {id: groupInfo.groupID, url: groupInfo.groupID, title: groupInfo.grouptitle, type: 'group' };
+                                    var _area = {type: 'group-join'};
+                                    var _group_id = groupInfo.groupID;
+                                    var _memberuser_id = user.userID;
+                                    //for group activity record
+                                    console.log('groupInfo.groupID: ', groupInfo.groupID);
+                                    activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuser_id);
+                                    //for group activity stream record -- END --
+
+                                    cb();
+                                    messageService.showSuccess("Team of Teams joining request sent successfully");
+
+                                }
+
+                            }, function(reason) {
+                                //console.log("Unable to send group joining request");
+                                cb();
+                                messageService.showFailure(reason);
+                            })
+                    },
+                    'groupQuery': function() {
+
+                        return firebaseService.getRefGroupsNames()
+                            .orderByKey()
+                            .startAt(val)
+                            .endAt(val + '~');
+
+                    },
+                    'cancelGroupJoining': function() {
+                        //console.log("Group Creation Cancelled");
+                        soundService.playFail();
+                        $location.path('/user/' + userService.getCurrentUser().userID)
+                    }
+                }
+            }
+        ]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.JoinGroup')
+        .controller('JoinGroupController', ['dataService', 'userService', 'joinGroupService', 'firebaseService', 'authService', '$firebaseObject', '$firebaseArray',
+            function(dataService, userService, joinGroupService, firebaseService, authService, $firebaseObject, $firebaseArray) {
+                // var $scope = this;
+                //https://github.com/angular/material/issues/547#issuecomment65620808
+
+                /*private variables*/
+                var that = this;
+                this.filteredGroups = [];
+                this.loadingData = true;
+                this.user = userService.getCurrentUser();
+
+                // firebaseService.getRefGroups().on('child_added', function (snapshot) {
+                //     that.filteredGroups.push(snapshot.val());
+                // });
+                /*listing groups*/
+                // this.listgroup;
+                //this.groupOne = $firebaseObject(firebaseService.getRefGroupsNames());
+                // this.filteredGroups = dataService.getTotalGroups();
+                $firebaseArray(firebaseService.getRefGroupsNames()).$loaded().then(function(data){
+                    that.filteredGroups = data;
+                    that.loadingData = false;
+                });
+
+                // $firebaseArray(firebaseService.getRefGroups()).$loaded().then(function(data){
+                //     that.filteredGroups = data;
+                //     that.loadingData = false;
+                // });
+                // this.groupOne.$loaded().then(function(data) {
+                //     if (data) {
+                //         //console.log(data);
+                //     }
+
+                // }).catch(function(err) {
+                //     console.log(err);
+                // });
+
+                // $scope.clear = function() {
+                //     if ($scope.listgroup == 0) {
+
+                //         $scope.listgroup = $scope.groupOne;
+                //     }
+                //     console.log($scope.listgroup);
+                // };
+
+                // $scope.listgroup = this.groupOne;
+                // console.log( $scope.listgroup);
+
+
+                /*VM functions*/
+                // $scope.queryGroups = queryGroups;
+                this.answer = answer;
+                this.hide = hide;
+
+                /*VM properties*/
+                this.message = {};
+                this.group = {
+                    groupID: "",
+                    message: "Please add me in your Team.",
+                    membershipNo: ""
+                };
+
+
+
+//                this.uImg = ['washedout.png', 'PanacloudLogoForList.svg', 'citibankLogo.svg', 'habibBankLogo.svg', 'washedout.png', 'PanacloudLogoForList.svg', 'citibankLogo.svg', 'habibBankLogo.svg', 'habibBankLogo.svg'];
+/*
+                function loadAllGroups() {
+                    $scope.filteredGroups = Firebase.getAsArray(firebaseService.getRefGroupsNames().orderByKey());
+                    // console.log($scope.filteredGroups)
+                }
+
+*/
+                // loadAllGroups();
+
+
+
+/*
+                //query for groups names list
+                function queryGroups() {
+                    if ($scope.search) {
+                        var filteredGroupsNamesRef = firebaseService.getRefGroupsNames()
+                            .orderByKey()
+                            .startAt($scope.search)
+                            .endAt($scope.search + '~');
+
+                        $scope.filteredGroups = Firebase.getAsArray(filteredGroupsNamesRef);
+                        // console.log($scope.filteredGroups);
+                        /*$scope.filteredGroups.forEach(function(el,i){
+
+                                                                 var j = i
+                                                                 $firebaseObject(firebaseService.getRefGroups().child(el.$id))
+                                                                     .$loaded()
+                                                                     .then(function(groupData){
+                                                                         $scope.filteredGroups[j].groupImg = groupData['logoimage']? groupData['logoimage'].url:""
+                                                                         if(groupData['groupownerid']){
+                                                                             $firebaseObject(firebaseService.getRefUsers().child(groupData['groupownerid']).child('profileimage'))
+                                                                                 .$loaded()
+                                                                                 .then(function(img){
+                                                                                     $scope.filteredGroups[j].ownerImg = img.$value
+                                                                                 })
+
+                                                                         }
+                                                                     });
+                                                             })*/
+/*                        $scope.filteredGroups.forEach(function(el, i) {
+                            var j = i;
+                            $firebaseObject(firebaseService.getRefGroupsNames().child(el.$id))
+                                .$loaded().then(function(gNames) {
+                                    // console.log($scope.filteredGroups[j]);
+                                    // $scope.filteredGroups[j].groupImg = gNames.groupImgUrl;
+                                    // $scope.filteredGroups[j].ownerImg = gNames.ownerImgUrl;
+                                });
+                        });
+
+                    } else {
+                        // $scope.filteredGroups = [];
+                        loadAllGroups();
+                    }
+
+                    return $scope.filteredGroups;
+                }
+
+*/
+                //cancels join/subscribe group modal
+                function hide() {
+                    joinGroupService.cancelGroupJoining();
+                }
+
+                //answers join/subscribe group modal and sends back some data modal.
+                function answer(group) {
+                    that.loadingData = true;
+                    that.group.message = that.message[group.$id] || that.group.message;
+                    that.group.membershipNo = that.membershipNo[group.$id] || that.group.membershipNo;
+                    that.group.groupID = group.$id;
+                    that.group.grouptitle = group.title;
+
+                    joinGroupService.joinGroupRequest(that.group, function(){
+                        that.loadingData = false;
+                    });
+                }
+
+/*
+                this.validator = function(form) {
+                    if ((this.selectedItem && this.selectedItem.$id) && form.$valid) {
+                        return false
+                    } else {
+                        return true;
+                    }
+
+                };
+
+*/
+                /*
+                 this.canActivate = function () { // this function automatically gets called by newRouter  for  route Resolution  before controller creation
+                     return joinGroupService.canActivate()
+                 }
+                 */
+            }
+        ]);
+})();
+
+/*
+ * Created by Shahzad on 5/23/2015.
+ */
+
+(function() {
+    'use strict';
+    angular
+        .module('app.personalSettings', ['core'])
+        .factory('personalSettingsService', ['soundService', '$location', 'userService',
+            function(soundService, $location, userService) {
+
+                return {
+
+                    'cancelPersonalSettings': function(userId) {
+                        //console.log("Personal Settings Cancelled");
+                        soundService.playFail();
+                        $location.path('/user/' + userService.getCurrentUser().userID)
+
+                    }
+                }
+
+            }
+        ])
+
+})();
+
+<!--waste-->
+
+
+(function() {
+    'use strict';
+
+    angular.module('app.personalSettings')
+        .controller('PersonalSettingsController', ['dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
+
+            function(dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
+
+                /*Private Variables*/
+                var that = this;
+                var firstName, lastName;
+
+                /*VM Properties*/
+                this.showAdvanced = showAdvanced;
+                this.answer = answer;
+                this.hide = hide;
+                this.loggedInUserData = userService.getCurrentUser();
+                $rootScope.newImg = '';
+                this.isProcessing = false;
+                this.userData = $firebaseObject(firebaseService.getRefUsers().child(this.loggedInUserData.userID))
+                this.userData.$loaded()
+                    .then(function(data) {
+                        firstName = data.firstName;
+                        lastName = data.lastName;
+                        // console.log(data)
+                    })
+                    .catch(function(err) {
+                        console.log(err)
+                    })
+
+                /*VM Functions*/
+                function answer(perSettingForm) {
+                    if(Object.keys(perSettingForm.$error).length > 0) return;
+                    that.isProcessing = true;
+                    var uploadFile, editUser, changePassword, data1, data2, pFlag, eFlag, imgFlag;
+                    var promiseArray = [];
+                    /*  if (perSettingForm.$invalid) {
+                          return;
+                      }*/
+                      perSettingForm.$submitted = true;
+                    function saveDataToServer() {
+                        if (that.userData.firstName != firstName || that.userData.lastName != lastName) {
+                            data1 = {
+                                userID: that.userData.$id,
+                                token: userService.getCurrentUser().token,
+                                firstName: that.userData['firstName'],
+                                lastName: that.userData['lastName']
+                            };
+                            eFlag = true;
+                            editUser = $http.post(appConfig.apiBaseUrl + '/api/edituser', data1);
+                        }
+
+                        if (that.userData.oldPassword && that.userData.newPassword && that.userData.oldPassword != that.userData.newPassword) {
+                            data2 = {
+                                userID: that.userData.$id,
+                                password: that.userData.oldPassword,
+                                newPassword: that.userData.newPassword
+                            };
+                            pFlag = true;
+                            changePassword = $http.post(appConfig.apiBaseUrl + '/api/changepassword', data2);
+                        } else {
+                            if (that.userData.oldPassword && that.userData.newPassword && that.userData.oldPassword == that.userData.newPassword) {
+                                if (perSettingForm.oldPassword.$pristine)
+                                    perSettingForm.oldPassword.$pristine = true;
+                                if (perSettingForm.oldPassword.$dirty) {
+                                    perSettingForm.oldPassword.$dirty = false;
+                                }
+                                messageService.showFailure('Passwords are same!');
+                            }
+
+                        }
+
+                        if ($rootScope.newImg) {
+                            var x = utilService.base64ToBlob($rootScope.newImg);
+                            var temp = $rootScope.newImg.split(',')[0];
+                            var mimeType = temp.split(':')[1].split(';')[0];
+                            imgFlag = true
+                            uploadFile = saveFile(x, mimeType, userService.getCurrentUser().userID);
+
+                        }
+                        eFlag ? promiseArray.push(editUser) : promiseArray.push($q.when(false));
+                        pFlag ? promiseArray.push(changePassword) : promiseArray.push($q.when(false));
+                        imgFlag ? promiseArray.push(uploadFile) : promiseArray.push($q.when(false));
+
+                        return $q.all(promiseArray)
+
+                    }
+
+
+
+                    saveDataToServer().then(function(data) {
+                            if (data[2]) {
+                                that.userData['profile-image'] = data[2]+'?random='+ Date.now();
+                                updateOwnImgGroup(data[2]+'?random='+ Date.now())
+                                // that.userData['profile-image'] = data[2];
+
+                            }
+                            delete that.userData.oldPassword;
+                            delete that.userData.newPassword;
+                            if (!that.userData['date-created']) that.userData['date-created'] = new Date().getTime();
+                            that.userData['status'] = 0;
+
+                            // console.log(that.userData)
+                            that.userData.$save().then(function(data) {
+                                // $location.path('/user/' + userService.getCurrentUser().userID)
+                                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
+                                that.isProcessing = false;
+                                perSettingForm.$submitted = false;
+                                messageService.showSuccess('User profile updated')
+                            }, function(err) {
+                                that.isProcessing = false;
+                                perSettingForm.$submitted = false;
+                                messageService.showFailure('Error occurred updating user profile')
+                                    //console.log('Error occurred updating user profile')
+                            })
+
+                        })
+                        .catch(function() {
+                            that.isProcessing = false;
+                            perSettingForm.$submitted = false;
+                            messageService.showFailure('Error occurred updating user profile')
+                        });
+                }
+
+                function hide() {
+                    personalSettingsService.cancelPersonalSettings()
+                }
+                /*
+                                this.validateForm = function validateForm(form){
+                                    if(form.$invalid){
+                                        form._oldPassword.$invalid
+                                    }
+                                }
+                */
+                function saveFile(file, type, userID) {
+                    var defer = $q.defer();
+                    var xhr = new XMLHttpRequest();
+                    //xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?file_name=" + userID + "." + type.split('/')[1] + "&file_type=" + type);
+                    xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?userID=" + userID + "&file_type=" + type);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                var response = JSON.parse(xhr.responseText);
+                                defer.resolve(upload_file(file, response.signed_request, response.url));
+                            } else {
+                                defer.reject(alert("Could not get signed URL."))
+                            }
+                        }
+                    };
+                    xhr.send();
+                    return defer.promise;
+                }
+
+                function upload_file(file, signed_request, url) {
+                    var defer = $q.defer();
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("PUT", signed_request);
+                    xhr.setRequestHeader('x-amz-acl', 'public-read');
+                    xhr.onload = function(data) {
+                        // console.log(xhr.status);
+                        // console.log(xhr.responseText);
+                        if (xhr.status === 200) {
+                            //console.log(url);
+                            $rootScope.userImg = $rootScope.newImg;
+                            messageService.showSuccess('Picture uploaded')
+                                //document.getElementById("preview").src = url;
+                                //that.group.imgLogoUrl = url;
+                                // console.log(url);
+                            defer.resolve(url)
+                        }
+                    };
+                    xhr.onerror = function(error) {
+                        defer.reject(console.log("Could not upload file."));
+                    };
+                    xhr.send(file);
+                    return defer.promise;
+                }
+
+                function updateOwnImgGroup (imgurl) {
+                    var defer = $q.defer();
+                    var groups = dataService.getUserGroups();
+                    groups.forEach(function(group, index){
+                        if (group.ownerID === that.loggedInUserData.userID) {
+                            firebaseService.getRefGroups().child(group.groupID).update({'owner-img-url' : imgurl})
+                            firebaseService.getRefGroupsNames().child(group.groupID).update({'ownerImgUrl' : imgurl})
+                        }
+                    })
+                    return defer.promise;
+                }
+
+                function showAdvanced(ev) {
+                    $rootScope.tmpImg = $rootScope.newImg;
+                    $rootScope.newImg = '';
+                    $mdDialog.show({
+                        controller: "DialogController as ctrl",
+                        templateUrl: 'directives/dilogue1.tmpl.html',
+                        targetEvent: ev,
+                        escapeToClose: false
+                    }).then(function(picture) {
+                        $rootScope.newImg = picture;
+                        //console.log("this is image" + picture)
+                    }, function(err) {
+                        //console.log(err)
+
+                    })
+
+                }
+            }
+
+        ]);
+})();
+<!--waste-->
+
+ /**
+ * Created by Mehmood on 5/21/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.policy', ['core'])
+        .factory('policyService', ['activityStreamService', 'firebaseService', '$q', "messageService",
+        function(activityStreamService, firebaseService, $q, dataService, messageService) {
+
+        	//Getting SubGroup Names of given GroupID -- START --
+        	var subGroupNames = [];
+    	    function setSubGroupNames(groupID) {
+                subGroupNames = [];
+
+                firebaseService.getRefSubgroupPolicies().child(groupID).on('child_added',function(subGroups, prevChildKey){
+                    //after getting names checking subgroup has policy or nothing
+                    subGroupNames.push({
+                        subgroupID: subGroups.key(),
+                        subgroupTitle: (subGroups.val()['subgroup-title']) ? subGroups.val()['subgroup-title'] : 'Subgroup Title',
+                        hasPolicy: false,
+                        policyID: (subGroups.val().policyID) ? subGroups.val().policyID : ''
+                    });
+                }); //getRefSubgroupPolicies (child_added)
+
+                firebaseService.getRefSubgroupPolicies().child(groupID).on('child_changed', function(snapshot){
+                        subGroupNames.forEach(function(value, index){
+                            if(value.subgroupID == snapshot.key()){
+                                subGroupNames[index]['policyID'] = snapshot.val().policyID;
+                            }
+                        });
+                }); //getRefSubgroupPolicies (child_changed)
+
+            } //setSubGroupNames
+            function getSubGroupNames(groupID) {
+            	setSubGroupNames(groupID);
+            	return subGroupNames;
+            }
+            //Getting SubGroup Names of given GroupID -- END --
+
+
+			//Getting Members of Given GroupID and SubGroupID -- START --
+			var subGroupMembers = [];
+			function setSubGroupMembers(groupID, subgroupID) {
+                subGroupMembers = [];
+                firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_added', function(subGroups, prevChildKey) {
+                    // console.log(subGroups.key());
+                    // console.log(subGroups.val());
+                    subGroupMembers.push({groupID: groupID, subgroupID: subgroupID, userID: subGroups.key()});
+                });
+            }
+
+            function getSubGroupMembers(groupID, subgroupID) {
+            	setSubGroupMembers(groupID, subgroupID);
+            	return subGroupMembers;
+            }
+			//Getting Members of Given GroupID and SubGroupID -- END --
+
+			//Getting Policies by given GroupID --START --
+			var groupPolicies = [];
+			function setGroupPolicies(groupID) {
+                groupPolicies = [];
+                firebaseService.getRefPolicies().child(groupID).on('child_added', function(subGroups, prevChildKey) {
+                    // console.log(subGroups.key());
+                    // console.log(subGroups.val());
+                    groupPolicies.push(subGroups.val());
+                });
+                // firebaseService.getRefPolicies().child(groupID).on('value', function(subGroups, prevChildKey) {
+                //     for(var subgroup in subGroups.val()){
+                //     	console.log(subGroups.val()[subgroup])
+                //     	groupPolicies.push(subGroups.val()[subgroup]);
+                //     }
+                //     console.log('groupPolicies ',groupPolicies);
+                // });
+			}
+			function getGroupPolicies(groupID) {
+				setGroupPolicies(groupID);
+				return groupPolicies;
+			}
+			//Getting Policies by given GroupID --END --
+
+			//Save data in firebase using Multi-Path 	-- START --
+			function answer(obj, groupID, selectedTeams, selectedTeamMembers, policyID, cb) {
+                //var firebaseTimestamp = Firebase.ServerValue.TIMESTAMP;
+
+				//refernce Object
+                var refNodes = { ref: firebaseService.getRefMain(),
+                                 policies: firebaseService.getRefPolicies()
+                };
+
+				var newPolicyKey = '';
+                if(!policyID){
+	                // Generate a new push ID for the new policy
+	                var newPolicyRef = refNodes.policies.push();
+	                newPolicyKey = newPolicyRef.key();
+                } else {
+                	//on Edit
+                	newPolicyKey = policyID;
+                }
+
+                //set policyID
+                obj.policyID = newPolicyKey;
+
+                //Saving on firebase by using multi path update
+                var multiPathUpdate = {};
+
+                //add policy in policies node
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/defined-by"] = obj['defined-by'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/location"] = obj['location'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/locationBased"] = obj['locationBased'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/policyID"] = obj['policyID'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReport"] = obj['progressReport'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/schedule"] = obj['schedule'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/timeBased"] = obj['timeBased'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/timestamp"] = obj['timestamp'];
+                multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/title"] = obj['title'];
+
+                //for daily progress questions
+                if (obj['progressReport']) {
+                    //if question has been changed then do this else nuthing just true isProgressReport....
+                    if (obj['progressReportQuestions']) {
+                        var newQuestionRef = refNodes.ref.child("policies").child(groupID).child(newPolicyKey).child('progressReportQuestions').push();
+                        var newQuestionID = newQuestionRef.key();
+                        multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/latestProgressReportQuestionID"] = newQuestionID;
+                        multiPathUpdate["policies/"+groupID+"/"+newPolicyKey+"/progressReportQuestions/"+newQuestionID] = obj['progressReportQuestions'];
+                    } 
+                }
+
+                var subgroupPolicyActivity = {};
+
+                //getting subgroups which are selected....
+                selectedTeams.forEach(function(val, indx){
+                    //add property hasPolicy in subgroupNames..
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
+
+                    //add policy id into subgroup node
+                    multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+
+                    //for policy - group/subgroup activity record -- start --
+                    subgroupPolicyActivity[val.subgroupID] = {
+                        type: 'policy',
+                        targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
+                        area: {type: 'policy-assigned-team'},
+                        group_id: groupID+'/'+val.subgroupID,
+                        memberuser_id: null,
+                        object_is_Team: {   "type": 'subgroup',
+                                            "id": val.subgroupID, //an index should be set on this
+                                            "url": groupID+'/'+val.subgroupID,
+                                            "displayName": val.subgroupTitle
+                                        }
+                    };
+                    //for policy - group/subgroup activity record -- end --
+
+                }); //selectedTeams.forEach
+
+                //getting subgroup Members...
+                for(var group in selectedTeamMembers) {
+                    selectedTeamMembers[group].forEach(function(v, i){
+                        //adding obj into user-policies userid -> groupid -> subgroupid node
+                        multiPathUpdate["user-policies/"+v.userID+"/"+v.groupID+"/"+v.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"title" : obj['title'] };
+                    }); //selectedTeamMembers[group].forEach
+                } //for selectedTeamMembers
+
+
+               	//Multi-Path update Queery
+                refNodes.ref.update(multiPathUpdate, function(err) {
+                    if(err) {
+                        console.log("Error updating Date:", err);
+                    } else {
+                        //for policy activity stream record -- START --
+                        var type = 'policy';
+                        var targetinfo = {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' };
+                        var area = {type: (policyID) ? 'policy-updated' : 'policy-created'};
+                        var group_id = groupID;
+                        var memberuserID = null;
+                        var object = null;
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, object);
+                        //for policy activity record
+
+                        //if selected subgroup then add in group/subgroup activity
+                        if(subgroupPolicyActivity){
+                            for(var _sbgrp in subgroupPolicyActivity){
+                                console.log('_sbgrp', subgroupPolicyActivity[_sbgrp].object_is_Team);
+                                activityStreamService.activityStream(
+                                    subgroupPolicyActivity[_sbgrp].type,
+                                    subgroupPolicyActivity[_sbgrp].targetinfo,
+                                    subgroupPolicyActivity[_sbgrp].area,
+                                    subgroupPolicyActivity[_sbgrp].group_id,
+                                    subgroupPolicyActivity[_sbgrp].memberuser_id,
+                                    subgroupPolicyActivity[_sbgrp].object_is_Team
+                                );
+                            } //for: subgroupPolicyActivity
+                        } //if subgroupPolicyActivity
+                        //for group activity stream record -- END --
+
+                    	cb(newQuestionID);
+                    }
+                }); //ref.update
+			} //answer
+
+            //Step1 checking Subgroup has Policy
+            function checkingTeamHasPolicy(groupID, subgroupID, cb){
+                firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot){
+                    if(snapshot.val() && snapshot.val().hasPolicy && snapshot.val().hasPolicy === true){
+                        cb(snapshot.val().hasPolicy, snapshot.val().policyID);
+                    } else {
+                        cb(false, null);
+                    }
+                });
+
+            } //checkingTeamHasPolicy
+            //Step2 if has policy then assign policy to single member else nuthing
+            function assignTeamPolicyToMember(memeberID, groupID, subgroupID, cb) {
+                checkingTeamHasPolicy(groupID, subgroupID, function(hasPolicy, policyID) {
+                    if(hasPolicy){
+                        //set policy to member
+                        firebaseService.getRefMain().child('user-policies').child(memeberID).child(groupID).child(subgroupID).set(policy.val(),function(err){
+                            if(err){
+                                cb(false, err);
+                            }
+                            cb(true, null);
+                        });
+                    } else {
+                        cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
+                    }
+                });
+            }//assignTeamPolicyToMember
+            //Step2 if has policy then assign policy to multiple members else nuthing
+            function assignTeamPolicyToMultipleMembers(memeberIDarray, groupID, subgroupID, cb) {
+                checkingTeamHasPolicy(groupID, subgroupID, function(hasPolicy, policyID) {
+                    if(hasPolicy){
+                        var multiPathUpdate = {};
+                        memeberIDarray.forEach(function(val, index){
+
+                            multiPathUpdate["user-policies/"+val+"/"+groupID+"/"+subgroupID] = policyID;
+
+                            if(memeberIDarray.length == index+1){
+                                firebaseService.getRefMain().update(multiPathUpdate, function(err){
+                                     if(err){
+                                        cb(false, err);
+                                    }
+                                    cb(true, null);
+                                });
+                            }   //array length is equal to foreach index
+                        }); //memeberIDarray.forEach
+                    } else {
+                        cb(false, 'team has no policy'); //Policy has not assigned on given team (subgroup)
+                    }
+                }); //checkingTeamHasPolicy
+            }//assignTeamPolicyToMultipleMembers
+            //if member assign into any team, if policy has exists on that team then also assigned to member -- START --
+
+
+            return {
+                getSubGroupNames: 	getSubGroupNames,
+                getSubGroupMembers: getSubGroupMembers,
+                getGroupPolicies: 	getGroupPolicies,
+                answer: 			answer,
+                assignTeamPolicyToMember: assignTeamPolicyToMember,
+                assignTeamPolicyToMultipleMembers: assignTeamPolicyToMultipleMembers
+            };
+        }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    angular.module('app.policy').controller('PolicyController', [
+        '$mdSidenav',
+        '$state',
+        '$location',
+        'messageService',
+        '$mdDialog',
+        'checkinService',
+        'userService',
+        '$stateParams',
+        'groupFirebaseService',
+        '$timeout',
+        '$firebaseObject',
+        'firebaseService',
+        '$firebaseArray',
+        "policyService",
+        function($mdSidenav, $state, $location, messageService, $mdDialog, checkinService, userService, $stateParams, groupFirebaseService, $timeout, $firebaseObject, firebaseService, $firebaseArray, policyService) {
+
+            this.showPanel = false;
+            var that = this;
+            this.showarrow = undefined;
+            this.isLocationbased = false;
+            this.isTimebased = false;
+            this.isProgressReport = false;
+            this.isProcessing = false;
+            that.fencing = true;
+            this.center = {};
+            this.markers = {
+                mark: {}
+            };
+            this.paths = {
+                c1: {}
+            };
+            this.defaults = {
+                scrollWheelZoom: false
+            };
+            this.policyTitle = '';
+            this.activePolicyId = false;
+
+            var groupId = that.groupId = $stateParams.groupID;
+            var SubgroupObj, userId = that.userId = userService.getCurrentUser().userID;
+            var subgroupId = that.subgroupId = undefined;
+
+            //checking is admin or not -- START
+            that.groupAdmin = false;
+            firebaseService.getRefUserGroupMemberships().child(that.userId).child(that.groupId).once('value', function(group) {
+                if (group.val()['membership-type'] == 1) {
+                    that.groupAdmin = true;
+                } else if (group.val()['membership-type'] == 2) {
+                    that.groupAdmin = true;
+                }
+            });
+            //checking is admin or not -- END
+
+            //Geo Fecning Default Location
+            function defaultGeoLocation() {
+
+                // for creating default geo fencing variables and define default lng, lat with marker
+                setLocationMarker(67.04971699999999, 24.8131137);
+
+                //getting user current location
+                checkinService.getCurrentLocation().then(function(location) {
+                    if (location) { //if location found
+                        getLatLngByAddress(location.coords.latitude + ', ' + location.coords.longitude);
+                    }
+                }, function(err) {
+                    //messageService.showFailure(err.error.message);
+                });
+            } //defaultGeoLocation
+
+            //setting location and its marker
+            function setLocationMarker(lng, lat) {
+                that.center.lat = lat;
+                that.center.lng = lng;
+                that.center.zoom = 20;
+
+                that.markers.mark.lat = lat;
+                that.markers.mark.lng = lng;
+                that.markers.mark.draggable = true;
+                that.markers.mark.focus = true;
+                that.markers.mark.message = '34C Stadium Lane 3, Karachi, Pakistan';
+
+                that.paths.c1.type = 'circle';
+                that.paths.c1.weight = 2;
+                that.paths.c1.color = 'green';
+                that.paths.c1.latlngs = that.center;
+                that.paths.c1.radius = 20;
+            } //setLocationMarker
+
+            function updatepostion(lat, lng, msg) {
+                that.paths.c1.latlngs = {
+                    lat: lat,
+                    lng: lng
+                };
+                that.markers.mark.lat = lat;
+                that.markers.mark.lng = lng;
+                that.markers.mark.focus = true;
+                that.markers.mark.message = msg;
+                that.center.lat = lat;
+                that.center.lng = lng;
+            }
+            that.getLatLngByAddress = getLatLngByAddress;
+
+
+            //on controller load...... START
+
+            //Load Group Policies from given GroupID
+            this.groupPolicies = [];
+            this.groupPolicies = policyService.getGroupPolicies(that.groupId);
+
+            //Load SubgroupNames from Given GroupID
+            this.subGroupNames = [];
+            this.subGroupNames = policyService.getSubGroupNames(that.groupId);
+
+            //on controller load...... END
+
+
+
+            this.openEditGroupPage = function() {
+                $state.go('user.edit-group', {
+                    groupID: groupId
+                });
+            };
+
+            this.openCreateSubGroupPage = function() {
+                $state.go('user.create-subgroup', {
+                    groupID: groupId
+                })
+            }
+            this.openUserSettingPage = function() {
+                $state.go('user.user-setting', {
+                    groupID: groupId
+                })
+            };
+            this.openEditGroup = function() {
+                $state.go('user.edit-group', {
+                    groupID: groupId
+                })
+            };
+
+            that.groupAdmin = false
+            firebaseService.getRefUserGroupMemberships().child(userId).child(groupId).once('value', function(group) {
+                if (group.val()['membership-type'] == 1) {
+                    that.groupAdmin = true;
+                } else if (group.val()['membership-type'] == 2) {
+                    that.groupAdmin = true;
+                }
+            })
+
+            this.showLocationBySubGroup = function(subgroupId, index, b) {
+
+                $timeout(function() {
+                    angular.element('#leafletmap').attr('height', '');
+                    angular.element('#leafletmap').attr('width', '');
+                }, 0)
+                wrapperGeoLoacation(subgroupId)
+            };
+
+            groupFirebaseService.getGroupSyncObjAsync(groupId, userId)
+                .then(function(syncObj) {
+                    that.subgroups = syncObj.subgroupsSyncArray;
+                });
+
+            function wrapperGeoLoacation(sub) {
+                if (sub) {
+                    that.subgroupId = sub;
+                }
+                var _subgroupId = sub || subgroupId;
+
+                checkinService.createCurrentRefsBySubgroup(groupId, _subgroupId, userId).then(function() {
+                    that.definedSubGroupLocations = checkinService.getFireCurrentSubGroupLocations().$loaded().then(function(data) {
+                        if (data.length > 0) {
+                            updatepostion(data[0].location.lat, data[0].location.lon, data[0].title);
+                            $timeout(function() {
+                                updatepostion(data[0].location.lat, data[0].location.lon, data[0].title);
+                            }, 500);
+                        } else {
+                            updatepostion(24.8131137, 67.04971699999999, '34C Stadium Lane 3, Karachi, Pakistan');
+                            $timeout(function() {
+                                updatepostion(24.8131137, 67.04971699999999, '34C Stadium Lane 3, Karachi, Pakistan');
+                            }, 500);
+                        }
+                    });
+                });
+            }
+
+            function getLatLngByAddress(newVal) {
+                if (newVal) {
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({
+                        'address': newVal
+                    }, function(results, status) {
+                        var i = 0;
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            var lat = results[0].geometry.location.lat() ? results[0].geometry.location.lat() : 0;
+                            var lng = results[0].geometry.location.lng() ? results[0].geometry.location.lng() : 0;
+                            updatepostion(lat, lng, results[0].formatted_address);
+                            $timeout(function() {
+                                updatepostion(lat, lng, results[0].formatted_address);
+                            }, 500);
+                        }
+                    });
+                }
+            }
+            that.setSubgroupLocation = setSubgroupLocation;
+
+            //Save on Firebase.....
+            function setSubgroupLocation() {
+                that.isProcessing = true;
+                var infoObj = {
+                    groupID: that.groupId,
+                    subgroupID: that.subgroupId,
+                    userID: that.userId,
+                    title: that.markers.mark.message,
+                    location: {
+                        lat: that.center.lat,
+                        lng: that.center.lng,
+                        radius: that.paths.c1.radius
+                    }
+
+                };
+
+                checkinService.addLocationBySubgroup (that.groupId, that.subgroupId, that.userId, infoObj, false)
+                    .then(function(res) {
+                        that.isProcessing = false;
+                        that.submitting = false;
+                        that.fencing = true;
+                        messageService.showSuccess(res);
+                        $mdDialog.hide();
+                    }, function(err) {
+                        that.isProcessing = false;
+                        that.submitting = false;
+                        that.fencing = true;
+                        messageService.showFailure(err);
+                    });
+            }
+
+
+            function UserMemberShipFunc() {
+                var userMemberships = checkinService.getFireAsObject(refUserMemberShip.child(userID));
+                userMemberships.$loaded().then(function(data) {
+                    var memberShipGroup = userMemberships[groupID][subgroupID];
+                    that.isAdmin = memberShipGroup && (memberShipGroup['membership-type'] == 1 || memberShipGroup['membership-type'] == 2);
+                });
+            }
+
+
+            //New Work POLICY
+
+            this.subgroupSideNavBar = false;
+            this.toggleSideNavBar = function(navID) {
+                //that.subgroupSideNavBar = !that.subgroupSideNavBar;
+                $mdSidenav(navID).toggle();
+            };
+
+            //scheduler for time base -- START --
+            this.selectedTimesForAllow = {};
+            this.day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            this.times = ['12AM', "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"];
+            //this.item = false;
+            this.schCalender = [];
+            //this.background = "red";
+            function loadSchaduler() {
+                that.schCalender = [];
+                var row = [];
+                for (var i = 0; i < 7; i++) {
+                    row = [];
+                    for (var j = 0; j < 24; j++) {
+                        row.push(false);
+                    }
+                    that.schCalender.push(row);
+                }
+            } //loadSchaduler
+
+            //on click schedule (checkbox) click create object
+            this.onScheduleClick = function(index, parentIndex) {
+                that.schCalender[parentIndex][index] = !that.schCalender[parentIndex][index];
+                // console.log(that.day[parentIndex], that.times[index], that.schCalender[parentIndex][index]);
+
+                if (that.selectedTimesForAllow.hasOwnProperty(that.day[parentIndex])) {
+                    that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
+                    // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
+                } else {
+                    that.selectedTimesForAllow[that.day[parentIndex]] = {};
+                    that.selectedTimesForAllow[that.day[parentIndex]][index] = that.schCalender[parentIndex][index]
+                    // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
+                }
+                // console.log(that.selectedTimesForAllow);
+            }
+            //scheduler for time base -- END --
+
+
+            //Selected SubGroup Members for Assigning Policies
+            this.selectedTeamMembers = {};
+            this.LoadSubGroupUsers = function(groupID, subgroupID) {
+                that.selectedTeamMembers[subgroupID] = policyService.getSubGroupMembers(groupID, subgroupID);
+                //that.selectedTeamMembers = policyService.getSubGroupMembers(that.groupId, 'hotemail');
+            }
+            //Selected SubGroup Members for Assigning Policies
+
+            //Selected SubGroup for Assign Policies
+            this.selectedTeams = [];
+            this.selectedTeam = function(subgroup, onEditPolicy) {
+                var _flag = true;
+                that.selectedTeams.forEach(function(val, indx) {
+                    if (val.subgroupID == subgroup.subgroupID) {
+                        _flag = false;
+                    }
+                });
+                if (_flag) {
+
+                    //Add SubGroups    //-K91WU-ZDR8kujgvU9gZ
+                    that.selectedTeams.push(subgroup);
+
+                    if (onEditPolicy) { //on click policy (edit mode)
+                        //after add in local selected team array chnage hasPolicy true in firebase team array
+                        that.subGroupNames.forEach(function(val, indx) {
+                            // console.log(val)
+                            if (val.subgroupID == subgroup.subgroupID && val.policyID == that.activePolicyId) {
+                                that.subGroupNames[indx].hasPolicy = true;
+                            }
+                        });
+                    } else {
+                        //after add in local selected team array chnage hasPolicy true in firebase team array
+                        that.subGroupNames.forEach(function(val, indx) {
+                            if (val.subgroupID == subgroup.subgroupID) {
+                                that.subGroupNames[indx].hasPolicy = true;
+                            } //else {
+                            //     that.subGroupNames[indx].hasPolicy = false;
+                            // }
+                        });
+                    }
+
+                    //Load SubGropMemebrs
+                    that.LoadSubGroupUsers(that.groupId, subgroup.subgroupID);
+                } //_flag
+            } //selectedTeam
+            //Selected SubGroup for Assign Policies
+
+            //on create policy
+            this.newPolicy = function(saved) {
+                //load initial page
+                init();
+
+                //chnage subgroup names hasPolicy false onload
+                subGroupNamesPolicyFalse();
+
+                //On New/Create Policy Show Panel
+                that.showPanel = true;
+
+                if (saved) {
+                    that.showPanel = false;
+                    this.showarrow = undefined;
+                } else {
+                    that.showPanel = true;
+                    this.showarrow = undefined;
+                }
+            };//this.newPolicy
+
+
+            this.selectedPolicy = function(policy, index) {
+                that.showarrow = index;
+                that.activePolicyId = policy.policyID;          //set active PolicyID
+                that.policyTitle = policy.title;                //show title
+                that.isLocationbased = policy.locationBased;    //show if locationBased is True
+
+                that.isTimebased = policy.timeBased;            //show if timebased is true
+                that.selectedTimesForAllow = {};
+
+                that.isProgressReport = policy.progressReport;
+                that.progressReportQuestions = {};
+                that.showPanel = true;
+
+                //Clear calender .. (run scheduler)
+                loadSchaduler();
+
+                if (that.isLocationbased) {
+                    getLatLngByAddress(policy.location.lat + ', ' + policy.location.lng);
+                    that.paths.c1.radius = policy.location.radius;
+                    //that.center.lat = policy.locationObj.lat;
+                    //that.center.lng = policy.locationObj.lng;
+                } //policy.locationBased true
+
+                if (that.isTimebased) {
+                    for (var day in policy.schedule) {
+                        // console.log(day); // console.log(policy.timeObj[day]);
+                        for (var hour in policy.schedule[day]) {
+                            // console.log(hour);  // console.log(policy.timeObj[day][hour]);
+                            that.schCalender[that.day.indexOf(day)][hour] = policy.schedule[day][hour];
+
+                            if (that.selectedTimesForAllow.hasOwnProperty(day)) {
+                                that.selectedTimesForAllow[day][hour] = policy.schedule[day][hour];
+                            } else {
+                                that.selectedTimesForAllow[day] = {};
+                                that.selectedTimesForAllow[day][hour] = policy.schedule[day][hour]
+                            }
+                        } // for hour    policy.timeObj[day]
+                        // console.log(that.selectedTimesForAllow);
+                    } //for day    policy.timeObj
+                } //policy.timeBased true
+
+                if (that.isProgressReport) {
+                    //when comes from firebase our question change into array from object.
+                    that.progressReportQuestions = arrayToObject(policy.progressReportQuestions[policy.latestProgressReportQuestionID]['questions']);
+                    //Selected Policy QuestionObject and LastestQuestionID (for checking questions are add/remove/change)
+                    that.selectedQuestionObject = arrayToObject(policy.progressReportQuestions[policy.latestProgressReportQuestionID]['questions']);
+                    that.selectedLastQuestionID = policy.latestProgressReportQuestionID;
+
+                    isQuestionExists();  //checking if questions exists
+                } //that.isDailyReport true
+
+                //now getting subgroup ids where this policy has implemented
+                that.selectedTeams = []; //on edit policy clear selectedTeams Array  before reload
+                that.selectedTeamMembers = {}; //on edit policy clear selectedTeamMembers object before reload
+
+                //before selectedTeam first hasPolicy = false...
+                subGroupNamesPolicyFalse();
+
+                //if active policy is match from subgroup object of policyID then hasPolicy true
+                that.subGroupNames.forEach(function(val, indx) {
+                    if (val.policyID && val.policyID == policy.policyID) {
+                        that.selectedTeam(val, true); //creating selected teams array
+                    }
+                }); //subGroupNames.forEach
+            }; //this.selectedPolicy
+
+            function subGroupNamesPolicyFalse() {
+                //before selectedTeam first hasPolicy = false...
+                that.subGroupNames.forEach(function(val, indx) {
+                    that.subGroupNames[indx].hasPolicy = false;
+                });
+            } // subGroupNamesPolicyFalse
+
+            //Daily Report -- START --
+            this.showQuestionList = false;      //for showing table
+            this.progressReportQuestions = {};
+            // var dailyReportQuestionsLength = gettingQuestionsLength();
+            this.addQuestion = function() {
+                if (that.question) {
+
+                    var sr = 0;
+                    for (var i in that.progressReportQuestions) {
+                        that.progressReportQuestions[sr.toString()] = that.progressReportQuestions[i];
+                        sr++;
+                    }
+
+                    that.progressReportQuestions[sr.toString()] = that.question;
+                    that.question = '';
+
+                    //Show Table of Question if question exists
+                    isQuestionExists();
+                }
+            };
+
+            function isQuestionExists() {
+                if (Object.keys(that.progressReportQuestions).length > 0) {
+                    that.showQuestionList = true;
+                } else {
+                    that.showQuestionList = false;
+                }
+            }
+            this.deleteQuestion = function(id) {
+                delete that.progressReportQuestions[id.toString()];
+                that.progressReportQuestions = arrayToObject(that.progressReportQuestions);
+
+                //Show Table of Question if question exists
+                isQuestionExists();
+            };
+            function gettingQuestionsLength() {      //getting current question object length
+                return Object.keys(that.progressReportQuestions).length;
+            }
+            //when comes from firebase our question change into array from object.
+            function arrayToObject(arr) {
+                if (arr instanceof Array) {
+                    var rv = {};
+                    for (var i = 0; i < arr.length; ++i)
+                        if (arr[i] !== undefined) rv[i] = arr[i];
+                    return rv;
+                } else {
+                    return arr;
+                }
+            }
+            //Daily Report -- END --
+
+            //onclick save button
+            this.onSave = function() {
+                that.isProcessing = true;
+                if (that.policyTitle) {
+
+                    if (!that.isProgressReport && !that.isTimebased && !that.isLocationbased) {
+                        //nothing have to do....
+                        messageService.showFailure('Please Select your Criteria');
+
+                        this.showarrow = undefined ;
+                        that.isProcessing = false;
+
+                        return false;
+
+                    }
+
+                    //default ObjectX
+
+                    var obj = {};
+                    obj["title"] = that.policyTitle;    //setting policy title name
+                    obj["locationBased"] = false;
+                    obj["timeBased"] = false;
+                    obj["location"] = "";
+                    obj["schedule"] = "";
+                    obj["defined-by"] = that.userId;
+                    obj["timestamp"] = Firebase.ServerValue.TIMESTAMP;
+                    obj["progressReport"] = false;
+                    obj["progressReportQuestions"] = "";
+                    obj["latestProgressReportQuestionID"] = '';
+
+                    this.showarrow = undefined;
+                    //if locationBased is selected
+                    if (that.isLocationbased) {
+                        //isLocationbased
+                        obj["locationBased"] = true;
+                        obj["location"] = {
+                            lat: that.center.lat,
+                            lng: that.center.lng,
+                            radius: that.paths.c1.radius,
+                            title: that.markers.mark.message
+                        }
+                           this.showarrow = undefined ;
+                           that.isProcessing = false;
+
+                    }
+
+                    //if timeBased is selected
+                    if (that.isTimebased) {
+                        //isTimebased
+                        if (Object.keys(that.selectedTimesForAllow).length > 0) {
+                            obj["timeBased"] = true;
+                            obj["schedule"] = that.selectedTimesForAllow;
+                        } else {
+                            messageService.showFailure('Please add schedule/time slot!');
+                            that.isProcessing = false;
+                            return false;
+                        }
+                        this.showarrow = undefined;
+                    }
+
+                    //if dailyBased is selected
+                    if (that.isProgressReport) {
+                        //isDailyReport
+                        obj["progressReport"] = true;
+                        //checking if pogressReport is selected then question should have atleast one.
+                        if (Object.keys(that.progressReportQuestions).length > 0) {
+                            //checking current questions and saved questions are same or not.........
+                            if (JSON.stringify(that.selectedQuestionObject) === JSON.stringify(that.progressReportQuestions)) {
+                                //if questions are same //no changes in questions
+                                obj["progressReportQuestions"] = null;
+                            } else {
+                                //if questions are not same or add/remove/chnage any question then add to firebase
+                                obj["progressReportQuestions"] = { questions: that.progressReportQuestions, timestamp: Firebase.ServerValue.TIMESTAMP }
+                            }
+                        } else {
+                            messageService.showFailure('Please add some Questions for Daily Report!');
+                            return false;
+                        }
+                    //    that.isProcessing = false;
+
+                    }
+                    // console.log('team', that.selectedTeams);
+                    // console.log('members', that.selectedTeamMembers);
+
+                    //calling policy service function to add in firebase
+                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
+                        //Load Group Policies from given GroupID
+                        //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
+                        if (that.activePolicyId) {  //if edit
+                            that.groupPolicies.forEach(function(val, index) {
+                                if (val.policyID == that.activePolicyId) {
+                                    if (obj["progressReport"]) {  //checking isProgressReport is true then do this else nuthing..
+                                        if (lastQuestionid) {
+                                            //if getting lastQuestionid then it means question has changed and now we getting lastQuestionId
+                                            obj['latestProgressReportQuestionID'] = lastQuestionid || '';
+                                            obj['progressReportQuestions'][lastQuestionid] = obj['progressReportQuestions'];
+                                        } else {
+                                            //pass on which we have done on selected policy
+                                            obj['latestProgressReportQuestionID'] = that.selectedLastQuestionID;
+                                            obj['progressReportQuestions'] = {};
+                                            obj['progressReportQuestions'][that.selectedLastQuestionID] = {};
+                                            obj['progressReportQuestions'][that.selectedLastQuestionID]['questions'] = that.selectedQuestionObject;
+                                        }
+                                    }
+                                    //reasign updated obj to our local array
+                                    that.groupPolicies[index] = obj;
+                                }
+                            });
+
+                            messageService.showSuccess('Policy Successfully Updated!');
+                            //$state.go('user.policy', {groupID: groupId});
+                            that.newPolicy('saved');
+                            that.isProcessing = false;
+
+                        } else{
+
+                            messageService.showSuccess('Policy Successfully Created!');
+                            //after created reload initial page
+                            that.newPolicy('saved');
+                            that.isProcessing = false;
+
+                        }
+                    });
+                } else {//if that.title exists
+                    messageService.showFailure('Please Write Policy Name');
+                    that.isProcessing = false;
+                }
+
+            }; //onSave
+
+            //load constructor
+            function init() {
+                that.activePolicyId = false; //at initial no policy has selected
+                that.policyTitle = ''; //clear policy title (not required on load)
+                that.isLocationbased = false; //unchek default location based
+                that.isTimebased = false; //unchek default time based
+                that.selectedTeams = []; //onLoad or create empty selectedTeams array
+                that.selectedTeamMembers = {}; //onLoad or create empty selectedTeamMembers obj
+                that.isProgressReport = true;
+                //onLoad default qustion daily Report Questions obj
+                that.progressReportQuestions = { '0': 'What did you accomplish today?', '1': 'What will you do tomorrow?', '2': 'What obstacles are impeding your progress?' };
+                isQuestionExists();
+
+                //set default location
+                defaultGeoLocation();
+
+                //generate scheduler
+                loadSchaduler();
+            }
+            //run when controller load
+            init();
+
+
+            //add prototype for comparission of array
+            Array.prototype.equals = function(array, strict) {
+                if (!array)
+                    return false;
+
+                if (arguments.length == 1)
+                    strict = true;
+
+                if (this.length != array.length)
+                    return false;
+
+                for (var i = 0; i < this.length; i++) {
+                    if (this[i] instanceof Array && array[i] instanceof Array) {
+                        if (!this[i].equals(array[i], strict))
+                            return false;
+                    }
+                    else if (strict && this[i] != array[i]) {
+                        return false;
+                    }
+                    else if (!strict) {
+                        return this.sort().equals(array.sort(), true);
+                    }
+                }
+                return true;
+            }
+
+        } // controller function
+    ]); //contoller
+})();
+
+/**
+ * Created by sj on 6/10/2015.
+ */
+
+(function() {
+    'use strict';
+    angular
+        .module('app.userSetting', ['core', 'ngMdIcons'])
+        .factory('userSettingService', ['groupFirebaseService', '$location', 'soundService', 'userService', "messageService", '$q', '$http', 'appConfig',
+            function(groupFirebaseService, $location, soundService, userService, messageService, $q, $http, appConfig) {
+
+                return {
+
+                    'userSetting': function(userID, group, SubgroupInfo, subgroupList, formDataFlag) {
+                        //var pageUserId = userService.getCurrentUser().userID;
+                        SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.toLowerCase();
+                        SubgroupInfo.subgroupID = SubgroupInfo.subgroupID.replace(/[^a-z0-9]/g, '');
+                        groupFirebaseService.asyncCreateSubgroup(userID, group, SubgroupInfo, subgroupList, formDataFlag)
+                            .then(function(response) {
+                                // console.log("Group Creation Successful");
+                                var unlistedMembersArray = response.unlistedMembersArray;
+                                if (unlistedMembersArray.length > 0) {
+
+                                    messageService.showSuccess("Team of Teams creation Successful, but following are not valid IDs: " + unlistedMembersArray);
+                                } else {
+                                    messageService.showSuccess("Team of Teams creation Successful");
+                                }
+                            }, function(group) {
+                                messageService.showFailure("Team of Teams not created, " + SubgroupInfo.groupID + " already exists");
+                            })
+                    },
+                    'cancelSubGroupCreation': function(userId) {
+                        console.log("Group Creation Cancelled");
+                        soundService.playFail();
+                        $location.path('/user/' + userService.getCurrentUser().userID)
+                    },
+                    'uploadPicture': function(file, groupID) {
+                        var defer = $q.defer();
+                        var reader = new FileReader();
+                        reader.onload = function() {
+
+                            var blobBin = atob(reader.result.split(',')[1]);
+                            var array = [];
+                            for (var i = 0; i < blobBin.length; i++) {
+                                array.push(blobBin.charCodeAt(i));
+                            }
+                            var fileBlob = new Blob([new Uint8Array(array)], {
+                                type: 'image/png'
+                            });
+
+
+                            var data = new FormData();
+                            data.append('userID', userService.getCurrentUser().userID);
+                            //data.append('token', $sessionStorage.loggedInUser.token);
+                            data.append('token', userService.getCurrentUser().token);
+                            data.append("source", fileBlob, file.name);
+
+                            defer.resolve($http.post(appConfig.apiBaseUrl + '/api/profilepicture', data, {
+                                withCredentials: true,
+                                headers: {
+                                    'Content-Type': undefined
+                                },
+                                transformRequest: angular.identity
+                            }));
+
+                        };
+                        reader.readAsDataURL(file);
+                        return defer.promise;
+
+                    },
+
+                    'getGroupImgFromServer': function() {
+                        var defer = $q.defer();
+                        $http({
+                                url: appConfig.apiBaseUrl + '/api/profilepicture/mmm',
+                                method: "GET",
+                                params: {
+                                    token: userService.getCurrentUser().token
+                                }
+                            })
+                            .then(function(data) {
+                                var reader = new FileReader();
+                                reader.onload = function() {
+                                    defer.resolve(reader.result)
+                                };
+                                reader.readAsDataURL(data.data.profilePicture);
+
+                            })
+                            .catch(function(err) {
+                                defer.reject(err)
+                            });
+
+                        return defer.promise;
+
+                    }
+
+                };
+
+                function Uint8ToString(u8a) {
+                    var CHUNK_SZ = 0x8000;
+                    var c = [];
+                    for (var i = 0; i < u8a.length; i += CHUNK_SZ) {
+                        c.push(String.fromCharCode.apply(null, u8a.slice(i, i + CHUNK_SZ)));
+                    }
+
+                    return c.join("");
+
+                }
+            }
+        ])
+
+})();
+
+/**
+ * Created by Muhammad Mohsin on 6/17/2015.
+ */
+/**
+ * Created by sj on 6/10/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('app.userSetting')
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
+
+        var that = this;
+        var user = userService.getCurrentUser();
+        this.hide = hide;
+        var user = userService.getCurrentUser();
+        var groupID = $stateParams.groupID;
+        this.groupId = groupID
+        // var $loggedInUserObj = groupFirebaseService.getSignedinUserObj();
+
+        this.approveMembership = approveMembership;
+        this.rejectMembership = rejectMembership;
+        this.changeMemberRole = changeMemberRole;
+
+        this.openCreateSubGroupPage = function() {
+            // $location.path('/user/group/' + groupID + '/create-subgroup');
+            $state.go('user.create-subgroup', {groupID: groupID})
+        }
+
+        this.subgroupPage = function() {
+            // $location.path('user/group/' + groupID + '/subgroup');
+            $state.go('user.subgroup', {groupID: groupID})
+        }
+        this.editgroupPage = function() {
+            // $location.path('user/group/' + groupID + '/edit-group');
+            $state.go('user.edit-group', {groupID: groupID})
+        }
+        this.openGeoFencingPage = function() {
+            // $location.path('/user/group/' + groupID + '/geoFencing');
+            $state.go('user.geo-fencing', {groupID: groupID})
+        }
+        this.openPolicyPage = function() {
+            // $location.path('/user/group/' + groupId + '/geoFencing');
+            $state.go('user.policy', {groupID: groupID})
+        }
+
+
+        this.syncGroupPromise = groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
+            .then(function(syncObj) {
+                that.groupSyncObj = syncObj;
+                //that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
+                that.group = that.groupSyncObj.groupSyncObj;
+                that.members = that.groupSyncObj.membersSyncArray;
+                that.subgroups = that.groupSyncObj.subgroupsSyncArray;
+                that.pendingRequests = that.groupSyncObj.pendingMembershipSyncArray;
+                // console.log(that.pendingRequests)
+                //that.activities = that.groupSyncObj.activitiesSyncArray;
+
+
+            });
+            // console.log(this.members);
+        function hide() {
+            /*   createGroupService.cancelGroupCreation();*/
+            /* $mdDialog.cancel();*/
+            // $location.path('/user/group/' + groupID);groupID
+        }
+        //For owner/admin: Approve membership request.
+        function approveMembership(requestedMember) {
+            // $loggedInUserObj.$loaded().then(function() {
+                // $loggedInUserObj.userID = user.userID;groupID
+                groupFirebaseService.approveMembership(groupID, user, requestedMember, that.group)
+                    .then(function(res) {
+                        if(requestedMember.teamrequest){
+                            requestedMember.teamrequest.forEach(function(val, indx){
+                                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
+                                    messageService.showSuccess("Approved Request Successfully");
+                                    // CollaboratorService.addAccessUser()
+                                }, function(err){
+                                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
+                                })
+                            })
+                        } else{
+                            messageService.showSuccess("Approved Request Successfully");
+                        }
+                    }, function(reason) {
+                        messageService.showFailure(reason);
+                    });
+            // });
+        }
+
+        //For owner/admin: Rejects membership request.
+        function rejectMembership(requestedMember) {
+            // $loggedInUserObj.$loaded().then(function() {
+                // $loggedInUserObj.userID = user.userID;
+                groupFirebaseService.rejectMembership(groupID, user, requestedMember, that.group)
+                    .then(function(res) {
+                        messageService.showSuccess("Ignored Request Successfully");
+                    }, function(reason) {
+                        messageService.showFailure(reason);
+                    });
+            // });
+        }
+
+        //For owner only: to change membership role of a member
+        function changeMemberRole(newType, member) {
+            groupFirebaseService.changeMemberRole(newType, member, that.group, user)
+                .then(function(res) {
+                    messageService.showSuccess("Changed Role Successfully");
+                }, function(reason) {
+                    messageService.showFailure(reason);
+                });
+        }
+
+    }
+
+
+
+})();
+
+(function () {
+    'use strict';
+    angular
+        .module('app.quiz', ['core'])
+        .directive('onBookRender', function ($timeout, quizService) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attr) {
+                    if (scope.$last) {
+                        $timeout(function () {
+                            $('#bookId' + quizService.getBookIndex() + '').addClass('selectedBook')
+                        }, 0);
+                    }
+                }
+            }
+        })
+        .directive('onChapterRender', function ($timeout, quizService) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attr) {
+                    $timeout(function () {
+                        if (scope.$last) {
+                            //$('#chapid' + quizService.getChapterIndex() + '').addClass('selectedChapter')
+                        }
+                    }, 0);
+
+
+                }
+            }
+        })
+        .directive('onTopicRender', function ($timeout, quizService) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attr) {
+                    if (scope.$last) {
+                        $timeout(function () {
+                            $('#topicId' + quizService.getTopicIndex() + '').addClass('selectedTopic')
+                        }, 0);
+                    }
+                }
+            }
+        })
+        .factory('quizService', ["$location", function ($location) {
+            var that = this;
+
+            that.book = null;
+            that.bookIndex = null;
+            that.chapter = null;
+            that.chapterIndex = null;
+            that.topic = null;
+            that.topicIndex = null;
+            that.question = null;
+            that.bookAfterCreation = null;
+            that.SelectedQuestion = null;
+
+            that.selectedTab = null;
+
+            return {
+                /*    Tabs    */
+                'getSelectedTab': function () {
+                    return that.selectedTab;
+                },
+                'setSelectedTab': function (tab) {
+                    that.selectedTab = tab;
+                },
+
+                'quiz': function () {
+
+                },
+                'getSelected': function () {
+                    return {
+                        book: that.book,
+                        chapter: that.chapter,
+                        topic: that.topic
+                    }
+                },
+                'getBook': function () {
+                    return that.book;
+                },
+                'getChapter': function () {
+                    return that.chapter;
+                },
+                'getTopic': function () {
+                    return that.topic;
+                },
+                'getQuestionObject': function () {
+                    return that.question;
+                },
+
+                'getBookIndex': function () {
+                    return that.bookIndex;
+                },
+                'getChapterIndex': function () {
+                    return that.chapterIndex + '';
+                },
+                'getTopicIndex': function () {
+                    return that.topicIndex;
+                },
+                'getBookAfterCreation': function () {
+                    return that.bookAfterCreation;
+                },
+
+
+                'setBook': function (bookId, bookIndex) {
+                    that.book = bookId
+                    that.bookIndex = bookIndex
+                },
+                'setChapter': function (chapterId, chapterIndex) {
+                    that.chapter = chapterId
+                    that.chapterIndex = chapterIndex
+                },
+                'setTopic': function (topicId, topicIndex) {
+                    that.topic = topicId
+                    that.topicIndex = topicIndex
+                },
+                'setQuestionObject': function (question) {
+                    that.question = question;
+                },
+
+                'getSelectedBook': function () {
+                    return that.SelectedBook;
+                },
+                'getSelectedChapter': function () {
+                    return that.SelectedChapter;
+                },
+                'getSelectedTopic': function () {
+                    return that.SelectedTopic;
+                },
+                'getSelectedQuestion': function () {
+                    return that.SelectedQuestion;
+                },
+                'setSelectedBook': function (index) {
+                    that.SelectedBook = index;
+                },
+                'setSelectedChapter': function (index) {
+                    that.SelectedChapter = index;
+                },
+                'setSelectedTopic': function (index) {
+                    that.SelectedTopic = index;
+                },
+                'setSelectedQuestion': function (index) {
+                    that.SelectedQuestion = index;
+                },
+                'setBookAfterCreation': function (book) {
+                    that.bookAfterCreation = book;
+                }
+            }
+        }])
+        .service('navService', function ($mdSidenav, $mdUtil, $log, $timeout) {
+            var $scope = this;
+            $scope.toggleRight1 = buildToggler('nav1');
+            $scope.toggleRight2 = buildToggler('nav2');
+            $scope.toggleRight3 = buildToggler('nav3');
+            $scope.toggleRight4 = buildToggler('nav4');
+            $scope.toggleRight5 = buildToggler('nav5');
+            $scope.toggleRight6 = buildToggler('nav6');
+
+            function buildToggler(navID) {
+                var debounceFn = $mdUtil.debounce(function () {
+                    $mdSidenav(navID)
+                        .toggle()
+                        .then(function () {
+                            $log.debug("toggle " + navID + " is done");
+                        });
+                }, 200);
+                return debounceFn;
+
+
+            }
+
+            $scope.close = function () {
+                $mdSidenav('nav1').close()
+                    .then(function () {
+                        $log.debug("close LEFT is done");
+                    });
+            }
+
+            $scope.close = function () {
+                $mdSidenav('nav2').close()
+                    .then(function () {
+                        $log.debug("close LEFT is done");
+                    });
+            }
+
+
+            $scope.close = function () {
+                $mdSidenav('nav3').close()
+                    .then(function () {
+                        $log.debug("close RIGHT is done");
+                    });
+            };
+
+
+            $scope.close = function () {
+                $mdSidenav('nav4').close()
+                    .then(function () {
+                        $log.debug("close RIGHT is done");
+                    });
+            };
+            $scope.close = function () {
+                $mdSidenav('nav5').close()
+                    .then(function () {
+                        $log.debug("close RIGHT is done");
+                    });
+            };
+            $scope.close = function () {
+                $mdSidenav('nav6').close()
+                    .then(function () {
+                        $log.debug("close RIGHT is done");
+                    });
+            };
+        })
+
+})();
+
+/**
+ * Created by Adnan Irfan on 06-Jul-15.
+ */
+(function () {
+    'use strict';
+
+    angular
+        .module('app.quiz')
+        .controller('QuizController', QuizController);
+
+    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
+
+    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
+
+        /*Private Variables*/
+        var $scope = this;
+        $scope.img = '../../img/userImg1.svg';
+        $scope.show = false;
+        $scope.showView = false;
+        $scope.showQuizBank = true;
+        $scope.showQuizList = false;
+        $scope.showQuizAssign = false;
+        $scope.questionView = null;
+        //for toolbar text hide
+        $scope.chapterSearch = false;
+        $scope.topicSearch = false;
+        $scope.questionSearch = false;
+        $scope.quizSearch = false;
+        $scope.quizQuestionSearch = false;
+        $scope.chaptersSideNavSearch = false;
+        $scope.topicSideNavSearch = false;
+        $scope.questionSideNavSearch = false;
+        $scope.inputEnter = false;
+
+        $scope.selectedQuestionIndex = null;
+        $scope.selectedTopicIndex = null;
+        $scope.selectedChapterIndex = null;
+
+        $scope.addBook = addBook;
+        $scope.createBook = createBook;
+        $scope.addChapter = addChapter;
+        $scope.createChapter = createChapter;
+        $scope.closeChapter = closeChapter;
+        $scope.addTopic = addTopic;
+        $scope.createTopic = createTopic;
+        $scope.closeTopic = closeTopic;
+        $scope.closeBook = closeBook;
+        $scope.closeQuestion = closeQuestion;
+        $scope.addQuestion = addQuestion;
+        $scope.editChapter = editChapter;
+        $scope.hover = hover;
+        $scope.editHover = editHover;
+        $scope.showChapters = showChapters;
+        $scope.showTopics = showTopics;
+        $scope.showQuestions = showQuestions;
+        $scope.showQuestionView = showQuestionView;
+        $scope.showQuizChapters = showQuizChapters;
+        $scope.showQuizTopics = showQuizTopics;
+
+        $scope.setSelectedBook = setSelectedBook;
+        $scope.setSelectedChapter = setSelectedChapter;
+        $scope.setSelectedTopic = setSelectedTopic;
+        $scope.setSelectedQuestion = setSelectedQuestion;
+        $scope.setSelectedQuizes = setSelectedQuizes;
+
+        $scope.SelectedBook = null;
+        $scope.SelectedChapter = null;
+        $scope.SelectedTopic = null;
+        $scope.SelectedQuestion = null;
+        $scope.showQuizBankFunc = showQuizBankFunc;
+        $scope.showQuiz = showQuiz;
+        $scope.showAssignQuiz = showAssignQuiz;
+        $scope.showAttemptQuiz = showAttemptQuiz;
+        $scope.addQuiz = addQuiz;
+        $scope.closeQuiz = closeQuiz;
+
+        $scope.afterLoad = afterLoad;
+
+        $scope.bookId = '';
+        $scope.chapterId = '';
+        $scope.topicId = '';
+        //Firebase
+        var ref = new Firebase('https://pspractice.firebaseio.com');
+        var refMain = new Firebase('https://luminous-torch-4640.firebaseio.com');
+        $scope.books = [];
+        $scope.booksId = [];
+        $scope.quizes = [];
+        $scope.chaptersId = [];
+        $scope.chapters = [];
+        $scope.topicsId = [];
+        $scope.topics = [];
+        $scope.questions = [];
+        $scope.groups = [];
+        //QUIZ SCEDULE variables & functions
+        $scope.closeAssignQuiz = closeAssignQuiz;
+        $scope.setSelectedGroup = setSelectedGroup;
+        $scope.setSelectedSubGroup = setSelectedSubGroup;
+        $scope.quizesList = [];
+        $scope.quizesListKey = [];
+        $scope.subGroup = [];
+        $scope.myDatabase = [];
+        $scope.selectedGroup = null;
+        $scope.dataPush = dataPush;
+        $scope.setSelectedQuiz = setSelectedQuiz;
+
+
+        /*All Function*/
+
+        setTabs()
+
+        authService.resolveUserPage()
+            .then(function (response) {
+                getUserObj();
+                initializeView();
+            }, function (err) {
+                alert('Error in Line 86: ' + err)
+            });
+        setTabs();
+
+        function setTabs() {
+            if (quizService.getSelectedTab() == 'QuizBank') {
+                $timeout(function () {
+                    showQuizBankFunc();
+                }, 0)
+            } else if (quizService.getSelectedTab() == 'Quiz') {
+                $timeout(function () {
+                    showQuiz();
+                }, 0)
+            } else if (quizService.getSelectedTab() == 'QuizAssign') {
+                $timeout(function () {
+                    showAssignQuiz();
+                }, 0)
+            }
+        }
+
+        function initializeView() {
+            // console.log(quizService.getBookAfterCreation())
+            // console.log(quizService.getBookAfterCreation() !== null)
+
+            if (quizService.getBookAfterCreation() !== null) {
+                ref.child('question-bank').on('child_added', function (snapShot) {
+                    $timeout(function () {
+                        $scope.books.push(snapShot.val());
+                        $scope.booksId.push(snapShot.key());
+                        if (quizService.getBookAfterCreation() == snapShot.key()) {
+                            $scope.selectedBookIndex = $scope.booksId.indexOf(snapShot.key());
+                            $scope.bookId = snapShot.key();
+                        }
+                    }, 0)
+                });
+            } else {
+                // console.log('ELSE');
+                ref.child('question-bank').on('child_added', function (snapShot) {
+                    $timeout(function () {
+                        $scope.books.push(snapShot.val());
+                        $scope.booksId.push(snapShot.key());
+
+                    }, 0)
+                });
+
+                /*if(quizService.getSelectedBook()) {
+                 $scope.selectedBookIndex = quizService.getSelectedBook();
+                 $scope.bookId = quizService.getBook();
+                 }else{
+                 $scope.selectedBookIndex = 0;
+                 $scope.bookId = quizService.getBook();
+                 quizService.setBook($scope.bookId, $scope.selectedBookIndex);
+                 }*/
+
+                if (quizService.getBook() !== null) {
+                    $scope.bookId = quizService.getBook();
+                    $scope.selectedBookIndex = quizService.getSelectedBook();
+                    console.log(quizService.getBook());
+                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
+                        $timeout(function () {
+                            $scope.chapters.push(snapShot.val());
+                            $scope.chaptersId.push(snapShot.key());
+                        }, 0)
+                    });
+                    if (quizService.getChapter() !== null) {
+                        $scope.chapterId = quizService.getChapter();
+                        ref.child('question-bank-topic').child(quizService.getBook()).child(quizService.getChapter()).on('child_added', function (snapShot) {
+                            $timeout(function () {
+                                $scope.topics.push(snapShot.val());
+                                $scope.topicsId.push(snapShot.key());
+                            }, 0)
+                        });
+                        $scope.selectedChapterIndex = quizService.getSelectedChapter()
+                        if (quizService.getTopic() !== null) {
+                            $scope.topicId = quizService.getTopic();
+                            ref.child('questions').child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).on('child_added', function (snapShot) {
+                                $timeout(function () {
+                                    $scope.questions.push(snapShot.val())
+                                }, 0)
+                            });
+                            $scope.selectedTopicIndex = quizService.getSelectedTopic()
+                            console.log(quizService.getSelectedQuestion())
+                            console.log(quizService.getQuestionObject())
+                            if (quizService.getSelectedQuestion() !== null) {
+                                if (quizService.getQuestionObject() !== null) {
+                                    $scope.selectedQuestionIndex = quizService.getSelectedQuestion();
+                                    showQuestionView(quizService.getQuestionObject())
+                                }
+                            }
+                        }
+                    }
+                }
+                /*else {
+                 $scope.bookId = $scope.booksId[0];
+                 quizService.setBook($scope.bookId, 0);
+
+                 }*/
+            }
+        };
+
+        function afterLoad(check) {
+            if (check) {
+            }
+
+        };
+
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds) {
+                    break;
+                }
+            }
+        }
+
+        /*  Tabs  */
+        function showQuizBankFunc() {
+            $scope.showQuizBank = true;
+            $scope.showQuizList = false;
+            $scope.showQuizAssign = false;
+            if (quizService.getQuestionObject() !== null && $scope.questionView !== null) {
+                $scope.showView = true;
+            }
+            $('#chapterColumn').addClass('marginLeft')
+            $('#quizBankIcon').addClass('selectedTab')
+            $('#quizIcon').removeClass('selectedTab')
+            $('#quizAssignIcon').removeClass('selectedTab')
+            quizService.setSelectedTab('QuizBank');
+
+            //$scope.chapters = [];
+            //$scope.topics = [];
+            //$scope.questions = [];
+            //$scope.chaptersId = [];
+            //$scope.topicsId = [];
+            //$scope.questionsId = [];
+        }
+
+        function showQuiz() {
+            $scope.showQuizBank = false;
+            $scope.showQuizList = true;
+            $scope.showQuizAssign = false;
+            $scope.showView = false;
+            //$('#chapterColumn').removeClass('marginLeft')
+            $('#quizBankIcon').removeClass('selectedTab')
+            $('#quizIcon').addClass('selectedTab')
+            $('#quizAssignIcon').removeClass('selectedTab')
+            quizService.setSelectedTab('Quiz');
+
+            //$scope.chapters = [];
+            //$scope.topics = [];
+            //$scope.questions = [];
+            //$scope.chaptersId = [];
+            //$scope.topicsId = [];
+            //$scope.questionsId = [];
+        }
+
+        function showAssignQuiz() {
+
+
+            $scope.showQuizBank = false;
+            $scope.showQuizList = false;
+            $scope.showQuizAssign = true;
+
+            $scope.showView = false;
+            $('#quizBankIcon').removeClass('selectedTab')
+            $('#quizIcon').removeClass('selectedTab')
+            $('#quizAssignIcon').addClass('selectedTab')
+
+            quizService.setSelectedTab('QuizAssign');
+
+            $scope.shceduleQuizArray = [];
+            //Calling Shcedule Array List
+            ref.child('quiz-schedule').on('child_added', function (snapShot) {
+
+                var abc = {
+                    group: snapShot.key(),
+                    sub_group: []
+                };
+                $.map(snapShot.val(), function (dbTopics, sbgindex) {
+                    //for getting sub groups and topics
+                    var sb = {
+                        name: sbgindex,
+                        topics: []
+                    };
+                    //var tmp2 = {name: sbgindex, topics:
+                    $.map(dbTopics, function (quiz, quizindex) {
+
+                        //Quiezes
+                        var qiuzess = [];
+                        $.map(quiz, function (quizDb, qindex) {
+                            qiuzess.push(quizDb);
+                        }); //map quizDb
+
+                        //Topics
+                        var topicx = {
+                            name: quizindex,
+                            quizes: qiuzess
+                        };
+                        sb.topics.push(topicx);
+
+                    }) //map dbtopic
+
+                    //  };//tmp2
+
+                    //var g = tmp2;
+                    abc.sub_group.push(sb);
+
+                    // ////for getting sub groups and topics
+                    // var sb = { name: sbgindex, topics: [] };
+                    // var tmp2 = {name: sbgindex, topics: $.map(dbTopics, function(quiz, quizindex){
+                    //     var t = {name: quizindex, quizes: quiz}
+                    //     sb.topics.push(t);
+                    //     })
+                    // };
+                    // var g = tmp2;
+                    // abc.sub_group.push(sb);
+
+
+                    //for getting sub groups
+                    // var tmp2 = {name: sbgindex, topics: dbTopics};
+                    // abc["sub_group"].push(tmp2);
+                }); //
+
+
+                $scope.shceduleQuizArray.push(abc);
+
+                console.log(JSON.stringify($scope.shceduleQuizArray));
+
+                $scope.SearchBindRecord = function (a, b, c) {
+                    if (c === 'sub') {
+                        $scope.shceduleQuizSubGroups = a.sub_group;
+
+                        //getting All Questions of Specific Groups
+                        $scope.shceduleQuizQuizes = [];
+                        $scope.shceduleQuizArray.forEach(function (value, index) {
+
+                            if (value.group == b) {
+                                value.sub_group.forEach(function (val, indx) {
+
+                                    val.topics.forEach(function (v, i) {
+
+                                        v.quizes.forEach(function (q, qi) {
+                                            $scope.shceduleQuizQuizes.push(q);
+
+
+                                        }); //q
+
+                                    }); //v
+                                }); //val
+
+                                //console.log('length: ' + $scope.shceduleQuizQuizes.length + '|' + JSON.stringify($scope.shceduleQuizQuizes));
+                            } //if
+                        });
+
+
+                    } // if sub_group
+
+                    if (c === 'topic') {
+                        $scope.shceduleQuizTopics = a.topics;
+
+
+                        //getting All Questions of Specific Sub Group
+                        $scope.shceduleQuizQuizes = [];
+                        $scope.shceduleQuizArray.forEach(function (value, index) {
+
+
+                            value.sub_group.forEach(function (val, indx) {
+
+                                console.log('topic----: ' + JSON.stringify(val));
+
+                                if (val.name == b) {
+                                    val.topics.forEach(function (v, i) {
+
+                                        v.quizes.forEach(function (q, qi) {
+                                            $scope.shceduleQuizQuizes.push(q);
+                                        }); //q
+
+                                    }); //v
+                                } //if
+                            }); //val
+
+                            console.log('length: ' + $scope.shceduleQuizQuizes.length + '|' + JSON.stringify($scope.shceduleQuizQuizes));
+
+                        });
+
+
+                    } //topic
+
+                    if (c === 'quiz') {
+
+
+
+                        //console.log('a-->: '+ JSON.stringify(a.topics));
+                    } //quiz
+
+
+                }; // SearchBindRecord
+                //$scope.SearchBindRecord($scope.shceduleQuizArray, 'saylani', 'sub');
+
+
+            });
+
+
+        }
+
+        function showAttemptQuiz() {
+            $location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quiz-attempting')
+            document.getElementById('navBar').style.display = "none";
+        }
+
+        /*  Selection  */
+        function setSelectedQuestion(that, index) {
+            $scope.selectedQuestionIndex = index;
+            quizService.setSelectedQuestion(index)
+            /*if ($scope.lastSelectedTopic.selectedTopic) {
+             console.log("show", arguments, that);
+             $('.selectedTopic').addClass('previousSelected')
+             if ($scope.lastSelectedQuestion) {
+             $scope.lastSelectedQuestion.selectedQuestion = '';
+             }
+             that.selectedQuestion = 'selectedQuestion';
+             $scope.lastSelectedQuestion = that;
+             }
+             console.log($scope.lastSelectedTopic.selectedTopic)*/
+        }
+
+        function setSelectedTopic(that, index) {
+            $scope.selectedQuestionIndex = null;
+            $scope.selectedTopicIndex = index;
+            quizService.setSelectedTopic(index)
+            quizService.setSelectedQuestion(null)
+            /*console.log("show", arguments, that);
+             if ($scope.lastSelectedChapter.selected) {
+             console.log('in IF')
+             $('.previousSelected').removeClass('previousSelected')
+             $('.selectedChapter').addClass('previousSelected')
+             if ($scope.lastSelectedTopic) {
+             $scope.lastSelectedTopic.selectedTopic = '';
+             }
+             that.selectedTopic = 'selectedTopic';
+             $scope.lastSelectedTopic = that;
+             }*/
+        }
+
+        function setSelectedChapter(that, index) {
+            $scope.selectedQuestionIndex = null;
+            $scope.selectedTopicIndex = null;
+            $scope.selectedChapterIndex = index;
+            quizService.setSelectedChapter(index)
+            quizService.setSelectedTopic(null)
+            quizService.setSelectedQuestion(null)
+            /*$('.selectedChapter').removeClass('previousSelected')
+             console.log("show", that);
+             if ($scope.lastSelectedChapter) {
+             $scope.lastSelectedChapter.selected = '';
+             }
+             quizService.setSelectedChapter(that)
+             that.selected = 'selectedChapter';
+             $scope.lastSelectedChapter = that;
+             console.log($scope.lastSelectedChapter.selected)*/
+        }
+
+        function setSelectedBook(that, index) {
+            $scope.selectedBookIndex = index;
+            quizService.setSelectedBook(index)
+
+            $scope.selectedQuestionIndex = null;
+            $scope.selectedTopicIndex = null;
+            $scope.selectedChapterIndex = null;
+            quizService.setSelectedChapter(null)
+            quizService.setSelectedTopic(null)
+            quizService.setSelectedQuestion(null)
+            /*$scope.selectedQuestionIndex = null;
+             $scope.selectedTopicIndex = null;
+             $scope.selectedChapterIndex = null;
+             if ($scope.lastSelectedBook) {
+             $scope.lastSelectedBook.selected = '';
+             }
+             that.selected = 'selectedBook';
+             $scope.lastSelectedBook = that;
+             console.log($scope.lastSelectedBook.selected)*/
+        }
+
+        function setSelectedQuizes(index) {
+            $scope.selectedQuizes = index;
+        }
+
+        /*  Question Bank   */
+        function showChapters(bookIndex) {
+            quizService.setQuestionObject(null)
+            quizService.setChapter(null, null);
+            quizService.setTopic(null, null);
+            console.log('showing Chapters')
+            quizService.setQuestionObject(null);
+            $scope.showView = false;
+            $scope.questionView = null;
+            $scope.bookId = $scope.booksId[bookIndex];
+            quizService.setBook($scope.bookId, bookIndex);
+            $scope.chapterId = null
+            $scope.topicId = null
+            $scope.show = true;
+            $scope.chapters = [];
+            $scope.topics = [];
+            $scope.questions = [];
+
+            $scope.chaptersId = [];
+            $scope.topicsId = [];
+            $scope.questionsId = [];
+            ref.child('question-bank-chapters').child($scope.bookId).on('child_added', function (snapShot) {
+                $timeout(function () {
+                    $scope.chapters.push(snapShot.val());
+                    $scope.chaptersId.push(snapShot.key());
+                }, 0)
+            })
+        }
+
+        function showTopics(chapterIndex) {
+            quizService.setTopic(null, null);
+            quizService.setQuestionObject(null);
+            $scope.topics = [];
+            $scope.questions = [];
+
+            $scope.topicsId = [];
+            $scope.questionsId = [];
+            $scope.showView = false;
+            $scope.topicId = null
+            $scope.questionView = null;
+            $scope.chapterId = $scope.chaptersId[chapterIndex];
+            quizService.setChapter($scope.chapterId, chapterIndex);
+            $scope.topics = [];
+            $scope.questions = []
+            ref.child('question-bank-topic').child($scope.bookId).child($scope.chapterId).on('child_added', function (snapShot) {
+                $timeout(function () {
+                    $scope.topics.push(snapShot.val());
+                    $scope.topicsId.push(snapShot.key());
+                }, 0)
+            })
+        }
+
+        function showQuestions(topicIndex) {
+            $scope.showView = false;
+            $scope.questionView = null;
+            $scope.topicId = $scope.topicsId[topicIndex];
+            quizService.setTopic($scope.topicId, topicIndex);
+            quizService.setQuestionObject(null);
+            $scope.questions = [];
+            ref.child('questions').child($scope.bookId).child($scope.chapterId).child($scope.topicId).on('child_added',
+                function (snapShot) {
+                    $timeout(function () {
+                        $scope.questions.push(snapShot.val())
+                    }, 0)
+                });
+
+        }
+
+        function showQuestionView(question) {
+            if (question !== null) {
+                quizService.setQuestionObject(question);
+            }
+            console.log('Showing Question View ' + question);
+            $scope.showView = true;
+            $scope.questionView = question;
+        }
+
+        /*  Quizes functions  */
+        $scope.showQuizes = showQuizes;
+        $scope.showQuizesQuestions = showQuizesQuestions;
+        $scope.quizes = [];
+
+        function showQuizes(bookIndex) {
+            $scope.quizes = [];
+            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
+                var temp = {
+                    details: snapShot.val().quizDetails,
+                    key: snapShot.key()
+                };
+                $scope.quizes.push(temp);
+            });
+        }
+
+        function showQuizesQuestions(index) {
+            $scope.Array = [];
+            var iterator = 0;
+            var chapterKey = '';
+            console.log('showing quiz Questions');
+            ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
+                .on('child_added', function (snapShot) {
+                    chapterKey = snapShot.key();
+                    var chapterTemp = snapShot.val().ChapterDetails;
+                    ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
+                        .child(chapterKey).child('ChapterTopics').on('child_added', function (snap) {
+                        var topicTemp = snap.val().TopicDetails;
+                        ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
+                            .child(chapterKey).child('ChapterTopics').child(snap.key())
+                            .child('TopicQuestions').on('child_added', function (shot) {
+                            $scope.Array[iterator] = {
+                                chapterDetails: chapterTemp,
+                                topicDetails: topicTemp,
+                                question: shot.val()
+                            };
+                            iterator++;
+                        });
+
+                    });
+                });
+
+        }
+
+        /*  Quiz Assign  */
+        /*refMain.child('groups-names').on('child_added', function (snapshot) {
+         $scope.groups.push({
+         details : snapshot.val(),
+         key   : snapshot.key()
+         });
+         console.log( snapshot.val() + ' ' + snapshot.key());
+         })*/
+        $scope.assignQuiz = assignQuiz;
+        // console.log($localStorage.loggedInUser)
+        //$scope.userID = '123654789';
+        /*userService.getCurrentUser()*/
+        var groupDataUbind = {}
+        var userDataUbind = {}
+        var userObjUbind;
+        $scope.userObj = [];
+
+        function getUserObj() {
+            // console.log('getUserObj: ' + userService.getCurrentUser().userID)
+            //var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.userID))
+            var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child(userService.getCurrentUser().userID))
+                .$loaded()
+                .then(function (data) {
+                    //alert(data.$id)
+                    // console.log('THEN getUserObj')
+
+                    userObjUbind = data.$watch(function () {
+                        getUserObj()
+                    })
+                    $scope.userObj = data;
+                    data.forEach(function (el, i) {
+                        var j = i;
+                        $firebaseObject(firebaseService.getRefGroups().child(el.$id))
+                            .$loaded()
+                            .then(function (groupData) {
+                                groupDataUbind[j] = groupData.$watch(function () {
+                                    $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
+                                });
+                                $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
+
+                                if (groupData['group-owner-id']) {
+                                    //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/!*.child('profile-image')*!/)
+                                    $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))
+                                        .$loaded()
+                                        .then(function (img) {
+
+                                            $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
+                                            userDataUbind[j] = img.$watch(function (dataVal) {
+
+                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img)
+                                            })
+                                            // console.log($scope.userObj)
+                                        })
+
+                                }
+                            });
+                    });
+                })
+                .catch(function (err) {
+                    //alert(err);
+                })
+        };
+
+        function assignQuiz() {
+            /* $timeout(function () {
+             $location.path('/user/:userID/quiz/quizAssign');
+             }, 0)*/
+            $scope.subGroup = [];
+            $timeout(function () {
+                $scope.showQuizSceduling = navService.toggleRight6;
+                $scope.showQuizSceduling();
+            }, 0)
+
+            $scope.quizesList = [];
+            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
+                $scope.quizesListKey.push(snapShot.key());
+                $scope.quizesList.push(snapShot.val().quizDetails);
+                console.log(snapShot.val());
+
+            });
+            console.log($scope.quizesListKey);
+
+            for (var i = 0; i < $scope.userObj.length; i++) {
+
+                $scope.myDatabase[i] = {
+                    groupId: $scope.userObj[i].$id,
+                    subGroupId: null,
+                    subGroupIdIndex: null,
+                    bookId: quizService.getBook(),
+                    quizId: null
+
+
+                };
+
+            }
+
+            console.log($scope.myDatabase);
+        }
+
+
+        function setSelectedQuiz(id) {
+            $scope.seclectedQuizID = id;
+            for (var i = 0; i < $scope.userObj.length; i++) {
+
+                if ($scope.myDatabase[i].groupId == $scope.selectedGroup) {
+                    $scope.myDatabase[i].quizId = $scope.seclectedQuizID;
+
+                }
+                console.log($scope.myDatabase[i]);
+            }
+            //            console.log($scope.myDatabase);
+
+        }
+
+
+        function setSelectedGroup(id, index) {
+            $scope.selectedGroup = id;
+            $scope.selectedGroupIndex = index;
+            $scope.subGroup = [];
+            refMain.child('subgroups').child(id).on('child_added', function (snapShot) {
+                $scope.subGroup.push(snapShot.key());
+                console.log($scope.subGroup);
+            });
+
+
+        }
+
+        function setSelectedSubGroup(id, index) {
+            $scope.subGroupId = id;
+            for (var i = 0; i < $scope.userObj.length; i++) {
+
+                if ($scope.myDatabase[i].groupId == $scope.selectedGroup) {
+                    $scope.myDatabase[i].subGroupId = id;
+                    $scope.myDatabase[i].quizId = $scope.seclectedQuizID;
+                    $scope.myDatabase[i].subGroupIdIndex = index;
+                }
+
+
+            }
+            console.log($scope.myDatabase);
+        }
+
+
+        function dataPush() {
+
+
+            for (var i = 0; i < $scope.userObj.length; i++) {
+
+
+                if ($scope.myDatabase[i].subGroupId != null && $scope.myDatabase[i].quizId != null) {
+
+                    for (var a = 0; a < $scope.quizesList.length; a++) {
+                        if ($scope.quizesList[a].title == $scope.myDatabase[i].quizId) {
+                            alert("yes");
+                            ref.child('quiz-schedule').child($scope.myDatabase[i].groupId).child($scope.myDatabase[i].subGroupId).child($scope.myDatabase[i].bookId).push({
+                                quizName: $scope.quizesList[a].title,
+                                quizUid: $scope.quizesListKey[a]
+                            });
+                            console.log($scope.myDatabase[i]);
+                        }
+                    }
+                }
+            }
+            closeAssignQuiz();
+        }
+
+
+        function closeAssignQuiz() {
+            $scope.showQuizSceduling = navService.toggleRight6;
+            $scope.showQuizSceduling();
+
+        }
+
+
+        function showQuizChapters(bookIndex) {
+            console.log('showing quiz Chapters')
+            $scope.bookId = $scope.booksId[bookIndex];
+            quizService.setBook($scope.bookId, bookIndex);
+        }
+
+        function showQuizTopics() {
+            console.log('showing quiz Topics')
+        }
+
+
+        /*  Question Bank Addition Functions  */
+
+        //        Create Book Navigation Start
+        $scope.desc = "";
+        $scope.newImg = null;
+        $scope.imgLogoUrl;
+        var userQuestionBanksRef1 = new Firebase('https://pspractice.firebaseio.com/');
+
+        function addBook() {
+            $scope.showbook = navService.toggleRight1;
+            $scope.showbook();
+        }
+
+        function createBook(bookForm, p) {
+            //alert('hi')
+            console.log($scope.imgLogoUrl)
+            console.log($rootScope.newImg);
+            $scope.temps = {
+
+                title: $scope.name,
+                description: $scope.desc,
+                //imgLogoUrl: $scope.imgLogoUrl || 'img/1angular.png'
+                imgLogoUrl: p
+            };
+
+            console.log('tmp: ' + JSON.stringify($scope.temps))
+
+            userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
+                'membership-type': 1
+            });
+            userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
+                "membership-type": 1
+            });
+            userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
+            console.log($scope.temps);
+
+
+            if ($rootScope.newImg) {
+                var x = utilService.base64ToBlob($rootScope.newImg);
+                var temp = $rootScope.newImg.split(',')[0];
+                var mimeType = temp.split(':')[1].split(';')[0];
+                console.log(x)
+                console.log(temp)
+                console.log(mimeType)
+                console.log($scope.bookID)
+                $scope.saveFile(x, mimeType, $scope.bookID)
+                    .then(function (url) {
+                        // $scope.temps.imgLogoUrl = url + '?random=' + new Date();
+                        //its for sending data on firebase by Name's node
+                        userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
+                            'membership-type': 1
+                        });
+                        userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
+                            "membership-type": 1
+                        });
+                        userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
+                        console.log($scope.temps);
+
+                        // quizService.setBookAfterCreation($scope.bookID)
+                        // ref.child($scope.bookID).set(temp);
+                        $scope.name = "";
+                        $scope.desc = "";
+                        $scope.bookID = "";
+                        //$scope.newImg = null;
+                        alert('book creation successful')
+                        // $location.path('/user/' + user.userID)
+                    })
+                    .catch(function () {
+                        //bookForm.$submitted = false;
+                        //return messageService.showSuccess('picture upload failed')
+                        alert('picture upload failed')
+                    });
+            }
+
+
+        }
+
+        $scope.showAdvanced1 = function (ev) {
+            $mdDialog.show({
+                controller: "DialogController as ctrl",
+                templateUrl: 'directives/dilogue.tmpl.html',
+                targetEvent: ev
+            }).then(function (picture) {
+                $rootScope.newImg = picture;
+                console.log("this is image" + picture)
+            }, function (err) {
+                console.log(err)
+
+            })
+
+        };
+
+        $scope.saveFile = function (file, type, quizID) {
+
+            console.log(file);
+            console.log(type);
+            console.log(quizID);
+
+            var defer = $q.defer();
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" + type);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        defer.resolve(upload_file(file, response.signed_request, response.url));
+                    } else {
+                        defer.reject(alert("Could not get signed URL."))
+                    }
+                }
+            };
+            defer.resolve(true)
+            /*remove it*/
+            //            xhr.send();
+            return defer.promise;
+        };
+
+        function upload_file(file, signed_request, url) {
+
+            var defer = $q.defer();
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT", signed_request);
+            xhr.setRequestHeader('x-amz-acl', 'public-read');
+            xhr.onload = function (data) {
+                console.log(xhr.status);
+                //alert(xhr.responseText);
+                if (xhr.status === 200) {
+                    messageService.showSuccess('Picture uploaded....');
+                    console.log('picture upload successful')
+                    console.log(url);
+
+                    defer.resolve(url)
+
+                }
+            };
+            xhr.onerror = function (error) {
+                defer.reject(messageService.showSuccess("Could not upload file."));
+            };
+            xhr.send(file);
+            console.log(file);
+            return defer.promise;
+        }
+
+        function closeBook() {
+            $scope.showbook = navService.toggleRight1;
+            $scope.showbook();
+        }
+
+        //        Create Book Navigation End
+
+
+        /*  Question Bank Addition Functions  */
+        /*        function addBook() {
+         //console.log('Add Book')
+         $timeout(function () {
+         $location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddBook')
+         }, 0)
+         }*/
+
+        var ref = new Firebase('https://pspractice.firebaseio.com/');
+
+        $scope.bookId = $stateParams.id;
+        $scope.Title = '';
+        $scope.Description = '';
+
+        function createChapter() {
+            console.log($scope.Title + " " + $scope.Description)
+            ref.child("question-bank-chapters").child($scope.bookId).push({
+                title: $scope.Title,
+                description: $scope.Description
+            }, function () {
+                $scope.Title = '';
+                $scope.Description = '';
+
+            });
+        }
+
+        function addChapter() {
+            if ($scope.bookId) {
+                $timeout(function () {
+                    $scope.showChapter = navService.toggleRight2;
+                    $scope.showChapter();
+                }, 0)
+            } else {
+                $mdToast.show({
+                    template: '<md-toast style="z-index:3;">' + 'Please Select Book' + '</md-toast>',
+                    //position: 'top right',
+                    hideDelay: 5000
+                });
+            }
+        }
+
+        function closeChapter() {
+            $scope.showChapter = navService.toggleRight2;
+            $scope.showChapter();
+        }
+
+
+        $scope.Title = '';
+        $scope.Description = '';
+        $scope.chapterId = $stateParams.id;
+
+        function createTopic() {
+            ref.child("question-bank-topic").child(quizService.getBook()).child($scope.chapterId).push({
+                description: $scope.Description,
+                title: $scope.Title
+            });
+        }
+
+        function addTopic() {
+            //console.log('Add Book')
+            if ($scope.chapterId) {
+                $timeout(function () {
+                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddTopic/' + $scope.chapterId)
+                    $scope.showTopic = navService.toggleRight4;
+                    $scope.showTopic();
+                }, 0)
+            } else {
+                $mdToast.show({
+                    template: '<md-toast style="z-index:3;">' + 'Please Select Chapter' + '</md-toast>',
+                    //position: 'top right',
+                    hideDelay: 5000
+                });
+            }
+        }
+
+        function closeTopic() {
+            $scope.showTopic = navService.toggleRight4;
+            $scope.showTopic();
+        }
+
+        function addQuestion() {
+            //console.log('Add Book')
+            if ($scope.topicId) {
+                $timeout(function () {
+                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddQuestion/' + $scope.topicId)
+                    $scope.showQuestion = navService.toggleRight3;
+                    $scope.showQuestion();
+                }, 0)
+            } else {
+                $mdToast.show({
+                    template: '<md-toast style="z-index:3;">' + 'Please Select Topic' + '</md-toast>',
+                    //position: 'top right',
+                    hideDelay: 5000
+                });
+            }
+        }
+
+        function closeQuestion() {
+            $scope.showQuestion = navService.toggleRight3;
+            $scope.showQuestion();
+        }
+
+
+        //AddQuestion Controller Work
+        var that = this;
+        var myFirebaseRef = new Firebase("https://pspractice.firebaseio.com/");
+        var idCounter = 3;
+        this.showRadioOptions = false;
+        this.showCheckOptions = false;
+        this.showAddButton = false;
+        this.myAnswer = undefined;
+        this.myType = '';
+        that.answerTag = [];
+        that.myTop = ['40px', '50px'];
+        var topMargin = 50;
+        this.showCheckText = false;
+        this.topicId = $stateParams.id;
+        //
+        //
+        //Answer Types.
+        this.types = [{
+            name: 'Radio Button'
+        }, {
+            name: 'CheckBox'
+        }];
+        this.question = {
+            Title: '',
+            Description: '',
+            Type: '',
+            QuestionOptions: [{
+                optionText: '',
+                id: 2,
+                rightAnswer: false
+            }, {
+                optionText: '',
+                id: 3,
+                rightAnswer: false
+            }]
+        };
+        //If Answer Type Changes.
+        this.typeChanged = function () {
+
+            that.radioValue = '';
+            that.myAnswer = undefined;
+            that.myTop = ['40px', '90px'];
+            topMargin = 50;
+            angular.forEach(that.question.QuestionOptions, function (data) {
+                if (data.id === true) {
+                    data.id = false;
+                }
+            });
+        };
+        //Setting different inputs.
+        this.setBoxValue = function () {
+            this.showAddButton = true;
+            that.question.QuestionOptions = [{
+                optionText: '',
+                id: 2,
+                rightAnswer: false
+            }, {
+                optionText: '',
+                id: 3,
+                rightAnswer: false
+            }];
+            if (that.myType.name === 'Radio Button') {
+                that.showRadioOptions = true;
+                that.showCheckOptions = false;
+                that.answerTag = [];
+                that.myAnswer = undefined;
+            } else if (that.myType.name === 'CheckBox') {
+                that.showCheckOptions = true;
+                that.showRadioOptions = false;
+                that.answerTag = [];
+                that.myAnswer = undefined;
+            }
+        };
+        //Push new input fields.
+        this.addOption = function () {
+
+            //Radio margin.
+            if (topMargin < 100) {
+                topMargin += 50;
+            }
+            that.myTop.push(topMargin + 'px');
+            idCounter++;
+            that.question.QuestionOptions.push({
+                optionText: '',
+                id: idCounter,
+                rightAnswer: false
+            });
+        };
+        //Delete Option
+        this.deleteOption = function (optionIndex) {
+            if (optionIndex > -1) {
+                that.question.QuestionOptions.splice(optionIndex, 1);
+            }
+        };
+
+        //Sets Answer if Type CheckBox is selected.
+        that.setCheckBoxValue = function (questionId) {
+            if (that.question.QuestionOptions[questionId].id == true) {
+                that.question.QuestionOptions[questionId].rightAnswer = true;
+                that.answerTag.push('one');
+            } else if (that.question.QuestionOptions[questionId].id == false) {
+                that.question.QuestionOptions[questionId].rightAnswer = false;
+                that.answerTag.pop();
+            }
+        };
+        //        //Add more Questions, Saves data to firebase and clears input fields.
+        that.addQuestionsAndContinue = function () {
+            that.showRadioOptions = false;
+            that.showCheckOptions = false;
+            that.showAddButton = false;
+            if (that.myType.name === 'Radio Button') {
+                angular.forEach(that.question.QuestionOptions, function (data) {
+                    if (data.optionText == that.myAnswer.optionText) {
+                        data.rightAnswer = true;
+                    } else {
+                        data.rightAnswer = false;
+                    }
+                });
+            }
+            angular.forEach(that.question.QuestionOptions, function (data) {
+                delete data.$$hashKey;
+                delete data.$$mdSelectId;
+                delete data.id;
+            });
+            that.question.Type = that.myType.name;
+            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question);
+            that.question = {
+                Title: '',
+                Description: '',
+                Type: '',
+                Answer: [],
+                QuestionOptions: [{
+                    optionText: '',
+                    id: 2,
+                    rightAnswer: false
+                }, {
+                    optionText: '',
+                    id: 3,
+                    rightAnswer: false
+                }]
+            };
+            that.myAnswer = undefined;
+        };
+        //Redirect on close
+        this.prev = function () {
+            $timeout(function () {
+                $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
+            });
+        };
+        //Save and Exit Button
+        this.showAnswer = function () {
+            if (that.myType.name === 'Radio Button') {
+                angular.forEach(that.question.QuestionOptions, function (data) {
+                    if (data.optionText == that.myAnswer.optionText) {
+                        data.rightAnswer = true;
+                    } else {
+                        data.rightAnswer = false;
+                    }
+                });
+            }
+            angular.forEach(that.question.QuestionOptions, function (data) {
+                delete data.$$hashKey;
+                delete data.$$mdSelectId;
+                delete data.id;
+            });
+            that.question.Type = that.myType.name;
+            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
+
+                that.question = {};
+                abc();
+            });
+
+            that.myAnswer = undefined;
+
+        };
+
+
+        //View Dialog Box.
+        this.showAdvanced = function (ev) {
+            that.question.Type = that.myType.name;
+            if (that.myType.name === 'Radio Button') {
+                angular.forEach(that.question.QuestionOptions, function (data) {
+                    if (data.optionText == that.myAnswer.optionText) {
+                        data.rightAnswer = true;
+                    } else {
+                        data.rightAnswer = false;
+                    }
+                });
+            }
+            $mdDialog.show({
+                    controller: DialogController,
+                    templateUrl: './components/quiz-add-question/dialog.tmpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    locals: {
+                        questionData: that.question
+                    }
+                })
+                .then(function (answer) {
+
+                }, function () {
+
+                });
+        };
+
+        //addQuestion work end
+
+
+        function editChapter(chapter) {
+            alert(chapter.name);
+            chapter.showEdit = !chapter.showEdit;
+        }
+
+        function addQuiz() {
+
+            /*$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')*/
+
+            if ($scope.bookId) {
+                $timeout(function () {
+                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')
+
+                    $scope.showQuize = navService.toggleRight5;
+                    $scope.showQuize();
+
+                    //Parou Code
+                    var that = this;
+                    var bookId = '';
+                    var chapId = '';
+                    var marker = 0;
+                    $scope.awaisObject = {};
+                    $scope.flagChapters = [];
+                    $scope.flagTopics = [];
+                    $scope.showQuestionView1 = false;
+                    $scope.quizObject = {};
+
+                    //temporary
+                    $scope.showTick = true;
+                    $scope.buttonText = 'Next';
+                    $scope.quizTitle = '';
+                    var topicCounter = 0;
+                    $scope.quizDescription = '';
+                    $scope.quizTime = '';
+                    var myCounter = 0;
+                    $scope.questionIndex = 0;
+                    $scope.tempQuestions = [];
+                    $scope.myChapterIndex = 0;
+                    $scope.viewAllQuestions = [];
+                    $scope.viewAllTopics = [];
+                    //bring the chapters from firebase
+
+                    $scope.secondBookName = 'angular101';
+                    $scope.secondChapters = [];
+                    $scope.secondChaptersKey = [];
+                    /*This will show hide quiz tabs*/
+                    var counter = 1;
+                    var tabCounter = 1;
+                    var arr = [],
+                        name = '';
+                    $scope.myChapters = [];
+                    $scope.myChaptersKey = [];
+                    $scope.thirdTopics = [];
+                    //Data fetching from firebase
+                    $scope.chapters = [];
+                    $scope.chaptersId = [];
+                    $scope.nestedQuestions = [];
+                    $scope.topics = [];
+                    $scope.topicsId = [];
+                    $scope.questions = [];
+                    $scope.questionsId = [];
+                    $scope.showOne = false;
+                    $scope.showTwo = true;
+                    $scope.showThree = false;
+                    //Second Page
+                    // all variables
+                    $scope.show = false;
+                    $scope.showView = false;
+                    $scope.showQuizBar = false;
+                    $scope.showTick = false;
+                    $scope.bookId = '';
+                    $scope.chapterId = '';
+                    $scope.topicId = null;
+                    $scope.SelectedBook = null;
+                    $scope.SelectedChapter = null;
+                    $scope.SelectedTopic = null;
+                    $scope.SelectedQuestion = null;
+                    /*$scope.quizes = [];*/
+                    $scope.chaptersId = [];
+                    $scope.chapters = [];
+                    $scope.topicsId = [];
+                    $scope.topics = [];
+                    $scope.questions = [];
+                    $scope.questionView = '';
+                    $scope.latestNode = [];
+
+
+                    /*
+                     if (tabCounter == 1) {
+                     //Tab Icons
+                     that.oneTab = true;
+                     that.twoTab = true;
+                     that.threeTab = false;
+                     tabCounter++;
+
+                     }*/
+
+
+                    // seleted data start
+                    $scope.setSelectedQuestion = function (thisScope) {
+
+                        if ($scope.lastSelectedTopic.selectedTopic) {
+                            $('.selectedTopic').addClass('previousSelected');
+                            if ($scope.lastSelectedQuestion) {
+                                $scope.lastSelectedQuestion.selectedQuestion = '';
+                            }
+                            thisScope.selectedQuestion = 'selectedQuestion';
+                            $scope.lastSelectedQuestion = thisScope;
+                        }
+                    };
+
+                    $scope.setSelectedTopics = function (thisScope) {
+                        if ($scope.lastSelectedChapter.selected) {
+                            $('.previousSelected').removeClass('previousSelected');
+                            $('.selectedChapter').addClass('previousSelected');
+                            if ($scope.lastSelectedTopic) {
+                                $scope.lastSelectedTopic.selectedTopic = '';
+                            }
+                            thisScope.selectedTopic = 'selectedTopic';
+                            $scope.lastSelectedTopic = thisScope;
+                        }
+                    };
+
+                    $scope.setSelectedChapters = function (thisScope) {
+
+                        $('.selectedChapter').removeClass('previousSelected');
+                        if ($scope.lastSelectedChapter) {
+                            $scope.lastSelectedChapter.selected = '';
+                        }
+                        quizCreateService.setSelectedChapter(thisScope);
+                        thisScope.selected = 'selectedChapter';
+                        $scope.lastSelectedChapter = thisScope;
+                    };
+                    //selected data end
+                    //2nd Tab Functions
+                    var chapterCounter = 0;
+                    //Chapters
+
+                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
+                        //$timeout(function () {
+
+                        $scope.chapters.push(snapShot.val());
+                        /*console.log($scope.chapters.push(snapShot.val()));*/
+                        $scope.chaptersId.push(snapShot.key());
+                        $scope.chaptersSnapData = snapShot.val();
+                        $scope.nestedQuestions.push([]);
+                        $scope.flagChapters[chapterCounter] = {};
+                        $scope.flagChapters[chapterCounter].id = true;
+                        $scope.viewAllTopics.push([]);
+                        $scope.flagTopics.push([]);
+                        chapterCounter++;
+                        //}, 0)
+
+                    });
+
+
+                    bookId = quizService.getBook();
+                    $scope.bookId = quizService.getBook();
+                    $scope.quizObject[quizService.getBook()] = {};
+                    $scope.awaisObject[quizService.getBook()] = {};
+
+                    //Topics
+                    $scope.showTopics = function (chapterIndex) {
+                        $scope.showQuestionView1 = false;
+                        if ($scope.quizObject[bookId]['quizQuestion'] == undefined) {
+                            $scope.quizObject[bookId]['quizQuestion'] = {};
+                        }
+                        $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]] = {};
+                        $scope.awaisObject[bookId][$scope.chaptersId[chapterIndex]] = {};
+                        $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]]['ChapterDetails'] = {
+                            title: $scope.chapters[chapterIndex].title,
+                            description: $scope.chapters[chapterIndex].description
+                        };
+                        $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]]['ChapterTopics'] = {};
+                        $scope.awaisObject[bookId][$scope.chaptersId[chapterIndex]] = {};
+                        console.log("Chapter Details");
+                        console.log($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]]['ChapterDetails']);
+                        $scope.chapterId = $scope.chaptersId[chapterIndex];
+                        $scope.myChapterIndex = chapterIndex;
+                        quizCreateService.setChapter($scope.chapterId, chapterIndex);
+
+                        if ($scope.flagChapters[chapterIndex].id == true) {
+                            $scope.nestedQuestions[chapterIndex] = [];
+                            $scope.tempQuestions[chapterIndex] = [];
+                            $scope.flagChapters[chapterIndex].id = false;
+                            $scope.topics = [];
+                            $scope.topicsId = [];
+                            $scope.topicId = null;
+                            topicCounter = 0;
+                            ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function (snapShot) {
+                                $timeout(function () {
+                                    $scope.topics.push(snapShot.val());
+                                    $scope.viewAllTopics[chapterIndex].push(snapShot.val());
+                                    $scope.topicsId.push(snapShot.key());
+                                    $scope.flagTopics[chapterIndex][topicCounter] = {};
+                                    $scope.flagTopics[chapterIndex][topicCounter].id = true;
+                                    $scope.nestedQuestions[chapterIndex].push([]);
+                                    $scope.tempQuestions[chapterIndex].push([]);
+                                    topicCounter++;
+                                }, 0)
+                            })
+                        } else {
+                            $scope.topics = $scope.viewAllTopics[chapterIndex];
+                            $scope.myChapterIndex = chapterIndex;
+                        }
+                    };
+
+                    //Questions.
+                    $scope.showQuestions = function (topicIndex) {
+                        $scope.showQuestionView1 = false;
+                        if ($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]] == undefined) {
+                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]] = {};
+                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[topicIndex]] = {};
+                            //Topic Object
+                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]['TopicDetails'] = {
+                                title: $scope.topics[topicIndex].title,
+                                description: $scope.topics[topicIndex].description
+                            };
+                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]['TopicQuestions'] = {};
+                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[topicIndex]] = {};
+                            console.log("Topic Details");
+                            console.log($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]);
+                        }
+                        if ($scope.flagTopics[$scope.myChapterIndex][topicIndex].id == true) {
+
+                            $scope.flagTopics[$scope.myChapterIndex][topicIndex].id = false;
+                            $scope.nestedQuestions[$scope.myChapterIndex][topicIndex] = [];
+                            myCounter = 0;
+                            $scope.questionIndex = topicIndex;
+                            $scope.showView = false;
+                            $scope.topicId = $scope.topicsId[topicIndex];
+                            $scope.tempQuestions[$scope.myChapterIndex][topicIndex] = [];
+                            quizCreateService.setTopic($scope.topicId, topicIndex);
+
+                            ref.child('questions').child(quizService.getBook()).child(quizCreateService.getChapter()).child(quizCreateService.getTopic()).on('child_added',
+                                function (snapShot) {
+                                    $timeout(function () {
+                                        $scope.questions.push(snapShot.val());
+                                        $scope.questionsId.push(snapShot.key());
+                                        $scope.nestedQuestions[$scope.myChapterIndex][topicIndex].push(snapShot.val());
+                                        $scope.tempQuestions[$scope.myChapterIndex][topicIndex].push(snapShot.val());
+                                        $scope.tempQuestions[$scope.myChapterIndex][topicIndex][myCounter].id = false;
+                                        $scope.nestedQuestions[$scope.myChapterIndex][topicIndex][myCounter].id = false;
+                                        myCounter++;
+                                    }, 0)
+                                });
+                        } else {
+                            $scope.questionIndex = topicIndex;
+                            $scope.nestedQuestions[$scope.myChapterIndex][topicIndex] = $scope.tempQuestions[$scope.myChapterIndex][topicIndex];
+                        }
+                    };
+                    $scope.showQuestionView = function (question) {
+                        $scope.showQuestionView1 = true;
+                        if (question !== null) {
+                            quizService.setQuestionObject(question);
+                        }
+                        $scope.questionView = question;
+                    };
+                    $scope.checkArray = [];
+                    $scope.showTickIcon = function (trueFalseValue, questionIndex) {
+
+                        console.log($scope.tickArray);
+
+                        if (trueFalseValue == false) {
+                            console.log("Checking");
+                            $scope.checkArray.push(questionIndex)
+                            //$scope.tickArray.push(trueFalseValue);
+                            //console.log($scope.tickArray + 'pus');
+                            $scope.showQuestionView1 = true;
+                            $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
+                            $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
+                            $scope.viewAllQuestions.push($scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex]);
+                            if ($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'] == undefined) {
+                                $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'] = {};
+                                $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]] = {};
+                            }
+                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'][$scope.questionsId[questionIndex]] = $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex];
+                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]][$scope.questionsId[questionIndex]] = $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex];
+                        } else if (trueFalseValue == true) {
+                            $scope.checkArray.splice($scope.checkArray.indexOf(questionIndex), 1);
+                            //$scope.tickArray.splice(trueFalseValue,1);
+                            //console.log($scope.tickArray + 'splice');
+                            $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = false;
+                            $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = false;
+                            arr = $scope.viewAllQuestions;
+                            name = $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].Title;
+                            angular.forEach(arr, function (data, key) {
+                                if (data.Title == name) {
+                                    arr.splice(key, 1);
+                                }
+                            });
+                            $scope.viewAllQuestions = arr;
+                            delete($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'][$scope.questionsId[questionIndex]]);
+                            delete($scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]][$scope.questionsId[questionIndex]]);
+                        }
+
+
+                    };
+
+
+                    $scope.createQuiz = function () {
+                        /*Quiz Create.*/
+
+                        //Delete Topics if Questions not there.
+                        console.log($scope.quizObject[bookId]['quizQuestion']);
+                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (datum, key, obj) {
+                            //$scope.consoleObj = datum;
+                            //console.log($scope.consoleObj + 'TIS IS T LENT OF AN OBJECT');
+                            //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
+                            //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
+                            angular.forEach(datum['ChapterTopics'], function (datum1, key2) {
+                                if (Object.keys(datum1['TopicQuestions']).length == 0) {
+                                    delete($scope.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
+                                }
+                            })
+                        });
+                        //console.log($scope.consoleObj);
+                        //console.log($scope.consoleObj.length + 'TIS IS T LENT OF AN OBJECT');
+                        //Delete Chapters if Topics not there.
+                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (data, key) {
+                            if (Object.keys(data['ChapterTopics']).length == 0) {
+                                delete($scope.quizObject[bookId]['quizQuestion'][key])
+                            }
+                        });
+
+
+                        /*Quiz Attempt*/
+
+                        //Delete Topics if Questions not there.
+                        angular.forEach($scope.awaisObject[bookId], function (datum, key) {
+                            angular.forEach(datum, function (datum1, key2) {
+                                if (Object.keys(datum1).length == 0) {
+                                    delete($scope.awaisObject[bookId][key][key2]);
+                                }
+                            })
+                        });
+
+
+                        //Delete Chapters if Topics not there.
+                        angular.forEach($scope.awaisObject[bookId], function (data, key) {
+                            if (Object.keys(data).length == 0) {
+                                delete($scope.awaisObject[bookId][key])
+                            }
+                        });
+
+                        $scope.quizObject[bookId]['quizDetails'] = {
+                            title: $scope.quizTitle,
+                            description: $scope.quizDescription,
+                            time: $scope.quizTime
+                        };
+
+
+                        //Object With Answer.
+                        ref.child('quiz-create').child(bookId).push($scope.quizObject[bookId], function () {
+
+                            angular.forEach($scope.awaisObject[bookId], function (one) {
+                                angular.forEach(one, function (two) {
+                                    angular.forEach(two, function (three) {
+                                        angular.forEach(three.QuestionOptions, function (deleteAnswer) {
+                                            delete(deleteAnswer.rightAnswer);
+                                        });
+                                    });
+                                });
+                            });
+                            //Object WithoutAnswer.
+                            // ref.child('quiz-attempt').child(bookId).push($scope.awaisObject[bookId]);
+                            angular.forEach($scope.viewAllQuestions, function (data) {
+                                delete(data.$$hashKey);
+                                angular.forEach(data.QuestionOptions, function (option) {
+                                    delete(option.$$hashKey);
+                                });
+                                ref.child('quiz-create').child(bookId).on("child_added", function (snapshot) {
+                                    $scope.latestNode.push(snapshot.key());
+                                });
+                                ref.child('quiz-attempt').child(bookId).child($scope.latestNode[$scope.latestNode.length - 1]).set(
+                                    $scope.awaisObject[bookId]
+                                );
+                            });
+                        });
+
+                    };
+
+
+                }, 0);
+
+
+            } else {
+                $mdToast.show({
+                    template: '<md-toast style="z-index:3;">' + 'Please Select Book' + '</md-toast>',
+                    //position: 'top right',
+                    hideDelay: 5000
+                });
+            }
+
+
+            console.log($scope.quizes);
+        }
+
+        function closeQuiz() {
+            $scope.showbook = navService.toggleRight5;
+            $scope.showbook();
+        }
+
+
+        function hover(item) {
+            //console.log('Hover')
+            // Shows/hides the delete button on hover
+            //return item.showEdit = !item.showEdit;
+        }
+
+        function editHover(item) {
+            alert("Deleting the " + item.name);
+            return item.show = false;
+        }
+    }
+})();
+
+/**
+ * Created by Mehmood on 5/20/2015.
+ */
+
+(function() {
+    'use strict';
+    angular.module('components', [
+        // "app.createChannels",
+        // 'app.createTeamsChannels',
+        "app.createGroup",
+        // "app.subgroup",
+        'app.editGroup',
+        'app.createSubGroup',
+        'app.home',
+        'app.signin',
+        'app.sign-up',
+        'app.user',
+        'app.group',
+        'app.navToolbar',
+        'app.navLoginbar',
+        'app.forgot',
+        'app.JoinGroup',
+        'app.personalSettings',
+        'app.userSetting',
+        // 'app.geoFencing',
+        'app.quiz',
+        'app.policy',
+        'app.activity',
+        'app.report',
+        'app.manualattendace',
+        'app.progressreport',
+        'app.chat',
+        'app.collaborator'
+        // 'app.quizAddBook',
+        // 'app.quizAddChapter',
+        // 'app.quizAddTopic',
+        // 'app.quizAddQuestion',
+        // 'app.quizCreate',
+        // 'app.quizAttempt',
+        // 'app.quizAttempting',
+        // 'app.quizAssign',
+        // 'app.quizResult'
+    ]);
+})();
+
+/**
+ * Created by Usuf on 23/Feb/16.
+ */
+(function () {
+
+    "use strict";
+
+    angular.module('core').factory('activityStreamService', ["$http", "appConfig", '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+
+    function activityStreamService($http, appConfig, $firebaseObject, firebaseService, userService, $rootScope) {
+        var user = '';
+        var userID = '';
+        var actor = '';
+        var currentUserActivities = [];
+        var currentUserGroupNamesAndMemberShips = {};
+        var currentUserSubGroupNamesAndMemberShips = {};
+        var currentUserSubGroupsMembersAndMemberShips = {};
+        var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+
+        //object for those who will be notify....
+
+        function init() {
+            user = userService.getCurrentUser();
+            userID = user.userID;
+            actor = {
+                "type": "user",
+                "id": user.userID, //this is the userID, and an index should be set on this
+                "email": user.email,
+                "displayName": user.firstName + " " + user.lastName,
+                'profile-image': $rootScope.userImg || ''
+            };
+
+            //getting curent use groups and then getting its notification/activities
+            getGroupsOfCurrentUser();
+
+            //getting current user subgroup names
+            getSubGroupsOfCurrentUsers();
+
+            //getting current user subgroup members
+            //getSubGroupsMembersOfCurrentUsers ();
+
+        } //init
+
+        //for activity step1
+        function getGroupsOfCurrentUser() {
+            //child_added on user-group-memberships
+            firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function (group) {
+
+                if (group && group.key()) {
+                    //create a object of group name and membership-type
+                    currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
+
+                    //getting activities by groupID
+                    getActivityOfCurrentUserByGroup(group.key());
+
+                    //getting activity by subgroup
+                    getActivityOfCurrentUserBySubGroup(group.key());                    
+                }
+            });
+            
+            //child_changed on user-group-memberships
+            firebaseService.getRefUserGroupMemberships().child(userID).on('child_changed', function (group) {
+                // console.log('group child_changed', group.val());
+                //change membership in currentUserGroupNamesAndMemberShips
+                currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
+                
+                // delete all activity from user activity array of group.key()
+                // if (group.val()['membership-type'] == '-1') { 
+                //     currentUserActivities.forEach(function (val, index) { 
+                //         if (val.groupID == group.key()) { 
+                //             //remove all notifications if user blocked
+                //             currentUserActivities.splice(val, 1);
+                //         } 
+                //     })
+                // }
+                
+            });
+            
+            //child_removed on user-group-memberships
+            firebaseService.getRefUserGroupMemberships().child(userID).on('child_removed', function (group) {
+                // console.log('group child_removed', group.val());
+                //delete group from currentUserGroupNamesAndMemberShips
+                delete currentUserGroupNamesAndMemberShips[group.key()];
+                
+                // delete all activity from user activity array of group.key()  (remove activity related from group)
+                // currentUserActivities.forEach(function (val, index) {
+                //     if (val.groupID == group.key()) {
+                //         //remove all notifications if user blocked
+                //         currentUserActivities.splice(val, 1);
+                //     }
+                // });
+            });
+
+        }
+        //for activity group
+        function getActivityOfCurrentUserByGroup(groupID) {
+            //getting activity streams from firebase node: group-activity-streams
+            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function (snapshot) {
+                if (snapshot && snapshot.val()) {
+                    currentUserActivities.push({
+                        groupID: groupID,
+                        displayMessage: snapshot.val().displayName,
+                        activityID: snapshot.key(),
+                        published: snapshot.val().published
+                    });
+                }
+            });
+        }
+
+        //for getting subgroups of current user
+        function getSubGroupsOfCurrentUsers() {
+            firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function (snapshot) {
+
+                for (var subgroup in snapshot.val()) {
+                    if (currentUserSubGroupNamesAndMemberShips && currentUserSubGroupNamesAndMemberShips[snapshot.key()]) {
+                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type'];
+                    } else {
+                        currentUserSubGroupNamesAndMemberShips[snapshot.key()] = {};
+                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type'];
+                    }
+
+                    //getting subgroup members
+                    getSubGroupsMembersOfCurrentUsers(snapshot.key(), subgroup);
+                }
+            });
+
+
+            firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_removed', function (snapshot) {
+                // console.log('subgroup child_removed', snapshot.val());
+                
+                for (var subgroup in snapshot.val()) {
+                    //delete membership type from subgroup object     
+                    delete currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup];
+                    // // delete all activity from user activity array of subgroup (remove activity related from subgroup)
+                    // currentUserActivities.forEach(function (val, index) {
+                    //     if (val.subgroupID == subgroup) {
+                    //         //remove all notifications if user blocked
+                    //         currentUserActivities.splice(val, 1);
+                    //     }
+                    // });    
+                }
+            });
+        }
+        
+        
+        
+        //for activity of subgroup
+        function getActivityOfCurrentUserBySubGroup(groupID) {
+            //getting activity streams from firebase node: subgroup-activity-streams
+            firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
+                    if (snapshot && snapshot.val()) {
+                        currentUserActivities.push({
+                            groupID: groupID,
+                            subgroupID: subgroup.key(),
+                            displayMessage: snapshot.val().displayName,
+                            activityID: snapshot.key(),
+                            published: snapshot.val().published
+                        });
+                    }
+                });                
+
+            });
+        }
+
+        //for getting subgroups members of current user
+        function getSubGroupsMembersOfCurrentUsers(groupID, subgroupID) {
+            //getting members by child_added
+            firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_added', function (snapshot) {
+
+                if (currentUserSubGroupsMembersAndMemberShips && currentUserSubGroupsMembersAndMemberShips[groupID]) {
+
+                    if (currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID]) {
+                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] });
+                    } else {
+                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
+                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] });
+                    }
+
+                } else {
+                    currentUserSubGroupsMembersAndMemberShips[groupID] = {};
+                    currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
+                    currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] })
+                }               
+                //currentUserSubGroupsMembers[groupID][subgroupID] = snapshot.key();
+            }); //firebaseService.getRefSubGroupMembers
+            
+            //remove subgroup when child_removed from subgroup
+            firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_removed', function (snapshot) {
+                // console.log('member child_removed: ', snapshot.key(), snapshot.val());
+                //when member remove from subgroup then update array of  currentUserSubGroupsMembersAndMemberShips
+                delete currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID];
+    
+            });
+        } //getSubGroupsMembersOfCurrentUsers
+
+
+
+        function getActivities() {
+            return currentUserActivities;
+        }
+
+        function getSubgroupNamesAndMemberships() {
+            return currentUserSubGroupNamesAndMemberShips;
+        } //getSubgroupNamesAndMemberships
+
+        function getSubgroupMembersAndMemberships() {
+            return currentUserSubGroupsMembersAndMemberShips;
+        }
+
+        // type = group, subgroup, policy, progressReport, firepad, chat
+        //targetinfo = {id: '', url: '', title: '', type: '' }
+        //area = {type: '', action: ''}
+        //memberUserID = if object is user for notification
+
+        function activityHasSeen() {
+            var multipath = {};
+            currentUserActivities.forEach(function (val, index) {
+                if (val.seen === false) {
+                    multipath['/user-activity-streams/' + userID + '/' + val.activityID + '/seen'] = true;
+                }
+            });
+        }
+
+        //calling from services or controller (public)
+        function activityStream(type, targetinfo, area, activityGroupOrSubGroupID, memberID, object) {
+            //function activityStream(type, targetinfo, area, activityGroupOrSubGroupID, memberUserID) {
+            var obj = {}; //object: affected area for user.... (represent notification)
+
+            if (object) {
+
+                saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, object);
+
+            } else {
+
+                if (memberID) { // incase of group ceration or group edit
+                    firebaseService.asyncCheckIfUserExists(memberID).then(function (res) {
+                        obj = {
+                            "type": type,
+                            "id": memberID, //an index should be set on this
+                            "email": res.user.email,
+                            "displayName": res.user.firstName + " " + res.user.lastName,
+                        };
+                        //now calling function for save to firebase....
+                        saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, obj);
+                    });
+                } else {
+                    obj = {
+                        "type": type,
+                        "id": targetinfo.id, //an index should be set on this
+                        "url": targetinfo.id,
+                        "displayName": targetinfo.title,
+                    };
+                    //now calling function for save to firebase....
+                    saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, obj);
+                }
+
+            }
+
+
+        } //activityStream
+        //calling from here  (private)
+        function saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, object) {
+            //function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object) {
+            // ## target ##
+            //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
+            var target = {
+                "type": type,
+                "id": targetinfo.id,
+                "url": targetinfo.url,
+                "displayName": targetinfo.title
+            };
+
+            var displayNameObject = {
+                'group': {
+                    'membersettings': { //reject == ignore
+                        'group-ignore-member': actor.displayName + " rejected " + object.displayName + "'s membership request for " + target.displayName,
+                        'group-approve-member': actor.displayName + " approved " + object.displayName + " as a member in " + target.displayName,
+                        'user-membership-from-admin-to-member': actor.displayName + " changed " + object.displayName + "'s membership from \"admin\" to \"member\" for " + target.displayName,
+                        'user-membership-from-member-to-admin': actor.displayName + " changed " + object.displayName + "'s membership from \"member\" to \"admin\" for " + target.displayName,
+                        'user-membership-block': actor.displayName + " changed " + object.displayName + "'s membership to \"suspend\" for " + target.displayName,
+                        'user-membership-unblock': actor.displayName + " changed " + object.displayName + "'s membership from \"suspend\" to \"member\" for " + target.displayName,
+                        'group-member-removed': actor.displayName + " removed " + object.displayName + " from " + target.displayName,
+                    }, //membersettings
+                    'group-created': actor.displayName + " created group " + target.displayName,
+                    'group-updated': actor.displayName + " udpated group " + target.displayName,
+                    'group-join': actor.displayName + " sent team join request of " + target.displayName,
+                }, //'type: group'
+                'subgroup': {
+                    'subgroup-created': actor.displayName + " created subgroup " + target.displayName,
+                    'subgroup-updated': actor.displayName + " updated subgroup " + target.displayName,
+                    'subgroup-member-assigned': actor.displayName + " assigned " + object.displayName + " as a member of " + target.displayName,
+                    'subgroup-admin-assigned': actor.displayName + " assigned " + object.displayName + " as a admin of " + target.displayName,
+                    'subgroup-member-removed': actor.displayName + " removed as member " + object.displayName + " from " + target.displayName,
+                    'subgroup-admin-removed': actor.displayName + " removed as admin " + object.displayName + " from " + target.displayName,
+                    'subgroup-join': actor.displayName + " sent team of teams join request of " + target.displayName,
+                }, //subgroup
+                'policy': {
+                    'policy-created': actor.displayName + " created policy " + target.displayName,
+                    'policy-updated': actor.displayName + " updated policy " + target.displayName,
+                    'policy-assigned-team': actor.displayName + " assigned policy " + target.displayName + " to " + object.displayName,
+                }, //policy
+                'progressReport': {
+                    'progressReport-created': actor.displayName + " Created progress report against " + target.displayName,
+                    'progressReport-updated': actor.displayName + " Updated progress report in " + target.displayName,
+                } //progressReport
+            }; //displayNameObject
+
+
+            var displayMessage = '';
+
+            if (area.action) {
+                displayMessage = displayNameObject[type][area.type][area.action];
+            } else {
+                displayMessage = displayNameObject[type][area.type];
+            }
+
+            var activity = {
+                language: "en",
+                verb: (area.action) ? area.action : area.type,
+                published: firebaseTimeStamp,
+                displayName: displayMessage,
+                actor: actor,
+                object: object,
+                target: target,
+                //seen: false
+            };
+
+            var ref = firebaseService.getRefMain();
+            var pushObj = ref.child('group-activity-streams/' + activityGroupOrSubGroupID).push();
+            var activityPushID = pushObj.key();
+
+            var multipath = {};
+
+            if (type === 'group') {
+                //firebase node: group-activity-streams
+                if (area.type === 'group-created' || area.type === 'group-updated') {
+                    delete activity.target;
+                    delete activity.object;
+                } else if (area.type === 'group-join' || area.type === 'membersettings') {
+                    delete activity.target;
+                }
+
+                multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+
+            } else if (type === 'subgroup') {
+                //firebase node: subgroup-activity-streams
+                if (area.type === 'subgroup-created' || area.type === 'subgroup-updated') {
+                    delete activity.target;
+                    delete activity.object;
+                } else if (area.type === 'subgroup-join') {
+                    delete activity.target;
+                }
+
+                multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+
+            } else if (type === 'policy') {
+                //firbase node:
+                //if pass groupid in 'activityGroupOrSubGroupID' then save into firebase group-activity-streams
+                //else if pass subgroupid in 'activityGroupOrSubGroupID' then save into firebase subgroup-activity-streams
+                //checking if activityGroupOrSubGroupID contains / then location is subgroup-activity else group-activity
+                if (activityGroupOrSubGroupID.indexOf('/') > -1) {
+                    multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+                } else {
+                    multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+                }
+            } else if (type === 'progressReport') {
+                //progress report belongs to subgroup then activityGroupOrSubGroupID will be subgroupID
+                multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+
+            }
+
+            //  console.log('activity_ activityGroupOrSubGroupID: ', activityGroupOrSubGroupID);
+            //  console.log('activity_  type: ', type);
+            //  console.log('activity_ : ', activity);
+
+            firebaseService.getRefMain().update(multipath, function (err) {
+                if (err) {
+                    console.log('activityError', err);
+                }
+            });
+        } //saveToFirebase
+
+        // function currentUserActivity() {
+        //    var deffer = $q.deffer();
+        //    var refGroupActivitieStream = firebaseService.groupsActivityStreams().child('group002').child(userID);
+        //    refGroupActivitieStream.on('child_added',function(snapshot){
+        //       console.log(snapshot.val());
+        //    });
+        //    return deffer.promise;
+        // }
+
+        return {
+            init: init,
+            getActivities: getActivities,
+            activityStream: activityStream
+        };
+    } //activityStreamService
+})();
+
+/**
+ * Created by ZiaKhan on 16/12/14.
+ */
+'use strict';
+
+// Create the 'example' controller
+angular.module('core')
+    .factory('authService', ["$state", "dataService", "userPresenceService", "messageService", "$q", "$http", "appConfig", "$firebaseAuth", "$location", "firebaseService", "userService",
+        function($state, dataService, userPresenceService, messageService, $q, $http, appConfig, $firebaseAuth, $location, firebaseService, userService) {
+
+            return {
+                //userData: null,
+
+                login: function(userCred, successFn, failureFn) {
+                    var self = this;
+                    $http.post(appConfig.apiBaseUrl + '/api/signin', userCred).
+                    success(function(data, status, headers, config) {
+
+                        // this callback will be called asynchronously
+                        // when the response is available
+                        //self.userData = data.user;
+                        if (data.statusCode != 0) {
+                            //$sessionStorage.loggedInUser = data.user;
+                            userService.setCurrentUser(data.user);
+                            //firebaseService.asyncLogin($sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token)
+                            firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
+                                .then(function() {
+                                    successFn(data);
+                                    // dataService.loadData();
+                                }, function(error) {
+                                    if (error) {
+                                        console.error("Firebase Authentication failed: ", error);
+                                        failureFn();
+                                    }
+                                })
+
+                        } else {
+                            failureFn(data);
+                        }
+
+                    }).
+                    error(function(data, status, headers, config) {
+                        // called asynchronously if an error occurs
+                        // or server returns response with an error status.
+                        //console.log('login error response object: ' + JSON.stringify(status));
+                        failureFn();
+                    });
+
+                },
+                forgotPassword: function(userCred) {
+                    var defer = $q.defer();
+
+                    $http.post(appConfig.apiBaseUrl + '/api/forgotpassword', userCred)
+                        .success(function(data, status, headers, config) {
+                            if (data.statusCode === 1) {
+                                defer.resolve(data.statusDesc);
+                            } else {
+                                defer.reject(data.statusDesc);
+                            }
+                        })
+                        .error(function(data, status, headers, config) {
+                            console.log('forgot error response object: ' + JSON.stringify(data));
+                            defer.reject('Error occurred in sending data. Please try again.');
+                        });
+
+                    return defer.promise;
+                },
+                signup: function(userInfo, successFn, failureFn) {
+                    var self = this;
+                    $http.post(appConfig.apiBaseUrl + '/api/signup', {
+                        email: userInfo.email,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        password: userInfo.password,
+                        userID: userInfo.userID
+                    }).
+                    success(function(data, status, headers, config) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                        //console.log("response: " + data);
+                        //console.log('signup response object: ' + JSON.stringify(data));
+                        successFn(data);
+                    }).
+                    error(function(data, status, headers, config) {
+                        // called asynchronously if an error occurs
+                        // or server returns response with an error status.
+                        failureFn();
+                    });
+                },
+                logout: function() {
+                    //empty data in dataservice
+                    dataService.unloadData();
+                    userPresenceService.removeCurrentConRef();
+                    // for manually sign out from firebase.
+                    userService.removeCurrentUser();
+                    firebaseService.logout();
+                    Firebase.goOffline();
+                    $state.go('signin');
+                },
+                //to resolve route "/user/:user" confirming is authenticated from firebase
+                resolveUserPage: function() {
+                    // alert('inside authService');
+                    var defer = $q.defer();
+                    // console.log('1')
+                    if (userService.getCurrentUser() && userService.getCurrentUser().userID) {
+                        // console.log('2')
+                        if (appConfig.firebaseAuth) {
+                            dataService.loadData();
+                            defer.resolve();
+                            // console.log('3')
+                        } else {
+                            //firebaseService.asyncLogin( $sessionStorage.loggedInUser.userID, $sessionStorage.loggedInUser.token )
+                            firebaseService.asyncLogin(userService.getCurrentUser().userID, userService.getCurrentUser().token)
+                                .then(function() {
+                                    //console.info("Firebase Authentication Successful when restarting app");
+                                    firebaseService.addUpdateHandler();
+                                    dataService.loadData();
+                                    defer.resolve();
+                                    // console.log('4')
+                                }, function(error) {
+                                    if (error) {
+                                        console.log("Firebase Authentication failed: ", error);
+                                        $location.path('/signin')
+                                        // console.log('5')
+                                    }
+                                });
+                        }
+                    } else {
+                        console.log("No user logged in");
+                        $location.path('/signin')
+                        // console.log('6')
+                    }
+                    // console.log('7')
+                    return defer.promise;
+                },
+                resolveDashboard: function(userID){
+                    var defer = $q.defer();
+                    // console.log('a1')
+                    if (userService.getCurrentUser() && userID !== userService.getCurrentUser().userID) {
+                        $location.path('/profile/' + userID)
+                        // console.log('a2')
+                        // $state.go('user.dashboard', {userID: user.userID})
+                    } else {
+                        defer.resolve();
+                        // console.log('a3')
+                    }
+                    return defer.promise;
+                }
+            };
+        }
+    ]);
+
+/**
+ * Created by sj on 6/6/2015.
+ */
+(function() {
+    'use strict';
+    angular
+        .module('core')
+        .factory('chatService', chatService);
+
+    chatService.$inject = ['$q', 'firebaseService', '$firebaseObject', '$firebaseArray'];
+
+    function chatService($q, firebaseService, $firebaseObject, $firebaseArray) {
+
+        // private variables
+        var refs, fireTimeStamp;
+
+        //firebase unix-epoch time
+        fireTimeStamp = Firebase.ServerValue.TIMESTAMP;
+        // main firebase reference
+        refs = {
+            main: firebaseService.getRefMain()
+        };
+        // group chat reference
+        refs.refGroupChats = refs.main.child('group-chats');
+        refs.refTeamChats = refs.main.child('subgroup-chats')
+        refs.refgroupchannel = refs.main.child('group-channel');
+        refs.refgroupmessages = refs.main.child('group-messages');
+        refs.refsubgroupchannel = refs.main.child('subgroup-channel');
+        refs.refsubgroupmessages = refs.main.child('subgroup-messages');
+
+        return {
+            checkGroupChannelExists: function (groupID, channelTitle) {
+                var deferred = $q.defer();
+                refs.refgroupchannel.child(groupID).orderByChild('title').equalTo(channelTitle).on('value', function(snapshot){
+                    deferred.resolve(snapshot.val());
+                })
+                return deferred.promise;
+            },
+            checkSubGroupChannelExists: function (groupID, subgroupID, channelTitle) {
+                var deferred = $q.defer();
+                refs.refsubgroupchannel.child(groupID).child(subgroupID).orderByChild('title').equalTo(channelTitle).on('value', function(snapshot){
+                    deferred.resolve(snapshot.val());
+                })
+                return deferred.promise;
+            },
+            // creating channel
+            createGroupChannel: function(groupID, channelTitle, userID, cb){
+                var newChannel = {
+                    'created-by': userID,
+                    timestamp   : fireTimeStamp,
+                    title       : channelTitle
+                }
+                var request = refs.refgroupchannel.child(groupID).push(newChannel, function(err){
+                    cb(err);
+                })
+            },
+            createSubGroupChannel: function(groupID, subgroupID, channelTitle, userID, cb){
+                var newChannel = {
+                    'created-by': userID,
+                    timestamp   : fireTimeStamp,
+                    title       : channelTitle
+                }
+                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push(newChannel, function(err){
+                    cb(err);
+                })
+            },
+            getGroupChannel: function(groupID){
+                return $firebaseArray(refs.refgroupchannel.child(groupID))
+            },
+            getSubGroupChannel: function(groupID, subgroupID){
+                return $firebaseArray(refs.refsubgroupchannel.child(groupID).child(subgroupID))
+            },
+            asyncCreateChannel: function(groupID, channelObj, user) {
+                var self = this;
+                var deferred = $q.defer();
+
+                //Step 1: see if it already exists - check if channelID exists
+                self.asyncCheckIfChannelExists(groupID, channelObj.channelID).then(function(response) {
+                    if (response.exists) {
+                        return deferred.reject('Channel creation failed. ' + channelObj.channelID + 'already exists.');
+                    } else {
+
+                        //Step 2: Add to channel
+                        var channelRef = refs.refGroupChats.child(groupID).child(channelObj.channelID)
+                            .set({
+                                title: channelObj.title,
+                                timestamp: fireTimeStamp,
+                                "created-by": user.userID//,
+                                // messages: {}
+
+                            }, function(error) {
+                                if (error) {
+                                    deferred.reject("error occurred in creating channel====");
+                                } else {
+                                    //step 3: add to messages
+                                    // var chatRef = refs.refGroupChats.child(groupID).child(channelObj.channelID).child("messages")
+                                        // .push({
+
+                                            // from: user.userID,
+                                            // timestamp: fireTimeStamp,
+                                            // text: "Welcome to " + channelObj.title + " Group"
+
+
+                                        // }, function(error) {
+                                            if (error) {
+                                                deferred.reject("error occurred in creating channel");
+                                            } else {
+
+                                                //step4 - create an activity for "channel-created" verb.
+                                                self.asyncRecordChannelCreationActivity(channelObj, user, groupID).then(
+
+                                                    deferred.resolve("channel created successfully and also pushed activity.")
+                                                );
+                                            }
+
+
+                                        // });
+                                }
+                            });
+
+                    }
+
+
+
+                });
+
+                return deferred.promise;
+            },
+            // sending msgs
+            SendMessages: function(groupID, channelID, user, text) {
+
+                var deferred = $q.defer();
+                var msgRef = refs.refgroupmessages.child(groupID + '/' + channelID).push({
+                    from: user.userID,
+                    timestamp: fireTimeStamp,
+                    text: text.msg
+                }, function(error) {
+                    if (error) {
+                        deferred.reject("error occurred in sending msg");
+                    } else {
+                        deferred.resolve("msg sucessfully sent");
+                    }
+
+
+                });
+
+
+
+                return deferred.promise;
+
+            },
+            // checking if channel exists
+            asyncCheckIfChannelExists: function(groupID, channelID) {
+                var deferred = $q.defer();
+
+                refs.refGroupChats.child(groupID + '/' + channelID).once('value', function(snapshot) {
+                    var exists = (snapshot.val() !== null);
+                    deferred.resolve({
+                        exists: exists,
+                        channel: snapshot.val()
+                    });
+                });
+
+                return deferred.promise;
+            },
+            // getting channel Array
+            getGroupChannelsSyncArray: function(groupID) {
+                return Firebase.getAsArray(refs.refsubgroupchannel.child(groupID));
+            },
+            //getting channels msg array
+            getChannelMessagesArray: function(groupID, channelID) {
+
+            var ref = refs.refgroupmessages.child(groupID + '/' + channelID);
+                // return Firebase.getAsArray(ref);
+                return $firebaseArray(ref);
+            },
+            // creating channel Activity
+            asyncRecordChannelCreationActivity: function(channel, user, group) {
+                var deferred = $q.defer();
+                var ref = firebaseService.getRefGroupsActivityStreams().child(group);
+                var actor = {
+                    "type": "user",
+                    "id": user.userID, //this is the userID, and an index should be set on this
+                    "email": user.email,
+                    "displayName": user.firstName + " " + user.lastName
+                };
+
+                var target = {
+                    type: "group",
+                    id: group
+                        //url:"",
+                        //displayName:""
+                };
+
+                var object = {
+                    "type": "channel",
+                    "id": channel.channelID, //an index should be set on this
+                    //"url": group.groupID,
+                    "displayName": channel.title
+                };
+
+
+                var activity = {
+                    language: "en",
+                    verb: "group-channel-creation",
+                    published: fireTimeStamp,
+                    displayName: actor.displayName + " created " + channel.title + "channel in " + target.id + " group.",
+                    actor: actor,
+                    object: object,
+                    target: target
+                };
+
+                var newActivityRef = ref.push();
+                newActivityRef.set(activity, function(error) {
+                    if (error) {
+                        deferred.reject();
+                    } else {
+                        var activityID = newActivityRef.key();
+                        var activityEntryRef = ref.child(activityID);
+                        activityEntryRef.once("value", function(snapshot) {
+                            var timestamp = snapshot.val().published;
+                            newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                if (error2) {
+                                    deferred.reject();
+                                } else {
+                                    deferred.resolve();
+                                }
+                            });
+                        });
+
+
+                    }
+                });
+
+                return deferred.promise;
+            },
+            // getting user emails object
+            getUserEmails: function(userID) {
+                // var deferred = $q.defer();
+                return $firebaseObject(refs.main.child("users").child(userID));
+                // deferred.resolve(EmailSyncObj);
+
+
+
+            },
+
+
+            //  SUB TEAMs SERVICESSSSSSSS
+
+            //    creating team channels
+
+            CreateTeamChannel: function(groupID, channelObj, TeamID, user) {
+                var self = this;
+                var deferred = $q.defer();
+
+                /*      //Step 1: see if it already exists - check if channelID exists
+                self.asyncCheckIfChannelExists(groupID, channelObj.channelID).then(function(response){
+                    if( response.exists ){
+                        return deferred.reject('Channel creation failed. ' + channelObj.channelID + 'already exists.');
+                    }
+                    else{
+*/
+                //Step 2: Add to channel
+                var channelRef = refs.refTeamChats.child(groupID).child(TeamID).child(channelObj.channelID)
+                    .set({
+                        title: channelObj.title,
+                        timestamp: fireTimeStamp,
+                        "created-by": user.userID,
+                        messages: {}
+
+                    }, function(error) {
+                        if (error) {
+                            deferred.reject("error occurred in creating channel");
+                        } else {
+                            //step 3: add to messages
+                            var chatRef = refs.refTeamChats.child(groupID).child(TeamID).child(channelObj.channelID).child("messages")
+                                .push({
+
+                                    from: user.userID,
+                                    timestamp: fireTimeStamp,
+                                    text: "Welcome to " + channelObj.title + " Group"
+
+
+                                }, function(error) {
+                                    if (error) {
+                                        deferred.reject("error occurred in creating channel");
+                                    } else {
+                                        deferred.resolve("channel created successfully and also pushed activity.");
+                                            /*//step4 - create an activity for "channel-created" verb.
+                                            self.asyncRecordChannelCreationActivity(channelObj,user,groupID ).then(
+                                                deferred.resolve("channel created successfully and also pushed activity.")
+                                            )*/
+                                    }
+
+
+                                });
+
+
+
+
+
+
+
+
+                        }
+                    });
+
+                //}
+
+
+
+                // });
+
+                return deferred.promise;
+            },
+            geTeamChannelsSyncArray: function(groupID, TeamID) {
+                return Firebase.getAsArray(refs.refsubgroupchannel.child(groupID).child(TeamID));
+            },
+            getTeamChannelMessagesArray: function(groupID, teamID, channelID) {
+
+                var ref = refs.refsubgroupmessages.child(groupID + '/' + teamID + '/' + channelID);
+                return $firebaseArray(ref);
+            },
+
+            TeamSendMessages: function(groupID, teamID, channelID, user, text) {
+
+                var deferred = $q.defer();
+                var msgRef = refs.refsubgroupmessages.child(groupID + '/' + teamID + '/' + channelID).push({
+
+                    from: user.userID,
+                    timestamp: fireTimeStamp,
+                    text: text.msg
+
+
+                }, function(error) {
+                    if (error) {
+                        deferred.reject("error occurred in sending msg");
+                    } else {
+                        deferred.resolve("msg sucessfully sent");
+                    }
+
+
+                });
+
+
+
+                return deferred.promise;
+
+            }
+        };
+    }
+})();
+
+/**
+ * Created by ZiaKhan on 31/12/14.
+ */
+
+'use strict';
+
+angular.module('core')
+    .factory('userService', ["$state", "$q", "$http", "appConfig", '$localStorage', function($state, $q, $http, appConfig, $localStorage) {
+        //.factory('userService',["$http","appConfig","$sessionStorage",'$localStorage','userFirebaseService', function( $http, appConfig,$sessionStorage,$localStorage, userFirebaseService) {
+
+        var user = $localStorage.loggedInUser;
+
+        return {
+            getUserPresenceFromLocastorage: function() {
+                var deferred = $q.defer();
+                if (user && user.userID) {
+                    if ((user.expiry*1000) < Date.now()) {
+                        deferred.resolve();
+                    }
+                    var ref = new Firebase(appConfig.myFirebase);
+                    ref.child("users").child(user.userID).once('value', function(snapshot) {
+                        if (snapshot.hasChild('email')) {
+                            $state.go('user.dashboard', {userID: user.userID})
+                        } else {
+                            deferred.resolve();
+                        }
+                        //console.log(snapshot)
+                    }); //user once
+                } // if userObj
+                else {
+                    deferred.resolve();
+                }
+
+                return deferred.promise;
+
+            },
+            getCurrentUser: function() {
+                return user;
+            },
+            getCurrentUserID: function() {
+                return user.userID;
+            },
+            setCurrentUser: function(newuser) {
+                $localStorage.loggedInUser = newuser;
+                user = newuser;
+            },
+            removeCurrentUser: function() {
+                delete $localStorage.loggedInUser;
+                user = {};
+            },
+            setExpiry: function(timestamp) {
+                $localStorage.loggedInUser.expiry = timestamp;
+                user.expiry = timestamp;
+            },
+            getExpire: function() {
+                return user.expiry
+            },
+            isUserAccessingOwnHome: function(path, userLoggedInfo) {
+                return true;
+            },
+            isUserGroupAdmin: function() {
+
+            },
+            isUserGroupMember: function() {
+
+            }
+        };
+    }]);
+
+/**
+ * Created by Mkamran on 31/12/14.
+ */
+
+"use strict";
+
+angular.module('core')
+    .factory('dataService', ['$firebaseObject', 'firebaseService', 'checkinService', 'userService', 'userPresenceService',
+        function($firebaseObject, firebaseService, checkinService, userService, userPresenceService) {
+            var userData = [];
+            var userGroups = [];
+            var userID = '';
+
+            function unloadData () {
+                userData = [];
+                userGroups = [];
+                userID = '';
+            }
+
+            function loadData () {
+                unloadData();
+                userID = userService.getCurrentUser().userID;
+                setUserData();
+                setUserGroups();
+            }
+
+            function setUserData () {
+                var groupTitle = '';
+                var subgroupTitle = '';
+                var groupsubgroupTitle = {};
+                firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
+                    $firebaseObject(firebaseService.getRefGroups().child(group.key())).$loaded().then(function(groupmasterdata) {
+                        groupsubgroupTitle[group.key()] = groupmasterdata.title;
+                    });
+                    firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_added', function(subgroup, prevChildKey) {
+                        checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
+                            userData.forEach(function(val, indx) {
+                                if (val.id === snapshot.key()) {
+                                    if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
+                                        if (snapshot.val().type === 1) {
+                                            val.type = true;
+                                        } else {
+                                            val.type = false;
+                                        }
+                                        val.message = snapshot.val().message;
+                                        val.timestamp = snapshot.val().timestamp;
+                                    }
+                                }
+                            });
+                        });
+                        checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
+                           userData.forEach(function(val, indx) {
+                                if (val.id === snapshot.key()) {
+                                    if (val.groupsubgroup === (group.key() + ' / ' + subgroup.key())) {
+                                        if (snapshot.val().type === 1) {
+                                            val.type = true;
+                                        } else {
+                                            val.type = false;
+                                        }
+                                        val.message = snapshot.val().message;
+                                        val.timestamp = snapshot.val().timestamp;
+                                    }
+                                }
+                            });
+                        });
+                        $firebaseObject(firebaseService.getRefSubGroups().child(group.key()).child(subgroup.key())).$loaded().then(function(subgroupmasterdata) {
+                            groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
+                        });
+                        firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
+                            $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
+                                if (userdata.type === 1) {
+                                    var type = true;
+                                } else {
+                                    var type = false;
+                                }
+                                var message = userdata.message;
+                                var timestamp = userdata.timestamp;
+                                $firebaseObject(firebaseService.getRefUsers().child(userdata.$id)).$loaded().then(function(usermasterdata) {
+                                    firebaseService.getRefUsers().child(userdata.$id).on('child_changed', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                if (snapshot.key() === "profileImage") {
+                                                    val.profileImage = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "firstName") {
+                                                    val.firstName = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "lastName") {
+                                                    val.lastName = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "contactNumber") {
+                                                    val.contactNumber = snapshot.val();
+                                                }
+                                            }
+                                        });
+                                    });
+                                    firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                if (snapshot.key() === "profileImage") {
+                                                    val.profileImage = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "firstName") {
+                                                    val.firstName = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "lastName") {
+                                                    val.lastName = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "contactNumber") {
+                                                    val.contactNumber = snapshot.val();
+                                                }
+                                            }
+                                        });
+                                    });
+                                    /*userPresenceService.getRefUsersPresense().child(userdata.$id).child('defined-status').on('value', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                val.onlinestatus = snapshot.val();
+                                            }
+                                        })
+                                    });*/
+                                    userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                if (snapshot.val()) {
+                                                    /*for (var key in snapshot.val()) {
+                                                        if (snapshot.val()[key].type === 1) {
+                                                            val.onlineweb = 1;
+                                                        } else if (snapshot.val()[key].type === 2) {
+                                                            val.onlineios = 1;
+                                                        } else if (snapshot.val()[key].type === 3) {
+                                                            val.onlineandroid = 1;
+                                                        }
+                                                    }*/
+                                                    val.onlinestatus = true;
+                                                } else {
+                                                    val.onlinestatus = false;
+                                                }
+                                            }
+                                        });
+                                    });
+                                    // firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
+                                    //     // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
+                                        userData.push({
+                                            id: userdata.$id,
+                                            type: type,
+                                            groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                            groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
+                                            groupID: group.key(),
+                                            groupTitle: groupsubgroupTitle[group.key()],
+                                            subgroupID: subgroup.key(),
+                                            subgroupTitle: groupsubgroupTitle[subgroup.key()],
+                                            //membershipNo : snapshot.getPriority() || '',
+                                            contactNumber: usermasterdata.contactNumber || '',
+                                            onlinestatus: false,
+                                            /*onlineweb: 0,
+                                            onlineios: 0,
+                                            onlineandroid: 0,*/
+                                            timestamp: timestamp,
+                                            message: message,
+                                            profileImage: usermasterdata['profile-image'] || '',
+                                            firstName: usermasterdata.firstName,
+                                            lastName: usermasterdata.lastName,
+                                            fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                        });
+                                    // });
+                                });
+                            });
+                        });
+                    });
+                });
+            }
+
+            function getUserData () {
+                return userData;
+            }
+
+            function setUserGroups () {
+                firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
+                    firebaseService.getRefGroups().child(group.key()).on('value', function(snapshot) {
+                        var groupmasterdata = snapshot.val();
+                        var eflag = true;
+
+                        //checking if group exists then update
+                        userGroups.forEach(function(val,indx) {
+                            if(val.groupID === snapshot.key()) {
+                                val.title = groupmasterdata.title;
+                                val.address = groupmasterdata.address;
+                                val.addressTitle = groupmasterdata['address-title'] || '';
+                                val.phone = groupmasterdata.phone;
+                                val.desc = groupmasterdata.desc;
+                                val.ownerID = groupmasterdata["group-owner-id"];
+                                val.owerImgUrl = groupmasterdata["owner-img-url"];
+                                val.imgUrl = (groupmasterdata["logo-image"] ? groupmasterdata["logo-image"].url : '' );
+                                val.membersOnline = (groupmasterdata["members-checked-in"] ? groupmasterdata["members-checked-in"].count : 0);
+                                val.members = groupmasterdata["members-count"];
+                                eflag = false;
+                            }
+                        });
+
+                        if(eflag){
+                            if(snapshot.hasChildren()) {
+                                userGroups.push({
+                                    groupID: snapshot.key(),
+                                    title: groupmasterdata.title,
+                                    address: groupmasterdata.address,
+                                    addressTitle: groupmasterdata['address-title'] || '',
+                                    phone: groupmasterdata.phone,
+                                    desc: groupmasterdata.desc,
+                                    ownerID: groupmasterdata["group-owner-id"],
+                                    owerImgUrl: groupmasterdata["owner-img-url"],
+                                    imgUrl: (groupmasterdata["logo-image"] ? groupmasterdata["logo-image"].url : '' ),
+                                    membersOnline: (groupmasterdata["members-checked-in"] ? groupmasterdata["members-checked-in"].count : 0),
+                                    members: groupmasterdata["members-count"]
+                                }); //userGroups Push
+                                firebaseService.getRefGroups().child(group.key()).on('child_changed', function(snapshot, prevChildKey) {
+                                    userGroups.forEach(function(item, index){
+                                        if (item.groupID === group.key()) {
+                                            if (snapshot.key() === "title") {
+                                                item.title = snapshot.val();
+                                            }
+                                            if (snapshot.key() === "members-checked-in") {
+                                                item.membersOnline = snapshot.val().count;
+                                            }
+                                            if (snapshot.key() === "members-count") {
+                                                item.members = snapshot.val();
+                                            }
+                                            if (snapshot.key() === "address-title") {
+                                                item.addressTitle = snapshot.val();
+                                            }
+                                        }
+                                    });
+                                });// firebaseService
+                            }//if snapshot.hasChildren()
+                        } // if eflag
+
+
+
+                        // userGroups.forEach(function(val,indx){
+                        //     console.log('2')
+                        //     if(val.groupID === snapshot.key()) {
+                        //         console.log('3')
+                        //         val.title = groupmasterdata.title;
+                        //         val.address = groupmasterdata.address;
+                        //         val.addressTitle = groupmasterdata['address-title'] || '';
+                        //         val.phone = groupmasterdata.phone;
+                        //         val.desc = groupmasterdata.desc;
+                        //         val.ownerID = groupmasterdata["group-owner-id"];
+                        //         val.owerImgUrl = groupmasterdata["owner-img-url"];
+                        //         val.imgUrl = (groupmasterdata["logo-image"] ? groupmasterdata["logo-image"].url : '' );
+                        //         val.membersOnline = (groupmasterdata["members-checked-in"] ? groupmasterdata["members-checked-in"].count : 0);
+                        //         val.members = groupmasterdata["members-count"];
+                        //     } else {
+                        //         console.log('else')
+                        //         if(snapshot.hasChildren()) {
+                        //             userGroups.push({
+                        //                 groupID: snapshot.key(),
+                        //                 title: groupmasterdata.title,
+                        //                 address: groupmasterdata.address,
+                        //                 addressTitle: groupmasterdata['address-title'] || '',
+                        //                 phone: groupmasterdata.phone,
+                        //                 desc: groupmasterdata.desc,
+                        //                 ownerID: groupmasterdata["group-owner-id"],
+                        //                 owerImgUrl: groupmasterdata["owner-img-url"],
+                        //                 imgUrl: (groupmasterdata["logo-image"] ? groupmasterdata["logo-image"].url : '' ),
+                        //                 membersOnline: (groupmasterdata["members-checked-in"] ? groupmasterdata["members-checked-in"].count : 0),
+                        //                 members: groupmasterdata["members-count"]
+                        //             });
+                        //             firebaseService.getRefGroups().child(group.key()).on('child_changed', function(snapshot, prevChildKey) {
+                        //                 userGroups.forEach(function(item, index){
+                        //                     if (item.groupID === group.key()) {
+                        //                         if (snapshot.key() === "title") {
+                        //                             item['title'] = snapshot.val()
+                        //                         }
+                        //                         if (snapshot.key() === "members-checked-in") {
+                        //                             item.membersOnline = snapshot.val().count
+                        //                         }
+                        //                         if (snapshot.key() === "members-count") {
+                        //                             item.members = snapshot.val()
+                        //                         }
+                        //                         if (snapshot.key() === "address-title") {
+                        //                             item.addressTitle = snapshot.val();
+                        //                         }
+                        //                     }
+                        //                 });
+                        //             });
+                        //         }//if closing
+                        //     }//else closing
+                        // })
+                    });
+                });
+            }
+
+            function getUserGroups () {
+                return userGroups;
+            }
+
+            function setUserCheckInOut (grId, sgrId, userID, type) {
+                userData.forEach(function(val, indx) {
+                    if (val.groupsubgroup === (grId + ' / ' + sgrId)) {
+                        if (val.id === userID) {
+                            if (type) {
+                                val.type = false;
+                            } else {
+                                val.type = true;
+                            }
+                        }
+                    }
+                });
+            }
+
+            return {
+                loadData: loadData,
+                unloadData: unloadData,
+                getUserData: getUserData,
+                getUserGroups: getUserGroups,
+                setUserCheckInOut: setUserCheckInOut
+            };
+        }
+    ]);
+
+/**
+ * Created by ZiaKhan on 07/01/15.
+ */
+
+'use strict';
+
+angular.module('core')
+    .factory('utilService', ['$q', function($q) {
+        return {
+            trim: function(str, characters) {
+                var c_array = characters.split('');
+                var result = '';
+
+                for (var i = 0; i < characters.length; i++)
+                    result += '\\' + c_array[i];
+
+                return str.replace(new RegExp('^[' + result + ']+|[' + result + ']+$', 'g'), '');
+            },
+            trimID: function(str) {
+                return this.trim(str, "/");
+            },
+            base64ToBlob: function(base64) {
+                // console.log(base64.split(',')[0])
+                var blobBin = atob(base64.split(',')[1]);
+                var array = [];
+                for (var i = 0; i < blobBin.length; i++) {
+                    array.push(blobBin.charCodeAt(i));
+                }
+
+                return new Blob([new Uint8Array(array)], {
+                    type: 'image/png'
+                });
+            }
+        };
+    }]);
+
+/**
+ * Created by ZiaKhan on 01/02/15.
+ */
+
+'use strict';
+
+angular.module('core')
+    .factory('messageService', ["$mdToast", "soundService", function($mdToast, soundService) {
+        var position = 'top left';
+        return {
+            show: function(message) {
+                $mdToast.show({
+                    template: '<md-toast class="md-toast-animating">' + message + '</md-toast>',
+                    hideDelay: 3000,
+                    //hideDelay: 200000,
+                    position: 'top left right'
+                });
+            },
+            showSuccess: function(message) {
+                this.show(message || 'Process successful.');
+                soundService.playSuccess();
+            },
+            showFailure: function(message) {
+                this.show(message || 'Process failed.');
+                soundService.playFail();
+            },
+            changePosition: function(position) {
+                position = position
+            },
+            reset: function() {
+                position = 'top left'
+            }
+        };
+    }]);
+
+/**
+ * Created by Shahzad on 2/25/2015.
+ */
+
+(function() {
+    'use strict';
+
+    angular
+        .module('core')
+        .factory('confirmDialogService', confirmDialogService);
+
+    confirmDialogService.$inject = ['$mdDialog'];
+
+    function confirmDialogService($mdDialog) {
+
+        return function(cautionString) {
+            return $mdDialog.show({
+                templateUrl: 'core/views/confirmDialog.tmpl.html',
+                controller: 'ConfirmDialogCtrl',
+                locals: {
+                    cautionString: cautionString || 'Are you sure ?'
+                }
+            });
+        };
+    }
+
+})();
+
+/**
+ * Created by ZiaKhan on 02/01/15.
+ */
+
+'use strict';
+
+angular.module('core')
+    .factory('firebaseService', ["$firebaseAuth", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", "userService",
+        function($firebaseAuth, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, userService) {
+
+            var ref = new Firebase(appConfig.myFirebase);
+
+            var currentAuthData = null;
+            var refUsers = null;
+            var refGroups = null;
+            var refSubGroups = null;
+            var refMicroGroups = null;
+            var refUserGroupMemberships = null;
+            var refUserSubGroupMemberships = null;
+            var refUserMicroGroupMemberships = null;
+            var groupsUserInvites = null;
+            var groupMembershipRequests = null;
+            var groupsMembershipRequestsByUser = null;
+            var subgroupMembershipRequests = null;
+            var subgroupMembershipRequestsByUser = null;
+            var groupMembers = null;
+            var subgroupMembers = null;
+            var microgroupMembers = null;
+            var groupsNames = null;
+            var subgroupsNames = null;
+            var microgroupsNames = null;
+            var groupsActivityStreams = null;
+            var subgroupsActivityStreams = null;
+            var microgroupsActivityStreams = null;
+            var groupCheckinCurrent = null;
+            var groupCheckinRecords = null;
+            var subgroupCheckinRecords = null;
+            var groupLocsDefined = null;
+            var flattenedGroups = null;
+            var loggedUserRef = null;
+            var policies = null;
+            var userPolicies = null;
+            var progressReport = null;
+            var subgroupPolicies = null;
+
+            return {
+                addUpdateHandler: function() {
+                    ref.onAuth(function(authData) {
+                        if (authData) {
+                            currentAuthData = authData;
+                            //console.info("User " + authData.uid + " is logged in with " + authData.provider);
+                        } else {
+                            //console.info("User is logged out");
+                            //delete $sessionStorage.loggedInUser;
+                            userService.removeCurrentUser();
+                            appConfig.firebaseAuth = false;
+                            messageService.showFailure("User is logged out, Please login again.");
+                            //$location.path("/user/login");
+                        }
+                    });
+
+                },
+                getRefMain: function() {
+                    return ref;
+                },
+                getAuthData: function() {
+                    return ref.getAuth();
+                },
+                getRefUsers: function() {
+                    return refUsers;
+                },
+                getRefUserGroupMemberships: function() {
+                    return refUserGroupMemberships;
+                },
+                getRefUserSubGroupMemberships: function() {
+                    return refUserSubGroupMemberships;
+                },
+                getRefUserMicroGroupMemberships: function() {
+                    return refUserMicroGroupMemberships;
+                },
+                getRefGroupsUserInvites: function() {
+                    return groupsUserInvites;
+                },
+                getRefGroupMembershipRequests: function() {
+                    return groupMembershipRequests;
+                },
+                getRefGroupMembershipRequestsByUser: function() {
+                    return groupsMembershipRequestsByUser;
+                },
+                getRefSubgroupMembershipRequests: function() {
+                    return subgroupMembershipRequests;
+                },
+                getRefSubgroupMembershipRequestsByUser: function() {
+                    return subgroupMembershipRequestsByUser;
+                },
+                getRefGroupMembers: function() {
+                    return groupMembers;
+                },
+                getRefSubGroupMembers: function() {
+                    return subgroupMembers;
+                },
+                getRefMicroGroupMembers: function() {
+                    return microgroupMembers;
+                },
+                getRefGroupsNames: function() {
+                    return groupsNames;
+                },
+                getRefSubGroupsNames: function() {
+                    return subgroupsNames;
+                },
+                getRefMicroGroupsNames: function() {
+                    return microgroupsNames;
+                },
+                getRefGroupsActivityStreams: function() {
+                    return groupsActivityStreams;
+                },
+                getRefSubGroupsActivityStreams: function() {
+                    return subgroupsActivityStreams;
+                },
+                getRefMicroGroupsActivityStreams: function() {
+                    return microgroupsActivityStreams;
+                },
+                getRefGroups: function() {
+                    return refGroups;
+                },
+                getRefSubGroups: function() {
+                    return refSubGroups;
+                },
+                getRefMicroGroups: function() {
+                    return refMicroGroups;
+                },
+                getRefGroupCheckinCurrent: function() {
+                    return groupCheckinCurrent;
+                },
+                getRefGroupCheckinRecords: function() {
+                    return groupCheckinRecords;
+                },
+                getRefsubgroupCheckinRecords: function() {
+                    return subgroupCheckinRecords;
+                },
+                getRefGroupLocsDefined: function() {
+                    return groupLocsDefined;
+                },
+                getSignedinUserRef: function() {
+                    return loggedUserRef;
+                },
+                getRefFlattendGroups: function() {
+                    return flattenedGroups;
+                },
+                getRefPolicies: function() {
+                    return policies;
+                },
+                getRefUserPolicies: function() {
+                    return userPolicies;
+                },
+                getRefProgressReport: function() {
+                    return progressReport;
+                },
+                getRefSubgroupPolicies: function(){
+                        return subgroupPolicies;
+                },
+                logout: function(){
+                  console.log('unauth the firebase');
+                  ref.unauth();
+                  var authdata = ref.getAuth();
+                  console.log(authdata);
+                },
+                asyncLogin: function(userID, token) {
+                    var deferred = $q.defer();
+                    if (token) { // means user logged in from web server
+                        Firebase.goOnline(); // if previously manually signed out from firebase.
+                        var auth = $firebaseAuth(ref);
+                        auth.$authWithCustomToken(token).then(function(authData) {
+                            if (authData.uid == userID) {
+
+                                //authenticated
+                                appConfig.firebaseAuth = true;
+                                userService.setExpiry(authData.expires)
+
+                                /*storing references*/
+                                currentAuthData = authData;
+                                refUsers = ref.child("users");
+                                refGroups = ref.child("groups");
+                                refSubGroups = ref.child("subgroups");
+                                refMicroGroups = ref.child("microgroups");
+                                refUserGroupMemberships = ref.child("user-group-memberships");
+                                refUserSubGroupMemberships = ref.child("user-subgroup-memberships");
+                                refUserMicroGroupMemberships = ref.child("user-microgroup-memberships");
+                                groupsUserInvites = ref.child("groups-user-invites");
+                                groupMembershipRequests = ref.child("group-membership-requests");
+                                groupsMembershipRequestsByUser = ref.child("group-membership-requests-by-user");
+                                subgroupMembershipRequests = ref.child("subgroup-membership-requests");
+                                subgroupMembershipRequestsByUser = ref.child("subgroup-membership-requests-by-user");
+                                groupMembers = ref.child("group-members");
+                                subgroupMembers = ref.child("subgroup-members");
+                                microgroupMembers = ref.child("microgroup-members");
+                                groupsNames = ref.child("groups-names");
+                                subgroupsNames = ref.child("subgroups-names");
+                                microgroupsNames = ref.child("microgroups-names");
+                                groupsActivityStreams = ref.child("group-activity-streams");
+                                subgroupsActivityStreams = ref.child("subgroup-activity-streams");
+                                microgroupsActivityStreams = ref.child("microgroup-activity-streams");
+                                groupCheckinCurrent = ref.child("group-check-in-current");
+                                groupCheckinRecords = ref.child("group-check-in-records");
+                                subgroupCheckinRecords = ref.child("subgroup-check-in-records");
+                                groupLocsDefined = ref.child("group-locations-defined");
+                                flattenedGroups = ref.child("flattened-groups");
+                                policies = ref.child("policies");
+                                userPolicies = ref.child("user-policies");
+                                progressReport = ref.child('subgroup-progress-reports');
+                                subgroupPolicies = ref.child('subgroup-policies');
+
+                                /*presence API work*/
+                                //explicitly passing references to avoid circular dependency issue.
+                                userPresenceService.init({
+                                    main: ref,
+                                    users: refUsers
+                                });
+
+                                //listen for firebase connection state and register presence
+                                userPresenceService.syncUserPresence(userID);
+
+                                deferred.resolve({
+                                    loggedUserRef: loggedUserRef
+                                });
+                            } else {
+                                deferred.reject();
+                            }
+                        }).catch(function(error) {
+                            // console.error("Firebase Authentication failed: ", error);
+                            deferred.reject(error);
+                        });
+                    } else {
+                        deferred.reject(); //token not provided
+                    }
+                    return deferred.promise;
+                },
+                asyncCheckIfGroupExists: function(groupID) {
+                    var deferred = $q.defer();
+                    groupsNames.child(groupID).once('value', function(snapshot) {
+                        var exists = (snapshot.val() !== null);
+                        deferred.resolve({
+                            exists: exists,
+                            group: snapshot.val()
+                        });
+                    });
+                    return deferred.promise;
+                },
+                asyncCheckIfUserExists: function(userID) {
+                    var deferred = $q.defer();
+                    refUsers.child(userID).once('value', function(snapshot) {
+                        var exists = (snapshot.val() !== null);
+                        deferred.resolve({
+                            exists: exists,
+                            userID: userID,
+                            user: snapshot.val()
+                        });
+                    });
+                    return deferred.promise;
+                }
+            };
+        }
+    ]);
+
+/**
+ * Created by ZiaKhan on 11/02/15.
+ */
+
+'use strict';
+
+angular.module('core')
+    .factory('userFirebaseService', ['activityStreamService', "firebaseService", "$q", "$timeout", '$http', "$firebaseObject", 'appConfig', 'userService',
+        function(activityStreamService, firebaseService, $q, $timeout, $http, $firebaseObject, appConfig, userService) {
+
+            //Firebase timeStamp object.
+            var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+
+            function groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred) {
+                var ref = firebaseService.getRefGroupMembershipRequests().child(groupID);
+                ref.child(userID).once("value", function(snap) {
+                    var alreadyPending = snap.val();
+                    if (alreadyPending) {
+                        if (subgroupID) {
+                            if (snap.val()['team-request']) {
+                                var obj = snap.val()['team-request'];
+                                obj.forEach(function(key, indx){
+                                    if(key.subgroupID === subgroupID) {
+                                        deferred.reject("Request is already pending for this team");
+                                        return
+                                    };
+                                    if(obj.length === (indx + 1)) {
+                                        // requestSaveToFirebase(groupID, subgroupID, subgrouptitle, userID, message, ref, deferred);
+
+                                        var request = {};
+                                        request[userID] = snap.val();
+                                        request[userID]['timestamp'] = firebaseTimeStamp;
+                                        request[userID]['message'] = message;
+                                        request[userID]['membershipNo'] = membershipNo;
+                                        request[userID]['team-request'][obj.length] = {
+                                            'subgroupID': subgroupID,
+                                            'subgrouptitle': subgrouptitle
+                                        };
+                                        ref.update(request, function(error) {
+                                            if (error) {
+                                                deferred.reject("Server Error, please try again");
+                                                return
+                                            } else {
+                                                deferred.resolve();
+                                                return
+                                            }
+                                        })
+
+                                    }
+                                })
+                            } else {
+                                var request = {};
+                                request[userID] = {
+                                    timestamp: firebaseTimeStamp,
+                                    message: message,
+                                    membershipNo: membershipNo,
+                                    'team-request': {
+                                        '0': {
+                                            'subgroupID': subgroupID,
+                                            'subgrouptitle': subgrouptitle
+                                        }
+                                    }
+                                };
+                                ref.update(request, function(error) {
+                                    if (error) {
+                                        deferred.reject("Server Error, please try again");
+                                        return
+                                    } else {
+                                        deferred.resolve();
+                                        return
+                                    }
+                                })
+                            }
+                        } else {
+                            deferred.reject("Request is already pending for this team of teams"); //just to double check here also, but no need if data is consistent
+                        }
+                    } else {
+                        requestSaveToFirebase(groupID, subgroupID, subgrouptitle, userID, message, membershipNo, ref, deferred);
+                    }
+                });
+            }
+
+            function requestSaveToFirebase (groupID, subgroupID, subgrouptitle, userID, message, membershipNo, ref, deferred) {
+                var request = {};
+                if (subgroupID) {
+                    request[userID] = {
+                        timestamp: firebaseTimeStamp,
+                        message: message,
+                        membershipNo: membershipNo,
+                        'team-request': {
+                            '0': {
+                                'subgroupID': subgroupID,
+                                'subgrouptitle': subgrouptitle
+                            }
+                        }
+                    };
+                } else {
+                    request[userID] = {
+                        timestamp: firebaseTimeStamp,
+                        message: message,
+                        membershipNo: membershipNo
+                    };
+                    console.log(membershipNo)
+                }
+                ref.update(request, function(error) {
+                    if (error) {
+                        deferred.reject("Server Error, please try again");
+                    } else {
+                        ref.child(userID).once("value", function(snapshot) {
+                            var timestamp = snapshot.val()["timestamp"]; //to get the server time
+                            var refByUser = firebaseService.getRefGroupMembershipRequestsByUser().child(userID); //Step 4 add to pending by user
+                            var requestByUser = {};
+                            requestByUser[groupID] = {
+                                timestamp: timestamp
+                            };
+                            refByUser.update(requestByUser, function(error) {
+                                if (error) {
+                                    //roll back previous may be
+                                    deferred.reject("Server Error, please try again");
+                                } else {
+                                    deferred.resolve();
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+
+            return {
+                getUserMembershipsSyncObj: function(userID) {
+                    var response = {
+                        groupArray: [],
+                        userActivityStream: []
+                    };
+                    var self = this;
+                    response.userGroupMembershipRef = firebaseService.getRefUserGroupMemberships().child(userID);
+                    response.userGroupMembershipRef.on('child_added', function(snapshot) {
+                        $timeout(function() {
+                            var groupSyncObj = $firebaseObject(firebaseService.getRefGroups().child(snapshot.key()));
+                            var groupActivitiesRef = firebaseService.getRefGroupsActivityStreams().child(snapshot.key());
+                            self.getGroupActivityStream(groupActivitiesRef, response.userActivityStream);
+                            response.groupArray.push({
+                                groupID: snapshot.key(),
+                                membershipType: snapshot.val()["membership-type"],
+                                timestamp: snapshot.val()["timestamp"],
+                                groupData: groupSyncObj
+                            });
+                        }, 1000);
+
+                    });
+                    response.userGroupMembershipRef.on('child_changed', function(snapshot) {
+                        var groupID = snapshot.key();
+                        var groupObj = snapshot.val();
+                        response.groupArray.forEach(function(obj) {
+                            if (obj.groupID == groupID) {
+                                $timeout(function() {
+                                    obj.membershipType = groupObj['membership-type'];
+                                });
+                            }
+                        });
+                    });
+                    response.userGroupMembershipRef.on('child_removed', function(snapshot) {
+                        var groupID = snapshot.key();
+                        var memberType = snapshot.val();
+                        response.groupArray.forEach(function(obj, i) {
+                            if (obj.groupID == groupID) {
+                                $timeout(function() {
+                                    response.groupArray.splice(i, 1);
+                                });
+                            }
+                        });
+
+                    });
+                    return response;
+                },
+                'uploadProfilePicture': function(api, data) {
+                    //var deferred = $q.defer();
+                    return $http.post(appConfig.apiBaseUrl + '/' + api, data, {
+                        withCredentials: false,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity
+                    });
+                    //return deferred.promise;
+                },
+                asyncCreateGroup: function(userID, groupObj, loggedInUserGroupsList, formDataFlag) {
+                    var self = this;
+                    var deferred = $q.defer();
+
+                    //Step 1: see if it already exists
+                    firebaseService.asyncCheckIfGroupExists(groupObj.groupID).then(function(response) {
+                        if (response.exists) {
+                            deferred.reject(groupObj);
+                        } else {
+                            //first adding own membership to get write access as per rules
+                            firebaseService.getRefUserGroupMemberships().child(userID).child(groupObj.groupID).update({
+                                "membership-type": 1,
+                                timestamp: firebaseTimeStamp
+                            }, function(error1) {
+                                if (error1) {
+                                    deferred.reject();
+                                } else {
+                                    firebaseService.getRefGroupMembers().child(groupObj.groupID).child(userID).set({
+                                        "membership-type": 1,
+                                        timestamp: firebaseTimeStamp
+                                    }, function(error2) {
+                                        if (error2) {
+                                            deferred.reject();
+                                        } else {
+                                            //Step 4: Add to group
+                                            var dataToSet = {
+                                                'group-owner-id': userService.getCurrentUser().userID,
+                                                'owner-img-url': groupObj.ownerImgUrl,
+                                                title: groupObj.title,
+                                                desc: groupObj.desc || '',
+                                                'address-title': groupObj.addressTitle || '',
+                                                address: groupObj.address || '',
+                                                phone: groupObj.phone,
+                                                timeZone: groupObj.timeZone,
+                                                timestamp: firebaseTimeStamp,
+                                                "members-count": 1,
+                                                "subgroups-count": 0,
+                                                "members-checked-in": {
+                                                     "count": 0
+                                                 },
+                                                 privacy: + groupObj.signupMode,
+                                                 'logo-image': {
+                                                    url: groupObj.imgLogoUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png', // pID is going to be changed with userID for single profile picture only
+                                                    id: groupObj.groupID,
+                                                    'bucket-name': 'test2pwow',
+                                                    source: 1, // 1 = google cloud storage
+                                                    mediaType: 'image/png' //image/jpeg
+                                                }
+                                            };
+
+                                            /* if(groupObj.signupMode === '3')dataToSet.privacy.allowedDomain = groupObj.allowedDomain;*/
+                                            var groupRef = firebaseService.getRefGroups().child(groupObj.groupID).set(dataToSet, function(error) {
+                                                if (error) {
+                                                    deferred.reject();
+                                                } else {
+
+                                                    /* if(formDataFlag){
+                                                         var api = appConfig.serverPostApi.groupProfilePictureUpload;
+                                                         self.uploadProfilePicture(api,groupObj.formData).then(function(data){
+                                                             console.log('pictureuploaded')
+                                                             console.log(data)
+                                                         },function(err){
+                                                             console.log('picture upload error')
+                                                             console.log(err)
+
+                                                         }) // save groupProfilePicture usign our server
+                                                     }*/
+                                                    var groupNameRef = firebaseService.getRefGroupsNames().child(groupObj.groupID);
+                                                    var data = {
+                                                        title: groupObj.title,
+                                                        groupImgUrl: groupObj.imgLogoUrl || 'https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png',
+                                                        ownerImgUrl: groupObj.ownerImgUrl,
+                                                        'address-title': groupObj.addressTitle || ''
+                                                            //groupOwnerImgUrl:
+                                                    };
+
+                                                    groupNameRef.set(data, function(error) {
+                                                        if (error) {
+                                                            deferred.reject();
+                                                            //role back previous
+                                                        } else {
+                                                            var memRef = firebaseService.getRefGroupMembers().child(groupObj.groupID);
+
+                                                            //to create a JSON for given comma separated members string.
+                                                            self.asyncCreateGroupMembersJSON(userID, groupObj.members).then(function(response) {
+                                                                var mems = response.memberJSON;
+
+                                                                //mems[userID] = {"membership-type": 1, timestamp: firebaseTimeStamp};
+                                                                memRef.update(mems, function(error) {
+                                                                    if (error) {
+                                                                        //roleback previous
+                                                                        deferred.reject();
+                                                                    } else {
+                                                                        var promises = [];
+                                                                        //promises.push(self.asyncAddUserMembership(userID, groupObj.groupID, 1));
+                                                                        var memArray = response.members;
+                                                                        memArray.forEach(function(val, i) {
+                                                                            promises.push(self.asyncAddUserMembership(val, groupObj.groupID, 3));
+                                                                        });
+                                                                        $q.all(promises).then(function() {
+                                                                            //self.asyncRecordGroupCreationActivity(groupObj, $sessionStorage.loggedInUser).then(function () {
+                                                                            self.asyncRecordGroupCreationActivity(groupObj, userService.getCurrentUser()).then(function() {
+                                                                                var memberCountRef = firebaseService.getRefGroups().child(groupObj.groupID).child("members-count");
+                                                                                if (memArray.length > 0) {
+                                                                                    memberCountRef.transaction(function(current_value) {
+                                                                                        return (current_value || 0) + memArray.length;
+                                                                                    });
+                                                                                }
+
+                                                                                if (memArray.length == 1) {
+                                                                                    //self.asyncRecordGroupMemberAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members[0])
+                                                                                    // self.asyncRecordGroupMemberAdditionActivity(groupObj, userService.getCurrentUser(), response.members[0])
+                                                                                    //     .then(function() {
+                                                                                    //         deferred.resolve({
+                                                                                    //             unlistedMembersArray: response.unlisted
+                                                                                    //         });
+                                                                                    //     })
+                                                                                } else if (memArray.length > 1) {
+                                                                                    //self.asyncRecordManyGroupMembersAdditionActivity(groupObj, $sessionStorage.loggedInUser, response.members)
+                                                                                    // self.asyncRecordManyGroupMembersAdditionActivity(groupObj, userService.getCurrentUser(), response.members)
+                                                                                    //     .then(function() {
+                                                                                    //         deferred.resolve({
+                                                                                    //             unlistedMembersArray: response.unlisted
+                                                                                    //         });
+                                                                                    //     });
+                                                                                } else {
+                                                                                    deferred.resolve({
+                                                                                        unlistedMembersArray: response.unlisted
+                                                                                    });
+                                                                                }
+                                                                            });
+
+                                                                        }, function() {
+                                                                            deferred.reject();
+                                                                        });
+                                                                    }
+                                                                });
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+
+
+                        }
+                    });
+
+                    return deferred.promise;
+                },
+                asyncAddUserMembership: function(userID, groupID, typeNum) {
+                    var deferred = $q.defer();
+                    var timestampRef = firebaseService.getRefGroupMembers().child(groupID + '/' + userID + '/timestamp');
+
+                    timestampRef.once("value", function(snapshot) {
+                        var timestamp = snapshot.val() || firebaseTimeStamp;
+                        var userMem = {};
+
+                        userMem[groupID] = {
+                            "membership-type": typeNum,
+                            timestamp: timestamp
+                        };
+
+                        var userMemRef = firebaseService.getRefUserGroupMemberships().child(userID);
+                        userMemRef.update(userMem, function(error) {
+                            if (error) {
+                                deferred.reject();
+                            } else {
+                                deferred.resolve();
+                            }
+                        });
+                    });
+
+                    return deferred.promise;
+                },
+                asyncCreateGroupMembersJSON: function(ownerUserID, listStr, existingMembersObj) {
+                    var deferred = $q.defer();
+
+                    var groupMembersJSON = {};
+                    var unlistedMembers = [];
+                    var members = [];
+
+                    if (listStr.length < 2) {
+                        deferred.resolve({
+                            memberJSON: groupMembersJSON,
+                            unlisted: unlistedMembers,
+                            members: members
+                        });
+                    } else {
+                        existingMembersObj = existingMembersObj || {};
+
+                        var memberArray = listStr.split(",");
+                        var promises = [];
+
+                        memberArray.forEach(function(val, i) {
+                            val = val.trim();
+                            var promise = firebaseService.asyncCheckIfUserExists(val);
+                            promise.then(function(response) {
+                                if (response.exists) {
+                                    /*check if requested userID is :
+                                     * a valid user,
+                                     * has not already been added to members list of group (if updating members list) */
+                                    if (val != ownerUserID && !existingMembersObj[val]) {
+                                        groupMembersJSON[val] = {
+                                            "membership-type": 3, //1 means owner, 2 will mean admin, 3 means member only
+                                            timestamp: firebaseTimeStamp
+                                        };
+                                        members.push(val);
+                                        //}
+                                    } else {
+                                        unlistedMembers.push(val);
+                                    }
+                                } else {
+                                    unlistedMembers.push(val);
+                                }
+                            });
+
+                            promises.push(promise);
+                        });
+
+                        $q.all(promises).then(function() {
+                            deferred.resolve({
+                                memberJSON: groupMembersJSON,
+                                unlisted: unlistedMembers,
+                                members: members
+                            });
+                        }, function() {
+                            deferred.reject();
+                        });
+                    }
+
+                    return deferred.promise;
+                },
+                asyncRecordMemberLeft: function(userObj, groupObj) {
+                    var deferred = $q.defer();
+
+                    var ref = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
+                    var actor = {
+                        "type": "user",
+                        "id": userObj.userID, //this is the userID, and an index should be set on this
+                        "email": userObj.email,
+                        "displayName": userObj.firstName + " " + userObj.lastName
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": groupObj.$id, //an index should be set on this
+                        "url": groupObj.$id,
+                        "displayName": groupObj.title
+                    };
+
+                    var activity = {
+                        language: "en",
+                        verb: "group-member-left",
+                        published: firebaseTimeStamp,
+                        displayName: actor.displayName + " left " + target.displayName,
+                        actor: actor,
+                        target: target
+                    };
+
+                    var newActivityRef = ref.push();
+                    newActivityRef.set(activity, function(error) {
+                        if (error) {
+                            deferred.reject();
+                        } else {
+                            var activityID = newActivityRef.key();
+                            var activityEntryRef = ref.child(activityID);
+                            activityEntryRef.once("value", function(snapshot) {
+                                var timestamp = snapshot.val().published;
+                                newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                    if (error2) {
+                                        deferred.reject();
+                                    } else {
+                                        deferred.resolve('You have left ' + target.displayName + ' successfully.');
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordGroupCreationActivity: function(groupObj, user) {
+                    var deferred = $q.defer();
+
+                    //publish an activity stream record -- START --
+                    var type = 'group';
+                    var targetinfo = {id: groupObj.groupID, url: groupObj.groupID, title: groupObj.title, type: 'group' };
+                    var area = {type: 'group-created'};
+                    var group_id = groupObj.groupID;
+                    var memberuserID = null;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
+                    deferred.resolve();
+
+                    // var ref = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+                    // var actor = {
+                    //     "type": "user",
+                    //     "id": user.userID, //this is the userID, and an index should be set on this
+                    //     "email": user.email,
+                    //     "displayName": user.firstName + " " + user.lastName
+                    // };
+                    //
+                    // var object = {
+                    //     "type": "group",
+                    //     "id": group.groupID, //an index should be set on this
+                    //     "url": group.groupID,
+                    //     "displayName": group.title
+                    // };
+                    //
+                    // var activity = {
+                    //     language: "en",
+                    //     verb: "group-creation",
+                    //     //published: firebaseTimeStamp,
+                    //     //published: Firebase.ServerValue.TIMESTAMP,
+                    //     published: {
+                    //         ".sv": "timestamp"
+                    //     },
+                    //     displayName: actor.displayName + " created " + group.title,
+                    //     actor: actor,
+                    //     object: object
+                    // };
+                    // var newActivityRef = ref.push();
+                    // newActivityRef.set(activity, function(error) {
+                    //     if (error) {
+                    //         deferred.reject();
+                    //     } else {
+                    //         var activityID = newActivityRef.key();
+                    //         var activityEntryRef = ref.child(activityID);
+                    //         activityEntryRef.once("value", function(snapshot) {
+                    //             var timestamp = snapshot.val().published;
+                    //             newActivityRef.setPriority(0 - timestamp, function(error2) {
+                    //                 if (error2) {
+                    //                     deferred.reject();
+                    //                 } else {
+                    //                     deferred.resolve();
+                    //                 }
+                    //             });
+                    //         });
+                    //
+                    //
+                    //     }
+                    // });
+
+                    return deferred.promise;
+                },
+                asyncRecordGroupMemberAdditionActivity: function(group, user, memberUserID) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": group.groupID,
+                        "url": group.groupID,
+                        "displayName": group.title
+                    };
+
+                    firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+                        var object = {
+                            "type": "user",
+                            "id": memberUserID, //an index should be set on this
+                            "email": res.user.email,
+                            "displayName": res.user.firstName + " " + res.user.lastName
+                        };
+
+                        var activity = {
+                            language: "en",
+                            verb: "group-added-member",
+                            published: firebaseTimeStamp,
+                            displayName: actor.displayName + " added " + object.displayName + " as a member in " + group.title,
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
+
+                        var newActivityRef = ref.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
+                                deferred.reject();
+                            } else {
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = ref.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+                                            deferred.reject();
+                                        } else {
+                                            deferred.resolve();
+                                        }
+                                    });
+                                });
+                            }
+                        });
+
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordManyGroupMembersAdditionActivity: function(group, user, membersArray) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+                    var self = this;
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var object = {
+                        "type": "UserCollection",
+                        "totalItems": membersArray.length,
+                        "items": {}
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": group.groupID,
+                        "url": group.groupID,
+                        "displayName": group.title
+                    };
+
+                    var promiseArray = [];
+                    membersArray.forEach(function(member) {
+                        promiseArray.push(firebaseService.asyncCheckIfUserExists(member));
+                    });
+
+                    $q.all(promiseArray).then(function(values) {
+                        values.forEach(function(v) {
+                            object.items[v.userID] = {
+                                "verb": "group-added-member",
+                                "object": {
+                                    "type": "user",
+                                    "id": v.userID,
+                                    "email": v.user.email,
+                                    "displayName": v.user.firstName + " " + v.user.lastName
+                                }
+                            };
+                        });
+
+
+                        var activity = {
+                            language: "en",
+                            verb: "group-added-many-members",
+                            published: firebaseTimeStamp,
+                            displayName: actor.displayName + " added members to " + group.title + " group",
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
+
+                        var newActivityRef = ref.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
+                                deferred.reject();
+                            } else {
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = ref.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+                                            deferred.reject();
+                                        } else {
+                                            deferred.resolve();
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordGroupMemberApproveRejectActivity: function(type, group, user, memberUserID) {
+                    var deferred = $q.defer();
+                    var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(group.groupID);
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": group.groupID,
+                        "url": group.groupID,
+                        "displayName": group.title
+                    };
+
+                    firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+                        var object = {
+                            "type": "user",
+                            "id": memberUserID, //an index should be set on this
+                            "email": res.user.email,
+                            "displayName": res.user.firstName + " " + res.user.lastName
+                        };
+                        //create an appropriate display message.
+                        var displayName;
+                        if (type === "approve") {
+                            displayName = actor.displayName + " approved " + object.displayName +
+                                " as a member in " + group.title + "."
+                        } else {
+                            displayName = actor.displayName + " rejected " + object.displayName +
+                                "'s membership request for " + group.title + "group."
+                        }
+
+                        var activity = {
+                            language: "en",
+                            verb: type === "approve" ? "group-approve-member" : "group-reject-member",
+                            published: firebaseTimeStamp,
+                            displayName: displayName,//actor.displayName + " approved " + object.displayName + " as a member in " + group.title,
+                            // if actor is to subject and target is to object then object is to verb
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
+
+                        var newActivityRef = refGroupActivities.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
+                                //handle this case
+                                deferred.reject();
+                            } else {
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = refGroupActivities.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+                                            //handle this case
+                                            deferred.reject();
+                                        } else {
+                                            deferred.resolve(displayName);
+                                        }
+                                    });
+                                });
+                            }
+                        });
+
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordSubGroupMemberApproveRejectActivity: function(type, subgroup, user, memberUserID) {
+                    //memberUserID is the request sender.
+                    //user is one whom request is made.
+                    var deferred = $q.defer();
+                    var refSubgroupActivities = firebaseService.getRefSubGroupsActivityStreams().child(subgroup.groupID).child(subgroup.subgroupID);
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var target = {
+                        "type": "subgroup",
+                        "id": subgroup.subgroupID,
+                        "url": subgroup.subgroupID,
+                        "displayName": subgroup.title
+                    };
+
+                    firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+                        var object = {
+                            "type": "user",
+                            "id": memberUserID, //an index should be set on this
+                            "email": res.user.email,
+                            "displayName": res.user.firstName + " " + res.user.lastName
+                        };
+
+                        //create an appropriate display message.
+                        var displayName;
+                        if (type === "approve") {
+                            displayName = actor.displayName + " approved " + object.displayName + " as a member in " + subgroup.title + "subgroup.";
+                        } else {
+                            displayName = actor.displayName + " rejected " + object.displayName + "'s membership request for " + subgroup.title + "subgroup.";
+                        }
+
+                        var activity = {
+                            language: "en",
+                            verb: type === "approve" ? "subgroup-approve-member" : "subgroup-reject-member",
+                            published: firebaseTimeStamp,
+                            displayName: actor.displayName + (type === "approve" ? " approved " : " rejected ") + object.displayName + " as a member in " + subgroup.title,
+                            // if actor is to subject and target is to object then object is to verb
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
+
+                        var newActivityRef = refSubgroupActivities.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
+                                //handle this case
+                                deferred.reject();
+                            } else {
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = refSubgroupActivities.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+                                            //handle this case
+                                            deferred.reject();
+                                        } else {
+                                            deferred.resolve(displayName);
+                                        }
+                                    });
+                                });
+                            }
+                        });
+
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordMembershipChangeActivity: function(prevType, newType, user, groupObj, loggedInUser) {
+                    var deferred = $q.defer();
+                    var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
+                    var actor = {
+                        "type": "user",
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
+                        "email": loggedInUser.email,
+                        "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": groupObj.$id,
+                        "url": groupObj.$id,
+                        "displayName": groupObj.title
+                    };
+
+                    var object = {
+                        "type": "user-membership-change",
+                        "id": user.$id,
+                        "url": user.$id,
+                        "from": this.getRoleTitleByType(prevType),
+                        "to": this.getRoleTitleByType(newType),
+                        "displayName": user.firstName + ' ' + user.lastName
+                    };
+
+                    var displayName = loggedInUser.firstName + ' ' + loggedInUser.lastName + ' changed ' +
+                        user.firstName + ' ' + user.lastName + '\'s membership from "' + object.from +
+                        '" to "' + object.to + '" for ' + groupObj.title + ' group.';
+
+                    var activity = {
+                        language: "en",
+                        verb: "user-membership-change",
+                        published: firebaseTimeStamp,
+                        displayName: displayName,
+                        actor: actor,
+                        object: object,
+                        target: target
+                    };
+
+                    var newActivityRef = refGroupActivities.push();
+                    newActivityRef.set(activity, function(error) {
+                        if (error) {
+                            //handle this case
+                            deferred.reject();
+                        } else {
+                            var activityID = newActivityRef.key();
+                            var activityEntryRef = refGroupActivities.child(activityID);
+                            activityEntryRef.once("value", function(snapshot) {
+                                var timestamp = snapshot.val().published;
+                                newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                    if (error2) {
+                                        //handle this case
+                                        deferred.reject();
+                                    } else {
+                                        deferred.resolve(displayName);
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordMemberRemoved: function(prevType, newType, user, groupObj, loggedInUser) {
+                    var deferred = $q.defer();
+                    var refGroupActivities = firebaseService.getRefGroupsActivityStreams().child(groupObj.$id);
+
+                    var actor = {
+                        "type": "user",
+                        "id": loggedInUser.userID, //this is the userID, and an index should be set on this
+                        "email": loggedInUser.email,
+                        "displayName": loggedInUser.firstName + " " + loggedInUser.lastName
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": groupObj.$id,
+                        "url": groupObj.$id,
+                        "displayName": groupObj.title
+                    };
+
+                    var object = {
+                        "type": "user",
+                        "id": user.$id,
+                        "url": user.$id,
+                        "displayName": user.firstName + ' ' + user.lastName
+                    };
+
+                    var displayName = loggedInUser.firstName + ' ' + loggedInUser.lastName + ' removed ' +
+                        user.firstName + ' ' + user.lastName + ' from "' + groupObj.title + '" group.';
+
+                    var activity = {
+                        language: "en",
+                        verb: "group-member-removed",
+                        published: firebaseTimeStamp,
+                        displayName: displayName,
+                        "from": this.getRoleTitleByType(prevType),
+                        "to": null,
+                        actor: actor,
+                        object: object,
+                        target: target
+                    };
+
+                    var newActivityRef = refGroupActivities.push();
+                    newActivityRef.set(activity, function(error) {
+                        if (error) {
+                            //handle this case
+                            deferred.reject();
+                        } else {
+                            var activityID = newActivityRef.key();
+                            var activityEntryRef = refGroupActivities.child(activityID);
+                            activityEntryRef.once("value", function(snapshot) {
+                                var timestamp = snapshot.val().published;
+                                newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                    if (error2) {
+                                        //handle this case
+                                        deferred.reject();
+                                    } else {
+                                        deferred.resolve(displayName);
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+                    return deferred.promise;
+                },
+                getGroupActivityStream: function(activityGroupRef, activityArray) {
+                    var self = this;
+                    activityGroupRef.orderByPriority().on("child_added", function(snapshot) {
+                        //console.log(snapshot.key());
+                        var activity = snapshot.val();
+                        //activity.publishedDate = new Date(activity.published/1000);
+                        if (activity) {
+                            if (activityArray.length === 0) {
+                                $timeout(function() {
+                                    activityArray.push(activity);
+                                });
+                            } else {
+                                var position = self.insertionPosition(activityArray, activity.published);
+                                $timeout(function() {
+                                    activityArray.splice(position, 0, activity);
+                                });
+                            }
+                        }
+
+                    });
+                },
+                insertionPosition: function(activityArray, currentTimestamp) {
+                    for (var i = 0; i < activityArray.length; i++) {
+                        if (currentTimestamp >= activityArray[i].published) {
+                            return i;
+                        }
+                    }
+                    return activityArray.length;
+                },
+                getRoleTitleByType: function(type) {
+                    var verb = 'unknown';
+
+                    switch (type) {
+                        case -1:
+                            verb = 'suspend';
+                            break;
+                        case 2:
+                            verb = 'admin';
+                            break;
+                        case 3:
+                            verb = 'member';
+                            break;
+                    }
+
+                    return verb;
+                },
+                asyncGroupJoiningRequest: function(userID, groupID, message, subgroupID, subgrouptitle, membershipNo) {
+                    var deferred = $q.defer();
+                    var self = this;
+                    firebaseService.asyncCheckIfGroupExists(groupID).then(function(response) {
+                        if (response.exists) {
+                            //Step 2: Add to pending requests
+                            var userMembershipRef = firebaseService.getRefUserGroupMemberships().child(userID).child(groupID);
+                            userMembershipRef.once("value", function(snapshotMem) { //Step 3: check to see if already a member
+                                var membershipData = snapshotMem.val();
+                                if (membershipData) {
+                                    if (membershipData["membership-type"] == 1) {
+                                        deferred.reject("User is already an owner of this team of teams");
+                                    } else if (membershipData["membership-type"] == 2) {
+                                        deferred.reject("User is already a admin of this team of teams");
+                                    } else if (membershipData["membership-type"] == 0) {
+                                        if (subgroupID) {
+                                            groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred);
+                                        } else {
+                                            deferred.reject("Membership request is already pending for this team of teams");
+                                        }
+                                    } else {
+                                        if (subgroupID) {
+                                            groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred);
+                                        } else {
+                                            deferred.reject("User is already a member of this team of teams");
+                                        }
+                                    }
+                                } else {
+                                    groupJoinRequestProcess(userID, groupID, message, subgroupID, subgrouptitle, membershipNo, deferred);
+                                }
+                            });
+                        } else {
+                            deferred.reject(groupID + " does not exist!");
+                        }
+                    });
+                    return deferred.promise;
+                },
+                asyncSubgroupJoiningRequest: function(userID, groupID, subgroupID, message) {
+                        var deferred = $q.defer();
+                        var self = this;
+
+                        //Step 1: check to see if already a member
+                        var userMembershipRef = firebaseService.getRefUserSubGroupMemberships().child(userID + '/' + groupID + '/' + subgroupID);
+                        userMembershipRef.once("value", function(snapshotMem) { //
+                            var membershipData = snapshotMem.val();
+                            if (membershipData) {
+                                if (membershipData["membership-type"] == 1) {
+                                    deferred.reject("User is already an owner of this team of teams");
+                                } else if (membershipData["membership-type"] == 2) {
+                                    deferred.reject("User is already a admin of this team of teams");
+                                }
+                                //else if (membershipData["membership-type"] == 0) {
+                                //    deferred.reject("Membership request is already pending for this group");
+                                //}
+                                else {
+                                    deferred.reject("User is already a member of this team of teams");
+                                }
+
+                            } else {
+                                //Step : check to see if already a request sent
+                                var ref = firebaseService.getRefSubgroupMembershipRequests().child(groupID + '/' + subgroupID + '/' + userID);
+                                ref.once("value", function(snap) {
+                                    var alreadyPending = snap.val();
+                                    if (alreadyPending) {
+                                        deferred.reject("Request is already pending for this team"); //just to double check here also, but no need if data is consistent
+                                    } else {
+                                        //step : setting request for membership "subgroup-membership-requests"
+                                        ref.set({
+                                            timestamp: firebaseTimeStamp,
+                                            message: message
+                                        }, function(error) {
+                                            if (error) {
+                                                deferred.reject("Server Error, please try again");
+                                            } else {
+                                                ref.once("value", function(snapshot) {
+                                                    var timestamp = snapshot.val()["timestamp"]; //to get the server time
+                                                    var refByUser = firebaseService.getRefSubgroupMembershipRequestsByUser().child(userID + '/' + groupID + '/' + subgroupID);
+                                                    // /Step 4 add to pending by user
+                                                    refByUser.set({
+                                                        timestamp: timestamp
+                                                    }, function(error) {
+                                                        if (error) {
+                                                            //roll back previous may be
+                                                            deferred.reject("Server Error, please try again");
+                                                        } else {
+                                                            deferred.resolve();
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                        //}
+                        //});
+
+                        return deferred.promise;
+                    }
+                    //,   userExists: function(userID){
+                    //     firebaseService.getRefUsers().child(userID).once(function(snapshot){
+                    //         console.log(snapshot)
+                    //         if(snapshot){
+                    //             return true;
+                    //         } else {
+                    //             return false;
+                    //         }
+                    //     })
+                    // }
+            }
+        }
+    ]);
+
+ /**
+ * Created by ZiaKhan on 03/02/15.
+ */
+
+'use strict';
+
+
+angular.module('core')
+    .factory('groupFirebaseService', ['$rootScope', 'activityStreamService', "firebaseService", "$q", "$timeout", 'userFirebaseService', 'checkinService', 'confirmDialogService', "$firebaseObject", "userPresenceService",
+        function($rootScope, activityStreamService, firebaseService, $q, $timeout, userFirebaseService, checkinService, confirmDialogService, $firebaseObject, userPresenceService) {
+
+            /*var syncObj = {
+                subgroupsSyncArray: [],
+                membersSyncArray: [],
+                pendingMembershipSyncArray: [],
+                activitiesSyncArray: []
+            };*/
+            var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+
+
+            return {
+                getGroupSyncObjAsync: function(groupID, viewerUserID) {
+                    var deferred = $q.defer();
+                    var self = this;
+                    var syncObj = {
+                        subgroupsSyncArray: [],
+                        membersSyncArray: [],
+                        pendingMembershipSyncArray: [],
+                        activitiesSyncArray: []
+                    };
+                    syncObj.self = this;
+                    syncObj.viewerUserID = viewerUserID;
+                    syncObj.groupID = groupID;
+                    syncObj.userGroupMembershipRef = firebaseService.getRefUserGroupMemberships().child(viewerUserID).child(groupID);
+                    syncObj.groupSyncObj = $firebaseObject(firebaseService.getRefGroups().child(groupID));
+                    syncObj.userGroupMembershipRef.once("value", function(snapshot) {
+                        if (snapshot.val()) {
+
+                            syncObj.membershipType = snapshot.val()["membership-type"];
+                            syncObj.timestamp = snapshot.val()["timestamp"];
+                            syncObj.userGroupMembershipRef.on("child_changed", self.membershipChanged, syncObj);
+                            syncObj.userGroupMembershipRef.on("child_removed", self.membershipDeleted, syncObj);
+                            self.addListeners(syncObj);
+                        } else {
+                            syncObj.membershipType = -100; //right now not a member
+                            //listen to if membership added later
+                            firebaseService.getRefUserGroupMemberships().on("child_added", self.membershipAddedLater, syncObj);
+                        }
+
+                        deferred.resolve(syncObj);
+                    });
+
+
+                    return deferred.promise;
+                },
+                addListeners: function(syncObj) {
+                    if (syncObj.membershipType >= 1) {
+                        syncObj.subgroupRef = this.syncSubgroups(syncObj.groupID, syncObj.subgroupsSyncArray, syncObj);
+                        syncObj.groupMembershipRef = syncObj.self.syncGroupMembers(syncObj.groupID, syncObj.membersSyncArray, syncObj);
+                        syncObj.groupActivitiesRef = syncObj.self.syncGroupActivities(syncObj.groupID, syncObj.activitiesSyncArray, syncObj);
+                    }
+
+                    if (syncObj.membershipType == 1 || syncObj.membershipType == 2) {
+                        syncObj.groupPendingMembershipRequestsRef = syncObj.self.syncGroupPendingMembershipRequests(syncObj.groupID, syncObj.pendingMembershipSyncArray, syncObj);
+                    }
+                },
+                membershipAddedLater: function(snapshot) {
+                    if (this.groupID == snapshot.key()) { //has become a member now
+                        this.membershipType = snapshot.val()["membership-type"];
+                        this.timestamp = snapshot.val()["timestamp"];
+                        this.userGroupMembershipRef.on("child_changed", this.self.membershipChanged, this);
+                        this.userGroupMembershipRef.on("child_removed", this.self.membershipDeleted, this);
+                        this.self.addListeners(this);
+                    }
+                },
+                membershipChanged: function(snapshot) {
+                    var newMembershipType = snapshot.val();
+                    if (newMembershipType != this.membershipType) { //membership type has changed
+                        if (this.membershipType == 3) { //previously was a member
+                            if (newMembershipType == 2) { //now a admin
+                                this.groupPendingMembershipRequestsRef = this.self.syncGroupPendingMembershipRequests(this.groupID, this.pendingMembershipSyncArray, this);
+                            } else if (newMembershipType == -1) { //has been suspended
+                                this.self.removeConfidentialGroupData.call(this, this.groupID);
+                            }
+                        }
+
+                        if (this.membershipType == 2) { //previously was a admin
+                            if (newMembershipType == 3) { //now a member only
+                                if (this.groupPendingMembershipRequestsRef) {
+                                    this.groupPendingMembershipRequestsRef.off("child_added", this.self.groupMembershipRequestAdded, this.pendingMembershipSyncArray);
+                                    this.groupPendingMembershipRequestsRef.off("child_removed", this.self.groupMembershipRequestDeleted, this.pendingMembershipSyncArray);
+                                }
+
+                                while (this.pendingMembershipSyncArray.length > 0) { //empty pending
+                                    this.pendingMembershipSyncArray.pop();
+                                }
+
+                            } else if (newMembershipType == -1) { //has been suspended
+                                this.self.removeConfidentialGroupData.call(this, this.groupID);
+                            }
+                        }
+                        this.membershipType = newMembershipType;
+                    }
+                },
+                removeConfidentialGroupData: function(groupIDMembershipDeleted) {
+                    if (this.groupID == groupIDMembershipDeleted) { //group membership deleted which logged-in-user was viewing
+                        this.membershipType = -100;
+                        this.timestamp = undefined;
+
+                        if (this.userGroupMembershipRef) {
+                            this.userGroupMembershipRef.off("child_changed", this.self.membershipChanged, this);
+                            this.userGroupMembershipRef.off("child_removed", this.self.membershipDeleted, this);
+                        }
+
+                        if (this.subgroupRef) {
+                            if (this.subgroupsRefContext) {
+                                this.subgroupRef.off('child_added', this.self.groupUserMembershipAdded, this.subgroupsRefContext);
+                            }
+
+                            this.subgroupRef.off('child_removed', this.self.groupUserMembershipAdded, this.subgroupsArray);
+                        }
+
+                        if (this.subgroupsRefContext) {
+                            this.subgroupsRefContext.subgroupsMembershipRef.off('child_added', this.self.subgroupsAdded, this.subgroupsRefContext);
+                            this.subgroupsRefContext.subgroupsMembershipRef.off('child_removed', this.self.subgroupsDeleted, this.subgroupsRefContext);
+                        }
+
+                        if (this.groupMembershipRef) {
+                            this.groupMembershipRef.off('child_added', this.self.groupUserMembershipAdded, this.membersSyncArray);
+                            this.groupMembershipRef.off('child_changed', this.self.groupUserMembershipChanged, this.membersSyncArray);
+                            this.groupMembershipRef.off('child_removed', this.self.groupUserMembershipDeleted, this.membersSyncArray);
+                        }
+
+                        if (this.groupActivitiesRef) {
+                            this.groupActivitiesRef.off("child_added", this.self.groupActivityAdded, this.activitiesSyncArray);
+                        }
+
+                        if (this.groupPendingMembershipRequestsRef) {
+                            this.groupPendingMembershipRequestsRef.off("child_added", this.self.groupMembershipRequestAdded, this.pendingMembershipSyncArray);
+                            this.groupPendingMembershipRequestsRef.off("child_removed", this.self.groupMembershipRequestDeleted, this.pendingMembershipSyncArray);
+                        }
+
+                        while (this.subgroupsSyncArray.length > 0) { //empty teams
+                            this.subgroupsSyncArray.pop();
+                        }
+                        while (this.membersSyncArray.length > 0) { //empty members
+                            this.membersSyncArray.pop();
+                        }
+                        while (this.pendingMembershipSyncArray.length > 0) { //empty pending
+                            this.pendingMembershipSyncArray.pop();
+                        }
+                        while (this.activitiesSyncArray.length > 0) { //empty activities
+                            this.activitiesSyncArray.pop();
+                        }
+
+                    }
+                },
+                membershipDeleted: function(snapshot) { //is no longer a member
+                    var groupIDMembershipDeleted = snapshot.key();
+                    this.self.removeConfidentialGroupData.call(this, groupIDMembershipDeleted);
+
+                },
+                syncSubgroups: function(groupID, subgroupsArray, syncObj) {
+                    var subgroupsRef = firebaseService.getRefSubGroups().child(groupID);
+                    var subgroupsMembershipRef = firebaseService.getRefUserSubGroupMemberships().child(syncObj.viewerUserID).child(groupID);
+
+                    syncObj.subgroupsRefContext = {
+                        subgroupsMembershipRef: subgroupsMembershipRef,
+                        subgroupRef: subgroupsRef,
+                        subgroupsArray: subgroupsArray
+                    };
+
+                    subgroupsMembershipRef.on('child_added', this.subgroupsAdded, syncObj.subgroupsRefContext);
+                    subgroupsMembershipRef.on('child_removed', this.subgroupsDeleted, syncObj.subgroupsRefContext);
+                    return subgroupsRef;
+                },
+                subgroupsAdded: function(snapshot) {
+                    var self = this;
+                    var subgroupSyncObj = $firebaseObject(this.subgroupRef.child(snapshot.key()));
+                    $timeout(function() {
+                        self.subgroupsArray.push(subgroupSyncObj);
+                    });
+                },
+                subgroupsDeleted: function(snapshot) {
+                    var self = this;
+                    var subgroupID = snapshot.key();
+                    this.subgroupsArray.forEach(function(obj, i) {
+                        if (obj.$id == subgroupID) {
+                            $timeout(function() {
+                                self.subgroupsArray.splice(i, 1);
+                            });
+                        }
+                    });
+                },
+                syncGroupMembers: function(groupID, memberArray) {
+                    var ref = firebaseService.getRefGroupMembers().child(groupID);
+                    ref.on('child_added', this.groupUserMembershipAdded, memberArray);
+                    ref.on('child_changed', this.groupUserMembershipChanged, memberArray);
+                    ref.on('child_removed', this.groupUserMembershipDeleted, memberArray);
+                    return ref;
+                },
+                groupUserMembershipAdded: function(snapshot) {
+                    var self = this;
+                    var userSyncObj = $firebaseObject(firebaseService.getRefUsers().child(snapshot.key()));
+                    $timeout(function() {
+                        self.push({
+                            userID: snapshot.key(),
+                            membershipType: snapshot.val()["membership-type"],
+                            timestamp: snapshot.val()["timestamp"],
+                            membershipNo: snapshot.getPriority(),
+                            userSyncObj: userSyncObj,
+                            //FIXME when implementing in client2 , eliminate userSyncObj to avoid duplicate listeners.
+                            user: userPresenceService.getUserSyncObject(snapshot.key())
+                        });
+                    });
+                },
+                groupUserMembershipChanged: function(snapshot) {
+                    var userID = snapshot.key();
+                    var membershipObj = snapshot.val();
+                    this.forEach(function(obj) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                obj.membershipType = membershipObj["membership-type"];
+                            });
+                        }
+                    });
+                },
+                groupUserMembershipDeleted: function(snapshot) {
+                    var self = this;
+                    var userID = snapshot.key();
+                    this.forEach(function(obj, i) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                self.splice(i, 1);
+                            });
+                        }
+                    });
+                },
+                syncGroupActivities: function(groupID, activitiesSyncArray) {
+                    var ref = firebaseService.getRefGroupsActivityStreams().child(groupID).orderByPriority();
+                    ref.on("child_added", this.groupActivityAdded, activitiesSyncArray);
+                    return ref;
+                },
+                groupActivityAdded: function(snapshot) {
+                    var self = this;
+                    var activity = snapshot.val();
+                    $timeout(function() {
+                        if (activity) {
+                            self.push(activity);
+                        }
+                    });
+                },
+                syncGroupPendingMembershipRequests: function(groupID, pendingMembershipSyncArray) {
+                    var ref = firebaseService.getRefGroupMembershipRequests().child(groupID);
+                    ref.on("child_added", this.groupMembershipRequestAdded, pendingMembershipSyncArray);
+                    ref.on("child_removed", this.groupMembershipRequestDeleted, pendingMembershipSyncArray);
+                    return ref;
+                },
+                groupMembershipRequestAdded: function(snapshot) {
+                    var self = this;
+                    var userSyncObj = $firebaseObject(firebaseService.getRefUsers().child(snapshot.key()));
+                    $timeout(function() {
+                        self.push({
+                            userID: snapshot.key(),
+                            message: snapshot.val()["message"],
+                            timestamp: snapshot.val()["timestamp"],
+                            "teamrequest": snapshot.val()["team-request"],
+                            "membershipNo": snapshot.val()["membershipNo"],
+                            userSyncObj: userSyncObj
+                        });
+                    });
+                },
+                groupMembershipRequestDeleted: function(snapshot) {
+                    var self = this;
+                    var userID = snapshot.key();
+                    this.forEach(function(obj, i) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                self.splice(i, 1);
+                            });
+                        }
+                    });
+                },
+                asyncCreateSubgroup: function(userID, group, subgroupInfo, subgroupList) {
+
+                    /* NODES TO HIT FOR CREATING SUBGROUPS:
+                     subgroup-members
+                     user-subgroup-memberships
+                     subgroup-names
+                     subgroups
+                     subgroup-activity-streams
+                     */
+
+                    var self = this;
+                    var deferred = $q.defer();
+                    var subgroupExist = false;
+                    var errorHandler = function(reason) {
+                        deferred.reject(reason || "Subgroup creation failed. error occurred in accessing server.");
+                    };
+
+                    //Step 1: check if subgroup does not exist
+                    subgroupList.forEach(function(subgroup) {
+                        if (subgroup.subgroupID == subgroupInfo.subgroupID) {
+                            errorHandler("Subgroup not created, " + subgroupInfo.subgroupID + " already exists"); //subgroup ID already exists
+                            subgroupExist = true;
+                        }
+                    });
+
+                    if (subgroupExist) {
+                        return deferred.promise;
+                    }
+
+                    //step : create an entry for "subgroup-members"
+                    self.asyncCreateSubGroupMembersJSON(userID, subgroupInfo.members)
+                        .then(function(response) {
+                            var memRef = firebaseService.getRefSubGroupMembers().child(group.$id).child(subgroupInfo.subgroupID);
+                            var mems = response.memberJSON;
+                            //if(response.members.length != 0) { //by default admin is included in membersJSON of subgroup.
+
+                            //step : create subgroup members
+                            memRef.set(mems, function(error) {
+                                if (error) {
+                                    //roleback previous
+                                    errorHandler();
+                                } else {
+                                    var subgroupNames = {title: subgroupInfo.title, subgroupImgUrl: subgroupInfo.imgLogoUrl || '', ownerImgUrl: $rootScope.userImg || ''};
+                                    // step: create and entry for "subgroups-names"
+                                    var groupNameRef = firebaseService.getRefSubGroupsNames().child(group.$id).child(subgroupInfo.subgroupID);
+                                    groupNameRef.set(subgroupNames,  function(error) {
+                                        if (error) {
+                                            deferred.reject();
+                                            //role back previous
+                                        } else {
+                                            //step: create an entry for "user-subgroup-memberships"
+                                            self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
+                                                .then(function() {
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
+                                                        var countsubgroup = snapshot.val()["subgroups-count"] + 1;
+                                                        // console.log(countsubgroup, 'testing')
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
+                                                            if (error) {
+                                                                errorHandler();
+                                                            }
+                                                        })
+                                                    })
+                                                    // console.log($rootScope.userImg)
+
+                                                    //save in subgroup-policies for Policies
+                                                    firebaseService.getRefSubgroupPolicies().child(group.$id).child(subgroupInfo.subgroupID).set({'hasPolicy': false, 'policyID': '', 'subgroup-title': subgroupInfo.title, 'policy-title': ''});
+
+                                                    //step : create an entry for "subgroups"
+                                                    var subgroupRef = firebaseService.getRefSubGroups().child(group.$id).child(subgroupInfo.subgroupID);
+                                                    subgroupRef.set({
+                                                        title: subgroupInfo.title,
+                                                        desc: subgroupInfo.desc,
+                                                        timestamp: firebaseTimeStamp,
+                                                        "members-count": response.membersCount,
+                                                        "microgroups-count": 0,
+                                                       "members-checked-in": {
+                                                            "count": 0
+                                                        },
+                                                        'logo-image': {
+                                                            url: subgroupInfo.imgLogoUrl || '', // pID is going to be changed with userID for single profile picture only
+                                                            id: subgroupInfo.subgroupID,
+                                                            'bucket-name': 'test2pwow',
+                                                            source: 1, // 1 = google cloud storage
+                                                            mediaType: 'image/png' //image/jpeg
+                                                        },
+                                                        'subgroup-owner-id': userID,
+                                                        'owner-img-url': $rootScope.userImg || ''
+                                                    }, function(error) {
+                                                        if (error) {
+                                                            //role back previous
+                                                            errorHandler();
+                                                        } else {
+                                                            // creating flattened-groups data in firebase
+
+                                                            var qArray = [];
+                                                            var qArray2 = [];
+                                                            var deffer = $q.defer();
+                                                            deffer.promise
+                                                                .then(function(dataArrofArr) {
+
+                                                                    // dataArrofArr.forEach(function(arr) {
+                                                                    //     if (arr[1].type == 1) {
+                                                                    //         arr[0].checkedin = true
+                                                                    //     } else {
+                                                                    //         arr[0].checkedin = false
+                                                                    //     }
+                                                                    //     qArray2.push(arr[0].$save())
+                                                                    // });
+                                                                    // return $q.all(qArray2)
+                                                                })
+                                                                .then(function() {
+                                                                    deferred.resolve({
+                                                                        unlistedMembersArray: response.unlisted
+                                                                    });
+                                                                    //step  : entry for "subgroup-activity-streams"
+                                                                    //                                                            debugger;
+
+                                                                    //self.asyncRecordSubgroupCreationActivity($localStorage.loggedInUser, group, subgroupInfo).then(function () {
+                                                                    //    if (response.members.length == 1) {
+                                                                    //        //self.asyncRecordSubgroupMemberAdditionActivity($sessionStorage.loggedInUser, group, subgroupInfo, response.members[0])
+                                                                    //        self.asyncRecordSubgroupMemberAdditionActivity($localStorage.loggedInUser, group, subgroupInfo, response.members[0])
+                                                                    //            .then(function () {
+                                                                    //                deferred.resolve({unlistedMembersArray: response.unlisted});
+                                                                    //            });
+                                                                    //    }
+                                                                    //    else if (response.members.length > 1) {
+                                                                    //        //self.asyncRecordManySubgroupsMembersAdditionActivity($sessionStorage.loggedInUser, group, subgroupInfo, response.members)
+                                                                    //        self.asyncRecordManySubgroupsMembersAdditionActivity($localStorage.loggedInUser, group, subgroupInfo, response.members)
+                                                                    //            .then(function () {
+                                                                    //                deferred.resolve({unlistedMembersArray: response.unlisted});
+                                                                    //            });
+                                                                    //    }
+                                                                    //    else {
+                                                                    //        deferred.resolve({unlistedMembersArray: response.unlisted});
+                                                                    //    }
+                                                                    //});
+
+                                                                })
+                                                                .catch(function(d) {
+                                                                    //debugger;
+                                                                })
+                                                            // for (var member in mems) {
+                                                            //
+                                                            //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
+                                                            //         .$loaded()
+                                                            //
+                                                            //     var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded()
+                                                            //
+                                                            //     qArray.push($q.all([temp, temp1]))
+                                                            //
+                                                            //
+                                                            // }
+                                                            //deffer.resolve($q.all(qArray))
+                                                            deffer.resolve('');
+
+                                                        }
+                                                    });
+
+                                                }, errorHandler);
+                                        }
+                                    });
+
+
+                                }
+                            });
+                        });
+
+                    return deferred.promise;
+                },
+                asyncCreateSubGroupMembersJSON: function(ownerUserID, listStr, existingMembersObj) {
+                    /*
+                    @param ownerUserID // 'ownerid'
+                    @param listStr // 'userid1,userid2'
+                    @param existingMembersObj // { userid1 : {}, userid2: {}}
+
+                    @return memberJSON {object} {
+                     userId1: {
+                          memberhsip-type: 1, // members
+                          timestamp: timestamp
+                       },
+                     userid2 : {
+                         memberhsip-type: 3, // members
+                         timestamp: timestamp
+                     }
+                     }
+
+                       */
+
+                    var deferred = $q.defer();
+
+                    var groupMembersJSON = {};
+                    var unlistedMembers = [];
+                    var members = [];
+
+                    //this time we are including ownerid in membersJSON with membership-type: 1. unlike groupmemberJSON method
+                    groupMembersJSON[ownerUserID] = {
+                        "membership-type": 1, //1 means owner, 2 will mean admin, 3 means member only
+                        timestamp: firebaseTimeStamp
+                    };
+
+                    if (listStr.length < 2) {
+                        deferred.resolve({
+                            memberJSON: groupMembersJSON,
+                            unlisted: unlistedMembers,
+                            members: members,
+                            membersCount: 1
+                        });
+                    } else {
+                        existingMembersObj = existingMembersObj || {};
+
+                        var memberArray = listStr.split(",");
+                        var promises = [];
+
+                        memberArray.forEach(function(val, i) {
+                            val = val.trim();
+                            var promise = firebaseService.asyncCheckIfUserExists(val);
+                            promise.then(function(response) {
+                                if (response.exists) {
+                                    /*check if requested userID is :
+                                     * a valid user,
+                                     * has not already been added to members list of group (if updating members list) */
+                                    if (val != ownerUserID && !existingMembersObj[val]) {
+                                        groupMembersJSON[val] = {
+                                            "membership-type": 3, //1 means owner, 2 will mean admin, 3 means member only
+                                            timestamp: firebaseTimeStamp
+                                        };
+                                        members.push(val);
+                                        //}
+                                    } else {
+                                        unlistedMembers.push(val);
+                                    }
+                                } else {
+                                    unlistedMembers.push(val);
+                                }
+                            });
+
+                            promises.push(promise);
+                        });
+
+                        $q.all(promises).then(function() {
+                            deferred.resolve({
+                                memberJSON: groupMembersJSON,
+                                membersCount: memberArray.length,
+                                unlisted: unlistedMembers,
+                                members: members
+                            });
+                        }, function() {
+                            deferred.reject();
+                        });
+                    }
+
+                    return deferred.promise;
+                },
+                asyncCreateUserSubgroupMemberships: function(groupID, subGroupID, memberJSONObj) {
+                    var defer = $q.defer();
+                    var promise;
+                    var promises = [];
+                    var userSubgroupMembershipRef = firebaseService.getRefUserSubGroupMemberships();
+
+                    angular.forEach(memberJSONObj, function(membershipObj, memberID) {
+                        promise = $q.defer();
+
+                        userSubgroupMembershipRef.child(memberID + '/' + groupID + '/' + subGroupID)
+                            .set(membershipObj, function(err) {
+                                if (err) {
+                                    promise.reject();
+                                } else {
+                                    promise.resolve();
+                                }
+                            });
+
+                        promises.push(promise);
+                    });
+
+                    $q.all(promises).then(function() {
+                        defer.resolve();
+                    }, function() {
+                        defer.reject();
+                    });
+
+                    return defer.promise;
+                },
+                asyncCreateGroupMembersJSON: function(ownerUserID, groupMemberList, listStr) {
+                    var self = this;
+                    var deferred = $q.defer();
+                    var subgroupMembersJSON = {};
+
+                    var unlistedMembers = [];
+                    var members = [];
+
+                    if (listStr.length < 2) {
+                        deferred.resolve({
+                            memberJSON: subgroupMembersJSON,
+                            unlisted: unlistedMembers,
+                            members: members
+                        });
+                    } else {
+                        var memberArray = listStr.split(",");
+                        var promises = [];
+                        memberArray.forEach(function(val, i) {
+                            val = val.trim();
+                            var promise = firebaseService.asyncCheckIfUserExists(val);
+                            promise.then(function(response) {
+                                if (response.exists) {
+                                    if (val != ownerUserID) {
+                                        var added = false;
+                                        groupMemberList.forEach(function(memberVal) {
+                                            if (memberVal.userID == val) { //user must be member of the parent group
+                                                var key = val;
+                                                subgroupMembersJSON[key] = {
+                                                    "membership-type": 3,
+                                                    timestamp: firebaseTimeStamp
+                                                }; //1 means member only, 2 will mean admin
+                                                members.push(val);
+                                                added = true;
+                                            }
+                                        });
+
+                                        if (!added) {
+                                            unlistedMembers.push(val);
+                                        }
+                                    } else {
+                                        unlistedMembers.push(val);
+                                    }
+                                } else {
+                                    unlistedMembers.push(val);
+                                }
+                            });
+
+                            promises.push(promise);
+                        });
+
+                        $q.all(promises).then(function() {
+                            deferred.resolve({
+                                memberJSON: subgroupMembersJSON,
+                                unlisted: unlistedMembers,
+                                members: members
+                            });
+                        }, function() {
+                            deferred.reject();
+                        });
+                    }
+
+                    return deferred.promise;
+                },
+                asyncRecordSubgroupCreationActivity: function(user, group, subgroup) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var object = {
+                        "type": "subgroup",
+                        "id": subgroup.subgroupID, //an index should be set on this
+                        "url": group.$id + "/" + subgroup.subgroupID,
+                        "displayName": subgroup.title
+                    };
+
+                    var target = {
+                        "type": "group",
+                        "id": group.$id, //an index should be set on this
+                        "url": group.$id,
+                        "displayName": group.title
+                    };
+
+                    var activity = {
+                        language: "en",
+                        verb: "subgroup-creation",
+                        published: firebaseTimeStamp,
+                        displayName: actor.displayName + " created " + subgroup.title + " in " + group.title,
+                        actor: actor,
+                        object: object,
+                        target: target
+                    };
+
+                    var newActivityRef = ref.push();
+                    newActivityRef.set(activity, function(error) {
+                        if (error) {
+
+                        } else {
+                            var activityID = newActivityRef.key();
+                            var activityEntryRef = ref.child(activityID);
+                            activityEntryRef.once("value", function(snapshot) {
+                                var timestamp = snapshot.val().published;
+                                newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                    if (error2) {
+
+                                    } else {
+                                        deferred.resolve();
+                                    }
+                                });
+                            });
+
+
+                        }
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordSubgroupMemberAdditionActivity: function(user, group, subgroup, memberUserID) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var target = {
+                        "type": "subgroup",
+                        "id": subgroup.subgroupID,
+                        "url": group.$id + "/" + subgroup.subgroupID,
+                        "displayName": subgroup.title,
+                        "parent": {
+                            "type": "group",
+                            "id": group.$id,
+                            "displayName": group.title,
+                            "url": group.$id
+                        }
+                    };
+
+                    firebaseService.asyncCheckIfUserExists(memberUserID).then(function(res) {
+                        var object = {
+                            "type": "user",
+                            "id": memberUserID, //an index should be set on this
+                            "email": res.user.email,
+                            "displayName": res.user.firstName + " " + res.user.lastName
+                        };
+
+                        var activity = {
+                            language: "en",
+                            verb: "subgroup-added-member",
+                            published: firebaseTimeStamp,
+                            displayName: actor.displayName + " added " + object.displayName + " as a member in " + subgroup.title,
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
+
+                        var newActivityRef = ref.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
+
+                            } else {
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = ref.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+
+                                        } else {
+                                            deferred.resolve();
+                                        }
+                                    });
+                                });
+                            }
+                        });
+
+                    });
+
+                    return deferred.promise;
+                },
+                asyncRecordManySubgroupsMembersAdditionActivity: function(user, group, subgroup, membersArray) {
+                    var deferred = $q.defer();
+                    var ref = firebaseService.getRefSubGroupsActivityStreams().child(group.$id).child(subgroup.subgroupID);
+                    var self = this;
+                    var actor = {
+                        "type": "user",
+                        "id": user.userID, //this is the userID, and an index should be set on this
+                        "email": user.email,
+                        "displayName": user.firstName + " " + user.lastName
+                    };
+
+                    var object = {
+                        "type": "UserCollection",
+                        "totalItems": membersArray.length,
+                        "items": {}
+                    };
+
+                    var target = {
+                        "type": "subgroup",
+                        "id": subgroup.subgroupID,
+                        "url": group.$id + "/" + subgroup.subgroupID,
+                        "displayName": subgroup.title,
+                        "parent": {
+                            "type": "group",
+                            "id": group.$id,
+                            "displayName": group.title,
+                            "url": group.$id
+                        }
+
+                    };
+
+                    var promiseArray = [];
+                    membersArray.forEach(function(m) {
+                        promiseArray.push(firebaseService.asyncCheckIfUserExists(m));
+                    });
+
+                    $q.all(promiseArray).then(function(values) {
+                        values.forEach(function(v) {
+                            object.items[v.userID] = {
+                                "verb": "subgroup-added-member",
+                                "object": {
+                                    "type": "user",
+                                    "id": v.userID,
+                                    "email": v.user.email,
+                                    "displayName": v.user.firstName + " " + v.user.lastName
+                                }
+                            };
+                        });
+
+
+                        var activity = {
+                            language: "en",
+                            verb: "subgroup-added-many-members",
+                            published: firebaseTimeStamp,
+                            displayName: actor.displayName + " added members to " + subgroup.title + " team",
+                            actor: actor,
+                            object: object,
+                            target: target
+                        };
+
+                        var newActivityRef = ref.push();
+                        newActivityRef.set(activity, function(error) {
+                            if (error) {
+
+                            } else {
+                                var activityID = newActivityRef.key();
+                                var activityEntryRef = ref.child(activityID);
+                                activityEntryRef.once("value", function(snapshot) {
+                                    var timestamp = snapshot.val().published;
+                                    newActivityRef.setPriority(0 - timestamp, function(error2) {
+                                        if (error2) {
+
+                                        } else {
+                                            deferred.resolve();
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+
+                    return deferred.promise;
+                },
+                asyncUpdateGroupMembers: function(loggedInUserObj, groupObj, requestedMembersList, groupExistingMembersArray) {
+                    var deferred = $q.defer();
+
+                    //create an object from membersSyncArray.
+                    var groupExistingMembersObj = {};
+                    angular.forEach(groupExistingMembersArray, function(memberObj) {
+                        groupExistingMembersObj[memberObj.userID] = true;
+                    });
+
+                    userFirebaseService.asyncCreateGroupMembersJSON(loggedInUserObj.userID, requestedMembersList, groupExistingMembersObj)
+                        .then(function(response) {
+
+                            var promises = [];
+
+                            //Add group to each user
+                            var promise;
+                            var memArray = response.members;
+                            memArray.forEach(function(memberID) {
+                                promise = userFirebaseService.asyncAddUserMembership(memberID, groupObj.groupID, 3);
+                                promises.push(promise);
+                            });
+
+                            //Add membersJSON to given group
+                            var addMembersToGroupDefer = $q.defer();
+                            firebaseService.getRefGroupMembers().child(groupObj.groupID).update(response.memberJSON, function(err) {
+                                if (err) {
+                                    //handle this scenario
+                                    console.log('adding membersJSON to group failed', err);
+                                } else {
+                                    addMembersToGroupDefer.resolve();
+                                }
+                            });
+
+                            promises.push(addMembersToGroupDefer.promise);
+
+                            $q.all(promises).then(function() {
+                                var memberCountRef = firebaseService.getRefGroups().child(groupObj.groupID + '/' + 'members-count');
+                                memberCountRef.transaction(function(currentValue) {
+                                    return (currentValue || 0) + memArray.length;
+                                });
+
+                                if (memArray.length == 1) {
+                                    userFirebaseService.asyncRecordGroupMemberAdditionActivity(groupObj, loggedInUserObj, response.members[0])
+                                        .then(function() {
+                                            deferred.resolve({
+                                                unlistedMembersArray: response.unlisted
+                                            });
+                                        })
+                                } else if (memArray.length > 1) {
+                                    userFirebaseService.asyncRecordManyGroupMembersAdditionActivity(groupObj, loggedInUserObj, response.members)
+                                        .then(function() {
+                                            deferred.resolve({
+                                                unlistedMembersArray: response.unlisted
+                                            });
+                                        });
+                                } else {
+                                    deferred.resolve({
+                                        unlistedMembersArray: response.unlisted
+                                    });
+                                }
+                            });
+
+                        }, function() {
+                            deferred.reject();
+                        });
+
+                    return deferred.promise;
+                },
+                addsubgroupmember: function(userID, groupID, subgroupID){
+                    var defer = $q.defer();
+                    var count = 0;
+                    firebaseService.getRefMain().child('subgroups').child(groupID).child(subgroupID).child('members-count').once('value', function(snapshot){
+                        count = snapshot.val();
+                    })
+                    var multipath = {};
+                    multipath["user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID] = {
+                        "membership-type": 3,
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    };
+                    multipath["subgroup-members/" + groupID + "/" + subgroupID + "/" + userID] = {
+                        "membership-type": 3,
+                        timestamp: Firebase.ServerValue.TIMESTAMP
+                    }
+                    multipath["subgroups/" + groupID + "/" + subgroupID + "/members-count"] = count + 1;
+                    multipath["subgroups/" + groupID + "/" + subgroupID + "/timestamp"] = Firebase.ServerValue.TIMESTAMP;
+                    firebaseService.getRefMain().update(multipath, function(err){
+                        if (err) {
+                            defer.reject(err);
+                        } else {
+                            defer.resolve();
+                        }
+                    })
+                    return defer.promise;
+                },
+                approveMembership: function(groupID, loggedInUserObj, requestedMember, groupObj) {
+                    var defer, userID, membershipType,
+                        userMembershipObj, errorHandler;
+
+                    defer = $q.defer();
+                    membershipType = 3; //for members only, should be dynamic when make admin feature added.
+                    userID = requestedMember.userID;
+
+                    errorHandler = function(err) {
+                        defer.reject('Error occurred in accessing server.');
+                    };
+
+                    userMembershipObj = {};
+                    userMembershipObj[userID] = {
+                        'membership-type': membershipType,
+                        timestamp: firebaseTimeStamp
+                    };
+
+                    //add user to group-membership list
+                    firebaseService.getRefGroupMembers().child(groupID)
+                        .update(userMembershipObj, function(err) {
+                            if (err) {
+                                errorHandler();
+                            } else {
+                                firebaseService.getRefGroupMembers().child(groupID).child(userID).setPriority(requestedMember.membershipNo);
+                                //step1: change membership-type of user in user-membership list
+                                firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
+                                    .set(userMembershipObj[userID], function(err) {
+                                        if (err) {
+                                            errorHandler();
+                                        } else {
+                                            //step2: delete user request from group-membership-requests
+                                            firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
+                                                .remove(function(err) {
+                                                    var groupCountRef;
+                                                    if (err) {
+                                                        errorHandler();
+                                                    } else {
+                                                        //step3: set members count in meta-data of group
+                                                        groupCountRef = firebaseService.getRefGroups().child(groupID + '/members-count');
+                                                        groupCountRef.once('value', function(snapshot) {
+                                                            var membersCount = snapshot.val();
+                                                            membersCount = (membersCount || 0) + 1;
+                                                            groupCountRef.set(membersCount, function(err) {
+                                                                if (err) {
+                                                                    errorHandler();
+                                                                } else {
+
+                                                                    //publish an activity stream record -- START --
+                                                                    var type = 'group';
+                                                                    var targetinfo = {id: groupID, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                                                    var area = {type: 'membersettings', action: 'group-approve-member'};
+                                                                    var group_id = groupID;
+                                                                    var memberuserID = userID;
+                                                                    //for group activity record
+                                                                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                                                    //for group activity stream record -- END --
+                                                                    defer.resolve();
+                                                                    // //step4: publish an activity
+                                                                    // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {
+                                                                    //         var groupObj = snapshot.val();
+                                                                    //         groupObj.groupID = groupID;
+                                                                    //         userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('approve', groupObj, loggedInUserObj, userID)
+                                                                    //             .then(function(res) {
+                                                                    //                 defer.resolve(res);
+                                                                    //             }, errorHandler);
+                                                                    //     });
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                });
+                                        }
+                                    });
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                rejectMembership: function(groupID, loggedInUserObj, requestedMember, groupObj) {
+                    var defer, userID,
+                        errorHandler;
+                    defer = $q.defer();
+                    userID = requestedMember.userID;
+
+                    errorHandler = function(err) {
+                        defer.reject('Error occurred in accessing server.');
+                    };
+
+                    //step1: delete group membership request from user-membership list
+                    //firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
+                        //.remove(function(err) {
+                        //    if (err) {
+                        //        errorHandler();
+                        //    } else {
+                                //step2: delete user request from group-membership-requests
+                                firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
+                                    .remove(function(err) {
+                                        if (err) {
+                                            errorHandler();
+                                        } else {
+
+                                            //publish an activity stream record -- START --
+                                            var type = 'group';
+                                            var targetinfo = {id: groupID, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                            var area = {type: 'membersettings', action: 'group-ignore-member'};
+                                            var group_id = groupID;
+                                            var memberuserID = userID;
+                                            //for group activity record
+                                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                            //for group activity stream record -- END --
+
+                                            // //step3: publish an activity
+                                            // firebaseService.getRefGroups().child(groupID).once('value', function(snapshot) {
+                                            //         var groupObj = snapshot.val();
+                                            //         groupObj.groupID = groupID;
+                                            //         userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('reject', groupObj, loggedInUserObj, userID)
+                                            //             .then(function(res) {
+                                            //                 defer.resolve(res);
+                                            //             }, errorHandler);
+                                            //     });
+                                        }
+                                    });
+                        //    }
+                        //});
+
+                    return defer.promise;
+                },
+                changeMemberRole: function(newType, member, groupObj, loggedInUser) {
+                    var defer, self, prevType,
+                        errorHandler;
+
+                    defer = $q.defer();
+                    self = this;
+                    prevType = member.membershipType;
+
+                    errorHandler = function(err) {
+                        defer.reject('Error occurred in accessing server.');
+                    };
+
+                    if (newType) {
+                        //update membership type in user memberships
+                        userFirebaseService.asyncAddUserMembership(member.userSyncObj.$id, groupObj.$id, newType)
+                            .then(function() {
+                                var userMem = {};
+                                userMem[member.userSyncObj.$id] = {
+                                    'membership-type': newType,
+                                    timestamp: firebaseTimeStamp
+                                };
+
+                                //update membership type in group memberships
+                                firebaseService.getRefGroupMembers().child(groupObj.$id)
+                                    .update(userMem, function(err) {
+                                        if (err) {
+                                            errorHandler();
+                                        } else {
+
+                                            //type: '2' is Admin, '3' is Member, '-1' is block, 'null' is delete membership for this group
+                                            var typeAction = { '2': 'user-membership-from-member-to-admin', '3': 'user-membership-from-admin-to-member', '-1': 'user-membership-block', '4': 'user-membership-unblock' };
+
+                                            //incase from block to member (we check prevType, if block then allow to be member)
+                                            if(prevType == '-1'){
+                                                newType = '4';
+                                            }
+
+                                            //for group activity stream record -- START --
+                                            var type = 'group';
+                                            var targetinfo = {id: groupObj.$id, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                            var area = {type: 'membersettings', action: (newType) ? typeAction[newType] : 'group-member-removed'};
+                                            var group_id = groupObj.$id;
+                                            var memberuserID = member.userID;
+                                            //for group activity record
+                                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                            //for group activity stream record -- END --
+
+                                            defer.resolve();
+
+                                            // //publish an activity for membership changed.
+                                            // userFirebaseService.asyncRecordMembershipChangeActivity(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
+                                            //     .then(function(res) {
+                                            //         defer.resolve(res);
+                                            //     }, errorHandler);
+                                        }
+                                    });
+
+                            }, errorHandler);
+
+                    } else {
+                        self.asyncRemoveUserFromGroup(member.userSyncObj.$id, groupObj.$id)
+                            .then(function() {
+
+                                //if newType is null for Delete Member..........
+                                //for group activity stream record -- START --
+                                var type = 'group';
+                                var targetinfo = {id: groupObj.$id, url: groupObj.$id, title: groupObj.title, type: 'user-membership-change' };
+                                var area = {type: 'membersettings', action: 'group-member-removed'};
+                                var group_id = groupObj.$id;
+                                var memberuserID = member.userID;
+                                //for group activity record
+                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                                //for group activity stream record -- END --
+
+                                defer.resolve();
+
+                                //publish an activity for group-member-removed.
+                                // userFirebaseService.asyncRecordMemberRemoved(prevType, newType, member.userSyncObj, groupObj, loggedInUser)
+                                //     .then(function(res) {
+                                //         defer.resolve(res);
+                                //     }, errorHandler);
+
+                            }, errorHandler);
+                        /* confirmDialogService('Are you sure to remove this user ?')
+                             .then(function () {
+                                 //remove user from group
+
+                             }, function() {
+                                 defer.reject('Cancelled removing user.');
+                             });*/
+                    }
+
+                    return defer.promise;
+                },
+
+                asyncRemoveUserFromGroup: function(memberID, groupID) {
+                    var defer, self,
+                        errorHandler;
+
+                    self = this;
+                    defer = $q.defer();
+                    errorHandler = function() {
+                        defer.reject('Error occurred in accessing server.')
+                    };
+
+                    self.asyncRemoveUserCheckin(memberID, groupID)
+                        .then(function(res) {
+                            self.asyncUpdateGroupDataForRemoveUser(res, groupID)
+                                .then(function() {
+                                    self.asyncRemoveUserMembership(memberID, groupID)
+                                        .then(function() {
+                                            defer.resolve();
+                                        }, errorHandler);
+                                }, errorHandler);
+                        }, errorHandler);
+
+                    return defer.promise;
+                },
+                asyncRemoveUserCheckin: function(memberID, groupID) {
+                    var defer = $q.defer();
+
+                    //check for current check-in/out status of user
+                    var userCurrentCheckinRef = checkinService.getRefCheckinCurrent().child(groupID + '/' + memberID);
+                    userCurrentCheckinRef.once('value', function(snapshot) {
+                        var checkinObj = snapshot.val();
+
+                        //if user's check-in/out exists
+                        if (checkinObj) {
+                            //remove user check-in/out
+                            userCurrentCheckinRef.remove(function(err) {
+                                if (err) {
+                                    defer.reject();
+                                } else {
+                                    defer.resolve(checkinObj);
+                                }
+                            });
+                        } else {
+                            //if not yet checked-in, skip checkin removal
+                            defer.resolve(null);
+                        }
+                    });
+
+                    return defer.promise;
+                },
+                asyncRemoveUserMembership: function(memberID, groupID) {
+                    var defer, errorHandler;
+
+                    defer = $q.defer();
+
+                    errorHandler = function() {
+                        defer.reject('Error occurred in accessing server.');
+                    };
+
+                    firebaseService.getRefGroupMembers().child(groupID + '/' + memberID)
+                        .remove(function(err) {
+                            if (err) {
+                                errorHandler();
+                            } else {
+                                firebaseService.getRefUserGroupMemberships().child(memberID + '/' + groupID)
+                                    .remove(function(err) {
+                                        if (err) {
+                                            errorHandler();
+                                        } else {
+                                            defer.resolve();
+                                        }
+                                    });
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                asyncUpdateGroupDataForRemoveUser: function(checkinObj, groupID) {
+                    var defer = $q.defer();
+
+                    //update group meta-data
+                    var groupDataRef = firebaseService.getRefGroups().child(groupID);
+                    groupDataRef.once('value', function(snapshot) {
+                        var updateObj = {};
+                        var dataObject = snapshot.val();
+
+                        if (checkinObj && checkinObj.type == 1) {
+                            updateObj['members-checked-in'] = {
+                                   count: dataObject['members-checked-in'].count - 1
+                              };
+                          }
+
+
+                        // if (checkinObj && checkinObj.type == 1) {
+                        //     updateObj['members-checked-in'] = {
+                        //         count: dataObject['members-checked-in'].count - 1
+                        //     };
+                        // }
+
+
+                        updateObj['members-count'] = dataObject['members-count'] - 1;
+                        groupDataRef.update(updateObj, function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                defer.resolve();
+                            }
+                        });
+                    });
+
+                    return defer.promise;
+                },
+                asyncLeaveGroup: function(userObj, groupObj) {
+                    var defer, errorHandler, self;
+
+                    defer = $q.defer();
+                    self = this;
+
+                    errorHandler = function() {
+                        defer.reject('could not access server data');
+                    };
+
+                    userFirebaseService.asyncRecordMemberLeft(userObj, groupObj)
+                        .then(function(res) {
+                            self.asyncRemoveUserFromGroup(userObj.$id, groupObj.$id)
+                                .then(function() {
+                                    defer.resolve(res);
+                                }, errorHandler);
+
+                        }, errorHandler);
+
+                    return defer.promise;
+                },
+                asyncRemoveGroup: function(userObj, groupObj) {
+                    var defer, self, errorHandler,
+                        promises, dfr;
+
+                    defer = $q.defer();
+                    self = this;
+                    promises = [];
+
+                    errorHandler = function(reason) {
+                        defer.reject(reason || 'could not access server data');
+                    };
+
+                    //for node: group-activity-streams > $groupid
+                    self.asyncRemoveGroupActivityStreams(groupObj.$id)
+                        .then(function() {
+
+                            //for node: "group-check-in-current" and "group-check-in-records"
+                            self.asyncRemoveGroupCheckin(groupObj.$id)
+                                .then(function() {
+
+                                    //for node: group-locations-defined > $groupid
+                                    self.asyncRemoveGroupDefLocs(groupObj.$id)
+                                        .then(function() {
+
+                                            //for node: group-membership-requests > $groupid AND group-membership-requests-by-user
+                                            self.asyncRemoveGroupMembershipRequests(groupObj.$id)
+                                                .then(function() {
+
+                                                    //for node: "group-names"
+                                                    self.asyncRemoveGroupNames(groupObj.$id)
+                                                        .then(function() {
+
+                                                            //for node: "groups"
+                                                            self.asyncRemoveGroupMetaDeta(groupObj.$id)
+                                                                .then(function() {
+
+                                                                    //get members list array
+                                                                    self.asyncGetGroupMembersArray(groupObj.$id)
+                                                                        .then(function(membersArray) {
+
+                                                                            dfr = $q.defer();
+                                                                            angular.forEach(membersArray, function(memberID) {
+
+                                                                                //for node: group-members and user-group-memberships
+                                                                                self.asyncRemoveUserMembership(memberID, groupObj.$id)
+                                                                                    .then(function() {
+                                                                                        dfr.resolve('You have removed "' + groupObj.title + '" group successfully.');
+                                                                                    }, function() {
+                                                                                        dfr.reject();
+                                                                                    });
+
+                                                                                promises.push(dfr.promise);
+                                                                            });
+
+                                                                            $q.all(promises).then(function() {
+                                                                                defer.resolve('group has been removed successfully.');
+                                                                            }, errorHandler);
+                                                                        });
+                                                                }, errorHandler);
+                                                        }, errorHandler);
+                                                }, errorHandler);
+                                        }, errorHandler);
+                                }, errorHandler);
+                        }, errorHandler);
+
+                    return defer.promise;
+                },
+                asyncRemoveGroupCheckin: function(groupID) {
+                    //for "group-check-in-current" and "group-check-in-records"
+                    var defer = $q.defer();
+
+                    firebaseService.getRefGroupCheckinCurrent().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                firebaseService.getRefGroupCheckinRecords().child(groupID)
+                                    .remove(function(err) {
+                                        if (err) {
+                                            defer.reject();
+                                        } else {
+                                            defer.resolve();
+                                        }
+                                    });
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                asyncRemoveGroupDefLocs: function(groupID) {
+                    //for "group-locations-defined"
+                    var defer = $q.defer();
+
+                    firebaseService.getRefGroupLocsDefined().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                defer.resolve();
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                asyncRemoveGroupActivityStreams: function(groupID) {
+                    //for "group-activity-streams"
+                    var defer = $q.defer();
+
+                    firebaseService.getRefGroupsActivityStreams().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                defer.resolve();
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                asyncRemoveGroupMembershipRequests: function(groupID) {
+                    //for "group-membership-requests" and "group-membership-requests-by-user"
+                    var defer, requestedMembers,
+                        promises, dfr;
+
+                    defer = $q.defer();
+                    promises = [];
+
+                    firebaseService.getRefGroupMembershipRequests().child(groupID)
+                        .on('value', function(snapshot) {
+                            requestedMembers = snapshot.val() || {};
+                            requestedMembers = Object.keys(requestedMembers);
+
+                            //if group does not have any membership-requests, skip requests removal step
+                            if (!requestedMembers.length) {
+                                defer.resolve();
+                            } else {
+                                //if group have membership-requests for approval or rejection.
+                                angular.forEach(requestedMembers, function(requestedMemberID) {
+                                    dfr = $q.defer();
+                                    promises.push(dfr.promise);
+
+                                    //remove requested Member's request from "group-membership-requests-by-user"
+                                    firebaseService.getRefGroupMembershipRequestsByUser().child(requestedMemberID + '/' + groupID)
+                                        .remove(function(err) {
+                                            if (err) {
+                                                dfr.reject();
+                                            } else {
+                                                dfr.resolve();
+                                            }
+                                        });
+                                });
+
+                                $q.all(promises)
+                                    .then(function() {
+                                        defer.resolve();
+                                    }, function() {
+                                        defer.reject();
+                                    });
+                            }
+                        }, function() {
+                            defer.reject('permission denied to access data.');
+                        });
+
+                    return defer.promise;
+
+                },
+                asyncRemoveGroupNames: function(groupID) {
+                    //for "group-names"
+                    var defer = $q.defer();
+
+                    firebaseService.getRefGroupsNames().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                defer.resolve();
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                asyncRemoveGroupMetaDeta: function(groupID) {
+                    //for "groups"
+                    var defer = $q.defer();
+
+                    firebaseService.getRefGroups().child(groupID)
+                        .remove(function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                defer.resolve();
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                asyncGetGroupMembersArray: function(groupID) {
+                    //to get an array that contains userIDs of all members of group
+                    var defer = $q.defer();
+
+                    firebaseService.getRefGroupMembers().child(groupID)
+                        .on('value', function(snapshot) {
+                            var membersObj = snapshot.val() || {};
+                            defer.resolve(Object.keys(membersObj));
+                        }, function() {
+                            defer.reject('permission denied to access data.');
+                        });
+
+                    return defer.promise;
+                }
+            };
+        }
+    ]);
+
+/**
+ * Created by ZiaKhan on 02/02/15.
+ */
+
+'use strict';
+
+angular.module('core')
+    .factory('soundService', ["ngAudio", function(ngAudio) {
+        var successSound = ngAudio.load("sounds/guitar_success.mp3"); // returns NgAudioObject
+        var failSound = ngAudio.load("sounds/piano_fail.mp3");
+
+        return {
+            playSuccess: function() {
+                successSound.play();
+            },
+            playFail: function() {
+                failSound.play();
+            }
+        };
+    }]);
+
+/**
+ * Created by Shahzad on 5/15/2015.
+ */
+
+/*
+ * dependency:
+ * init: after successful login, call setUserPresence()
+ * */
+(function() {
+    "use strict";
+
+    angular
+        .module('core')
+        .service('userPresenceService', userPresenceService);
+
+    userPresenceService.$inject = ['$firebaseObject', '$timeout'];
+
+    function userPresenceService($firebaseObject, $timeout) {
+
+        var refs = {};
+        var currentConRef;
+        var userPresRef;
+        //initialize code
+
+        //exports list
+        return {
+            init: init,
+            syncUserPresence: syncUserPresence,
+            getUserSyncObject: getUserSyncObject,
+            getRefUsersPresense: getRefUsersPresense,
+            removeCurrentConRef: removeCurrentConRef
+        };
+
+        //to set references for firebase nodes, avoid injecting firebase service to avoid circular dependency
+        function init(refsObj) {
+            refs.main = refsObj.main;
+            refs.users = refsObj.users;
+
+            refs.fireConnection = refsObj.main.child('.info/connected');
+            refs.usersPresence = refsObj.main.child('users-presence');
+        }
+
+        function getRefUsersPresense(){
+            return refs.usersPresence
+        }
+
+        function removeCurrentConRef(){
+            currentConRef.remove();
+            userPresRef.child('last-modified').set(Firebase.ServerValue.TIMESTAMP);
+        }
+
+        //to set user presence
+        function syncUserPresence(userID) {
+            //for run once
+            var i = 0;
+            refs.fireConnection.on('value', function(snapshot) {
+
+                // if (snapshot.val() && i === 0) {
+                if (snapshot.val()) {
+                    var userPresenceRef = refs.usersPresence.child(userID);
+                    userPresRef = userPresenceRef
+                    //get an entry for the current connection.
+                    // userPresenceRef.child('last-modified').set(Firebase.ServerValue.TIMESTAMP);
+                    // userPresenceRef.child('defined-status').set(1);
+                    var currentConnRef = userPresenceRef.child('connections').push();
+                    currentConRef = currentConnRef;
+                    var multipath = {};
+                    multipath[userID + "/last-modified"] = Firebase.ServerValue.TIMESTAMP;
+                    multipath[userID + "/defined-status"] = 1;
+                    multipath[userID + "/connections/" + currentConnRef.key() + "/type"] = 1;
+                    multipath[userID + "/connections/" + currentConnRef.key() + "/started"] = Firebase.ServerValue.TIMESTAMP;
+                        /*userID : {
+                            'last-modified': Firebase.ServerValue.TIMESTAMP,
+                            'defined-status': 1
+                        },
+                        currentConnRef : {
+                            type: 1, // 1 = web, 2 = ios, 3 = andriod  (changed as per sir zia's instruction, issue # 92)
+                            started: Firebase.ServerValue.TIMESTAMP,
+                        }*/
+                    // }
+                    // console.log(multipath)
+                    refs.usersPresence.update(multipath)
+                    // when user disconnect, remove the connection. ( we should run .remove() before .set(), to avoid ghost entries. )
+                    var multipath2 = {};
+                    multipath2[userID + "/last-modified"] = Firebase.ServerValue.TIMESTAMP;
+                    multipath2[userID + "/defined-status"] = 0;
+                    // multipath2[userID + "/connections/" + currentConnRef.key() + "/type"] = 1;
+                    // multipath2[userID + "/connections/" + currentConnRef.key() + "/started"] = Firebase.ServerValue.TIMESTAMP;
+                    refs.usersPresence.onDisconnect().update(multipath2)
+                    currentConnRef.onDisconnect().remove(
+                        //@for debugging purpose for mahmood bhai
+                        //    function(err){
+                        //    if ( err ) {
+                        //        console.info('remove error', err);
+                        //    }
+                        //}
+                    );
+
+                    //var x = userPresenceRef.child('last-modified');
+
+                    // setting up details about current connection
+                    // currentConnRef.set({
+                            // type: 3, // 1 = mobile, 2 = tablet, 3 = web, 4 = watch , 5 = hololens
+                            // type: 1, // 1 = web, 2 = ios, 3 = andriod  (changed as per sir zia's instruction, issue # 92)
+                            // started: Firebase.ServerValue.TIMESTAMP,
+                            //'last-modified': 'assasa'
+
+                        // } //@for debugging purpose for mahmood bhai
+                        //    function( err ) {
+                        //    if ( err ) {
+                        //        console.info('push error', err);
+                        //    }
+                        //}
+                    // );
+
+                    // when user disconnect, update the last time user was connected
+                    userPresenceRef.child('last-modified').onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+                    // userPresenceRef.child('defined-status').onDisconnect().set(0);
+                    i++; //for run once (increment)
+                }
+            });
+        }
+
+        //to get user sync object that contains profile, and availability object.
+        function getUserSyncObject(userID) {
+            var userSyncObject, userRef, userPresenceRef;
+
+            userSyncObject = {};
+
+            // get user profile
+            userRef = refs.users.child(userID);
+            userSyncObject.profile = $firebaseObject(userRef);
+
+            //get user presence
+            userPresenceRef = refs.usersPresence.child(userID);
+            userPresenceRef.on('value', getUserPresenceObj);
+
+            //method to destroy user presence syncObjects
+            userSyncObject.off = function() {
+                userPresenceRef.off('value', getUserPresenceObj);
+            };
+
+            //handler for user presence.
+            function getUserPresenceObj(snapshot) {
+                var userPresenceObj, recentConnection;
+                userPresenceObj = snapshot.val() || {}; //A FIX for inconsistent data in Attendance System.
+
+                $timeout(function() {
+                    userSyncObject.availability = {};
+
+                    userSyncObject.availability.lastSeen = userPresenceObj['last-modified'];
+
+                    if (!userPresenceObj.connections) { //if no connections
+                        userSyncObject.availability.status = "Offline";
+                    } else {
+                        switch (userPresenceObj['defined-status']) { // 0 = offline, 1 = online, 2 = away, 3 = busy.
+                            case 1:
+                                userSyncObject.availability.status = 'Online';
+                                break;
+                            case 2:
+                                userSyncObject.availability.status = 'Away';
+                                break;
+                            case 3:
+                                userSyncObject.availability.status = 'Busy';
+                                break;
+                            default:
+                                userSyncObject.availability.status = 'Online'; //A FIX for inconsistent data in Attendance System.
+                        }
+
+                        //find the most recent connection to show the type of device from which the user is connected
+                        recentConnection = Object.keys(userPresenceObj.connections);
+                        recentConnection = recentConnection[recentConnection.length - 1];
+
+                        // 1 = web, 2 = ios, 3 = andriod  (changed as per sir zia's instruction, issue # 92)
+                        switch (userPresenceObj.connections[recentConnection].type) {
+                            case 1:
+                                userSyncObject.availability.device = 'Web';
+                                break;
+                            case 2:
+                                userSyncObject.availability.device = 'IOS';
+                                break;
+                            case 3:
+                                userSyncObject.availability.device = 'Android';
+                                break;
+                            case 4:
+                                userSyncObject.availability.device = 'iWatch';
+                                break;
+                            case 5:
+                                userSyncObject.availability.device = 'HoloLens';
+                                break;
+                            default:
+                                userSyncObject.availability.device = 'Unknown';
+                        }
+
+                        // switch (userPresenceObj.connections[recentConnection].type) { // 1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
+                        //     case 1:
+                        //         userSyncObject.availability.device = 'Mobile';
+                        //         break;
+                        //     case 2:
+                        //         userSyncObject.availability.device = 'Tablet';
+                        //         break;
+                        //     case 3:
+                        //         userSyncObject.availability.device = 'Web';
+                        //         break;
+                        //     case 4:
+                        //         userSyncObject.availability.device = 'iWatch';
+                        //         break;
+                        //     case 5:
+                        //         userSyncObject.availability.device = 'HoloLens';
+                        //         break;
+                        //     default:
+                        //         userSyncObject.availability.device = 'Unknown';
+                        // }
+                    }
+                });
+            }
+
+            return userSyncObject;
+        }
+    }
+
+})();
+
+/**
+ * Created by Shahzad on 6/9/2015.
+ */
+
+(function() {
+    'use strict';
+    angular.module('core')
+        .factory('userHelperService', ["$q", "$http", "appConfig", "$firebaseAuth", "$location", '$firebaseArray', "firebaseService",
+            function($q, $http, appConfig, $firebaseAuth, $location, $firebaseArray, firebaseService) {
+
+
+                return {
+                    getAllUsers: function() {
+                        //return $firebaseObject(firebaseService. getRefUsers());
+                        return $firebaseArray(toDoListRef)(firebaseService.getRefUsers());
+
+                    },
+                    getUserGroupMemberShip: function() {
+                        //return $firebaseObject(firebaseService.getRefUserGroupMemberships());
+                        return Firebase.getAsArray(firebaseService.getRefGroupMembers());
+
+                    }
+
+
+
+                }
+
+            }
+        ]);
+})();
+
+/**
+ * Created by ZiaKhan on 15/02/15.
+ */
+
+
+'use strict';
+
+
+angular.module('core')
+    .factory('subgroupFirebaseService', ['checkinService', "$firebaseArray", "firebaseService", "$q", "$timeout", "$firebaseObject", 'userFirebaseService', 'groupFirebaseService',
+        //function(firebaseService, $q, $timeout, $sessionStorage, $route, $firebaseObject,userFirebaseService,groupFirebaseService) {
+        function(checkinService, $firebaseArray, firebaseService, $q, $timeout, $firebaseObject, userFirebaseService, groupFirebaseService) {
+            var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+            return {
+                getSubgroupSyncObjAsync: function(groupID, subgroupID, viewerUserID) {
+                    var deferred = $q.defer();
+                    var self = this;
+                    var syncObj = {
+                        subgroupsSyncArray: [],
+                        membersSyncArray: [],
+                        pendingMembershipSyncArray: [],
+                        activitiesSyncArray: [],
+                        groupMembersSyncArray: []
+                    };
+
+                    syncObj.self = this;
+                    syncObj.viewerUserID = viewerUserID;
+                    syncObj.groupID = groupID;
+                    syncObj.subgroupID = subgroupID;
+                    syncObj.userSubgroupMembershipRef = firebaseService.getRefUserSubGroupMemberships().child(viewerUserID).child(groupID).child(subgroupID);
+                    syncObj.userGroupMembershipRef = firebaseService.getRefUserGroupMemberships().child(viewerUserID).child(groupID);
+                    syncObj.subgroupSyncObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(subgroupID));
+                    syncObj.groupObj =
+                        syncObj.userGroupMembershipRef.once("value", function(groupMembershipSnapshot) {
+
+
+                            syncObj.userSubgroupMembershipRef.once("value", function(subgroupMembershipSnapshot) {
+
+                                syncObj.groupMembership = groupMembershipSnapshot.val();
+                                syncObj.subgroupMembership = subgroupMembershipSnapshot.val();
+
+                                if (syncObj.subgroupMembership) { //if has team membership
+                                    var teamMembershipType = subgroupMembershipSnapshot.val()["membership-type"];
+                                    syncObj.membershipType = teamMembershipType;
+                                    syncObj.timestamp = syncObj.subgroupMembership["timestamp"];
+                                    if (teamMembershipType > 0 && teamMembershipType <= 3) {
+                                        self.addListeners(syncObj);
+                                    }
+
+
+                                    syncObj.userSubgroupMembershipRef.on("child_changed", self.subgroupMembershipChanged, syncObj);
+                                    syncObj.userSubgroupMembershipRef.on("child_removed", self.subgroupMembershipDeleted, syncObj);
+                                } else { //doesnot have team membership but because he is an owner or admin of space he gets a membership
+                                    if (syncObj.groupMembership) { //not a team member but does he have a space membership
+                                        var groupMembershipType = groupMembershipSnapshot.val()["membership-type"];
+
+                                        if (groupMembershipType == 1 || groupMembershipType == 2) { //space owner and admins have access to all teams
+                                            syncObj.membershipType = groupMembershipType;
+                                            if (groupMembershipType == 1) {
+                                                syncObj.timestamp = syncObj.subgroupSyncObj.timestamp; //space owner is a member from the time team was created
+                                            } else {
+                                                syncObj.timestamp = subgroupMembershipSnapshot.val()["timestamp"]; //space admin is a member from when he became space admin
+                                            }
+
+                                            self.addListeners(syncObj);
+
+                                            syncObj.userGroupMembershipRef.on("child_changed", self.groupMembershipChanged, syncObj);
+                                            syncObj.userGroupMembershipRef.on("child_removed", self.groupMembershipDeleted, syncObj);
+
+                                        } else {
+                                            syncObj.membershipType = -100; //space member but not a team member yet
+                                            syncObj.userSubgroupMembershipRef.on("child_added", self.subgroupMembershipAddedLater, syncObj);
+                                        }
+
+                                    } else {
+                                        syncObj.membershipType = -1000; //right now not even a member of the parent space
+                                        //listen to if membership added later
+                                        //syncObj.userSpaceMembershipRef.on("child_added", self.spaceMembershipAddedLater, syncObj); //not needed if he does not have space membership he will not have access to this page
+                                    }
+
+
+                                }
+
+                                deferred.resolve(syncObj);
+                            });
+                        }, syncObj);
+
+                    return deferred.promise;
+                },
+                removeSubgroupMembershipHandlers: function() {
+                    this.userSubgroupMembershipRef.off("child_changed", this.self.subgroupMembershipChanged, this);
+                    this.userSubgroupMembershipRef.off("child_removed", this.self.subgroupMembershipDeleted, this);
+                },
+                removeGroupMembershipHandlers: function() {
+                    this.userGroupMembershipRef.off("child_changed", this.self.groupMembershipChanged, this);
+                    this.userGroupMembershipRef.off("child_removed", this.self.groupMembershipDeleted, this);
+                    this.self.userSubgroupMembershipRef.off("child_added", this.self.subgroupMembershipAddedLater, this);
+                },
+                reloadController: function() {
+                    /* $timeout(function () {
+                         // 0 ms delay to reload the page.
+                         $route.reload();
+                     }, 0);*/
+                },
+                addListeners: function(syncObj) {
+                    if (syncObj.membershipType >= 1) {
+                        syncObj.groupMembershipRef = groupFirebaseService.syncGroupMembers(syncObj.groupID, syncObj.groupMembersSyncArray);
+                        syncObj.subgroupMembershipRef = syncObj.self.syncSubgroupMembers(syncObj.groupID, syncObj.subgroupID, syncObj.membersSyncArray, syncObj);
+                        syncObj.groupActivitiesRef = syncObj.self.syncSubgroupActivities(syncObj.groupID, syncObj.subgroupID, syncObj.activitiesSyncArray, syncObj);
+                    }
+
+                    if (syncObj.membershipType == 1 || syncObj.membershipType == 2) {
+                        syncObj.teamPendingMembershipRequestsRef = syncObj.self.syncSubgroupPendingMembershipRequests(syncObj.groupID, syncObj.subgroupID, syncObj.pendingMembershipSyncArray, syncObj);
+                    }
+                },
+                removeListeners: function() {
+                    if (this.membershipType >= 1) {
+
+                    }
+
+                    if (this.membershipType == 1 || this.membershipType == 2) {
+
+                    }
+                },
+                subgroupMembershipAddedLater: function(snapshot) {
+                    if ((this.spaceID + ">" + this.teamID) == snapshot.key()) { //has become a member now
+                        this.self.removeGroupMembershipHandlers.apply(this);
+                        this.self.removeListeners.apply(this);
+                        this.self.reloadController.apply(this);
+                    }
+                },
+                groupMembershipChanged: function(snapshot) {
+                    var newMembershipType = snapshot.val();
+                    if (newMembershipType != this.groupMembership.membershipType) { //membership type has changed
+                        this.self.removeGroupMembershipHandlers.apply(this);
+                        this.self.removeListeners.apply(this);
+                        this.self.reloadController.apply(this);
+                    }
+                },
+                subgroupMembershipChanged: function(snapshot) {
+                    var newMembershipType = snapshot.val();
+                    if (newMembershipType != this.subgroupMembership.membershipType) { //membership type has changed
+                        this.self.removeSubgroupMembershipHandlers.apply(this);
+                        this.self.removeListeners.apply(this);
+                        this.self.reloadController.apply(this);
+                    }
+                },
+                groupMembershipDeleted: function(snapshot) { //is no longer a space member
+                    this.self.removeGroupMembershipHandlers.apply(this);
+                    this.self.removeListeners.apply(this);
+                    this.self.reloadController.apply(this);
+
+                },
+                subgroupMembershipDeleted: function(snapshot) { //is no longer a team member
+                    this.self.removeSubgroupMembershipHandlers.apply(this);
+                    this.self.removeListeners.apply(this);
+                    this.self.reloadController.apply(this);
+
+                },
+
+                syncSubgroupMembers: function(groupId, subgroupID, memberArray) {
+                    //var ref = firebaseService.getRefGroupMembers().child(spaceID + ">" + teamID);
+                    var ref = firebaseService.getRefSubGroupMembers().child(groupId + "/" + subgroupID);
+                    ref.on('child_added', this.subgroupUserMembershipAdded, memberArray);
+                    ref.on('child_changed', this.subgroupUserMembershipChanged, memberArray);
+                    ref.on('child_removed', this.subgroupUserMembershipDeleted, memberArray);
+                    return ref;
+                },
+
+                subgroupUserMembershipAdded: function(snapshot) {
+                    var self = this;
+                    var userSyncObj = $firebaseObject(firebaseService.getRefUsers().child(snapshot.key()));
+                    $timeout(function() {
+                        self.push({
+                            userID: snapshot.key(),
+                            membershipType: snapshot.val()["membership-type"],
+                            timestamp: snapshot.val()["timestamp"],
+                            userSyncObj: userSyncObj
+                        });
+                    });
+                },
+                subgroupUserMembershipChanged: function(snapshot) {
+                    var userID = snapshot.key();
+                    var membershipObj = snapshot.val();
+                    this.forEach(function(obj) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                obj.membershipType = membershipObj["membership-type"];
+                            });
+                        }
+                    });
+                },
+                subgroupUserMembershipDeleted: function(snapshot) {
+                    var self = this;
+                    var userID = snapshot.key();
+                    this.forEach(function(obj, i) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                self.splice(i, 1);
+                            });
+                        }
+                    });
+                },
+                syncSubgroupActivities: function(groupID, subgroupID, activitiesSyncArray) {
+                    var ref = firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroupID).orderByPriority();
+                    ref.on("child_added", this.groupActivityAdded, {
+                        array: activitiesSyncArray,
+                        groupID: groupID,
+                        subgroupID: subgroupID,
+                        self: this
+                    });
+                    return ref;
+                },
+                groupActivityAdded: function(snapshot) {
+                    var self = this;
+                    var activity = snapshot.val();
+                    $timeout(function() {
+                        if (activity) {
+                            self.array.push(activity);
+                        }
+                    });
+                },
+
+                syncSubgroupPendingMembershipRequests: function(groupID, subgroupID, pendingMembershipSyncArray) {
+                    var ref = firebaseService.getRefSubgroupMembershipRequests().child(groupID + "/" + subgroupID);
+                    ref.on("child_added", this.subgroupMembershipRequestAdded, pendingMembershipSyncArray);
+                    ref.on("child_removed", this.subgroupMembershipRequestDeleted, pendingMembershipSyncArray);
+                    return ref;
+                },
+                subgroupMembershipRequestAdded: function(snapshot) {
+                    var self = this;
+                    var userSyncObj = $firebaseObject(firebaseService.getRefUsers().child(snapshot.key()));
+                    $timeout(function() {
+                        self.push({
+                            userID: snapshot.key(),
+                            message: snapshot.val()["message"],
+                            timestamp: snapshot.val()["timestamp"],
+                            userSyncObj: userSyncObj
+                        });
+                    });
+                },
+                subgroupMembershipRequestDeleted: function(snapshot) {
+                    var self = this;
+                    var userID = snapshot.key();
+                    this.forEach(function(obj, i) {
+                        if (obj.userID == userID) {
+                            $timeout(function() {
+                                self.splice(i, 1);
+                            });
+                        }
+                    });
+                },
+                asyncAddUserMembershipToSubgroup: function(userID, groupID, subgroupID, typeNum) {
+                    var that = this;
+                    var deferred = $q.defer();
+                    var timestampRef = firebaseService.getRefSubGroupMembers().child(groupID + '/' + subgroupID + '/' + userID + '/timestamp');
+
+                    timestampRef.once("value", function(snapshot) {
+                        var timestamp = snapshot.val() || firebaseTimeStamp;
+                        var userMem = {};
+
+                        userMem[subgroupID] = {
+                            "membership-type": typeNum,
+                            timestamp: timestamp
+                        };
+
+                        var userMemRef = firebaseService.getRefUserSubGroupMemberships().child(userID).child(groupID);
+                        userMemRef.update(userMem, function(error) {
+                            if (error) {
+                                deferred.reject();
+                            } else {
+                                deferred.resolve();
+                            }
+                        });
+                    });
+
+                    return deferred.promise;
+                },
+                asyncUpdateSubgroupMembers: function(loggedInUserObj, subgroupObj, requestedMembersList, subgroupExistingMembersArray, groupData) {
+                    var deferred = $q.defer();
+                    var that = this;
+                    //create an object from membersSyncArray.
+                    var subgroupExistingMembersObj = {};
+                    angular.forEach(subgroupExistingMembersArray, function(memberObj) {
+                        subgroupExistingMembersObj[memberObj.userID] = true;
+                    });
+
+                    userFirebaseService.asyncCreateGroupMembersJSON(loggedInUserObj.userID, requestedMembersList, subgroupExistingMembersObj)
+                        .then(function(response) {
+
+                            var promises = [];
+
+                            //Add group to each user
+                            var promise;
+                            var memArray = response.members;
+                            memArray.forEach(function(memberID) {
+                                promise = that.asyncAddUserMembershipToSubgroup(memberID, subgroupObj.groupID, subgroupObj.subgroupID, 3);
+                                promises.push(promise);
+                            });
+
+                            //Add membersJSON to given group
+                            var addMembersToGroupDefer = $q.defer();
+                            firebaseService.getRefSubGroupMembers().child(subgroupObj.groupID).child(subgroupObj.subgroupID).update(response.memberJSON, function(err) {
+                                if (err) {
+                                    //handle this scenario
+                                    console.log('adding membersJSON to group failed', err);
+                                } else {
+                                    addMembersToGroupDefer.resolve();
+                                }
+                            });
+
+                            promises.push(addMembersToGroupDefer.promise);
+
+                            $q.all(promises).then(function() {
+                                var memberCountRef = firebaseService.getRefSubGroups().child(subgroupObj.groupID + '/' + subgroupObj.subgroupID + '/' + 'members-count');
+                                memberCountRef.transaction(function(currentValue) {
+                                    return (currentValue || 0) + memArray.length;
+                                });
+                                // debugger;
+                                var qArray = [];
+                                var qArray2 = [];
+                                var deffer = $q.defer();
+                                deffer.promise
+                                    .then(function(dataArrofArr) {
+
+                                        dataArrofArr.forEach(function(arr) {
+                                            if (arr[1].type == 1) {
+                                                arr[0].checkedin = true
+                                            } else {
+                                                arr[0].checkedin = false
+                                            }
+                                            qArray2.push(arr[0].$save())
+                                        });
+                                        return $q.all(qArray2)
+                                    })
+                                    .then(function() {
+                                        deferred.resolve({
+                                            unlistedMembersArray: response.unlisted
+                                        });
+                                        //step  : entry for "subgroup-activity-streams"
+                                        // debugger;
+
+                                    })
+                                    .catch(function(d) {
+                                        console.log(d);
+                                    })
+                                // for (var member in memArray) {
+                                //
+                                //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(loggedInUserObj.userID).child(subgroupObj.groupID + "_" + subgroupObj.subgroupID).child(member))
+                                //         .$loaded().then(function() {
+                                //             var temp1 = $firebaseObject(checkinService.getRefSubgroupCheckinCurrentByUser().child(member)).$loaded().then(function() {
+                                //                 qArray.push($q.all([temp, temp1]))
+                                //             })
+                                //         })
+                                // }
+                                deffer.resolve($q.all(qArray));
+
+
+
+
+
+                                /*  if(memArray.length == 1) {
+
+                                      //userFirebaseService.asyncRecordGroupMemberAdditionActivity(subgroupObj, loggedInUserObj, response.members[0])
+                                      groupFirebaseService.asyncRecordSubgroupMemberAdditionActivity(loggedInUserObj.userID, subgroupObj.groupID ,subgroupObj.$id, memArray[0] )
+                                          .then(function(){
+                                              deferred.resolve({unlistedMembersArray: response.unlisted});
+                                          })
+                                  }
+                                  else if (memArray.length > 1) {
+
+                                      groupFirebaseService.asyncRecordManySubgroupsMembersAdditionActivity(loggedInUserObj, groupData, subgroupObj, response.members)
+                                          .then(function(){
+                                              deferred.resolve({unlistedMembersArray: response.unlisted});
+                                          });
+                                  }
+                                  else {
+                                      deferred.resolve({unlistedMembersArray: response.unlisted});
+                                  }*/
+                            });
+
+                        }, function() {
+                            deferred.reject();
+                        });
+
+                    return deferred.promise;
+                },
+                getFirebaseGroupObj: function(groupId) {
+
+                    var ref = firebaseService.getRefGroups().child(groupId);
+                    return $firebaseObject(ref)
+                },
+                getFirebaseGroupSubGroupMemberObj: function(groupid, subgroupid) {
+
+                    var ref = firebaseService.getRefSubGroupMembers().child(groupid).child(subgroupid);
+                    return $firebaseArray(ref)
+                },
+                approveMembership: function(groupID, subgroupID, loggedInUserObj, requestedMember) {
+                    var defer, userID, membershipType,
+                        userMembershipObj, errorHandler;
+
+                    defer = $q.defer();
+                    membershipType = 3; //for members only, should be dynamic when make admin feature added.
+                    userID = requestedMember.userID;
+
+                    errorHandler = function(err) {
+                        defer.reject('Error occurred in accessing server.');
+                    };
+
+                    userMembershipObj = {};
+                    userMembershipObj[userID] = {
+                        'membership-type': membershipType,
+                        timestamp: firebaseTimeStamp
+                    };
+
+                    //add user to subgroup-membership list
+                    firebaseService.getRefGroupMembers().child(groupID)
+                        .update(userMembershipObj, function(err) {
+                            if (err) {
+                                errorHandler();
+                            } else {
+                                //step1: change membership-type of user in user-membership list
+                                //firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
+                                firebaseService.getRefUserSubGroupMemberships().child(userID + '/' + groupID + '/' + subgroupID)
+                                    .set(userMembershipObj[userID], function(err) {
+                                        if (err) {
+                                            errorHandler();
+                                        } else {
+                                            //step2: delete user request from subgroup-membership-requests
+                                            //firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
+                                            firebaseService.getRefSubgroupMembershipRequests().child(groupID + '/' + subgroupID + '/' + userID)
+                                                .remove(function(err) {
+                                                    var groupCountRef;
+                                                    if (err) {
+                                                        errorHandler();
+                                                    } else {
+                                                        //step3: set members count in meta-data of subgroup
+                                                        //groupCountRef = firebaseService.getRefGroups().child(groupID + '/members-count');
+                                                        groupCountRef = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-count');
+                                                        groupCountRef.once('value', function(snapshot) {
+                                                            var membersCount = snapshot.val();
+                                                            membersCount = (membersCount || 0) + 1;
+                                                            groupCountRef.set(membersCount, function(err) {
+                                                                if (err) {
+                                                                    errorHandler();
+                                                                } else {
+                                                                    //step4: publish an activity
+                                                                    firebaseService.getRefSubGroups().child(groupID).child(subgroupID)
+                                                                        .once('value', function(snapshot) {
+                                                                            var groupObj = snapshot.val();
+                                                                            groupObj.groupID = groupID;
+                                                                            groupObj.subgroupID = subgroupID;
+                                                                            userFirebaseService.asyncRecordSubGroupMemberApproveRejectActivity('approve', groupObj, loggedInUserObj, userID)
+                                                                                .then(function(res) {
+                                                                                        defer.resolve(res);
+                                                                                    },
+                                                                                    errorHandler);
+                                                                        });
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                });
+                                        }
+                                    });
+                            }
+                        });
+
+                    return defer.promise;
+                },
+                rejectMembership: function(groupID, subgroupID, loggedInUserObj, requestedMember) {
+                    var defer, userID,
+                        errorHandler;
+
+                    defer = $q.defer();
+                    userID = requestedMember.userID;
+
+                    errorHandler = function(err) {
+                        defer.reject('Error occurred in accessing server.');
+                    };
+
+                    //step1: delete group membership request from user-membership list
+                    //firebaseService.getRefUserGroupMemberships().child( userID + '/' + groupID)
+                    firebaseService.getRefUserSubGroupMemberships().child(userID + '/' + groupID + '/' + subgroupID)
+                        .remove(function(err) {
+                            if (err) {
+                                errorHandler();
+                            } else {
+                                //step2: delete user request from subgroup-membership-requests
+                                //firebaseService.getRefGroupMembershipRequests().child(groupID + '/' + userID)
+                                firebaseService.getRefSubgroupMembershipRequests().child(groupID + '/' + subgroupID + '/' + userID)
+                                    .remove(function(err) {
+                                        if (err) {
+                                            errorHandler();
+                                        } else {
+                                            //step3: publish an activity
+                                            //firebaseService.getRefGroups().child(groupID)
+                                            firebaseService.getRefSubGroups().child(groupID).child(subgroupID)
+                                                .once('value', function(snapshot) {
+                                                    var subgroupOjb = snapshot.val();
+                                                    subgroupOjb.groupID = groupID;
+                                                    subgroupOjb.subgroupID = subgroupID;
+                                                    //userFirebaseService.asyncRecordGroupMemberApproveRejectActivity('reject', groupObj, loggedInUserObj, userID)
+                                                    userFirebaseService.asyncRecordSubGroupMemberApproveRejectActivity('reject', subgroupOjb, loggedInUserObj, userID)
+                                                        .then(function(res) {
+                                                            defer.resolve(res);
+                                                        }, errorHandler);
+                                                });
+                                        }
+                                    });
+                            }
+                        });
+
+                    return defer.promise;
+                }
+
+
+
+            };
+        }
+    ]);
+
+/*
+var s = {
+    "user-subgroup-memberships" : {
+        "$userid": {
+            ".read": "(auth.uid == $userid)",
+            ".validate": "(root.child('users/' + $userid).exists())",
+            "$groupid" : {
+                ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).exists() && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2",
+                ".write": "root.child('user-group-memberships').child(auth.uid).child($groupid).exists() && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2",
+                "$subgroupid": {
+                    ".read": "root.child('user-subgroup-memberships').child(auth.uid).child($groupid).exists() && root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2",
+                    ".write": "root.child('user-subgroup-memberships').child(auth.uid).child($groupid).exists() && root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-subgroup-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2",
+                    ".validate": "newData.hasChildren(['membership-type', 'timestamp'])",
+                    "membership-type": {
+                        ".validate": "newData.isNumber() && newData.val() == -1 || newData.val() == 0 || newData.val() == 1 || newData.val() == 2 || newData.val() == 3"
+
+                    },
+                    "timestamp": {
+                        ".validate": "newData.isNumber() && newData.val() <= now"
+                    }
+                }
+
+            }
+        }
+    }
+}*/
+
+ /**
+ * Created by Shahzad on 1/21/2015.
+ */
+
+(function() {
+    'use strict';
+
+    angular
+        // .module('checkin')
+        .module('core')
+        .factory('checkinService', checkinService);
+
+    checkinService.$inject = ['activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
+
+    function checkinService(activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
+
+        /*private variables*/
+        var refs, fireTimeStamp;
+
+        //firebase unix-epoch time
+        fireTimeStamp = Firebase.ServerValue.TIMESTAMP;
+
+        refs = {
+            main: firebaseService.getRefMain()
+        };
+
+        refs.refGroupCheckinCurrent = refs.main.child('group-check-in-current');
+        refs.refGroupCheckinRecords = refs.main.child('group-check-in-records');
+        refs.refGroupLocationsDefined = refs.main.child('group-locations-defined');
+
+        refs.refSubGroupCheckinCurrent = refs.main.child('subgroup-check-in-current');
+        refs.refSubGroupCheckinRecords = refs.main.child('subgroup-check-in-records');
+        refs.refSubGroupLocationsDefined = refs.main.child('subgroup-locations-defined');
+        refs.refSubGroupCheckinCurrentByUser = refs.main.child('subgroup-check-in-current-by-user');
+
+        function getLocation(groupID, subgroupID) {
+            var defer = $q.defer();
+            // var locationRef = new Firebase(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID).toString());
+            // locationRef.orderByValue().on("value", function(snapshot) {
+            //     snapshot.forEach(function(data) {
+            //         //console.log(data.val());
+            //         refs.$currentSubGroupLocationsObject = data.val();
+            //     });
+            //     defer.resolve();
+            // });
+                defer.resolve();
+            return defer.promise;
+        }
+
+
+        //step 1 (calling from Controller)
+        function ChekinUpdateSatatus(group, userId, checkoutFlag, cb){
+            //var groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userId};
+            $geolocation.getCurrentPosition({
+                timeout: 60000,
+                maximumAge: 250,
+                enableHighAccuracy: true
+            }).then(function(location){
+                // console.log('location', location)
+                 if(location.coords) {
+                    var locationObj = {lat: location.coords.latitude, lng: location.coords.longitude};
+                     subgroupHasPolicy(group.groupId, group.subgroupId, function(hasPolicy, Policy){
+                        if(hasPolicy) {
+                            //hasPolicy true
+                            checkinPolicy(Policy, locationObj, function(result, msg, teamLocationTitle){
+                                if(result){
+                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, teamLocationTitle, function(result, cbMsg, reportMsg){
+                                        //console.log('group', group); //group = {groupId: "hotmaill", subgroupId: "yahooemail", userId: "usuf52"}
+                                        cb(result, cbMsg, reportMsg, group);
+                                    });
+                                } else {
+                                    cb(false, msg, null, null);
+                                }
+                            });
+                        } else {
+                            //hasPolicy false
+                            saveFirebaseCheckInOut(group, checkoutFlag,  locationObj, Policy, null, function(result, cbMsg, reportMsg){
+                                cb(result, cbMsg, null, null);
+                            });
+                        }
+                    });
+                 } else {
+                     cb(false, 'Please allow your location (not getting current location)!', null, null);
+                 }
+            });
+        }
+
+        function subgroupHasPolicy(groupID, subgroupID, cb){
+            //firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
+            firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupID).once('value', function(snapshot) {
+                if(snapshot.val() && snapshot.val().hasPolicy && snapshot.val().hasPolicy === true) {
+                    firebaseService.getRefPolicies().child(groupID).child(snapshot.val().policyID).once('value', function(policy){
+                        cb(true, policy.val());
+                    }); //getting policy
+                } else {//self.subGroupHasPolicy if true
+                    cb(false, false);
+                }
+            }); //firebaseService.getRefSubGroupsNames()
+        } //subgroupHasPolicy
+
+        //calculating Distance
+        function CalculateDistance(lat1, lon1, lat2, lon2, unit) {
+            //:::    unit = the unit you desire for results                               :::
+            //:::           where: 'M' is statute miles (default)                         :::
+            //:::                  'K' is kilometers                                      :::
+            //:::                  'N' is nautical miles                                  :::
+            var radlat1 = Math.PI * lat1 / 180;
+            var radlat2 = Math.PI * lat2 / 180;
+            // var radlon1 = Math.PI * lon1 / 180;
+            // var radlon2 = Math.PI * lon2 / 180;
+            var theta = lon1 - lon2;
+            var radtheta = Math.PI * theta / 180;
+            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            dist = Math.acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+            if (unit == "K") {
+                dist = dist * 1.609344;
+            }
+            if (unit == "N") {
+                dist = dist * 0.8684;
+            }
+            return dist;
+        }
+
+        //checking Policy is Subgroup Has Policy (is that timebased or locationbased)
+        function checkinPolicy(Policy, currentLocationObj, callback) {
+            if(Policy && Policy.locationBased) {  //checking if location Based
+
+                //checking distance (RADIUS)
+                var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
+                // console.log('distance:' + distance);
+                // console.log('distance in meter:' + distance * 1000);
+
+                if ((distance * 1000) < Policy.location.radius) {  //checking lcoation radius
+                    // callback(false, 'Current Location does not near to the Team Location');
+                    checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
+                        callback(d, msg, Policy.location.title);     //if result true (checkin allow)
+                    }); //checking if time based
+                } else { // if within radius
+                    checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
+                        callback(d, msg, false);     //if result true (checkin allow)
+                    }); //checking if time based
+                } //if within radius
+
+            } else if(Policy && Policy.timeBased) { //policy has timeBased
+                checkinTimeBased(Policy, function(d, msg) {
+                    callback(d, msg, false);      //if result true (checkin allow)
+                }); //checking if time based
+            } else {    //checking others like if dailyReport
+                callback(true, '', false);      //result true (checkin allow) (might be only dailyReport has checked)
+            }
+        } //checkinLocationBased
+        //checkinTimeBased
+        function checkinTimeBased(Policy, callback) {
+            var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+            //if timeBased true
+            if(Policy && Policy.timeBased) {
+                var today = new Date();
+                var Schduleday = days[today.getDay()];
+
+                //(self.subGroupPolicy.schedule[Schduleday] && self.subGroupPolicy.schedule[Schduleday][today.getHours()]) ?  console.log('t') : console.log('f');
+                if(Policy.schedule[Schduleday] && Policy.schedule[Schduleday][today.getHours()]) {
+                    //if allow then checkin
+                    callback(true, '');
+                } else {   //checking allow in days with hours
+                    callback(false, 'You Don\'t have to permission to checkin at this day/hour');
+                }
+
+            } else {//timeBased false
+                callback(true, '');    //if not timebased then return true....
+            }
+        } //checkinTimeBased
+
+        //checkinDailyProgress
+        function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb){
+               if(Policy && Policy.progressReport) {
+                //checking daily progress report is exists or not -- START --
+                //firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
+                firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).orderByChild('date')
+                .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
+                    if(snapshot.val() === null) { //if null then create daily report dummy
+                        //cerating Dummy Report Object on Checkin....
+                        var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push({
+                            date: Firebase.ServerValue.TIMESTAMP,
+                            //date: new Date().setHours(0,0,0,0),
+                            questionID: Policy.latestProgressReportQuestionID,
+                            policyID: Policy.policyID,
+                            answers: ''
+                        });
+
+                        //for group activity stream record -- START --
+                        var type = 'progressReport';
+                        var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
+                        var area = {type: 'progressReport-created'};
+                        var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
+                        var memberuserID = groupObj.userId;
+                        var _object = null;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+                        //for group activity stream record -- END --
+
+                        cb(false, 'notSubmitted');
+                    } else {
+                        for(var obj in snapshot.val()) {
+                            //console.log(snapshot.val()[obj])
+                            if(snapshot.val()[obj].answers === "" && checkoutFlag === true) {  //now checking if answers has given or not on checkout
+                                //if not submited report then show msg
+                                cb(false, 'notSubmitted');
+                            } else {
+                                //if submited report then nuthing
+                                cb(true, null);
+                            }
+                        }
+                    }
+                });
+                //checking daily progress report is exists or not -- END --
+            } else {//if(Policy && Policy.dailyReport)
+                //if not assign any daily report policy (Daily Report policy has false)
+                cb(true, '');
+            }
+
+        }//checkinDailyProgress
+
+
+
+        function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, teamLocationTitle, cb){
+            // groupObj = {groupId: '', subgroupId: '', userId: ''}
+            var multipath = {};
+            var dated = fireTimeStamp;
+            var ref = firebaseService.getRefMain();         //firebase main reference
+            var refGroup = firebaseService.getRefGroups();  //firebase groups reference
+            var refSubGroup = firebaseService.getRefSubGroups();  //firebase groups reference
+
+            //generate key
+            var newPostRef = firebaseService.getRefsubgroupCheckinRecords().child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push();
+            var newPostKey = newPostRef.key();
+
+            var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
+            var checkinResultMsg = (checkoutFlag) ? "Checkout Successfully" : "Checkin Successfully";
+            var statusType = (checkoutFlag) ? 2 : 1;
+            var _teamLocationTitle = (teamLocationTitle ? teamLocationTitle : 'Other');
+            multipath["subgroup-check-in-records/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId+"/"+newPostKey] = {
+                "identified-location-id": _teamLocationTitle,
+                "location": {
+                    "lat": locationObj.lat,
+                    "lon": locationObj.lng
+                },
+                "message": checkinMessage,
+                "source-device-type": 1,
+                "source-type": 1,
+                "subgroup-url": groupObj.groupId+"/"+groupObj.subgroupId,
+                "timestamp": dated,
+                "type": statusType
+            };
+            multipath["subgroup-check-in-current-by-user/"+groupObj.userId] = {
+                "groupID": groupObj.groupId,
+                "source-device-type": 1,
+                "source-type": 1,
+                "subgroupID": groupObj.subgroupId,
+                "timestamp": dated,
+                "type": statusType
+            };
+            multipath["subgroup-check-in-current/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId] = {
+                "identified-location-id": "Other",
+                "location": {
+                    "lat": locationObj.lat,
+                    "lon": locationObj.lng
+                },
+                "message": checkinMessage,
+                "record-ref": newPostKey,
+                "source-device-type": 1,
+                "source-type": 1,
+                "subgroup-url": groupObj.groupId+"/"+groupObj.subgroupId,
+                "timestamp": dated,
+                "type": statusType
+            };
+            //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
+            refGroup.child(groupObj.groupId).child('members-checked-in/count').once('value', function(snapshot){
+                multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+                refSubGroup.child(groupObj.groupId).child(groupObj.subgroupId).child('members-checked-in/count').once('value', function(snapshot){
+                    multipath["subgroups/"+groupObj.groupId+"/"+groupObj.subgroupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
+                    ref.update(multipath, function(err){
+                        if(err) {
+                            // console.log('err', err);
+                            cb(false, 'Please contact to your administrator', null);
+                        }
+                        //checking Daily Progress Report
+                        checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes) {
+                            if (rst) {
+                                //calling callbAck....
+                                cb(true, checkinResultMsg, null);
+                            } else {
+                                cb(true, checkinResultMsg, mes);
+                            }
+                        });
+                    }); //ref update
+                }); //getting and update members-checked-in count - subgroup
+            }); //getting and update members-checked-in count - group
+        } //saveFirebaseCheckInOut
+
+
+
+        return {
+
+            getRefUsers: firebaseService.getRefUsers,
+            getRefGroups: firebaseService.getRefGroups,
+            getRefUserGroupMemberships: firebaseService.getRefUserGroupMemberships,
+            getRefUserSubGroupMemberships: firebaseService.getRefUserGroupMemberships,
+            createCurrentRefs: function(groupID, userID) {
+                refs.$currentGroupLocations = Firebase.getAsArray(refs.refGroupLocationsDefined.child(groupID));
+                refs.refCurrentGroupCheckinCurrent = refs.refGroupCheckinCurrent.child(groupID);
+
+                var userCheckinRecords = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
+                refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+            },
+            hasSubGroupCurrentLocation: function(groupID, subGroupID){
+                var defer = $q.defer();
+                var hasLocation = false;
+                // $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID))
+                //     .$loaded().then(function(data){
+                //         // console.log(data[0].location)
+                //         if(data[0] && data[0].location){
+                //             hasLocation = true;
+                //             defer.resolve(hasLocation);
+                //         }
+                //     });
+                //
+                // refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID).on('child_changed', function(snapshot){
+                //     // console.log(snapshot.val().location);
+                //     if(snapshot.val() && snapshot.val().location){
+                //         hasLocation = true;
+                //         defer.resolve(hasLocation);
+                // }
+                // })
+                defer.resolve('');
+                return defer.promise;
+            },
+            createCurrentRefsBySubgroup: function(groupID, subgroupID, userID) {
+                var defer = $q.defer();
+                // getLocation(groupID, subgroupID).then(function(data) {
+                //     //refs.$currentSubGroupLocations = Firebase.getAsArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
+                //     refs.$currentSubGroupLocations = $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID));
+                //     //refs.refCurrentSubGroupCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID).child(subgroupID);
+                //     var userCheckinRecords = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupID + '/' + userID);
+                //     refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+                //     defer.resolve('test');
+                // });
+                defer.resolve('');
+                return defer.promise;
+            },
+            getRefSubgroupCheckinCurrentByUser: function() {
+                return refs.refSubGroupCheckinCurrentByUser;
+            },
+            getFireAsObject: function(ref) {
+                return $firebaseObject(ref);
+            },
+            getRefGroupLocationsDefined: function(groupID) {
+                return refs.refGroupLocationsDefined.child(groupID);
+            },
+            getRefCheckinCurrent: function() {
+                return refs.refGroupCheckinCurrent;
+            },
+            getRefCheckinCurrentBySubgroup: function() {
+                return refs.refSubGroupCheckinCurrent;
+            },
+            getRefGroupCheckinCurrent: function(groupID) {
+                return refs.refGroupCheckinCurrent.child(groupID);
+            },
+            getRefSubGroupCheckinCurrent: function(userID, groupID, subgroupId) {
+                return refs.refSubGroupCheckinCurrent.child(userID + '/' + groupID + '/' + subgroupId);
+            },
+            getFireCurrentGroupLocations: function() {
+                return refs.$currentGroupLocations;
+            },
+            getFireCurrentSubGroupLocations: function() {
+                return refs.$currentSubGroupLocations;
+            },
+            getFireCurrentSubGroupLocationsObject: function() {
+                return refs.$currentSubGroupLocationsObject;
+            },
+            getFireGroup: function(groupID) {
+                var refGroups = this.getRefGroups();
+                return this.getFireAsObject(refGroups.child(groupID));
+            },
+            geoLocationSupport: function() {
+                return typeof window.navigator !== 'undefined' && typeof window.navigator.geolocation !== 'undefined';
+            },
+            getCurrentLocation: function() {
+                return $geolocation.getCurrentPosition({
+                    timeout: 60000,
+                    maximumAge: 250,
+                    enableHighAccuracy: true
+                });
+            },
+            updateUserStatusBySubGroup: function(groupID, subgroupId, userID, statusObj, definedLocations, groupObj) {
+                var defer = $q.defer();
+                var errorCallback = function(err) {
+                    defer.reject('error occurred in connecting to the server', err);
+                };
+
+                var self = this;
+
+                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(statusObj.location, definedLocations).$id : 'Other';
+
+                var checkinObj = {
+
+                    'subgroup-url': groupID + '/' + subgroupId,
+                    'timestamp': fireTimeStamp,
+                    'type': +statusObj.type, // 1 = in, 2 = out
+                    'source-type': 1, //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                    'source-device-type': 1, // 1 = Web, 2 = iPhone, 3 = Android
+                    //'source-device-address': 'ip address or mobile number',
+                    'location': statusObj.location, //not present in case of beacon based check in and out or the user does not select or allow data
+                    'identified-location-id': identifiedLocation
+
+                };
+
+                // console.log(checkinObj)
+
+                checkinObj.message = statusObj.message || (statusObj.type == 1 ? 'Checked-in' : 'Checked-out');
+
+                var userCheckinCurrent = refs.refSubGroupCheckinCurrent.child(groupID + '/' + subgroupId + '/' + userID);
+                var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
+
+                $userCheckinCurrent
+                    .$loaded()
+                    .then(function() {
+                        var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupId + '/' + userID);
+                        var _ref = new Firebase(userCheckinRecordsRef.toString());
+                        var _userCheckinREcordsRef = $firebaseArray(_ref);
+                        // console.log(checkinObj)
+                        _userCheckinREcordsRef.$add(checkinObj)
+                            .then(function(snapShot) {
+                                var temp = $firebaseObject(refs.refSubGroupCheckinCurrentByUser.child(userID))
+                                    .$loaded().then(function(snapshot) {
+                                        // console.log('before')
+                                        // console.log(snapshot)
+                                        snapshot.timestamp = fireTimeStamp;
+                                        snapshot.type = statusObj.type; // 1 = in, 2 = out
+                                        snapshot.groupID = groupID;
+                                        snapshot.subgroupID = subgroupId;
+                                        snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
+                                        snapshot['source-type'] = 1; //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                                        // snapshot['record-ref'] = snapShot.key(); //report manjan
+                                        // console.log('after')
+                                        // console.log(snapshot)
+                                        snapshot.$save().then(function(d) {
+
+                                            checkinObj['record-ref'] = snapShot.key();
+                                            angular.extend($userCheckinCurrent, checkinObj);
+                                            $userCheckinCurrent.$save()
+                                                .then(function() {
+                                                    self.updateSubGroupCount(groupID, subgroupId, checkinObj.type)
+                                                        .then(function() {
+                                                            self.updateGroupCount(groupID, checkinObj.type)
+                                                                .then(function() {
+                                                                    defer.resolve('Status updated successfully.');
+                                                            /*self.asyncRecordUserCheckSubGroupActivity(checkinObj, userID, groupID,subgroupId, groupObj, definedLocations)
+                                                             .then(function () {
+                                                             defer.resolve('Status updated successfully.');
+                                                             }, errorCallback);*/
+                                                            }, errorCallback);
+                                                        }, errorCallback);
+
+                                                }, errorCallback);
+
+                                        }, errorCallback);
+
+                                    }, errorCallback);
+
+                            }, errorCallback);
+
+                    }, errorCallback);
+
+                return defer.promise;
+            },
+            updateUserStatus: function(groupID, userID, statusObj, definedLocations, groupObj) {
+                var defer = $q.defer();
+                var errorCallback = function(err) {
+                    defer.reject('error occurred in connecting to the server', err);
+                };
+
+                var self = this;
+
+                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(statusObj.location, definedLocations).$id : 'Other';
+
+                var checkinObj = {
+                    //id: 'autoGeneratedTimestampBasedRecordID', // from record
+                    'group-url': groupID,
+                    'timestamp': fireTimeStamp,
+                    'type': +statusObj.type, // 1 = in, 2 = out
+                    'source-type': 1, //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                    'source-device-type': 1, // 1 = Web, 2 = iPhone, 3 = Android
+                    //'source-device-address': 'ip address or mobile number',
+                    'location': statusObj.location, //not present in case of beacon based check in and out or the user does not select or allow data
+                    'identified-location-id': identifiedLocation
+                };
+
+                checkinObj.message = statusObj.message || (statusObj.type == 1 ? 'Checked-in' : 'Checked-out');
+
+                var userCheckinCurrent = refs.refGroupCheckinCurrent.child(groupID + '/' + userID);
+                var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
+
+                $userCheckinCurrent
+                    .$loaded()
+                    .then(function() {
+
+                        var userCheckinRecordsRef = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
+                        var $userCheckinRecords = Firebase.getAsArray(userCheckinRecordsRef);
+
+                        var recRef = $userCheckinRecords.$add(checkinObj);
+                        checkinObj.id = recRef.key();
+
+                        angular.extend($userCheckinCurrent, checkinObj);
+                        $userCheckinCurrent.$save()
+                            .then(function() {
+                                self.updateGroupCount(groupID, checkinObj.type)
+                                    .then(function() {
+                                        self.asyncRecordUserCheckGroupActivity(checkinObj, userID, groupID, groupObj, definedLocations)
+                                            .then(function() {
+                                                defer.resolve('Status updated successfully.');
+
+                                            }, errorCallback);
+
+                                    }, errorCallback);
+
+                            }, errorCallback);
+
+                    }, errorCallback);
+
+                return defer.promise;
+            },
+            updateGroupCount: function(groupID, checkinType) {
+                var defer = $q.defer();
+
+                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/members-checked-in');
+                var $checkin = $firebaseObject(groupCheckedIn);
+
+                $checkin.$loaded()
+                    .then(function() {
+                        $checkin.count = ($checkin.count || 0) + (checkinType == 1 ? 1 : -1);
+                        $checkin.$save().then(function() {
+                            defer.resolve();
+                        }, function() {
+                            defer.reject();
+                        });
+                    }, function() {
+                        defer.reject();
+                    });
+
+                return defer.promise;
+            },
+            updateAllSubGroupCount: function(groupID, subgroupID, numberofuser) {
+                var defer = $q.defer();
+
+                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var $checkin = $firebaseObject(groupCheckedIn);
+
+                $checkin.$loaded()
+                    .then(function() {
+                        $checkin.count = ($checkin.count || 0) - numberofuser;
+                        $checkin.$save().then(function() {
+                            defer.resolve();
+                        }, function() {
+                            defer.reject();
+                        });
+                    }, function() {
+                        defer.reject();
+                    });
+                return defer.promise;
+            },
+            updateSubGroupCount: function(groupID, subgroupID, checkinType) {
+                var defer = $q.defer();
+
+                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
+                var $checkin = $firebaseObject(groupCheckedIn);
+
+                $checkin.$loaded()
+                    .then(function() {
+                        $checkin.count = ($checkin.count || 0) + (checkinType == 1 ? 1 : -1);
+                        $checkin.$save().then(function() {
+                            defer.resolve();
+                        }, function() {
+                            defer.reject();
+                        });
+                    }, function() {
+                        defer.reject();
+                    });
+
+                return defer.promise;
+            },
+            asyncRecordUserCheckGroupActivity: function(checkinObj, userID, groupID, groupObj, definedLocations) {
+                var deferred = $q.defer();
+
+                var currentUser = userService.getCurrentUser();
+                var locationName = this.getLocationName(checkinObj, definedLocations);
+                var groupActivityRef = firebaseService.getRefGroupsActivityStreams().child(groupID);
+
+                var actor = {
+                    type: 'user',
+                    id: userID, //this is the userID, and an index should be set on this
+                    email: currentUser.email,
+                    displayName: currentUser.firstName + ' ' + currentUser.lastName,
+                    image: null
+                };
+
+                var object = {
+                    type: 'location',
+                    id: null,
+                    url: null,
+                    displayName: locationName,
+                    image: null
+                };
+
+                var target = {
+                    type: 'group',
+                    id: groupID, //an index should be set on this
+                    url: groupID,
+                    displayName: groupObj.title
+                };
+
+                var displayName = actor.displayName +
+                    (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
+                    ' at "' + locationName +
+                    '" location of ' + groupObj.title + '.';
+
+                var activity = {
+                    language: 'en',
+                    verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
+                    published: fireTimeStamp,
+                    displayName: displayName,
+                    actor: actor,
+                    object: object,
+                    target: target
+                };
+
+                var newActivityRef = groupActivityRef.push();
+                newActivityRef.set(activity, function(err) {
+                    if (err) {
+                        deferred.reject();
+                        console.log('error occurred in check-in activity', err);
+                    } else {
+                        var activityID = newActivityRef.key();
+                        var activityEntryRef = groupActivityRef.child(activityID);
+                        activityEntryRef.once('value', function(snapshot) {
+                            var timestamp = snapshot.val();
+                            newActivityRef.setPriority(0 - timestamp.published, function(error) {
+                                if (error) {
+                                    deferred.reject();
+                                    console.log('error occurred in check-in activity', error);
+                                } else {
+                                    deferred.resolve();
+                                }
+                            });
+                        });
+                    }
+                });
+
+                return deferred.promise;
+            },
+            asyncRecordUserCheckSubGroupActivity: function(checkinObj, userID, groupID, subgroupID, groupObj, definedLocations) {
+                var deferred = $q.defer();
+
+                var currentUser = userService.getCurrentUser();
+                var locationName = this.getLocationName(checkinObj, definedLocations);
+                var subGroupActivityRef = firebaseService.getRefSubGroupsActivityStreams().child(groupID + "/" + subgroupID); //"subgroup-activity-streams"
+
+                var actor = {
+                    type: 'user',
+                    id: currentUser.userID, //this is the userID, and an index should be set on this
+                    email: currentUser.email,
+                    displayName: currentUser.firstName + ' ' + currentUser.lastName,
+                    image: null
+                };
+
+                var object = {
+                    type: 'location',
+                    id: null,
+                    url: null,
+                    displayName: locationName,
+                    image: null
+                };
+
+                var target = {
+                    type: 'group',
+                    id: subgroupID, //an index should be set on this
+                    url: subgroupID,
+                    displayName: groupObj.title
+                };
+
+                var displayName = actor.displayName +
+                    (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
+                    ' at "' + locationName +
+                    '" location of ' + groupObj.title + '.';
+
+                var activity = {
+                    language: 'en',
+                    verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
+                    published: fireTimeStamp,
+                    displayName: displayName,
+                    actor: actor,
+                    object: object,
+                    target: target
+                };
+
+                var newActivityRef = subGroupActivityRef.push();
+                newActivityRef.set(activity, function(err) {
+                    if (err) {
+                        deferred.reject();
+                        console.log('error occurred in check-in activity', err);
+                    } else {
+                        var activityID = newActivityRef.key();
+                        var activityEntryRef = subGroupActivityRef.child(activityID);
+                        activityEntryRef.once('value', function(snapshot) {
+                            var timestamp = snapshot.val();
+                            newActivityRef.setPriority(0 - timestamp.published, function(error) {
+                                if (error) {
+                                    deferred.reject();
+                                    console.log('error occurred in check-in activity', error);
+                                } else {
+                                    deferred.resolve();
+                                }
+                            });
+                        });
+                    }
+                });
+
+                return deferred.promise;
+            },
+            addLocation: function(groupID, userID, locationObj) {
+                var defer = $q.defer();
+
+                var newLocation = {
+                    'group-url': groupID,
+                    'title': locationObj.title,
+                    'type': 1, // 1 = Geo location, 2 = Beacon
+                    'location': {
+                        'lat': locationObj.lat,
+                        'lon': locationObj.lng,
+                        'radius': locationObj.radius
+                    },
+                    'defined-by': userID, //only admins or owners can define a office location
+                    'timestamp': fireTimeStamp
+                };
+
+                var ref = refs.$currentGroupLocations.$add(newLocation);
+                if (ref.key()) {
+                    defer.resolve('Location has been added to "' + groupID + '".');
+                } else {
+                    defer.reject('Error occurred in saving on server.');
+                }
+
+                return defer.promise;
+            },
+            addLocationBySubgroup: function(groupID, subgroupID, userID, locationObj, multiple, recordId) {
+
+                var defer = $q.defer();
+
+                var newLocation = {
+                    'subgroup-url': groupID + '/' + subgroupID,
+                    'title': locationObj.title,
+                    'type': 1, // 1 = Geo location, 2 = Beacon
+                    'location': {
+                        'lat': locationObj.locationObj.lat,
+                        'lon': locationObj.locationObj.lng,
+                        'radius': locationObj.locationObj.radius
+                    },
+                    'defined-by': userID, //only admins or owners can define a office location
+                    'timestamp': fireTimeStamp
+                };
+
+                var syncRef;
+                if (!multiple && refs.$currentSubGroupLocations.length) {
+                    //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
+                    angular.extend(refs.$currentSubGroupLocations[0], newLocation);
+                    refs.$currentSubGroupLocations.$save(0)
+                        .then(function() {
+                            defer.resolve('Location has been added.');
+                        }, function() {
+                            defer.reject('Error occurred in saving on server.');
+                        });
+
+                } else {
+
+                    refs.$currentSubGroupLocations.$add(newLocation)
+                        .then(function() {
+                            defer.resolve('Location has been added.');
+                        }, function() {
+                            defer.reject('Error occurred in saving on server.');
+
+                        });
+                    /*if( syncRef.key() ){
+                        defer.resolve('Location has been added to "' + subgroupID + '".');
+                    } else {
+                        defer.reject('Error occurred in saving on server.');
+                    }*/
+                }
+
+
+
+                return defer.promise;
+            },
+            //for Admins: get the predefined location timestampID, from which user checked-in or checked-out.
+            getDefinedLocationByLatLng: function(userLoc, definedLocations, radius) {
+                var distance, currentLatLon,
+                    location, newLocLatLng;
+
+                //setting default in case no location matches.
+                location = {
+                    title: 'Other',
+                    $id: 'Other'
+                };
+
+                //if no radius provided to calculate distance. e.g user check-in/out from any location.
+                radius = radius || 0;
+
+                newLocLatLng = new L.LatLng(userLoc.lat, userLoc.lon || userLoc.lng);
+
+                angular.forEach(definedLocations, function(definedLoc) {
+                    currentLatLon = new L.LatLng(definedLoc.location.lat, definedLoc.location.lon);
+                    distance = newLocLatLng.distanceTo(currentLatLon);
+
+                    if (distance <= definedLoc.location.radius + radius) {
+                        location = definedLoc;
+                    }
+                });
+
+                return location;
+            },
+
+            //for Admins: get the predefined location name, from which user checked-in or checked-out.
+            getLocationName: function(userStatusObj, definedLocations) {
+
+                //handle if no previous check-in found and got null.
+                if (!userStatusObj) {
+                    return;
+                }
+
+                var locationID = 'Other';
+                var locID = userStatusObj['identified-location-id'];
+
+                angular.forEach(definedLocations, function(definedLoc) {
+                    if (locID === definedLoc.$id) {
+                        locationID = definedLoc.title;
+                    }
+                });
+
+                return locationID;
+            },
+            getGroupTitle: function(GroupID){
+                var title;
+                refs.main.child('groups').child(GroupID).once('value', function(snapshot){
+                    // console.log(snapshot.val().title)
+                    if (snapshot.val()) {
+                        title = snapshot.val().title ? snapshot.val().title : '';
+                    }
+                });
+                return title;
+            },
+            getSubGroupTitle: function(GroupID, subGroupID){
+                var title;
+                refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
+                    // console.log(snapshot.val().title)
+                    if (snapshot.val()) {
+                        title = snapshot.val().title ? snapshot.val().title : '';
+                    }
+                });
+                return title;
+            }, //getSubGroupTitle
+            ChekinUpdateSatatus: ChekinUpdateSatatus
+
+        }; //return
+    } //checkin service function
+})();
+
+angular.module('core')
+    .directive('groupcardDirective', function () {
+    return {
+        restrict: 'E',
+        scope: {
+        	group: '='
+        },
+        templateUrl: 'directives/groupcardDirective.html'
+	};
+});
+
+angular.module('core')
+    .directive('subgroupcardDirective', function () {
+    return {
+        restrict: 'E',
+        scope: {
+        	subgroup: '='
+        },
+        templateUrl: 'directives/subgroupcardDirective.html',
+        controller: function($scope, $stateParams, checkinService) {
+        	checkinService.hasSubGroupCurrentLocation($stateParams.groupID, $scope.subgroup.$id).then(function(has){
+        		$scope.hasLocation = has;
+        	})
+        } //controller
+	};
+});
+
+/**
+ * Created by Shahzad on 4/10/2015.
+ */
+
+//directive to validate userID asynchronously from server, over singup page.
+
+(function() {
+    'use strict';
+
+    angular
+        .module('core')
+        .directive("checkUserId", checkUserId)
+        .directive("checkUserPassword", checkUserPassword);
+
+    checkUserId.$inject = ['$http', '$q', 'appConfig'];
+
+    function checkUserId($http, $q, appConfig) {
+
+        //hits a GET to server, to check userID availability.
+        var asyncCheckUserId = function(modelValue) {
+            var defer = $q.defer();
+
+            $http.get(appConfig.apiBaseUrl + '/api/checkuserid/' + modelValue)
+                .success(function(data) {
+                    if (data.statusCode === 1) {
+                        defer.resolve();
+                    } else if (data.statusCode === 2) {
+                        defer.reject();
+                    } else {
+                        defer.resolve();
+                    }
+                })
+                .error(function(data) {
+                    //handle this case
+                    defer.resolve();
+                });
+
+            return defer.promise;
+        };
+
+        return {
+            require: "ngModel",
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$asyncValidators.checkUserId = asyncCheckUserId;
+            }
+        };
+    }
+
+    function checkUserPassword($http, $q, appConfig) {
+        var el;
+
+        //hits a GET to server, to check userID availability.
+        var asyncCheckUserPassword = function(modelValue) {
+            var defer = $q.defer();
+            var dataToCheck = {
+                userID: el.scope().personalSettings.userData.$id,
+                password: modelValue
+            }
+            if (modelValue) {
+                $http.post(appConfig.apiBaseUrl + '/api/checkpassword', dataToCheck)
+                    .success(function(data) {
+                        console.log('1', data);
+                        if (data.statusCode === 1) {
+                            defer.resolve();
+
+                        } else {
+                            defer.reject();
+                        }
+                    })
+                    .error(function(data) {
+                        console.log('2', data);
+                        //handle this case
+                        defer.reject();
+                    });
+            }
+            return defer.promise;
+        };
+
+        return {
+            require: "ngModel",
+            link: function(scope, element, attributes, ngModel) {
+                //debugger
+                el = element;
+                ngModel.$asyncValidators._oldPassword = asyncCheckUserPassword;
+            }
+        };
+    }
+
+})();
+
+/**
+ * Created by Shahzad on 4/10/2015.
+ */
+
+//Can be used to validate form fields for confirmPassword, confirmEmail and etc.
+
+(function() {
+    'use strict';
+
+    angular
+        .module('core')
+        .directive("compareTo", compareTo)
+        .directive("compareToo", compareToo)
+        .directive("compareAgainst", compareAgainst);
+
+    function compareTo() {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=compareTo"
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareTo = function(modelValue) {
+                    console.log(modelValue);
+                    if(modelValue) {
+                      return modelValue !== scope.otherModelValue;
+                    } else {
+                       return true
+                    }
+                };
+
+                scope.$watch("otherModelValue", function() {
+                    ngModel.$validate();
+                });
+            }
+        };
+    }
+
+    function compareToo() {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=compareToo"
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareToo = function(modelValue) {
+                  return modelValue == scope.otherModelValue;
+                };
+
+                scope.$watch("otherModelValue", function() {
+                    ngModel.$validate();
+                });
+            }
+        };
+    }
+
+    function compareAgainst() {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=compareAgainst"
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareAgainst = function(modelValue) {
+                    if(modelValue) {
+                      return modelValue !== scope.otherModelValue;
+                    } else {
+                       return true
+                    }
+                };
+
+                scope.$watch("otherModelValue", function() {
+                    ngModel.$validate();
+                });
+            }
+        };
+    }
+
+})();
+
+/**
+ * Created by Shahzad on 4/10/2015.
+ */
+
+//directive to validate userID asynchronously from server, over singup page.
+
+(function() {
+    'use strict';
+
+    angular
+        .module('core')
+        .directive("checkGroupExistance", checkGroupExistance);
+
+    checkGroupExistance.$inject = ['firebaseService', '$q', 'appConfig'];
+
+    function checkGroupExistance(firebaseService, $q, appConfig) {
+        var path;
+        //hits a GET to server, to check userID availability.
+        var asyncCheckGroupExistance = function(modelValue, b, v) {
+            var defer = $q.defer();
+
+            firebaseService.asyncCheckIfGroupExists(setChild(modelValue)).then(function(response) {
+                if (response.exists) {
+                    defer.reject(); // reject if group already exixts
+                } else {
+                    defer.resolve()
+                }
+            });
+            return defer.promise;
+        };
+
+        function setChild(modelValue) {
+            if (path) {
+                return path + '/' + modelValue
+            } else {
+                return modelValue
+            }
+
+        }
+        return {
+
+            require: "ngModel",
+            link: function(scope, element, attributes, ngModel) {
+                path = attributes['grouppath']
+                ngModel.$asyncValidators.checkGroupExistance = asyncCheckGroupExistance;
+            }
+        };
+    }
+
+})();
+
+/**
+ * Created by ZiaKhan on 05/12/14.
+ */
+
+// Invoke 'strict' JavaScript mode
+'use strict';
+
+// Set the main application name
+//var mainApplicationModuleName = 'Panacloud.WOW';// Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
+var mainApplicationModuleName = 'myApp';// Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
+var mainApplicationModule = angular.module(mainApplicationModuleName, [
+    'components',
+    'core'
+
+
+]).run(['authService',function(authService){
+    // alert('run');
+    // authService.resolveUserPage();
+}]);
+mainApplicationModule.value('appConfig', {
+    'apiBaseUrl': 'https://teamofteams.herokuapp.com',
+    //'apiBaseUrl': 'http://localhost:3000',
+    'myFirebase': 'https://panacloud.firebaseio.com',
+    'firebaseAuth': false,
+    'serverPostApi':{
+        userProfilePictureUpload:'api/groupProfilepicture',
+        groupProfilePictureUpload:'api/groupProfilepicture'
+    }
+});
+
+// Configure the hashbang URLs using the $locationProvider services
+/*mainApplicationModule.config(['$locationProvider',
+    function($locationProvider) {
+        $locationProvider.hashPrefix('!');
+    }
+]);*/
+
+/*
+mainApplicationModule.config (['$componentLoaderProvider', '$locationProvider', function ($componentLoaderProvider, $locationProvider) {
+    $componentLoaderProvider.setTemplateMapping(function (name) {
+        var dashName = dashCase(name);
+        return '/components/' + dashName + '/' + dashName + '.html';
+    });
+    $locationProvider.hashPrefix('!');
+}])
+*/
+/*
+mainApplicationModule.config (['$locationProvider', function ($locationProvider) {
+
+    $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+    });
+}])
+*/
+
+// mainApplicationModule.constant('angularMomentConfig', {
+//     preprocess: 'unix' // optional https://github.com/urish/angular-moment
+// });
+
+// Fix Facebook's OAuth bug
+//if (window.location.hash === '#_=_') window.location.hash = '#!';
+
+// // Manually bootstrap the AngularJS application
+// angular.element(document).ready(function() {
+//     angular.bootstrap(document, [mainApplicationModuleName]);
+// });
+
+/**
+ * Created by Shahzad on 5/21/2015.
+ */
+
+(function() {
+  'use strict';
+  angular.module("myApp")
+    .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+      // alert('config')
+      $locationProvider.html5Mode(true).hashPrefix('!');
+      var navLoginbar = {
+        templateUrl: 'components/nav-loginbar/nav-loginbar.html',
+        controller: 'NavLoginbarController',
+        controllerAs: 'navLoginbar'
+      };
+      var navToolbar = {
+        templateUrl: 'components/nav-toolbar/nav-toolbar.html',
+        controller: 'NavToolbarController',
+        controllerAs: 'navToolbar'
+      };
+      $stateProvider.state('home', {
+        url: '/',
+        views: {
+          'nav': navLoginbar,
+          'main': {
+            templateUrl: 'components/home/home.html',
+            controller: 'HomeController',
+            controllerAs: 'home'
+          }
+        }
+      });
+      $stateProvider.state('signin', {
+        url: '/signin',
+        views: {
+          'nav': navLoginbar,
+          'main': {
+            templateUrl: 'components/signin/signin.html',
+            controller: 'SigninController',
+            controllerAs: 'signin'
+          }
+        },
+        resolve: {
+          user: function($state, userService) {
+            return userService.getUserPresenceFromLocastorage();
+          }
+        }
+      });
+      $stateProvider.state('forgot', {
+        url: '/forgot',
+        views: {
+          'nav': navLoginbar,
+          'main': {
+            templateUrl: 'components/forgot/forgot.html',
+            controller: 'ForgotController',
+            controllerAs: 'forgot'
+          }
+        }
+      });
+      $stateProvider.state('signup', {
+        url: '/signup',
+        views: {
+          'nav': navLoginbar,
+          'main': {
+            templateUrl: 'components/sign-up/sign-up.html',
+            controller: 'SignUpController',
+            controllerAs: 'signUp'
+          }
+        }
+      });
+      $stateProvider.state('user', {
+        // url: '/user',
+        abstract: true,
+        views: {
+          'nav': navToolbar,
+          'main': {
+            template: '<ui-view></ui-view>'
+          }
+        },
+        resolve: {
+          resolveuser: function(authService) {
+            return authService.resolveUserPage();
+          }
+        }
+      });
+      $stateProvider.state('user.dashboard', {
+        url: '/user/:userID',
+        templateUrl: 'components/user/user.html',
+        controller: 'UserController',
+        controllerAs: 'user',
+        resolve: {
+          resolvedashboard: function(authService, $stateParams) {
+            return authService.resolveDashboard($stateParams.userID);
+          }
+        }
+      });
+      $stateProvider.state('user.personal-settings', {
+        url: '/profile/:userID',
+        templateUrl: 'components/personal-settings/personal-settings.html',
+        controller: 'PersonalSettingsController',
+        controllerAs: 'personalSettings',
+      });
+      $stateProvider.state('user.join-group', {
+        url: '/search',
+        templateUrl: 'components/join-group/join-group.html',
+        controller: 'JoinGroupController',
+        controllerAs: 'joinGroup'
+      });
+      $stateProvider.state('user.create-group', {
+        url: '/create',
+        templateUrl: 'components/create-group/create-group.html',
+        controller: 'CreateGroupController',
+        controllerAs: 'createGroup'
+      });
+      $stateProvider.state('user.group', {
+        url: '/:groupID',
+        templateUrl: 'components/group/group.html',
+        controller: 'GroupController',
+        controllerAs: 'group'
+      });
+      $stateProvider.state('user.group.activity', {
+        url: '/tab/activity',
+        templateUrl: 'components/activity/activity.html',
+        controller: 'ActivityController',
+        controllerAs: 'activity',
+      });
+      $stateProvider.state('user.group.subgroup-activity', {
+        url: '/:subgroupID/tab/activity',
+        templateUrl: 'components/activity/activity.html',
+        controller: 'ActivityController',
+        controllerAs: 'activity',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
+      });
+      $stateProvider.state('user.group.report', {
+        url: '/tab/report',
+        templateUrl: 'components/report/report.html',
+        controller: 'ReportController',
+        controllerAs: 'report',
+      });
+      $stateProvider.state('user.group.subgroup-report', {
+        url: '/:subgroupID/tab/report',
+        templateUrl: 'components/report/report.html',
+        controller: 'ReportController',
+        controllerAs: 'report',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
+      });
+      $stateProvider.state('user.group.manualattendace', {
+        url: '/tab/manualattendace',
+        templateUrl: 'components/manualattendace/manualattendace.html',
+        controller: 'ManualAttendaceController',
+        controllerAs: 'manualattendace',
+      });
+      $stateProvider.state('user.group.subgroup-manualattendace', {
+        url: '/:subgroupID/tab/manualattendace',
+        templateUrl: 'components/manualattendace/manualattendace.html',
+        controller: 'ManualAttendaceController',
+        controllerAs: 'manualattendace',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
+      });
+      $stateProvider.state('user.group.progressreport', {
+        url: '/tab/progressreport',
+        templateUrl: 'components/progressreport/progressreport.html',
+        controller: 'ProgressReportController',
+        controllerAs: 'progressreport',
+      });
+      $stateProvider.state('user.group.subgroup-progressreport', {
+        url: '/:subgroupID/tab/progressreport?u',
+        templateUrl: 'components/progressreport/progressreport.html',
+        controller: 'ProgressReportController',
+        controllerAs: 'progressreport',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
+      });
+      $stateProvider.state('user.group.chat', {
+        url: '/tab/chat?channelID?channelTitle',
+        templateUrl: 'components/chat/chat.html',
+        controller: 'ChatController',
+        controllerAs: 'chat',
+      });
+      $stateProvider.state('user.group.subgroup-chat', {
+        url: '/:subgroupID/tab/chat?channelID?channelTitle',
+        templateUrl: 'components/chat/chat.html',
+        controller: 'ChatController',
+        controllerAs: 'chat',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
+      });
+      // firepad States
+      $stateProvider.state('user.group.collaborator', {
+        url: '/tab/collaborator?docID',
+        templateUrl: 'components/collaborator/collaborator.html',
+        controller: 'CollaboratorController',
+        controllerAs: 'collaborator',
+      });
+      $stateProvider.state('user.group.subgroup-collaborator', {
+        url: '/:subgroupID/tab/collaborator?docID',
+        templateUrl: 'components/collaborator/collaborator.html',
+        controller: 'CollaboratorController',
+        controllerAs: 'collaborator',
+        resolve: {
+            getsubgroupID : function(groupService, $stateParams){
+                groupService.setSubgroupIDPanel($stateParams.subgroupID);
+            }
+        }
+      });
+      // end firepad states
+      $stateProvider.state('user.edit-group', {
+        url: '/:groupID/setting/edit',
+        templateUrl: 'components/edit-group/edit-group.html',
+        controller: 'EditGroupController',
+        controllerAs: 'editGroup'
+      });
+      $stateProvider.state('user.user-setting', {
+        url: '/:groupID/setting/members',
+        templateUrl: 'components/user-setting/user-setting.html',
+        controller: 'UserSettingController',
+        controllerAs: 'userSetting'
+      });
+      $stateProvider.state('user.create-subgroup', {
+        url: '/:groupID/setting/teams',
+        templateUrl: 'components/create-sub-group/create-sub-group.html',
+        controller: 'CreateSubGroupController',
+        controllerAs: 'createSubGroup'
+      });
+      $stateProvider.state('user.policy', {
+        url: '/:groupID/setting/policies',
+        templateUrl: 'components/policy/policy.html',
+        controller: 'PolicyController',
+        controllerAs: 'policy',
+      });
+      /*$stateProvider.state('user.subgroup', {
+          url: '/:groupID/subgroup',
+          templateUrl: 'components/subgroup/subgroup.html',
+          controller: 'SubgroupController',
+          controllerAs: 'subgroup'
+      });*/
+      /*$stateProvider.state('user.geo-fencing', {
+          url: '/:groupID/geo-fencing',
+          templateUrl: 'components/geo-fencing/geo-fencing.html',
+          controller: 'GeoFencingController',
+          controllerAs: 'geoFencing'
+      });*/
+      $stateProvider.state('user.create-channels', {
+        url: '/:groupID/create-channels',
+        templateUrl: 'components/create-channels/create-channels.html',
+        controller: 'CreateChannelsController',
+        controllerAs: 'createChannels'
+      });
+      $stateProvider.state('user.create-teams-channels', {
+        url: '/:groupID/:teamID/create-teams-channels',
+        templateUrl: 'components/create-teams-channels/create-teams-channels.html',
+        controller: 'CreateTeamsChannelsController',
+        controllerAs: 'createTeamsChannels'
+      });
+      $stateProvider.state('user.quiz', {
+        url: '/:userID/quiz',
+        templateUrl: 'components/quiz/quiz.html',
+        controller: 'QuizController',
+        controllerAs: 'quiz'
+      });
+      $stateProvider.state('user.group-subgroup', {
+        url: '/:groupID/:subgroupID',
+        templateUrl: 'components/group/group.html',
+        controller: 'GroupController',
+        controllerAs: 'group'
+      });
+      $urlRouterProvider.otherwise('/');
+    })
+    .controller('AppController', ['$rootScope', 'authService', AppController]);
+
+  function AppController($router) {}
+})();
+
+/*
+    AppController.$routeConfig = [{
+        // Define url for this route
+        path: '/',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'home'
+        }
+    }, {
+        // Define url for this route
+        path: '/signin',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'signin'
+        }
+    }, {
+        // Define url for this route
+        path: '/forgotpassword',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'forgot'
+        }
+    }, {
+        // Define url for this route
+        path: '/signup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'signUp'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'user'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/user/:userID/create-group',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createGroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'group'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/create-subgroup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createSubGroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/subgroup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'subgroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/joinGroup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'joinGroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/personalSettings',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'personalSettings'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/user-setting',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'userSetting'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/edit-group',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'editGroup'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/geoFencing',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'geoFencing'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/create-channels',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createChannels'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/:teamID/create-teams-channels',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createTeamsChannels'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quiz'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddBook',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddBook'
+        }
+
+
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddChapter/:id',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddChapter'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddTopic/:id',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddTopic'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddQuestion/:id',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddQuestion'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizCreate',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizCreate'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAttempt',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAttempt'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quiz-attempting',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAttempting'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/quizAttempt',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAttempt'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAssign',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAssign'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizResult',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizResult'
+        }
+    }]
+*/
+//function AppController($router) {
+
+
+/*            $router.config([
+                {
+                    // Define url for this route
+                    path: '/',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'home'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/signin',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'signin'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/forgotpassword',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'forgot'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/signup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'signup'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/user/:userID',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'user'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/user/:userID/create-group',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'createGroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'group'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/create-subgroup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'createSubGroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/subgroup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'subgroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/joinGroup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'joinGroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/personalSettings',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'personalSettings'
+                    }
+
+                },{
+                    // Define url for this route
+                    path: '/pages/group/:groupID/user-setting',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'userSetting'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/edit-group',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'editGroup'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/geoFencing',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'geoFencing'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/create-channels',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'createChannels'
+                    }
+                }
+            ]);*/
+// }
+/* AppController.prototype.canActivate =function(){
+     alert('IM mainCtrl');
+     return authService.resolveUserPage();
+ }*/
+
+
+// })();

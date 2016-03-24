@@ -1,169 +1,568 @@
 .firepad {
-    width: 100%;
-    height: 85vh;
-    background-color: #FFFFFF; /* dark orange background */
+  width: 100%;
+  height: 85vh;
+  background-color: #FFFFFF;
+  /* dark orange background */
 }
 
 /* For the "inset" look only */
+
 html {
-    overflow: auto;
+  overflow: auto;
 }
 
 /* Let's get this party started */
+
 ::-webkit-scrollbar {
-    width: 4px;
+  width: 4px;
 }
 
 /* Track */
+
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Handle */
+
 ::-webkit-scrollbar-thumb {
-    background: #FFFFFF;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  background: #FFFFFF;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #FFFFFF;
+}
+.firepad-toolbar {
+  text-align: center;
+  /*border-bottom: 1px solid #6A6A6A;*/
+}
+.CodeMirror {
+  margin-top: 5px;
+  background-color: #FFFFFF;
 }
 
-::-webkit-scrollbar-thumb:window-inactive {
-    background: #FFFFFF;
-}
-.firepad-toolbar{
-    text-align: center;
-    /*border-bottom: 1px solid #6A6A6A;*/
-}
-.CodeMirror{
-    margin-top: 5px;
-    background-color: #FFFFFF;
-}
 /* Note: CodeMirror applies its own styles which can be customized in the same way.
    To apply a background to the entire editor, we need to also apply it to CodeMirror. */
+
 .firepad-btn-group .firepad-btn {
-    background: #FFFFFF;
+  background: #FFFFFF;
 }
-
-.firepad-btn-group .firepad-btn:hover{
-    color: #FFFFFF;
-    border-color: #EDEFFA;
-    background: #EDEFFA;
+.firepad-btn-group .firepad-btn:hover {
+  color: #FFFFFF;
+  border-color: #EDEFFA;
+  background: #EDEFFA;
 }
-
 .powered-by-firepad {
-    display: none;
+  display: none;
 }
-
 .firepad-richtext .CodeMirror {
-    /* height: 100%;*/
+  /* height: 100%;*/
 }
 .dropDown {
-    margin-top: 64px;
+  margin-top: 64px;
 }
+
 /*.dropDown {*/
-    /*margin-top: 48px;*/
+
+
+/*margin-top: 48px;*/
+
+
 /*}*/
+
 
 /*-------------------------------------------------------------*/
 
 .mybtn {
-    border-radius: 3px;
-    box-sizing: border-box;
-    color: currentColor;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    position: relative;
-    outline: none;
-    border: 0;
-    display: inline-block;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 0 6px;
-    margin: 6px 8px;
-    line-height: 36px;
-    min-height: 36px;
-    background: transparent;
-    white-space: nowrap;
-    min-width: 88px;
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: 500;
-    font-size: 14px;
-    font-style: inherit;
-    font-variant: inherit;
-    font-family: inherit;
-    text-decoration: none;
-    cursor: pointer;
-    overflow: hidden;
-    transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-
-
-
-
-
-@font-face {
-    font-family:"icomoon";
-    src:url("https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot");
-    font-weight:normal;
-    font-style:normal;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: currentColor;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  outline: none;
+  border: 0;
+  display: inline-block;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 6px;
+  margin: 6px 8px;
+  line-height: 36px;
+  min-height: 36px;
+  background: transparent;
+  white-space: nowrap;
+  min-width: 88px;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 14px;
+  font-style: inherit;
+  font-variant: inherit;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 @font-face {
-    font-family: 'icomoon';
-    src:url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?-cmq1um');
-    src:url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?#iefix-cmq1um') format('embedded-opentype'),
-    url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.woff?-cmq1um') format('woff'),
-    url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.ttf?-cmq1um') format('truetype'),
-    url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.svg?-cmq1um#icomoon') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "icomoon";
+  src: url("https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot");
+  font-weight: normal;
+  font-style: normal;
 }
-
+@font-face {
+  font-family: 'icomoon';
+  src: url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?-cmq1um');
+  src: url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?#iefix-cmq1um') format('embedded-opentype'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.woff?-cmq1um') format('woff'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.ttf?-cmq1um') format('truetype'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.svg?-cmq1um#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 ng-md-icon:hover {
-    fill:#eee;
+  fill: #eee;
 }
-
 .onhover:hover {
-    fill:#eee
+  fill: #eee
 }
-
-
 .cust {
-    background: transparent;
-    border: none;
-    border-radius: 2px;
-    color: rgb(0,0,0);
-    position: relative;
-    height: 36px;
-    margin: 0;
-    min-width: 64px;
-    padding: 0 16px;
-    display: inline-block;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-    line-height: 1;
-    letter-spacing: 0;
-    overflow: hidden;
-    will-change: box-shadow;
-    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    outline: none;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-    line-height: 36px;
-    vertical-align: middle;
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  color: rgb(0, 0, 0);
+  position: relative;
+  height: 36px;
+  margin: 0;
+  min-width: 64px;
+  padding: 0 16px;
+  display: inline-block;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: 0;
+  overflow: hidden;
+  will-change: box-shadow;
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  line-height: 36px;
+  vertical-align: middle;
 }
-
-
 .toolbar {
-    /*height: 30%;*/
+  /*height: 30%;*/
+}
+.toolbar-list .is-upgraded {
+  margin-top: 4%;
+}
+.dropDown-list {
+  top: 6em;
+  left: 19.25em;
+}
+[class~="mdl-menu__outline"] {
+  top: 4em;
+  left: 15em;
+}
+.firepad-color-dropdown-item {
+  width: 56%;
+  margin: auto;
+}
+.selectedDocumentIcon .md-button {
+  padding-left: 0;
+}
+
+/*{*/
+.mui-btn {
+  -webkit-animation-duration: 0.0001s;
+  animation-duration: 0.0001s;
+  -webkit-animation-name: mui-node-inserted;
+  animation-name: mui-node-inserted;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #FFF;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+  height: 36px;
+  padding: 0 26px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  background-image: none;
+  text-align: center;
+  line-height: 36px;
+  vertical-align: middle;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  position: relative;
+  overflow: hidden;
+}
+.mui-btn:hover, .mui-btn:focus, .mui-btn:active {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: white;
+}
+
+.mui-btn[disabled]:hover, .mui-btn[disabled]:focus, .mui-btn[disabled]:active {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #FFF;
+}
+
+.mui-btn.mui-btn--flat {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: transparent;
+}
+
+.mui-btn.mui-btn--flat:hover, .mui-btn.mui-btn--flat:focus, .mui-btn.mui-btn--flat:active {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #f2f2f2;
+}
+
+.mui-btn.mui-btn--flat[disabled]:hover, .mui-btn.mui-btn--flat[disabled]:focus, .mui-btn.mui-btn--flat[disabled]:active {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: transparent;
+}
+
+.mui-btn:hover, .mui-btn:focus, .mui-btn:active {
+  outline: 0;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.mui-btn:hover, .mui-btn:focus {
+  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .mui-btn:hover, .mui-btn:focus {
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.12), -1px 0px 2px rgba(0, 0, 0, 0.12), 0 0px 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.mui-btn:active {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .mui-btn:active {
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.12), -1px 0px 2px rgba(0, 0, 0, 0.12), 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  }
+}
+
+.mui-btn:disabled, .mui-btn.mui--is-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.60;
+  box-shadow: none;
+}
+
+.mui-btn + .mui-btn {
+  margin-left: 8px;
+}
+
+.mui-btn--flat {
+  background-color: transparent;
+}
+
+.mui-btn--flat:hover, .mui-btn--flat:focus, .mui-btn--flat:active {
+  box-shadow: none;
+  background-color: #f2f2f2;
+}
+
+.mui-btn--raised, .mui-btn--fab {
+  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .mui-btn--raised, .mui-btn--fab {
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.12), -1px 0px 2px rgba(0, 0, 0, 0.12), 0 0px 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.mui-btn--raised:active, .mui-btn--fab:active {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .mui-btn--raised:active, .mui-btn--fab:active {
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.12), -1px 0px 2px rgba(0, 0, 0, 0.12), 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  }
+}
+
+.mui-btn--fab {
+  position: relative;
+  padding: 0;
+  width: 55px;
+  height: 55px;
+  line-height: 55px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.mui-btn--primary {
+  color: #FFF;
+  background-color: #2196F3;
+}
+
+.mui-btn--primary:hover, .mui-btn--primary:focus, .mui-btn--primary:active {
+  color: #FFF;
+  background-color: #39a1f4;
+}
+
+.mui-btn--primary[disabled]:hover, .mui-btn--primary[disabled]:focus, .mui-btn--primary[disabled]:active {
+  color: #FFF;
+  background-color: #2196F3;
+}
+
+.mui-btn--primary.mui-btn--flat {
+  color: #2196F3;
+  background-color: transparent;
+}
+
+.mui-btn--primary.mui-btn--flat:hover, .mui-btn--primary.mui-btn--flat:focus, .mui-btn--primary.mui-btn--flat:active {
+  color: #2196F3;
+  background-color: #f2f2f2;
+}
+
+.mui-btn--primary.mui-btn--flat[disabled]:hover, .mui-btn--primary.mui-btn--flat[disabled]:focus, .mui-btn--primary.mui-btn--flat[disabled]:active {
+  color: #2196F3;
+  background-color: transparent;
+}
+
+.mui-btn--dark {
+  color: #FFF;
+  background-color: #424242;
+}
+
+.mui-btn--dark:hover, .mui-btn--dark:focus, .mui-btn--dark:active {
+  color: #FFF;
+  background-color: #4f4f4f;
+}
+
+.mui-btn--dark[disabled]:hover, .mui-btn--dark[disabled]:focus, .mui-btn--dark[disabled]:active {
+  color: #FFF;
+  background-color: #424242;
+}
+
+.mui-btn--dark.mui-btn--flat {
+  color: #424242;
+  background-color: transparent;
+}
+
+.mui-btn--dark.mui-btn--flat:hover, .mui-btn--dark.mui-btn--flat:focus, .mui-btn--dark.mui-btn--flat:active {
+  color: #424242;
+  background-color: #f2f2f2;
+}
+
+.mui-btn--dark.mui-btn--flat[disabled]:hover, .mui-btn--dark.mui-btn--flat[disabled]:focus, .mui-btn--dark.mui-btn--flat[disabled]:active {
+  color: #424242;
+  background-color: transparent;
+}
+
+.mui-btn--danger {
+  color: #FFF;
+  background-color: #F44336;
+}
+
+.mui-btn--danger:hover, .mui-btn--danger:focus, .mui-btn--danger:active {
+  color: #FFF;
+  background-color: #f55a4e;
+}
+
+.mui-btn--danger[disabled]:hover, .mui-btn--danger[disabled]:focus, .mui-btn--danger[disabled]:active {
+  color: #FFF;
+  background-color: #F44336;
+}
+
+.mui-btn--danger.mui-btn--flat {
+  color: #F44336;
+  background-color: transparent;
+}
+
+.mui-btn--danger.mui-btn--flat:hover, .mui-btn--danger.mui-btn--flat:focus, .mui-btn--danger.mui-btn--flat:active {
+  color: #F44336;
+  background-color: #f2f2f2;
+}
+
+.mui-btn--danger.mui-btn--flat[disabled]:hover, .mui-btn--danger.mui-btn--flat[disabled]:focus, .mui-btn--danger.mui-btn--flat[disabled]:active {
+  color: #F44336;
+  background-color: transparent;
+}
+
+.mui-btn--accent {
+  color: #FFF;
+  background-color: #FF4081;
+}
+
+.mui-btn--accent:hover, .mui-btn--accent:focus, .mui-btn--accent:active {
+  color: #FFF;
+  background-color: #ff5a92;
+}
+
+.mui-btn--accent[disabled]:hover, .mui-btn--accent[disabled]:focus, .mui-btn--accent[disabled]:active {
+  color: #FFF;
+  background-color: #FF4081;
+}
+
+.mui-btn--accent.mui-btn--flat {
+  color: #FF4081;
+  background-color: transparent;
+}
+
+.mui-btn--accent.mui-btn--flat:hover, .mui-btn--accent.mui-btn--flat:focus, .mui-btn--accent.mui-btn--flat:active {
+  color: #FF4081;
+  background-color: #f2f2f2;
+}
+
+.mui-btn--accent.mui-btn--flat[disabled]:hover, .mui-btn--accent.mui-btn--flat[disabled]:focus, .mui-btn--accent.mui-btn--flat[disabled]:active {
+  color: #FF4081;
+  background-color: transparent;
+}
+
+.mui-btn--small {
+  height: 30.6px;
+  line-height: 30.6px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+.mui-btn--large {
+  height: 54px;
+  line-height: 54px;
+  padding: 0 26px;
+  font-size: 14px;
+}
+
+.mui-btn--fab.mui-btn--small {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+}
+
+.mui-btn--fab.mui-btn--large {
+  width: 75px;
+  height: 75px;
+  line-height: 75px;
+}
+@media (min-width: 544px) {
+  .mui-form--inline > .mui-btn {
+    margin-bottom: 0;
+    margin-top: 0;
+    vertical-align: bottom;
+  }
+}
+.mui-btn > .mui-ripple-effect {
+  background-color: #a6a6a6;
+}
+
+.mui-btn--primary > .mui-ripple-effect {
+  background-color: #FFF;
+}
+
+.mui-btn--dark > .mui-ripple-effect {
+  background-color: #FFF;
+}
+
+.mui-btn--danger > .mui-ripple-effect {
+  background-color: #FFF;
+}
+
+.mui-btn--accent > .mui-ripple-effect {
+  background-color: #FFF;
+}
+
+.mui-btn--flat > .mui-ripple-effect {
+  background-color: #a6a6a6;
+}
+
+.mui-dropdown__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  text-align: left;
+  background-color: #FFF;
+  border-radius: 2px;
+  z-index: 1;
+  background-clip: padding-box;
 }
 
 
-.toolbar-list .is-upgraded {
-    margin-top:4%;
+.mui-dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.mui-dropdown__menu.mui--is-open {
+  display: block;
+}
+
+.mui-dropdown__menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  text-decoration: none;
+  font-weight: normal;
+  line-height: 1.429;
+  color: rgba(0, 0, 0, 0.87);
+  white-space: nowrap;
+}
+
+.mui-dropdown__menu > li > a:hover, .mui-dropdown__menu > li > a:focus {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #EEEEEE;
+}
+
+.mui-dropdown__menu > .mui--is-disabled > a, .mui-dropdown__menu > .mui--is-disabled > a:hover, .mui-dropdown__menu > .mui--is-disabled > a:focus {
+  color: #EEEEEE;
+}
+
+.mui-dropdown__menu > .mui--is-disabled > a:hover, .mui-dropdown__menu > .mui--is-disabled > a:focus {
+  text-decoration: none;
+  background-color: transparent;
+  background-image: none;
+  cursor: not-allowed;
+}
+
+.mui-dropdown__menu--right {
+  left: auto;
+  right: 0;
+}
+
+.mui--z1, .mui-dropdown__menu, .mui-select__menu {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+/*}*/
+.mui-btn + .mui-btn {
+  margin-left: 2px;
+}
+
+.mui-btn--fab.mui-btn--small {
+  width: 35px !important;
+  height: 35px !important;
+}
+
+.mui-btn--small {
+  font-size: 16px;
+  padding: 0px;
+  background: transparent !important;
 }

@@ -58,9 +58,11 @@
 
                 /*VM properties*/
                 this.message = {};
+                this.membershipNo = [];
                 this.group = {
                     groupID: "",
-                    message: "Please add me in your group."
+                    message: "Please add me in your Team.",
+                    membershipNo: ""
                 };
 
 
@@ -133,8 +135,9 @@
                 function answer(group) {
                     that.loadingData = true;
                     that.group.message = that.message[group.$id] || that.group.message;
+                    that.group.membershipNo = that.membershipNo[group.$id] || that.group.membershipNo;
                     that.group.groupID = group.$id;
-                    that.group.title = group.title;
+                    that.group.grouptitle = group.title;
 
                     joinGroupService.joinGroupRequest(that.group, function(){
                         that.loadingData = false;

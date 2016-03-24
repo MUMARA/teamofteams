@@ -40,8 +40,9 @@ angular.module('core')
             var loggedUserRef = null;
             var policies = null;
             var userPolicies = null;
-            var dailyProgressReport = null;
+            var progressReport = null;
             var subgroupPolicies = null;
+            var activitySeen = null;
 
             return {
                 addUpdateHandler: function() {
@@ -142,10 +143,10 @@ angular.module('core')
                     return groupLocsDefined;
                 },
                 getSignedinUserRef: function() {
-                    return loggedUserRef
+                    return loggedUserRef;
                 },
                 getRefFlattendGroups: function() {
-                    return flattenedGroups
+                    return flattenedGroups;
                 },
                 getRefPolicies: function() {
                     return policies;
@@ -153,13 +154,16 @@ angular.module('core')
                 getRefUserPolicies: function() {
                     return userPolicies;
                 },
-                getRefDailyProgressReport: function() {
-                    return dailyProgressReport;
+                getRefProgressReport: function() {
+                    return progressReport;
                 },
                 getRefSubgroupPolicies: function(){
                         return subgroupPolicies;
                 },
-                logout: function(){
+                getRefActivitySeen: function() {
+                    return activitySeen;
+                },
+                logout: function() {
                   console.log('unauth the firebase');
                   ref.unauth();
                   var authdata = ref.getAuth();
@@ -207,8 +211,9 @@ angular.module('core')
                                 flattenedGroups = ref.child("flattened-groups");
                                 policies = ref.child("policies");
                                 userPolicies = ref.child("user-policies");
-                                dailyProgressReport = ref.child('progress-reports-by-users');
+                                progressReport = ref.child('subgroup-progress-reports');
                                 subgroupPolicies = ref.child('subgroup-policies');
+                                activitySeen = ref.child('activities-seen-by-user');
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.

@@ -5,9 +5,16 @@
         <md-progress-circular class="cirrcularGrey" md-mode="indeterminate" ng-show="manualattendace.processTeamAttendance" md-diameter="30"></md-progress-circular>
         <div layout="row" flex-gt-sm="50">
             <ng-md-icon icon="search" size="36" class="nooutline fillColorDarkGrey" ng-click="manualattendace.setFocus()"></ng-md-icon>
-            <md-input-container md-no-float class="nopadding nomargin" flex layout="row">
+            <md-input-container md-no-float class="nopadding nomargin" flex layout="row" ng-if="group.dropbox == 0">
                 <input type="text" id="#UserSearch" ng-model="manualattendace.searchbox" aria-label="search dashboard" class="serachbox2" placeholder="Search">
             </md-input-container>
+            <md-input-container md-no-float class="nopadding nomargin" flex layout="row" ng-if="group.dropbox == 1">
+                <input type="text" id="#UserSearch" ng-model="manualattendace.searchbox2" aria-label="search dashboard" class="serachbox2" placeholder="Search" ng-keyup="manualattendace.checkInMembershipNo($event, manualattendace.activeuser)">
+            </md-input-container>
+            <md-select class="nopadding nomargin leftmargin20px" placeholder="Full Name" ng-init="group.dropbox = 0" ng-model="group.dropbox" style="overflow: hidden!important;">
+                <md-option value="0" selected ng-click="group.dropbox = 0; manualattendace.searchbox2 = ''">Full Name</md-option>
+                <md-option value="1" ng-click="group.dropbox = 1; manualattendace.searchbox = ''">Membershio No</md-option>
+            </md-select>
         </div>
     </div>
     <md-table-container flex class="backColorWhite">
@@ -21,6 +28,7 @@
                         </md-button>
                     </th>
                     <th md-column class="foreColorSeaGreen">Name</th>
+                    <th md-column class="foreColorSeaGreen">Membership No</th>
                     <th md-column class="foreColorSeaGreen">Team of Teams</th>
                     <th md-column class="foreColorSeaGreen">Team</th>
                     <th md-column class="foreColorSeaGreen">Last Modified</th>
@@ -28,12 +36,14 @@
                 </tr>
             </thead>
             <tbody md-body>
-                <tr md-row ng-repeat="user in manualattendace.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: manualattendace.groupID, subgroupID: manualattendace.subgroupID, fullName: manualattendace.searchbox}"  class="hoverLightGrey3 nooutline" >
-                    <td md-cell layout="row" layout-align="center center">
+                <tr md-row ng-repeat="user in (manualattendace.activeuser = (manualattendace.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: manualattendace.groupID, subgroupID: manualattendace.subgroupID}:true | filter: {fullName: manualattendace.searchbox, membershipNo: manualattendace.searchbox2}))
+                "  class="hoverLightGrey3 nooutline" >
+                    <td md-cell>
                         <ng-md-icon icon="lens" size="10" ng-style="user.onlinestatus ? {'fill':'#8BC53F'} : {'fill':'#c51903'}"></ng-md-icon>
                         <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type ? {'border':'3px solid #8BC53F'} : {'border':'3px solid #c51903'}" layout-margin>
                     </td>
                     <td md-cell>{{user.fullName}}</td>
+                    <td md-cell>{{user.membershipNo}}</td>
                     <td md-cell>{{user.groupTitle}}</td>
                     <td md-cell>{{user.subgroupTitle}}</td>
                     <td md-cell>{{manualattendace.returnMoment(user.timestamp)}}</td>

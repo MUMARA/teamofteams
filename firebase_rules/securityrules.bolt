@@ -25,12 +25,20 @@ function isAuthenticated() {
 //  User path
 //===================================
 
-path /users/{userid} is UserType {
-
- update() { isAuthenticatedUser($userid)}
- read()   { isAuthenticated() }
-
+path /users {
+  validate() { this.length >= 3  && this.length <= 10  }
+  /{userid} is UserType {
+   update() { isAuthenticatedUser($userid)}
+   read()   { isAuthenticated() }
+  }
 }
+/*type UseridLength extends String {
+    validate() { this.length >= 3  && this.length <= 10 }
+}*/
+/*
+type UseridLengthEqualtoTen extends String {
+  validate() { this.length == 10 }
+}*/
 //===================================
 //  User Type
 //===================================
@@ -85,39 +93,6 @@ type ConnectionIDStatus{
       "type"     :  Number,                               //  1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
       "started"  : CurrentTimeStamp
 }
-
-
-/*
-//===================================
-//          Personal Setting
-//===================================
-//      Path for Personal Setting
-//===================================
-
-
-path /users/{userid} is UserPersonalSetting {
-    read()   {     isAuthenticated()          }
-    update() {  isAuthenticatedUser($userid)  }
-
-}
-
-
-type UserPersonalSetting {
-
-    'contactNumber'   : ContactNumberLength,
-    'date-created'    : CurrentTimeStamp,
-    'desc'            : DescLenght,
-    'email'           : String,
-    'firstName'       : NameLengthGreaterThanThree,
-    'lastName'        : NameLengthGreaterThanThree,
-    'profession'      : String,
-    'profile-image'   : String,                                               //  ----------------------------------
-    'status'          : Number                                               // Discuss to sir what is -1 and what is 0
-}                                                                               //---------------------
-
-
-
-*/
 
 type ContactNumberLength extends String {
   validate() {
@@ -234,6 +209,14 @@ function isCurrentUserGroupOwner ($groupid) {
 
 path /group-members/{groupid} {
   read() { isGroupMembersIdExist(groupid) && groupMemberShipAnyType(groupid)  } // i think blockmember type is -1 so blockmembers cannot read the group for that we want member-shiptype should be greater than 0
+  create() {  isAuthenticated()                          &&
+              isCurrentUserGroupOwner(groupid)           ||
+              isCurrentUserGroupAdmin(groupid)
+  }
+  update() {  isAuthenticated()                          &&
+              isCurrentUserGroupOwner(groupid)           ||
+              isCurrentUserGroupAdmin(groupid)
+  }
 }
 
 path /group-members/{groupid}/{userid} is UserGroupSubGroupMemberShipType {
@@ -429,7 +412,7 @@ type LogoImageRequirement {
  //====================================
  //Please note when creating group using Multi path update donot add group creation activity seprately
 path /group-activity-streams/{groupid} {
-  index()  {  "object/id" }
+  index()  {  "published" }
 
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
@@ -439,7 +422,7 @@ path /group-activity-streams/{groupid} {
   // validate() { prior(root['groups'][$groupid].val() != null)     }
 
 /{activityid} is GroupActivityStreamsInfo {
-    index()  {  "object/id" }
+    index()  {  "published" }
 write() {
   (isAuthenticated() && isGroupJoined(this['verb']))
 }
@@ -485,23 +468,33 @@ type  ActorType {
  //   SubGroup Activity Streams
  //====================================
  //Please note when creating group using Multi path update donot add group creation activity seprately
-path /subgroup-activity-streams/{groupid}/{subgroupid} {
-  index()  {  "object/id" }
+path /subgroup-activity-streams/{groupid}{
+  read() {
+      isAuthenticated()                &&
+      isGroupMembersIdExist(groupid)          &&
+      isCurrentUserGroupMembersOwner(groupid) ||
+      groupMemberShipAnyType(groupid)  }
 
-  read()     {    isGroupMembersIdExist(groupid)       &&
-                  groupMemberShipAnyType(groupid) }
+  /{subgroupid} {
+    index()  {  "published" }
 
-  write()    {   ( isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
+    read()     {    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
+                    isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist($groupid,$subgroupid)  }
 
-  // validate() { prior(root['groups'][$groupid].val() != null)     }
+    write()    {   (isAuthenticated()                        &&
+                    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
+                    isCurrentSubUserGroupMembersOwner(groupid,subgroupid)      ||
+                    isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)  ) }
 
-/{activityid} is GroupActivityStreamsInfo {
-    index()  {  "object/id" }
-write() {
-  ( isAuthenticated() && isSubGroupJoined(this['verb']))
+    // validate() { prior(root['groups'][$groupid].val() != null)     }
+
+      /{activityid} is GroupActivityStreamsInfo {
+                index()  {  "published" }
+                write() {  ( isAuthenticated() && isSubGroupJoined(this['verb'])) }
+        }
+    }
 }
- }
- }
+
  //====================================
  //   Group Check In Current
  //====================================
@@ -651,7 +644,7 @@ path /group-membership-requests-by-user/{userid} {
                isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) &&
                subGroupMembersMemberShipAnyType(groupid,subgroupid)    }*/
     /members-checked-in is SubGroupMembersCheckInInfo {
-    validate() { isUserUSerIDExist() }
+     validate() { isUserUSerIDExist() }
 
       update()    { isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) }
      }
@@ -1381,6 +1374,32 @@ type SubgroupAppliedPolicyType {
       }
 
   }
+}*/
+//SubGroup progress Report
+path /subgroup-progress-reports/{groupid} {
+ index()  {  "date" }
+
+
+    /{subgroupid}{
+      read()     {   isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
+                      subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
+      /{userid} {
+
+      /{reportid} is ProgressType {
+          read() {   isAuthenticated() &&
+                     isCurrentUserGroupOwner(groupid)    ||
+                     isCurrentUserGroupAdmin(groupid) ||
+                     subGroupMembersMemberShipAnyType(groupid,subgroupid) }
+          write() {  isAuthenticatedUser(userid)  &&  isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
+                      subGroupMembersMemberShipAnyType(groupid,subgroupid)
+                  }
+
+        }
+         index()  {  "date" }
+      }
+      }
+
+
 }
 
  type ProgressType {
@@ -1389,7 +1408,7 @@ type SubgroupAppliedPolicyType {
   questionID : String,
   policyID : String
 
- }*/
+ }
 /*Group Channel*/
 path /group-channel/{groupid} {
     read()  { isAuthenticated() && userGroupMembershipAnyType(groupid) }
@@ -1511,7 +1530,7 @@ type ChatChannelType {
 
 /*User Activity Streams*/
 
-path /user-activity-streams/{userid}{
+/*path /user-activity-streams/{userid}{
   read() {
     isAuthenticated()
    }
@@ -1523,7 +1542,7 @@ path /user-activity-streams/{userid}{
     isAuthenticated()
    }
  }
-  }
+  }*/
   /*firepad Group Access */
 path /firepad-groups-access/{groupid}/{documentid}{
       read() {
@@ -1542,7 +1561,9 @@ path /firepad-groups-access/{groupid}/{documentid}{
     }
 }
   /*firepad Group Rules */
-path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
+path /firepad-groups-rules/{groupid}{
+
+     /{documentid} is FirepadRulesType  {
       read() {
         isAuthenticated()
       }
@@ -1550,6 +1571,7 @@ path /firepad-groups-rules/{groupid}/{documentid} is FirepadRulesType  {
         isAuthenticated()
       }
 }
+  }
   /*firepad SubGroup Access */
 path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid}{
   read() {
@@ -1581,6 +1603,13 @@ type FirepadRulesType {
   allUsers: Boolean;
 }
 
+path /activities-seen-by-user/{userid} is ActivityType {
+     read() { isAuthenticatedUser($userid)}
+     write() { isAuthenticatedUser($userid)}
+}
+type ActivityType {
+  timestamp: CurrentTimeStamp
+}
 /*type AllUserType {
   allUsers:  Boolean;
 }*/

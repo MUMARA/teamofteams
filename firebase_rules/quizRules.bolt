@@ -1,5 +1,5 @@
-function isSignedIn() { 
-    return auth != null 
+function isSignedIn() {
+    return auth != null
 }
 
 //----------------------------------
@@ -7,38 +7,27 @@ function isSignedIn() {
 // matches the currently signed-in user.
 //----------------------------------
 
-function isCurrentUser(uid) { 
-    return isSignedIn() && auth.uid == uid 
+function isCurrentUser(uid) {
+    return isSignedIn() && auth.uid == uid
 }
 
 type CurrentTimestamp extends Number {
-  validate() { this == now }
+  validate() {    this <= Date.now; }
 }
-
-//----------------------------------
-// Define createOnly() function to test if it is being created for the first time
-//----------------------------------
-function createOnly(value) { 
-    return prior(value) == null && value != null 
-}
-
-
-
-
 
 //-----------------------------------------------------------------------------------
 //       MemberType type extends globally and MemberType Number Validations Should Be
 //-----------------------------------------------------------------------------------
-function memberTypeShouldBe(that , num){ 
+function memberTypeShouldBe(that , num){
     return that  == num;
 }
 
-type QuestionBankMemberType extends Number{
+type QuestionBankMemberType extends Number {
 
     validate(){
-        memberTypeShouldBe(this , 1) || memberTypeShouldBe(this , 2);// Owner = 1, Admin = 2
+        memberTypeShouldBe(this , 1) || memberTypeShouldBe(this , 2); // Owner = 1, Admin = 2
     }
-	
+
 }
 
 function isQuestionBankOwner(questionBankMemberType) {
@@ -50,13 +39,17 @@ function isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, value){
 }
 
 function isCurrentUserQuestionBankOwner(questionBankUniqueID) {
-    return isCurrentUserQuestionBankMember(questionBankUniqueID) && 
-    prior(memberTypeShouldBe(root.question_bank_memberships[questionBankUniqueID][auth.uid]["member-type"], 1));
+    return isCurrentUserQuestionBankMember(questionBankUniqueID) &&
+    prior(memberTypeShouldBe(root.question-bank-memberships[questionBankUniqueID][auth.uid]["member-type"], 1));
+}
+function isCurrentUserQuestionBankAdmin(questionBankUniqueID) {
+    return isCurrentUserQuestionBankMember(questionBankUniqueID) &&
+    prior(memberTypeShouldBe(root.question-bank-memberships[questionBankUniqueID][auth.uid]["member-type"], 2));
 }
 
 function isCurrentUserQuestionBankMember(questionBankUniqueID) {
-    prior(root.question_bank_memberships[questionBankUniqueID][auth.uid] != null)
-} 
+    prior(root.question-bank-memberships[questionBankUniqueID][auth.uid] != null)
+}
 
 
 
@@ -65,195 +58,149 @@ function isCurrentUserQuestionBankMember(questionBankUniqueID) {
 //----------------------------------
 
 function isQuestionBankOwnerCreating(pathUserID, value) {
-    return isQuestionBankOwner(value.member-type) && createOnly(value) && isCurrentUser(pathUserID);
+    return isQuestionBankOwner(value["member-type"]) &&  isCurrentUser(pathUserID);
 }
 
 //----------------------------------
 //      question-bank-memberships (Before creating a QuestionBank, create a owner membership first)
 //----------------------------------
+path /user-question-banks/{userid}/{questionBankUniqueID} is QuestionBankMembership {
+      read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+      create() { isQuestionBankOwnerCreating(UserID, this) }
+      update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+}
+//----------------------------------
+//      question-bank-memberships (Before creating a QuestionBank, create a owner membership first)
+//----------------------------------
 
-path /question_bank_memberships/{questionBankUniqueID}/{UserID} is QuestionBankMembership {  
-    read() { true }
-    write() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+path /question-bank-memberships/{questionBankUniqueID}/{UserID} is QuestionBankMembership {
+    read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+    create() { isQuestionBankOwnerCreating(UserID, this) }
+    update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
 }
 
 type QuestionBankMembership {
-    "member-type" : QuestionBankMemberType                      //MemberType type extends globally
+    "member-type" : QuestionBankMemberType,
+    timestamp: CurrentTimestamp                     //MemberType type extends globally
 }
 
 
 //----------------------------------
 //      question-bank (Before creating a QuestionBank, create a owner membership first)
 //----------------------------------
-
-path /question-bank/{questionBankUniqueID} is QuestionBank { 
-    read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
-    write() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+path /question-bank/{questionBankUniqueID} is QuestionBank {
+  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+  create() { isSignedIn() }
+  update() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
+    /chapters/{chapterId} is ChapterAndTopicType {
+        /topics/{topicId} is ChapterAndTopicType {
+            /questions/{questionId} is QuestionType {
+               /options is String[] { }
+            }
+        }
+    }
 }
-
 type QuestionBank {
 
     timestamp  : CurrentTimestamp,                   //Timestamp type extends globally
-      title    : String,
-      desc     : String
-
+    title    : String,
+    desc     : String
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Work in progress, not reviewed yet
-
-//---------------------------------------
-//      Timestamp type extends globally
-//---------------------------------------
-
-type Timestamp extends Number{
-    validate(){
-        this <= Date.now;
-    }
-
+type ChapterAndTopicType {
+    timestamp  : CurrentTimestamp,                   //Timestamp type extends globally
+    title    : String,
+    desc     : String
 }
-
+type Question {
+   title: String,
+   type: OptionType, //QuestionTupe
+   html: String,
+  options: Option[] | Null,
+  questiones: Question[] | Null,
+  "discussion-html" : String
+}
+type Option {
+  "html": String,
+  "correct": Boolean,
+  "discussion-html" : String
+}
 //-----------------------------------------------------------
-// Options Type Radio Button , CheckBox And question Set
+// Options Type 1 Radio Button , 2 CheckBox And 3 question Set
 //---------------------------------------------------------
 
-function optionsTypeShouldBe(that , num) { 
-    return that == num 
+function optionsTypeShouldBe(that , num) {
+    return that == num
 }
 
 type OptionType extends Number{
    validate() {
    optionsTypeShouldBe(this , 1 ) || optionsTypeShouldBe(this , 2 ) || optionsTypeShouldBe(this , 3 );
    }
-}
+}1
 
 
-//---------------------------
-//      user_question_banks
-//---------------------------
-
-path /user_question_banks/{userid}/{questionBankUniqueID} is Quiz{  }
-
-type Quiz {
- "member-type" : QuestionBankMemberType          //MemberType type extends globally
-
-}
-
-
-
-
-//----------------------------------
-//      question-bank-topics
-//----------------------------------
-
-path /question_bank_topics/{questionBankUniqueID}/{autotopicid1} is QuestionBankInfo{
-}
-
-type QuestionBankInfo {
-
-        timestamp  : Timestamp,                   //Timestamp type extends globally
-        title      : String,
-        desc       : String,
-        subtopics  : SubTopicID,                  //subtopics has a child Autosubtopicid1
-        question   : Questions
-
-}
-//subtopics child
-type SubTopicID {
-    validate() {this.hasChildren(['autoSubTopicID']);}
-    $autoSubTopicID :  Autosubtopicid1
-}
-type Autosubtopicid1{
-          timestamp  : Timestamp,                   //Timestamp type extends globally
-          title      : String,
-          desc       : String,
-          questions  : SubTopicQuestionsID          //questions has a child QuestionsID
-
-}
-//Autosubtopicid1 child
-
-type SubTopicQuestionsID{
-       $questionID  : Boolean
-}
-//question child
-
- type Questions{
-       $questionID  : Boolean
-
-
- }
-
-//----------------------------------
-//      Questions
-//----------------------------------
-/*
-path /questions/{questionBankUniqueID} is QuestionID { }
-
-type QuestionID {
-   $questionID1 : QuestionID1Info                   //questionID1 has a child QuestionID1Info
-}
-
-type QuestionID1Info {
-        title              :  String,
-        desc               :  String,
-        type               :  OptionType,
-        "discussion-html"  :  String
-        //options          :  OptionsID           //options has a child OptionsID
-}
-
-type OptionsID{
-
-
-}
-*/
-
+ //Discuss
 //----------------------------------
 //      Question Bank Quizes
 //----------------------------------
+/*
+path /question-bank-quizes/{questionBankID} is QuestionBankQuiz {
+  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+  create() { isSignedIn() }
+  update() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+}
 
-path /question_bank_quizes/{questionBankID} is QuestionBankQuiz {  }
-
-type QuestionBankQuiz{
+type QuestionBankQuiz {
 
     validate(){this.hasChildren(['quizID'])}
     $quizID : Boolean
-}
+}*/
 
 //----------------------------------
 //      Group Quizes
 //----------------------------------
 
-path /group_quizes/{groupID} is QuestionBankQuiz { }
+path /group-quizes/{groupID}/{quizId} is QuestionBankQuiz {
+ read() { isSignedIn() &&  groupMemberShipAnyType($groupid) }
+ create() { groupMemberShipAnyType($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
+ update() { groupMemberShipAnyType($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
+          /options is String[] { }
+}
+
+//===================================
+//function For Group-member
+//===================================
+
+function isGroupMembersIdExist($groupid) {
+  return prior(root['group-members'][$groupid][auth.uid] != null);
+}
+
+function groupMemberShipAnyType($groupid) {
+    return prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() > 0)
+ }
+
+function isCurrentUserGroupMembersOwner($groupid) {
+    return  prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() == 1 )
+ }
+
+
+ function isCurrentUserGroupMembersAdmin($groupid) {
+    return  prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() ==2 )
+ }
 
 //----------------------------------
 //      Quizes
 //----------------------------------
 
-path /quizes/{quizID}  is QuizDesc { }
+path /quizes/{quizID}  is QuizDesc {
+  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+  create() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
+  update() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+}
 
 type QuizDesc {
     title           : String,
@@ -262,90 +209,3 @@ type QuizDesc {
     'num-questions' : Number
 
 }
-
-//----------------------------------
-//      Quiz Topics
-//----------------------------------
-
-path /quiz-topics/{quizID}/{autotopicID} is QuizTopic{ }
-
-type QuizTopic{
-     timestamp  : Timestamp,                   //Timestamp type extends globally
-     title      : String,
-     desc       : String,
-     subtopics  : SubTopicID
-
-
-}
-
-
-
-
-//----------------------------------
-//      Quiz Questions
-//----------------------------------
-
-path /quiz_questions/{quizID}/{questionID} is QuizQuestionDesc { }
-
-type QuizQuestionDesc {
-
-   title   : String,
-   type    : OptionType,
-   desc    : String,
-   options : QuestionOptions
-}
-
-type QuestionOptions {
- validate(){ this.hasChildren(['optionID'])}
-   $optionID : Object
-}
-
-
-//----------------------------------
-//      Quiz Answers
-//----------------------------------
-
-
-path /quiz_answers/{quizID}/{questionID} is QuizAnswerDesc { }
-
-type QuizAnswerDesc {
-   title              : String,
-   type               : OptionType,
-   'desc-html'        :  String,
-   'discussion-html'  : String,
-   options            : AnswerOptions
-}
-
-type AnswerOptions {
-    validate() {this.hasChildren(['optionID'])}
-    $optionID   : OptionsDetail
-}
-
- type OptionsDetail {
-    html              : String,
-    correct           : Boolean,
-    'discussion-html' : String
- }
-
-
-
-//----------------------------------
-//      Quiz Answer Sheet
-//----------------------------------
-
-path /quiz_answer_sheet/{groupid}/{quizid}/{userid}/{questionID} is  CorrectAnswer { }
-
- type CorrectAnswer {
-   optionID : Boolean,
-   correct  :  Boolean
-  }
-
-
-
-
-
-
-
-
-
-

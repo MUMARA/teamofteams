@@ -51,8 +51,8 @@
         </div>
 
         <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
-            {{navToolbar.showUrlObj.subgroupTitle}} /
-            {{navToolbar.showUrlObj.groupTitle}}
+            {{navToolbar.showUrlObj.groupTitle}} /
+            {{navToolbar.showUrlObj.subgroupTitle}}
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
             <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()">
@@ -75,20 +75,26 @@
                 </ng-md-icon>
                 <!-- Notification Start -->
                 <div style="position:relative;top: -35px;right: 15px">
-                    <md-card class="carrotImg" ng-show="navToolbar.show"><img src="img/carrot.svg"></md-card>
-                      <md-card class="toolbarListCard_MinHeight" ng-show="navToolbar.show">
-                      <div style="background-color: #E0E0E0; height:40px;" layout="row" layout-align="space-between center" layout-padding>
+                    <md-card class="carrotImg" ng-show="navToolbar.displayNotificationBox"><img src="img/carrot.svg"></md-card>
+                      <md-card class="toolbarListCard_MinHeight" ng-show="navToolbar.displayNotificationBox">
+                      <md-toolbar style="background-color: #E0E0E0; min-height:40px;" layout="row" layout-align="space-between center" layout-padding>
                           <strong class="foreColorDarkGrey" style="font-size: large;">Notifications</strong>
-                      </div>
+                      </md-toolbar>
                       <md-list class="nopadding vscroll">
-                          <md-list-item  class="nopadding" ng-repeat="notify in navToolbar.notifications | reverse track by $index">
+                          <md-list-item  class="nopadding" ng-repeat="notify in navToolbar.notifications | orderBy: '-published'  track by $index">
                               <div layout="column" layout-align="center start" style="font-size: large; overflow-x: auto;" flex>
-                                  <div style="font-size:small;" layout="row" layout-align="start center" layout-fill>
+                                  <div class="hoverLightGrey3" style="font-size:small;" layout="row" layout-align="start center" layout-fill>
                                       <img ng-src="{{notify['profile-image'] ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon30px nooutline leftmargin10px">
-                                      <div class="nooutline leftpadding20px cursorPointer hoverLightGrey3 foreColorDarkGrey"  layout-padding>
-                                          {{notify.displayMessage}}
+                                      <div class="nooutline leftpadding20px cursorPointer foreColorDarkGrey"  layout-padding layout="column" flex>
+                                          <div class="nopadding nomargin">
+                                              {{notify.displayMessage}}
+                                          </div>
+                                          <div  class="nopadding nomargin">
+                                              <em>{{navToolbar.returnMoment(notify.published)}}</em>
+                                          </div> 
                                       </div>
                                   </div>
+                            
                                   <md-divider md-outset></md-divider>
                               </div>
                           </md-list-item>
@@ -98,7 +104,7 @@
                 <!-- Notification End-->
             </div>
 
-            <md-badge ng-if="navToolbar.notifications.length > 0" ng-click="navToolbar.showNotification()" style="background-color:rgb(251, 68, 130); position:fixed; font-size: small; right:90px; top:15px;"><strong>{{navToolbar.notifications.length}}</strong></md-badge>
+            <md-badge ng-if="navToolbar.notifications.length > 0" ng-click="navToolbar.showNotification()" style="background-color:rgb(251, 68, 130); position:fixed; font-size: small; right:90px; top:10px;"><strong>{{navToolbar.notifications.length}}</strong></md-badge>
             <div >
                 <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
                     Profile

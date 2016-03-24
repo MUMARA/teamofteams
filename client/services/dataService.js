@@ -139,26 +139,30 @@ angular.module('core')
                                             }
                                         });
                                     });
-                                    userData.push({
-                                        id: userdata.$id,
-                                        type: type,
-                                        groupsubgroup: group.key() + ' / ' + subgroup.key(),
-                                        groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
-                                        groupID: group.key(),
-                                        groupTitle: groupsubgroupTitle[group.key()],
-                                        subgroupID: subgroup.key(),
-                                        subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                        contactNumber: usermasterdata.contactNumber || '',
-                                        onlinestatus: false,
-                                        /*onlineweb: 0,
-                                        onlineios: 0,
-                                        onlineandroid: 0,*/
-                                        timestamp: timestamp,
-                                        message: message,
-                                        profileImage: usermasterdata['profile-image'] || '',
-                                        firstName: usermasterdata.firstName,
-                                        lastName: usermasterdata.lastName,
-                                        fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                    firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
+                                        // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
+                                        userData.push({
+                                            id: userdata.$id,
+                                            type: type,
+                                            groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                            groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
+                                            groupID: group.key(),
+                                            groupTitle: groupsubgroupTitle[group.key()],
+                                            subgroupID: subgroup.key(),
+                                            subgroupTitle: groupsubgroupTitle[subgroup.key()],
+                                            membershipNo : snapshot.getPriority() || '',
+                                            contactNumber: usermasterdata.contactNumber || '',
+                                            onlinestatus: false,
+                                            /*onlineweb: 0,
+                                            onlineios: 0,
+                                            onlineandroid: 0,*/
+                                            timestamp: timestamp,
+                                            message: message,
+                                            profileImage: usermasterdata['profile-image'] || '',
+                                            firstName: usermasterdata.firstName,
+                                            lastName: usermasterdata.lastName,
+                                            fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                        });
                                     });
                                 });
                             });

@@ -3,9 +3,7 @@
 	<div  layout-padding layout-fill flex>
 
      <div layout="row" layout-align="space-between center" style="font-size:large;" class="backColorWhite foreColorLightGrey">
-
-
-			      <h4 class="leftmargin20px nomargin">{{progressreport.activeTitle | uppercase}}</h4>
+            <h4 class="leftmargin20px nomargin">{{progressreport.activeTitle | uppercase}}</h4>
             <md-input-container md-no-float class="nopadding  nomargin" layout="row" layout-align="center">
                     <input type="text" id="#UserSearch" ng-model="progressreport.searchbox" aria-label="search dashboard" placeholder="e.g. member name" class="serachbox2">
             </md-input-container>
@@ -18,7 +16,7 @@
 					<md-progress-circular class="cirrcularGrey" ng-show="progressreport.loadingData" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
 					<md-progress-circular class="cirrcularGrey" ng-hide="progressreport.dailyProgressReport" md-mode="indeterminate" md-diameter="50"></md-progress-circular>
 				</div>
-		<div ng-if="progressreport.dailyProgressReport" class="viewHeight-170 vscroll">
+		<div ng-if="progressreport.dailyProgressReport && progressreport.dailyProgressReport.length > 0" class="viewHeight-170 vscroll">
 			<md-list>
 			  <md-list-item ng-repeat="report in progressreport.dailyProgressReport  | filter: {userID: progressreport.activeUser, fullName: progressreport.searchbox, subgroupID: subgroupID}  | orderBy: '-date' " layout="column" class="md-whiteframe-z2">
 				<div layout="row" layout-fill layout-margin layout-align="space-between center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">

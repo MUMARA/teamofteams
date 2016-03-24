@@ -43,14 +43,14 @@
               groupService.setActivePanel('collaborator');
             }
             that.panel.subgroupID = subgroupID;
-            if(that.panel.subgroupID){
-                $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {groupID: that.groupID, subgroupID: that.panel.subgroupID});
-                // $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), {docID: "Team of Teams Information"});
-                //CollaboratorService.CreateDocument('Team of Teams Information',that.panel.groupID,that.panel.subgroupID)
+            if (that.panel.subgroupID) {
+                CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
+                    $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId });
+                })
             } else {
-                $state.go('user.group.' + (that.panel.active || 'activity'),  {groupID: that.groupID, subgroupID: that.panel.subgroupID});
-                // $state.go('user.group.' + (that.panel.active || 'activity'),  {docID: "Team Information"});
-                //CollaboratorService.CreateDocument('Team Information',that.panel.groupID)
+                CollaboratorService.getinitGroupDocument(that.groupID, function(docId) {
+                    $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID, docID: docId });
+                });
             }
         };
 
@@ -70,7 +70,8 @@
             that.errorMsg = false;
             that.reqObj = {
                 groupID: that.groupID,
-                message: ""
+                message: "Please add me in your Team.",
+                membershipNo: ""
             };
             if (that.subgroupID) {
                 firebaseService.getRefSubGroupsNames().child(that.groupID).child(that.subgroupID).once('value', function(subg){
@@ -81,9 +82,9 @@
                             } else {
                                 that.reqObj.subgroupID = subg.key();
                                 that.reqObj.subgrouptitle = (subg.val() && subg.val().title) ? subg.val().title : false;
-                                loadGroup(function(){
+                                loadGroup(function() {
                                     that.errorMsg = "You have to be Member of Team before access";
-                                })
+                                });
                             }
                         });
                     } else {
@@ -91,7 +92,7 @@
                     }
                 });
             } else {
-                checkGroup()
+                checkGroup();
             }
         }
         function loadGroup (cb) {
@@ -99,6 +100,7 @@
                 if (grp.val()) {
                     that.group = {};
                     that.group.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
+                    that.reqObj.grouptitle = (grp.val() && grp.val().title) ? grp.val().title : false;
                     that.group.addresstitle = (grp.val() && grp.val()['address-title']) ? grp.val()['address-title'] : false;
                     that.group.groupImgUrl = (grp.val() && grp.val().groupImgUrl) ? grp.val().groupImgUrl : false;
                     that.group.ownerImgUrl = (grp.val() && grp.val().ownerImgUrl) ? grp.val().ownerImgUrl : false;
@@ -108,7 +110,7 @@
                 }
             });
         }
-        function checkGroup () {
+        function checkGroup() {
             if (that.groupID) {
                 loadGroup(function(){
                     firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups){
@@ -128,12 +130,12 @@
                             that.errorMsg = "You have to be Member of Team before access";
                         } else {
                             if (that.isMember) {
-                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo){
+                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo) {
                                     that.group.onlinemember = (groupinfo.val() && groupinfo.val().count) ? groupinfo.val().count : 0;
-                                })
-                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo){
+                                });
+                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo) {
                                     that.group.members = groupinfo.val() ? groupinfo.val() : 0;
-                                })
+                                });
                             }
                             firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
                                 for (var subgroup in subgroups.val()) {
@@ -150,18 +152,31 @@
                                         that.isMember = true;
                                     }
                                     if (that.isMember) {
-                                        firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).on('value', function(subgroupData){
+                                        firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).on('value', function(subgroupData) {
                                             var subgroup = subgroupData.val();
                                             subgroup['$id'] = subgroupData.key();
                                             if (that.subgroups.length > 0) {
-                                                that.subgroups.forEach(function(subgrp, indx){
-                                                    if (subgrp.$id === subgroupData.key()) {
-                                                        subgrp = subgroup
-                                                    }
-                                                    if (that.subgroups.length === (indx + 1) ) {
-                                                        that.subgroups.push(subgroup);
-                                                    }
-                                                });
+                                                for (var i = 0; i <= that.subgroups.length; i++) {
+                                                        if (that.subgroups[i].$id === subgroupData.key()) {
+                                                            that.subgroups[i] = subgroup;
+                                                            return false;
+                                                        }
+                                                        if (i + 1 == that.subgroups.length) {
+                                                            that.subgroups.push(subgroup);
+                                                        }
+                                                } //for loop
+                                            // that.subgroups.forEach(function(subgrp, indx) {
+                                            //     console.log('watch 3', subgrp);
+                                            //     console.log('watch 3 b', subgroupData.key());
+                                            //         if (subgrp.$id === subgroupData.key()) {
+                                            //             console.log('watch 4');
+                                            //             subgrp = subgroup;
+                                            //         }
+                                            //         if (that.subgroups.length === (indx + 1)) {
+                                            //             console.log('watch 5');
+                                            //             that.subgroups.push(subgroup);
+                                            //         }
+                                            //     });
                                             } else {
                                                 that.subgroups.push(subgroup);
                                             }

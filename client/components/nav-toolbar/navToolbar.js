@@ -9,16 +9,16 @@
       };
     })
 
-    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$interval','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $interval, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
             var self = this;
-            self.show = false;
+            self.displayNotificationBox = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
-            this.notifications = []
+            this.notifications = [];
            //filter Array in reverse
 
             /*VM properties*/
@@ -33,8 +33,8 @@
             this.groups = {};
             this.ListGroupSubGroup = [];
             this.subgroups = [];
-            this.filteredGroups;
-            this.groupObj1;
+            this.filteredGroups = null;
+            this.groupObj1 = null;
             this.currentLocation = {};
             //this.userObj2;
             this.switchCheckIn = false;
@@ -55,33 +55,37 @@
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart
+            this.quizStart = quizStart;       
 
-            //   notification activities
-            self.showNotification = function(){
-                self.show = !self.show;
+            this.progressReport = function() {
+                $mdSidenav('right').toggle().then(function() {
+                    //self.openNav = !self.openNav;
+                });
             };
-
-            this.progressReport = function(){
-              $mdSidenav('right').toggle().then(function(){
-                //self.openNav = !self.openNav;
-              });
-            }
             //#document.onkey
             this.count = function(e){
               console.log(document);
               console.log(e);
-            }
+            };
                 // alert(this.test)
             this.setFocus = function() {
                 document.getElementById("#GroupSearch").focus();
-            }
+            };
 
             function quizStart() {
                 // console.log('done')
                 // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
-                $state.go('user.quiz', {userID: userService.getCurrentUser().userID})
+                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
             }
+
+            //moment.js
+            this.returnMoment = function (timestamp) {
+                if (timestamp) {
+                    return moment().to(timestamp);
+                } else {
+                    return '';
+                }
+            };
 
             //this.userObj = $firebaseObject(firebaseService.getRefUsers().child(userID))
 
@@ -150,15 +154,15 @@
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
-                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
-                        self.showUrlObj.subgroupTitle = snapshot.val()
-                    })
-                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
-                        self.showUrlObj.groupTitle = snapshot.val()
-                    })
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot) {
+                        self.showUrlObj.groupTitle = snapshot.val();
+                    });
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot) {
+                        self.showUrlObj.subgroupTitle = snapshot.val();
+                    });
                     // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
-            })
+            });
 
             checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('child_changed', function(snapshot, prevChildKey) {
                 // console.log(snapshot.val());
@@ -209,50 +213,50 @@
                 return dist;
             };
 
-            //Show Dailogue Box for Daily Report Questions -- START --
-            var html = "<md-dialog aria-label=\"Daily Report\" ng-cloak> <form> <md-toolbar> <div class=\"md-toolbar-tools\"> <h2>Daily Progress Report</h2> <span flex></span> </div> </md-toolbar> <md-dialog-content> <div class=\"md-dialog-content\"> <h2>Questions List</h2> <p ng-repeat=\"(id, name) in questions\"> <strong>*</strong> {{name}} </p> <div layout=\"row\"> <md-input-container flex> <label>Please write...</label><textarea ng-model=\"reportText\"></textarea></md-input-container> </div> </div> </md-dialog-content> <md-dialog-actions layout=\"row\"> <span flex></span> <md-button ng-click=\"cancel('not useful')\"> Later </md-button> &nbsp; <md-button ng-click=\"report()\" style=\"margin-right:20px;\"> Submit </md-button> </md-dialog-actions> </form> </md-dialog>";
-            self.showAdvanced = function(ev) {
-                //var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
-                $mdDialog.show({
-                  controller: DailyReportController,
-                  // templateUrl: 'http://yahoo.com',
-                  template: html,
-                  //parent: angular.element(document.body),
-                  targetEvent: ev,
-                  locals: { questions: self.subGroupPolicy.dailyReportQuestions},
-                  clickOutsideToClose:false,
-                  //fullscreen: useFullScreen
-                })
-                .then(function(reportAnswer) {
+            // //Show Dailogue Box for Daily Report Questions -- START --
+            // var html = "<md-dialog aria-label=\"Daily Report\" ng-cloak> <form> <md-toolbar> <div class=\"md-toolbar-tools\"> <h2>Daily Progress Report</h2> <span flex></span> </div> </md-toolbar> <md-dialog-content> <div class=\"md-dialog-content\"> <h2>Questions List</h2> <p ng-repeat=\"(id, name) in questions\"> <strong>*</strong> {{name}} </p> <div layout=\"row\"> <md-input-container flex> <label>Please write...</label><textarea ng-model=\"reportText\"></textarea></md-input-container> </div> </div> </md-dialog-content> <md-dialog-actions layout=\"row\"> <span flex></span> <md-button ng-click=\"cancel('not useful')\"> Later </md-button> &nbsp; <md-button ng-click=\"report()\" style=\"margin-right:20px;\"> Submit </md-button> </md-dialog-actions> </form> </md-dialog>";
+            // self.showAdvanced = function(ev) {
+            //     //var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+            //     $mdDialog.show({
+            //       controller: DailyReportController,
+            //       // templateUrl: 'http://yahoo.com',
+            //       template: html,
+            //       //parent: angular.element(document.body),
+            //       targetEvent: ev,
+            //       locals: { questions: self.subGroupPolicy.dailyReportQuestions},
+            //       clickOutsideToClose:false,
+            //       //fullscreen: useFullScreen
+            //     })
+            //     .then(function(reportAnswer) {
 
-                    //save report in firebase
-                    firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').push({
-                        date: firebaseTimeStamp,
-                        answer: reportAnswer,
-                        questions: self.subGroupPolicy.dailyReportQuestions
-                    })
+            //         //save report in firebase
+            //         firebaseService.getRefMain().child('daily-progress-report-by-users').child('user').child('group').child('subgroup').push({
+            //             date: firebaseTimeStamp,
+            //             answer: reportAnswer,
+            //             questions: self.subGroupPolicy.dailyReportQuestions
+            //         });
 
-                    alert(reportAnswer);
-                    self.reportAnswer = 'You said the information was "' + reportAnswer + '".';
-                }, function() {
-                    // alert('Cancel - Later');
-                    $scope.status = 'You cancelled the dialog.';
-                });
-            };
+            //         alert(reportAnswer);
+            //         self.reportAnswer = 'You said the information was "' + reportAnswer + '".';
+            //     }, function() {
+            //         // alert('Cancel - Later');
+            //         $scope.status = 'You cancelled the dialog.';
+            //     });
+            // };
 
-            function DailyReportController($scope, $mdDialog, questions) {
-              $scope.questions = questions;
-              $scope.hide = function() {
-                $mdDialog.hide();
-              };
-              $scope.cancel = function() {
-                $mdDialog.cancel();
-              };
-              $scope.report = function() {
-                $mdDialog.hide($scope.reportText);
-              };
-            }
-            //Show Dailogue Box for Daily Report Questions -- END --
+            // function DailyReportController($scope, $mdDialog, questions) {
+            //   $scope.questions = questions;
+            //   $scope.hide = function() {
+            //     $mdDialog.hide();
+            //   };
+            //   $scope.cancel = function() {
+            //     $mdDialog.cancel();
+            //   };
+            //   $scope.report = function() {
+            //     $mdDialog.hide($scope.reportText);
+            //   };
+            // }
+            // //Show Dailogue Box for Daily Report Questions -- END --
 
             function updateStatus(group, checkoutFlag, event) {
                 var groupObj = {};
@@ -260,20 +264,35 @@
                 if(group){
                     groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
                 } else {
-                     groupObj = {
+                    groupObj = {
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    }
+                    };
                 }
-                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject) {
                     if(result){
                         self.checkinSending = false;
-                        if(checkoutFlag){
+                        if (checkoutFlag) {
+                            //when successfully checkout then add activity Stream
+                            //for subgroup activity stream record -- START --
+                            var type = 'subgroup';
+                            var targetinfo = {id: groupObj.subgroupId, url: groupObj.groupId+'/'+groupObj.subgroupId, title: self.showUrlObj.subgroupTitle, type: 'subgroup-checkout' };
+                            var area = {type: 'subgroup-checkout'};
+                            var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
+                            var memberuserID = userID;
+                            var _object = null;
+                            //for group activity record
+                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+                            //for subgroup activity stream record -- END --
+
+                            //showing toaster of checkout
                             messageService.showSuccess('Checkout Successfully!');
+
+                            //checking is report is submitted or not.. if not then open side navbar for getting progress report
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
-                                var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId }
+                                var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId };
                                 self.dailyProgressReport = ProgressReportService.getSingleSubGroupReport(userObj, groupObj.groupId, groupObj.subgroupId);
 
                                 //open side nav bar for getting progress report
@@ -286,14 +305,29 @@
                                 // self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {
+                            //when successfully checkin successfully
+
                             self.checkinSending = false;
+
+                            //add activity Stream
+                            //for subgroup activity stream record -- START --
+                            var _type = 'subgroup';
+                            var _targetinfo = {id: group.subgroupId, url: group.pId+'/'+group.subgroupId, title: group.subgroupTitle, type: 'subgroup-checkin' };
+                            var _area = {type: 'subgroup-checkin'};
+                            var _group_id = group.pId+'/'+group.subgroupId;
+                            var _memberuserID = userID;
+                            var __object = null;
+                            //for group activity record
+                            activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuserID, __object);
+                            //for subgroup activity stream record -- END --
+
                             messageService.showSuccess('Checkin Successfully!');
-                        }
+                        } // else checkoutFlag 
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
                     }
-                });
+                }); // checkinService.ChekinUpdateSatatus
             }
 
             function updateStatus1(group, checkoutFlag, event) {
@@ -486,7 +520,7 @@
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    }
+                    };
                 }
 
                 // //checking daily progress report is exists or not -- START --
@@ -621,7 +655,7 @@
             }
             function shiftToUserPage() {
                 // $location.path('/user/' + userService.getCurrentUser().userID)
-                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
+                $state.go('user.dashboard', { userID: userService.getCurrentUser().userID });
             }
             this.checkTeamAvailable = function () {
                 if (self.groups.length === 0) {
@@ -631,22 +665,22 @@
                 }
             };
             this.checkinClick = function(event) {
-                self.show = false;
+                self.displayNotificationBox = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
-                    return
+                    return;
                 }
                 if (self.groups.length === 0) {
-                    return
+                    return;
                 }
                 if (!self.switchMsg) {
                     if (self.checkout) {
                         updateStatus(false, true, event);
                         //self.updateStatus(self.showUrlObj.group, true)
-                        return
+                        return;
                     }
                 }
-                self.switchMsg = !self.switchMsg
+                self.switchMsg = !self.switchMsg;
                 self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId) {
                     var tmp = {
@@ -661,11 +695,11 @@
                             temp.subgroupId = i;
                             temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
                             temp.data = group[i];
-                            tmp.subGroups.push(temp)
+                            tmp.subGroups.push(temp);
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);
-                })
+                });
             };
             function showSubGroup(group, pId) {
                 self.subgroups = [];
@@ -675,7 +709,7 @@
                         temp.pId = group.$id; // group Name == pId
                         temp.subgroupId = i;
                         temp.data = group[i];
-                        self.subgroups.push(temp)
+                        self.subgroups.push(temp);
                     }
                 }
             }
@@ -697,9 +731,9 @@
                     self.filteredGroups = Firebase.getAsArray(firebaseService.getRefUserSubGroupMemberships().child(userID));
                 }
 
-                return
-                self.filteredGroups
-                self.groupObj1;
+                return;
+                // self.filteredGroups;
+                // self.groupObj1;
             }
             function PersonalSetting() {
                 // $location.path('/user/' + userID + '/personalSettings')
@@ -724,10 +758,24 @@
                 });
             };
 
+            // ## Notification -- START
+
             //getting notifications
             activityStreamService.init();
             this.notifications = activityStreamService.getActivities();
-        }
-    ]);
 
+            //   enable/disable notificaiton box and also on click will set seen notfication
+            self.showNotification = function() {
+                self.displayNotificationBox = !self.displayNotificationBox;
+                if (!self.displayNotificationBox) {
+
+                    //has seen activities..... update timestamp of seen
+                    activityStreamService.activityHasSeen();
+                }
+            };
+
+            // ## Notification -- END
+
+        } //NavToolbarController
+    ]);
 })();
