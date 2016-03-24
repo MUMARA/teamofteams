@@ -3,9 +3,9 @@
 
     angular
         .module('app.group')
-        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
+        .controller('GroupController', ['activityStreamService', 'firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
 
-    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
+    function GroupController(activityStreamService, firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
         var that = this;
         //adminof subgroup checkin member
         this.openSetting = function () {
@@ -56,7 +56,8 @@
 
         init();
 
-        function init () {
+        function init() {
+            console.log('watch 1: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
             that.isOwner = false;
             that.isMember = false;
             that.isAdmin = false;
@@ -78,7 +79,7 @@
                     if (subg.val()) {
                         firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgrp){
                             if (subgrp.val() && subgrp.val()['membership-type'] > 0) {
-                                checkGroup()
+                                checkGroup();
                             } else {
                                 that.reqObj.subgroupID = subg.key();
                                 that.reqObj.subgrouptitle = (subg.val() && subg.val().title) ? subg.val().title : false;
@@ -112,17 +113,17 @@
         }
         function checkGroup() {
             if (that.groupID) {
-                loadGroup(function(){
-                    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups){
+                loadGroup(function() {
+                    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups) {
                         if (groups.val() && groups.val()['membership-type'] == 1) {
                             that.isOwner = true;
                             that.isAdmin = true;
                             that.isMember = true;
-                            that.adminOf = "Group"
+                            that.adminOf = "Group";
                         } else if (groups.val() && groups.val()['membership-type'] == 2) {
                             that.isAdmin = true;
                             that.isMember = true;
-                            that.adminOf = "Group"
+                            that.adminOf = "Group";
                         } else if (groups.val() && groups.val()['membership-type'] == 3) {
                             that.isMember = true;
                         }
@@ -137,7 +138,7 @@
                                     that.group.members = groupinfo.val() ? groupinfo.val() : 0;
                                 });
                             }
-                            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
+                            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups) {
                                 for (var subgroup in subgroups.val()) {
                                     if (subgroups.val()[subgroup]['membership-type'] == 1) {
                                         that.isOwner = true;
@@ -157,28 +158,26 @@
                                             subgroup['$id'] = subgroupData.key();
                                             if (that.subgroups.length > 0) {
                                                 for (var i = 0; i <= that.subgroups.length; i++) {
-                                                        if (that.subgroups[i].$id === subgroupData.key()) {
-                                                            that.subgroups[i] = subgroup;
-                                                            return false;
-                                                        }
-                                                        if (i + 1 == that.subgroups.length) {
-                                                            that.subgroups.push(subgroup);
-                                                        }
+                                                    if (that.subgroups[i].$id === subgroupData.key()) {
+                                                        that.subgroups[i] = subgroup;
+                                                        return false;
+                                                    }
+                                                    if (i + 1 == that.subgroups.length) {
+                                                        that.subgroups.push(subgroup);
+                                                        subgroupChildRemovedEvent(subgroup.$id);
+                                                    }
                                                 } //for loop
-                                            // that.subgroups.forEach(function(subgrp, indx) {
-                                            //     console.log('watch 3', subgrp);
-                                            //     console.log('watch 3 b', subgroupData.key());
-                                            //         if (subgrp.$id === subgroupData.key()) {
-                                            //             console.log('watch 4');
-                                            //             subgrp = subgroup;
-                                            //         }
-                                            //         if (that.subgroups.length === (indx + 1)) {
-                                            //             console.log('watch 5');
-                                            //             that.subgroups.push(subgroup);
-                                            //         }
-                                            //     });
+                                                // that.subgroups.forEach(function(subgrp, indx) {
+                                                //         if (subgrp.$id === subgroupData.key()) {
+                                                //             subgrp = subgroup;
+                                                //         }
+                                                //         if (that.subgroups.length === (indx + 1)) {
+                                                //             that.subgroups.push(subgroup);
+                                                //         }
+                                                //     });
                                             } else {
                                                 that.subgroups.push(subgroup);
+                                                subgroupChildRemovedEvent(subgroup.$id); 
                                             }
                                         });
                                     }
@@ -187,8 +186,19 @@
                             });
                         }
                     });
-                })
+                });
             }
-        }
+        } //checkGroup
+        function subgroupChildRemovedEvent(subgroup) {
+            firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).off('value');
+            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(subgroup).on('child_removed', function(Oldsnapshot) {
+                console.log('watch 2: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
+                that.subgroups.forEach(function(v) {
+                    if (v.$id == subgroup) {
+                        that.subgroups.splice(v, 1);
+                    }
+                });
+            });
+        } //subgroupChildRemovedEvent
     }
 })();
