@@ -177,6 +177,13 @@ angular.module('core')
 
             function setUserGroups () {
                 firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
+                	firebaseService.getRefUserGroupMemberships().child(userID).child(group.key()).on('child_removed', function() {
+                		userGroups.forEach(function(val,indx) {
+                            if(val.groupID === group.key()) {
+                                userGroups.splice(indx);
+                            }
+                        });
+                	});
                     firebaseService.getRefGroups().child(group.key()).on('value', function(snapshot) {
                         var groupmasterdata = snapshot.val();
                         var eflag = true;
