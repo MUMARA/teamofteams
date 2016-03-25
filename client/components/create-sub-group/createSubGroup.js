@@ -113,20 +113,20 @@
         };
         this.openEditGroup = function() {
             // $location.path('user/group/' + groupID + '/edit-group');
-            $state.go('user.edit-group', {groupID: groupID})
-        }
+            $state.go('user.edit-group', { groupID: groupID })
+        };
         this.openGeoFencingPage = function() {
             // $location.path('/user/group/' + groupID + '/geoFencing');
             $state.go('user.geo-fencing', {groupID: groupID})
         };
         this.subgroupPage = function() {
             // $location.path('user/group/' + this.groupid + '/subgroup');
-            $state.go('user.subgroup', {groupID: groupID})
-        }
+            $state.go('user.subgroup', { groupID: groupID })
+        };
         this.openPolicyPage = function() {
             // $location.path('/user/group/' + groupId + '/geoFencing');
-            $state.go('user.policy', {groupID: groupID})
-        }
+            $state.go('user.policy', { groupID: groupID })
+        };
 
 
         this.veiwSubgroup = function(subgroupData, index) {
@@ -412,7 +412,7 @@
                     var unlistedMembersArray = response.unlistedMembersArray,
                         notificationString;
 
-                    if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                    if (unlistedMembersArray &&  that.membersArray && unlistedMembersArray.length === that.membersArray.length) {
                         notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
                         messageService.showFailure(notificationString);
                     } else if (unlistedMembersArray.length) {
@@ -521,28 +521,28 @@
 
         this.deleteAdminMember = function(admin){
            var adminMemberId = '';
-           that.submembers.forEach(function(val,indx){
-                if(val.userSyncObj.email == admin.email && val.membershipType != 1){
-                    createSubGroupService.DeleteUserMemberShip(val.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
+        //    that.submembers.forEach(function(val,indx){
+        //         if(val.userSyncObj.email == admin.userSyncObj.email && val.membershipType != 1){
+                    createSubGroupService.DeleteUserMemberShip(admin.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
 
                     //publish an activity stream record -- START --
                     var type = 'subgroup';
                     var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
                     var area = {type: 'subgroup-admin-removed' };
                     var group_id = groupID+'/'+that.activeID;
-                    var memberuserID = val.userSyncObj.$id;
+                    var memberuserID = admin.userSyncObj.$id;
                     //for group activity record
                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                     //for group activity stream record -- END --
 
-                }
-           });
+                // }
+        //    });  //that.submembers.forEach
 
-           that.selectedAdminArray.forEach(function(val, indx){
-                if(val.email == admin.email && val.membershipType != 1){
-                    that.selectedAdminArray.splice(indx, 1);
-                }
-           });
+        //    that.selectedAdminArray.forEach(function(val, indx){
+        //         if(val.email == admin.email && val.membershipType != 1){
+        //             that.selectedAdminArray.splice(indx, 1);
+        //         }
+        //    });
 
        };
 

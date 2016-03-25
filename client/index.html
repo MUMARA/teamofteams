@@ -14,6 +14,10 @@
 <body ng-app="myApp" ng-controller="AppController as app">
     <ui-view name="nav" ></ui-view>
     <ui-view name="main"></ui-view>
+    <!-- jsPDF script -->
+    <script src="https://cdn.rawgit.com/hongru/canvas2image/master/canvas2image.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script src="http://parall.ax/parallax/js/jspdf.js"></script>
     <!-- Angular -->
     <script src="bower_components/angular/angular.js"></script>
     <!-- UI Router -->
@@ -63,15 +67,21 @@
     <script src="bower_components/angular-filter/dist/angular-filter.js"></script>
     <!-- Date & Time Moment Library -->
     <script src="bower_components/moment/moment.js"></script>
+    <!-- RxJs Library -->
+    <script src="bower_components/rxjs/dist/rx.all.js"></script>
+    <!-- Js Barcode Library -->
+    <script   src="https://code.jquery.com/jquery-2.2.1.js"   integrity="sha256-eNcUzO3jsv0XlJLveFEkbB8bA7/CroNpNVk3XpmnwHc="   crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/lindell/JsBarcode/master/JsBarcode.all.min.js"></script>
+    <!-- <script src="bower_components/JsBarcode/JsBarcode.js"></script> -->
     <!-- Collaborator -->
     <link rel="stylesheet" href="lib/collaborator/codemirror/lib/codemirror.css">
     <link rel="stylesheet" href="lib/collaborator/firepad/dist/firepad.css">
     <link rel="stylesheet" href="css/collaborator.css">
     <script src="lib/collaborator/codemirror/lib/codemirror.js"></script>
+    <script src="lib/collaborator/firepad/dist/firepad.js"></script>
     <script src="lib/collaborator/javascript/javascript.js"></script>
     <script src="lib/collaborator/swift/swift.js"></script>
     <script src="lib/collaborator/clike/clike.js"></script>
-    <script src="lib/collaborator/firepad/dist/firepad.js"></script>
 
     <script src="lib/collaborator/bower_components/angular-file-saver/dist/angular-file-saver.bundle.min.js"></script>
     <!-- Custom Libraries Start -->

@@ -334,15 +334,15 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
-                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot) {
                                                         var countsubgroup = snapshot.val()["subgroups-count"] + 1;
                                                         // console.log(countsubgroup, 'testing')
-                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function() {
                                                             if (error) {
                                                                 errorHandler();
                                                             }
-                                                        })
-                                                    })
+                                                        });
+                                                    });
                                                     // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
@@ -421,7 +421,7 @@ angular.module('core')
                                                                 })
                                                                 .catch(function(d) {
                                                                     //debugger;
-                                                                })
+                                                                });
                                                             // for (var member in mems) {
                                                             //
                                                             //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
@@ -950,7 +950,9 @@ angular.module('core')
                             if (err) {
                                 errorHandler();
                             } else {
-                                firebaseService.getRefGroupMembers().child(groupID).child(userID).setPriority(requestedMember.membershipNo);
+                                if (requestedMember.membershipNo) {
+                                    firebaseService.getRefGroupMembers().child(groupID).child(userID).setPriority(requestedMember.membershipNo);
+                                }
                                 //step1: change membership-type of user in user-membership list
                                 firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
                                     .set(userMembershipObj[userID], function(err) {
@@ -1230,6 +1232,42 @@ angular.module('core')
 
                     //update group meta-data
                     var groupDataRef = firebaseService.getRefGroups().child(groupID);
+                    groupDataRef.once('value', function(snapshot) {
+                        var updateObj = {};
+                        var dataObject = snapshot.val();
+
+                        if (checkinObj && checkinObj.type == 1) {
+                            updateObj['members-checked-in'] = {
+                                   count: dataObject['members-checked-in'].count - 1
+                              };
+                          }
+
+
+                        // if (checkinObj && checkinObj.type == 1) {
+                        //     updateObj['members-checked-in'] = {
+                        //         count: dataObject['members-checked-in'].count - 1
+                        //     };
+                        // }
+
+
+                        updateObj['members-count'] = dataObject['members-count'] - 1;
+                        groupDataRef.update(updateObj, function(err) {
+                            if (err) {
+                                defer.reject();
+                            } else {
+                                defer.resolve();
+                            }
+                        });
+                    });
+
+                    return defer.promise;
+                },
+                asyncUpdateSubGroupDataForRemoveUser: function(checkinObj, groupID, userID) {
+                    var defer = $q.defer();
+
+                    // var groupDataRef = firebaseService.getRefUserSubGroupMemberships().child(userID).child(groupID).once('value', function(snapshot){});
+                    //update group meta-data
+                    var groupDataRef = firebaseService.getRefSubGroups().child(groupID);
                     groupDataRef.once('value', function(snapshot) {
                         var updateObj = {};
                         var dataObject = snapshot.val();

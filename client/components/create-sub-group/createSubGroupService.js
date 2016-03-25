@@ -104,7 +104,7 @@
                             .then(function(data) {
                                 var reader = new FileReader();
                                 reader.onload = function() {
-                                    defer.resolve(reader.result)
+                                    defer.resolve(reader.result);
                                 };
                                 reader.readAsDataURL(data.data.profilePicture);
 
@@ -135,11 +135,16 @@
 
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
                                 subgroupNameRef.title = subgroupRef.title;
+                                subgroupNameRef.subgroupImgUrl = subgroupInfo.imgLogoUrl || '';
+                                subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();
                                         //groupForm.$submitted = false;
                                         //$rootScope.newImg = null;
+
+                                        //update subgroup-policy
+                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );
 
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
@@ -151,12 +156,12 @@
                                         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                         //for group activity stream record -- END --
 
-                                        messageService.showSuccess('Team Edited Successfully')
+                                        messageService.showSuccess('Team Edited Successfully');
 
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");
-                                    })
+                                    });
                             }, function(group) {
                                 cb();
                                 // groupForm.$submitted = false;
@@ -319,14 +324,23 @@
                         // });
 
                         firebaseService.getRefMain().child("user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID + "/").remove(function(err) {
-                            // console.log(err);
+                            console.log(err);
 
                             firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
-                                // console.log(err);
-
-                                firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
-                                    // console.log(err);
-                                });
+                                console.log(err);
+                                if (!submembers) {
+                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").once('value', function(snapshot){
+                                        submembers = snapshot.val();
+                                        console.log('testest', submembers)
+                                        firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                            console.log(err);
+                                        });
+                                    });
+                                } else {
+                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                        console.log(err);
+                                    });
+                                }
 
 
 
