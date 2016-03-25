@@ -180,7 +180,7 @@
                                                 //     });
                                             } else {
                                                 that.subgroups.push(subgroup);
-                                                subgroupChildRemovedEvent(subgroup.$id); 
+                                                subgroupChildRemovedEvent(subgroup.$id);
                                             }
                                         });
                                     }

@@ -1265,7 +1265,7 @@ angular.module('core')
                 asyncUpdateSubGroupDataForRemoveUser: function(checkinObj, groupID, userID) {
                     var defer = $q.defer();
 
-                    var groupDataRef = firebaseService.getRefUserSubGroupMemberships().child(userID).child(groupID).once('one', function(snapshot));
+                    // var groupDataRef = firebaseService.getRefUserSubGroupMemberships().child(userID).child(groupID).once('value', function(snapshot){});
                     //update group meta-data
                     var groupDataRef = firebaseService.getRefSubGroups().child(groupID);
                     groupDataRef.once('value', function(snapshot) {

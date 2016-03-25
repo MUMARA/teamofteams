@@ -8,11 +8,10 @@
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
-    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'activityStreamService', 'firebaseService', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
+    function UserSettingController($rootScope, messageService, $stateParams, activityStreamService, firebaseService, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
 
         var that = this;
-        var user = userService.getCurrentUser();
         this.hide = hide;
         var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
@@ -106,7 +105,23 @@
         function changeMemberRole(newType, member) {
             groupFirebaseService.changeMemberRole(newType, member, that.group, user)
                 .then(function(res) {
-                    messageService.showSuccess("Changed Role Successfully");
+                    if (newType) {
+                        messageService.showSuccess("Changed Role Successfully");
+                    } else {
+                        firebaseService.getRefUserSubGroupMemberships().child(member.userID).child(groupID).once('value', function(snapshot) {
+                            for (var key in snapshot.val()) {
+                                createSubGroupService.DeleteUserMemberShip(member.userID, groupID, key, '');
+                                var type = 'subgroup';
+                                var targetinfo = {id: key, url: groupID+'/'+key, title: key, type: 'subgroup' };
+                                var area = {type: 'subgroup-member-removed' };
+                                var group_id = groupID+'/'+key;
+                                var memberuserID = member.userID;
+                                //for group activity record
+                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                            }
+                            messageService.showSuccess("Membership Deleted Successfully");
+                        })
+                    }
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });
