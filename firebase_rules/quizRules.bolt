@@ -22,7 +22,7 @@ function memberTypeShouldBe(that , num){
     return that  == num;
 }
 
-type QuestionBankMemberType extends Number {
+type QuestionBankMember extends Number {
 
     validate(){
         memberTypeShouldBe(this , 1) || memberTypeShouldBe(this , 2); // Owner = 1, Admin = 2
@@ -30,8 +30,8 @@ type QuestionBankMemberType extends Number {
 
 }
 
-function isQuestionBankOwner(questionBankMemberType) {
-    return memberTypeShouldBe(questionBankMemberType , 1)
+function isQuestionBankOwner(questionBankMember) {
+    return memberTypeShouldBe(questionBankMember , 1)
 }
 
 function isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, value){
@@ -80,7 +80,7 @@ path /question-bank-memberships/{questionBankUniqueID}/{UserID} is QuestionBankM
 }
 
 type QuestionBankMembership {
-    "member-type" : QuestionBankMemberType,
+    "member-type" : QuestionBankMember,
     timestamp: CurrentTimestamp                     //MemberType type extends globally
 }
 
@@ -93,10 +93,9 @@ path /question-bank/{questionBankUniqueID} is QuestionBank {
   create() { isSignedIn() }
   update() { isQuestionBankOwnerCreating(UserID, this)  ||
              isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
-    /chapters/{chapterId} is ChapterAndTopicType {
-        /topics/{topicId} is ChapterAndTopicType {
-            /questions/{questionId} is QuestionType {
-               /options is String[] { }
+    /chapters/{chapterId} is ChapterAndTopic {
+        /topics/{topicId} is ChapterAndTopic {
+            /questions/{questionId} is Question {
             }
         }
     }
@@ -107,18 +106,25 @@ type QuestionBank {
     title    : String,
     desc     : String
 }
-type ChapterAndTopicType {
+type ChapterAndTopic {
     timestamp  : CurrentTimestamp,                   //Timestamp type extends globally
     title    : String,
     desc     : String
 }
 type Question {
    title: String,
-   type: OptionType, //QuestionTupe
+   type: QuestionType, //QuestionTupe
    html: String,
-  options: Option[] | Null,
-  questiones: Question[] | Null,
-  "discussion-html" : String
+   options: Option[] | Null,
+   questiones: QuestionSet[] | Null,
+   "discussion-html" : String
+}
+type QuestionSet {
+   title: String,
+   type: QuestionType, //QuestionTupe
+   html: String,
+   options: Option[] | Null,
+   "discussion-html" : String
 }
 type Option {
   "html": String,
@@ -133,11 +139,11 @@ function optionsTypeShouldBe(that , num) {
     return that == num
 }
 
-type OptionType extends Number{
+type QuestionType extends Number{
    validate() {
    optionsTypeShouldBe(this , 1 ) || optionsTypeShouldBe(this , 2 ) || optionsTypeShouldBe(this , 3 );
    }
-}1
+}
 
 
  //Discuss
@@ -162,10 +168,10 @@ type QuestionBankQuiz {
 //      Group Quizes
 //----------------------------------
 
-path /group-quizes/{groupID}/{quizId} is QuestionBankQuiz {
- read() { isSignedIn() &&  groupMemberShipAnyType($groupid) }
- create() { groupMemberShipAnyType($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
- update() { groupMemberShipAnyType($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
+path /group-quizes/{groupID}/{quizId} {
+ read() { isSignedIn() &&  groupMemberShipAny($groupid) }
+ create() { groupMemberShipAny($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
+ update() { groupMemberShipAny($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
           /options is String[] { }
 }
 
@@ -177,7 +183,7 @@ function isGroupMembersIdExist($groupid) {
   return prior(root['group-members'][$groupid][auth.uid] != null);
 }
 
-function groupMemberShipAnyType($groupid) {
+function groupMemberShipAny($groupid) {
     return prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() > 0)
  }
 
