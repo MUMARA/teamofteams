@@ -51,8 +51,8 @@
         </div>
 
         <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
-            {{navToolbar.showUrlObj.subgroupTitle}} /
-            {{navToolbar.showUrlObj.groupTitle}}
+            {{navToolbar.showUrlObj.groupTitle}} /
+            {{navToolbar.showUrlObj.subgroupTitle}}
         </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
             <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()">
@@ -75,8 +75,8 @@
                 </ng-md-icon>
                 <!-- Notification Start -->
                 <div style="position:relative;top: -35px;right: 15px">
-                    <md-card class="carrotImg" ng-show="navToolbar.show"><img src="img/carrot.svg"></md-card>
-                      <md-card class="toolbarListCard_MinHeight" ng-show="navToolbar.show">
+                    <md-card class="carrotImg" ng-show="navToolbar.displayNotificationBox"><img src="img/carrot.svg"></md-card>
+                      <md-card class="toolbarListCard_MinHeight" ng-show="navToolbar.displayNotificationBox">
                       <md-toolbar style="background-color: #E0E0E0; min-height:40px;" layout="row" layout-align="space-between center" layout-padding>
                           <strong class="foreColorDarkGrey" style="font-size: large;">Notifications</strong>
                       </md-toolbar>

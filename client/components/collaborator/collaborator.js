@@ -129,24 +129,26 @@
           subgroupID: that.subgroupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
+        // that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
+        console.log(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers").toString());
       } else {
         $state.go("user.group.collaborator", {
           groupID: that.groupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+        // that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
       }
 
-      that.allUsers.$loaded(function() {
-      });
+      // that.allUsers.$loaded(function() {
+      // });
     };
 
 
     function initiateFirepad(refArgument, arg) {
       var codeMirror = CodeMirror(document.getElementById('firepad'), {
         lineNumbers: that.mode == "Rich Text" ? false : true,
-        mode: that.mode
+        mode: that.mode,
+        lineWrapping: true
       });
       firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
         richTextShortcuts: that.isNormal,
@@ -194,24 +196,17 @@
       var updateDocument = {};
       if (that.subgroupID) {
         updateDocument["firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
-        // globalRef.child('firepad-subgroups-access/finalyear/morning/-KCJfxThRM2tRXE9q_Vh').on('child_added', function (snapshot) {
-        //  });
-        //that.allUsers = $firebaseObject(firepadRef.child("firepad-subgroups-rules/"+that.groupID+"/"+that.subgroupID+'/'+$stateParams.docID+"/allUsers")).$value;
         firepadRef.update(updateDocument, function(err) {
           if (err) {
           }
         })
       } else {
         updateDocument["firepad-groups-access/" + that.groupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
-        // globalRef.child('firepad-groups-access/finalyear/-KCJZdghiEKGV7C9NRfj').on('child_added', function (snapshot) {
-        //  });
-        //that.allUsers = $firebaseObject(firepadRef.child("firepad-groups-rules/"+that.groupID+"/"+$stateParams.docID+"/allUsers"));
         firepadRef.update(updateDocument, function(err) {
           if (err) {
           }
         })
       }
-      // that.backdrop = userStatus;
     };
     that.createDocument = function() {
       var firebaseLocalRef;
@@ -342,24 +337,8 @@
         });
       }
 
-      // that.allUsers = false;
       that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
     }
-
-    /* function getUserPermissions(userID) {
-       //var defered = $q.defer();
-
-       // firepadRef.once("value",function(snapshot){
-       //   if(that.allUsers){
-       //     that.backdrop = true;
-       //   }
-       // });
-       //$firebaseArray(firepadRef).$loaded().then(function(arr) {
-       //    cb(arr);
-       //  })
-       return firepadRef;
-         // return $firebaseArray(firepadRef);
-     }*/
 
     function permissions() {
 

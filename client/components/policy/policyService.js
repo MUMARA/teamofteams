@@ -128,30 +128,34 @@
 
                 var subgroupPolicyActivity = {};
 
-                //getting subgroups which are selected....
-                selectedTeams.forEach(function(val, indx){
-                    //add property hasPolicy in subgroupNames..
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
+                if (selectedTeams && selectedTeams.length > 0) {
+                    //getting subgroups which are selected....
+                    selectedTeams.forEach(function(val, indx) {
+                        //add property hasPolicy in subgroupNames..
+                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/hasPolicy"] = true;
+                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policyID"] = newPolicyKey;
+                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policy-title"] = obj['title'];                    
 
-                    //add policy id into subgroup node
-                    multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+                        //add policy id into subgroup node
+                        multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
 
-                    //for policy - group/subgroup activity record -- start --
-                    subgroupPolicyActivity[val.subgroupID] = {
-                        type: 'policy',
-                        targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
-                        area: {type: 'policy-assigned-team'},
-                        group_id: groupID+'/'+val.subgroupID,
-                        memberuser_id: null,
-                        object_is_Team: {   "type": 'subgroup',
-                                            "id": val.subgroupID, //an index should be set on this
-                                            "url": groupID+'/'+val.subgroupID,
-                                            "displayName": val.subgroupTitle
-                                        }
-                    };
-                    //for policy - group/subgroup activity record -- end --
+                        //for policy - group/subgroup activity record -- start --
+                        subgroupPolicyActivity[val.subgroupID] = {
+                            type: 'policy',
+                            targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
+                            area: {type: 'policy-assigned-team'},
+                            group_id: groupID+'/'+val.subgroupID,
+                            memberuser_id: null,
+                            object_is_Team: {   "type": 'subgroup',
+                                                "id": val.subgroupID, //an index should be set on this
+                                                "url": groupID+'/'+val.subgroupID,
+                                                "displayName": val.subgroupTitle
+                                            }
+                        };
+                        //for policy - group/subgroup activity record -- end --
 
-                }); //selectedTeams.forEach
+                    }); //selectedTeams.forEach
+                }
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {

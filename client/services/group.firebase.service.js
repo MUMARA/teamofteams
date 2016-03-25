@@ -334,15 +334,15 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
-                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot) {
                                                         var countsubgroup = snapshot.val()["subgroups-count"] + 1;
                                                         // console.log(countsubgroup, 'testing')
-                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function() {
                                                             if (error) {
                                                                 errorHandler();
                                                             }
-                                                        })
-                                                    })
+                                                        });
+                                                    });
                                                     // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
@@ -421,7 +421,7 @@ angular.module('core')
                                                                 })
                                                                 .catch(function(d) {
                                                                     //debugger;
-                                                                })
+                                                                });
                                                             // for (var member in mems) {
                                                             //
                                                             //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
