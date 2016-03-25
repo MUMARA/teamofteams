@@ -38,15 +38,15 @@
 
         $scope.addBook = addBook;
         $scope.createBook = createBook;
+        $scope.closeBook = closeBook;
         $scope.addChapter = addChapter;
         $scope.createChapter = createChapter;
         $scope.closeChapter = closeChapter;
         $scope.addTopic = addTopic;
         $scope.createTopic = createTopic;
         $scope.closeTopic = closeTopic;
-        $scope.closeBook = closeBook;
-        $scope.closeQuestion = closeQuestion;
         $scope.addQuestion = addQuestion;
+        $scope.closeQuestion = closeQuestion;
         $scope.editChapter = editChapter;
         $scope.hover = hover;
         $scope.editHover = editHover;
@@ -419,8 +419,8 @@
         }
 
         function showAttemptQuiz() {
-            $location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quiz-attempting');
-            document.getElementById('navBar').style.display = "none";
+            //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quiz-attempting');
+            //document.getElementById('navBar').style.display = "none";
         }
 
         /*  Selection  */
@@ -820,19 +820,13 @@
         }
 
         function createBook(bookForm, p) {
-            //alert('hi')
-            console.log($scope.imgLogoUrl);
-            console.log($rootScope.newImg);
+            addBook();
             $scope.temps = {
-
                 title: $scope.name,
                 description: $scope.desc,
                 //imgLogoUrl: $scope.imgLogoUrl || 'img/1angular.png'
                 imgLogoUrl: p
             };
-
-            console.log('tmp: ' + JSON.stringify($scope.temps));
-
             userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
                 'membership-type': 1
             });
@@ -840,17 +834,10 @@
                 "membership-type": 1
             });
             userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
-            console.log($scope.temps);
-
-
             if ($rootScope.newImg) {
                 var x = utilService.base64ToBlob($rootScope.newImg);
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                console.log(x);
-                console.log(temp);
-                console.log(mimeType);
-                console.log($scope.bookID);
                 $scope.saveFile(x, mimeType, $scope.bookID)
                     .then(function (url) {
                         // $scope.temps.imgLogoUrl = url + '?random=' + new Date();
@@ -862,7 +849,6 @@
                             "membership-type": 1
                         });
                         userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
-                        console.log($scope.temps);
 
                         // quizService.setBookAfterCreation($scope.bookID)
                         // ref.child($scope.bookID).set(temp);
@@ -883,10 +869,10 @@
 
         }
 
-        $scope.showAdvanced1 = function (ev) {
+        $scope.selectBookPoster = function (ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
-                templateUrl: 'directives/dilogue.tmpl.html',
+                templateUrl: 'directives/dilogue2.tmpl.html',
                 targetEvent: ev
             }).then(function (picture) {
                 $rootScope.newImg = picture;
@@ -899,11 +885,6 @@
         };
 
         $scope.saveFile = function (file, type, quizID) {
-
-            console.log(file);
-            console.log(type);
-            console.log(quizID);
-
             var defer = $q.defer();
             var xhr = new XMLHttpRequest();
             xhr.open("GET", appConfig.apiBaseUrl + "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" + type);
@@ -972,6 +953,7 @@
         $scope.Description = '';
 
         function createChapter() {
+            $scope.showChapter();
             console.log($scope.Title + " " + $scope.Description);
             ref.child("question-bank-chapters").child($scope.bookId).push({
                 title: $scope.Title,
@@ -1012,7 +994,8 @@
             ref.child("question-bank-topic").child(quizService.getBook()).child($scope.chapterId).push({
                 description: $scope.Description,
                 title: $scope.Title
-            });
+            })
+            $scope.showTopic();
         }
 
         function addTopic() {

@@ -235,7 +235,6 @@
     }
 </style>-->
 
-
 <!--left side-->
 <div layout="row" class="backColorLightGrey2 quiz-columns-content">
     <md-sidenav class="md-sidenav-left quiz-sidenav-g" md-component-id="left" md-is-locked-open="quiz.booksNav">
@@ -636,15 +635,10 @@
                     <ng-md-icon style="fill:white" icon="info_outline"></ng-md-icon>
                 </h3>
                 <div class="dialog-demo-content cropper-main-button" id="cropperDialogue"
-                     layout="row" layout-wrap ng-hide="$root.newImg">
-                    <img style="outline: none;" ng-src="img/image.svg" alt="img/image.svg"
-                         class="cropper-main-image" ng-click="quiz.showAdvanced1($event)"/>
-                </div>
-                <div>
-                    <img style="outline: none;" ng-src="{{$root.newImg}}" alt=""
-                         class="cropper-main-button" ng-hide="!$root.newImg"
-                         ng-click="quiz.showAdvanced1($event);"/>
-                </div>
+                     layout="row" layout-wrap>
+                    <img style="outline: none;" ng-src="{{$root.newImg || 'img/image.svg'}}" alt="img/image.svg"
+                         class="cropper-main-image" ng-click="quiz.selectBookPoster($event)"/>
+                </div>    
                 <image-cropper></image-cropper>
             </form>
         </md-content>
