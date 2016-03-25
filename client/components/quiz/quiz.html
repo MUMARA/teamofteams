@@ -497,7 +497,7 @@
         </md-button>
     </md-content>
     <!--Questions side-->
-    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex="18">
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" >
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-3" layout="row">
                 <h2 ng-hide="quiz.questionSearch">
@@ -673,7 +673,7 @@
         <md-content layout-padding>
             <form name="chapterForm">
                 <div layout="column">
-                    <md-input-container >
+                    <md-input-container>
                     <label >Chapter Title</label>
                     <input name="chapterTitle"
                            ng-model="quiz.Title" minlength="3" maxlength="40" required>
@@ -728,8 +728,8 @@
         <h1 style="color: #d3d3d3;padding-left:8px;">Add Topic</h1>
         <md-content layout-padding>
             <form name="topicForm">
-              <div layout="row">
-                <md-input-container flex>
+              <div layout="column">
+                <md-input-container >
                     <label>Topic Title
                         <ng-md-icon style="fill:#d3d3d3" icon="info_outline"></ng-md-icon>
                     </label>
@@ -743,7 +743,7 @@
                         <!--<div class="invalid_color id_Error" ng-message="checkChapterExistance">This name is not available.</div>-->
                     </div>
                 </md-input-container>
-                <md-input-container flex>
+                <md-input-container>
                     <label>Description</label>
                     <textarea name="chapterDescription" ng-model="quiz.Description"
                               minlength="8" maxlength="200" required></textarea>
@@ -786,7 +786,9 @@
                 <div >
                     <h1 style="color: #d3d3d3">Add Question</h1>
                     <!--Question Title-->
-                    <md-input-container>
+                    <div layout="row">
+
+                    <md-input-container flex>
                         <label>Question Title</label>
                         <input name="questionTitle" ng-model="quiz.question.Title"
                                minlength="3" maxlength="30" required
@@ -800,7 +802,7 @@
                         </div>
                     </md-input-container>
                     <!--Question Description-->
-                    <md-input-container>
+                    <md-input-container flex>
                         <label style="font-weight:lighter;">Question Description</label>
                         <textarea name="questionDescription" ng-model="quiz.question.Description"
                                   minlength="10" maxlength="200" required>
@@ -814,6 +816,7 @@
                         </div>
                     </md-input-container>
                 </div>
+            </div>
                 <!--Answer Type-->
                 <div class="div1">
                     <div>
@@ -829,80 +832,106 @@
                             </md-option>
                         </md-select>
                     </div>
+                    <div ng-show="quiz.showQuestionSet">
+                        <md-input-container style="margin-left: 10px; margin:0px">
+                            <label>Question {{$index + 1}}</label>
+                            <input type="text"  ng-model="option.optionText">
+                            <ng-md-icon icon="delete" ng-disabled="!option.optionText"  class="nooutline" style="fill:gray; position:absolute; top:10;" ng-click="quiz.deleteOption($index)">
+                         </md-input-container>
+                         <div layout="row" ng-repeat="option in quiz.question.QuestionOptions">
+                             <md-radio-group ng-model="quiz.myAnswer" style="margin-top: 10px;margin-left: 20px">
+                                 <md-radio-button
+                                         ng-value="option" ng-disabled="!option.optionText"
+                                         aria-label="Radio-Button">
+                                 </md-radio-button>
+                            </md-radio-group>
+                                 <md-input-container style="margin:0px">
+                                     <label>Option {{$index + 1}}</label>
+                                         <input type="text"  ng-model="option.optionText">
+                                          <ng-md-icon icon="delete" ng-disabled="!option.optionText"  class="nooutline" style="fill:gray; position:absolute; top:10;" ng-click="quiz.deleteOption($index)">
+                                  </md-input-container>
+                        </div>
+                    <div layout="row" layout-align="start end">
+                        <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
+                            Add Option
+                        </md-button>
+                    </div>
+                </div>
                     <!--RadioBoxes InputFields-->
                     <div ng-show="quiz.showRadioOptions">
-                        <div layout="row">
-                            <md-radio-group ng-model="quiz.myAnswer" >
-                                <md-radio-button ng-repeat="option in quiz.question.QuestionOptions"
+                        <div layout="row" ng-repeat="option in quiz.question.QuestionOptions">
+                            <md-radio-group ng-model="quiz.myAnswer"  >
+                                <md-radio-button
                                         ng-value="option" ng-disabled="!option.optionText"
-                                        aria-label="Radio-Button"
-                                        style="margin-bottom: 78%; margin-left: 10%;"
-                                        ng-style="{'margin-top' : quiz.myTop[$index]}">
+                                        aria-label="Radio-Button">
                                 </md-radio-button>
+                                <md-input-container style=" margin-top: -45px; margin-left: 30px;">
+                                    <label>Option {{$index + 1}}</label>
+                                        <input type="text"  ng-model="option.optionText">
+                                                <!-- <textarea  required="required"></textarea> -->
+                                                <!-- <img style="background-color:red;"src="./components/quiz/images/deleteIcon.png"
+                                                     ng-click="quiz.deleteOption($index)"
+                                                     role="button" tabindex="0"
+                                                     style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
+                                         <ng-md-icon icon="delete" ng-disabled="!option.optionText"  class="nooutline" style="fill:gray; position:absolute; top:10;" ng-click="quiz.deleteOption($index)">
+                                 </md-input-container>
                             </md-radio-group>
-                            <div>
-                                <md-input-container
-                                        ng-repeat="option in quiz.question.QuestionOptions">
-                                    <div layout="row">
-                                            <label>Option {{$index+1}}</label>
-                                            <textarea ng-model="option.optionText" required="required"></textarea>
-                                            <!-- <img src="./components/quiz/images/deleteIcon.png"
-                                                 ng-click="quiz.deleteOption($index)"
-                                                 role="button" tabindex="0"
-                                                 style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
-                                    </div>
-                                </md-input-container>
-                            </div>
                         </div>
-                        <md-button class="backColorSeaGreen"ng-click="quiz.addOption();">
-                            Add Option...
+                        <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
+                            Add Option
                         </md-button>
                     </div>
                     <!--CheckBoxes-->
                     <!--CheckBoxes Input Fields-->
                     <div ng-show="quiz.showCheckOptions">
-                        <md-input-container layout="row" md-ng-ink
-                                            ng-repeat="option in quiz.question.QuestionOptions">
-                            <div flex="10" style="">
+                        <div layout="row" ng-repeat="option in quiz.question.QuestionOptions"
+                                        >
                                 <md-checkbox md-no-ink aria-label="Checkbox No Ink"
                                              class="md-primary" ng-model="option.id"
                                              ng-change="quiz.setCheckBoxValue($index)"
-                                             ng-disabled="!option.optionText"
-                                             style="margin-top: 20px;">
+                                             ng-disabled="!option.optionText">
+                                             <!-- style="margin-top: 20px;" -->
                                 </md-checkbox>
-                            </div>
-                            <div>
-                                <div layout="row">
-                                    <div>
-                                        <label style="color: #EF9BA3;;">Option
+
+                            <md-input-container style="margin-left: 10px;">
+                                <label>Option {{$index + 1}}</label>
+                                    <input type="text"  ng-model="option.optionText">
+                                            <!-- <textarea  required="required"></textarea> -->
+                                            <!-- <img style="background-color:red;"src="./components/quiz/images/deleteIcon.png"
+                                                 ng-click="quiz.deleteOption($index)"
+                                                 role="button" tabindex="0"
+                                                 style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
+                                     <ng-md-icon icon="delete" ng-disabled="!option.optionText"  class="nooutline" style="fill:gray; position:absolute; top:10;" ng-click="quiz.deleteOption($index)">
+                             </md-input-container>
+                                <!-- <div layout="row"> -->
+                                    <!-- <div> -->
+                                        <!-- <label >Option
                                             {{$index+1}}</label>
-                                                                    <textarea
-                                                                            style="color: #FFFFFF;width: 400px; border-color:#FFFFFF;"
-                                                                            ng-model="option.optionText"
-                                                                            required="required"></textarea>
-                                    </div>
-                                    <div flex="10">
+                                            <textarea style=";width: 400px;" ng-model="option.optionText"
+                                                      required="required"></textarea> -->
+                                    <!-- </div> -->
+                                    <!-- <div flex="10">
                                         <img src="./components/quiz/images/deleteIcon.png"
                                              ng-click="quiz.deleteOption($index)"
                                              role="button" tabindex="0"
                                              style="margin-left: 80%; margin-top:20px;width: 25px;height: 25px;">
-                                    </div>
-                                </div>
-                            </div>
-                        </md-input-container>
-                        <md-button ng-click="quiz.addOption();" ng-disabled="">
-                            Add Option...
+                                    </div> -->
+                                <!-- </div> -->
+                            <!-- </div> -->
+                        </div>
+                        <md-button ng-click="quiz.addOption();" style="color:white;" class="backColorSeaGreen">
+                            Add Option
                         </md-button>
                     </div>
                 </div>
                 <!--Bottom Buttons-->
                 <div style="margin: 0px 0px 0px 305px; width: 220px">
-                    <md-button style="color:#ffffff; background-color: blueviolet;"
+                    <md-button style="color:#ffffff;" class="backColorSeaGreen"
                                ng-click="quiz.showAnswer();"
                                ng-disabled="!quiz.question.Title || !quiz.question.Description || (!quiz.answerTag.length > 0 && ((quiz.myAnswer.rightAnswer) != '' && (quiz.myAnswer.rightAnswer) != true))">
                         Create
                     </md-button>
-                    <md-button style="color:#ffffff;" ng-click="quiz.closeQuestion();">
+                    <md-button style="color:#ffffff;"class="backColorSeaGreen" ng-click="quiz.closeQuestion();">
                         Cancel
                     </md-button>
                 </div>

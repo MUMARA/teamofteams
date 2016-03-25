@@ -1049,6 +1049,7 @@
         var idCounter = 3;
         this.showRadioOptions = false;
         this.showCheckOptions = false;
+        that.showQuestionSet = false;
         this.showAddButton = false;
         this.myAnswer = undefined;
         this.myType = '';
@@ -1064,6 +1065,8 @@
             name: 'Radio Button'
         }, {
             name: 'CheckBox'
+        }, {
+            name: 'Question Set'
         }];
         this.question = {
             Title: '',
@@ -1107,11 +1110,19 @@
             if (that.myType.name === 'Radio Button') {
                 that.showRadioOptions = true;
                 that.showCheckOptions = false;
+                that.showQuestionSet = false;
                 that.answerTag = [];
                 that.myAnswer = undefined;
             } else if (that.myType.name === 'CheckBox') {
                 that.showCheckOptions = true;
                 that.showRadioOptions = false;
+                that.showQuestionSet = false;
+                that.answerTag = [];
+                that.myAnswer = undefined;
+            } else  {
+                that.showCheckOptions = false;
+                that.showRadioOptions = false;
+                that.showQuestionSet = true;
                 that.answerTag = [];
                 that.myAnswer = undefined;
             }
@@ -1152,6 +1163,7 @@
         that.addQuestionsAndContinue = function () {
             that.showRadioOptions = false;
             that.showCheckOptions = false;
+            that.showQuestionSet = false;
             that.showAddButton = false;
             if (that.myType.name === 'Radio Button') {
                 angular.forEach(that.question.QuestionOptions, function (data) {
