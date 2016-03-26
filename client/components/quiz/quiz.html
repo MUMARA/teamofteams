@@ -498,7 +498,7 @@
         </md-button>
     </md-content>
     <!--Questions side-->
-    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" >
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp"  >
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-3" layout="row">
                 <h2 ng-hide="quiz.questionSearch">
@@ -684,7 +684,7 @@
             <form name="chapterForm">
                 <div layout="column">
                     <md-input-container>
-                    <label >Chapter Title</label>
+                    <label>Chapter Title</label>
                     <input name="chapterTitle"
                            ng-model="quiz.Title" minlength="3" maxlength="40" required>
                     <!--check-chapter-existance=""-->
@@ -860,7 +860,7 @@
                                          <input type="text"  ng-model="option.optionText">
                                           <ng-md-icon icon="delete" ng-disabled="!option.optionText"  class="nooutline" style="fill:gray; position:absolute; top:10;" ng-click="quiz.deleteOption($index)">
                                   </md-input-container>
-                        </div>
+                    </div>
                     <div layout="row" layout-align="start end">
                         <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
                             Add Option
@@ -942,7 +942,7 @@
                         Create
                     </md-button>
                     <md-button style="color:#ffffff;"class="backColorSeaGreen" ng-click="quiz.closeQuestion();">
-                        Cancel
+                        Close
                     </md-button>
                 </div>
             </form>
@@ -2048,7 +2048,7 @@
                                             style="background-color:#a043ef">CREATE
                                     </md-button>
                                     <md-button ng-click="quiz.closeQuiz()" class="md-primary" style="color: #ffffff">
-                                        CANCEL
+                                        Close
                                     </md-button>
                                 </div>
                             </div>

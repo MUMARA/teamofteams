@@ -990,11 +990,7 @@
                     $scope.showChapter();
                 }, 0);
             } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Book' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
+                messageService.showSuccess('Please Select Book');
             }
         }
 
@@ -1024,11 +1020,8 @@
                     $scope.showTopic();
                 }, 0);
             } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Chapter' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
+                messageService.showSuccess('Please Select Chapter');
+
             }
         }
 
@@ -1046,11 +1039,8 @@
                     $scope.showQuestion();
                 }, 0);
             } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Topic' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
+                messageService.showSuccess('Please Select Topic');
+
             }
         }
 
@@ -1667,11 +1657,12 @@
 
 
             } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Book' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
+                messageService.showSuccess('Please Select Book')
+                // $mdToast.show({
+                //     template: '<md-toast style="">' + 'Please Select Book' + '</md-toast>',
+                //     position: 'top right',
+                //     hideDelay: 5000
+                // });
             }
 
 
