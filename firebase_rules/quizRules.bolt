@@ -40,15 +40,15 @@ function isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, value){
 
 function isCurrentUserQuestionBankOwner(questionBankUniqueID) {
     return isCurrentUserQuestionBankMember(questionBankUniqueID) &&
-    prior(memberTypeShouldBe(root.question-bank-memberships[questionBankUniqueID][auth.uid]["member-type"], 1));
+    prior(memberTypeShouldBe(root['question-bank-memberships'][questionBankUniqueID][auth.uid]["member-type"], 1));
 }
 function isCurrentUserQuestionBankAdmin(questionBankUniqueID) {
     return isCurrentUserQuestionBankMember(questionBankUniqueID) &&
-    prior(memberTypeShouldBe(root.question-bank-memberships[questionBankUniqueID][auth.uid]["member-type"], 2));
+    prior(memberTypeShouldBe(root['question-bank-memberships'][questionBankUniqueID][auth.uid]["member-type"], 2));
 }
 
 function isCurrentUserQuestionBankMember(questionBankUniqueID) {
-    prior(root.question-bank-memberships[questionBankUniqueID][auth.uid] != null)
+    prior(root['question-bank-memberships'][questionBankUniqueID][auth.uid] != null)
 }
 
 
@@ -115,16 +115,16 @@ type Question {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
-   options: Option[] | Null,
-   questiones: QuestionSet[] | Null,
-   "discussion-html" : String
+  options: Option[] | Null,
+  questiones: QuestionSet[] | Null,
+  "discussion-html" : String
 }
 type QuestionSet {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
-   options: Option[] | Null,
-   "discussion-html" : String
+  options: Option[] | Null,
+  "discussion-html" : String
 }
 type Option {
   "html": String,
@@ -200,18 +200,59 @@ function isCurrentUserGroupMembersOwner($groupid) {
 //      Quizes
 //----------------------------------
 
-path /quizes/{quizID}  is QuizDesc {
-  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
-  create() { isQuestionBankOwnerCreating(UserID, this)  ||
-             isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
-  update() { isQuestionBankOwnerCreating(UserID, this)  ||
-             isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+//path /quizes/{quizID}  is QuizDesc {
+//  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+ // create() { isQuestionBankOwnerCreating(UserID, this)  ||
+  //           isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
+  //update() { isQuestionBankOwnerCreating(UserID, this)  ||
+   //          isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+//}
+
+//type QuizDesc {
+  //  title           : String,
+   // desc            : String,
+    //duration        : Number,
+ //   'num-questions' : Number
+
+//}
+
+
+
+//----------------------------------
+//     rules for QUIZES
+//----------------------------------
+
+
+
+path /quizes/{questionBankUniqueID}/{quizID} is Quiz { // to discuss with Sir Zia about User ID Node
+    validate() {this.hasChildren(['questions']);}
+
+
+    /questions/{chapterID}/{topicID}/{questionID} is Boolean{
+
+
+    read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+    create() { isQuestionBankOwnerCreating(UserID, this) }
+    update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+
+
+    }
+
 }
 
-type QuizDesc {
-    title           : String,
-    desc            : String,
-    duration        : Number,
-    'num-questions' : Number
+//  user-quiz-membership/{userID}/
+//  child, timestamp, questionBankUniqueID, membership type
+
+// user - group - membership
+
+
+//----------------------------------
+//     Type Quiz
+//----------------------------------
+
+type Quiz{
+    title: String,
+    description: String,
+    duration: Number
 
 }
