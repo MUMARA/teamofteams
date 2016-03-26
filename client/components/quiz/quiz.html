@@ -581,14 +581,12 @@
 
 
 <!--Create Book Navigation Start-->
-<md-sidenav class="md-sidenav-right add-books-nav" md-component-id="nav1">
-    <ng-md-icon icon="close" size="30"
-                style="fill:#d3d3d3;outline: none;"
-                ng-click="quiz.closeBook()">
+<md-sidenav class="md-sidenav-right add-books-nav backColorLightSeaGreen" md-component-id="nav1">
+    <ng-md-icon icon="close" size="30" class="nooutline close-icon" ng-click="quiz.closeBook()">
     </ng-md-icon>
     <div>
-        <h1 style="color: #d3d3d3;padding-left:8px;">Create Book</h1>
-        <md-content>
+        <h1 class="create-sidenav-heading">Create Book</h1>
+        <md-content class="backColorLightSeaGreen">
             <form name="bookForm" layout-padding>
                 <div layout="row">
                     <md-input-container flex>
@@ -644,8 +642,8 @@
                 </h3>
                 <div class="dialog-demo-content cropper-main-button" id="cropperDialogue"
                      layout="row" layout-wrap>
-                    <img style="outline: none;" ng-src="{{$root.newImg || 'img/image.svg'}}" alt="img/image.svg"
-                         class="cropper-main-image" ng-click="quiz.selectBookPoster($event)"/>
+                    <img ng-src="{{$root.newImg || 'img/image.svg'}}" alt="img/image.svg"
+                         class="cropper-main-image nooutline" ng-click="quiz.selectBookPoster($event)"/>
                 </div>
                 <image-cropper></image-cropper>
             </form>
@@ -655,13 +653,13 @@
                                   md-mode="indeterminate"></md-progress-circular>
             <!--<md-button class="md-raised md-primary">Submit</md-button>-->
             <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
-            <md-button style="color: #ffffff;" class="backColorSeaGreen"
+            <md-button class="backColorSeaGreen color-white"
                        ng-disabled="bookForm.$invalid || !newImg" class="md-primary"
                        ng-click="quiz.createBook(bookForm, $root.newImg); $root.newImg = null">
                 Create
             </md-button>
-            <md-button style="color: #ffffff" ng-click="quiz.closeBook()"
-                       class="backColorSeaGreen">
+            <md-button ng-click="quiz.closeBook()"
+                       class="backColorSeaGreen color-white">
                 Close
             </md-button>
         </div>
@@ -671,14 +669,12 @@
 <!--Create Book Navigation End-->
 
 <!--Create Chapter Navigation Start-->
-<md-sidenav class="md-sidenav-right add-chapter-nav" md-component-id="nav2">
-    <ng-md-icon icon="close" size="30"
-                style="fill:#d3d3d3;outline: none;"
-                ng-click="quiz.closeChapter()">
+<md-sidenav class="md-sidenav-right add-chapter-nav backColorLightSeaGreen" md-component-id="nav2">
+    <ng-md-icon icon="close" size="30" class="nooutline close-icon" ng-click="quiz.closeChapter()">
     </ng-md-icon>
     <div>
-        <h1 style="color: #d3d3d3;padding-left:8px;">Add Chapter</h1>
-        <md-content layout-padding>
+        <h1 class="create-sidenav-heading">Add Chapter</h1>
+        <md-content layout-padding class="backColorLightSeaGreen">
             <form name="chapterForm">
                 <div layout="column">
                     <md-input-container>
@@ -715,12 +711,12 @@
                               md-mode="indeterminate"></md-progress-circular>
         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
         <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
-        <md-button style="color: #ffffff;" ng-disabled="chapterForm.$invalid"
-                   class="backColorSeaGreen" ng-click="quiz.createChapter()">
+        <md-button ng-disabled="chapterForm.$invalid"
+                   class="backColorSeaGreen color-white" ng-click="quiz.createChapter()">
             Create
         </md-button>
         </md-button>
-        <md-button style="color: #ffffff" ng-click="quiz.closeChapter()" class="backColorSeaGreen">
+        <md-button ng-click="quiz.closeChapter()" class="backColorSeaGreen color-white">
             Close
         </md-button>
     </div>
@@ -728,14 +724,13 @@
 <!--Create Chapter Navigation End-->
 
 <!--Create Topic Navigation Start-->
-<md-sidenav class="md-sidenav-right add-topic-nav" md-component-id="nav4">
-    <ng-md-icon icon="close" size="30"
-                style="fill:#d3d3d3;outline: none;"
+<md-sidenav class="md-sidenav-right add-topic-nav backColorLightSeaGreen" md-component-id="nav4">
+    <ng-md-icon icon="close" size="30" class="nooutline close-icon"
                 ng-click="quiz.closeTopic()">
     </ng-md-icon>
     <div>
-        <h1 style="color: #d3d3d3;padding-left:8px;">Add Topic</h1>
-        <md-content layout-padding>
+        <h1 class="create-sidenav-heading">Add Topic</h1>
+        <md-content layout-padding class="backColorLightSeaGreen">
             <form name="topicForm">
                 <div layout="column">
                     <md-input-container>
@@ -772,12 +767,11 @@
         <md-progress-circular ng-show="bookForm.$submitted" md-mode="indeterminate"></md-progress-circular>
         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
         <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
-        <md-button style="color: #ffffff" ;
-                   ng-disabled="topicForm.$invalid" class="backColorSeaGreen"
+        <md-button ng-disabled="topicForm.$invalid" class="backColorSeaGreen color-white"
                    ng-click="quiz.createTopic()">Create
         </md-button>
         </md-button>
-        <md-button style="color: #ffffff" ng-click="quiz.closeTopic()" class="backColorSeaGreen">
+        <md-button ng-click="quiz.closeTopic()" class="backColorSeaGreen color-white">
             Close
         </md-button>
     </div>
@@ -785,13 +779,12 @@
 <!--Create Topic Navigation End-->
 
 <!--Add Question Sidenav Start-->
-<md-sidenav class="md-sidenav-right add-question-nav md-whiteframe-z2" md-component-id="nav3">
-    <ng-md-icon icon="close" size="30" style="fill: #d3d3d3;outline: none;"
-                ng-click="quiz.closeQuestion()">
+<md-sidenav class="md-sidenav-right add-question-nav md-whiteframe-z2 backColorLightSeaGreen" md-component-id="nav3">
+    <ng-md-icon icon="close" size="30" class="nooutline close-icon" ng-click="quiz.closeQuestion()">
     </ng-md-icon>
-    <md-content layout-padding>
+    <md-content layout-padding class="backColorLightSeaGreen">
         <form>
-            <h1 style="color: #d3d3d3">Add Question</h1>
+            <h1 class="create-sidenav-heading">Add Question</h1>
             <!--Question Title-->
             <div layout="row">
                 <md-input-container flex>
@@ -828,7 +821,7 @@
                 <div layout="row">
                     <md-input-container flex="50">
                         <label ng-value="quiz.myType = user">Question Type</label>
-                        <md-select ng-model="user" style="min-width: 200px;"
+                        <md-select ng-model="user"
                                    md-on-close="quiz.setBoxValue()"
                                    ng-change="quiz.typeChanged()">
                             <md-option ng-value="user" ng-repeat="user in quiz.types">
@@ -851,12 +844,11 @@
                         <md-input-container style="padding-right: 50px">
                             <label>Question {{$index + 1}}</label>
                             <input type="text" ng-model="option.optionText">
-                            <ng-md-icon icon="delete" ng-disabled="!option.optionText" class="nooutline"
-                                        style="fill:gray; position:absolute; top:10;"
+                            <ng-md-icon icon="delete" ng-disabled="!option.optionText" class="nooutline quiz-dlt-btn"
                                         ng-click="quiz.deleteOption($index)">
                         </md-input-container>
-                        <md-button ng-click="quiz.addOption();" style="color:white;margin-top: -20px"
-                                   class="backColorSeaGreen">
+                        <md-button ng-click="quiz.addOption();" style="margin-top: -20px"
+                                   class="backColorSeaGreen color-white">
                             Add Question
                         </md-button>
                     </div>
@@ -877,7 +869,7 @@
                             </md-input-container>
 
                         </div>
-                        <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
+                        <md-button class="backColorSeaGreen color-white" ng-click="quiz.addOption();">
                             Add Option
                         </md-button>
                     </div>
@@ -892,12 +884,11 @@
                             <md-input-container style="margin-left: 10px;">
                                 <label>Option {{$index + 1}}</label>
                                 <input type="text" ng-model="option.optionText">
-                                <ng-md-icon icon="delete" ng-disabled="!option.optionText" class="nooutline"
-                                            style="fill:gray; position:absolute; top:10;"
+                                <ng-md-icon icon="delete" ng-disabled="!option.optionText" class="nooutline quiz-dlt-btn"
                                             ng-click="quiz.deleteOption($index)">
                             </md-input-container>
                         </div>
-                        <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
+                        <md-button class="backColorSeaGreen color-white" ng-click="quiz.addOption();">
                             Add Option
                         </md-button>
                     </div>
@@ -975,7 +966,7 @@
                 </div>
             </div>
             <!--Bottom Buttons-->
-            <div style="margin: 0px 0px 0px 305px; width: 220px">
+            <div style="position: fixed;bottom: 5px;right: 15px;">
                 <md-button style="color:#ffffff;" class="backColorSeaGreen"
                            ng-click="quiz.showAnswer();"
                            ng-disabled="!quiz.question.Title || !quiz.question.Description || (!quiz.answerTag.length > 0 && ((quiz.myAnswer.rightAnswer) != '' && (quiz.myAnswer.rightAnswer) != true))">
