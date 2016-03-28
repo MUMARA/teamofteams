@@ -172,13 +172,32 @@
     /*background-color: #F2F2F2;*/
 }
 
-.options-question span{
+.options-question span {
     /*margin-left: -1%!important;*/
     white-space: pre
 }
 
-.options-question ng-md-icon{
-  fill: green
+.options-question ng-md-icon {
+    fill: green
+}
+
+.create-sidenav-heading {
+    color: #d3d3d3;
+    padding-left: 8px;
+}
+
+.color-white {
+    color: #fff !important;
+}
+
+.quiz-dlt-btn {
+    fill: gray;
+    position: absolute;
+    top: 10px;
+}
+
+.close-icon {
+    fill: #d3d3d3
 }
 
 /*  OLD CSS */
