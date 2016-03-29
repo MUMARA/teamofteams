@@ -232,8 +232,11 @@ path /quizes/{questionBankUniqueID}/{quizID} is Quiz { // to discuss with Sir Zi
 
 
     read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
-    create() { isQuestionBankOwnerCreating(UserID, this) }
-    update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+
+
+
+    create() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+    update() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
 
 
     }
