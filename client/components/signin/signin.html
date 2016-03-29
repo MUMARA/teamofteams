@@ -13,7 +13,11 @@
         </md-input-container>
         <md-button class="foreColorSeaGreen" ui-sref="forgot">Forgot Password?</md-button>
         <!-- <a ng-click="signin.login(loginForm); alert('sign button')">signin</a> -->
-        <md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="loginForm.$invalid && loginForm.$error" aria-label="sign in" ng-click="signin.login(loginForm); alert('sign button')">
+        <!--<md-button layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="loginForm.$invalid && loginForm.$error" aria-label="sign in" ng-click="signin.login(loginForm); alert('sign button')">
+            <md-progress-circular ng-if="signin.submitting" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+            <span>Login</span>
+        </md-button>-->
+        <md-button type="submit" layout-align="center" class="backColorSeaGreen foreColorWhite displayFlex" ng-disabled="loginForm.$invalid && loginForm.$error" aria-label="sign in" >
             <md-progress-circular ng-if="signin.submitting" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
             <span>Login</span>
         </md-button>
