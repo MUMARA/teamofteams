@@ -2382,10 +2382,12 @@ angular.module('core', [
             that.panel.subgroupID = subgroupID;
             if (that.panel.subgroupID) {
                 CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
+                    console.log('in showPanel')
                     $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId });
                 })
             } else {
                 CollaboratorService.getinitGroupDocument(that.groupID, function(docId) {
+                    console.log('in - showPanel')
                     $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID, docID: docId });
                 });
             }
@@ -10314,7 +10316,7 @@ angular.module('core')
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_changed', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
                                             if (val.id === userdata.$id) {
-                                                if (snapshot.key() === "profileImage") {
+                                                if (snapshot.key() === "profile-image") {
                                                     val.profileImage = snapshot.val();
                                                 }
                                                 if (snapshot.key() === "firstName") {
