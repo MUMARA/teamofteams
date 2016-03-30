@@ -96,7 +96,7 @@ angular.module('core')
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_changed', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
                                             if (val.id === userdata.$id) {
-                                                if (snapshot.key() === "profileImage") {
+                                                if (snapshot.key() === "profile-image") {
                                                     val.profileImage = snapshot.val();
                                                 }
                                                 if (snapshot.key() === "firstName") {
