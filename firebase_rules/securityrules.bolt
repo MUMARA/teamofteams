@@ -26,7 +26,6 @@ function isAuthenticated() {
 //===================================
 
 path /users {
-  validate() { this.length >= 3  && this.length <= 10  }
   /{userid} is UserType {
    update() { isAuthenticatedUser($userid)}
    read()   { isAuthenticated() }

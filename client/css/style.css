@@ -1,3 +1,9 @@
+@media print {
+    .flex-30 : {
+        width: 10px;
+    }
+}
+
 md-progress-circular.md-default-theme .md-inner .md-right .md-half-circle, md-progress-circular .md-inner .md-right .md-half-circle {
     border-right-color: white;
 }
@@ -1611,10 +1617,10 @@ body > md-content > div > div.toolbarContainer > div > div > md-toolbar > div {
 */
 
 .showArrow {
-    margin-left: -15px;
-    margin-top: 5px;
-    /*    width: 34px;
-    height: 34px;*/
+    margin-left: -8px;
+    margin-top: 12px;
+    width: 26px;
+    /*height: 34px;*/
     position: absolute;
 }
 

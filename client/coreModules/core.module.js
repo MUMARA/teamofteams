@@ -23,7 +23,30 @@ angular.module('core', [
     'angular.filter',
     'ngFileSaver',
     'truncate'
-  ]).filter('trustUrl', ['$sce', function($sce) {
+  ]).filter('groupUsers', function() {
+      return function(users, groupID) {
+        var filteredUsers = [];
+        users.forEach(function(user) {
+          if (user.groupID == groupID) {
+            var userNew = findWithAttr(filteredUsers, 'fullName', user.fullName) == -1;
+            if (userNew) {
+              filteredUsers.push(user);
+            }
+          }
+        });
+        return filteredUsers;
+      };
+
+      function findWithAttr(array, attr, value) {
+        for (var i = 0; i < array.length; i += 1) {
+          if (array[i][attr] === value) {
+            return i;
+          }
+        }
+        return -1;
+      }
+    })
+  .filter('trustUrl', ['$sce', function($sce) {
     return function(url) {
       /*var temp;
        $.get(url).success(function(data){

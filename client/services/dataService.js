@@ -33,6 +33,17 @@ angular.module('core')
                         groupsubgroupTitle[group.key()] = groupmasterdata.title;
                     });
                     firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_added', function(subgroup, prevChildKey) {
+                        // console.log('user', subgroup.val())
+                        firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_removed', function(rmsubgroup) {
+                            firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).off();
+                            userData.forEach(function(val, indx) {
+                                // if (val.id === userID) {
+                                    if (val.groupsubgroup === (group.key() + ' / ' + rmsubgroup.key())) {
+                                        userData.splice(indx);
+                                    }
+                                // }
+                            });
+                        });
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
                             userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
@@ -67,7 +78,13 @@ angular.module('core')
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
                         });
                         firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
+                            console.log('user2', snapshot.key(), snapshot.val())
                             $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
+                                // console.log('user', userdata)
+                                // checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key()).on('value', function(ss){
+                                //     console.log('user', ss.key())
+                                //     console.log('user', ss.val())
+                                // })
                                 if (userdata.type === 1) {
                                     var type = true;
                                 } else {
@@ -141,32 +158,87 @@ angular.module('core')
                                     });
                                     firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
                                         // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
-                                        userData.push({
-                                            id: userdata.$id,
-                                            type: type,
-                                            groupsubgroup: group.key() + ' / ' + subgroup.key(),
-                                            groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
-                                            groupID: group.key(),
-                                            groupTitle: groupsubgroupTitle[group.key()],
-                                            subgroupID: subgroup.key(),
-                                            subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                            membershipNo : snapshot.getPriority() || '',
-                                            contactNumber: usermasterdata.contactNumber || '',
-                                            onlinestatus: false,
-                                            /*onlineweb: 0,
-                                            onlineios: 0,
-                                            onlineandroid: 0,*/
-                                            timestamp: timestamp,
-                                            message: message,
-                                            profileImage: usermasterdata['profile-image'] || '',
-                                            firstName: usermasterdata.firstName,
-                                            lastName: usermasterdata.lastName,
-                                            fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
-                                        });
+                                        // console.log('user', userdata.$id)
+                                        if (userData.length > 0) {
+                                            userData.forEach(function(val, indx) {
+                                                console.log(val.id);
+                                                console.log(userdata.$id)
+                                                console.log(userData[indx])
+                                                if (val.id === userdata.$id) {
+                                                    userData[indx].id = userdata.$id;
+                                                    userData[indx].type = type;
+                                                    userData[indx].groupsubgroup = group.key() + ' / ' + subgroup.key();
+                                                    userData[indx].groupsubgroupTitle = groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()];
+                                                    userData[indx].groupID = group.key();
+                                                    userData[indx].groupTitle = groupsubgroupTitle[group.key()];
+                                                    userData[indx].subgroupID = subgroup.key();
+                                                    userData[indx].subgroupTitle = groupsubgroupTitle[subgroup.key()];
+                                                    userData[indx].membershipNo  = snapshot.getPriority() || '';
+                                                    userData[indx].contactNumber = usermasterdata.contactNumber || '';
+                                                    userData[indx].onlinestatus = false;
+                                                    /*userData[indx].onlineweb = 0;
+                                                    userData[indx].onlineios = 0;
+                                                    userData[indx].onlineandroid = 0;*/
+                                                    userData[indx].timestamp = timestamp;
+                                                    userData[indx].message = message;
+                                                    userData[indx].profileImage = usermasterdata['profile-image'] || '';
+                                                    userData[indx].firstName = usermasterdata.firstName;
+                                                    userData[indx].lastName = usermasterdata.lastName;
+                                                    userData[indx].fullName = usermasterdata.firstName + ' ' + usermasterdata.lastName;
+                                                }
+                                                if (userData.length === indx + 1) {
+                                                    userData.push({
+                                                        id: userdata.$id,
+                                                        type: type,
+                                                        groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                                        groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
+                                                        groupID: group.key(),
+                                                        groupTitle: groupsubgroupTitle[group.key()],
+                                                        subgroupID: subgroup.key(),
+                                                        subgroupTitle: groupsubgroupTitle[subgroup.key()],
+                                                        membershipNo : snapshot.getPriority() || '',
+                                                        contactNumber: usermasterdata.contactNumber || '',
+                                                        onlinestatus: false,
+                                                        /*onlineweb: 0,
+                                                        onlineios: 0,
+                                                        onlineandroid: 0,*/
+                                                        timestamp: timestamp,
+                                                        message: message,
+                                                        profileImage: usermasterdata['profile-image'] || '',
+                                                        firstName: usermasterdata.firstName,
+                                                        lastName: usermasterdata.lastName,
+                                                        fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            userData.push({
+                                                id: userdata.$id,
+                                                type: type,
+                                                groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                                groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
+                                                groupID: group.key(),
+                                                groupTitle: groupsubgroupTitle[group.key()],
+                                                subgroupID: subgroup.key(),
+                                                subgroupTitle: groupsubgroupTitle[subgroup.key()],
+                                                membershipNo : snapshot.getPriority() || '',
+                                                contactNumber: usermasterdata.contactNumber || '',
+                                                onlinestatus: false,
+                                                /*onlineweb: 0,
+                                                onlineios: 0,
+                                                onlineandroid: 0,*/
+                                                timestamp: timestamp,
+                                                message: message,
+                                                profileImage: usermasterdata['profile-image'] || '',
+                                                firstName: usermasterdata.firstName,
+                                                lastName: usermasterdata.lastName,
+                                                fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                            });
+                                        }
                                     });
                                 });
-                            });
-                        });
+                            }); //$firebaseObject
+                        }); //firebaseService.getRefSubGroupMembers child_added
                     });
                 });
             }
@@ -177,6 +249,13 @@ angular.module('core')
 
             function setUserGroups () {
                 firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
+                	firebaseService.getRefUserGroupMemberships().child(userID).child(group.key()).on('child_removed', function() {
+                		userGroups.forEach(function(val,indx) {
+                            if(val.groupID === group.key()) {
+                                userGroups.splice(indx);
+                            }
+                        });
+                	});
                     firebaseService.getRefGroups().child(group.key()).on('value', function(snapshot) {
                         var groupmasterdata = snapshot.val();
                         var eflag = true;

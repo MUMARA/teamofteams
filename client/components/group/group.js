@@ -42,6 +42,9 @@
             if(pname === 'collaborator') {
               groupService.setActivePanel('collaborator');
             }
+            if(pname === 'membershipcard') {
+              groupService.setActivePanel('membershipcard');
+            }
             that.panel.subgroupID = subgroupID;
             if (that.panel.subgroupID) {
                 CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
@@ -177,7 +180,7 @@
                                                 //     });
                                             } else {
                                                 that.subgroups.push(subgroup);
-                                                subgroupChildRemovedEvent(subgroup.$id); 
+                                                subgroupChildRemovedEvent(subgroup.$id);
                                             }
                                         });
                                     }

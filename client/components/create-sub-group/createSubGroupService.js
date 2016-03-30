@@ -144,7 +144,7 @@
                                         //$rootScope.newImg = null;
 
                                         //update subgroup-policy
-                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );                                        
+                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );
 
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
@@ -324,14 +324,23 @@
                         // });
 
                         firebaseService.getRefMain().child("user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID + "/").remove(function(err) {
-                            // console.log(err);
+                            console.log(err);
 
                             firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
-                                // console.log(err);
-
-                                firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
-                                    // console.log(err);
-                                });
+                                console.log(err);
+                                if (!submembers) {
+                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").once('value', function(snapshot){
+                                        submembers = snapshot.val();
+                                        console.log('testest', submembers)
+                                        firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                            console.log(err);
+                                        });
+                                    });
+                                } else {
+                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                        console.log(err);
+                                    });
+                                }
 
 
 

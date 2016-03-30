@@ -307,6 +307,7 @@ angular.module('core')
                                 } else {
                                     addMembersToGroupDefer.resolve();
                                 }
+                                console.log('user2 added')
                             });
 
                             promises.push(addMembersToGroupDefer.promise);
