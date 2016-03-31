@@ -137,19 +137,29 @@
                         <div flex="20">
                         </div>
                     </div>
-                    <md-chips ng-repeat="admin in createSubGroup.selectedAdminArray">
+                    <md-chips ng-repeat="mems in createSubGroup.submembers">
+                        <md-chip style="height:40px" class="backColorDarkGrey" ng-show="mems.membershipType < 3">
+                            <img ng-src="{{mems.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                 class="md-avatar" alt="user" style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;"/>
+                            <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{mems.userSyncObj.firstName + ' ' + mems.userSyncObj.lastName +" "}}</span>
+                            <span style="position:relative; top:-8px;" class="fillColorWhite" ng-if="mems.membershipType != 1">
+                                    &nbsp; <ng-md-icon icon="close" size="24" class="nooutline" ng-click="createSubGroup.deleteAdminMember(mems);"></ng-md-icon>
+                                </span>
+                        </md-chip>
+                    </md-chips>
+                    <!--<md-chips ng-repeat="admin in createSubGroup.selectedAdminArray">
                         <md-chip style="height:40px" class="backColorDarkGrey">
                             <img ng-src="{{admin['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                  class="md-avatar" alt="user"
                                  style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;;"/>
                             <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{admin.firstName + ' ' + admin.lastName +" "}}</span>
                             <span style="position:relative; top:-8px;" class="fillColorWhite"
-                                  ng-if="admin.firstName != createSubGroup.submembers[0].userSyncObj.firstName">
+                                  ng-if="admin.email != createSubGroup.submembers[0].userSyncObj.email && createSubGroup.submembers[0].membershipType == 1">
                                     &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"
                                                        ng-click="createSubGroup.deleteAdminMember(admin)"></ng-md-icon>
                                 </span>
                         </md-chip>
-                    </md-chips>
+                    </md-chips>-->
                 </div>
                 <div ng-if="createSubGroup.activeID">
                     <!--adding team members-->
@@ -166,13 +176,13 @@
                         </div>
                     </div>
                     <md-chips ng-repeat="mems in createSubGroup.submembers">
-                        <md-chip style="height:40px" class="backColorDarkGrey">
+                        <md-chip style="height:40px" class="backColorDarkGrey" >
                             <img ng-src="{{mems.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                  class="md-avatar" alt="user"
                                  style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;"/>
                             <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{mems.userSyncObj.firstName + ' ' + mems.userSyncObj.lastName +" "}}</span>
                             <span style="position:relative; top:-8px;" class="fillColorWhite"
-                                  ng-if="mems.membershipType != 1">
+                                  ng-hide="mems.membershipType == 1 || mems.membershipType == 2">
                                     &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"
                                                        ng-click="createSubGroup.deleteMember(mems.userID)"></ng-md-icon>
                                 </span>

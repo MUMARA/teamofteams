@@ -77,6 +77,13 @@
         <div ng-if="group.isAdmin">
             <md-divider class="backColorWhite topbottommargin5px"></md-divider>
             <div layout="row" layout-align="center center">
+                <ng-md-icon icon="credit_card" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('membershipcard', group.panel.subgroupID)"></ng-md-icon>
+                <img src="img/1arrow.png" ng-if="group.panel.active === 'membershipcard'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Membership Card
+                </md-tooltip>
+            </div>
+            <div layout="row" layout-align="center center">
                 <!-- <img src="img/menu.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('manualAttendace')" /> -->
                 <ng-md-icon icon="alarm_on" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('manualattendace', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'manualattendace'" class="showArrow anifade">
