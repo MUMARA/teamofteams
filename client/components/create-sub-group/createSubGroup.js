@@ -595,7 +595,7 @@
         }
 
         function answer(groupForm) {
-           that.processingSave = true;
+            that.processingSave = true;
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
