@@ -132,7 +132,7 @@
 }
 
 .quiz-search-box-1 {
-    background-color: #FF9800;
+    background-color: #CAA100;
 }
 
 .quiz-search-box-2 {
@@ -142,7 +142,9 @@
 .quiz-search-box-3 {
     background-color: #00A7F8;
 }
-
+.quiz-search-box-5 {
+    background-color: #FF9800;
+}
 .quiz-menu-col {
     height: calc(100vh - 64px);
 }
