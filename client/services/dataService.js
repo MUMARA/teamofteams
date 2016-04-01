@@ -161,9 +161,9 @@ angular.module('core')
                                         // console.log('user', userdata.$id)
                                         if (userData.length > 0) {
                                             userData.forEach(function(val, indx) {
-                                                console.log(val.id);
-                                                console.log(userdata.$id)
-                                                console.log(userData[indx])
+                                                // console.log(val.id);
+                                                // console.log(userdata.$id)
+                                                // console.log(userData[indx])
                                                 if (val.id === userdata.$id) {
                                                     userData[indx].id = userdata.$id;
                                                     userData[indx].type = type;

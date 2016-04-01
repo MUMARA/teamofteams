@@ -5269,7 +5269,7 @@ angular.module('core', [
         }
 
         function answer(groupForm) {
-           that.processingSave = true;
+            that.processingSave = true;
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
@@ -7127,14 +7127,7 @@ angular.module('core', [
                 groupFirebaseService.approveMembership(groupID, user, requestedMember, that.group)
                     .then(function(res) {
                         if(requestedMember.teamrequest){
-                            requestedMember.teamrequest.forEach(function(val, indx){
-                                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
-                                    messageService.showSuccess("Approved Request Successfully");
-                                    // CollaboratorService.addAccessUser()
-                                }, function(err){
-                                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
-                                })
-                            })
+                            approveTeamMembership(requestedMember);
                         } else{
                             messageService.showSuccess("Approved Request Successfully");
                         }
@@ -7143,6 +7136,33 @@ angular.module('core', [
                     });
             // });
         }
+
+        function approveTeamMembership(requestedMember) {
+            requestedMember.teamrequest.forEach(function(val, indx){
+                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
+                    userActivityStreamOnAddMember(groupID, val.subgroupID, val.subgrouptitle, requestedMember.userID);
+                    messageService.showSuccess("Approved Request Successfully");
+                    // CollaboratorService.addAccessUser()
+                }, function(err){
+                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + err);
+                })
+            })
+        }
+
+        function userActivityStreamOnAddMember(groupID, subgroupID, subgrouptitle, userID) {
+            var areaType = 'subgroup-member-assigned';
+            //publish an activity stream record -- START --
+            var type = 'subgroup';
+            var targetinfo = {id: subgroupID, url: groupID+'/'+subgroupID, title: subgrouptitle, type: 'subgroup' };
+            var area = {type: areaType };
+            var group_id = groupID+'/'+subgroupID;
+            var memberuserID = userID;
+            //for group activity record
+            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+            //for group activity stream record -- END --
+        }
+
+
 
         //For owner/admin: Rejects membership request.
         function rejectMembership(requestedMember) {
@@ -10392,9 +10412,9 @@ angular.module('core')
                                         // console.log('user', userdata.$id)
                                         if (userData.length > 0) {
                                             userData.forEach(function(val, indx) {
-                                                console.log(val.id);
-                                                console.log(userdata.$id)
-                                                console.log(userData[indx])
+                                                // console.log(val.id);
+                                                // console.log(userdata.$id)
+                                                // console.log(userData[indx])
                                                 if (val.id === userdata.$id) {
                                                     userData[indx].id = userdata.$id;
                                                     userData[indx].type = type;
