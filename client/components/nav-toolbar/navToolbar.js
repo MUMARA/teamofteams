@@ -46,6 +46,11 @@
             this.PersonalSetting = PersonalSetting;
             this.showSubGroup = showSubGroup;
             this.shiftToUserPage = shiftToUserPage;
+            this.quizCreate = quizCreate;
+
+
+
+
             //this.doChange = doChange;
             this.updateStatus = updateStatus;
 
@@ -75,7 +80,7 @@
             function quizStart() {
                 // console.log('done')
                 // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
-                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
+                $state.go('user.quizes', {userID: userService.getCurrentUser().userID});
             }
 
             //moment.js
@@ -738,6 +743,11 @@
             function PersonalSetting() {
                 // $location.path('/user/' + userID + '/personalSettings')
                 $state.go('user.personal-settings', {userID: userService.getCurrentUser().userID})
+            }
+
+            function quizCreate() {
+                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
+
             }
 
             this.progressReportSideNav = function(){
