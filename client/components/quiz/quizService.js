@@ -2,7 +2,7 @@
     'use strict';
     angular
         .module('app.quiz', ['core'])
-        .directive('onBookRender', function ($timeout, quizService) {
+        /*.directive('onBookRender', function ($timeout, quizService) {
             return {
                 restrict: 'A',
                 link: function (scope, element, attr) {
@@ -13,8 +13,8 @@
                     }
                 }
             }
-        })
-        .directive('onChapterRender', function ($timeout, quizService) {
+        })*/
+        /*.directive('onChapterRender', function ($timeout, quizService) {
             return {
                 restrict: 'A',
                 link: function (scope, element, attr) {
@@ -27,8 +27,8 @@
 
                 }
             }
-        })
-        .directive('onTopicRender', function ($timeout, quizService) {
+        })*/
+        /*.directive('onTopicRender', function ($timeout, quizService) {
             return {
                 restrict: 'A',
                 link: function (scope, element, attr) {
@@ -39,7 +39,7 @@
                     }
                 }
             }
-        })
+        })*/
         .factory('quizService', ["$location", function ($location) {
             var that = this;
 
@@ -164,33 +164,26 @@
                         });
                 }, 200);
                 return debounceFn;
-
-
             }
 
-            $scope.close = function () {
+            /*$scope.close = function () {
                 $mdSidenav('nav1').close()
                     .then(function () {
                         $log.debug("close LEFT is done");
                     });
             }
-
             $scope.close = function () {
                 $mdSidenav('nav2').close()
                     .then(function () {
                         $log.debug("close LEFT is done");
                     });
             }
-
-
             $scope.close = function () {
                 $mdSidenav('nav3').close()
                     .then(function () {
                         $log.debug("close RIGHT is done");
                     });
             };
-
-
             $scope.close = function () {
                 $mdSidenav('nav4').close()
                     .then(function () {
@@ -208,7 +201,6 @@
                     .then(function () {
                         $log.debug("close RIGHT is done");
                     });
-            };
+            };*/
         })
-
 })();

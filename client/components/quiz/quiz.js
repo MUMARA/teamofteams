@@ -80,7 +80,7 @@
         $scope.chapterId = '';
         $scope.topicId = '';
         //Firebase
-        var ref = new Firebase('https://pspractice.firebaseio.com');
+        var ref = new Firebase('https://luminous-torch-4640.firebaseio.com');
         var refMain = new Firebase('https://luminous-torch-4640.firebaseio.com');
         $scope.books = [];
         $scope.booksId = [];
@@ -136,7 +136,6 @@
         function initializeView() {
             // console.log(quizService.getBookAfterCreation())
             // console.log(quizService.getBookAfterCreation() !== null)
-
             if (quizService.getBookAfterCreation() !== null) {
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
@@ -148,7 +147,8 @@
                         }
                     }, 0);
                 });
-            } else {
+            }
+            else {
                 // console.log('ELSE');
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
@@ -230,16 +230,17 @@
 
         /*  Tabs  */
         function showQuizBankFunc() {
+            alert('showQuizBankFunc')
             $scope.showQuizBank = true;
             $scope.showQuizList = false;
             $scope.showQuizAssign = false;
             if (quizService.getQuestionObject() !== null && $scope.questionView !== null) {
                 $scope.showView = true;
             }
-            $('#chapterColumn').addClass('marginLeft');
-            $('#quizBankIcon').addClass('selectedTab');
-            $('#quizIcon').removeClass('selectedTab');
-            $('#quizAssignIcon').removeClass('selectedTab');
+            // $('#chapterColumn').addClass('marginLeft');
+            // $('#quizBankIcon').addClass('selectedTab');
+            // $('#quizIcon').removeClass('selectedTab');
+            // $('#quizAssignIcon').removeClass('selectedTab');
             quizService.setSelectedTab('QuizBank');
 
             //$scope.chapters = [];
@@ -812,26 +813,29 @@
         $scope.desc = "";
         $scope.newImg = null;
         $scope.imgLogoUrl;
-        var userQuestionBanksRef1 = new Firebase('https://pspractice.firebaseio.com/');
+        var userQuestionBanksRef1 = new Firebase('https://luminous-torch-4640.firebaseio.com/');
 
         function addBook() {
             $scope.showbook = navService.toggleRight1;
             $scope.showbook();
         }
 
-        function createBook(bookForm, p) {
+        function createBook(bookForm, img) {
             addBook();
             $scope.temps = {
                 title: $scope.name,
-                description: $scope.desc,
-                //imgLogoUrl: $scope.imgLogoUrl || 'img/1angular.png'
-                imgLogoUrl: p
+                desc: $scope.desc,
+                imgLogoUrl: $scope.imgLogoUrl || 'img/1angular.png',
+                'timestamp': Firebase.ServerValue.TIMESTAMP,
+                // imgLogoUrl: img
             };
             userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
-                'membership-type': 1
+                'memberships-type': 1,
+                'timestamp': Firebase.ServerValue.TIMESTAMP
             });
             userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
-                "membership-type": 1
+                "memberships-type": 1,
+                'timestamp': Firebase.ServerValue.TIMESTAMP
             });
             userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
             if ($rootScope.newImg) {
@@ -843,10 +847,12 @@
                         // $scope.temps.imgLogoUrl = url + '?random=' + new Date();
                         //its for sending data on firebase by Name's node
                         userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
-                            'membership-type': 1
+                            'memberships-type': 1,
+                            'timestamp': Firebase.ServerValue.TIMESTAMP
                         });
                         userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
-                            "membership-type": 1
+                            "memberships-type": 1,
+                            'timestamp': Firebase.ServerValue.TIMESTAMP
                         });
                         userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
 
@@ -876,7 +882,6 @@
                 targetEvent: ev
             }).then(function (picture) {
                 $rootScope.newImg = picture;
-                console.log("this is image" + picture);
             }, function (err) {
                 console.log(err);
 
@@ -916,7 +921,7 @@
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....');
                     console.log('picture upload successful');
-                    console.log(url);
+                    // console.log(url);
 
                     defer.resolve(url);
 
@@ -946,7 +951,7 @@
          }, 0)
          }*/
 
-        var ref = new Firebase('https://pspractice.firebaseio.com/');
+        var ref = new Firebase('https://luminous-torch-4640.firebaseio.com/');
 
         $scope.bookId = $stateParams.id;
         $scope.Title = '';
@@ -1045,7 +1050,7 @@
 
         //AddQuestion Controller Work
         var that = this;
-        var myFirebaseRef = new Firebase("https://pspractice.firebaseio.com/");
+        var myFirebaseRef = new Firebase("https://luminous-torch-4640.firebaseio.com/");
         var idCounter = 3;
         this.showRadioOptions = false;
         this.showCheckOptions = false;
@@ -1119,7 +1124,7 @@
                 that.showQuestionSet = false;
                 that.answerTag = [];
                 that.myAnswer = undefined;
-            } else  {
+            } else {
                 that.showCheckOptions = false;
                 that.showRadioOptions = false;
                 that.showQuestionSet = true;
