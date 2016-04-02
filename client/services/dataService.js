@@ -114,7 +114,7 @@ angular.module('core')
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
                                             if (val.id === userdata.$id) {
-                                                if (snapshot.key() === "profileImage") {
+                                                if (snapshot.key() === "profile-image") {
                                                     val.profileImage = snapshot.val();
                                                 }
                                                 if (snapshot.key() === "firstName") {
@@ -137,7 +137,10 @@ angular.module('core')
                                         })
                                     });*/
                                     userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(snapshot, prevChildKey) {
+                                            console.log('presence 1', userdata.$id)
+
                                         userData.forEach(function(val, indx) {
+                                            console.log('presence 2', val.id, userdata.$id)
                                             if (val.id === userdata.$id) {
                                                 if (snapshot.val()) {
                                                     /*for (var key in snapshot.val()) {
@@ -160,11 +163,11 @@ angular.module('core')
                                         // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
                                         // console.log('user', userdata.$id)
                                         if (userData.length > 0) {
-                                            userData.forEach(function(val, indx) {
+                                            for (var indx = 0; indx <= userData.length; indx++) {
                                                 // console.log(val.id);
                                                 // console.log(userdata.$id)
                                                 // console.log(userData[indx])
-                                                if (val.id === userdata.$id) {
+                                                if (userData[indx].id === userdata.$id && userData[indx].groupID === group.key() && userData[indx].subgroupID === subgroup.key()) {
                                                     userData[indx].id = userdata.$id;
                                                     userData[indx].type = type;
                                                     userData[indx].groupsubgroup = group.key() + ' / ' + subgroup.key();
@@ -185,6 +188,7 @@ angular.module('core')
                                                     userData[indx].firstName = usermasterdata.firstName;
                                                     userData[indx].lastName = usermasterdata.lastName;
                                                     userData[indx].fullName = usermasterdata.firstName + ' ' + usermasterdata.lastName;
+                                                    break;
                                                 }
                                                 if (userData.length === indx + 1) {
                                                     userData.push({
@@ -210,7 +214,7 @@ angular.module('core')
                                                         fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
                                                     });
                                                 }
-                                            });
+                                            };
                                         } else {
                                             userData.push({
                                                 id: userdata.$id,
