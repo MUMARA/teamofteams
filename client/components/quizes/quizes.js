@@ -23,6 +23,7 @@
         $scope.questionView = null;
         //for toolbar text hide
         $scope.chapterSearch = false;
+        $scope.quizSearch = false;
         $scope.topicSearch = false;
         $scope.questionSearch = false;
         $scope.quizSearch = false;

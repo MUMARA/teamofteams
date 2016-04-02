@@ -352,24 +352,24 @@
     <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-1" layout="row">
-                <h2 ng-hide="quizes.chapterSearch">
+                <h2 ng-hide="quizes.quizSearch">
                     <span>Quiz Banks</span>
                 </h2>
 
                 <div flex layout="row">
-                    <md-input-container class="search-input-quiz" ng-show="quizes.chapterSearch">
+                    <md-input-container class="search-input-quiz" ng-show="quizes.quizSearch">
                         <input type="text" ng-model="cSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
-                    <img ng-click="quizes.chapterSearch = !quizes.chapterSearch;"
-                         ng-if="quizes.chapterSearch"
+                    <img ng-click="quizes.quizSearch = !quizes.quizSearch;"
+                         ng-if="quizes.quizSearch"
                          src="img/closeIcon.png" class="close-img">
 
                     <div class="img-div">
-                        <img ng-if="!quizes.chapterSearch" src="img/1dropdown.svg"/>
-                        <img ng-if="!quizes.chapterSearch" src="img/1search.svg"
-                             ng-click="quizes.chapterSearch = !quizes.chapterSearch"/>
+                        <img ng-if="!quizes.quizSearch" src="img/1dropdown.svg"/>
+                        <img ng-if="!quizes.quizSearch" src="img/1search.svg"
+                             ng-click="quizes.quizSearch = !quizes.quizSearch"/>
                     </div>
                 </div>
             </div>
