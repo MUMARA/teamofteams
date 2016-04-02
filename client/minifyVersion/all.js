@@ -10344,23 +10344,50 @@ angular.module('core')
                                 var message = userdata.message;
                                 var timestamp = userdata.timestamp;
                                 $firebaseObject(firebaseService.getRefUsers().child(userdata.$id)).$loaded().then(function(usermasterdata) {
+                                    // console.log('user change 4', userdata.$id)
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_changed', function(snapshot, prevChildKey) {
-                                        userData.forEach(function(val, indx) {
-                                            if (val.id === userdata.$id) {
-                                                if (snapshot.key() === "profile-image") {
-                                                    val.profileImage = snapshot.val();
+                                        // console.log('user change', snapshot.key(), snapshot.val(), userData.length)
+                                        // for (var i = 0; i <= userData.length; i++) {
+                                        //     // console.log('user change 2', i, userData[i].id, userdata.$id)
+                                        //     if (userData[i].id === userdata.$id) {
+                                        //         // console.log('user change 3', val.id)
+                                        //         if (snapshot.key() === "profile-image") {
+                                        //             userData[i].profileImage = snapshot.val();
+                                        //         }
+                                        //         if (snapshot.key() === "firstName") {
+                                        //             userData[i].firstName = snapshot.val();
+                                        //         }
+                                        //         if (snapshot.key() === "lastName") {
+                                        //             userData[i].lastName = snapshot.val();
+                                        //         }
+                                        //         if (snapshot.key() === "contactNumber") {
+                                        //             userData[i].contactNumber = snapshot.val();
+                                        //         }
+                                        //         break;
+                                        //     }
+                                            userData.forEach(function(val, indx) {
+                                                    // console.log('user 2', val.id, userdata.$id)
+                                                if (val.id === userdata.$id) {
+                                                    // console.log('user 1', val.id === userdata.$id)
+                                                    console.log('user 1', snapshot.key())
+                                                    if (snapshot.key() === "profile-image") {
+                                                        val.profileImage = snapshot.val();
+                                                    }
+                                                    if (snapshot.key() === "firstName") {
+                                                        val.firstName = snapshot.val();
+                                                        val.fullName = val.firstName + ' ' + val.lastName;
+                                                    }
+                                                    if (snapshot.key() === "lastName") {
+                                                        console.log('user 2', val.lastName)
+                                                        val.lastName = snapshot.val();
+                                                        val.fullName = val.firstName + ' ' + val.lastName;
+                                                    }
+                                                    if (snapshot.key() === "contactNumber") {
+                                                        val.contactNumber = snapshot.val();
+                                                    }
                                                 }
-                                                if (snapshot.key() === "firstName") {
-                                                    val.firstName = snapshot.val();
-                                                }
-                                                if (snapshot.key() === "lastName") {
-                                                    val.lastName = snapshot.val();
-                                                }
-                                                if (snapshot.key() === "contactNumber") {
-                                                    val.contactNumber = snapshot.val();
-                                                }
-                                            }
-                                        });
+                                            });
+                                        // }
                                     });
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
@@ -10370,9 +10397,11 @@ angular.module('core')
                                                 }
                                                 if (snapshot.key() === "firstName") {
                                                     val.firstName = snapshot.val();
+                                                    val.fullName = val.firstName + ' ' + val.lastName;
                                                 }
                                                 if (snapshot.key() === "lastName") {
                                                     val.lastName = snapshot.val();
+                                                    val.fullName = val.firstName + ' ' + val.lastName;
                                                 }
                                                 if (snapshot.key() === "contactNumber") {
                                                     val.contactNumber = snapshot.val();
@@ -10388,10 +10417,7 @@ angular.module('core')
                                         })
                                     });*/
                                     userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(snapshot, prevChildKey) {
-                                            console.log('presence 1', userdata.$id)
-
                                         userData.forEach(function(val, indx) {
-                                            console.log('presence 2', val.id, userdata.$id)
                                             if (val.id === userdata.$id) {
                                                 if (snapshot.val()) {
                                                     /*for (var key in snapshot.val()) {
