@@ -43,6 +43,9 @@ angular.module('core')
             var progressReport = null;
             var subgroupPolicies = null;
             var activitySeen = null;
+            var questionBank = null;
+            var userQuestionBanks = null;
+            var questionBankMemberships = null;
 
             return {
                 addUpdateHandler: function() {
@@ -163,6 +166,15 @@ angular.module('core')
                 getRefActivitySeen: function() {
                     return activitySeen;
                 },
+                getRefQuestionBank:  function() {
+                    return questionBank;
+                },
+                getRefUserQuestionBanks:  function() {
+                    return userQuestionBanks;
+                },
+                getRefQuestionBankMemberships:  function() {
+                    return questionBankMemberships;
+                },
                 logout: function() {
                   console.log('unauth the firebase');
                   ref.unauth();
@@ -214,6 +226,11 @@ angular.module('core')
                                 progressReport = ref.child('subgroup-progress-reports');
                                 subgroupPolicies = ref.child('subgroup-policies');
                                 activitySeen = ref.child('activities-seen-by-user');
+                                questionBank = ref.child('question-bank');
+                                userQuestionBanks = ref.child('user-question-banks');
+                                questionBankMemberships = ref.child('question-bank-memberships');
+                                
+                                
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.

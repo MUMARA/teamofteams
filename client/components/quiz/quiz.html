@@ -589,9 +589,9 @@
         <md-content class="backColorLightSeaGreen">
             <form name="bookForm" layout-padding>
                 <div layout="row">
-                    <md-input-container flex>
+                    <!--<md-input-container flex>
                         <label>Book ID</label>
-                        <input name="bookID" ng-model="quiz.bookID" required
+                        <input name="bookID" ng-model="quiz.questionbankObj.bookID" required
                                ng-pattern="/^([a-z0-9]){3,20}$/" minlength="3" maxlength="50"
                                check-book-existance="" md-sidenav-focus>
 
@@ -607,11 +607,11 @@
                                 available.
                             </div>
                         </div>
-                    </md-input-container>
+                    </md-input-container>-->
                     <md-input-container flex>
                         <label>Book Title</label>
                         <input name="bookTitle"
-                               ng-model="quiz.name" minlength="3" maxlength="50" required
+                               ng-model="quiz.questionbankObj.name" minlength="3" maxlength="50" required
                                md-sidenav-focus>
 
                         <div ng-show="bookForm.$submitted || bookForm.bookTitle.$touched"
@@ -626,7 +626,7 @@
                     <md-input-container flex>
                         <label>Description</label>
                     <textarea minlength="10"
-                              maxlength="200" name="bookDesc" required ng-model="quiz.desc"
+                              maxlength="200" name="bookDesc" required ng-model="quiz.questionbankObj.desc"
                               cols="25" rows="3"></textarea>
 
                         <div ng-show="bookForm.$submitted || bookForm.bookDesc.$touched"
@@ -654,8 +654,8 @@
             <!--<md-button class="md-raised md-primary">Submit</md-button>-->
             <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
             <md-button class="backColorSeaGreen color-white"
-                       ng-disabled="bookForm.$invalid || !newImg" class="md-primary"
-                       ng-click="quiz.createBook(bookForm, $root.newImg); $root.newImg = null">
+                       ng-disabled="bookForm.$invalid" class="md-primary"
+                       ng-click="quiz.createBook(quiz.questionbankObj, $root.newImg); $root.newImg = null">
                 Create
             </md-button>
             <md-button ng-click="quiz.closeBook()"
@@ -1007,7 +1007,7 @@
                     <div style="border: 1px none ; background-color: #F2F2F2;overflow:auto">
                         <!-- height: 400%;-->
                         <div style="background-color: #f2f2f2; overflow:auto">
-                            <div style=" " ng-repeat="book in quiz.books" id="bookId{{$index}}">
+                            <div style=" " ng-repeat="book in quiz.books track by $index" id="bookId{{$index}}">
                                 <div style=" background-color: #f7f7f7; height: 126px">
                                     <div style="background-color: #f7f7f7; height: 121px;border-bottom:solid #E5E5E5 "
                                          layout="column" layout-align="center center"

@@ -3,43 +3,44 @@
     angular
         .module('app.quiz', ['core'])
         /*.directive('onBookRender', function ($timeout, quizService) {
-            return {
-                restrict: 'A',
-                link: function (scope, element, attr) {
-                    if (scope.$last) {
-                        $timeout(function () {
-                            $('#bookId' + quizService.getBookIndex() + '').addClass('selectedBook')
-                        }, 0);
-                    }
-                }
-            }
-        })*/
+         return {
+         restrict: 'A',
+         link: function (scope, element, attr) {
+         if (scope.$last) {
+         $timeout(function () {
+         $('#bookId' + quizService.getBookIndex() + '').addClass('selectedBook')
+         }, 0);
+         }
+         }
+         }
+         })*/
         /*.directive('onChapterRender', function ($timeout, quizService) {
-            return {
-                restrict: 'A',
-                link: function (scope, element, attr) {
-                    $timeout(function () {
-                        if (scope.$last) {
-                            //$('#chapid' + quizService.getChapterIndex() + '').addClass('selectedChapter')
-                        }
-                    }, 0);
+         return {
+         restrict: 'A',
+         link: function (scope, element, attr) {
+         $timeout(function () {
+         if (scope.$last) {
+         //$('#chapid' + quizService.getChapterIndex() + '').addClass('selectedChapter')
+         }
+         }, 0);
 
 
-                }
-            }
-        })*/
+         }
+         }
+         })*/
         /*.directive('onTopicRender', function ($timeout, quizService) {
-            return {
-                restrict: 'A',
-                link: function (scope, element, attr) {
-                    if (scope.$last) {
-                        $timeout(function () {
-                            $('#topicId' + quizService.getTopicIndex() + '').addClass('selectedTopic')
-                        }, 0);
-                    }
-                }
-            }
-        })*/
+         return {
+         restrict: 'A',
+         link: function (scope, element, attr) {
+         if (scope.$last) {
+         $timeout(function () {
+         $('#topicId' + quizService.getTopicIndex() + '').addClass('selectedTopic')
+         }, 0);
+         }
+         }
+         }
+         })*/
+        .service('quizBankService', ['firebaseService', 'userService', '$q', quizBank])
         .factory('quizService', ["$location", function ($location) {
             var that = this;
 
@@ -167,40 +168,76 @@
             }
 
             /*$scope.close = function () {
-                $mdSidenav('nav1').close()
-                    .then(function () {
-                        $log.debug("close LEFT is done");
-                    });
-            }
-            $scope.close = function () {
-                $mdSidenav('nav2').close()
-                    .then(function () {
-                        $log.debug("close LEFT is done");
-                    });
-            }
-            $scope.close = function () {
-                $mdSidenav('nav3').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };
-            $scope.close = function () {
-                $mdSidenav('nav4').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };
-            $scope.close = function () {
-                $mdSidenav('nav5').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };
-            $scope.close = function () {
-                $mdSidenav('nav6').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };*/
-        })
+             $mdSidenav('nav1').close()
+             .then(function () {
+             $log.debug("close LEFT is done");
+             });
+             }
+             $scope.close = function () {
+             $mdSidenav('nav2').close()
+             .then(function () {
+             $log.debug("close LEFT is done");
+             });
+             }
+             $scope.close = function () {
+             $mdSidenav('nav3').close()
+             .then(function () {
+             $log.debug("close RIGHT is done");
+             });
+             };
+             $scope.close = function () {
+             $mdSidenav('nav4').close()
+             .then(function () {
+             $log.debug("close RIGHT is done");
+             });
+             };
+             $scope.close = function () {
+             $mdSidenav('nav5').close()
+             .then(function () {
+             $log.debug("close RIGHT is done");
+             });
+             };
+             $scope.close = function () {
+             $mdSidenav('nav6').close()
+             .then(function () {
+             $log.debug("close RIGHT is done");
+             });
+             };*/
+        });
+
+
+    function quizBank(firebaseService, userService, $q) {
+        var _self = this;
+        _self.books = [];
+
+        _self.loadQuestionBanks = function () {
+            var deferred = $q.defer();
+            firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).on('child_added', function (questionBankUniqueID) {
+                firebaseService.getRefQuestionBank().child(questionBankUniqueID.key()).on('value', function (questionBank) {
+                    _self.books.push(questionBank.val());
+                    deferred.resolve(_self.books)
+                });
+            });
+
+            return deferred.promise;
+        };
+        _self.createQuestionBank = function (questionBankUniqueID,data) {
+            console.log(questionBankUniqueID,data)
+            // firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).set();
+           var a =  firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).push({
+                'memberships-type': 1,
+                'timestamp': Firebase.ServerValue.TIMESTAMP
+            });
+            console.log(a.key());
+            firebaseService.getRefQuestionBankMemberships().child(a.key()).child(userService.getCurrentUser().userID).set({
+                "memberships-type": 1,
+                'timestamp': Firebase.ServerValue.TIMESTAMP
+            });
+            firebaseService.getRefQuestionBank().child(a.key()).set(data);
+            // userQuestionBanksRef1.child("question-bank").child($scope.bookID).child("memberships").child(userService.getCurrentUser().userID).set({
+            //     "memberships-type": 1,
+            // });
+        }
+    }
+
 })();

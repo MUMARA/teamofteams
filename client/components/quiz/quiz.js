@@ -8,101 +8,117 @@
         .module('app.quiz')
         .controller('QuizController', QuizController);
 
-    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
+    QuizController.$inject = ['quizBankService', "$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
 
-    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
+    function QuizController(quizBankService, $rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
 
         /*Private Variables*/
-        var $scope = this;
-        $scope.img = '../../img/userImg1.svg';
-        $scope.show = false;
-        $scope.showView = false;
-        $scope.showQuizBank = true;
-        $scope.showQuizList = false;
-        $scope.showQuizAssign = false;
-        $scope.questionView = null;
+        var _self = this;
+        _self.img = '../../img/userImg1.svg';
+        _self.show = false;
+        _self.showView = false;
+        _self.showQuizBank = true;
+        _self.showQuizList = false;
+        _self.showQuizAssign = false;
+        _self.questionView = null;
         //for toolbar text hide
-        $scope.chapterSearch = false;
-        $scope.topicSearch = false;
-        $scope.questionSearch = false;
-        $scope.quizSearch = false;
-        $scope.quizQuestionSearch = false;
-        $scope.chaptersSideNavSearch = false;
-        $scope.topicSideNavSearch = false;
-        $scope.questionSideNavSearch = false;
-        $scope.inputEnter = false;
+        _self.chapterSearch = false;
+        _self.topicSearch = false;
+        _self.questionSearch = false;
+        _self.quizSearch = false;
+        _self.quizQuestionSearch = false;
+        _self.chaptersSideNavSearch = false;
+        _self.topicSideNavSearch = false;
+        _self.questionSideNavSearch = false;
+        _self.inputEnter = false;
 
-        $scope.selectedQuestionIndex = null;
-        $scope.selectedTopicIndex = null;
-        $scope.selectedChapterIndex = null;
+        _self.selectedQuestionIndex = null;
+        _self.selectedTopicIndex = null;
+        _self.selectedChapterIndex = null;
+        _self.questionbankObj = {}
+        _self.addBook = addBook;
+        _self.createBook = createBook;
+        _self.closeBook = closeBook;
+        _self.addChapter = addChapter;
+        _self.createChapter = createChapter;
+        _self.closeChapter = closeChapter;
+        _self.addTopic = addTopic;
+        _self.createTopic = createTopic;
+        _self.closeTopic = closeTopic;
+        _self.addQuestion = addQuestion;
+        _self.closeQuestion = closeQuestion;
+        _self.editChapter = editChapter;
+        _self.hover = hover;
+        _self.editHover = editHover;
+        _self.showChapters = showChapters;
+        _self.showTopics = showTopics;
+        _self.showQuestions = showQuestions;
+        _self.showQuestionView = showQuestionView;
+        _self.showQuizChapters = showQuizChapters;
+        _self.showQuizTopics = showQuizTopics;
 
-        $scope.addBook = addBook;
-        $scope.createBook = createBook;
-        $scope.closeBook = closeBook;
-        $scope.addChapter = addChapter;
-        $scope.createChapter = createChapter;
-        $scope.closeChapter = closeChapter;
-        $scope.addTopic = addTopic;
-        $scope.createTopic = createTopic;
-        $scope.closeTopic = closeTopic;
-        $scope.addQuestion = addQuestion;
-        $scope.closeQuestion = closeQuestion;
-        $scope.editChapter = editChapter;
-        $scope.hover = hover;
-        $scope.editHover = editHover;
-        $scope.showChapters = showChapters;
-        $scope.showTopics = showTopics;
-        $scope.showQuestions = showQuestions;
-        $scope.showQuestionView = showQuestionView;
-        $scope.showQuizChapters = showQuizChapters;
-        $scope.showQuizTopics = showQuizTopics;
+        _self.setSelectedBook = setSelectedBook;
+        _self.setSelectedChapter = setSelectedChapter;
+        _self.setSelectedTopic = setSelectedTopic;
+        _self.setSelectedQuestion = setSelectedQuestion;
+        _self.setSelectedQuizes = setSelectedQuizes;
 
-        $scope.setSelectedBook = setSelectedBook;
-        $scope.setSelectedChapter = setSelectedChapter;
-        $scope.setSelectedTopic = setSelectedTopic;
-        $scope.setSelectedQuestion = setSelectedQuestion;
-        $scope.setSelectedQuizes = setSelectedQuizes;
+        _self.SelectedBook = null;
+        _self.SelectedChapter = null;
+        _self.SelectedTopic = null;
+        _self.SelectedQuestion = null;
+        _self.showQuizBankFunc = showQuizBankFunc;
+        _self.showQuiz = showQuiz;
+        _self.showAssignQuiz = showAssignQuiz;
+        _self.showAttemptQuiz = showAttemptQuiz;
+        _self.addQuiz = addQuiz;
+        _self.closeQuiz = closeQuiz;
 
-        $scope.SelectedBook = null;
-        $scope.SelectedChapter = null;
-        $scope.SelectedTopic = null;
-        $scope.SelectedQuestion = null;
-        $scope.showQuizBankFunc = showQuizBankFunc;
-        $scope.showQuiz = showQuiz;
-        $scope.showAssignQuiz = showAssignQuiz;
-        $scope.showAttemptQuiz = showAttemptQuiz;
-        $scope.addQuiz = addQuiz;
-        $scope.closeQuiz = closeQuiz;
+        _self.afterLoad = afterLoad;
 
-        $scope.afterLoad = afterLoad;
-
-        $scope.bookId = '';
-        $scope.chapterId = '';
-        $scope.topicId = '';
+        _self.bookId = '';
+        _self.chapterId = '';
+        _self.topicId = '';
         //Firebase
         var ref = new Firebase('https://luminous-torch-4640.firebaseio.com');
-        var refMain = new Firebase('https://luminous-torch-4640.firebaseio.com');
-        $scope.books = [];
-        $scope.booksId = [];
-        $scope.quizes = [];
-        $scope.chaptersId = [];
-        $scope.chapters = [];
-        $scope.topicsId = [];
-        $scope.topics = [];
-        $scope.questions = [];
-        $scope.groups = [];
-        //QUIZ SCEDULE variables & functions
-        $scope.closeAssignQuiz = closeAssignQuiz;
-        $scope.setSelectedGroup = setSelectedGroup;
-        $scope.setSelectedSubGroup = setSelectedSubGroup;
-        $scope.quizesList = [];
-        $scope.quizesListKey = [];
-        $scope.subGroup = [];
-        $scope.myDatabase = [];
-        $scope.selectedGroup = null;
-        $scope.dataPush = dataPush;
-        $scope.setSelectedQuiz = setSelectedQuiz;
+        _self.books = [];
+        _self.booksId = [];
+        _self.quizes = [];
+        _self.chaptersId = [];
+        _self.chapters = [];
+        _self.topicsId = [];
+        _self.topics = [];
+        _self.questions = [];
+        _self.groups = [];
+        //QUIZ SCHEDULED variables & functions
+        _self.closeAssignQuiz = closeAssignQuiz;
+        _self.setSelectedGroup = setSelectedGroup;
+        _self.setSelectedSubGroup = setSelectedSubGroup;
+        _self.quizesList = [];
+        _self.quizesListKey = [];
+        _self.subGroup = [];
+        _self.myDatabase = [];
+        _self.selectedGroup = null;
+        _self.dataPush = dataPush;
+        _self.setSelectedQuiz = setSelectedQuiz;
 
+        /* Start My Code */
+        firebaseService.getRefMain()
+        /*ref.child('user-question-banks').child(userService.getCurrentUser().userID).on('value', function (snapshot) {
+         console.log(snapshot);
+         });*/
+        function initQuestionBank() {
+            quizBankService.loadQuestionBanks().then(
+                function (data) {
+                    _self.books = data;
+                    console.log(data, 'console.log(questionBank.val())');
+                }
+            )
+        }
+
+        initQuestionBank();
+
+        /* End My Code */
 
         /*All Function*/
 
@@ -139,11 +155,11 @@
             if (quizService.getBookAfterCreation() !== null) {
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
-                        $scope.books.push(snapShot.val());
-                        $scope.booksId.push(snapShot.key());
+                        _self.books.push(snapShot.val());
+                        _self.booksId.push(snapShot.key());
                         if (quizService.getBookAfterCreation() == snapShot.key()) {
-                            $scope.selectedBookIndex = $scope.booksId.indexOf(snapShot.key());
-                            $scope.bookId = snapShot.key();
+                            _self.selectedBookIndex = _self.booksId.indexOf(snapShot.key());
+                            _self.bookId = snapShot.key();
                         }
                     }, 0);
                 });
@@ -152,53 +168,53 @@
                 // console.log('ELSE');
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
-                        $scope.books.push(snapShot.val());
-                        $scope.booksId.push(snapShot.key());
+                        _self.books.push(snapShot.val());
+                        _self.booksId.push(snapShot.key());
 
                     }, 0);
                 });
 
                 /*if(quizService.getSelectedBook()) {
-                 $scope.selectedBookIndex = quizService.getSelectedBook();
-                 $scope.bookId = quizService.getBook();
+                 _self.selectedBookIndex = quizService.getSelectedBook();
+                 _self.bookId = quizService.getBook();
                  }else{
-                 $scope.selectedBookIndex = 0;
-                 $scope.bookId = quizService.getBook();
-                 quizService.setBook($scope.bookId, $scope.selectedBookIndex);
+                 _self.selectedBookIndex = 0;
+                 _self.bookId = quizService.getBook();
+                 quizService.setBook(_self.bookId, _self.selectedBookIndex);
                  }*/
 
                 if (quizService.getBook() !== null) {
-                    $scope.bookId = quizService.getBook();
-                    $scope.selectedBookIndex = quizService.getSelectedBook();
+                    _self.bookId = quizService.getBook();
+                    _self.selectedBookIndex = quizService.getSelectedBook();
                     console.log(quizService.getBook());
                     ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
                         $timeout(function () {
-                            $scope.chapters.push(snapShot.val());
-                            $scope.chaptersId.push(snapShot.key());
+                            _self.chapters.push(snapShot.val());
+                            _self.chaptersId.push(snapShot.key());
                         }, 0);
                     });
                     if (quizService.getChapter() !== null) {
-                        $scope.chapterId = quizService.getChapter();
+                        _self.chapterId = quizService.getChapter();
                         ref.child('question-bank-topic').child(quizService.getBook()).child(quizService.getChapter()).on('child_added', function (snapShot) {
                             $timeout(function () {
-                                $scope.topics.push(snapShot.val());
-                                $scope.topicsId.push(snapShot.key());
+                                _self.topics.push(snapShot.val());
+                                _self.topicsId.push(snapShot.key());
                             }, 0);
                         });
-                        $scope.selectedChapterIndex = quizService.getSelectedChapter();
+                        _self.selectedChapterIndex = quizService.getSelectedChapter();
                         if (quizService.getTopic() !== null) {
-                            $scope.topicId = quizService.getTopic();
+                            _self.topicId = quizService.getTopic();
                             ref.child('questions').child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).on('child_added', function (snapShot) {
                                 $timeout(function () {
-                                    $scope.questions.push(snapShot.val());
+                                    _self.questions.push(snapShot.val());
                                 }, 0);
                             });
-                            $scope.selectedTopicIndex = quizService.getSelectedTopic();
+                            _self.selectedTopicIndex = quizService.getSelectedTopic();
                             console.log(quizService.getSelectedQuestion());
                             console.log(quizService.getQuestionObject());
                             if (quizService.getSelectedQuestion() !== null) {
                                 if (quizService.getQuestionObject() !== null) {
-                                    $scope.selectedQuestionIndex = quizService.getSelectedQuestion();
+                                    _self.selectedQuestionIndex = quizService.getSelectedQuestion();
                                     showQuestionView(quizService.getQuestionObject());
                                 }
                             }
@@ -206,8 +222,8 @@
                     }
                 }
                 /*else {
-                 $scope.bookId = $scope.booksId[0];
-                 quizService.setBook($scope.bookId, 0);
+                 _self.bookId = _self.booksId[0];
+                 quizService.setBook(_self.bookId, 0);
 
                  }*/
             }
@@ -231,11 +247,11 @@
         /*  Tabs  */
         function showQuizBankFunc() {
             alert('showQuizBankFunc')
-            $scope.showQuizBank = true;
-            $scope.showQuizList = false;
-            $scope.showQuizAssign = false;
-            if (quizService.getQuestionObject() !== null && $scope.questionView !== null) {
-                $scope.showView = true;
+            _self.showQuizBank = true;
+            _self.showQuizList = false;
+            _self.showQuizAssign = false;
+            if (quizService.getQuestionObject() !== null && _self.questionView !== null) {
+                _self.showView = true;
             }
             // $('#chapterColumn').addClass('marginLeft');
             // $('#quizBankIcon').addClass('selectedTab');
@@ -243,48 +259,48 @@
             // $('#quizAssignIcon').removeClass('selectedTab');
             quizService.setSelectedTab('QuizBank');
 
-            //$scope.chapters = [];
-            //$scope.topics = [];
-            //$scope.questions = [];
-            //$scope.chaptersId = [];
-            //$scope.topicsId = [];
-            //$scope.questionsId = [];
+            //_self.chapters = [];
+            //_self.topics = [];
+            //_self.questions = [];
+            //_self.chaptersId = [];
+            //_self.topicsId = [];
+            //_self.questionsId = [];
         }
 
         function showQuiz() {
-            $scope.showQuizBank = false;
-            $scope.showQuizList = true;
-            $scope.showQuizAssign = false;
-            $scope.showView = false;
+            _self.showQuizBank = false;
+            _self.showQuizList = true;
+            _self.showQuizAssign = false;
+            _self.showView = false;
             //$('#chapterColumn').removeClass('marginLeft')
             $('#quizBankIcon').removeClass('selectedTab');
             $('#quizIcon').addClass('selectedTab');
             $('#quizAssignIcon').removeClass('selectedTab');
             quizService.setSelectedTab('Quiz');
 
-            //$scope.chapters = [];
-            //$scope.topics = [];
-            //$scope.questions = [];
-            //$scope.chaptersId = [];
-            //$scope.topicsId = [];
-            //$scope.questionsId = [];
+            //_self.chapters = [];
+            //_self.topics = [];
+            //_self.questions = [];
+            //_self.chaptersId = [];
+            //_self.topicsId = [];
+            //_self.questionsId = [];
         }
 
         function showAssignQuiz() {
 
 
-            $scope.showQuizBank = false;
-            $scope.showQuizList = false;
-            $scope.showQuizAssign = true;
+            _self.showQuizBank = false;
+            _self.showQuizList = false;
+            _self.showQuizAssign = true;
 
-            $scope.showView = false;
+            _self.showView = false;
             $('#quizBankIcon').removeClass('selectedTab');
             $('#quizIcon').removeClass('selectedTab');
             $('#quizAssignIcon').addClass('selectedTab');
 
             quizService.setSelectedTab('QuizAssign');
 
-            $scope.shceduleQuizArray = [];
+            _self.shceduleQuizArray = [];
             //Calling Shcedule Array List
             ref.child('quiz-schedule').on('child_added', function (snapShot) {
 
@@ -338,17 +354,17 @@
                 }); //
 
 
-                $scope.shceduleQuizArray.push(abc);
+                _self.shceduleQuizArray.push(abc);
 
-                console.log(JSON.stringify($scope.shceduleQuizArray));
+                console.log(JSON.stringify(_self.shceduleQuizArray));
 
-                $scope.SearchBindRecord = function (a, b, c) {
+                _self.SearchBindRecord = function (a, b, c) {
                     if (c === 'sub') {
-                        $scope.shceduleQuizSubGroups = a.sub_group;
+                        _self.shceduleQuizSubGroups = a.sub_group;
 
                         //getting All Questions of Specific Groups
-                        $scope.shceduleQuizQuizes = [];
-                        $scope.shceduleQuizArray.forEach(function (value, index) {
+                        _self.shceduleQuizQuizes = [];
+                        _self.shceduleQuizArray.forEach(function (value, index) {
 
                             if (value.group == b) {
                                 value.sub_group.forEach(function (val, indx) {
@@ -356,7 +372,7 @@
                                     val.topics.forEach(function (v, i) {
 
                                         v.quizes.forEach(function (q, qi) {
-                                            $scope.shceduleQuizQuizes.push(q);
+                                            _self.shceduleQuizQuizes.push(q);
 
 
                                         }); //q
@@ -364,7 +380,7 @@
                                     }); //v
                                 }); //val
 
-                                //console.log('length: ' + $scope.shceduleQuizQuizes.length + '|' + JSON.stringify($scope.shceduleQuizQuizes));
+                                //console.log('length: ' + _self.shceduleQuizQuizes.length + '|' + JSON.stringify(_self.shceduleQuizQuizes));
                             } //if
                         });
 
@@ -372,12 +388,12 @@
                     } // if sub_group
 
                     if (c === 'topic') {
-                        $scope.shceduleQuizTopics = a.topics;
+                        _self.shceduleQuizTopics = a.topics;
 
 
                         //getting All Questions of Specific Sub Group
-                        $scope.shceduleQuizQuizes = [];
-                        $scope.shceduleQuizArray.forEach(function (value, index) {
+                        _self.shceduleQuizQuizes = [];
+                        _self.shceduleQuizArray.forEach(function (value, index) {
 
 
                             value.sub_group.forEach(function (val, indx) {
@@ -388,14 +404,14 @@
                                     val.topics.forEach(function (v, i) {
 
                                         v.quizes.forEach(function (q, qi) {
-                                            $scope.shceduleQuizQuizes.push(q);
+                                            _self.shceduleQuizQuizes.push(q);
                                         }); //q
 
                                     }); //v
                                 } //if
                             }); //val
 
-                            console.log('length: ' + $scope.shceduleQuizQuizes.length + '|' + JSON.stringify($scope.shceduleQuizQuizes));
+                            console.log('length: ' + _self.shceduleQuizQuizes.length + '|' + JSON.stringify(_self.shceduleQuizQuizes));
 
                         });
 
@@ -411,7 +427,7 @@
 
 
                 }; // SearchBindRecord
-                //$scope.SearchBindRecord($scope.shceduleQuizArray, 'saylani', 'sub');
+                //_self.SearchBindRecord(_self.shceduleQuizArray, 'saylani', 'sub');
 
 
             });
@@ -426,79 +442,79 @@
 
         /*  Selection  */
         function setSelectedQuestion(that, index) {
-            $scope.selectedQuestionIndex = index;
+            _self.selectedQuestionIndex = index;
             quizService.setSelectedQuestion(index);
-            /*if ($scope.lastSelectedTopic.selectedTopic) {
+            /*if (_self.lastSelectedTopic.selectedTopic) {
              console.log("show", arguments, that);
              $('.selectedTopic').addClass('previousSelected')
-             if ($scope.lastSelectedQuestion) {
-             $scope.lastSelectedQuestion.selectedQuestion = '';
+             if (_self.lastSelectedQuestion) {
+             _self.lastSelectedQuestion.selectedQuestion = '';
              }
              that.selectedQuestion = 'selectedQuestion';
-             $scope.lastSelectedQuestion = that;
+             _self.lastSelectedQuestion = that;
              }
-             console.log($scope.lastSelectedTopic.selectedTopic)*/
+             console.log(_self.lastSelectedTopic.selectedTopic)*/
         }
 
         function setSelectedTopic(that, index) {
-            $scope.selectedQuestionIndex = null;
-            $scope.selectedTopicIndex = index;
+            _self.selectedQuestionIndex = null;
+            _self.selectedTopicIndex = index;
             quizService.setSelectedTopic(index);
             quizService.setSelectedQuestion(null);
             /*console.log("show", arguments, that);
-             if ($scope.lastSelectedChapter.selected) {
+             if (_self.lastSelectedChapter.selected) {
              console.log('in IF')
              $('.previousSelected').removeClass('previousSelected')
              $('.selectedChapter').addClass('previousSelected')
-             if ($scope.lastSelectedTopic) {
-             $scope.lastSelectedTopic.selectedTopic = '';
+             if (_self.lastSelectedTopic) {
+             _self.lastSelectedTopic.selectedTopic = '';
              }
              that.selectedTopic = 'selectedTopic';
-             $scope.lastSelectedTopic = that;
+             _self.lastSelectedTopic = that;
              }*/
         }
 
         function setSelectedChapter(that, index) {
-            $scope.selectedQuestionIndex = null;
-            $scope.selectedTopicIndex = null;
-            $scope.selectedChapterIndex = index;
+            _self.selectedQuestionIndex = null;
+            _self.selectedTopicIndex = null;
+            _self.selectedChapterIndex = index;
             quizService.setSelectedChapter(index);
             quizService.setSelectedTopic(null);
             quizService.setSelectedQuestion(null);
             /*$('.selectedChapter').removeClass('previousSelected')
              console.log("show", that);
-             if ($scope.lastSelectedChapter) {
-             $scope.lastSelectedChapter.selected = '';
+             if (_self.lastSelectedChapter) {
+             _self.lastSelectedChapter.selected = '';
              }
              quizService.setSelectedChapter(that)
              that.selected = 'selectedChapter';
-             $scope.lastSelectedChapter = that;
-             console.log($scope.lastSelectedChapter.selected)*/
+             _self.lastSelectedChapter = that;
+             console.log(_self.lastSelectedChapter.selected)*/
         }
 
         function setSelectedBook(that, index) {
-            $scope.selectedBookIndex = index;
+            _self.selectedBookIndex = index;
             quizService.setSelectedBook(index);
 
-            $scope.selectedQuestionIndex = null;
-            $scope.selectedTopicIndex = null;
-            $scope.selectedChapterIndex = null;
+            _self.selectedQuestionIndex = null;
+            _self.selectedTopicIndex = null;
+            _self.selectedChapterIndex = null;
             quizService.setSelectedChapter(null);
             quizService.setSelectedTopic(null);
             quizService.setSelectedQuestion(null);
-            /*$scope.selectedQuestionIndex = null;
-             $scope.selectedTopicIndex = null;
-             $scope.selectedChapterIndex = null;
-             if ($scope.lastSelectedBook) {
-             $scope.lastSelectedBook.selected = '';
+            /*_self.selectedQuestionIndex = null;
+             _self.selectedTopicIndex = null;
+             _self.selectedChapterIndex = null;
+             if (_self.lastSelectedBook) {
+             _self.lastSelectedBook.selected = '';
              }
              that.selected = 'selectedBook';
-             $scope.lastSelectedBook = that;
-             console.log($scope.lastSelectedBook.selected)*/
+             _self.lastSelectedBook = that;
+             console.log(_self.lastSelectedBook.selected)*/
         }
 
         function setSelectedQuizes(index) {
-            $scope.selectedQuizes = index;
+            _self.selectedQuizes = index;
         }
 
         /*  Question Bank   */
@@ -508,24 +524,24 @@
             quizService.setTopic(null, null);
             console.log('showing Chapters');
             quizService.setQuestionObject(null);
-            $scope.showView = false;
-            $scope.questionView = null;
-            $scope.bookId = $scope.booksId[bookIndex];
-            quizService.setBook($scope.bookId, bookIndex);
-            $scope.chapterId = null;
-            $scope.topicId = null;
-            $scope.show = true;
-            $scope.chapters = [];
-            $scope.topics = [];
-            $scope.questions = [];
+            _self.showView = false;
+            _self.questionView = null;
+            _self.bookId = _self.booksId[bookIndex];
+            quizService.setBook(_self.bookId, bookIndex);
+            _self.chapterId = null;
+            _self.topicId = null;
+            _self.show = true;
+            _self.chapters = [];
+            _self.topics = [];
+            _self.questions = [];
 
-            $scope.chaptersId = [];
-            $scope.topicsId = [];
-            $scope.questionsId = [];
-            ref.child('question-bank-chapters').child($scope.bookId).on('child_added', function (snapShot) {
+            _self.chaptersId = [];
+            _self.topicsId = [];
+            _self.questionsId = [];
+            ref.child('question-bank-chapters').child(_self.bookId).on('child_added', function (snapShot) {
                 $timeout(function () {
-                    $scope.chapters.push(snapShot.val());
-                    $scope.chaptersId.push(snapShot.key());
+                    _self.chapters.push(snapShot.val());
+                    _self.chaptersId.push(snapShot.key());
                 }, 0);
             });
         }
@@ -533,37 +549,37 @@
         function showTopics(chapterIndex) {
             quizService.setTopic(null, null);
             quizService.setQuestionObject(null);
-            $scope.topics = [];
-            $scope.questions = [];
+            _self.topics = [];
+            _self.questions = [];
 
-            $scope.topicsId = [];
-            $scope.questionsId = [];
-            $scope.showView = false;
-            $scope.topicId = null;
-            $scope.questionView = null;
-            $scope.chapterId = $scope.chaptersId[chapterIndex];
-            quizService.setChapter($scope.chapterId, chapterIndex);
-            $scope.topics = [];
-            $scope.questions = [];
-            ref.child('question-bank-topic').child($scope.bookId).child($scope.chapterId).on('child_added', function (snapShot) {
+            _self.topicsId = [];
+            _self.questionsId = [];
+            _self.showView = false;
+            _self.topicId = null;
+            _self.questionView = null;
+            _self.chapterId = _self.chaptersId[chapterIndex];
+            quizService.setChapter(_self.chapterId, chapterIndex);
+            _self.topics = [];
+            _self.questions = [];
+            ref.child('question-bank-topic').child(_self.bookId).child(_self.chapterId).on('child_added', function (snapShot) {
                 $timeout(function () {
-                    $scope.topics.push(snapShot.val());
-                    $scope.topicsId.push(snapShot.key());
+                    _self.topics.push(snapShot.val());
+                    _self.topicsId.push(snapShot.key());
                 }, 0);
             });
         }
 
         function showQuestions(topicIndex) {
-            $scope.showView = false;
-            $scope.questionView = null;
-            $scope.topicId = $scope.topicsId[topicIndex];
-            quizService.setTopic($scope.topicId, topicIndex);
+            _self.showView = false;
+            _self.questionView = null;
+            _self.topicId = _self.topicsId[topicIndex];
+            quizService.setTopic(_self.topicId, topicIndex);
             quizService.setQuestionObject(null);
-            $scope.questions = [];
-            ref.child('questions').child($scope.bookId).child($scope.chapterId).child($scope.topicId).on('child_added',
+            _self.questions = [];
+            ref.child('questions').child(_self.bookId).child(_self.chapterId).child(_self.topicId).on('child_added',
                 function (snapShot) {
                     $timeout(function () {
-                        $scope.questions.push(snapShot.val());
+                        _self.questions.push(snapShot.val());
                     }, 0);
                 });
 
@@ -574,42 +590,42 @@
                 quizService.setQuestionObject(question);
             }
             console.log('Showing Question View ' + question);
-            $scope.showView = true;
-            $scope.questionView = question;
+            _self.showView = true;
+            _self.questionView = question;
         }
 
         /*  Quizes functions  */
-        $scope.showQuizes = showQuizes;
-        $scope.showQuizesQuestions = showQuizesQuestions;
-        $scope.quizes = [];
+        _self.showQuizes = showQuizes;
+        _self.showQuizesQuestions = showQuizesQuestions;
+        _self.quizes = [];
 
         function showQuizes(bookIndex) {
-            $scope.quizes = [];
+            _self.quizes = [];
             ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
                 var temp = {
                     details: snapShot.val().quizDetails,
                     key: snapShot.key()
                 };
-                $scope.quizes.push(temp);
+                _self.quizes.push(temp);
             });
         }
 
         function showQuizesQuestions(index) {
-            $scope.Array = [];
+            _self.Array = [];
             var iterator = 0;
             var chapterKey = '';
             console.log('showing quiz Questions');
-            ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
+            ref.child('quiz-create').child(quizService.getBook()).child(_self.quizes[index].key).child('quizQuestion')
                 .on('child_added', function (snapShot) {
                     chapterKey = snapShot.key();
                     var chapterTemp = snapShot.val().ChapterDetails;
-                    ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
+                    ref.child('quiz-create').child(quizService.getBook()).child(_self.quizes[index].key).child('quizQuestion')
                         .child(chapterKey).child('ChapterTopics').on('child_added', function (snap) {
                         var topicTemp = snap.val().TopicDetails;
-                        ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
+                        ref.child('quiz-create').child(quizService.getBook()).child(_self.quizes[index].key).child('quizQuestion')
                             .child(chapterKey).child('ChapterTopics').child(snap.key())
                             .child('TopicQuestions').on('child_added', function (shot) {
-                            $scope.Array[iterator] = {
+                            _self.Array[iterator] = {
                                 chapterDetails: chapterTemp,
                                 topicDetails: topicTemp,
                                 question: shot.val()
@@ -623,25 +639,25 @@
         }
 
         /*  Quiz Assign  */
-        /*refMain.child('groups-names').on('child_added', function (snapshot) {
-         $scope.groups.push({
+        /*ref.child('groups-names').on('child_added', function (snapshot) {
+         _self.groups.push({
          details : snapshot.val(),
          key   : snapshot.key()
          });
          console.log( snapshot.val() + ' ' + snapshot.key());
          })*/
-        $scope.assignQuiz = assignQuiz;
+        _self.assignQuiz = assignQuiz;
         // console.log($localStorage.loggedInUser)
-        //$scope.userID = '123654789';
+        //_self.userID = '123654789';
         /*userService.getCurrentUser()*/
         var groupDataUbind = {};
         var userDataUbind = {};
         var userObjUbind;
-        $scope.userObj = [];
+        _self.userObj = [];
 
         function getUserObj() {
             // console.log('getUserObj: ' + userService.getCurrentUser().userID)
-            //var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.userID))
+            //var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child(_self.userID))
             var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child(userService.getCurrentUser().userID))
                 .$loaded()
                 .then(function (data) {
@@ -651,16 +667,16 @@
                     userObjUbind = data.$watch(function () {
                         getUserObj();
                     });
-                    $scope.userObj = data;
+                    _self.userObj = data;
                     data.forEach(function (el, i) {
                         var j = i;
                         $firebaseObject(firebaseService.getRefGroups().child(el.$id))
                             .$loaded()
                             .then(function (groupData) {
                                 groupDataUbind[j] = groupData.$watch(function () {
-                                    $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : "";
+                                    _self.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : "";
                                 });
-                                $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : "";
+                                _self.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : "";
 
                                 if (groupData['group-owner-id']) {
                                     //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/!*.child('profile-image')*!/)
@@ -668,12 +684,12 @@
                                         .$loaded()
                                         .then(function (img) {
 
-                                            $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
+                                            _self.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
                                             userDataUbind[j] = img.$watch(function (dataVal) {
 
-                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img);
+                                                _self.userObj[j].userImg = $sce.trustAsResourceUrl(img);
                                             });
-                                            // console.log($scope.userObj)
+                                            // console.log(_self.userObj)
                                         });
 
                                 }
@@ -689,25 +705,25 @@
             /* $timeout(function () {
              $location.path('/user/:userID/quiz/quizAssign');
              }, 0)*/
-            $scope.subGroup = [];
+            _self.subGroup = [];
             $timeout(function () {
-                $scope.showQuizSceduling = navService.toggleRight6;
-                $scope.showQuizSceduling();
+                _self.showQuizSceduling = navService.toggleRight6;
+                _self.showQuizSceduling();
             }, 0);
 
-            $scope.quizesList = [];
+            _self.quizesList = [];
             ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
-                $scope.quizesListKey.push(snapShot.key());
-                $scope.quizesList.push(snapShot.val().quizDetails);
+                _self.quizesListKey.push(snapShot.key());
+                _self.quizesList.push(snapShot.val().quizDetails);
                 console.log(snapShot.val());
 
             });
-            console.log($scope.quizesListKey);
+            console.log(_self.quizesListKey);
 
-            for (var i = 0; i < $scope.userObj.length; i++) {
+            for (var i = 0; i < _self.userObj.length; i++) {
 
-                $scope.myDatabase[i] = {
-                    groupId: $scope.userObj[i].$id,
+                _self.myDatabase[i] = {
+                    groupId: _self.userObj[i].$id,
                     subGroupId: null,
                     subGroupIdIndex: null,
                     bookId: quizService.getBook(),
@@ -718,69 +734,69 @@
 
             }
 
-            console.log($scope.myDatabase);
+            console.log(_self.myDatabase);
         }
 
 
         function setSelectedQuiz(id) {
-            $scope.seclectedQuizID = id;
-            for (var i = 0; i < $scope.userObj.length; i++) {
+            _self.seclectedQuizID = id;
+            for (var i = 0; i < _self.userObj.length; i++) {
 
-                if ($scope.myDatabase[i].groupId == $scope.selectedGroup) {
-                    $scope.myDatabase[i].quizId = $scope.seclectedQuizID;
+                if (_self.myDatabase[i].groupId == _self.selectedGroup) {
+                    _self.myDatabase[i].quizId = _self.seclectedQuizID;
 
                 }
-                console.log($scope.myDatabase[i]);
+                console.log(_self.myDatabase[i]);
             }
-            //            console.log($scope.myDatabase);
+            //            console.log(_self.myDatabase);
 
         }
 
 
         function setSelectedGroup(id, index) {
-            $scope.selectedGroup = id;
-            $scope.selectedGroupIndex = index;
-            $scope.subGroup = [];
-            refMain.child('subgroups').child(id).on('child_added', function (snapShot) {
-                $scope.subGroup.push(snapShot.key());
-                console.log($scope.subGroup);
+            _self.selectedGroup = id;
+            _self.selectedGroupIndex = index;
+            _self.subGroup = [];
+            ref.child('subgroups').child(id).on('child_added', function (snapShot) {
+                _self.subGroup.push(snapShot.key());
+                console.log(_self.subGroup);
             });
 
 
         }
 
         function setSelectedSubGroup(id, index) {
-            $scope.subGroupId = id;
-            for (var i = 0; i < $scope.userObj.length; i++) {
+            _self.subGroupId = id;
+            for (var i = 0; i < _self.userObj.length; i++) {
 
-                if ($scope.myDatabase[i].groupId == $scope.selectedGroup) {
-                    $scope.myDatabase[i].subGroupId = id;
-                    $scope.myDatabase[i].quizId = $scope.seclectedQuizID;
-                    $scope.myDatabase[i].subGroupIdIndex = index;
+                if (_self.myDatabase[i].groupId == _self.selectedGroup) {
+                    _self.myDatabase[i].subGroupId = id;
+                    _self.myDatabase[i].quizId = _self.seclectedQuizID;
+                    _self.myDatabase[i].subGroupIdIndex = index;
                 }
 
 
             }
-            console.log($scope.myDatabase);
+            console.log(_self.myDatabase);
         }
 
 
         function dataPush() {
 
 
-            for (var i = 0; i < $scope.userObj.length; i++) {
+            for (var i = 0; i < _self.userObj.length; i++) {
 
 
-                if ($scope.myDatabase[i].subGroupId !== null && $scope.myDatabase[i].quizId !== null) {
+                if (_self.myDatabase[i].subGroupId !== null && _self.myDatabase[i].quizId !== null) {
 
-                    for (var a = 0; a < $scope.quizesList.length; a++) {
-                        if ($scope.quizesList[a].title == $scope.myDatabase[i].quizId) {
+                    for (var a = 0; a < _self.quizesList.length; a++) {
+                        if (_self.quizesList[a].title == _self.myDatabase[i].quizId) {
                             alert("yes");
-                            ref.child('quiz-schedule').child($scope.myDatabase[i].groupId).child($scope.myDatabase[i].subGroupId).child($scope.myDatabase[i].bookId).push({
-                                quizName: $scope.quizesList[a].title,
-                                quizUid: $scope.quizesListKey[a]
+                            ref.child('quiz-schedule').child(_self.myDatabase[i].groupId).child(_self.myDatabase[i].subGroupId).child(_self.myDatabase[i].bookId).push({
+                                quizName: _self.quizesList[a].title,
+                                quizUid: _self.quizesListKey[a]
                             });
-                            console.log($scope.myDatabase[i]);
+                            console.log(_self.myDatabase[i]);
                         }
                     }
                 }
@@ -790,16 +806,16 @@
 
 
         function closeAssignQuiz() {
-            $scope.showQuizSceduling = navService.toggleRight6;
-            $scope.showQuizSceduling();
+            _self.showQuizSceduling = navService.toggleRight6;
+            _self.showQuizSceduling();
 
         }
 
 
         function showQuizChapters(bookIndex) {
             console.log('showing quiz Chapters');
-            $scope.bookId = $scope.booksId[bookIndex];
-            quizService.setBook($scope.bookId, bookIndex);
+            _self.bookId = _self.booksId[bookIndex];
+            quizService.setBook(_self.bookId, bookIndex);
         }
 
         function showQuizTopics() {
@@ -810,58 +826,62 @@
         /*  Question Bank Addition Functions  */
 
         //        Create Book Navigation Start
-        $scope.desc = "";
-        $scope.newImg = null;
-        $scope.imgLogoUrl;
+        _self.desc = "";
+        _self.newImg = null;
+        _self.imgLogoUrl;
         var userQuestionBanksRef1 = new Firebase('https://luminous-torch-4640.firebaseio.com/');
 
         function addBook() {
-            $scope.showbook = navService.toggleRight1;
-            $scope.showbook();
+            _self.showbook = navService.toggleRight1;
+            _self.showbook();
         }
 
-        function createBook(bookForm, img) {
+        function createBook(QuestionBank, img) {
+            console.log(QuestionBank);
             addBook();
-            $scope.temps = {
-                title: $scope.name,
-                desc: $scope.desc,
-                imgLogoUrl: $scope.imgLogoUrl || 'img/1angular.png',
-                'timestamp': Firebase.ServerValue.TIMESTAMP,
-                // imgLogoUrl: img
+            _self.questionBankObject = {
+                title: QuestionBank.name,
+                desc: QuestionBank.desc,
+                imgLogoUrl: img || 'img/1angular.png',
+                'timestamp': Firebase.ServerValue.TIMESTAMP
             };
-            userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
+            quizBankService.createQuestionBank(QuestionBank.bookID,_self.questionBankObject);
+            /*userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
                 'memberships-type': 1,
                 'timestamp': Firebase.ServerValue.TIMESTAMP
             });
-            userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
+            userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
                 "memberships-type": 1,
                 'timestamp': Firebase.ServerValue.TIMESTAMP
             });
-            userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
+            userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
+            // userQuestionBanksRef1.child("question-bank").child(_self.bookID).child("memberships").child(userService.getCurrentUser().userID).set({
+            //     "memberships-type": 1,
+            // });
             if ($rootScope.newImg) {
                 var x = utilService.base64ToBlob($rootScope.newImg);
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                $scope.saveFile(x, mimeType, $scope.bookID)
+                _self.saveFile(x, mimeType, _self.bookID)
                     .then(function (url) {
-                        // $scope.temps.imgLogoUrl = url + '?random=' + new Date();
+                        // _self.temps.imgLogoUrl = url + '?random=' + new Date();
                         //its for sending data on firebase by Name's node
-                        userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
+                        userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
                             'memberships-type': 1,
                             'timestamp': Firebase.ServerValue.TIMESTAMP
                         });
-                        userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
+                        userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
                             "memberships-type": 1,
                             'timestamp': Firebase.ServerValue.TIMESTAMP
                         });
-                        userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
+                        userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
 
-                        // quizService.setBookAfterCreation($scope.bookID)
-                        // ref.child($scope.bookID).set(temp);
-                        $scope.name = "";
-                        $scope.desc = "";
-                        $scope.bookID = "";
-                        //$scope.newImg = null;
+                        // quizService.setBookAfterCreation(_self.bookID)
+                        // ref.child(_self.bookID).set(temp);
+                        _self.name = "";
+                        _self.desc = "";
+                        _self.bookID = "";
+                        //_self.newImg = null;
                         alert('book creation successful');
                         // $location.path('/user/' + user.userID)
                     })
@@ -870,12 +890,12 @@
                         //return messageService.showSuccess('picture upload failed')
                         alert('picture upload failed');
                     });
-            }
+            }*/
 
 
         }
 
-        $scope.selectBookPoster = function (ev) {
+        _self.selectBookPoster = function (ev) {
             $mdDialog.show({
                 controller: "DialogController as ctrl",
                 templateUrl: 'directives/dilogue2.tmpl.html',
@@ -889,7 +909,7 @@
 
         };
 
-        $scope.saveFile = function (file, type, quizID) {
+        _self.saveFile = function (file, type, quizID) {
             var defer = $q.defer();
             var xhr = new XMLHttpRequest();
             xhr.open("GET", appConfig.apiBaseUrl + "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" + type);
@@ -936,8 +956,8 @@
         }
 
         function closeBook() {
-            $scope.showbook = navService.toggleRight1;
-            $scope.showbook();
+            _self.showbook = navService.toggleRight1;
+            _self.showbook();
         }
 
         //        Create Book Navigation End
@@ -951,30 +971,30 @@
          }, 0)
          }*/
 
-        var ref = new Firebase('https://luminous-torch-4640.firebaseio.com/');
+        // var ref = new Firebase('https://luminous-torch-4640.firebaseio.com/');
 
-        $scope.bookId = $stateParams.id;
-        $scope.Title = '';
-        $scope.Description = '';
+        _self.bookId = $stateParams.id;
+        _self.Title = '';
+        _self.Description = '';
 
         function createChapter() {
-            $scope.showChapter();
-            console.log($scope.Title + " " + $scope.Description);
-            ref.child("question-bank-chapters").child($scope.bookId).push({
-                title: $scope.Title,
-                description: $scope.Description
+            _self.showChapter();
+            console.log(_self.Title + " " + _self.Description);
+            ref.child("question-bank-chapters").child(_self.bookId).push({
+                title: _self.Title,
+                description: _self.Description
             }, function () {
-                $scope.Title = '';
-                $scope.Description = '';
+                _self.Title = '';
+                _self.Description = '';
 
             });
         }
 
         function addChapter() {
-            if ($scope.bookId) {
+            if (_self.bookId) {
                 $timeout(function () {
-                    $scope.showChapter = navService.toggleRight2;
-                    $scope.showChapter();
+                    _self.showChapter = navService.toggleRight2;
+                    _self.showChapter();
                 }, 0);
             } else {
                 $mdToast.show({
@@ -986,30 +1006,30 @@
         }
 
         function closeChapter() {
-            $scope.showChapter = navService.toggleRight2;
-            $scope.showChapter();
+            _self.showChapter = navService.toggleRight2;
+            _self.showChapter();
         }
 
 
-        $scope.Title = '';
-        $scope.Description = '';
-        $scope.chapterId = $stateParams.id;
+        _self.Title = '';
+        _self.Description = '';
+        _self.chapterId = $stateParams.id;
 
         function createTopic() {
-            ref.child("question-bank-topic").child(quizService.getBook()).child($scope.chapterId).push({
-                description: $scope.Description,
-                title: $scope.Title
+            ref.child("question-bank-topic").child(quizService.getBook()).child(_self.chapterId).push({
+                description: _self.Description,
+                title: _self.Title
             })
-            $scope.showTopic();
+            _self.showTopic();
         }
 
         function addTopic() {
             //console.log('Add Book')
-            if ($scope.chapterId) {
+            if (_self.chapterId) {
                 $timeout(function () {
-                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddTopic/' + $scope.chapterId)
-                    $scope.showTopic = navService.toggleRight4;
-                    $scope.showTopic();
+                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddTopic/' + _self.chapterId)
+                    _self.showTopic = navService.toggleRight4;
+                    _self.showTopic();
                 }, 0);
             } else {
                 $mdToast.show({
@@ -1021,17 +1041,17 @@
         }
 
         function closeTopic() {
-            $scope.showTopic = navService.toggleRight4;
-            $scope.showTopic();
+            _self.showTopic = navService.toggleRight4;
+            _self.showTopic();
         }
 
         function addQuestion() {
             //console.log('Add Book')
-            if ($scope.topicId) {
+            if (_self.topicId) {
                 $timeout(function () {
-                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddQuestion/' + $scope.topicId)
-                    $scope.showQuestion = navService.toggleRight3;
-                    $scope.showQuestion();
+                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddQuestion/' + _self.topicId)
+                    _self.showQuestion = navService.toggleRight3;
+                    _self.showQuestion();
                 }, 0);
             } else {
                 $mdToast.show({
@@ -1043,8 +1063,8 @@
         }
 
         function closeQuestion() {
-            $scope.showQuestion = navService.toggleRight3;
-            $scope.showQuestion();
+            _self.showQuestion = navService.toggleRight3;
+            _self.showQuestion();
         }
 
 
@@ -1277,82 +1297,82 @@
 
             /*$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')*/
 
-            if ($scope.bookId) {
+            if (_self.bookId) {
                 $timeout(function () {
                     //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')
 
-                    $scope.showQuize = navService.toggleRight5;
-                    $scope.showQuize();
+                    _self.showQuize = navService.toggleRight5;
+                    _self.showQuize();
 
                     //Parou Code
                     var that = this;
                     var bookId = '';
                     var chapId = '';
                     var marker = 0;
-                    $scope.awaisObject = {};
-                    $scope.flagChapters = [];
-                    $scope.flagTopics = [];
-                    $scope.showQuestionView1 = false;
-                    $scope.quizObject = {};
+                    _self.awaisObject = {};
+                    _self.flagChapters = [];
+                    _self.flagTopics = [];
+                    _self.showQuestionView1 = false;
+                    _self.quizObject = {};
 
                     //temporary
-                    $scope.showTick = true;
-                    $scope.buttonText = 'Next';
-                    $scope.quizTitle = '';
+                    _self.showTick = true;
+                    _self.buttonText = 'Next';
+                    _self.quizTitle = '';
                     var topicCounter = 0;
-                    $scope.quizDescription = '';
-                    $scope.quizTime = '';
+                    _self.quizDescription = '';
+                    _self.quizTime = '';
                     var myCounter = 0;
-                    $scope.questionIndex = 0;
-                    $scope.tempQuestions = [];
-                    $scope.myChapterIndex = 0;
-                    $scope.viewAllQuestions = [];
-                    $scope.viewAllTopics = [];
+                    _self.questionIndex = 0;
+                    _self.tempQuestions = [];
+                    _self.myChapterIndex = 0;
+                    _self.viewAllQuestions = [];
+                    _self.viewAllTopics = [];
                     //bring the chapters from firebase
 
-                    $scope.secondBookName = 'angular101';
-                    $scope.secondChapters = [];
-                    $scope.secondChaptersKey = [];
+                    _self.secondBookName = 'angular101';
+                    _self.secondChapters = [];
+                    _self.secondChaptersKey = [];
                     /*This will show hide quiz tabs*/
                     var counter = 1;
                     var tabCounter = 1;
                     var arr = [],
                         name = '';
-                    $scope.myChapters = [];
-                    $scope.myChaptersKey = [];
-                    $scope.thirdTopics = [];
+                    _self.myChapters = [];
+                    _self.myChaptersKey = [];
+                    _self.thirdTopics = [];
                     //Data fetching from firebase
-                    $scope.chapters = [];
-                    $scope.chaptersId = [];
-                    $scope.nestedQuestions = [];
-                    $scope.topics = [];
-                    $scope.topicsId = [];
-                    $scope.questions = [];
-                    $scope.questionsId = [];
-                    $scope.showOne = false;
-                    $scope.showTwo = true;
-                    $scope.showThree = false;
+                    _self.chapters = [];
+                    _self.chaptersId = [];
+                    _self.nestedQuestions = [];
+                    _self.topics = [];
+                    _self.topicsId = [];
+                    _self.questions = [];
+                    _self.questionsId = [];
+                    _self.showOne = false;
+                    _self.showTwo = true;
+                    _self.showThree = false;
                     //Second Page
                     // all variables
-                    $scope.show = false;
-                    $scope.showView = false;
-                    $scope.showQuizBar = false;
-                    $scope.showTick = false;
-                    $scope.bookId = '';
-                    $scope.chapterId = '';
-                    $scope.topicId = null;
-                    $scope.SelectedBook = null;
-                    $scope.SelectedChapter = null;
-                    $scope.SelectedTopic = null;
-                    $scope.SelectedQuestion = null;
-                    /*$scope.quizes = [];*/
-                    $scope.chaptersId = [];
-                    $scope.chapters = [];
-                    $scope.topicsId = [];
-                    $scope.topics = [];
-                    $scope.questions = [];
-                    $scope.questionView = '';
-                    $scope.latestNode = [];
+                    _self.show = false;
+                    _self.showView = false;
+                    _self.showQuizBar = false;
+                    _self.showTick = false;
+                    _self.bookId = '';
+                    _self.chapterId = '';
+                    _self.topicId = null;
+                    _self.SelectedBook = null;
+                    _self.SelectedChapter = null;
+                    _self.SelectedTopic = null;
+                    _self.SelectedQuestion = null;
+                    /*_self.quizes = [];*/
+                    _self.chaptersId = [];
+                    _self.chapters = [];
+                    _self.topicsId = [];
+                    _self.topics = [];
+                    _self.questions = [];
+                    _self.questionView = '';
+                    _self.latestNode = [];
 
 
                     /*
@@ -1367,39 +1387,39 @@
 
 
                     // seleted data start
-                    $scope.setSelectedQuestion = function (thisScope) {
+                    _self.setSelectedQuestion = function (thisScope) {
 
-                        if ($scope.lastSelectedTopic.selectedTopic) {
+                        if (_self.lastSelectedTopic.selectedTopic) {
                             $('.selectedTopic').addClass('previousSelected');
-                            if ($scope.lastSelectedQuestion) {
-                                $scope.lastSelectedQuestion.selectedQuestion = '';
+                            if (_self.lastSelectedQuestion) {
+                                _self.lastSelectedQuestion.selectedQuestion = '';
                             }
                             thisScope.selectedQuestion = 'selectedQuestion';
-                            $scope.lastSelectedQuestion = thisScope;
+                            _self.lastSelectedQuestion = thisScope;
                         }
                     };
 
-                    $scope.setSelectedTopics = function (thisScope) {
-                        if ($scope.lastSelectedChapter.selected) {
+                    _self.setSelectedTopics = function (thisScope) {
+                        if (_self.lastSelectedChapter.selected) {
                             $('.previousSelected').removeClass('previousSelected');
                             $('.selectedChapter').addClass('previousSelected');
-                            if ($scope.lastSelectedTopic) {
-                                $scope.lastSelectedTopic.selectedTopic = '';
+                            if (_self.lastSelectedTopic) {
+                                _self.lastSelectedTopic.selectedTopic = '';
                             }
                             thisScope.selectedTopic = 'selectedTopic';
-                            $scope.lastSelectedTopic = thisScope;
+                            _self.lastSelectedTopic = thisScope;
                         }
                     };
 
-                    $scope.setSelectedChapters = function (thisScope) {
+                    _self.setSelectedChapters = function (thisScope) {
 
                         $('.selectedChapter').removeClass('previousSelected');
-                        if ($scope.lastSelectedChapter) {
-                            $scope.lastSelectedChapter.selected = '';
+                        if (_self.lastSelectedChapter) {
+                            _self.lastSelectedChapter.selected = '';
                         }
                         quizCreateService.setSelectedChapter(thisScope);
                         thisScope.selected = 'selectedChapter';
-                        $scope.lastSelectedChapter = thisScope;
+                        _self.lastSelectedChapter = thisScope;
                     };
                     //selected data end
                     //2nd Tab Functions
@@ -1409,15 +1429,15 @@
                     ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
                         //$timeout(function () {
 
-                        $scope.chapters.push(snapShot.val());
-                        /*console.log($scope.chapters.push(snapShot.val()));*/
-                        $scope.chaptersId.push(snapShot.key());
-                        $scope.chaptersSnapData = snapShot.val();
-                        $scope.nestedQuestions.push([]);
-                        $scope.flagChapters[chapterCounter] = {};
-                        $scope.flagChapters[chapterCounter].id = true;
-                        $scope.viewAllTopics.push([]);
-                        $scope.flagTopics.push([]);
+                        _self.chapters.push(snapShot.val());
+                        /*console.log(_self.chapters.push(snapShot.val()));*/
+                        _self.chaptersId.push(snapShot.key());
+                        _self.chaptersSnapData = snapShot.val();
+                        _self.nestedQuestions.push([]);
+                        _self.flagChapters[chapterCounter] = {};
+                        _self.flagChapters[chapterCounter].id = true;
+                        _self.viewAllTopics.push([]);
+                        _self.flagTopics.push([]);
                         chapterCounter++;
                         //}, 0)
 
@@ -1425,171 +1445,171 @@
 
 
                     bookId = quizService.getBook();
-                    $scope.bookId = quizService.getBook();
-                    $scope.quizObject[quizService.getBook()] = {};
-                    $scope.awaisObject[quizService.getBook()] = {};
+                    _self.bookId = quizService.getBook();
+                    _self.quizObject[quizService.getBook()] = {};
+                    _self.awaisObject[quizService.getBook()] = {};
 
                     //Topics
-                    $scope.showTopics = function (chapterIndex) {
-                        $scope.showQuestionView1 = false;
-                        if ($scope.quizObject[bookId]["quizQuestion"] === undefined) {
-                            $scope.quizObject[bookId]["quizQuestion"] = {};
+                    _self.showTopics = function (chapterIndex) {
+                        _self.showQuestionView1 = false;
+                        if (_self.quizObject[bookId]["quizQuestion"] === undefined) {
+                            _self.quizObject[bookId]["quizQuestion"] = {};
                         }
-                        $scope.quizObject[bookId]["quizQuestion"][$scope.chaptersId[chapterIndex]] = {};
-                        $scope.awaisObject[bookId][$scope.chaptersId[chapterIndex]] = {};
-                        $scope.quizObject[bookId]["quizQuestion"][$scope.chaptersId[chapterIndex]]["ChapterDetails"] = {
-                            title: $scope.chapters[chapterIndex].title,
-                            description: $scope.chapters[chapterIndex].description
+                        _self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]] = {};
+                        _self.awaisObject[bookId][_self.chaptersId[chapterIndex]] = {};
+                        _self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]]["ChapterDetails"] = {
+                            title: _self.chapters[chapterIndex].title,
+                            description: _self.chapters[chapterIndex].description
                         };
-                        $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]]['ChapterTopics'] = {};
-                        $scope.awaisObject[bookId][$scope.chaptersId[chapterIndex]] = {};
+                        _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[chapterIndex]]['ChapterTopics'] = {};
+                        _self.awaisObject[bookId][_self.chaptersId[chapterIndex]] = {};
                         console.log("Chapter Details");
-                        console.log($scope.quizObject[bookId]["quizQuestion"][$scope.chaptersId[chapterIndex]]["ChapterDetails"]);
-                        $scope.chapterId = $scope.chaptersId[chapterIndex];
-                        $scope.myChapterIndex = chapterIndex;
-                        quizCreateService.setChapter($scope.chapterId, chapterIndex);
+                        console.log(_self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]]["ChapterDetails"]);
+                        _self.chapterId = _self.chaptersId[chapterIndex];
+                        _self.myChapterIndex = chapterIndex;
+                        quizCreateService.setChapter(_self.chapterId, chapterIndex);
 
-                        if ($scope.flagChapters[chapterIndex].id === true) {
-                            $scope.nestedQuestions[chapterIndex] = [];
-                            $scope.tempQuestions[chapterIndex] = [];
-                            $scope.flagChapters[chapterIndex].id = false;
-                            $scope.topics = [];
-                            $scope.topicsId = [];
-                            $scope.topicId = null;
+                        if (_self.flagChapters[chapterIndex].id === true) {
+                            _self.nestedQuestions[chapterIndex] = [];
+                            _self.tempQuestions[chapterIndex] = [];
+                            _self.flagChapters[chapterIndex].id = false;
+                            _self.topics = [];
+                            _self.topicsId = [];
+                            _self.topicId = null;
                             topicCounter = 0;
                             ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function (snapShot) {
                                 $timeout(function () {
-                                    $scope.topics.push(snapShot.val());
-                                    $scope.viewAllTopics[chapterIndex].push(snapShot.val());
-                                    $scope.topicsId.push(snapShot.key());
-                                    $scope.flagTopics[chapterIndex][topicCounter] = {};
-                                    $scope.flagTopics[chapterIndex][topicCounter].id = true;
-                                    $scope.nestedQuestions[chapterIndex].push([]);
-                                    $scope.tempQuestions[chapterIndex].push([]);
+                                    _self.topics.push(snapShot.val());
+                                    _self.viewAllTopics[chapterIndex].push(snapShot.val());
+                                    _self.topicsId.push(snapShot.key());
+                                    _self.flagTopics[chapterIndex][topicCounter] = {};
+                                    _self.flagTopics[chapterIndex][topicCounter].id = true;
+                                    _self.nestedQuestions[chapterIndex].push([]);
+                                    _self.tempQuestions[chapterIndex].push([]);
                                     topicCounter++;
                                 }, 0)
                             })
                         } else {
-                            $scope.topics = $scope.viewAllTopics[chapterIndex];
-                            $scope.myChapterIndex = chapterIndex;
+                            _self.topics = _self.viewAllTopics[chapterIndex];
+                            _self.myChapterIndex = chapterIndex;
                         }
                     };
 
                     //Questions.
-                    $scope.showQuestions = function (topicIndex) {
-                        $scope.showQuestionView1 = false;
-                        if ($scope.quizObject[bookId]["ChapterDetails"][$scope.chaptersId[$scope.myChapterIndex]]["ChapterTopics"][$scope.topicsId[topicIndex]] === undefined) {
-                            $scope.quizObject[bookId]["ChapterDetails"][$scope.chaptersId[$scope.myChapterIndex]]["ChapterTopics"][$scope.topicsId[topicIndex]] = {};
-                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[topicIndex]] = {};
+                    _self.showQuestions = function (topicIndex) {
+                        _self.showQuestionView1 = false;
+                        if (_self.quizObject[bookId]["ChapterDetails"][_self.chaptersId[_self.myChapterIndex]]["ChapterTopics"][_self.topicsId[topicIndex]] === undefined) {
+                            _self.quizObject[bookId]["ChapterDetails"][_self.chaptersId[_self.myChapterIndex]]["ChapterTopics"][_self.topicsId[topicIndex]] = {};
+                            _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[topicIndex]] = {};
                             //Topic Object
-                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]['TopicDetails'] = {
-                                title: $scope.topics[topicIndex].title,
-                                description: $scope.topics[topicIndex].description
+                            _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]['TopicDetails'] = {
+                                title: _self.topics[topicIndex].title,
+                                description: _self.topics[topicIndex].description
                             };
-                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]['TopicQuestions'] = {};
-                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[topicIndex]] = {};
+                            _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]['TopicQuestions'] = {};
+                            _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[topicIndex]] = {};
                             console.log("Topic Details");
-                            console.log($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]);
+                            console.log(_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]);
                         }
-                        if ($scope.flagTopics[$scope.myChapterIndex][topicIndex].id == true) {
+                        if (_self.flagTopics[_self.myChapterIndex][topicIndex].id == true) {
 
-                            $scope.flagTopics[$scope.myChapterIndex][topicIndex].id = false;
-                            $scope.nestedQuestions[$scope.myChapterIndex][topicIndex] = [];
+                            _self.flagTopics[_self.myChapterIndex][topicIndex].id = false;
+                            _self.nestedQuestions[_self.myChapterIndex][topicIndex] = [];
                             myCounter = 0;
-                            $scope.questionIndex = topicIndex;
-                            $scope.showView = false;
-                            $scope.topicId = $scope.topicsId[topicIndex];
-                            $scope.tempQuestions[$scope.myChapterIndex][topicIndex] = [];
-                            quizCreateService.setTopic($scope.topicId, topicIndex);
+                            _self.questionIndex = topicIndex;
+                            _self.showView = false;
+                            _self.topicId = _self.topicsId[topicIndex];
+                            _self.tempQuestions[_self.myChapterIndex][topicIndex] = [];
+                            quizCreateService.setTopic(_self.topicId, topicIndex);
 
                             ref.child('questions').child(quizService.getBook()).child(quizCreateService.getChapter()).child(quizCreateService.getTopic()).on('child_added',
                                 function (snapShot) {
                                     $timeout(function () {
-                                        $scope.questions.push(snapShot.val());
-                                        $scope.questionsId.push(snapShot.key());
-                                        $scope.nestedQuestions[$scope.myChapterIndex][topicIndex].push(snapShot.val());
-                                        $scope.tempQuestions[$scope.myChapterIndex][topicIndex].push(snapShot.val());
-                                        $scope.tempQuestions[$scope.myChapterIndex][topicIndex][myCounter].id = false;
-                                        $scope.nestedQuestions[$scope.myChapterIndex][topicIndex][myCounter].id = false;
+                                        _self.questions.push(snapShot.val());
+                                        _self.questionsId.push(snapShot.key());
+                                        _self.nestedQuestions[_self.myChapterIndex][topicIndex].push(snapShot.val());
+                                        _self.tempQuestions[_self.myChapterIndex][topicIndex].push(snapShot.val());
+                                        _self.tempQuestions[_self.myChapterIndex][topicIndex][myCounter].id = false;
+                                        _self.nestedQuestions[_self.myChapterIndex][topicIndex][myCounter].id = false;
                                         myCounter++;
                                     }, 0)
                                 });
                         } else {
-                            $scope.questionIndex = topicIndex;
-                            $scope.nestedQuestions[$scope.myChapterIndex][topicIndex] = $scope.tempQuestions[$scope.myChapterIndex][topicIndex];
+                            _self.questionIndex = topicIndex;
+                            _self.nestedQuestions[_self.myChapterIndex][topicIndex] = _self.tempQuestions[_self.myChapterIndex][topicIndex];
                         }
                     };
-                    $scope.showQuestionView = function (question) {
-                        $scope.showQuestionView1 = true;
+                    _self.showQuestionView = function (question) {
+                        _self.showQuestionView1 = true;
                         if (question !== null) {
                             quizService.setQuestionObject(question);
                         }
-                        $scope.questionView = question;
+                        _self.questionView = question;
                     };
-                    $scope.checkArray = [];
-                    $scope.showTickIcon = function (trueFalseValue, questionIndex) {
+                    _self.checkArray = [];
+                    _self.showTickIcon = function (trueFalseValue, questionIndex) {
 
-                        console.log($scope.tickArray);
+                        console.log(_self.tickArray);
 
                         if (trueFalseValue == false) {
                             console.log("Checking");
-                            $scope.checkArray.push(questionIndex)
-                            //$scope.tickArray.push(trueFalseValue);
-                            //console.log($scope.tickArray + 'pus');
-                            $scope.showQuestionView1 = true;
-                            $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
-                            $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
-                            $scope.viewAllQuestions.push($scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex]);
-                            if ($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'] == undefined) {
-                                $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'] = {};
-                                $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]] = {};
+                            _self.checkArray.push(questionIndex)
+                            //_self.tickArray.push(trueFalseValue);
+                            //console.log(_self.tickArray + 'pus');
+                            _self.showQuestionView1 = true;
+                            _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = true;
+                            _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = true;
+                            _self.viewAllQuestions.push(_self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex]);
+                            if (_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'] == undefined) {
+                                _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'] = {};
+                                _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]] = {};
                             }
-                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'][$scope.questionsId[questionIndex]] = $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex];
-                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]][$scope.questionsId[questionIndex]] = $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex];
+                            _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'][_self.questionsId[questionIndex]] = _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex];
+                            _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]][_self.questionsId[questionIndex]] = _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex];
                         } else if (trueFalseValue == true) {
-                            $scope.checkArray.splice($scope.checkArray.indexOf(questionIndex), 1);
-                            //$scope.tickArray.splice(trueFalseValue,1);
-                            //console.log($scope.tickArray + 'splice');
-                            $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = false;
-                            $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = false;
-                            arr = $scope.viewAllQuestions;
-                            name = $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].Title;
+                            _self.checkArray.splice(_self.checkArray.indexOf(questionIndex), 1);
+                            //_self.tickArray.splice(trueFalseValue,1);
+                            //console.log(_self.tickArray + 'splice');
+                            _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = false;
+                            _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = false;
+                            arr = _self.viewAllQuestions;
+                            name = _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].Title;
                             angular.forEach(arr, function (data, key) {
                                 if (data.Title == name) {
                                     arr.splice(key, 1);
                                 }
                             });
-                            $scope.viewAllQuestions = arr;
-                            delete($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'][$scope.questionsId[questionIndex]]);
-                            delete($scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]][$scope.questionsId[questionIndex]]);
+                            _self.viewAllQuestions = arr;
+                            delete(_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'][_self.questionsId[questionIndex]]);
+                            delete(_self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]][_self.questionsId[questionIndex]]);
                         }
 
 
                     };
 
 
-                    $scope.createQuiz = function () {
+                    _self.createQuiz = function () {
                         /*Quiz Create.*/
 
                         //Delete Topics if Questions not there.
-                        console.log($scope.quizObject[bookId]['quizQuestion']);
-                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (datum, key, obj) {
-                            //$scope.consoleObj = datum;
-                            //console.log($scope.consoleObj + 'TIS IS T LENT OF AN OBJECT');
+                        console.log(_self.quizObject[bookId]['quizQuestion']);
+                        angular.forEach(_self.quizObject[bookId]['quizQuestion'], function (datum, key, obj) {
+                            //_self.consoleObj = datum;
+                            //console.log(_self.consoleObj + 'TIS IS T LENT OF AN OBJECT');
                             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
                             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
                             angular.forEach(datum['ChapterTopics'], function (datum1, key2) {
                                 if (Object.keys(datum1['TopicQuestions']).length == 0) {
-                                    delete($scope.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
+                                    delete(_self.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
                                 }
                             })
                         });
-                        //console.log($scope.consoleObj);
-                        //console.log($scope.consoleObj.length + 'TIS IS T LENT OF AN OBJECT');
+                        //console.log(_self.consoleObj);
+                        //console.log(_self.consoleObj.length + 'TIS IS T LENT OF AN OBJECT');
                         //Delete Chapters if Topics not there.
-                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (data, key) {
+                        angular.forEach(_self.quizObject[bookId]['quizQuestion'], function (data, key) {
                             if (Object.keys(data['ChapterTopics']).length == 0) {
-                                delete($scope.quizObject[bookId]['quizQuestion'][key])
+                                delete(_self.quizObject[bookId]['quizQuestion'][key])
                             }
                         });
 
@@ -1597,33 +1617,33 @@
                         /*Quiz Attempt*/
 
                         //Delete Topics if Questions not there.
-                        angular.forEach($scope.awaisObject[bookId], function (datum, key) {
+                        angular.forEach(_self.awaisObject[bookId], function (datum, key) {
                             angular.forEach(datum, function (datum1, key2) {
                                 if (Object.keys(datum1).length == 0) {
-                                    delete($scope.awaisObject[bookId][key][key2]);
+                                    delete(_self.awaisObject[bookId][key][key2]);
                                 }
                             })
                         });
 
 
                         //Delete Chapters if Topics not there.
-                        angular.forEach($scope.awaisObject[bookId], function (data, key) {
+                        angular.forEach(_self.awaisObject[bookId], function (data, key) {
                             if (Object.keys(data).length == 0) {
-                                delete($scope.awaisObject[bookId][key])
+                                delete(_self.awaisObject[bookId][key])
                             }
                         });
 
-                        $scope.quizObject[bookId]['quizDetails'] = {
-                            title: $scope.quizTitle,
-                            description: $scope.quizDescription,
-                            time: $scope.quizTime
+                        _self.quizObject[bookId]['quizDetails'] = {
+                            title: _self.quizTitle,
+                            description: _self.quizDescription,
+                            time: _self.quizTime
                         };
 
 
                         //Object With Answer.
-                        ref.child('quiz-create').child(bookId).push($scope.quizObject[bookId], function () {
+                        ref.child('quiz-create').child(bookId).push(_self.quizObject[bookId], function () {
 
-                            angular.forEach($scope.awaisObject[bookId], function (one) {
+                            angular.forEach(_self.awaisObject[bookId], function (one) {
                                 angular.forEach(one, function (two) {
                                     angular.forEach(two, function (three) {
                                         angular.forEach(three.QuestionOptions, function (deleteAnswer) {
@@ -1633,17 +1653,17 @@
                                 });
                             });
                             //Object WithoutAnswer.
-                            // ref.child('quiz-attempt').child(bookId).push($scope.awaisObject[bookId]);
-                            angular.forEach($scope.viewAllQuestions, function (data) {
+                            // ref.child('quiz-attempt').child(bookId).push(_self.awaisObject[bookId]);
+                            angular.forEach(_self.viewAllQuestions, function (data) {
                                 delete(data.$$hashKey);
                                 angular.forEach(data.QuestionOptions, function (option) {
                                     delete(option.$$hashKey);
                                 });
                                 ref.child('quiz-create').child(bookId).on("child_added", function (snapshot) {
-                                    $scope.latestNode.push(snapshot.key());
+                                    _self.latestNode.push(snapshot.key());
                                 });
-                                ref.child('quiz-attempt').child(bookId).child($scope.latestNode[$scope.latestNode.length - 1]).set(
-                                    $scope.awaisObject[bookId]
+                                ref.child('quiz-attempt').child(bookId).child(_self.latestNode[_self.latestNode.length - 1]).set(
+                                    _self.awaisObject[bookId]
                                 );
                             });
                         });
@@ -1663,12 +1683,12 @@
             }
 
 
-            console.log($scope.quizes);
+            console.log(_self.quizes);
         }
 
         function closeQuiz() {
-            $scope.showbook = navService.toggleRight5;
-            $scope.showbook();
+            _self.showbook = navService.toggleRight5;
+            _self.showbook();
         }
 
 

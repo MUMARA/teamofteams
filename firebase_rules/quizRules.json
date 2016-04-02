@@ -38,6 +38,13 @@
     },
     "question-bank": {
       "$questionBankUniqueID": {
+        "membership": {
+          "$userid": {
+            "type": {
+              ".validate": "newData.isNumber()"
+            }
+          }
+        },
         "chapters": {
           "$chapterId": {
             "topics": {
@@ -163,7 +170,7 @@
           ".validate": "false"
         },
         ".write": "data.val() == null && auth != null || data.val() != null && newData.val() != null && (newData.child('member-type').val() == 1 && (auth != null && auth.uid == UserID) || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('member-type').val() == 2)",
-        ".read": "auth != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+        ".read": "auth != null && root.child('question-bank').child($questionBankUniqueID).child('membership').child(auth.id).child('type').val() != null"
       }
     },
     "group-quizes": {
