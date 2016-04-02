@@ -39,7 +39,7 @@ angular.module('core')
                             userData.forEach(function(val, indx) {
                                 // if (val.id === userID) {
                                     if (val.groupsubgroup === (group.key() + ' / ' + rmsubgroup.key())) {
-                                        userData.splice(indx);
+                                        userData.splice(indx, 1);
                                     }
                                 // }
                             });
@@ -252,7 +252,7 @@ angular.module('core')
                 	firebaseService.getRefUserGroupMemberships().child(userID).child(group.key()).on('child_removed', function() {
                 		userGroups.forEach(function(val,indx) {
                             if(val.groupID === group.key()) {
-                                userGroups.splice(indx);
+                                userGroups.splice(indx, 1);
                             }
                         });
                 	});
