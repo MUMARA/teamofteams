@@ -6,11 +6,11 @@
 
     angular
         .module('app.quiz')
-        .controller('QuizesController', QuizController);
+        .controller('QuizesController', QuizesController);
 
-    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
+    QuizesController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
 
-    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
+    function QuizesController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
 
         /*Private Variables*/
         var $scope = this;
@@ -1043,6 +1043,7 @@
         }
 
 
+
         //AddQuestion Controller Work
         var that = this;
         var myFirebaseRef = new Firebase("https://pspractice.firebaseio.com/");
@@ -1058,6 +1059,10 @@
         var topMargin = 50;
         this.showCheckText = false;
         this.topicId = $stateParams.id;
+
+
+
+
         //
         //
         //Answer Types.

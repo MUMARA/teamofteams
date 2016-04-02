@@ -62,7 +62,7 @@
             } else if (group.val()['membership-type'] == 2) {
                 that.groupAdmin = true;
             }
-        })
+        });
 
 
         this.ActiveSideNavBar = function(sideNav) {
