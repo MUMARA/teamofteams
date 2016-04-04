@@ -31,6 +31,7 @@
         'app.progressreport',
         'app.chat',
         'app.collaborator'
+
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',

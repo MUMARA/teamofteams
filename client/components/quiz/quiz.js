@@ -79,7 +79,7 @@
         _self.chapterId = '';
         _self.topicId = '';
         //Firebase
-        var ref = new Firebase('https://luminous-torch-4640.firebaseio.com');
+
         _self.books = [];
         _self.booksId = [];
         _self.quizes = [];
@@ -114,6 +114,7 @@
                 }
             )
         }
+
 
         initQuestionBank();
 
@@ -151,6 +152,7 @@
         function initializeView() {
             // console.log(quizService.getBookAfterCreation())
             // console.log(quizService.getBookAfterCreation() !== null)
+
             if (quizService.getBookAfterCreation() !== null) {
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
@@ -162,8 +164,7 @@
                         }
                     }, 0);
                 });
-            }
-            else {
+            } else {
                 // console.log('ELSE');
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
@@ -245,17 +246,17 @@
 
         /*  Tabs  */
         function showQuizBankFunc() {
-            alert('showQuizBankFunc')
-            _self.showQuizBank = true;
-            _self.showQuizList = false;
-            _self.showQuizAssign = false;
-            if (quizService.getQuestionObject() !== null && _self.questionView !== null) {
-                _self.showView = true;
+
+            $scope.showQuizBank = true;
+            $scope.showQuizList = false;
+            $scope.showQuizAssign = false;
+            if (quizService.getQuestionObject() !== null && $scope.questionView !== null) {
+                $scope.showView = true;
             }
-            // $('#chapterColumn').addClass('marginLeft');
-            // $('#quizBankIcon').addClass('selectedTab');
-            // $('#quizIcon').removeClass('selectedTab');
-            // $('#quizAssignIcon').removeClass('selectedTab');
+            $('#chapterColumn').addClass('marginLeft');
+            $('#quizBankIcon').addClass('selectedTab');
+            $('#quizIcon').removeClass('selectedTab');
+            $('#quizAssignIcon').removeClass('selectedTab');
             quizService.setSelectedTab('QuizBank');
 
             //_self.chapters = [];
@@ -843,10 +844,6 @@
         /*  Question Bank Addition Functions  */
 
         //        Create Book Navigation Start
-        _self.desc = "";
-        _self.newImg = null;
-        _self.imgLogoUrl;
-        var userQuestionBanksRef1 = new Firebase('https://luminous-torch-4640.firebaseio.com/');
 
         function addBook() {
             _self.showbook = navService.toggleRight1;
@@ -909,7 +906,6 @@
              });
              }*/
 
-
         }
 
         _self.selectBookPoster = function (ev) {
@@ -919,6 +915,7 @@
                 targetEvent: ev
             }).then(function (picture) {
                 $rootScope.newImg = picture;
+                console.log("this is image" + picture);
             }, function (err) {
                 console.log(err);
 
@@ -958,7 +955,7 @@
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....');
                     console.log('picture upload successful');
-                    // console.log(url);
+                    console.log(url);
 
                     defer.resolve(url);
 
@@ -989,6 +986,7 @@
          }*/
 
         // var ref = new Firebase('https://luminous-torch-4640.firebaseio.com/');
+
 
         _self.bookId = $stateParams.id;
         _self.Title = '';
@@ -1090,9 +1088,10 @@
         }
 
 
+
         //AddQuestion Controller Work
         var that = this;
-        var myFirebaseRef = new Firebase("https://luminous-torch-4640.firebaseio.com/");
+        var myFirebaseRef = new Firebase("https://pspractice.firebaseio.com/");
         var idCounter = 3;
         this.showRadioOptions = false;
         this.showCheckOptions = false;
@@ -1105,6 +1104,10 @@
         var topMargin = 50;
         this.showCheckText = false;
         this.topicId = $stateParams.id;
+
+
+
+
         //
         //
         //Answer Types.
@@ -1163,7 +1166,7 @@
                 that.showQuestionSet = false;
                 that.answerTag = [];
                 that.myAnswer = undefined;
-            } else {
+            } else  {
                 that.showCheckOptions = false;
                 that.showRadioOptions = false;
                 that.showQuestionSet = true;

@@ -227,7 +227,7 @@ function isCurrentUserGroupMembersOwner($groupid) {
 
 
 
-path /quizes/{questionBankUniqueID}/{quizID} is Quiz { // to discuss with Sir Zia about User ID Node
+path /quizes/{questionBankUniqueID}/{quizID} is Quiz {
     validate() {this.hasChildren(['questions']);}
 
 
@@ -246,10 +246,7 @@ path /quizes/{questionBankUniqueID}/{quizID} is Quiz { // to discuss with Sir Zi
 
 }
 
-//  user-quiz-membership/{userID}/
-//  child, timestamp, questionBankUniqueID, membership type
 
-// user - group - membership
 
 
 //----------------------------------
