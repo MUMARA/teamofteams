@@ -56,21 +56,21 @@
                     Chat
                 </md-tooltip>
             </div>
-            <div layout="row" layout-align="center center">
-                <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('progressreport', group.panel.subgroupID)" /> -->
-                <ng-md-icon icon="assignment" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('progressreport', group.panel.subgroupID)"></ng-md-icon>
-                <img src="img/1arrow.png" ng-if="group.panel.active === 'progressreport'" class="showArrow anifade">
-                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                    Progress Report
-                </md-tooltip>
-            </div>
             <!-- firepad tab -->
-            <div layout="row" layout-align="center center" ng-if="group.isMember">
+            <div layout="row" layout-align="center center" ng-if="group.isMember" >
                 <!-- <img src="img/comment.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('collaborator', group.panel.subgroupID)" /> -->
                 <ng-md-icon icon="border_color" size="35" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('collaborator', group.panel.subgroupID)"></ng-md-icon>
                 <img src="img/1arrow.png" ng-if="group.panel.active === 'collaborator'" class="showArrow anifade">
                 <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
                     Collaborator
+                </md-tooltip>
+            </div>
+            <div layout="row" layout-align="center center" ng-if="group.panel.subgroupID">
+                <!-- <img src="img/line.svg" class="nooutline cursorPointer icon40px" layout-margin ng-click="group.showPanel('progressreport', group.panel.subgroupID)" /> -->
+                <ng-md-icon icon="assignment" size="40" class="nooutline cursorPointer fillColorWhite padding5px" ng-click="group.showPanel('progressreport', group.panel.subgroupID)"></ng-md-icon>
+                <img src="img/1arrow.png" ng-if="group.panel.active === 'progressreport'" class="showArrow anifade">
+                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                    Progress Report
                 </md-tooltip>
             </div>
         </div>
