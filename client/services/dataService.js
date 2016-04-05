@@ -203,7 +203,7 @@ angular.module('core')
                                                         userData[indx].subgroupTitle = groupsubgroupTitle[subgroup.key()];
                                                         userData[indx].membershipNo  = snapshot.getPriority() || '';
                                                         userData[indx].contactNumber = usermasterdata.contactNumber || '';
-                                                        userData[indx].onlinestatus = false;
+                                                        userData[indx].onlinestatus = usersPresense.val() ? true : false,
                                                         /*userData[indx].onlineweb = 0;
                                                         userData[indx].onlineios = 0;
                                                         userData[indx].onlineandroid = 0;*/
@@ -252,7 +252,7 @@ angular.module('core')
                                                     subgroupTitle: groupsubgroupTitle[subgroup.key()],
                                                     membershipNo : snapshot.getPriority() || '',
                                                     contactNumber: usermasterdata.contactNumber || '',
-                                                    onlinestatus: false,
+                                                    onlinestatus: usersPresense.val() ? true : false,
                                                     /*onlineweb: 0,
                                                     onlineios: 0,
                                                     onlineandroid: 0,*/
