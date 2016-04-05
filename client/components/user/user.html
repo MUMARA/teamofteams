@@ -18,7 +18,7 @@
                 <tr md-row>
                     <th md-column></th>
                     <th md-column class="foreColorSeaGreen">Name</th>
-                    <th md-column class="foreColorSeaGreen">Phone</th>
+                    <!-- <th md-column class="foreColorSeaGreen">Phone</th> -->
                     <th md-column class="foreColorSeaGreen">Team</th>
                     <th md-column class="foreColorSeaGreen">Last Modified</th>
                 </tr>
@@ -30,7 +30,7 @@
                         <img ng-src="{{usr.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"  layout-margin class="imageRound icon50px" ng-style="usr.type == 1 ? {'border':'3px solid #8BC53F'} :{'border':'3px solid #c51903'} ">
                     </td>
                     <td md-cell>{{usr.fullName}}</td>
-                    <td md-cell>{{usr.contactNumber}}</td>
+                    <!-- <td md-cell>{{usr.contactNumber}}</td> -->
                     <td md-cell>{{usr.groupsubgroupTitle}}</td>
                     <td md-cell>
                         {{user.returnMoment(usr.timestamp)}}
