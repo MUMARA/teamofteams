@@ -4,12 +4,12 @@
 (function() {
   'use strict';
   angular.module('app.collaborator', ['core'])
-    .factory('CollaboratorService', ['$q', '$firebaseArray', 'ref','$rootScope', CollaboratorService]);
+    .factory('CollaboratorService', ['$q', '$firebaseArray','$rootScope','firebaseService', CollaboratorService]);
 
-  function CollaboratorService($q, $firebaseArray, ref,$rootScope) {
-    var currentGroup,currentSubGroup,subGroupUsers =[];
+  function CollaboratorService($q, $firebaseArray, $rootScope,firebaseService) {
+    var currentGroup,currentSubGroup,subGroupUsers = [];
     var currentDocumentId ="";
-    var firepadRef, pushDocumentNode, firebaseDocumentId, filteredUsers = [];
+    var firepadRef = firebaseService.getRefMain(), pushDocumentNode, firebaseDocumentId, filteredUsers = [];
     return {
       getCurrentDocumentId :getCurrentDocumentId,
       setCurrentDocumentId:setCurrentDocumentId,
@@ -51,8 +51,8 @@
 
     function getinitGroupDocument(groupID, cb) {
       var val = "";
-      firepadRef = new Firebase(ref).child("firepad-groups/"+groupID);
-      firepadRef.limitToFirst(1).once('value',function(snapshot){
+    //   firepadRef = new Firebase(ref)
+      firepadRef.child("firepad-groups/"+groupID).limitToFirst(1).once('value',function(snapshot){
         for(var a in snapshot.val()){
            val = a;
         }
@@ -62,14 +62,14 @@
 
     function getGroupMembers(groupID,subgroupID) {
       if(subgroupID){
-        firepadRef = new Firebase(ref).child("group-members/"+subgroupID+"/"+groupID);
-        $firebaseArray(firepadRef).$loaded().then(function(x){
+        // firepadRef = new Firebase(ref).child("group-members/"+subgroupID+"/"+groupID);
+        $firebaseArray(firepadRef.child("group-members/"+subgroupID+"/"+groupID)).$loaded().then(function(x){
            return x;
         });
       }
       else {
-        firepadRef = new Firebase(ref).child("group-members/"+groupID);
-        $firebaseArray(firepadRef).$loaded().then(function(x){
+        // firepadRef = new Firebase(ref).child("group-members/"+groupID);
+        $firebaseArray(firepadRef.child("group-members/"+groupID)).$loaded().then(function(x){
            return x;
          });
       }
@@ -78,8 +78,8 @@
 
     function getinitSubGroupDocument(groupID,subgroupID,cb){
       var val = "";
-      firepadRef = new Firebase(ref).child("firepad-subgroups/"+groupID+'/'+subgroupID);
-      firepadRef.limitToFirst(1).once('value',function(snapshot){
+    //   firepadRef = new Firebase(ref).child("firepad-subgroups/"+groupID+'/'+subgroupID);
+      firepadRef.child("firepad-subgroups/"+groupID+'/'+subgroupID).limitToFirst(1).once('value',function(snapshot){
         for(var a in snapshot.val()){
            val = a;
         }
@@ -90,16 +90,16 @@
 
 
     function addAccessUser(documentId, groupID, subgroupID, userID,access) {
-      var firebaseLocalRef;
-      firepadRef = new Firebase(ref);
+    //   var firebaseLocalRef;
+    //   firepadRef = new Firebase(ref);
       var updateDocument = {};
       if (subgroupID) {
-        firebaseLocalRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId);
+        // firebaseLocalRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId);
           updateDocument['firepad-subgroups-rules/' + groupID + '/' + subgroupID + '/' + documentId + '/allUsers'] = true;
           updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/' + userID] = access;
       }
       else {
-        firebaseLocalRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + documentId);
+        // firebaseLocalRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + documentId);
           updateDocument['firepad-groups-rules/' + groupID + '/' + documentId + '/allUsers'] = true;
           updateDocument['firepad-groups-access/' + groupID +  '/' + documentId + '/' + userID] = access;
       }
@@ -111,7 +111,7 @@
 
     function CreateDocument(documentTitle, groupID, subgroupID,documentType,user) {
       var deferred = $q.defer();
-      var firebaseLocalRef,pushDocumentNode,firebaseDocumentId;
+      var firebaseLocalRef = firepadRef,pushDocumentNode,firebaseDocumentId;
       var updateDocument = {},
       createdBy = {
         firstName:user.firstName,
@@ -121,7 +121,7 @@
 
       };
       if (subgroupID) {
-        firebaseLocalRef = new Firebase(ref);
+        // firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
         pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID).push();
         firebaseDocumentId = pushDocumentNode.key();
@@ -137,7 +137,7 @@
         updateDocument['firepad-subgroups-rules/' + groupID + "/" + subgroupID + '/' + firebaseDocumentId + '/allUsers'] = true;
 
       } else {
-        firebaseLocalRef = new Firebase(ref);
+        // firebaseLocalRef = new Firebase(ref);
         firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
         pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
         firebaseDocumentId = pushDocumentNode.key();
