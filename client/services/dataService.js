@@ -165,10 +165,10 @@ angular.module('core')
                                             }
                                         })
                                     });*/
-                                    userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(snapshot, prevChildKey) {
+                                    userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(usersPresense, prevChildKey) {
                                         userData.forEach(function(val, indx) {
                                             if (val.id === userdata.$id) {
-                                                if (snapshot.val()) {
+                                                if (usersPresense.val()) {
                                                     /*for (var key in snapshot.val()) {
                                                         if (snapshot.val()[key].type === 1) {
                                                             val.onlineweb = 1;
@@ -184,87 +184,87 @@ angular.module('core')
                                                 }
                                             }
                                         });
-                                    });
-                                    firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
-                                        // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
-                                        // console.log('user', userdata.$id)
-                                        if (userData.length > 0) {
-                                            for (var indx = 0; indx <= userData.length; indx++) {
-                                                // console.log(val.id);
-                                                // console.log(userdata.$id)
-                                                // console.log(userData[indx])
-                                                if (userData[indx].id === userdata.$id && userData[indx].groupID === group.key() && userData[indx].subgroupID === subgroup.key()) {
-                                                    userData[indx].id = userdata.$id;
-                                                    userData[indx].type = type;
-                                                    userData[indx].groupsubgroup = group.key() + ' / ' + subgroup.key();
-                                                    userData[indx].groupsubgroupTitle = groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()];
-                                                    userData[indx].groupID = group.key();
-                                                    userData[indx].groupTitle = groupsubgroupTitle[group.key()];
-                                                    userData[indx].subgroupID = subgroup.key();
-                                                    userData[indx].subgroupTitle = groupsubgroupTitle[subgroup.key()];
-                                                    userData[indx].membershipNo  = snapshot.getPriority() || '';
-                                                    userData[indx].contactNumber = usermasterdata.contactNumber || '';
-                                                    userData[indx].onlinestatus = false;
-                                                    /*userData[indx].onlineweb = 0;
-                                                    userData[indx].onlineios = 0;
-                                                    userData[indx].onlineandroid = 0;*/
-                                                    userData[indx].timestamp = timestamp;
-                                                    userData[indx].message = message;
-                                                    userData[indx].profileImage = usermasterdata['profile-image'] || '';
-                                                    userData[indx].firstName = usermasterdata.firstName;
-                                                    userData[indx].lastName = usermasterdata.lastName;
-                                                    userData[indx].fullName = usermasterdata.firstName + ' ' + usermasterdata.lastName;
-                                                    break;
-                                                }
-                                                if (userData.length === indx + 1) {
-                                                    userData.push({
-                                                        id: userdata.$id,
-                                                        type: type,
-                                                        groupsubgroup: group.key() + ' / ' + subgroup.key(),
-                                                        groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
-                                                        groupID: group.key(),
-                                                        groupTitle: groupsubgroupTitle[group.key()],
-                                                        subgroupID: subgroup.key(),
-                                                        subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                                        membershipNo : snapshot.getPriority() || '',
-                                                        contactNumber: usermasterdata.contactNumber || '',
-                                                        onlinestatus: false,
-                                                        /*onlineweb: 0,
-                                                        onlineios: 0,
-                                                        onlineandroid: 0,*/
-                                                        timestamp: timestamp,
-                                                        message: message,
-                                                        profileImage: usermasterdata['profile-image'] || '',
-                                                        firstName: usermasterdata.firstName,
-                                                        lastName: usermasterdata.lastName,
-                                                        fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
-                                                    });
-                                                }
-                                            };
-                                        } else {
-                                            userData.push({
-                                                id: userdata.$id,
-                                                type: type,
-                                                groupsubgroup: group.key() + ' / ' + subgroup.key(),
-                                                groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
-                                                groupID: group.key(),
-                                                groupTitle: groupsubgroupTitle[group.key()],
-                                                subgroupID: subgroup.key(),
-                                                subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                                membershipNo : snapshot.getPriority() || '',
-                                                contactNumber: usermasterdata.contactNumber || '',
-                                                onlinestatus: false,
-                                                /*onlineweb: 0,
-                                                onlineios: 0,
-                                                onlineandroid: 0,*/
-                                                timestamp: timestamp,
-                                                message: message,
-                                                profileImage: usermasterdata['profile-image'] || '',
-                                                firstName: usermasterdata.firstName,
-                                                lastName: usermasterdata.lastName,
-                                                fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
-                                            });
-                                        }
+                                        firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
+                                            // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
+                                            // console.log('user', userdata.$id)
+                                            if (userData.length > 0) {
+                                                for (var indx = 0; indx <= userData.length; indx++) {
+                                                    // console.log(val.id);
+                                                    // console.log(userdata.$id)
+                                                    // console.log(userData[indx])
+                                                    if (userData[indx].id === userdata.$id && userData[indx].groupID === group.key() && userData[indx].subgroupID === subgroup.key()) {
+                                                        userData[indx].id = userdata.$id;
+                                                        userData[indx].type = type;
+                                                        userData[indx].groupsubgroup = group.key() + ' / ' + subgroup.key();
+                                                        userData[indx].groupsubgroupTitle = groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()];
+                                                        userData[indx].groupID = group.key();
+                                                        userData[indx].groupTitle = groupsubgroupTitle[group.key()];
+                                                        userData[indx].subgroupID = subgroup.key();
+                                                        userData[indx].subgroupTitle = groupsubgroupTitle[subgroup.key()];
+                                                        userData[indx].membershipNo  = snapshot.getPriority() || '';
+                                                        userData[indx].contactNumber = usermasterdata.contactNumber || '';
+                                                        userData[indx].onlinestatus = false;
+                                                        /*userData[indx].onlineweb = 0;
+                                                        userData[indx].onlineios = 0;
+                                                        userData[indx].onlineandroid = 0;*/
+                                                        userData[indx].timestamp = timestamp;
+                                                        userData[indx].message = message;
+                                                        userData[indx].profileImage = usermasterdata['profile-image'] || '';
+                                                        userData[indx].firstName = usermasterdata.firstName;
+                                                        userData[indx].lastName = usermasterdata.lastName;
+                                                        userData[indx].fullName = usermasterdata.firstName + ' ' + usermasterdata.lastName;
+                                                        break;
+                                                    }
+                                                    if (userData.length === indx + 1) {
+                                                        userData.push({
+                                                            id: userdata.$id,
+                                                            type: type,
+                                                            groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                                            groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
+                                                            groupID: group.key(),
+                                                            groupTitle: groupsubgroupTitle[group.key()],
+                                                            subgroupID: subgroup.key(),
+                                                            subgroupTitle: groupsubgroupTitle[subgroup.key()],
+                                                            membershipNo : snapshot.getPriority() || '',
+                                                            contactNumber: usermasterdata.contactNumber || '',
+                                                            onlinestatus: usersPresense.val() ? true : false,
+                                                            /*onlineweb: 0,
+                                                            onlineios: 0,
+                                                            onlineandroid: 0,*/
+                                                            timestamp: timestamp,
+                                                            message: message,
+                                                            profileImage: usermasterdata['profile-image'] || '',
+                                                            firstName: usermasterdata.firstName,
+                                                            lastName: usermasterdata.lastName,
+                                                            fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                                        });
+                                                    }
+                                                };
+                                            } else {
+                                                userData.push({
+                                                    id: userdata.$id,
+                                                    type: type,
+                                                    groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                                    groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
+                                                    groupID: group.key(),
+                                                    groupTitle: groupsubgroupTitle[group.key()],
+                                                    subgroupID: subgroup.key(),
+                                                    subgroupTitle: groupsubgroupTitle[subgroup.key()],
+                                                    membershipNo : snapshot.getPriority() || '',
+                                                    contactNumber: usermasterdata.contactNumber || '',
+                                                    onlinestatus: false,
+                                                    /*onlineweb: 0,
+                                                    onlineios: 0,
+                                                    onlineandroid: 0,*/
+                                                    timestamp: timestamp,
+                                                    message: message,
+                                                    profileImage: usermasterdata['profile-image'] || '',
+                                                    firstName: usermasterdata.firstName,
+                                                    lastName: usermasterdata.lastName,
+                                                    fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                                });
+                                            }
+                                        });
                                     });
                                 });
                             }); //$firebaseObject
