@@ -593,7 +593,7 @@ angular.module('core', [
         };
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().from(timestamp);
+                return moment().to(timestamp);
             } else {
                 return ''
             }
@@ -693,9 +693,19 @@ angular.module('core', [
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             if (that.subgroupID) {
-                that.channels = chatService.getSubGroupChannel(that.groupID, that.subgroupID);
+                chatService.getSubGroupChannel(that.groupID, that.subgroupID).$loaded().then(function(snapshot){
+                    that.channels = snapshot;
+                    if(snapshot.length > 0) {
+                        that.gotoChannel(snapshot[0])
+                    }
+                });
             } else {
-                that.channels = chatService.getGroupChannel(that.groupID);
+                chatService.getGroupChannel(that.groupID).$loaded().then(function(snapshot){
+                    that.channels = snapshot;
+                    if(snapshot.length > 0) {
+                        that.gotoChannel(snapshot[0])
+                    }
+                });
             }
             that.activeTitle = 'Select Channel to Start Chat';
             that.activeChannelID = null;
@@ -815,7 +825,7 @@ angular.module('core', [
 		var dailyProgressReport = [];
 
         //crearting progress Report
-        
+
         function createProgressReport(obj, Policy, checkoutFlag) {     //obj = {groupId: '', subgroupId: '',userId; '' }
             var deferred = $q.defer();
             //checking daily progress report is exists or not -- START --
@@ -861,7 +871,7 @@ angular.module('core', [
 
                 });
 
-            return deferred.promise;            
+            return deferred.promise;
         } //createProgressReport
 
 		//getting daily progress report
@@ -1169,7 +1179,9 @@ angular.module('core', [
     function ProgressReportController(firebaseService, $state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
         this.loadingData = false;
+        this.showParam = false;
         this.setFocus = function(startDate , endDate) {
+            that.showParam = !that.showParam
             that.loadingData = true;
              if(startDate && endDate) {
                  $timeout(function() {
@@ -1179,7 +1191,7 @@ angular.module('core', [
                  	// console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
                  }, 2000);
              }else{
-                 document.getElementById("#UserSearch").focus();
+                 //document.getElementById("UserSearch").focus();
                  that.loadingData = false;
              }
 
