@@ -15436,7 +15436,7 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
       });
       $stateProvider.state('user.quiz', {
         url: '/:userID/quiz',
-        templateUrl: 'components/quiz/quiz.html',
+        templateUrl: 'components/quiz/questionBanks.html',
         controller: 'QuizController',
         controllerAs: 'quiz'
       });

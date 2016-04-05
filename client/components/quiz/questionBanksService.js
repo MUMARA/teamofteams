@@ -256,9 +256,6 @@
         _self.createTopic = function (questionBankUniqueID, chapterUniqueId, topicObject) {
             firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').child(chapterUniqueId).child("topics").push(topicObject);
         };
-        _self.createTopic = function (questionBankUniqueID, chapterUniqueId, topicObject) {
-            firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').child(chapterUniqueId).child("topics").push(topicObject);
-        };
         _self.loadTopic = function (questionBankUniqueID, chapterUniqueId) {
             var deferred = $q.defer();
             _self.topics = [];
@@ -274,6 +271,22 @@
         };
         _self.createQuestion = function (questionBankUniqueID, chapterUniqueId, topicUniqueId, questionObject) {
             console.log(questionBankUniqueID, chapterUniqueId, topicUniqueId, questionObject);
+            questionObject = {
+                title: "title",
+                type: 1, //QuestionTupe
+                html: "htmlsllssllss",
+                options: [{
+                    "html": "hello ",
+                    "correct": false,
+                    "discussion-html": "sajklksjls"
+                },
+                    {
+                        "html": "helkkdjjs",
+                        "correct": true,
+                        "discussion-html": "hekejejsd"
+                    }],
+                "discussion-html": "hgshshs"
+            }
             firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').child(chapterUniqueId).child("topics").child(topicUniqueId).child("questions").push(questionObject);
         };
     }
