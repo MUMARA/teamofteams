@@ -93,12 +93,12 @@
                     </md-content>
                 </md-tab>
                 <!--Private group side-->
-                <md-tab label="Private groups" class="rightTbs">
+                <md-tab label="Private groups" ng-if="false" class="rightTbs">
                     <md-content>
                     </md-content>
                 </md-tab>
                 <!--direct message side-->
-                <md-tab label="Direct Messages" class="rightTbs">
+                <md-tab label="Direct Messages" ng-if="false" class="rightTbs">
                     <md-content class="grayScroller">
                         <md-list style="padding: 0px 0px 5px 0px;!important;position: relative" ng-class="$index%2==0 ? 'moh' : 'sin'" ng-repeat="member in chat.members track by $index">
                             <span ng-class="$index%3==0 ? 'statusOnline' : 'statusOffline'"></span>
