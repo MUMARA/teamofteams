@@ -80,8 +80,8 @@
         $scope.chapterId = '';
         $scope.topicId = '';
         //Firebase
-        var ref = new Firebase('https://pspractice.firebaseio.com');
-        var refMain = new Firebase('https://luminous-torch-4640.firebaseio.com');
+     var ref = new Firebase('https://luminous-torch-4640.firebaseio.com/');
+        // var refMain = new Firebase('https://luminous-torch-4640.firebaseio.com');
         $scope.books = [];
         $scope.booksId = [];
         $scope.quizes = [];
@@ -112,6 +112,7 @@
             .then(function (response) {
                 getUserObj();
                 initializeView();
+                console.log("resolveUserPageeeeeeeeeeeeee")
             }, function (err) {
                 alert('Error in Line 86: ' + err);
             });
@@ -136,8 +137,8 @@
         function initializeView() {
             // console.log(quizService.getBookAfterCreation())
             // console.log(quizService.getBookAfterCreation() !== null)
-
             if (quizService.getBookAfterCreation() !== null) {
+                console.log("kjkkkkjskkkkkkkkkkkkkk");
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
                         $scope.books.push(snapShot.val());
@@ -148,13 +149,14 @@
                         }
                     }, 0);
                 });
-            } else {
-                // console.log('ELSE');
+            }
+            else {
+                console.log('ELSE');
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
                         $scope.books.push(snapShot.val());
                         $scope.booksId.push(snapShot.key());
-
+                        console.log($scope.books)
                     }, 0);
                 });
 
@@ -170,7 +172,7 @@
                 if (quizService.getBook() !== null) {
                     $scope.bookId = quizService.getBook();
                     $scope.selectedBookIndex = quizService.getSelectedBook();
-                    console.log(quizService.getBook());
+                    console.log("boooooooookkkkkkkkkkkkkkk",quizService.getBook());
                     ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
                         $timeout(function () {
                             $scope.chapters.push(snapShot.val());
@@ -230,16 +232,17 @@
 
         /*  Tabs  */
         function showQuizBankFunc() {
+            alert('showQuizBankFunc')
             $scope.showQuizBank = true;
             $scope.showQuizList = false;
             $scope.showQuizAssign = false;
             if (quizService.getQuestionObject() !== null && $scope.questionView !== null) {
                 $scope.showView = true;
             }
-            $('#chapterColumn').addClass('marginLeft');
-            $('#quizBankIcon').addClass('selectedTab');
-            $('#quizIcon').removeClass('selectedTab');
-            $('#quizAssignIcon').removeClass('selectedTab');
+            // $('#chapterColumn').addClass('marginLeft');
+            // $('#quizBankIcon').addClass('selectedTab');
+            // $('#quizIcon').removeClass('selectedTab');
+            // $('#quizAssignIcon').removeClass('selectedTab');
             quizService.setSelectedTab('QuizBank');
 
             //$scope.chapters = [];
@@ -740,7 +743,7 @@
             $scope.selectedGroup = id;
             $scope.selectedGroupIndex = index;
             $scope.subGroup = [];
-            refMain.child('subgroups').child(id).on('child_added', function (snapShot) {
+            ref.child('subgroups').child(id).on('child_added', function (snapShot) {
                 $scope.subGroup.push(snapShot.key());
                 console.log($scope.subGroup);
             });
@@ -812,28 +815,31 @@
         $scope.desc = "";
         $scope.newImg = null;
         $scope.imgLogoUrl;
-        var userQuestionBanksRef1 = new Firebase('https://pspractice.firebaseio.com/');
+        // var ref = new Firebase('https://luminous-torch-4640.firebaseio.com/');
 
         function addBook() {
             $scope.showbook = navService.toggleRight1;
             $scope.showbook();
         }
 
-        function createBook(bookForm, p) {
+        function createBook(bookForm, img) {
             addBook();
             $scope.temps = {
                 title: $scope.name,
-                description: $scope.desc,
-                //imgLogoUrl: $scope.imgLogoUrl || 'img/1angular.png'
-                imgLogoUrl: p
+                desc: $scope.desc,
+                imgLogoUrl: img || 'img/1angular.png',
+                'timestamp': Firebase.ServerValue.TIMESTAMP,
+                // imgLogoUrl: img
             };
-            userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
-                'membership-type': 1
+            ref.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
+                'memberships-type': 1,
+                'timestamp': Firebase.ServerValue.TIMESTAMP
             });
-            userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
-                "membership-type": 1
+            ref.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
+                "memberships-type": 1,
+                'timestamp': Firebase.ServerValue.TIMESTAMP
             });
-            userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
+            ref.child("question-bank").child($scope.bookID).set($scope.temps);
             if ($rootScope.newImg) {
                 var x = utilService.base64ToBlob($rootScope.newImg);
                 var temp = $rootScope.newImg.split(',')[0];
@@ -843,15 +849,17 @@
                     .then(function (url) {
                         // $scope.temps.imgLogoUrl = url + '?random=' + new Date();
                         //its for sending data on firebase by Name's node
-                        userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
-                            'membership-type': 1
+                        ref.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
+                            'memberships-type': 1,
+                            'timestamp': Firebase.ServerValue.TIMESTAMP
                         });
-                        userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
-                            "membership-type": 1
+                        ref.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
+                            "memberships-type": 1,
+                            'timestamp': Firebase.ServerValue.TIMESTAMP
                         });
-                        userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
-
-                        // quizService.setBookAfterCreation($scope.bookID)
+                        ref.child("question-bank").child($scope.bookID).set($scope.temps);
+                        // initializeView();
+                        quizService.setBookAfterCreation($scope.bookID)
                         // ref.child($scope.bookID).set(temp);
                         $scope.name = "";
                         $scope.desc = "";
@@ -877,7 +885,7 @@
                 targetEvent: ev
             }).then(function (picture) {
                 $rootScope.newImg = picture;
-                
+
             }, function (err) {
                 console.log(err);
 
@@ -917,7 +925,7 @@
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....');
                     console.log('picture upload successful');
-                    console.log(url);
+                    // console.log(url);
 
                     defer.resolve(url);
 
@@ -947,7 +955,7 @@
          }, 0)
          }*/
 
-        var ref = new Firebase('https://pspractice.firebaseio.com/');
+    //    var ref = new Firebase('https://luminous-torch-4640.firebaseio.com/');
 
         $scope.bookId = $stateParams.id;
         $scope.Title = '';
@@ -1036,7 +1044,7 @@
 
         //AddQuestion Controller Work
         var that = this;
-        var myFirebaseRef = new Firebase("https://pspractice.firebaseio.com/");
+        // var myFirebaseRef = new Firebase("https://luminous-torch-4640.firebaseio.com/");
         var idCounter = 3;
         this.showRadioOptions = false;
         this.showCheckOptions = false;
@@ -1110,7 +1118,7 @@
                 that.showQuestionSet = false;
                 that.answerTag = [];
                 that.myAnswer = undefined;
-            } else  {
+            } else {
                 that.showCheckOptions = false;
                 that.showRadioOptions = false;
                 that.showQuestionSet = true;
@@ -1171,7 +1179,7 @@
                 delete data.id;
             });
             that.question.Type = that.myType.name;
-            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question);
+            ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question);
             that.question = {
                 Title: '',
                 Description: '',
@@ -1212,7 +1220,7 @@
                 delete data.id;
             });
             that.question.Type = that.myType.name;
-            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
+            ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
 
                 that.question = {};
                 abc();

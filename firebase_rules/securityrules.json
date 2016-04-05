@@ -997,8 +997,8 @@
     "firepad-groups": {
       "$groupid": {
         "$documentid": {
-          ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
-          ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+          ".write": "data.val() == null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
+          ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
         },
         ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
       }
@@ -1007,8 +1007,8 @@
       "$groupid": {
         "$subgroupid": {
           "$documentid": {
-            ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
-            ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+            ".write": "data.val() == null && auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
+            ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
           },
           ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
         }
@@ -1017,8 +1017,8 @@
     "firepad-groups-documents": {
       "$groupid": {
         "$documentid": {
-          ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
-          ".write": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+          ".write": "data.val() == null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
+          ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
         }
       }
     },
@@ -1026,8 +1026,8 @@
       "$groupid": {
         "$subgroupid": {
           "$documentid": {
-            ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
-            ".write": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
+            ".write": "data.val() == null && auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
+            ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
           },
           ".read": "auth != null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
         }
@@ -1038,11 +1038,11 @@
         "$documentid": {
           "$userid": {
             ".validate": "newData.isNumber()",
-            ".read": "auth != null",
-            ".write": "auth != null"
+            ".write": "data.val() == null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && root.child('firepad-groups-access').child($groupid).child($documentid).child(auth.uid).val() == 1",
+            ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
           },
-          ".read": "auth != null",
-          ".write": "auth != null"
+          ".write": "data.val() == null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
+          ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
         }
       }
     },
@@ -1056,8 +1056,8 @@
           "$other": {
             ".validate": "false"
           },
-          ".read": "auth != null",
-          ".write": "auth != null"
+          ".write": "data.val() == null && auth != null || data.val() != null && newData.val() != null && (root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 1 || root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() == 2 || root.child('firepad-groups-access').child($groupid).child($documentid).child(auth.uid).val() == 1)",
+          ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
         }
       }
     },
@@ -1067,11 +1067,11 @@
           "$documentid": {
             "$userid": {
               ".validate": "newData.isNumber()",
-              ".read": "auth != null",
-              ".write": "auth != null"
+              ".write": "data.val() == null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2 || root.child('firepad-subgroups-access').child($groupid).child($subgroupid).child($documentid).child(auth.uid).val() == 1)",
+              ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
             },
-            ".read": "auth != null",
-            ".write": "auth != null"
+            ".write": "data.val() == null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0",
+            ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
           }
         }
       }
@@ -1087,8 +1087,8 @@
             "$other": {
               ".validate": "false"
             },
-            ".read": "auth != null",
-            ".write": "auth != null"
+            ".write": "data.val() == null && root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2 || root.child('firepad-subgroups-access').child($groupid).child($subgroupid).child($documentid).child(auth.uid).val() == 1)",
+            ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
           }
         }
       }
@@ -1121,7 +1121,8 @@
           },
           ".write": "data.val() == null && (newData.child('memberships-type').val() == 1 && (auth != null && auth.uid == $UserID)) || data.val() != null && newData.val() != null && (newData.child('memberships-type').val() == 1 && (auth != null && auth.uid == $UserID) || auth != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1) && newData.child('memberships-type').val() == 2)",
           ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
-        }
+        },
+        ".read": "auth != null && auth.uid == $UserID"
       }
     },
     "question-bank-memberships": {
@@ -1273,6 +1274,179 @@
         },
         ".write": "data.val() == null && auth != null || data.val() != null && newData.val() != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2)",
         ".read": "auth != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+      }
+    },
+    "answers": {
+      "$userid": {
+        "$quizId": {
+          "$answerId": {
+            "$questionId": {
+              "$optionId": {
+                ".validate": "newData.isBoolean()"
+              }
+            }
+          }
+        }
+      }
+    },
+    "answer-user": {
+      "$userId": {
+        "$groupid": {
+          "$subgroupid": {
+            "$quizId": {
+              "$answerId": {
+                "$questionId": {
+                  "$optionId": {
+                    ".validate": "newData.isBoolean()",
+                    ".read": "auth != null && auth.uid == $userId || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "quizes": {
+      "$quizId": {
+        "$questionBankUniqueID": {
+          "$chapterId": {
+            "$topicId": {
+              "$questionId": {
+                ".validate": "newData.hasChildren(['title', 'type', 'desc'])",
+                "title": {
+                  ".validate": "newData.isString()"
+                },
+                "type": {
+                  ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
+                },
+                "desc": {
+                  ".validate": "newData.isString()"
+                },
+                "options": {
+                  "$key3": {
+                    ".validate": "newData.hasChildren(['html', 'correct', 'discussion-html'])",
+                    "html": {
+                      ".validate": "newData.isString()"
+                    },
+                    "correct": {
+                      ".validate": "newData.isBoolean()"
+                    },
+                    "discussion-html": {
+                      ".validate": "newData.isString()"
+                    },
+                    "$other": {
+                      ".validate": "false"
+                    }
+                  }
+                },
+                "$other": {
+                  ".validate": "false"
+                },
+                ".write": "data.val() == null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2)",
+                ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+              }
+            }
+          }
+        }
+      }
+    },
+    "quiz-in-progress": {
+      "$groupId": {
+        "$subgroupId": {
+          "$quizId": {
+            ".validate": "newData.isBoolean()",
+            ".write": "data.val() == null && root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
+          }
+        }
+      }
+    },
+    "quiz-schedule": {
+      "$groupid": {
+        "$subgroupid": {
+          "$quizId": {
+            ".validate": "newData.hasChildren(['title', 'duration', 'start-time', 'num-questions'])",
+            "title": {
+              ".validate": "newData.isString()"
+            },
+            "duration": {
+              ".validate": "newData.isNumber()"
+            },
+            "start-time": {
+              ".validate": "newData.isNumber()"
+            },
+            "num-questions": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": "false"
+            },
+            ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
+            ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
+          }
+        }
+      }
+    },
+    "quiz-proctoringkey": {
+      "$quizid": {
+        "key": {
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "quiz-result": {
+      "$userId": {
+        "$groupId": {
+          "$subgroupId": {
+            "$quizId": {
+              "$answerId": {
+                "$chapterId": {
+                  "$topicId": {
+                    "$questionId": {
+                      ".validate": "newData.isBoolean()",
+                      ".read": "auth != null && auth.uid == $userId"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "quiz-answer": {
+      "$quizId": {
+        "$questionBankUniqueID": {
+          "$chapterId": {
+            "$topicId": {
+              "$questionId": {
+                "$optionId": {
+                  ".validate": "newData.isBoolean()",
+                  ".write": "data.val() == null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2)",
+                  ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "user-quiz": {
+      "$userId": {
+        "$quizId": {
+          ".validate": "newData.hasChildren(['memberships-type', 'timestamp'])",
+          "memberships-type": {
+            ".validate": "newData.isNumber()"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() && newData.val() <= now"
+          },
+          "$other": {
+            ".validate": "false"
+          },
+          ".write": "data.val() == null && (auth != null && auth.uid == $userId)",
+          ".read": "auth != null && auth.uid == $userId"
+        }
       }
     }
   }
