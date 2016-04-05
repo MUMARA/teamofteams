@@ -10,7 +10,7 @@
 		var dailyProgressReport = [];
 
         //crearting progress Report
-        
+
         function createProgressReport(obj, Policy, checkoutFlag) {     //obj = {groupId: '', subgroupId: '',userId; '' }
             var deferred = $q.defer();
             //checking daily progress report is exists or not -- START --
@@ -56,7 +56,7 @@
 
                 });
 
-            return deferred.promise;            
+            return deferred.promise;
         } //createProgressReport
 
 		//getting daily progress report

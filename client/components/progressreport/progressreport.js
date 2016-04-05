@@ -8,7 +8,9 @@
     function ProgressReportController(firebaseService, $state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
         this.loadingData = false;
+        this.showParam = false;
         this.setFocus = function(startDate , endDate) {
+            that.showParam = !that.showParam
             that.loadingData = true;
              if(startDate && endDate) {
                  $timeout(function() {
@@ -18,7 +20,7 @@
                  	// console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
                  }, 2000);
              }else{
-                 document.getElementById("#UserSearch").focus();
+                 //document.getElementById("UserSearch").focus();
                  that.loadingData = false;
              }
 
