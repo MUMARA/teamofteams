@@ -66,10 +66,17 @@ function isQuestionBankOwnerCreating(pathUserID, value) {
 //----------------------------------
 //      question-bank-memberships (Before creating a QuestionBank, create a owner membership first)
 //----------------------------------
-path /user-question-banks/{UserID}/{questionBankUniqueID} is QuestionBankMembership {
+/*path /user-question-banks/{UserID}/{questionBankUniqueID} is QuestionBankMembership {
       read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
       create() { isQuestionBankOwnerCreating(UserID, this) }
-      update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+      update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }*/
+path /user-question-banks/{userid}{
+  read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+    /{questionBankUniqueID} is QuestionBankMembership {
+          read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+          create() { isQuestionBankOwnerCreating(userid, this) }
+          update() { isQuestionBankOwnerCreating(userid, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+    }
 }
 //----------------------------------
 //      question-bank-memberships (Before creating a QuestionBank, create a owner membership first)
@@ -238,6 +245,9 @@ path /answers/{userid}/{quizId}/{answerId}/{questionId}/{optionId} is Boolean { 
 
 
 
+path /quizes/{questionBankUniqueID}/{quizID} is Quiz {
+    validate() { this.hasChildren(['questions']) } 
+
 //--------------------------
 //  Answer User
 //--------------------------
@@ -301,6 +311,7 @@ type Schedules {
   "num-questions": Number
 }
 /*
+
 
 
 path /quizes/{questionBankUniqueID}/{quizID} is Quiz {

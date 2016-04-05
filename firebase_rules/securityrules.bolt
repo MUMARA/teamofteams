@@ -417,7 +417,7 @@ path /group-activity-streams/{groupid} {
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
 
-  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) }
+  write()    {   (true || isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) || isAuthenticated() && isGroupJoined(this['verb']) }
 
   // validate() { prior(root['groups'][$groupid].val() != null)     }
 
@@ -551,11 +551,9 @@ path /group-check-in-records/{groupid} {
  //====================================
 
 path /group-membership-requests/{groupid} {
-       read() {    isGroupMembersIdExist(groupid)            &&
-                   isCurrentUserGroupMembersOwner(groupid)   ||
-                   isCurrentUserGroupMembersAdmin(groupid)
+       read() {   isAuthenticated()
             }
-
+        create() { isAuthenticated() }
         update() {   isGroupMembersIdExist(groupid)            &&
                     isCurrentUserGroupMembersOwner(groupid)   ||
                     isCurrentUserGroupMembersAdmin(groupid)
@@ -1406,7 +1404,8 @@ path /subgroup-progress-reports/{groupid} {
   answers : String[],
   date    : CurrentTimeStamp,
   questionID : String,
-  policyID : String
+  policyID : String,
+  "modified-date": Number | Null
 
  }
 /*Group Channel*/
@@ -1721,7 +1720,8 @@ path /question-bank/{questionBankUniqueID} is QuestionBank {
     /chapters/{chapterId} is Chapter {
         /topics/{topicId} is Topic {
             /questions/{questionId} is Question {
-            }
+            /options is  Option[] { }
+           }
         }
     }
 }
@@ -1745,7 +1745,7 @@ type Question {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
-   options: Option[] | Null,
+//   options: Option[] | Null,
    questiones: QuestionSet[] | Null,
    "discussion-html" : String
 }

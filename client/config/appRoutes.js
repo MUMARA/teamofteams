@@ -269,11 +269,17 @@
         controller: 'CreateTeamsChannelsController',
         controllerAs: 'createTeamsChannels'
       });
-      $stateProvider.state('user.quiz', {
-        url: '/:userID/quiz',
-        templateUrl: 'components/quiz/quiz.html',
-        controller: 'QuizController',
-        controllerAs: 'quiz'
+        $stateProvider.state('user.quiz', {
+            url: '/:userID/quiz',
+            templateUrl: 'components/quiz/quiz.html',
+            controller: 'QuizController',
+            controllerAs: 'quiz'
+        });
+      $stateProvider.state('user.quizes', {
+        url: '/:userID/quizes',
+        templateUrl: 'components/quizes/quizes.html',
+        controller: 'QuizesController',
+        controllerAs: 'quizes'
       });
       $stateProvider.state('user.group-subgroup', {
         url: '/:groupID/:subgroupID',
