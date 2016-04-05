@@ -218,6 +218,8 @@ md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle, md-pro
     height: 30px;
 }
 .icon40px {
+    min-width: 40px;
+    min-height: 40px;
     width: 40px;
     height: 40px;
 }
