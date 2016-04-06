@@ -607,7 +607,7 @@
                 var x = utilService.base64ToBlob($rootScope.newImg);
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                that.saveFile(x, mimeType, that.subgroupData.$id).then(function(data) {
+                that.saveFile(x, mimeType, groupID, that.subgroupData.$id).then(function(data) {
                         // console.log('subgroup img  uploaded ' + data)
                         // console.log(3)
                         //console.log(SubgroupObj)
@@ -666,19 +666,21 @@
             }
         }
 
-        function saveFile(file, type, groupID) {
+        function saveFile(file, type, groupID, subgroupid) {
             var defer = $q.defer();
             //if(!that.group.groupID)return alert('Pleas provide group url firstt');
             //var groupID= that.group.groupID;
             var xhr = new XMLHttpRequest();
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.subgroupData.$id + "&file_type=" + type);
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + subgroupid + '&subgroupID=' + groupID + "&file_type=" + type);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
 
                         var response = JSON.parse(xhr.responseText);
+                        console.log('response')
+                        console.log(response)
                         defer.resolve(that.upload_file(file, response.signed_request, response.url));
                     } else {
                         defer.reject(essageService.showFailure("Could not get signed URL."))

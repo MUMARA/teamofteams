@@ -1728,7 +1728,8 @@ path /question-bank/{questionBankUniqueID} is QuestionBank {
     /chapters/{chapterId} is Chapter {
         /topics/{topicId} is Topic {
             /questions/{questionId} is Question {
-            /options is  Option[] { }
+          //  /options is  Option[] { }
+            /questiones is QuestionSet[] {}
            }
         }
     }
@@ -1753,15 +1754,15 @@ type Question {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
-//   options: Option[] | Null,
-   questiones: QuestionSet[] | Null,
+   options: Map<String, Option>,
+  // questiones: QuestionSet[] | Null,
    "discussion-html" : String
 }
 type QuestionSet {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
-   options: Option[] | Null,
+   options: Map<String, Option>,
    "discussion-html" : String
 }
 type Option {

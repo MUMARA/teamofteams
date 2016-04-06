@@ -196,6 +196,7 @@ var routes = {
     'savesubgroupprofilepicture': function(req, res) {
 
         checkFileType(req, res)
+        console.log(req.query);
         if (!req.query.groupID) {
             res.send({
                 statusCode: 0,
