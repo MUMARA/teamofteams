@@ -6,11 +6,26 @@
 
     angular
         .module('app.quiz')
+
+        .service("myQuizData", function(){
+            var QuizDatah = [];
+            this._saveQuizData = function(qData){
+                //console.log(studentObj);
+                QuizDatah.push(qData);
+                console.log(qData);
+            };
+
+            this._getQuizData = function(){
+                return QuizDatah;
+
+            }
+        })
+
         .controller('QuizesController', QuizesController);
 
-    QuizesController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
+    QuizesController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService", "myQuizData"];
 
-    function QuizesController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
+    function QuizesController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService, myQuizData) {
 
         /*Private Variables*/
         var $scope = this;
@@ -103,9 +118,30 @@
         $scope.selectedGroup = null;
         $scope.dataPush = dataPush;
         $scope.setSelectedQuiz = setSelectedQuiz;
+        $scope.createQuize = createQuize;
+
+
 
 
         /*All Function*/
+
+        function createQuize(qData, img){
+            qData.img = img;
+
+            console.log(qData);
+
+
+            myQuizData._saveQuizData(qData);
+            getQuizDataAll();
+            addBook();
+
+        }
+
+        function getQuizDataAll(){
+            $scope.QuizDataFromService = myQuizData._getQuizData();
+            console.log($scope.QuizDataFromService)
+        }
+
 
         setTabs();
 
