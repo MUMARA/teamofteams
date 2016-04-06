@@ -272,14 +272,14 @@
     };
 
 
-    function backdropPermission(fireRef) {
+    function backdropPermission() {
       if (that.subgroupID) {
-        fireRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+        globalRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
         });
       } else {
-        fireRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+        globalRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
         });
@@ -305,33 +305,33 @@
           that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
           localRef = globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID); //this will be the user created documents
           globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
             globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           });
         } else {
           that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
           localRef = globalRef.child("firepad-groups/" + that.groupID).child($stateParams.docID);
           globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
             globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           });
-          
+
         }
         localRef.once('value', function(snapshot) {
           that.document = snapshot.val().title;
@@ -345,7 +345,7 @@
         that.history = $firebaseArray(localRef.child("history").limitToLast(300));
       }
 
-      
+
     }
 
     function permissions() {
