@@ -66,39 +66,39 @@
         _self.SelectedChapter = null;
         _self.SelectedTopic = null;
         _self.SelectedQuestion = null;
-        _self.showQuizBankFunc = showQuizBankFunc;
-        _self.showQuiz = showQuiz;
+        // _self.showQuizBankFunc = showQuizBankFunc;
+        // _self.showQuiz = showQuiz;
         _self.showAssignQuiz = showAssignQuiz;
         _self.showAttemptQuiz = showAttemptQuiz;
         _self.addQuiz = addQuiz;
         _self.closeQuiz = closeQuiz;
 
-        _self.afterLoad = afterLoad;
+        // _self.afterLoad = afterLoad;
 
         _self.bookId = '';
         _self.chapterId = '';
         _self.topicId = '';
         //Firebase
-        $scope.books = [];
-        $scope.booksId = [];
-        $scope.quizes = [];
-        $scope.chaptersId = [];
-        $scope.chapters = [];
-        $scope.topicsId = [];
-        $scope.topics = [];
-        $scope.questions = [];
-        $scope.groups = [];
+        _self.books = [];
+        _self.booksId = [];
+        _self.quizes = [];
+        _self.chaptersId = [];
+        _self.chapters = [];
+        _self.topicsId = [];
+        _self.topics = [];
+        _self.questions = [];
+        _self.groups = [];
         //QUIZ SCEDULE variables & functions
-        $scope.closeAssignQuiz = closeAssignQuiz;
-        $scope.setSelectedGroup = setSelectedGroup;
-        $scope.setSelectedSubGroup = setSelectedSubGroup;
-        $scope.quizesList = [];
-        $scope.quizesListKey = [];
-        $scope.subGroup = [];
-        $scope.myDatabase = [];
-        $scope.selectedGroup = null;
-        $scope.dataPush = dataPush;
-        $scope.setSelectedQuiz = setSelectedQuiz;
+        _self.closeAssignQuiz = closeAssignQuiz;
+        _self.setSelectedGroup = setSelectedGroup;
+        _self.setSelectedSubGroup = setSelectedSubGroup;
+        _self.quizesList = [];
+        _self.quizesListKey = [];
+        _self.subGroup = [];
+        _self.myDatabase = [];
+        _self.selectedGroup = null;
+        _self.dataPush = dataPush;
+        _self.setSelectedQuiz = setSelectedQuiz;
 
         _self.books = [];
         _self.booksId = [];
@@ -142,19 +142,18 @@
 
         /*All Function*/
 
-        setTabs();
+        // setTabs();
 
         authService.resolveUserPage()
             .then(function (response) {
                 getUserObj();
-                initializeView();
-                console.log("resolveUserPageeeeeeeeeeeeee")
+              // initializeView();
             }, function (err) {
                 alert('Error in Line 86: ' + err);
             });
-        setTabs();
+        // setTabs();
 
-        function setTabs() {
+/*        function setTabs() {
             if (quizService.getSelectedTab() == 'QuizBank') {
                 $timeout(function () {
                     showQuizBankFunc();
@@ -168,9 +167,9 @@
                     showAssignQuiz();
                 }, 0);
             }
-        }
+        }*/
 
-        function initializeView() {
+        /*function initializeView() {
             // console.log(quizService.getBookAfterCreation())
             // console.log(quizService.getBookAfterCreation() !== null)
 
@@ -186,8 +185,13 @@
                         }
                     }, 0);
                 });
+<<<<<<< HEAD:client/components/quiz/quiz.js
 
             } else {
+=======
+            }
+            else {
+>>>>>>> c1179d5fa76f0ac81fcb6eaa4713c9af0158f5e8:client/components/quiz/questionBanks.js
                 // console.log('ELSE');
                 ref.child('question-bank').on('child_added', function (snapShot) {
                     $timeout(function () {
@@ -196,14 +200,14 @@
                     }, 0);
                 });
 
-                /*if(quizService.getSelectedBook()) {
+                /!*if(quizService.getSelectedBook()) {
                  _self.selectedBookIndex = quizService.getSelectedBook();
                  _self.bookId = quizService.getBook();
                  }else{
                  _self.selectedBookIndex = 0;
                  _self.bookId = quizService.getBook();
                  quizService.setBook(_self.bookId, _self.selectedBookIndex);
-                 }*/
+                 }*!/
 
                 if (quizService.getBook() !== null) {
 
@@ -244,37 +248,37 @@
                         }
                     }
                 }
-                /*else {
+                /!*else {
                  _self.bookId = _self.booksId[0];
                  quizService.setBook(_self.bookId, 0);
 
-                 }*/
+                 }*!/
             }
-        }
+        }*/
 
-        function afterLoad(check) {
+       /* function afterLoad(check) {
             if (check) {
             }
 
-        }
+        }*/
 
-        function sleep(milliseconds) {
+      /*  function sleep(milliseconds) {
             var start = new Date().getTime();
             for (var i = 0; i < 1e7; i++) {
                 if ((new Date().getTime() - start) > milliseconds) {
                     break;
                 }
             }
-        }
+        }*/
 
         /*  Tabs  */
-        function showQuizBankFunc() {
+        /*function showQuizBankFunc() {
 
-            $scope.showQuizBank = true;
-            $scope.showQuizList = false;
-            $scope.showQuizAssign = false;
-            if (quizService.getQuestionObject() !== null && $scope.questionView !== null) {
-                $scope.showView = true;
+            _self.showQuizBank = true;
+            _self.showQuizList = false;
+            _self.showQuizAssign = false;
+            if (quizService.getQuestionObject() !== null && _self.questionView !== null) {
+                _self.showView = true;
             }
             $('#chapterColumn').addClass('marginLeft');
             $('#quizBankIcon').addClass('selectedTab');
@@ -288,9 +292,9 @@
             //_self.chaptersId = [];
             //_self.topicsId = [];
             //_self.questionsId = [];
-        }
+        }*/
 
-        function showQuiz() {
+        /*function showQuiz() {
             _self.showQuizBank = false;
             _self.showQuizList = true;
             _self.showQuizAssign = false;
@@ -307,7 +311,7 @@
             //_self.chaptersId = [];
             //_self.topicsId = [];
             //_self.questionsId = [];
-        }
+        }*/
 
         function showAssignQuiz() {
 
@@ -1055,8 +1059,12 @@
         _self.chapterId = $stateParams.id;
 
         function createTopic(topicObj) {
-            topicObj.timestamp = Firebase.ServerValue.TIMESTAMP;
-            quizBankService.createTopic(_self.bookId, _self.chapterId, topicObj);
+            var TopicObj = {
+                title: topicObj.title,
+                desc: topicObj.desc,
+                'timestamp': Firebase.ServerValue.TIMESTAMP
+            }
+            quizBankService.createTopic(_self.bookId, _self.chapterId, TopicObj);
             _self.showTopic();
         }
 
@@ -1080,7 +1088,6 @@
         }
 
         function addQuestion() {
-            console.log('Add Book', _self.topicId)
             if (_self.topicId) {
                 $timeout(function () {
                     //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddQuestion/' + _self.topicId)
@@ -1153,6 +1160,8 @@
                 }
             });
         };
+        var that = this;
+
         //Setting different inputs.
         this.setBoxValue = function () {
             this.showAddButton = true;
@@ -1165,13 +1174,13 @@
                 "discussion-html" : "discussion-html",
                 correct: false
             }];
-            if (that.myType.name === 'Radio Button') {
+            if (that.myType.name === "1") {
                 that.showRadioOptions = true;
                 that.showCheckOptions = false;
                 that.showQuestionSet = false;
                 that.answerTag = [];
                 that.myAnswer = undefined;
-            } else if (that.myType.name === 'CheckBox') {
+            } else if (that.myType.name === "2") {
                 that.showCheckOptions = true;
                 that.showRadioOptions = false;
                 that.showQuestionSet = false;
@@ -1189,11 +1198,11 @@
         this.addOption = function () {
 
             //Radio margin.
-            if (topMargin < 100) {
-                topMargin += 50;
-            }
-            that.myTop.push(topMargin + 'px');
-            idCounter++;
+            // if (topMargin < 100) {
+            //     topMargin += 50;
+            // }
+            // that.myTop.push(topMargin + 'px');
+            // idCounter++;
             that.question.options.push({
                 html: '',
                 correct: false,
@@ -1287,9 +1296,13 @@
 
         //Save and Exit Button
         this.showAnswer = function (question) {
+            delete question.desc;
+            console.log(question)
+            angular.forEach(that.question.options, function (data) {
+                delete data.$$hashKey;
+            });
             question['discussion-html'] = "discussion-html";
             question['html'] = "html-";
-
            /* if (question.type === 1) {
                 angular.forEach(_self.question.options, function (data) {
                     if (data.html == _self.myAnswer.html) {
@@ -1299,11 +1312,7 @@
                     }
                 });
             }
-            angular.forEach(that.question.QuestionOptions, function (data) {
-                delete data.$$hashKey;
-                delete data.$$mdSelectId;
-                delete data.id;
-            });
+
             that.question.Type = that.myType.name;
             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
 
@@ -1314,9 +1323,8 @@
             that.myAnswer = undefined;
 
             }*/
-            quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId);
-            console.log(question);
-
+            quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId,question);
+           _self.closeQuestion()
             /*if (that.myType.name === 'Radio Button') {
              angular.forEach(that.question.options, function (data) {
              if (data.html == that.myAnswer.html) {

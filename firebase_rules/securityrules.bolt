@@ -25,13 +25,11 @@ function isAuthenticated() {
 //  User path
 //===================================
 
-path /users {
-  validate() { this.length >= 3  && this.length <= 10  }
-  /{userid} is UserType {
+path /users/{userid} is UserType {
    update() { isAuthenticatedUser($userid)}
    read()   { isAuthenticated() }
   }
-}
+
 /*type UseridLength extends String {
     validate() { this.length >= 3  && this.length <= 10 }
 }*/
@@ -718,8 +716,8 @@ path /subgroups-names/{groupid}/{subgroupid} is SubGroupsNameInfo {
                 /*groupMemberShipAnyType(groupid) }*/
 
     create() {  isGroupMembersIdExist(groupid)              &&
-               isCurrentUserGroupMembersOwner(groupid)      ||
-               isCurrentUserGroupMembersAdmin(groupid)
+                isCurrentUserGroupMembersOwner(groupid)      ||
+                isCurrentUserGroupMembersAdmin(groupid)
              }
                /*groupMemberShipAnyType(groupid)  }*/
     update() {
@@ -751,33 +749,26 @@ type SubGroupsNameInfo {
 //subgroup Members
 //================================
 
-path /subgroup-members/{groupid} {
-
-  read() {     isGroupMembersIdExist(groupid)          &&
-               isCurrentUserGroupMembersOwner(groupid) ||
-               isCurrentUserGroupMembersAdmin(groupid) ||
-               groupMemberShipAnyType($groupid)   }
-
-  write() {    isGroupMembersIdExist(groupid)            &&
-               isCurrentUserGroupMembersOwner(groupid)   ||
-               isCurrentUserGroupMembersAdmin(groupid)    }
-
-   // path for /subgroup-members/{groupid}/{subgroupid}
-   //------------------------------------------------
-
-  /{subgroupid} {
+path /subgroup-members/{groupid}/{subgroupid} {
 
   read() {  isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
             subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
-
+  create() { isGroupMembersIdExist(groupid)              &&
+              isCurrentUserGroupMembersOwner(groupid)      ||
+              isCurrentUserGroupMembersAdmin(groupid) ||
+              isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) ||
+              isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)}
     // path for /subgroup-members/{groupid}/{userid}
    //------------------------------------------------
    /{userid} is UserGroupSubGroupMemberShipType {
-     read(){  isAuthenticatedUser($userid)  }
+     read(){ subGroupMembersMemberShipAnyType($groupid,$subgroupid) || isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)  }
+     create() {  isGroupMembersIdExist(groupid)              &&
+                 isCurrentUserGroupMembersOwner(groupid)      ||
+                 isCurrentUserGroupMembersAdmin(groupid)}
+     update(){ isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)}
 
      }
    }
-}
 
 
 //==================================
@@ -902,12 +893,12 @@ function isSubGroupGroupIDExist(this) {
 }
 
 function isSubGroupGroupIDOwner(this) {
-        return   prior(root['group-members'])[this['groupID']][auth.uid]['membership-type'].val() == 1
+  return   prior(root['group-members'])[this['groupID']][auth.uid]['membership-type'].val() == 1
 
 }
 
 function isSubGroupGroupIDAdmin(this) {
-        return   prior(root['group-members'])[this['groupID']][auth.uid]['membership-type'].val() == 2
+  return   prior(root['group-members'])[this['groupID']][auth.uid]['membership-type'].val() == 2
 
 }
 
@@ -973,28 +964,31 @@ path /user-subgroup-memberships/{userid} {
    //-------------------------------------------------------------
 
     /{groupid} {
-        read() {
+        /*read() {
                isGroupIdExist(groupid)                    &&
                isCurrentUserGroupOwner(groupid)           ||
                isCurrentUserGroupAdmin(groupid)    }
         write() {
                isGroupIdExist(groupid)                    &&
                isCurrentUserGroupOwner(groupid)           ||
-               isCurrentUserGroupAdmin(groupid)    }
+               isCurrentUserGroupAdmin(groupid)    }*/
 
     // path for  /user-subgroup-memberships/{userid}/{groupid}/{subgroupid}
    //-------------------------------------------------------------
 
       /{subgroupid} is UserGroupSubGroupMemberShipType {
         read() {
-                isUserSubGroupMemberShipExist(groupid)        &&
-                isUserCurrentSubgroupMemberShipOwner(groupid) ||
-                isUserCurrentSubgroupMemberShipAdmin(groupid)  }
+                isUserSubGroupMemberShipExist(groupid, subgroupid)        &&
+                isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
+                isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)  }
 
-        write() {
-              isUserSubGroupMemberShipExist(groupid)        &&
-              isUserCurrentSubgroupMemberShipOwner(groupid) ||
-              isUserCurrentSubgroupMemberShipAdmin(groupid)   }
+        create() {   isAuthenticated()  &&  this['membership-type'].val() == 1 ||
+                  isUserSubGroupMemberShipExist(groupid,subgroupid) ||
+                isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
+                isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)  }
+              /*isUserSubGroupMemberShipExist(groupid,subgroupid)     }   */
+              /*isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
+              isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)   }*/
       }
    }
 }
@@ -1002,19 +996,19 @@ path /user-subgroup-memberships/{userid} {
 
 
 
-function isUserCurrentSubgroupMemberShipOwner($groupid) {
-      return prior(root['user-subgroup-memberships'][auth.uid][$groupid]['membership-type'].val() == 1)
+function isUserCurrentSubgroupMemberShipOwner($groupid,subgroupId) {
+      return prior(root['user-subgroup-memberships'][auth.uid][$groupid][subgroupId]['membership-type'].val() == 1)
 
 }
 
 
-function isUserSubGroupMemberShipExist($groupid) {
-      return prior(root['user-subgroup-memberships'][auth.uid][$groupid].val() != null)
+function isUserSubGroupMemberShipExist($groupid,subgroupId) {
+      return prior(root['user-subgroup-memberships'][auth.uid][$groupid][subgroupId].val() != null)
 
 }
 
-function isUserCurrentSubgroupMemberShipAdmin($groupid) {
-      return prior(root['user-subgroup-memberships'][auth.uid][$groupid]['membership-type'].val() == 2)
+function isUserCurrentSubgroupMemberShipAdmin($groupid,subgroupId) {
+      return prior(root['user-subgroup-memberships'][auth.uid][$groupid][subgroupId]['membership-type'].val() == 2)
 
 }
 
@@ -1291,26 +1285,19 @@ type BooleanOrNull {
    Saturday : BooleanOrNull[]
   }
 /*Subgroup Policies*/
-path /subgroup-policies/{groupid} {
-    read(){
-          isAuthenticated() &&
-          isCurrentUserGroupOwner(groupid)    ||
-          isCurrentUserGroupAdmin(groupid)    ||
-          userGroupMembershipAnyType($groupid)
-     }
-       /{subgroupid} is SubgroupAppliedPolicyType {
+path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
-             isCurrentUserGroupAdmin(groupid)    ||
-             isSubGroupGroupIDOwner(this) ||
-             isSubGroupGroupIDAdmin(this)
+             isCurrentUserGroupAdmin(groupid)  ||
+             isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) ||
+             subGroupMembersMemberShipAnyType($groupid,$subgroupid)
           }
 
-  create() {  isAuthenticated() &&
-             isCurrentUserGroupOwner(groupid)    ||
+  create() {  isAuthenticated() && isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) }
+             /*isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)     ||
-             isSubGroupGroupIDOwner(this) ||
-            isSubGroupGroupIDAdmin(this) }
+             isSubGroupGroupIDOwner(this) ||*/
+            //isSubGroupGroupIDAdmin(this) }
 
   update() {  isAuthenticated() &&
               isCurrentUserGroupOwner(groupid)    ||
@@ -1319,7 +1306,6 @@ path /subgroup-policies/{groupid} {
               isSubGroupGroupIDAdmin(this) }
  }
 
-}
 type AppliedPolicyType {
    hasPolicy   :  Boolean,
    policyID    :    String,
@@ -1564,6 +1550,9 @@ path /firepad-groups-access/{groupid}/{documentid} {
       create() {
         userGroupMembershipAnyType(groupid)
       }
+      update() {
+      isGroupCollaboratorCreater(groupid, documentid) || isCurrentUserGroupOwner (groupid) || isCurrentUserGroupAdmin(groupid)
+      }
    /{userid} is Number {
       read() {
       userGroupMembershipAnyType(groupid)
@@ -1571,7 +1560,7 @@ path /firepad-groups-access/{groupid}/{documentid} {
       create() {
       userGroupMembershipAnyType(groupid)
       }
-      update() {
+      delete() {
         isGroupCollaboratorCreater(groupid, documentid)
       }
     }
@@ -1595,6 +1584,9 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid} {
   create() {
         subGroupMembersMemberShipAnyType(groupid,subgroupid)
   }
+  update() {  isCurrentSubUserGroupMembersOwner(groupid, subgroupid) ||
+              isCurrentSubUserGroupMembersAdmin(groupid, subgroupid) ||
+              isSubGroupCollaboratorCreater(groupid,subgroupid, documentid)}
     /{userid} is Number {
       read() {
       subGroupMembersMemberShipAnyType(groupid,subgroupid)
@@ -1602,9 +1594,9 @@ path /firepad-subgroups-access/{groupid}/{subgroupid}/{documentid} {
       create() {
       subGroupMembersMemberShipAnyType(groupid,subgroupid)
       }
-      update() { isCurrentSubUserGroupMembersOwner(groupid, subgroupid) ||
+      delete() {  isCurrentSubUserGroupMembersOwner(groupid, subgroupid) ||
                   isCurrentSubUserGroupMembersAdmin(groupid, subgroupid) ||
-                isSubGroupCollaboratorCreater(groupid,subgroupid, documentid)}
+                  isSubGroupCollaboratorCreater(groupid,subgroupid, documentid)}
 }
 }
 /*firepad SubGroup Rules */
@@ -1751,7 +1743,7 @@ type Question {
 }
 type QuestionSet {
    title: String,
-   type: QuestionType, //QuestionTupe
+   type: QuestionType, // it only just radio and CheckBox
    html: String,
    options: Option[] | Null,
    "discussion-html" : String

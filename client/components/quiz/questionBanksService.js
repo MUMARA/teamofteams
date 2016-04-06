@@ -256,9 +256,6 @@
         _self.createTopic = function (questionBankUniqueID, chapterUniqueId, topicObject) {
             firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').child(chapterUniqueId).child("topics").push(topicObject);
         };
-        _self.createTopic = function (questionBankUniqueID, chapterUniqueId, topicObject) {
-            firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').child(chapterUniqueId).child("topics").push(topicObject);
-        };
         _self.loadTopic = function (questionBankUniqueID, chapterUniqueId) {
             var deferred = $q.defer();
             _self.topics = [];
@@ -273,7 +270,30 @@
             return deferred.promise;
         };
         _self.createQuestion = function (questionBankUniqueID, chapterUniqueId, topicUniqueId, questionObject) {
-            console.log(questionBankUniqueID, chapterUniqueId, topicUniqueId, questionObject);
+            // var questionObject = {
+            //     title: "title",
+            //     type: 3, //QuestionTupe
+            //     html: "htmlsllssllss",
+            //     questiones: [{
+            //         title: "Title",
+            //         type: 1, // it only just radio and CheckBox
+            //         html: "HTML",
+            //         options: [{
+            //             "html": "hello ",
+            //             "correct": false,
+            //             "discussion-html": "sajklksjls"
+            //         },
+            //         {
+            //             "html": "helkkdjjs",
+            //             "correct": true,
+            //             "discussion-html": "hekejejsd"
+            //         }],
+            //       "discussion-html" : "String"
+            //
+            //     },
+            //         ],
+            //     "discussion-html": "hgshshs"
+            // }
             firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').child(chapterUniqueId).child("topics").child(topicUniqueId).child("questions").push(questionObject);
         };
     }
