@@ -312,9 +312,11 @@
           });
           globalRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
-            globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-            backdropPermission();
-          });
+            if(!that.allUsers){
+              globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).once('value', function(snapshot) {
+              backdropPermission();
+            });
+            }
           });
         } else {
           that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
@@ -327,9 +329,12 @@
           });
           globalRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
-            globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-            backdropPermission();
-          });
+            if(!that.allUsers){
+              globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
+              backdropPermission();
+            });
+            }
+
           });
 
         }
