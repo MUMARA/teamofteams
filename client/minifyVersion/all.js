@@ -1440,7 +1440,7 @@ angular.module('core', [
       };
       if (subgroupID) {
         // firebaseLocalRef = new Firebase(ref);
-        firepadRef = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
+        // firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
         pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID).push();
         firebaseDocumentId = pushDocumentNode.key();
         updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
@@ -1456,7 +1456,7 @@ angular.module('core', [
 
       } else {
         // firebaseLocalRef = new Firebase(ref);
-        firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
+        // firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
         pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
         firebaseDocumentId = pushDocumentNode.key();
         updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
@@ -1758,14 +1758,14 @@ angular.module('core', [
     };
 
 
-    function backdropPermission(fireRef) {
+    function backdropPermission() {
       if (that.subgroupID) {
-        fireRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+        globalRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
         });
       } else {
-        fireRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+        globalRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
         });
@@ -1791,33 +1791,38 @@ angular.module('core', [
           that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
           localRef = globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID); //this will be the user created documents
           globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
-            globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-            backdropPermission(globalRef);
-          });
+            if(!that.allUsers){
+              globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).once('value', function(snapshot) {
+              backdropPermission();
+            });
+            }
           });
         } else {
           that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
           localRef = globalRef.child("firepad-groups/" + that.groupID).child($stateParams.docID);
           globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            backdropPermission(globalRef);
+            backdropPermission();
           });
           globalRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
-            globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-            backdropPermission(globalRef);
+            if(!that.allUsers){
+              globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
+              backdropPermission();
+            });
+            }
+
           });
-          });
-          
+
         }
         localRef.once('value', function(snapshot) {
           that.document = snapshot.val().title;
@@ -1831,7 +1836,7 @@ angular.module('core', [
         that.history = $firebaseArray(localRef.child("history").limitToLast(300));
       }
 
-      
+
     }
 
     function permissions() {
@@ -9328,6 +9333,9 @@ angular.module('core', [
         function getActivityOfCurrentUserByGroup(groupID, date) {
             //getting activity streams from firebase node: group-activity-streams.startAt(startDate.setHours(0, 0, 0, 0))
             if (date) {
+                //close child_added Event....
+                firebaseService.getRefGroupsActivityStreams().child(groupID).off("child_added");
+                  
                 firebaseService.getRefGroupsActivityStreams().child(groupID)
                     .orderByChild('published').startAt(date).on("child_added", function(snapshot) {
                     if (snapshot && snapshot.val()) {
@@ -9341,6 +9349,7 @@ angular.module('core', [
                     }
                 });
             } else {
+                
                 firebaseService.getRefGroupsActivityStreams().child(groupID)
                     .orderByChild('published').on("child_added", function(snapshot) {
                     if (snapshot && snapshot.val()) {
@@ -9415,6 +9424,9 @@ angular.module('core', [
         function getActivityOfCurrentUserBySubGroup(groupID, date) {
             //getting activity streams from firebase node: subgroup-activity-streams
             if (date) {
+                //close child_added Event....
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).off('child_added');
+                
                 firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
                     if (subgroup && subgroup.val()) {
                         firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key())
