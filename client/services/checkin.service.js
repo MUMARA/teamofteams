@@ -869,7 +869,7 @@
             getSubGroupTitle: function(GroupID, subGroupID){
                 var title;
                 refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
-                    // console.log(snapshot.val().title)
+                    console.log('TITLE', snapshot.val().title)
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }

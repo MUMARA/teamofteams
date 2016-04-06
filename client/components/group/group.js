@@ -65,7 +65,11 @@
                 });
               }
               else {
-                    $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID});
+                    if(that.panel.active == 'progressreport') {
+                        $state.go('user.group.' + 'activity', { groupID: that.groupID});
+                    } else {
+                        $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID});
+                    }
               }
             }
         };
