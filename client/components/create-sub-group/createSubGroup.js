@@ -62,7 +62,7 @@
             } else if (group.val()['membership-type'] == 2) {
                 that.groupAdmin = true;
             }
-        })
+        });
 
 
         this.ActiveSideNavBar = function(sideNav) {
@@ -200,7 +200,7 @@
             }, function(err) {
                 //console.log(err)
 
-            })
+            });
 
         };
 
@@ -228,6 +228,8 @@
                 //if is member
                 if(that.submembers.length > 0) {
                     for (var i = 0; i < that.submembers.length; i++) {
+                        that.members[index].isMember = false;
+                        that.members[index].isAdmin = false;
                         if (val.userID === that.submembers[i].userID) {
                             that.members[index].isMember = true;
                             that.members[index].isAdmin = (that.members[index].membershipType == 1 || that.members[index].membershipType == 2) ? true : false;
@@ -312,6 +314,14 @@
             }
 
             if(_flag) {
+                
+                for(var x = 0; x <= that.members.length; x++) {
+                    if(that.members[x].userID == userObj.$id){
+                          that.members[x].isMember = true;
+                          break;
+                    }
+                }
+                
                 that.becomeMember.push(userObj);
                 that.memberss.selectedUsersArray.push(userObj.$id);
                 that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
@@ -413,7 +423,8 @@
                         notificationString;
 
                     if (unlistedMembersArray &&  that.membersArray && unlistedMembersArray.length === that.membersArray.length) {
-                        notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        // notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        notificationString = 'AAdding Members Successful.';
                         messageService.showFailure(notificationString);
                     } else if (unlistedMembersArray.length) {
                         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
