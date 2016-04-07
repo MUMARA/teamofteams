@@ -1,7 +1,7 @@
 <!-- Activity -->
 <div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
   <div layout-fill flex>
-    <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);" layout="row">
+    <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227); z-index:1" layout="row">
       <div class="md-toolbar-tools">
         <div class="foreColorDarkGrey">
           <h2>{{collaborator.document}}</h2>
@@ -116,7 +116,7 @@
                   <h5 class="foreColorDarkGrey">All User</h5>
                 </md-switch>
               </md-list-item>
-              <md-list-item ng-if="!(collaborator.subgroupID.length === 0)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+              <md-list-item ng-if="!(collaborator.subgroupID.length === 0)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID} : true" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-switch ng-disabled="collaborator.permissionMembers[user.id] || ((collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers)" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1" ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)">
                   <h5 class="">{{user.fullName}}
                     <span ng-if="(collaborator.createdBy.userID !=  user.id) && collaborator.permissionMembers[user.id]">
@@ -157,7 +157,7 @@
                   <h3 class="foreColorDarkGrey">Editor :
                     {{ key }}</h3>
                   <span style="font-size: 13px; color: #ffffff;">Time :
-                    {{value[value.length-1].t | date : 'M/d/yy'}}</span>
+                    {{value[value.length-1].t | date:'short'}}</span>
                 </div>
               </md-list-item>
             </md-list>
