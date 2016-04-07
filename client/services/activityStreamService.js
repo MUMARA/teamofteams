@@ -149,6 +149,9 @@
         function getActivityOfCurrentUserByGroup(groupID, date) {
             //getting activity streams from firebase node: group-activity-streams.startAt(startDate.setHours(0, 0, 0, 0))
             if (date) {
+                //close child_added Event....
+                firebaseService.getRefGroupsActivityStreams().child(groupID).off("child_added");
+                  
                 firebaseService.getRefGroupsActivityStreams().child(groupID)
                     .orderByChild('published').startAt(date).on("child_added", function(snapshot) {
                     if (snapshot && snapshot.val()) {
@@ -162,6 +165,7 @@
                     }
                 });
             } else {
+                
                 firebaseService.getRefGroupsActivityStreams().child(groupID)
                     .orderByChild('published').on("child_added", function(snapshot) {
                     if (snapshot && snapshot.val()) {
@@ -236,6 +240,9 @@
         function getActivityOfCurrentUserBySubGroup(groupID, date) {
             //getting activity streams from firebase node: subgroup-activity-streams
             if (date) {
+                //close child_added Event....
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).off('child_added');
+                
                 firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
                     if (subgroup && subgroup.val()) {
                         firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key())
