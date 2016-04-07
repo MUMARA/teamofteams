@@ -136,7 +136,7 @@
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
                                 subgroupNameRef.title = subgroupRef.title;
                                 subgroupNameRef.subgroupImgUrl = subgroupInfo.imgLogoUrl || '';
-                                subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
+                                //subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();

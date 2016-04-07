@@ -26,7 +26,6 @@ function isAuthenticated() {
 //===================================
 
 path /users {
-  validate() { this.length >= 3  && this.length <= 10  }
   /{userid} is UserType {
    update() { isAuthenticatedUser($userid)}
    read()   { isAuthenticated() }
@@ -755,17 +754,24 @@ path /subgroup-members/{groupid}/{subgroupid} {
 
   read() {  isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
             subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
-  create() { isGroupMembersIdExist(groupid)              &&
+   create() { isGroupMembersIdExist(groupid)              &&
               isCurrentUserGroupMembersOwner(groupid)      ||
-              isCurrentUserGroupMembersAdmin(groupid)}
+              isCurrentUserGroupMembersAdmin(groupid) ||
+              isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) ||
+              isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
+            }
     // path for /subgroup-members/{groupid}/{userid}
    //------------------------------------------------
    /{userid} is UserGroupSubGroupMemberShipType {
      read(){ subGroupMembersMemberShipAnyType($groupid,$subgroupid) || isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)  }
      create() {  isGroupMembersIdExist(groupid)              &&
                  isCurrentUserGroupMembersOwner(groupid)      ||
-                 isCurrentUserGroupMembersAdmin(groupid)}
+                 isCurrentUserGroupMembersAdmin(groupid)      ||
+                 isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) ||
+              isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
+            }
      update(){ isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)}
+     delete(){ isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)}
 
      }
    }
@@ -986,6 +992,16 @@ path /user-subgroup-memberships/{userid} {
                   isUserSubGroupMemberShipExist(groupid,subgroupid) ||
                 isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
                 isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)  }
+        update() {
+                isAuthenticated()  &&
+                isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
+                isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)
+        }
+        delete() {
+                isAuthenticated()  &&
+                isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
+                isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)
+        }
               /*isUserSubGroupMemberShipExist(groupid,subgroupid)     }   */
               /*isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
               isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)   }*/
@@ -1289,11 +1305,11 @@ path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)  ||
-             isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) ||
+             isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) ||
              subGroupMembersMemberShipAnyType($groupid,$subgroupid)
           }
 
-  create() {  isAuthenticated() && isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) }
+  create() {  isAuthenticated() && isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
              /*isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)     ||
              isSubGroupGroupIDOwner(this) ||*/
@@ -1302,8 +1318,8 @@ path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
   update() {  isAuthenticated() &&
               isCurrentUserGroupOwner(groupid)    ||
               isCurrentUserGroupAdmin(groupid)     ||
-              isSubGroupGroupIDOwner(this) ||
-              isSubGroupGroupIDAdmin(this) }
+              isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
+            }
  }
 
 type AppliedPolicyType {
@@ -1712,7 +1728,8 @@ path /question-bank/{questionBankUniqueID} is QuestionBank {
     /chapters/{chapterId} is Chapter {
         /topics/{topicId} is Topic {
             /questions/{questionId} is Question {
-            /options is  Option[] { }
+          //  /options is  Option[] { }
+            /questiones is QuestionSet[] {}
            }
         }
     }
@@ -1737,15 +1754,15 @@ type Question {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
-//   options: Option[] | Null,
-   questiones: QuestionSet[] | Null,
+   options: Map<String, Option>,
+  // questiones: QuestionSet[] | Null,
    "discussion-html" : String
 }
 type QuestionSet {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
-   options: Option[] | Null,
+   options: Map<String, Option>,
    "discussion-html" : String
 }
 type Option {
