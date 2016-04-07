@@ -144,174 +144,181 @@
 
         // setTabs();
 
+        _self.correctAnswer = function () {
+            angular.forEach(_self.question.options, function (val, index) {
+                index == _self.correct ? _self.question.options[_self.correct].correct = true : _self.question.options[index].correct = false;
+            });
+            console.log(_self.question.options)
+        };
+
         authService.resolveUserPage()
             .then(function (response) {
                 getUserObj();
-              // initializeView();
+                // initializeView();
             }, function (err) {
                 alert('Error in Line 86: ' + err);
             });
         // setTabs();
 
-/*        function setTabs() {
-            if (quizService.getSelectedTab() == 'QuizBank') {
-                $timeout(function () {
-                    showQuizBankFunc();
-                }, 0);
-            } else if (quizService.getSelectedTab() == 'Quiz') {
-                $timeout(function () {
-                    showQuiz();
-                }, 0);
-            } else if (quizService.getSelectedTab() == 'QuizAssign') {
-                $timeout(function () {
-                    showAssignQuiz();
-                }, 0);
-            }
-        }*/
+        /*        function setTabs() {
+         if (quizService.getSelectedTab() == 'QuizBank') {
+         $timeout(function () {
+         showQuizBankFunc();
+         }, 0);
+         } else if (quizService.getSelectedTab() == 'Quiz') {
+         $timeout(function () {
+         showQuiz();
+         }, 0);
+         } else if (quizService.getSelectedTab() == 'QuizAssign') {
+         $timeout(function () {
+         showAssignQuiz();
+         }, 0);
+         }
+         }*/
 
         /*function initializeView() {
-            // console.log(quizService.getBookAfterCreation())
-            // console.log(quizService.getBookAfterCreation() !== null)
+         // console.log(quizService.getBookAfterCreation())
+         // console.log(quizService.getBookAfterCreation() !== null)
 
-            if (quizService.getBookAfterCreation() !== null) {
-                console.log("kjkkkkjskkkkkkkkkkkkkk");
-                ref.child('question-bank').on('child_added', function (snapShot) {
-                    $timeout(function () {
-                        _self.books.push(snapShot.val());
-                        _self.booksId.push(snapShot.key());
-                        if (quizService.getBookAfterCreation() == snapShot.key()) {
-                            _self.selectedBookIndex = _self.booksId.indexOf(snapShot.key());
-                            _self.bookId = snapShot.key();
-                        }
-                    }, 0);
-                });
-<<<<<<< HEAD:client/components/quiz/quiz.js
+         if (quizService.getBookAfterCreation() !== null) {
+         console.log("kjkkkkjskkkkkkkkkkkkkk");
+         ref.child('question-bank').on('child_added', function (snapShot) {
+         $timeout(function () {
+         _self.books.push(snapShot.val());
+         _self.booksId.push(snapShot.key());
+         if (quizService.getBookAfterCreation() == snapShot.key()) {
+         _self.selectedBookIndex = _self.booksId.indexOf(snapShot.key());
+         _self.bookId = snapShot.key();
+         }
+         }, 0);
+         });
+         <<<<<<< HEAD:client/components/quiz/quiz.js
 
-            } else {
-=======
-            }
-            else {
->>>>>>> c1179d5fa76f0ac81fcb6eaa4713c9af0158f5e8:client/components/quiz/questionBanks.js
-                // console.log('ELSE');
-                ref.child('question-bank').on('child_added', function (snapShot) {
-                    $timeout(function () {
-                        _self.books.push(snapShot.val());
-                        _self.booksId.push(snapShot.key());
-                    }, 0);
-                });
+         } else {
+         =======
+         }
+         else {
+         >>>>>>> c1179d5fa76f0ac81fcb6eaa4713c9af0158f5e8:client/components/quiz/questionBanks.js
+         // console.log('ELSE');
+         ref.child('question-bank').on('child_added', function (snapShot) {
+         $timeout(function () {
+         _self.books.push(snapShot.val());
+         _self.booksId.push(snapShot.key());
+         }, 0);
+         });
 
-                /!*if(quizService.getSelectedBook()) {
-                 _self.selectedBookIndex = quizService.getSelectedBook();
-                 _self.bookId = quizService.getBook();
-                 }else{
-                 _self.selectedBookIndex = 0;
-                 _self.bookId = quizService.getBook();
-                 quizService.setBook(_self.bookId, _self.selectedBookIndex);
-                 }*!/
+         /!*if(quizService.getSelectedBook()) {
+         _self.selectedBookIndex = quizService.getSelectedBook();
+         _self.bookId = quizService.getBook();
+         }else{
+         _self.selectedBookIndex = 0;
+         _self.bookId = quizService.getBook();
+         quizService.setBook(_self.bookId, _self.selectedBookIndex);
+         }*!/
 
-                if (quizService.getBook() !== null) {
+         if (quizService.getBook() !== null) {
 
-                    _self.bookId = quizService.getBook();
-                    _self.selectedBookIndex = quizService.getSelectedBook();
-                    console.log(quizService.getBook());
-                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
-                        $timeout(function () {
-                            _self.chapters.push(snapShot.val());
-                            _self.chaptersId.push(snapShot.key());
-                        }, 0);
-                    });
-                    if (quizService.getChapter() !== null) {
-                        _self.chapterId = quizService.getChapter();
-                        ref.child('question-bank-topic').child(quizService.getBook()).child(quizService.getChapter()).on('child_added', function (snapShot) {
-                            $timeout(function () {
-                                _self.topics.push(snapShot.val());
-                                _self.topicsId.push(snapShot.key());
-                            }, 0);
-                        });
-                        _self.selectedChapterIndex = quizService.getSelectedChapter();
-                        if (quizService.getTopic() !== null) {
-                            _self.topicId = quizService.getTopic();
-                            ref.child('questions').child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).on('child_added', function (snapShot) {
-                                $timeout(function () {
-                                    _self.questions.push(snapShot.val());
-                                }, 0);
-                            });
-                            _self.selectedTopicIndex = quizService.getSelectedTopic();
-                            console.log(quizService.getSelectedQuestion());
-                            console.log(quizService.getQuestionObject());
-                            if (quizService.getSelectedQuestion() !== null) {
-                                if (quizService.getQuestionObject() !== null) {
-                                    _self.selectedQuestionIndex = quizService.getSelectedQuestion();
-                                    showQuestionView(quizService.getQuestionObject());
-                                }
-                            }
-                        }
-                    }
-                }
-                /!*else {
-                 _self.bookId = _self.booksId[0];
-                 quizService.setBook(_self.bookId, 0);
+         _self.bookId = quizService.getBook();
+         _self.selectedBookIndex = quizService.getSelectedBook();
+         console.log(quizService.getBook());
+         ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
+         $timeout(function () {
+         _self.chapters.push(snapShot.val());
+         _self.chaptersId.push(snapShot.key());
+         }, 0);
+         });
+         if (quizService.getChapter() !== null) {
+         _self.chapterId = quizService.getChapter();
+         ref.child('question-bank-topic').child(quizService.getBook()).child(quizService.getChapter()).on('child_added', function (snapShot) {
+         $timeout(function () {
+         _self.topics.push(snapShot.val());
+         _self.topicsId.push(snapShot.key());
+         }, 0);
+         });
+         _self.selectedChapterIndex = quizService.getSelectedChapter();
+         if (quizService.getTopic() !== null) {
+         _self.topicId = quizService.getTopic();
+         ref.child('questions').child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).on('child_added', function (snapShot) {
+         $timeout(function () {
+         _self.questions.push(snapShot.val());
+         }, 0);
+         });
+         _self.selectedTopicIndex = quizService.getSelectedTopic();
+         console.log(quizService.getSelectedQuestion());
+         console.log(quizService.getQuestionObject());
+         if (quizService.getSelectedQuestion() !== null) {
+         if (quizService.getQuestionObject() !== null) {
+         _self.selectedQuestionIndex = quizService.getSelectedQuestion();
+         showQuestionView(quizService.getQuestionObject());
+         }
+         }
+         }
+         }
+         }
+         /!*else {
+         _self.bookId = _self.booksId[0];
+         quizService.setBook(_self.bookId, 0);
 
-                 }*!/
-            }
-        }*/
+         }*!/
+         }
+         }*/
 
-       /* function afterLoad(check) {
-            if (check) {
-            }
+        /* function afterLoad(check) {
+         if (check) {
+         }
 
-        }*/
+         }*/
 
-      /*  function sleep(milliseconds) {
-            var start = new Date().getTime();
-            for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds) {
-                    break;
-                }
-            }
-        }*/
+        /*  function sleep(milliseconds) {
+         var start = new Date().getTime();
+         for (var i = 0; i < 1e7; i++) {
+         if ((new Date().getTime() - start) > milliseconds) {
+         break;
+         }
+         }
+         }*/
 
         /*  Tabs  */
         /*function showQuizBankFunc() {
 
-            _self.showQuizBank = true;
-            _self.showQuizList = false;
-            _self.showQuizAssign = false;
-            if (quizService.getQuestionObject() !== null && _self.questionView !== null) {
-                _self.showView = true;
-            }
-            $('#chapterColumn').addClass('marginLeft');
-            $('#quizBankIcon').addClass('selectedTab');
-            $('#quizIcon').removeClass('selectedTab');
-            $('#quizAssignIcon').removeClass('selectedTab');
-            quizService.setSelectedTab('QuizBank');
+         _self.showQuizBank = true;
+         _self.showQuizList = false;
+         _self.showQuizAssign = false;
+         if (quizService.getQuestionObject() !== null && _self.questionView !== null) {
+         _self.showView = true;
+         }
+         $('#chapterColumn').addClass('marginLeft');
+         $('#quizBankIcon').addClass('selectedTab');
+         $('#quizIcon').removeClass('selectedTab');
+         $('#quizAssignIcon').removeClass('selectedTab');
+         quizService.setSelectedTab('QuizBank');
 
-            //_self.chapters = [];
-            //_self.topics = [];
-            //_self.questions = [];
-            //_self.chaptersId = [];
-            //_self.topicsId = [];
-            //_self.questionsId = [];
-        }*/
+         //_self.chapters = [];
+         //_self.topics = [];
+         //_self.questions = [];
+         //_self.chaptersId = [];
+         //_self.topicsId = [];
+         //_self.questionsId = [];
+         }*/
 
         /*function showQuiz() {
-            _self.showQuizBank = false;
-            _self.showQuizList = true;
-            _self.showQuizAssign = false;
-            _self.showView = false;
-            //$('#chapterColumn').removeClass('marginLeft')
-            $('#quizBankIcon').removeClass('selectedTab');
-            $('#quizIcon').addClass('selectedTab');
-            $('#quizAssignIcon').removeClass('selectedTab');
-            quizService.setSelectedTab('Quiz');
+         _self.showQuizBank = false;
+         _self.showQuizList = true;
+         _self.showQuizAssign = false;
+         _self.showView = false;
+         //$('#chapterColumn').removeClass('marginLeft')
+         $('#quizBankIcon').removeClass('selectedTab');
+         $('#quizIcon').addClass('selectedTab');
+         $('#quizAssignIcon').removeClass('selectedTab');
+         quizService.setSelectedTab('Quiz');
 
-            //_self.chapters = [];
-            //_self.topics = [];
-            //_self.questions = [];
-            //_self.chaptersId = [];
-            //_self.topicsId = [];
-            //_self.questionsId = [];
-        }*/
+         //_self.chapters = [];
+         //_self.topics = [];
+         //_self.questions = [];
+         //_self.chaptersId = [];
+         //_self.topicsId = [];
+         //_self.questionsId = [];
+         }*/
 
         function showAssignQuiz() {
 
@@ -602,32 +609,35 @@
             quizBankService.loadTopic(_self.bookId, _self.chapterId).then(function (topics) {
                 _self.topics = topics;
             });
-            /* _self.topics = [];
-             _self.questions = [];*/
-            // ref.child('question-bank-topic').child(_self.bookId).child(_self.chapterId).on('child_added', function (snapShot) {
-            //     $timeout(function () {
-            //         _self.topics.push(snapShot.val());
-            //         _self.topicsId.push(snapShot.key());
-            //     }, 0);
-            // });
+            /*   _self.topics = [];
+             _self.questions = [];
+             ref.child('question-bank-topic').child(_self.bookId).child(_self.chapterId).on('child_added', function (snapShot) {
+             $timeout(function () {
+             _self.topics.push(snapShot.val());
+             _self.topicsId.push(snapShot.key());
+             }, 0);
+             });*/
         }
 
         function showQuestions(topicIndex) {
             _self.topicId = quizBankService.topicsId[topicIndex];
             _self.showView = false;
             _self.questionView = null;
-            // _self.topicId = _self.topicsId[topicIndex];
-            // quizBankService.loa
-            // quizService.setTopic(_self.topicId, topicIndex);
-            // quizService.setQuestionObject(null);
-            // _self.questions = [];
-            // ref.child('questions').child(_self.bookId).child(_self.chapterId).child(_self.topicId).on('child_added',
-            //     function (snapShot) {
-            //         $timeout(function () {
-            //             _self.questions.push(snapShot.val());
-            //         }, 0);
-            //     });
-
+            _self.questions = [];
+            quizBankService.loadQuestions(_self.bookId, _self.chapterId, _self.topicId).then(function (questions) {
+                _self.questions = questions;
+            });
+            /*_self.topicId = _self.topicsId[topicIndex];
+             quizBankService.loa
+             quizService.setTopic(_self.topicId, topicIndex);
+             quizService.setQuestionObject(null);
+             _self.questions = [];
+             ref.child('questions').child(_self.bookId).child(_self.chapterId).child(_self.topicId).on('child_added',
+             function (snapShot) {
+             $timeout(function () {
+             _self.questions.push(snapShot.val());
+             }, 0);
+             });*/
         }
 
         function showQuestionView(question) {
@@ -1106,7 +1116,6 @@
         }
 
 
-
         //AddQuestion Controller Work
         var that = this;
 
@@ -1124,8 +1133,6 @@
         this.topicId = $stateParams.id;
 
 
-
-
         //
         //
         //Answer Types.
@@ -1139,14 +1146,15 @@
         this.question = {
             options: [{
                 html: '',
-                "discussion-html" : "discussion-html",
+                "discussion-html": "discussion-html",
                 correct: false
             }, {
                 html: '',
-                "discussion-html" : "discussion-html",
+                "discussion-html": "discussion-html",
                 correct: false
             }]
         };
+
         //If Answer Type Changes.
         this.typeChanged = function () {
 
@@ -1167,11 +1175,11 @@
             this.showAddButton = true;
             that.question.options = [{
                 html: '',
-                "discussion-html" : "discussion-html",
+                "discussion-html": "discussion-html",
                 correct: false
             }, {
                 html: '',
-                "discussion-html" : "discussion-html",
+                "discussion-html": "discussion-html",
                 correct: false
             }];
             if (that.myType.name === "1") {
@@ -1186,7 +1194,7 @@
                 that.showQuestionSet = false;
                 that.answerTag = [];
                 that.myAnswer = undefined;
-            } else  {
+            } else {
                 that.showCheckOptions = false;
                 that.showRadioOptions = false;
                 that.showQuestionSet = true;
@@ -1206,7 +1214,7 @@
             that.question.options.push({
                 html: '',
                 correct: false,
-                "discussion-html" : "discussion-html"
+                "discussion-html": "discussion-html"
             });
         };
         //Delete Option
@@ -1297,34 +1305,42 @@
         //Save and Exit Button
         this.showAnswer = function (question) {
             delete question.desc;
-            console.log(question)
-            angular.forEach(that.question.options, function (data) {
+            var arr = question.options;
+            angular.forEach(question.options, function (data,index) {
                 delete data.$$hashKey;
             });
+            angular.forEach(question.options, function (data,index) {
+                // delete arr[index].$$hashKey;
+                if(question.options[index].html === ""){
+                    arr.splice(index,1);
+                }
+            });
+            console.log(arr);
+            question.options = arr;
             question['discussion-html'] = "discussion-html";
             question['html'] = "html-";
-           /* if (question.type === 1) {
-                angular.forEach(_self.question.options, function (data) {
-                    if (data.html == _self.myAnswer.html) {
-                        data.correct = true;
-                    } else {
-                        data.correct = false;
-                    }
-                });
-            }
+            /* if (question.type === 1) {
+             angular.forEach(_self.question.options, function (data) {
+             if (data.html == _self.myAnswer.html) {
+             data.correct = true;
+             } else {
+             data.correct = false;
+             }
+             });
+             }
 
-            that.question.Type = that.myType.name;
-            ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
+             that.question.Type = that.myType.name;
+             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
 
-                that.question = {};
-                abc();
-            });
+             that.question = {};
+             abc();
+             });
 
-            that.myAnswer = undefined;
+             that.myAnswer = undefined;
 
-            }*/
-            quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId,question);
-           _self.closeQuestion()
+             }*/
+            quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question);
+            _self.closeQuestion()
             /*if (that.myType.name === 'Radio Button') {
              angular.forEach(that.question.options, function (data) {
              if (data.html == that.myAnswer.html) {
@@ -1353,31 +1369,31 @@
 
         //View Dialog Box.
         /*this.showAdvanced = function (ev) {
-            that.question.Type = that.myType.name;
-            if (that.myType.name === 'Radio Button') {
-                angular.forEach(that.question.options, function (data) {
-                    if (data.html == that.myAnswer.html) {
-                        data.correct = true;
-                    } else {
-                        data.correct = false;
-                    }
-                });
-            }
-            $mdDialog.show({
-                    controller: DialogController,
-                    templateUrl: './components/quiz-add-question/dialog.tmpl.html',
-                    parent: angular.element(document.body),
-                    targetEvent: ev,
-                    locals: {
-                        questionData: that.question
-                    }
-                })
-                .then(function (answer) {
+         that.question.Type = that.myType.name;
+         if (that.myType.name === 'Radio Button') {
+         angular.forEach(that.question.options, function (data) {
+         if (data.html == that.myAnswer.html) {
+         data.correct = true;
+         } else {
+         data.correct = false;
+         }
+         });
+         }
+         $mdDialog.show({
+         controller: DialogController,
+         templateUrl: './components/quiz-add-question/dialog.tmpl.html',
+         parent: angular.element(document.body),
+         targetEvent: ev,
+         locals: {
+         questionData: that.question
+         }
+         })
+         .then(function (answer) {
 
-                }, function () {
+         }, function () {
 
-                });
-        };*/
+         });
+         };*/
 
         //addQuestion work end
 
@@ -1481,17 +1497,17 @@
 
 
                     // seleted data start
-                    _self.setSelectedQuestion = function (thisScope) {
+                    /*_self.setSelectedQuestion = function (thisScope) {
 
-                        if (_self.lastSelectedTopic.selectedTopic) {
-                            $('.selectedTopic').addClass('previousSelected');
-                            if (_self.lastSelectedQuestion) {
-                                _self.lastSelectedQuestion.selectedQuestion = '';
-                            }
-                            thisScope.selectedQuestion = 'selectedQuestion';
-                            _self.lastSelectedQuestion = thisScope;
-                        }
-                    };
+                     if (_self.lastSelectedTopic.selectedTopic) {
+                     $('.selectedTopic').addClass('previousSelected');
+                     if (_self.lastSelectedQuestion) {
+                     _self.lastSelectedQuestion.selectedQuestion = '';
+                     }
+                     thisScope.selectedQuestion = 'selectedQuestion';
+                     _self.lastSelectedQuestion = thisScope;
+                     }
+                     };*/
 
                     _self.setSelectedTopics = function (thisScope) {
 

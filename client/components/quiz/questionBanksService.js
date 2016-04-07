@@ -214,8 +214,12 @@
         _self.chaptersId = [];
         _self.topics = [];
         _self.topicsId = [];
+        _self.questions = [];
+        _self.questionId = [];
 
         _self.loadQuestionBanks = function () {
+            _self.books = [];
+            _self.bookId = [];
             var deferred = $q.defer();
             firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).on('child_added', function (questionBankUniqueID) {
                 firebaseService.getRefQuestionBank().child(questionBankUniqueID.key()).on('value', function (questionBank) {
@@ -241,6 +245,7 @@
         _self.loadChapters = function (questionBankUniqueID) {
             var deferred = $q.defer();
             _self.chapters = [];
+            _self.chaptersId = [];
             firebaseService.getRefQuestionBank().child(questionBankUniqueID).child("chapters").on('value', function (ChaptersUniqueId) {
                 for (var key in ChaptersUniqueId.val()) {
                     _self.chaptersId.push(key);
@@ -259,6 +264,7 @@
         _self.loadTopic = function (questionBankUniqueID, chapterUniqueId) {
             var deferred = $q.defer();
             _self.topics = [];
+            _self.topicsId = [];
             firebaseService.getRefQuestionBank().child(questionBankUniqueID).child("chapters").child(chapterUniqueId).child("topics").on('value', function (topics) {
                 for (var key in topics.val()) {
                     _self.topicsId.push(key);
@@ -269,31 +275,45 @@
             });
             return deferred.promise;
         };
+        _self.loadQuestions = function (questionBankUniqueID, chapterUniqueId,topicUniqueId) {
+            var deferred = $q.defer();
+            _self.questions = [];
+            _self.questionId = [];
+            firebaseService.getRefQuestionBank().child(questionBankUniqueID).child("chapters").child(chapterUniqueId).child("topics").child(topicUniqueId).child("questions").on('value', function (questions) {
+                for (var key in questions.val()) {
+                    _self.questionId.push(key);
+                    _self.questions.push(questions.val()[key]);
+                    console.log(_self.questions)
+                    deferred.resolve(_self.questions);
+                }
+            });
+            return deferred.promise;
+        };
         _self.createQuestion = function (questionBankUniqueID, chapterUniqueId, topicUniqueId, questionObject) {
-            // var questionObject = {
-            //     title: "title",
-            //     type: 3, //QuestionTupe
-            //     html: "htmlsllssllss",
-            //     questiones: [{
-            //         title: "Title",
-            //         type: 1, // it only just radio and CheckBox
-            //         html: "HTML",
-            //         options: [{
-            //             "html": "hello ",
-            //             "correct": false,
-            //             "discussion-html": "sajklksjls"
-            //         },
-            //         {
-            //             "html": "helkkdjjs",
-            //             "correct": true,
-            //             "discussion-html": "hekejejsd"
-            //         }],
-            //       "discussion-html" : "String"
-            //
-            //     },
-            //         ],
-            //     "discussion-html": "hgshshs"
-            // }
+            /*            var questionObject = {
+             title: "title",
+             type: 3, //QuestionTupe
+             html: "htmlsllssllss",
+             questiones: [{
+             title: "Title",
+             type: 1, // it only just radio and CheckBox
+             html: "HTML",
+             options: [{
+             "html": "hello ",
+             "correct": false,
+             "discussion-html": "sajklksjls"
+             },
+             {
+             "html": "helkkdjjs",
+             "correct": true,
+             "discussion-html": "hekejejsd"
+             }],
+             "discussion-html" : "String"
+
+             },
+             ],
+             "discussion-html": "hgshshs"
+             }*/
             firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').child(chapterUniqueId).child("topics").child(topicUniqueId).child("questions").push(questionObject);
         };
     }
