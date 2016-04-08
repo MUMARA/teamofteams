@@ -315,7 +315,7 @@
                 </md-list>
             </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
-                       aria-label="Add book" ng-click="quiz.addBook()">
+                       aria-label="Add book" ng-click="quiz.ShowNavBar()">
                 <ng-md-icon icon="add" style="fill: #fff"></ng-md-icon>
             </md-button>
         </md-content>
@@ -558,8 +558,6 @@
             </div>
         </md-toolbar>
         <div layout-padding class="show-question-section-main-div" ng-show="quiz.showView">
-            <p><b>Type :</b> {{quiz.questionView.type}}</p>
-
             <p><b>Question : {{$index + 1 + " : " + quiz.questionView.html}}</b></p>
 
             <p><b>Options :</b></p>
@@ -684,7 +682,7 @@
                     <md-input-container>
                         <label>Chapter Title</label>
                         <input name="chapterTitle"
-                               ng-model="quiz.Title" minlength="3" maxlength="40" required>
+                               ng-model="quiz.chapterObj.title" minlength="3" maxlength="40" required>
                         <!--check-chapter-existance=""-->
                         <div ng-show="chapterForm.$submitted || chapterForm.chapterTitle.$touched"
                              ng-messages="chapterForm.chapterTitle.$error">
@@ -695,7 +693,7 @@
                     </md-input-container>
                     <md-input-container>
                         <label>Chapter Description</label>
-                    <textarea name="chapterDescription" ng-model="quiz.Description"
+                    <textarea name="chapterDescription" ng-model="quiz.chapterObj.desc"
                               minlength="10" maxlength="200" required>
                     </textarea>
 
@@ -716,7 +714,7 @@
         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
         <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
         <md-button ng-disabled="chapterForm.$invalid"
-                   class="backColorSeaGreen color-white" ng-click="quiz.createChapter()">
+                   class="backColorSeaGreen color-white" ng-click="quiz.createChapter(quiz.chapterObj)">
             Create
         </md-button>
         </md-button>
@@ -741,10 +739,10 @@
                         <label>Topic Title
                             <ng-md-icon style="fill:#d3d3d3" icon="info_outline"></ng-md-icon>
                         </label>
-                        <input name="chapterTitle" ng-model="quiz.topic.title" minlength="3" maxlength="30">
+                        <input name="topicTitle" required ng-model="quiz.topicObj.title" minlength="3" maxlength="30">
                         <!--check-chapter-existance=""-->
-                        <div ng-show="topicForm.$submitted || topicForm.chapterTitle.$touched"
-                             ng-messages="chapterForm.chapterTitle.$error">
+                        <div ng-show="topicForm.$submitted || topicForm.topicTitle.$touched"
+                             ng-messages="topicForm.topicTitle.$error">
                             <div class="invalid_color" ng-message="required">This is required.</div>
                             <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
                             <div class="invalid_color" ng-message="maxlength">Required maximum length 30</div>
@@ -753,14 +751,14 @@
                     </md-input-container>
                     <md-input-container>
                         <label>Description</label>
-                    <textarea name="chapterDescription" ng-model="quiz.topic.desc"
-                              minlength="8" maxlength="200" required></textarea>
+                    <textarea name="topicDescription" ng-model="quiz.topicObj.desc"
+                              minlength="10" maxlength="100" required></textarea>
 
-                        <div ng-show="topicForm.$submitted || chapterForm.chapterDescription.$touched"
-                             ng-messages="chapterForm.chapterDescription.$error">
+                        <div ng-show="topicForm.$submitted || topicForm.topicDescription.$touched"
+                             ng-messages="topicForm.topicDescription.$error">
                             <div class="invalid_color" ng-message="required">This is required.</div>
-                            <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-                            <div class="invalid_color" ng-message="maxlength">Required maximum length 40</div>
+                            <div class="invalid_color" ng-message="minlength">Required minimum length 10</div>
+                            <div class="invalid_color" ng-message="maxlength">Required maximum length 100</div>
                         </div>
                     </md-input-container>
                 </div>
@@ -772,7 +770,7 @@
         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
         <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
         <md-button ng-disabled="topicForm.$invalid" class="backColorSeaGreen color-white"
-                   ng-click="quiz.createTopic(quiz.topic)">Create
+                   ng-click="quiz.createTopic(quiz.topicObj)">Create
         </md-button>
         </md-button>
         <md-button ng-click="quiz.closeTopic()" class="backColorSeaGreen color-white">
@@ -806,8 +804,8 @@
                 </md-input-container>
                 <!--Question Description-->
                 <md-input-container flex>
-                    <label style="font-weight:lighter;">Question Description</label>
-                        <textarea name="questionDescription" ng-model="quiz.question.desc"
+                    <label style="font-weight:lighter;">HTML</label>
+                        <textarea name="questionDescription" ng-model="quiz.question.html"
                                   minlength="10" maxlength="200" required>
                        </textarea>
 
@@ -1069,7 +1067,7 @@
                     </div>
                 </li>
             </ul>
-            <md-button class="md-fab " aria-label="Eat cake" ng-click="quiz.addBook()" style="width: 40px !important;
+            <md-button class="md-fab " aria-label="Eat cake" ng-click="quiz.ShowNavBar()" style="width: 40px !important;
                                 height: 40px !important
                                 ;background-color: #FB3C7C;
                                 position: absolute;
@@ -1976,8 +1974,8 @@
                                                     <md-card style="margin: 1px !important;"
                                                              ng-repeat="topic in quiz.topics | filter:tSNSearch"
                                                              ng-click="quiz.setSelectedTopics(this);
-                    !quiz.showQuizBar && quiz.showQuestions($index);
-                    quiz.showQuizBar && quiz.showQuizQuestions($index);" id="topicId{{$index}}"
+                                                             !quiz.showQuizBar && quiz.showQuestions($index);
+                                                             quiz.showQuizBar && quiz.showQuizQuestions($index);" id="topicId{{$index}}"
                                                              ng-mouseenter="quiz.hover(chapter)"
                                                              ng-mouseleave="quiz.hover(chapter)"
                                                              class="{{selectedTopic}}">
