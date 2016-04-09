@@ -271,10 +271,10 @@
                                   ng-class="{selectedBook: $index == quiz.selectedBookIndex,previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}">
                         <!-- Books Side-->
                         <div layout="row" class="subgroupcard" style="height: 120px">
-                            <div class="subgrouplogo" style="height: 120px">
+                            <div flex="30" class="subgrouplogo" style="height: 120px">
                                 <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
                             </div>
-                            <div layout="column" flex>
+                            <div flex="60" layout="column" flex>
                                 <div layout="row" layout-align="space-between center">
                                     <div layout-padding>{{book.title}}</div>
                                 </div>
@@ -282,6 +282,9 @@
                                     <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                          class="icon40px imageRound" alt="user" layout-margin/>
                                 </div>
+                            </div>
+                            <div class="quiz-select-item-book" ng-if="$index === quiz.selectedBookIndex">
+                                <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
                             </div>
                         </div>
 
@@ -326,13 +329,13 @@
             <img ng-src="img/menu.svg" style=" height: 45px;">
         </a>
         <br>
-        <md-divider style="background-color: white;"></md-divider>
+        <md-divider></md-divider>
         <br>
 
         <div>
             <div ng-style="(quiz.books.length == 0) && {'display':'none'}">
                 <div id="quizBankIcon" ng-click="quiz.showQuizBankFunc()" class="selectedTab menu-item-btn">
-                    <img ng-src="img/1book.svg" style="height: 39px;  margin-left: 20px;  "/>
+                    <img ng-src="img/1book.svg" class="book-img-quiz"/>
                 </div>
                 <div id="quizIcon" ng-click="quiz.showQuiz()" class="menu-item-btn">
                     <img ng-src="img/1add_quiz.svg"/>
@@ -412,6 +415,10 @@
                         <span><b>{{chapter.title}}</b></span>
                     </div>
                     <img src="img/1dots.svg" class="img-dots">
+                    <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedChapterIndex" layout="column"
+                         layout-align="center end">
+                        <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                    </div>
                 </div>
             </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
@@ -487,6 +494,10 @@
                         <span><b>{{topic.title}}</b></span>
                     </div>
                     <img src="img/1dots.svg" class="img-dots">
+                    <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedTopicIndex" layout="column"
+                         layout-align="center end">
+                        <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                    </div>
                 </div>
             </div>
         </div>
@@ -539,6 +550,11 @@
                         <span><b>{{question.title}}</b></span>
                     </div>
                     <img src="img/1dots.svg" class="img-dots">
+                    <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedQuestionIndex"
+                         layout="column"
+                         layout-align="center end">
+                        <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                    </div>
                 </div>
             </div>
         </div>
@@ -806,7 +822,7 @@
                 </md-input-container>
                 <!--Question Description-->
                 <md-input-container flex>
-                    <label style="font-weight:lighter;">Question Description</label>
+                    <label>Question Description</label>
                         <textarea name="questionDescription" ng-model="quiz.question.desc"
                                   minlength="10" maxlength="200" required>
                        </textarea>
@@ -835,38 +851,38 @@
                     </md-input-container>
                     <md-input-container flex="50" ng-if="quiz.question.type == 3">
                         <label>Sub Question Type</label>
-                        <md-select ng-model="quiz.subQuestionType" style="min-width: 200px;">
-                            <md-option value="checkbox">Checkbox</md-option>
-                            <md-option value="radio">Radio</md-option>
+                        <md-select ng-model="quiz.questionSet.type">
+                            <md-option ng-value="1">Radio</md-option>
+                            <md-option ng-value="2">Checkbox</md-option>
                         </md-select>
                     </md-input-container>
                 </div>
 
 
                 <div ng-show="quiz.question.type == 3">
-                    <div layout="row" layout-align="center center">
+                    <div layout="column" layout-align="center center">
                         <md-input-container style="padding-right: 50px">
                             <label>Question {{$index + 1}}</label>
-                            <input type="text" ng-model="option.optionText">
-                            <ng-md-icon icon="delete" ng-disabled="!option.optionText" class="nooutline"
-                                        style="fill:gray; position:absolute; top:10;"
+                            <input type="text" ng-model="quiz.questionSet.html">
+                            <ng-md-icon icon="delete" ng-disabled="!quiz.questionSet.html"
+                                        class="nooutline delete-icon-option"
                                         ng-click="quiz.deleteOption($index)">
                         </md-input-container>
-                        <div layout="row" ng-repeat="option in quiz.question.QuestionOptions">
-                            <md-radio-group ng-model="quiz.myAnswer" style="margin-top: 10px;margin-left: 20px">
-                                <md-radio-button
-                                        ng-value="option" ng-disabled="!option.optionText"
-                                        aria-label="Radio-Button">
-                                </md-radio-button>
-                            </md-radio-group>
-                            <md-input-container style="margin:0px">
-                                <label>Option {{$index + 1}}</label>
-                                <input type="text" ng-model="option.optionText">
-                                <ng-md-icon icon="delete" ng-disabled="!option.optionText" class="nooutline"
-                                            style="fill:gray; position:absolute; top:10;"
-                                            ng-click="quiz.deleteOption($index)">
-                            </md-input-container>
-                        </div>
+                        <!--         <div layout="row" ng-repeat="questionset in quiz.questionSetQuestions">
+                                     &lt;!&ndash;<md-radio-group ng-model="quiz.correct" style="margin-top: 10px;margin-left: 20px">
+                                         <md-radio-button
+                                                 ng-value="questionset" ng-disabled="!questionset.optionText"
+                                                 aria-label="Radio-Button">
+                                         </md-radio-button>
+                                     </md-radio-group>
+                                     <md-input-container style="margin:0px">
+                                         <label>Option {{$index + 1}}</label>
+                                         <input type="text" ng-model="questionset.optionText">
+                                         <ng-md-icon icon="delete" ng-disabled="!questionset.optionText"
+                                                     class="nooutline delete-icon-option"
+                                                     ng-click="quiz.deleteOption($index)">
+                                     </md-input-container>&ndash;&gt;
+                                 </div>-->
                         <div layout="row" layout-align="start end">
                             <!-- <md-button class="backColorSeaGreen"  style="color:white" ng-click="quiz.addOption();">
                                 Add Option</md-button> -->
@@ -876,37 +892,41 @@
                                 <ng-md-icon icon="delete" ng-disabled="!option.html" class="nooutline quiz-dlt-btn"
                                             ng-click="quiz.deleteOption($index)">
                             </md-input-container> -->
-                            <md-button ng-click="quiz.addOption();" style="margin-top: -20px"
+                            <md-button ng-click="quiz.questionSetAddQuestion(quiz.questionSet);"
+                                       style="margin-top: -20px"
                                        class="backColorSeaGreen color-white">
-                                Add Question
+                                Save Question
                             </md-button>
                         </div>
-                        <div layout-align="center center" layout="column" ng-if="quiz.subQuestionType === 'radio'">
-                            <div layout="row" ng-repeat="option in quiz.question.options">
-                                <md-radio-group ng-model="quiz.myAnswer" style="margin-top: 10px;margin-left: 20px">
-                                    <md-radio-button
-                                            ng-value="option" ng-disabled="!option.html"
-                                            aria-label="Radio-Button">
-                                    </md-radio-button>
+                        <div layout-align="center center" layout="column" ng-if="quiz.questionSet.type === 1">
+                            <div layout="row">
+
+                                <md-radio-group ng-change="quiz.correctQuestionSetAnswer()" ng-model="quiz.correct" style="margin-top: 10px;margin-left: 20px">
+                                    <div ng-repeat="option in quiz.questionSet.options">
+                                        <md-radio-button
+                                                ng-value="$index" ng-disabled="!option.html"
+                                                aria-label="Radio-Button">
+                                        </md-radio-button>
+                                        <md-input-container style="margin:0px">
+                                            <label>Option {{$index + 1}}</label>
+                                            <input type="text" ng-model="option.html">
+                                            <ng-md-icon icon="delete" ng-disabled="!option.html"
+                                                        class="nooutline delete-icon-option"
+                                                        ng-click="quiz.deleteOption($index)">
+                                        </md-input-container>
+                                    </div>
                                 </md-radio-group>
-                                <md-input-container style="margin:0px">
-                                    <label>Option {{$index + 1}}</label>
-                                    <input type="text" ng-model="option.html">
-                                    <ng-md-icon icon="delete" ng-disabled="!option.html" class="nooutline"
-                                                style="fill:gray; position:absolute; top:10;"
-                                                ng-click="quiz.deleteOption($index)">
-                                </md-input-container>
+
 
                             </div>
-                            <md-button class="backColorSeaGreen color-white" ng-click="quiz.addOption();">
+                            <md-button class="backColorSeaGreen color-white" ng-click="quiz.addQuestionSetOption();">
                                 Add Option
                             </md-button>
                         </div>
-                        <div layout-align="center center" layout="column" ng-if="quiz.subQuestionType === 'checkbox'">
-                            <div layout="row" ng-repeat="option in quiz.question.options">
+                        <div layout-align="center center" layout="column" ng-if="quiz.questionSet.type  === 2">
+                            <div layout="row" ng-repeat="option in quiz.questionSet.options">
                                 <md-checkbox md-no-ink aria-label="Checkbox No Ink"
-                                             class="md-primary" ng-model="option.id"
-                                             ng-change="quiz.setCheckBoxValue($index)"
+                                             class="md-primary" ng-model="option.correct"
                                              ng-disabled="!option.html">
                                 </md-checkbox>
 
@@ -917,7 +937,7 @@
                                                 ng-click="quiz.deleteOption($index)">
                                 </md-input-container>
                             </div>
-                            <md-button class="backColorSeaGreen color-white" ng-click="quiz.addOption();">
+                            <md-button class="backColorSeaGreen color-white" ng-click="quiz.addQuestionSetOption();">
                                 Add Option
                             </md-button>
                         </div>
@@ -926,7 +946,7 @@
 
                 <!--RadioBoxes InputFields-->
                 <div ng-show="quiz.question.type == 1">
-                    <div layout="row" >
+                    <div layout="row">
                         <md-radio-group ng-model="quiz.correct" ng-change="quiz.correctAnswer()">
                             <div ng-repeat="option in quiz.question.options">
                                 <md-radio-button ng-value="$index" name="chapterForm.correct"
@@ -941,8 +961,8 @@
                                          ng-click="quiz.deleteOption($index)"
                                          role="button" tabindex="0"
                                          style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
-                                    <ng-md-icon icon="delete" ng-disabled="!option.html" class="nooutline"
-                                                style="fill:gray; position:absolute; top:10;"
+                                    <ng-md-icon icon="delete" ng-disabled="!option.html"
+                                                class="nooutline delete-icon-option"
                                                 ng-click="quiz.deleteOption($index)">
                                 </md-input-container>
                             </div>
@@ -971,8 +991,7 @@
                                  ng-click="quiz.deleteOption($index)"
                                  role="button" tabindex="0"
                                  style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
-                            <ng-md-icon icon="delete" ng-disabled="!option.html" class="nooutline"
-                                        style="fill:gray; position:absolute; top:10;"
+                            <ng-md-icon icon="delete" ng-disabled="!option.html" class="nooutline delete-icon-option"
                                         ng-click="quiz.deleteOption($index)">
                         </md-input-container>
                         <!-- <div layout="row"> -->

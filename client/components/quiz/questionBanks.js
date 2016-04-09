@@ -120,6 +120,20 @@
         _self.selectedGroup = null;
         _self.dataPush = dataPush;
         _self.setSelectedQuiz = setSelectedQuiz;
+        _self.questionSetQuestions = [];
+        _self.questionSetAddQuestion = questionSetAddQuestion;
+
+
+        function questionSetAddQuestion(questionSet) {
+            angular.forEach(questionSet.options, function (val) {
+               delete val.$$hashKey;
+            });
+            _self.questionSetQuestions.push(questionSet);
+            console.log(_self.questionSetQuestions)
+            _self.questionSet = { options: []};
+            console.log(questionSet);
+        }
+
 
         /* Start My Code */
         firebaseService.getRefMain()
@@ -149,6 +163,12 @@
                 index == _self.correct ? _self.question.options[_self.correct].correct = true : _self.question.options[index].correct = false;
             });
             console.log(_self.question.options)
+        };
+        _self.correctQuestionSetAnswer = function () {
+            angular.forEach(_self.questionSet.options, function (val, index) {
+                index == _self.correct ? _self.questionSet.options[_self.correct].correct = true : _self.questionSet.options[index].correct = false;
+            });
+            console.log(_self.questionSet.options)
         };
 
         authService.resolveUserPage()
@@ -1131,7 +1151,7 @@
         var topMargin = 50;
         this.showCheckText = false;
         this.topicId = $stateParams.id;
-
+        _self.questionSet = {};
 
         //
         //
@@ -1182,6 +1202,15 @@
                 "discussion-html": "discussion-html",
                 correct: false
             }];
+            _self.questionSet.options = [{
+                html: '',
+                "discussion-html": "discussion-html",
+                correct: false
+            }, {
+                html: '',
+                "discussion-html": "discussion-html",
+                correct: false
+            }];
             if (that.myType.name === "1") {
                 that.showRadioOptions = true;
                 that.showCheckOptions = false;
@@ -1212,6 +1241,16 @@
             // that.myTop.push(topMargin + 'px');
             // idCounter++;
             that.question.options.push({
+                html: '',
+                correct: false,
+                "discussion-html": "discussion-html"
+            });
+        };
+        // _self.questionSet.options = [];
+        _self.addQuestionSetOption = function () {
+            console.log(_self.questionSet);
+            alert("")
+            _self.questionSet.options.push({
                 html: '',
                 correct: false,
                 "discussion-html": "discussion-html"
@@ -1304,41 +1343,47 @@
 
         //Save and Exit Button
         this.showAnswer = function (question) {
-            delete question.desc;
-            var arr = question.options;
-            angular.forEach(question.options, function (data,index) {
-                delete data.$$hashKey;
-            });
-            angular.forEach(question.options, function (data,index) {
-                // delete arr[index].$$hashKey;
-                if(question.options[index].html === ""){
-                    arr.splice(index,1);
-                }
-            });
-            console.log(arr);
-            question.options = arr;
             question['discussion-html'] = "discussion-html";
-            question['html'] = "html-";
-            /* if (question.type === 1) {
-             angular.forEach(_self.question.options, function (data) {
-             if (data.html == _self.myAnswer.html) {
-             data.correct = true;
-             } else {
-             data.correct = false;
-             }
-             });
-             }
+            if(question.type == 3) {
+                question['title'] = "title";
+                delete question.options;
+                question.questions = _self.questionSetQuestions;
+            }else {
+                delete question.desc;
+                var arr = question.options;
+                angular.forEach(question.options, function (data, index) {
+                    delete data.$$hashKey;
+                });
+                angular.forEach(question.options, function (data, index) {
+                    // delete arr[index].$$hashKey;
+                    if (question.options[index].html === "") {
+                        arr.splice(index, 1);
+                    }
+                });
+                question.options = arr;
+                question['html'] = "html-";
+                /* if (question.type === 1) {
+                 angular.forEach(_self.question.options, function (data) {
+                 if (data.html == _self.myAnswer.html) {
+                 data.correct = true;
+                 } else {
+                 data.correct = false;
+                 }
+                 });
+                 }
 
-             that.question.Type = that.myType.name;
-             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
+                 that.question.Type = that.myType.name;
+                 ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
 
-             that.question = {};
-             abc();
-             });
+                 that.question = {};
+                 abc();
+                 });
 
-             that.myAnswer = undefined;
+                 that.myAnswer = undefined;
 
-             }*/
+                 }*/
+            }
+            console.log(1111111111111111111111,question.type == 3,question)
             quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question);
             _self.closeQuestion()
             /*if (that.myType.name === 'Radio Button') {
