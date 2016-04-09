@@ -16,8 +16,8 @@
         var _self = this;
         _self.img = '../../img/userImg1.svg';
         _self.show = false;
-        _self.showView = false;
-        _self.showQuizBank = true;
+        _self.showQuestionDetails = false;
+        // _self.showQuizBank = true;
         _self.showQuizList = false;
         _self.showQuizAssign = false;
         _self.questionView = null;
@@ -34,35 +34,43 @@
         _self.selectedQuestionIndex = null;
         _self.selectedTopicIndex = null;
         _self.selectedChapterIndex = null;
+        // For Empty Input Field
         _self.questionbankObj = {};
         _self.chapterObj = {};
         _self.topicObj = {};
         _self.question = {};
+        // Show n Hide Side nav bar
         _self.ShowNavBar = ShowNavBar;
+       // Create Function for Book, Chapter, Topic , question and Open Side nav bar
         _self.createBook = createBook;
-        _self.closeBook = closeBook;
         _self.addChapter = addChapter;
         _self.createChapter = createChapter;
-        _self.closeChapter = closeChapter;
         _self.addTopic = addTopic;
         _self.createTopic = createTopic;
-        _self.closeTopic = closeTopic;
         _self.addQuestion = addQuestion;
+
+        // Close Side nav Bar
+
+        _self.closeBook = closeBook;
+        _self.closeChapter = closeChapter;
         _self.closeQuestion = closeQuestion;
+        _self.closeTopic = closeTopic;
         // _self.editChapter = editChapter;
-        _self.hover = hover;
-        _self.editHover = editHover;
+        // _self.hover = hover;
+        // _self.editHover = editHover;
+        // side NAv Show n hide
         _self.showChapters = showChapters;
         _self.showTopics = showTopics;
         _self.showQuestions = showQuestions;
         _self.showQuestionView = showQuestionView;
+
         // _self.showQuizChapters = showQuizChapters;
         // _self.showQuizTopics = showQuizTopics;
 
         _self.setSelectedBook = setSelectedBook;
         _self.setSelectedChapter = setSelectedChapter;
         _self.setSelectedTopic = setSelectedTopic;
-        _self.setSelectedQuestion = setSelectedQuestion;
+        // _self.setSelectedQuestion = setSelectedQuestion;
         // _self.setSelectedQuizes = setSelectedQuizes;
 
         _self.SelectedBook = null;
@@ -73,15 +81,16 @@
         // _self.showQuiz = showQuiz;
         // _self.showAssignQuiz = showAssignQuiz;
         // _self.showAttemptQuiz = showAttemptQuiz;
-        _self.addQuiz = addQuiz;
-        _self.closeQuiz = closeQuiz;
+        // _self.addQuiz = addQuiz;
+        // _self.closeQuiz = closeQuiz;
 
         // _self.afterLoad = afterLoad;
-
+     // Get only one id
         _self.bookId = '';
         _self.chapterId = '';
         _self.topicId = '';
-        //Firebase
+
+        //all books chapters , topics , questions Id
         _self.books = [];
         _self.booksId = [];
         _self.quizes = [];
@@ -90,11 +99,14 @@
         _self.topicsId = [];
         _self.topics = [];
         _self.questions = [];
-        _self.groups = [];
+
         //QUIZ SCEDULE variables & functions
         // _self.closeAssignQuiz = closeAssignQuiz;
         // _self.setSelectedGroup = setSelectedGroup;
         // _self.setSelectedSubGroup = setSelectedSubGroup;
+        // Old Code
+        _self.groups = [];
+
         _self.quizesList = [];
         _self.quizesListKey = [];
         _self.subGroup = [];
@@ -103,25 +115,12 @@
         // _self.dataPush = dataPush;
         // _self.setSelectedQuiz = setSelectedQuiz;
 
-        _self.books = [];
-        _self.booksId = [];
-        _self.quizes = [];
-        _self.chaptersId = [];
-        _self.chapters = [];
-        _self.topicsId = [];
-        _self.topics = [];
-        _self.questions = [];
-        _self.groups = [];
-        //QUIZ SCHEDULED variables & functions
-        _self.quizesList = [];
-        _self.quizesListKey = [];
-        _self.subGroup = [];
-        _self.myDatabase = [];
-        _self.selectedGroup = null;
+        // _self.books = [];
+        // _self.booksId = [];
+
             // _self.setSelectedQuiz = setSelectedQuiz;
 
         /* Start My Code */
-        firebaseService.getRefMain()
         /*ref.child('user-question-banks').child(userService.getCurrentUser().userID).on('value', function (snapshot) {
          console.log(snapshot);
          });*/
@@ -283,7 +282,7 @@
          _self.showQuizList = false;
          _self.showQuizAssign = false;
          if (quizService.getQuestionObject() !== null && _self.questionView !== null) {
-         _self.showView = true;
+         _self.showQuestionDetails = true;
          }
          $('#chapterColumn').addClass('marginLeft');
          $('#quizBankIcon').addClass('selectedTab');
@@ -303,7 +302,7 @@
          _self.showQuizBank = false;
          _self.showQuizList = true;
          _self.showQuizAssign = false;
-         _self.showView = false;
+         _self.showQuestionDetails = false;
          //$('#chapterColumn').removeClass('marginLeft')
          $('#quizBankIcon').removeClass('selectedTab');
          $('#quizIcon').addClass('selectedTab');
@@ -325,7 +324,7 @@
         //     _self.showQuizList = false;
         //     _self.showQuizAssign = true;
         //
-        //     _self.showView = false;
+        //     _self.showQuestionDetails = false;
         //     $('#quizBankIcon').removeClass('selectedTab');
         //     $('#quizIcon').removeClass('selectedTab');
         //     $('#quizAssignIcon').addClass('selectedTab');
@@ -473,29 +472,29 @@
         // }
 
         /*  Selection  */
-        function setSelectedQuestion(that, index) {
-            _self.selectedQuestionIndex = index;
-            quizService.setSelectedQuestion(index);
-            /*if (_self.lastSelectedTopic.selectedTopic) {
-             console.log("show", arguments, that);
-             $('.selectedTopic').addClass('previousSelected')
-             if (_self.lastSelectedQuestion) {
-             _self.lastSelectedQuestion.selectedQuestion = '';
-             }
-             that.selectedQuestion = 'selectedQuestion';
-             _self.lastSelectedQuestion = that;
-             }
-             console.log(_self.lastSelectedTopic.selectedTopic)*/
-        }
+        // function setSelectedQuestion(_self, index) {
+        //     _self.selectedQuestionIndex = index;
+        //     quizService.setSelectedQuestion(index);
+        //     /*if (_self.lastSelectedTopic.selectedTopic) {
+        //      console.log("show", arguments, _self);
+        //      $('.selectedTopic').addClass('previousSelected')
+        //      if (_self.lastSelectedQuestion) {
+        //      _self.lastSelectedQuestion.selectedQuestion = '';
+        //      }
+        //      _self.selectedQuestion = 'selectedQuestion';
+        //      _self.lastSelectedQuestion = _self;
+        //      }
+        //      console.log(_self.lastSelectedTopic.selectedTopic)*/
+        // }
 
-        function setSelectedTopic(that, index) {
+        function setSelectedTopic(_self, index) {
             _self.topicId = quizBankService.topicsId[index];
 
             _self.selectedQuestionIndex = null;
             _self.selectedTopicIndex = index;
             quizService.setSelectedTopic(index);
-            quizService.setSelectedQuestion(null);
-            /*console.log("show", arguments, that);
+            // quizService.setSelectedQuestion(null);
+            /*console.log("show", arguments, _self);
              if (_self.lastSelectedChapter.selected) {
              console.log('in IF')
              $('.previousSelected').removeClass('previousSelected')
@@ -503,30 +502,30 @@
              if (_self.lastSelectedTopic) {
              _self.lastSelectedTopic.selectedTopic = '';
              }
-             that.selectedTopic = 'selectedTopic';
-             _self.lastSelectedTopic = that;
+             _self.selectedTopic = 'selectedTopic';
+             _self.lastSelectedTopic = _self;
              }*/
         }
 
-        function setSelectedChapter(that, index) {
+        function setSelectedChapter(_self, index) {
             _self.selectedQuestionIndex = null;
             _self.selectedTopicIndex = null;
             _self.selectedChapterIndex = index;
             quizService.setSelectedChapter(index);
             quizService.setSelectedTopic(null);
-            quizService.setSelectedQuestion(null);
+            // quizService.setSelectedQuestion(null);
             /*$('.selectedChapter').removeClass('previousSelected')
-             console.log("show", that);
+             console.log("show", _self);
              if (_self.lastSelectedChapter) {
              _self.lastSelectedChapter.selected = '';
              }
-             quizService.setSelectedChapter(that)
-             that.selected = 'selectedChapter';
-             _self.lastSelectedChapter = that;
+             quizService.setSelectedChapter(_self)
+             _self.selected = 'selectedChapter';
+             _self.lastSelectedChapter = _self;
              console.log(_self.lastSelectedChapter.selected)*/
         }
 
-        function setSelectedBook(that, index) {
+        function setSelectedBook(_self, index) {
             _self.selectedBookIndex = index;
             quizService.setSelectedBook(index);
 
@@ -535,15 +534,15 @@
             _self.selectedChapterIndex = null;
             quizService.setSelectedChapter(null);
             quizService.setSelectedTopic(null);
-            quizService.setSelectedQuestion(null);
+            // quizService.setSelectedQuestion(null);
             /*_self.selectedQuestionIndex = null;
              _self.selectedTopicIndex = null;
              _self.selectedChapterIndex = null;
              if (_self.lastSelectedBook) {
              _self.lastSelectedBook.selected = '';
              }
-             that.selected = 'selectedBook';
-             _self.lastSelectedBook = that;
+             _self.selected = 'selectedBook';
+             _self.lastSelectedBook = _self;
              console.log(_self.lastSelectedBook.selected)*/
         }
 
@@ -557,21 +556,19 @@
             quizService.setQuestionObject(null);
             quizService.setChapter(null, null);
             quizService.setTopic(null, null);
-            console.log('showing Chapters');
             quizService.setQuestionObject(null);
             // quizService.book = bookIndex;
             _self.bookId = quizBankService.bookId[bookIndex];
 
-            _self.showView = false;
+            _self.showQuestionDetails = false;
             _self.questionView = null;
-            console.log(_self.bookId, bookIndex);
             quizBankService.loadChapters(_self.bookId).then(
                 function (chapters) {
                     _self.chapters = chapters;
                 });
 
             // _self.bookId = _self.booksId[bookIndex];
-            quizService.setBook(_self.bookId, bookIndex);
+            // quizService.setBook(_self.bookId, bookIndex);
             _self.chapterId = null;
             _self.topicId = null;
             _self.show = true;
@@ -598,7 +595,7 @@
 
             _self.topicsId = [];
             _self.questionsId = [];
-            _self.showView = false;
+            _self.showQuestionDetails = false;
             // _self.topicId = null;
             _self.questionView = null;
             // _self.chapterId = _self.chaptersId[chapterIndex];
@@ -619,7 +616,7 @@
 
         function showQuestions(topicIndex) {
             _self.topicId = quizBankService.topicsId[topicIndex];
-            _self.showView = false;
+            _self.showQuestionDetails = false;
             _self.questionView = null;
             _self.questions = [];
             quizBankService.loadQuestions(_self.bookId, _self.chapterId, _self.topicId).then(function (questions) {
@@ -642,7 +639,7 @@
             if (question !== null) {
                 quizService.setQuestionObject(question);
             }
-            _self.showView = true;
+            _self.showQuestionDetails = true;
             _self.questionView = question;
         }
 
@@ -985,13 +982,9 @@
             xhr.open("PUT", signed_request);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
             xhr.onload = function (data) {
-                console.log(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
                     messageService.showSuccess('Picture uploaded....');
-                    console.log('picture upload successful');
-                    console.log(url);
-
                     defer.resolve(url);
 
                 }
@@ -1000,7 +993,6 @@
                 defer.reject(messageService.showSuccess("Could not upload file."));
             };
             xhr.send(file);
-            console.log(file);
             return defer.promise;
         }
 
@@ -1116,17 +1108,17 @@
 
 
         //AddQuestion Controller Work
-        var that = this;
+        var _self = this;
 
         var idCounter = 3;
         this.showRadioOptions = false;
         this.showCheckOptions = false;
-        that.showQuestionSet = false;
+        _self.showQuestionSet = false;
         this.showAddButton = false;
         this.myAnswer = undefined;
         this.myType = '';
-        that.answerTag = [];
-        that.myTop = ['40px', '50px'];
+        _self.answerTag = [];
+        _self.myTop = ['40px', '50px'];
         var topMargin = 50;
         this.showCheckText = false;
         this.topicId = $stateParams.id;
@@ -1153,17 +1145,16 @@
         //If Answer Type Changes.
         this.typeChanged = function () {
 
-            that.radioValue = '';
-            that.myAnswer = undefined;
-            that.myTop = ['40px', '90px'];
+            _self.radioValue = '';
+            _self.myAnswer = undefined;
+            _self.myTop = ['40px', '90px'];
             topMargin = 50;
-            angular.forEach(that.question.options, function (data) {
+            angular.forEach(_self.question.options, function (data) {
                 if (data.id === true) {
                     data.id = false;
                 }
             });
         };
-        var that = this;
 
         //Setting different inputs.
         this.setBoxValue = function () {
@@ -1173,24 +1164,24 @@
                 "discussion-html": "discussion-html",
                 correct: false
             }];
-            if (that.myType.name === "1") {
-                that.showRadioOptions = true;
-                that.showCheckOptions = false;
-                that.showQuestionSet = false;
-                that.answerTag = [];
-                that.myAnswer = undefined;
-            } else if (that.myType.name === "2") {
-                that.showCheckOptions = true;
-                that.showRadioOptions = false;
-                that.showQuestionSet = false;
-                that.answerTag = [];
-                that.myAnswer = undefined;
+            if (_self.myType.name === "1") {
+                _self.showRadioOptions = true;
+                _self.showCheckOptions = false;
+                _self.showQuestionSet = false;
+                _self.answerTag = [];
+                _self.myAnswer = undefined;
+            } else if (_self.myType.name === "2") {
+                _self.showCheckOptions = true;
+                _self.showRadioOptions = false;
+                _self.showQuestionSet = false;
+                _self.answerTag = [];
+                _self.myAnswer = undefined;
             } else {
-                that.showCheckOptions = false;
-                that.showRadioOptions = false;
-                that.showQuestionSet = true;
-                that.answerTag = [];
-                that.myAnswer = undefined;
+                _self.showCheckOptions = false;
+                _self.showRadioOptions = false;
+                _self.showQuestionSet = true;
+                _self.answerTag = [];
+                _self.myAnswer = undefined;
             }
         };
         //Push new input fields.
@@ -1200,7 +1191,7 @@
             // if (topMargin < 100) {
             //     topMargin += 50;
             // }
-            // that.myTop.push(topMargin + 'px');
+            // _self.myTop.push(topMargin + 'px');
             // idCounter++;
             _self.question.options.push({
                 html: '',
@@ -1216,7 +1207,7 @@
         };
 
         //Sets Answer if Type CheckBox is selected.
-        that.setCheckBoxValue = function (questionId) {
+        _self.setCheckBoxValue = function (questionId) {
             if (_self.question.options[questionId].id === true) {
                 _self.question.options[questionId].correct = true;
                 _self.answerTag.push('one');
@@ -1226,29 +1217,29 @@
             }
         };
         //        //Add more Questions, Saves data to firebase and clears input fields.
-        // that.addQuestionsAndContinue = function () {
+        // _self.addQuestionsAndContinue = function () {
         //     alert("")
-        //     that.showRadioOptions = false;
-        //     that.showCheckOptions = false;
-        //     that.showQuestionSet = false;
-        //     that.showAddButton = false;
-        //     if (that.myType.name === 'Radio Button') {
+        //     _self.showRadioOptions = false;
+        //     _self.showCheckOptions = false;
+        //     _self.showQuestionSet = false;
+        //     _self.showAddButton = false;
+        //     if (_self.myType.name === 'Radio Button') {
         //         angular.forEach(_self.question.options, function (data) {
-        //             if (data.html == that.myAnswer.html) {
+        //             if (data.html == _self.myAnswer.html) {
         //                 data.correct = true;
         //             } else {
         //                 data.correct = false;
         //             }
         //         });
         //     }
-        //     angular.forEach(that.question.options, function (data) {
+        //     angular.forEach(_self.question.options, function (data) {
         //         delete data.$$hashKey;
         //         delete data.$$mdSelectId;
         //         delete data.id;
         //     });
-        //     that.question.Type = that.myType.name;
-        //     ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question);
-        //     that.question = {
+        //     _self.question.Type = _self.myType.name;
+        //     ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question);
+        //     _self.question = {
         //         title: '',
         //         desc: '',
         //         type: '',
@@ -1259,7 +1250,7 @@
         //             'discussion-html': "discussion-html"
         //         }]
         //     };
-        //     that.myAnswer = undefined;
+        //     _self.myAnswer = undefined;
         // }
         //Redirect on close
         // this.prev = function () {
@@ -1293,6 +1284,7 @@
         //Save and Exit Button
         this.showAnswer = function (question) {
             // delete question.desc;
+           console.log("11111111111111111111111111111111",question)
             var arr = question.options;
             angular.forEach(question.options, function (data,index) {
                 delete data.$$hashKey;
@@ -1315,52 +1307,54 @@
              });
              }
 
-             that.question.Type = that.myType.name;
-             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
+             _self.question.Type = _self.myType.name;
+             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
 
-             that.question = {};
+             _self.question = {};
              abc();
              });
 
-             that.myAnswer = undefined;
+             _self.myAnswer = undefined;
 
              }*/
             quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question);
             _self.question = {};
+            _self.question.html = null;
+            _self.question.title = null;
             _self.correct = null;
             _self.closeQuestion();
-            /*if (that.myType.name === 'Radio Button') {
-             angular.forEach(that.question.options, function (data) {
-             if (data.html == that.myAnswer.html) {
+            /*if (_self.myType.name === 'Radio Button') {
+             angular.forEach(_self.question.options, function (data) {
+             if (data.html == _self.myAnswer.html) {
              data.correct = true;
              } else {
              data.correct = false;
              }
              });
              }*/
-            /* angular.forEach(that.question.options, function (data) {
+            /* angular.forEach(_self.question.options, function (data) {
              delete data.$$hashKey;
              delete data.$$mdSelectId;
              delete data.id;
              });*/
-            // that.question.Type = that.myType.name;
-            /*myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
+            // _self.question.Type = _self.myType.name;
+            /*myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
 
-             that.question = {};
+             _self.question = {};
              abc();
              });
              */
-            // that.myAnswer = undefined;
+            // _self.myAnswer = undefined;
 
         };
 
 
         //View Dialog Box.
         /*this.showAdvanced = function (ev) {
-         that.question.Type = that.myType.name;
-         if (that.myType.name === 'Radio Button') {
-         angular.forEach(that.question.options, function (data) {
-         if (data.html == that.myAnswer.html) {
+         _self.question.Type = _self.myType.name;
+         if (_self.myType.name === 'Radio Button') {
+         angular.forEach(_self.question.options, function (data) {
+         if (data.html == _self.myAnswer.html) {
          data.correct = true;
          } else {
          data.correct = false;
@@ -1373,7 +1367,7 @@
          parent: angular.element(document.body),
          targetEvent: ev,
          locals: {
-         questionData: that.question
+         questionData: _self.question
          }
          })
          .then(function (answer) {
@@ -1385,417 +1379,417 @@
 
 
 
-        function addQuiz() {
+        // function addQuiz() {
+        //
+        //     /*$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')*/
+        //
+        //     if (_self.bookId) {
+        //         // $timeout(function () {
+        //         //     //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')
+        //         //
+        //         //     _self.showQuize = navService.toggleRight5;
+        //         //     _self.showQuize();
+        //
+        //             //Parou Code
+        //             // var _self = this;
+        //             // var bookId = '';
+        //             // var chapId = '';
+        //             // var marker = 0;
+        //             // _self.awaisObject = {};
+        //             // _self.flagChapters = [];
+        //             // _self.flagTopics = [];
+        //             // _self.showQuestionView1 = false;
+        //             // _self.quizObject = {};
+        //
+        //             //temporary
+        //             // _self.showTick = true;
+        //             // _self.buttonText = 'Next';
+        //             // _self.quizTitle = '';
+        //             // var topicCounter = 0;
+        //             // _self.quizDescription = '';
+        //             // _self.quizTime = '';
+        //             // var myCounter = 0;
+        //             // _self.questionIndex = 0;
+        //             // _self.tempQuestions = [];
+        //             // _self.myChapterIndex = 0;
+        //             // _self.viewAllQuestions = [];
+        //             // _self.viewAllTopics = [];
+        //             //bring the chapters from firebase
+        //
+        //             // _self.secondBookName = 'angular101';
+        //             // _self.secondChapters = [];
+        //             // _self.secondChaptersKey = [];
+        //             /*This will show hide quiz tabs*/
+        //             // var counter = 1;
+        //             // var tabCounter = 1;
+        //             // var arr = [],
+        //             //     name = '';
+        //             // _self.myChapters = [];
+        //             // _self.myChaptersKey = [];
+        //             // _self.thirdTopics = [];
+        //             //Data fetching from firebase
+        //             // _self.chapters = [];
+        //             // _self.chaptersId = [];
+        //             // _self.nestedQuestions = [];
+        //             // _self.topics = [];
+        //             // _self.topicsId = [];
+        //             // _self.questions = [];
+        //             // _self.questionsId = [];
+        //             // _self.showOne = false;
+        //             // _self.showTwo = true;
+        //             // _self.showThree = false;
+        //             //Second Page
+        //             // all variables
+        //             // _self.show = false;
+        //             // _self.showQuestionDetails = false;
+        //             // _self.showQuizBar = false;
+        //             // _self.showTick = false;
+        //             // _self.bookId = '';
+        //             // _self.chapterId = '';
+        //             // _self.topicId = null;
+        //             // _self.SelectedBook = null;
+        //             // _self.SelectedChapter = null;
+        //             // _self.SelectedTopic = null;
+        //             // _self.SelectedQuestion = null;
+        //             /*_self.quizes = [];*/
+        //             // _self.chaptersId = [];
+        //             // _self.chapters = [];
+        //             // _self.topicsId = [];
+        //             // _self.topics = [];
+        //             // _self.questions = [];
+        //             // _self.questionView = '';
+        //             // _self.latestNode = [];
+        //
+        //
+        //             /*
+        //              if (tabCounter == 1) {
+        //              //Tab Icons
+        //              _self.oneTab = true;
+        //              _self.twoTab = true;
+        //              _self.threeTab = false;
+        //              tabCounter++;
+        //
+        //              }*/
+        //
+        //
+        //             //  seleted data start
+        //             // _self.setSelectedQuestion = function (thisScope) {
+        //             //
+        //             //  if (_self.lastSelectedTopic.selectedTopic) {
+        //             //  $('.selectedTopic').addClass('previousSelected');
+        //             //  if (_self.lastSelectedQuestion) {
+        //             //  _self.lastSelectedQuestion.selectedQuestion = '';
+        //             //  }
+        //             //  thisScope.selectedQuestion = 'selectedQuestion';
+        //             //  _self.lastSelectedQuestion = thisScope;
+        //             //  }
+        //             //  };
+        //
+        //             // _self.setSelectedTopics = function (thisScope) {
+        //             //
+        //             //     if (_self.lastSelectedChapter.selected) {
+        //             //         $('.previousSelected').removeClass('previousSelected');
+        //             //         $('.selectedChapter').addClass('previousSelected');
+        //             //         if (_self.lastSelectedTopic) {
+        //             //             _self.lastSelectedTopic.selectedTopic = '';
+        //             //         }
+        //             //         thisScope.selectedTopic = 'selectedTopic';
+        //             //         _self.lastSelectedTopic = thisScope;
+        //             //     }
+        //             // };
+        //
+        //             // _self.setSelectedChapters = function (thisScope) {
+        //             //
+        //             //     $('.selectedChapter').removeClass('previousSelected');
+        //             //     if (_self.lastSelectedChapter) {
+        //             //         _self.lastSelectedChapter.selected = '';
+        //             //     }
+        //             //     quizCreateService.setSelectedChapter(thisScope);
+        //             //     thisScope.selected = 'selectedChapter';
+        //             //     _self.lastSelectedChapter = thisScope;
+        //             // };
+        //             //selected data end
+        //             //2nd Tab Functions
+        //             // var chapterCounter = 0;
+        //             //Chapters
+        //
+        //             // ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
+        //             //     //$timeout(function () {
+        //             //
+        //             //     _self.chapters.push(snapShot.val());
+        //             //     /*console.log(_self.chapters.push(snapShot.val()));*/
+        //             //     _self.chaptersId.push(snapShot.key());
+        //             //     _self.chaptersSnapData = snapShot.val();
+        //             //     _self.nestedQuestions.push([]);
+        //             //     _self.flagChapters[chapterCounter] = {};
+        //             //     _self.flagChapters[chapterCounter].id = true;
+        //             //     _self.viewAllTopics.push([]);
+        //             //     _self.flagTopics.push([]);
+        //             //     chapterCounter++;
+        //             //     //}, 0)
+        //             //
+        //             // });
+        //
+        //
+        //             // bookId = quizService.getBook();
+        //             // _self.bookId = quizService.getBook();
+        //             // _self.quizObject[quizService.getBook()] = {};
+        //             // _self.awaisObject[quizService.getBook()] = {};
+        //
+        //             //Topics
+        //             // _self.showTopics = function (chapterIndex) {
+        //             //     _self.showQuestionView1 = false;
+        //             //     if (_self.quizObject[bookId]["quizQuestion"] === undefined) {
+        //             //         _self.quizObject[bookId]["quizQuestion"] = {};
+        //             //     }
+        //             //     _self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]] = {};
+        //             //     _self.awaisObject[bookId][_self.chaptersId[chapterIndex]] = {};
+        //             //     _self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]]["ChapterDetails"] = {
+        //             //         title: _self.chapters[chapterIndex].title,
+        //             //         description: _self.chapters[chapterIndex].description
+        //             //     };
+        //             //     _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[chapterIndex]]['ChapterTopics'] = {};
+        //             //     _self.awaisObject[bookId][_self.chaptersId[chapterIndex]] = {};
+        //             //     console.log("Chapter Details");
+        //             //     console.log(_self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]]["ChapterDetails"]);
+        //             //     _self.chapterId = _self.chaptersId[chapterIndex];
+        //             //     _self.myChapterIndex = chapterIndex;
+        //             //     quizCreateService.setChapter(_self.chapterId, chapterIndex);
+        //             //
+        //             //     if (_self.flagChapters[chapterIndex].id === true) {
+        //             //         _self.nestedQuestions[chapterIndex] = [];
+        //             //         _self.tempQuestions[chapterIndex] = [];
+        //             //         _self.flagChapters[chapterIndex].id = false;
+        //             //         _self.topics = [];
+        //             //         _self.topicsId = [];
+        //             //         // _self.topicId = null;
+        //             //         topicCounter = 0;
+        //             //         ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function (snapShot) {
+        //             //             $timeout(function () {
+        //             //                 _self.topics.push(snapShot.val());
+        //             //                 _self.viewAllTopics[chapterIndex].push(snapShot.val());
+        //             //                 _self.topicsId.push(snapShot.key());
+        //             //                 _self.flagTopics[chapterIndex][topicCounter] = {};
+        //             //                 _self.flagTopics[chapterIndex][topicCounter].id = true;
+        //             //                 _self.nestedQuestions[chapterIndex].push([]);
+        //             //                 _self.tempQuestions[chapterIndex].push([]);
+        //             //                 topicCounter++;
+        //             //             }, 0)
+        //             //         })
+        //             //     } else {
+        //             //         _self.topics = _self.viewAllTopics[chapterIndex];
+        //             //         _self.myChapterIndex = chapterIndex;
+        //             //     }
+        //             // };
+        //
+        //             //Questions.
+        //             // _self.showQuestions = function (topicIndex) {
+        //             //     _self.showQuestionView1 = false;
+        //             //     if (_self.quizObject[bookId]["ChapterDetails"][_self.chaptersId[_self.myChapterIndex]]["ChapterTopics"][_self.topicsId[topicIndex]] === undefined) {
+        //             //         _self.quizObject[bookId]["ChapterDetails"][_self.chaptersId[_self.myChapterIndex]]["ChapterTopics"][_self.topicsId[topicIndex]] = {};
+        //             //         _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[topicIndex]] = {};
+        //             //         //Topic Object
+        //             //         _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]['TopicDetails'] = {
+        //             //             title: _self.topics[topicIndex].title,
+        //             //             description: _self.topics[topicIndex].description
+        //             //         };
+        //             //         _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]['TopicQuestions'] = {};
+        //             //         _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[topicIndex]] = {};
+        //             //         console.log("Topic Details");
+        //             //         console.log(_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]);
+        //             //     }
+        //             //     if (_self.flagTopics[_self.myChapterIndex][topicIndex].id == true) {
+        //             //
+        //             //         _self.flagTopics[_self.myChapterIndex][topicIndex].id = false;
+        //             //         _self.nestedQuestions[_self.myChapterIndex][topicIndex] = [];
+        //             //         myCounter = 0;
+        //             //         _self.questionIndex = topicIndex;
+        //             //         _self.showQuestionDetails = false;
+        //             //         // _self.topicId = _self.topicsId[topicIndex];
+        //             //         _self.tempQuestions[_self.myChapterIndex][topicIndex] = [];
+        //             //         // quizCreateService.setTopic(_self.topicId, topicIndex);
+        //             //
+        //             //         ref.child('questions').child(quizService.getBook()).child(quizCreateService.getChapter()).child(quizCreateService.getTopic()).on('child_added',
+        //             //             function (snapShot) {
+        //             //                 $timeout(function () {
+        //             //                     _self.questions.push(snapShot.val());
+        //             //                     _self.questionsId.push(snapShot.key());
+        //             //                     _self.nestedQuestions[_self.myChapterIndex][topicIndex].push(snapShot.val());
+        //             //                     _self.tempQuestions[_self.myChapterIndex][topicIndex].push(snapShot.val());
+        //             //                     _self.tempQuestions[_self.myChapterIndex][topicIndex][myCounter].id = false;
+        //             //                     _self.nestedQuestions[_self.myChapterIndex][topicIndex][myCounter].id = false;
+        //             //                     myCounter++;
+        //             //                 }, 0)
+        //             //             });
+        //             //     } else {
+        //             //         _self.questionIndex = topicIndex;
+        //             //         _self.nestedQuestions[_self.myChapterIndex][topicIndex] = _self.tempQuestions[_self.myChapterIndex][topicIndex];
+        //             //     }
+        //             // };
+        //         //     _self.showQuestionView = function (question) {
+        //         //         alert("")
+        //         //         _self.showQuestionView1 = true;
+        //         //         if (question !== null) {
+        //         //             quizService.setQuestionObject(question);
+        //         //         }
+        //         //         _self.questionView = question;
+        //         //     };
+        //         //     _self.checkArray = [];
+        //         //     _self.showTickIcon = function (trueFalseValue, questionIndex) {
+        //         //
+        //         //         console.log(_self.tickArray);
+        //         //
+        //         //         if (trueFalseValue == false) {
+        //         //             console.log("Checking");
+        //         //             _self.checkArray.push(questionIndex)
+        //         //             //_self.tickArray.push(trueFalseValue);
+        //         //             //console.log(_self.tickArray + 'pus');
+        //         //             _self.showQuestionView1 = true;
+        //         //             _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = true;
+        //         //             _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = true;
+        //         //             _self.viewAllQuestions.push(_self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex]);
+        //         //             if (_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'] == undefined) {
+        //         //                 _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'] = {};
+        //         //                 _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]] = {};
+        //         //             }
+        //         //             _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'][_self.questionsId[questionIndex]] = _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex];
+        //         //             _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]][_self.questionsId[questionIndex]] = _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex];
+        //         //         } else if (trueFalseValue == true) {
+        //         //             _self.checkArray.splice(_self.checkArray.indexOf(questionIndex), 1);
+        //         //             //_self.tickArray.splice(trueFalseValue,1);
+        //         //             //console.log(_self.tickArray + 'splice');
+        //         //             _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = false;
+        //         //             _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = false;
+        //         //             arr = _self.viewAllQuestions;
+        //         //             name = _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].Title;
+        //         //             angular.forEach(arr, function (data, key) {
+        //         //                 if (data.Title == name) {
+        //         //                     arr.splice(key, 1);
+        //         //                 }
+        //         //             });
+        //         //             _self.viewAllQuestions = arr;
+        //         //             delete(_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'][_self.questionsId[questionIndex]]);
+        //         //             delete(_self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]][_self.questionsId[questionIndex]]);
+        //         //         }
+        //         //
+        //         //
+        //         //     };
+        //         //
+        //         //
+        //         //     _self.createQuiz = function () {
+        //         //         /*Quiz Create.*/
+        //         //
+        //         //         //Delete Topics if Questions not there.
+        //         //         console.log(_self.quizObject[bookId]['quizQuestion']);
+        //         //         angular.forEach(_self.quizObject[bookId]['quizQuestion'], function (datum, key, obj) {
+        //         //             //_self.consoleObj = datum;
+        //         //             //console.log(_self.consoleObj + 'TIS IS T LENT OF AN OBJECT');
+        //         //             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
+        //         //             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
+        //         //             angular.forEach(datum['ChapterTopics'], function (datum1, key2) {
+        //         //                 if (Object.keys(datum1['TopicQuestions']).length == 0) {
+        //         //                     delete(_self.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
+        //         //                 }
+        //         //             })
+        //         //         });
+        //         //         //console.log(_self.consoleObj);
+        //         //         //console.log(_self.consoleObj.length + 'TIS IS T LENT OF AN OBJECT');
+        //         //         //Delete Chapters if Topics not there.
+        //         //         angular.forEach(_self.quizObject[bookId]['quizQuestion'], function (data, key) {
+        //         //             if (Object.keys(data['ChapterTopics']).length == 0) {
+        //         //                 delete(_self.quizObject[bookId]['quizQuestion'][key])
+        //         //             }
+        //         //         });
+        //         //
+        //         //
+        //         //         /*Quiz Attempt*/
+        //         //
+        //         //         //Delete Topics if Questions not there.
+        //         //         angular.forEach(_self.awaisObject[bookId], function (datum, key) {
+        //         //             angular.forEach(datum, function (datum1, key2) {
+        //         //                 if (Object.keys(datum1).length == 0) {
+        //         //                     delete(_self.awaisObject[bookId][key][key2]);
+        //         //                 }
+        //         //             })
+        //         //         });
+        //         //
+        //         //
+        //         //         //Delete Chapters if Topics not there.
+        //         //         angular.forEach(_self.awaisObject[bookId], function (data, key) {
+        //         //             if (Object.keys(data).length == 0) {
+        //         //                 delete(_self.awaisObject[bookId][key])
+        //         //             }
+        //         //         });
+        //         //
+        //         //         _self.quizObject[bookId]['quizDetails'] = {
+        //         //             title: _self.quizTitle,
+        //         //             description: _self.quizDescription,
+        //         //             time: _self.quizTime
+        //         //         };
+        //         //
+        //         //
+        //         //         //Object With Answer.
+        //         //         ref.child('quiz-create').child(bookId).push(_self.quizObject[bookId], function () {
+        //         //
+        //         //             angular.forEach(_self.awaisObject[bookId], function (one) {
+        //         //                 angular.forEach(one, function (two) {
+        //         //                     angular.forEach(two, function (three) {
+        //         //                         angular.forEach(three.options, function (deleteAnswer) {
+        //         //                             delete(deleteAnswer.correct);
+        //         //                         });
+        //         //                     });
+        //         //                 });
+        //         //             });
+        //         //             //Object WithoutAnswer.
+        //         //             // ref.child('quiz-attempt').child(bookId).push(_self.awaisObject[bookId]);
+        //         //             angular.forEach(_self.viewAllQuestions, function (data) {
+        //         //                 delete(data.$$hashKey);
+        //         //                 angular.forEach(data.options, function (option) {
+        //         //                     delete(option.$$hashKey);
+        //         //                 });
+        //         //                 ref.child('quiz-create').child(bookId).on("child_added", function (snapshot) {
+        //         //                     _self.latestNode.push(snapshot.key());
+        //         //                 });
+        //         //                 ref.child('quiz-attempt').child(bookId).child(_self.latestNode[_self.latestNode.length - 1]).set(
+        //         //                     _self.awaisObject[bookId]
+        //         //                 );
+        //         //             });
+        //         //         });
+        //         //
+        //         //     };
+        //         //
+        //         //
+        //         // } 0);
+        //
+        //
+        //     } else {
+        //         messageService.showSuccess('Please Select Book')
+        //         // $mdToast.show({
+        //         //     template: '<md-toast style="">' + 'Please Select Book' + '</md-toast>',
+        //         //     position: 'top right',
+        //         //     hideDelay: 5000
+        //         // });
+        //     }
+        //
+        //
+        //     console.log(_self.quizes);
+        // }
 
-            /*$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')*/
+        // function closeQuiz() {
+        //     _self.showbook = navService.toggleRight5;
+        //     _self.showbook();
+        // }
 
-            if (_self.bookId) {
-                // $timeout(function () {
-                //     //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')
-                //
-                //     _self.showQuize = navService.toggleRight5;
-                //     _self.showQuize();
+        //
+        // function hover(item) {
+        //     //console.log('Hover')
+        //     // Shows/hides the delete button on hover
+        //     //return item.showEdit = !item.showEdit;
+        // }
 
-                    //Parou Code
-                    // var that = this;
-                    // var bookId = '';
-                    // var chapId = '';
-                    // var marker = 0;
-                    // _self.awaisObject = {};
-                    // _self.flagChapters = [];
-                    // _self.flagTopics = [];
-                    // _self.showQuestionView1 = false;
-                    // _self.quizObject = {};
-
-                    //temporary
-                    // _self.showTick = true;
-                    // _self.buttonText = 'Next';
-                    // _self.quizTitle = '';
-                    // var topicCounter = 0;
-                    // _self.quizDescription = '';
-                    // _self.quizTime = '';
-                    // var myCounter = 0;
-                    // _self.questionIndex = 0;
-                    // _self.tempQuestions = [];
-                    // _self.myChapterIndex = 0;
-                    // _self.viewAllQuestions = [];
-                    // _self.viewAllTopics = [];
-                    //bring the chapters from firebase
-
-                    // _self.secondBookName = 'angular101';
-                    // _self.secondChapters = [];
-                    // _self.secondChaptersKey = [];
-                    /*This will show hide quiz tabs*/
-                    // var counter = 1;
-                    // var tabCounter = 1;
-                    // var arr = [],
-                    //     name = '';
-                    // _self.myChapters = [];
-                    // _self.myChaptersKey = [];
-                    // _self.thirdTopics = [];
-                    //Data fetching from firebase
-                    // _self.chapters = [];
-                    // _self.chaptersId = [];
-                    // _self.nestedQuestions = [];
-                    // _self.topics = [];
-                    // _self.topicsId = [];
-                    // _self.questions = [];
-                    // _self.questionsId = [];
-                    // _self.showOne = false;
-                    // _self.showTwo = true;
-                    // _self.showThree = false;
-                    //Second Page
-                    // all variables
-                    // _self.show = false;
-                    // _self.showView = false;
-                    // _self.showQuizBar = false;
-                    // _self.showTick = false;
-                    // _self.bookId = '';
-                    // _self.chapterId = '';
-                    // _self.topicId = null;
-                    // _self.SelectedBook = null;
-                    // _self.SelectedChapter = null;
-                    // _self.SelectedTopic = null;
-                    // _self.SelectedQuestion = null;
-                    /*_self.quizes = [];*/
-                    // _self.chaptersId = [];
-                    // _self.chapters = [];
-                    // _self.topicsId = [];
-                    // _self.topics = [];
-                    // _self.questions = [];
-                    // _self.questionView = '';
-                    // _self.latestNode = [];
-
-
-                    /*
-                     if (tabCounter == 1) {
-                     //Tab Icons
-                     that.oneTab = true;
-                     that.twoTab = true;
-                     that.threeTab = false;
-                     tabCounter++;
-
-                     }*/
-
-
-                    //  seleted data start
-                    // _self.setSelectedQuestion = function (thisScope) {
-                    //
-                    //  if (_self.lastSelectedTopic.selectedTopic) {
-                    //  $('.selectedTopic').addClass('previousSelected');
-                    //  if (_self.lastSelectedQuestion) {
-                    //  _self.lastSelectedQuestion.selectedQuestion = '';
-                    //  }
-                    //  thisScope.selectedQuestion = 'selectedQuestion';
-                    //  _self.lastSelectedQuestion = thisScope;
-                    //  }
-                    //  };
-
-                    // _self.setSelectedTopics = function (thisScope) {
-                    //
-                    //     if (_self.lastSelectedChapter.selected) {
-                    //         $('.previousSelected').removeClass('previousSelected');
-                    //         $('.selectedChapter').addClass('previousSelected');
-                    //         if (_self.lastSelectedTopic) {
-                    //             _self.lastSelectedTopic.selectedTopic = '';
-                    //         }
-                    //         thisScope.selectedTopic = 'selectedTopic';
-                    //         _self.lastSelectedTopic = thisScope;
-                    //     }
-                    // };
-
-                    // _self.setSelectedChapters = function (thisScope) {
-                    //
-                    //     $('.selectedChapter').removeClass('previousSelected');
-                    //     if (_self.lastSelectedChapter) {
-                    //         _self.lastSelectedChapter.selected = '';
-                    //     }
-                    //     quizCreateService.setSelectedChapter(thisScope);
-                    //     thisScope.selected = 'selectedChapter';
-                    //     _self.lastSelectedChapter = thisScope;
-                    // };
-                    //selected data end
-                    //2nd Tab Functions
-                    // var chapterCounter = 0;
-                    //Chapters
-
-                    // ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
-                    //     //$timeout(function () {
-                    //
-                    //     _self.chapters.push(snapShot.val());
-                    //     /*console.log(_self.chapters.push(snapShot.val()));*/
-                    //     _self.chaptersId.push(snapShot.key());
-                    //     _self.chaptersSnapData = snapShot.val();
-                    //     _self.nestedQuestions.push([]);
-                    //     _self.flagChapters[chapterCounter] = {};
-                    //     _self.flagChapters[chapterCounter].id = true;
-                    //     _self.viewAllTopics.push([]);
-                    //     _self.flagTopics.push([]);
-                    //     chapterCounter++;
-                    //     //}, 0)
-                    //
-                    // });
-
-
-                    // bookId = quizService.getBook();
-                    // _self.bookId = quizService.getBook();
-                    // _self.quizObject[quizService.getBook()] = {};
-                    // _self.awaisObject[quizService.getBook()] = {};
-
-                    //Topics
-                    // _self.showTopics = function (chapterIndex) {
-                    //     _self.showQuestionView1 = false;
-                    //     if (_self.quizObject[bookId]["quizQuestion"] === undefined) {
-                    //         _self.quizObject[bookId]["quizQuestion"] = {};
-                    //     }
-                    //     _self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]] = {};
-                    //     _self.awaisObject[bookId][_self.chaptersId[chapterIndex]] = {};
-                    //     _self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]]["ChapterDetails"] = {
-                    //         title: _self.chapters[chapterIndex].title,
-                    //         description: _self.chapters[chapterIndex].description
-                    //     };
-                    //     _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[chapterIndex]]['ChapterTopics'] = {};
-                    //     _self.awaisObject[bookId][_self.chaptersId[chapterIndex]] = {};
-                    //     console.log("Chapter Details");
-                    //     console.log(_self.quizObject[bookId]["quizQuestion"][_self.chaptersId[chapterIndex]]["ChapterDetails"]);
-                    //     _self.chapterId = _self.chaptersId[chapterIndex];
-                    //     _self.myChapterIndex = chapterIndex;
-                    //     quizCreateService.setChapter(_self.chapterId, chapterIndex);
-                    //
-                    //     if (_self.flagChapters[chapterIndex].id === true) {
-                    //         _self.nestedQuestions[chapterIndex] = [];
-                    //         _self.tempQuestions[chapterIndex] = [];
-                    //         _self.flagChapters[chapterIndex].id = false;
-                    //         _self.topics = [];
-                    //         _self.topicsId = [];
-                    //         // _self.topicId = null;
-                    //         topicCounter = 0;
-                    //         ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function (snapShot) {
-                    //             $timeout(function () {
-                    //                 _self.topics.push(snapShot.val());
-                    //                 _self.viewAllTopics[chapterIndex].push(snapShot.val());
-                    //                 _self.topicsId.push(snapShot.key());
-                    //                 _self.flagTopics[chapterIndex][topicCounter] = {};
-                    //                 _self.flagTopics[chapterIndex][topicCounter].id = true;
-                    //                 _self.nestedQuestions[chapterIndex].push([]);
-                    //                 _self.tempQuestions[chapterIndex].push([]);
-                    //                 topicCounter++;
-                    //             }, 0)
-                    //         })
-                    //     } else {
-                    //         _self.topics = _self.viewAllTopics[chapterIndex];
-                    //         _self.myChapterIndex = chapterIndex;
-                    //     }
-                    // };
-
-                    //Questions.
-                    // _self.showQuestions = function (topicIndex) {
-                    //     _self.showQuestionView1 = false;
-                    //     if (_self.quizObject[bookId]["ChapterDetails"][_self.chaptersId[_self.myChapterIndex]]["ChapterTopics"][_self.topicsId[topicIndex]] === undefined) {
-                    //         _self.quizObject[bookId]["ChapterDetails"][_self.chaptersId[_self.myChapterIndex]]["ChapterTopics"][_self.topicsId[topicIndex]] = {};
-                    //         _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[topicIndex]] = {};
-                    //         //Topic Object
-                    //         _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]['TopicDetails'] = {
-                    //             title: _self.topics[topicIndex].title,
-                    //             description: _self.topics[topicIndex].description
-                    //         };
-                    //         _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]['TopicQuestions'] = {};
-                    //         _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[topicIndex]] = {};
-                    //         console.log("Topic Details");
-                    //         console.log(_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[topicIndex]]);
-                    //     }
-                    //     if (_self.flagTopics[_self.myChapterIndex][topicIndex].id == true) {
-                    //
-                    //         _self.flagTopics[_self.myChapterIndex][topicIndex].id = false;
-                    //         _self.nestedQuestions[_self.myChapterIndex][topicIndex] = [];
-                    //         myCounter = 0;
-                    //         _self.questionIndex = topicIndex;
-                    //         _self.showView = false;
-                    //         // _self.topicId = _self.topicsId[topicIndex];
-                    //         _self.tempQuestions[_self.myChapterIndex][topicIndex] = [];
-                    //         // quizCreateService.setTopic(_self.topicId, topicIndex);
-                    //
-                    //         ref.child('questions').child(quizService.getBook()).child(quizCreateService.getChapter()).child(quizCreateService.getTopic()).on('child_added',
-                    //             function (snapShot) {
-                    //                 $timeout(function () {
-                    //                     _self.questions.push(snapShot.val());
-                    //                     _self.questionsId.push(snapShot.key());
-                    //                     _self.nestedQuestions[_self.myChapterIndex][topicIndex].push(snapShot.val());
-                    //                     _self.tempQuestions[_self.myChapterIndex][topicIndex].push(snapShot.val());
-                    //                     _self.tempQuestions[_self.myChapterIndex][topicIndex][myCounter].id = false;
-                    //                     _self.nestedQuestions[_self.myChapterIndex][topicIndex][myCounter].id = false;
-                    //                     myCounter++;
-                    //                 }, 0)
-                    //             });
-                    //     } else {
-                    //         _self.questionIndex = topicIndex;
-                    //         _self.nestedQuestions[_self.myChapterIndex][topicIndex] = _self.tempQuestions[_self.myChapterIndex][topicIndex];
-                    //     }
-                    // };
-                //     _self.showQuestionView = function (question) {
-                //         alert("")
-                //         _self.showQuestionView1 = true;
-                //         if (question !== null) {
-                //             quizService.setQuestionObject(question);
-                //         }
-                //         _self.questionView = question;
-                //     };
-                //     _self.checkArray = [];
-                //     _self.showTickIcon = function (trueFalseValue, questionIndex) {
-                //
-                //         console.log(_self.tickArray);
-                //
-                //         if (trueFalseValue == false) {
-                //             console.log("Checking");
-                //             _self.checkArray.push(questionIndex)
-                //             //_self.tickArray.push(trueFalseValue);
-                //             //console.log(_self.tickArray + 'pus');
-                //             _self.showQuestionView1 = true;
-                //             _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = true;
-                //             _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = true;
-                //             _self.viewAllQuestions.push(_self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex]);
-                //             if (_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'] == undefined) {
-                //                 _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'] = {};
-                //                 _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]] = {};
-                //             }
-                //             _self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'][_self.questionsId[questionIndex]] = _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex];
-                //             _self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]][_self.questionsId[questionIndex]] = _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex];
-                //         } else if (trueFalseValue == true) {
-                //             _self.checkArray.splice(_self.checkArray.indexOf(questionIndex), 1);
-                //             //_self.tickArray.splice(trueFalseValue,1);
-                //             //console.log(_self.tickArray + 'splice');
-                //             _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = false;
-                //             _self.tempQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].id = false;
-                //             arr = _self.viewAllQuestions;
-                //             name = _self.nestedQuestions[_self.myChapterIndex][_self.questionIndex][questionIndex].Title;
-                //             angular.forEach(arr, function (data, key) {
-                //                 if (data.Title == name) {
-                //                     arr.splice(key, 1);
-                //                 }
-                //             });
-                //             _self.viewAllQuestions = arr;
-                //             delete(_self.quizObject[bookId]['quizQuestion'][_self.chaptersId[_self.myChapterIndex]]['ChapterTopics'][_self.topicsId[_self.questionIndex]]['TopicQuestions'][_self.questionsId[questionIndex]]);
-                //             delete(_self.awaisObject[bookId][_self.chaptersId[_self.myChapterIndex]][_self.topicsId[_self.questionIndex]][_self.questionsId[questionIndex]]);
-                //         }
-                //
-                //
-                //     };
-                //
-                //
-                //     _self.createQuiz = function () {
-                //         /*Quiz Create.*/
-                //
-                //         //Delete Topics if Questions not there.
-                //         console.log(_self.quizObject[bookId]['quizQuestion']);
-                //         angular.forEach(_self.quizObject[bookId]['quizQuestion'], function (datum, key, obj) {
-                //             //_self.consoleObj = datum;
-                //             //console.log(_self.consoleObj + 'TIS IS T LENT OF AN OBJECT');
-                //             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
-                //             //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
-                //             angular.forEach(datum['ChapterTopics'], function (datum1, key2) {
-                //                 if (Object.keys(datum1['TopicQuestions']).length == 0) {
-                //                     delete(_self.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
-                //                 }
-                //             })
-                //         });
-                //         //console.log(_self.consoleObj);
-                //         //console.log(_self.consoleObj.length + 'TIS IS T LENT OF AN OBJECT');
-                //         //Delete Chapters if Topics not there.
-                //         angular.forEach(_self.quizObject[bookId]['quizQuestion'], function (data, key) {
-                //             if (Object.keys(data['ChapterTopics']).length == 0) {
-                //                 delete(_self.quizObject[bookId]['quizQuestion'][key])
-                //             }
-                //         });
-                //
-                //
-                //         /*Quiz Attempt*/
-                //
-                //         //Delete Topics if Questions not there.
-                //         angular.forEach(_self.awaisObject[bookId], function (datum, key) {
-                //             angular.forEach(datum, function (datum1, key2) {
-                //                 if (Object.keys(datum1).length == 0) {
-                //                     delete(_self.awaisObject[bookId][key][key2]);
-                //                 }
-                //             })
-                //         });
-                //
-                //
-                //         //Delete Chapters if Topics not there.
-                //         angular.forEach(_self.awaisObject[bookId], function (data, key) {
-                //             if (Object.keys(data).length == 0) {
-                //                 delete(_self.awaisObject[bookId][key])
-                //             }
-                //         });
-                //
-                //         _self.quizObject[bookId]['quizDetails'] = {
-                //             title: _self.quizTitle,
-                //             description: _self.quizDescription,
-                //             time: _self.quizTime
-                //         };
-                //
-                //
-                //         //Object With Answer.
-                //         ref.child('quiz-create').child(bookId).push(_self.quizObject[bookId], function () {
-                //
-                //             angular.forEach(_self.awaisObject[bookId], function (one) {
-                //                 angular.forEach(one, function (two) {
-                //                     angular.forEach(two, function (three) {
-                //                         angular.forEach(three.options, function (deleteAnswer) {
-                //                             delete(deleteAnswer.correct);
-                //                         });
-                //                     });
-                //                 });
-                //             });
-                //             //Object WithoutAnswer.
-                //             // ref.child('quiz-attempt').child(bookId).push(_self.awaisObject[bookId]);
-                //             angular.forEach(_self.viewAllQuestions, function (data) {
-                //                 delete(data.$$hashKey);
-                //                 angular.forEach(data.options, function (option) {
-                //                     delete(option.$$hashKey);
-                //                 });
-                //                 ref.child('quiz-create').child(bookId).on("child_added", function (snapshot) {
-                //                     _self.latestNode.push(snapshot.key());
-                //                 });
-                //                 ref.child('quiz-attempt').child(bookId).child(_self.latestNode[_self.latestNode.length - 1]).set(
-                //                     _self.awaisObject[bookId]
-                //                 );
-                //             });
-                //         });
-                //
-                //     };
-                //
-                //
-                // } 0);
-
-
-            } else {
-                messageService.showSuccess('Please Select Book')
-                // $mdToast.show({
-                //     template: '<md-toast style="">' + 'Please Select Book' + '</md-toast>',
-                //     position: 'top right',
-                //     hideDelay: 5000
-                // });
-            }
-
-
-            console.log(_self.quizes);
-        }
-
-        function closeQuiz() {
-            _self.showbook = navService.toggleRight5;
-            _self.showbook();
-        }
-
-
-        function hover(item) {
-            //console.log('Hover')
-            // Shows/hides the delete button on hover
-            //return item.showEdit = !item.showEdit;
-        }
-
-        function editHover(item) {
-            alert("Deleting the " + item.name);
-            return item.show = false;
-        }
+        // function editHover(item) {
+        //     alert("Deleting the " + item.name);
+        //     return item.show = false;
+        // }
     }
 })();

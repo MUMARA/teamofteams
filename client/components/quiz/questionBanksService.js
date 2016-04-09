@@ -42,27 +42,27 @@
          })*/
         .service('quizBankService', ['firebaseService', 'userService', '$q', quizBank])
         .factory('quizService', ["$location", function ($location) {
-            var that = this;
+            var _self = this;
 
-            that.book = null;
-            that.bookIndex = null;
-            that.chapter = null;
-            that.chapterIndex = null;
-            that.topic = null;
-            that.topicIndex = null;
-            that.question = null;
-            that.bookAfterCreation = null;
-            that.SelectedQuestion = null;
+            _self.book = null;
+            _self.bookIndex = null;
+            _self.chapter = null;
+            _self.chapterIndex = null;
+            _self.topic = null;
+            _self.topicIndex = null;
+            _self.question = null;
+            _self.bookAfterCreation = null;
+            _self.SelectedQuestion = null;
 
-            that.selectedTab = null;
+            _self.selectedTab = null;
 
             return {
                 /*    Tabs    */
                 'getSelectedTab': function () {
-                    return that.selectedTab;
+                    return _self.selectedTab;
                 },
                 'setSelectedTab': function (tab) {
-                    that.selectedTab = tab;
+                    _self.selectedTab = tab;
                 },
 
                 'quiz': function () {
@@ -70,91 +70,91 @@
                 },
                 'getSelected': function () {
                     return {
-                        book: that.book,
-                        chapter: that.chapter,
-                        topic: that.topic
+                        book: _self.book,
+                        chapter: _self.chapter,
+                        topic: _self.topic
                     }
                 },
                 'getBook': function () {
-                    return that.book;
+                    return _self.book;
                 },
                 'getChapter': function () {
-                    return that.chapter;
+                    return _self.chapter;
                 },
                 'getTopic': function () {
-                    return that.topic;
+                    return _self.topic;
                 },
                 'getQuestionObject': function () {
-                    return that.question;
+                    return _self.question;
                 },
 
                 'getBookIndex': function () {
-                    return that.bookIndex;
+                    return _self.bookIndex;
                 },
                 'getChapterIndex': function () {
-                    return that.chapterIndex + '';
+                    return _self.chapterIndex + '';
                 },
                 'getTopicIndex': function () {
-                    return that.topicIndex;
+                    return _self.topicIndex;
                 },
                 'getBookAfterCreation': function () {
-                    return that.bookAfterCreation;
+                    return _self.bookAfterCreation;
                 },
 
 
                 'setBook': function (bookId, bookIndex) {
-                    that.book = bookId
-                    that.bookIndex = bookIndex
+                    _self.book = bookId
+                    _self.bookIndex = bookIndex
                 },
                 'setChapter': function (chapterId, chapterIndex) {
-                    that.chapter = chapterId
-                    that.chapterIndex = chapterIndex
+                    _self.chapter = chapterId
+                    _self.chapterIndex = chapterIndex
                 },
                 'setTopic': function (topicId, topicIndex) {
-                    that.topic = topicId
-                    that.topicIndex = topicIndex
+                    _self.topic = topicId
+                    _self.topicIndex = topicIndex
                 },
                 'setQuestionObject': function (question) {
-                    that.question = question;
+                    _self.question = question;
                 },
 
                 'getSelectedBook': function () {
-                    return that.SelectedBook;
+                    return _self.SelectedBook;
                 },
                 'getSelectedChapter': function () {
-                    return that.SelectedChapter;
+                    return _self.SelectedChapter;
                 },
                 'getSelectedTopic': function () {
-                    return that.SelectedTopic;
+                    return _self.SelectedTopic;
                 },
                 'getSelectedQuestion': function () {
-                    return that.SelectedQuestion;
+                    return _self.SelectedQuestion;
                 },
                 'setSelectedBook': function (index) {
-                    that.SelectedBook = index;
+                    _self.SelectedBook = index;
                 },
                 'setSelectedChapter': function (index) {
-                    that.SelectedChapter = index;
+                    _self.SelectedChapter = index;
                 },
                 'setSelectedTopic': function (index) {
-                    that.SelectedTopic = index;
+                    _self.SelectedTopic = index;
                 },
                 'setSelectedQuestion': function (index) {
-                    that.SelectedQuestion = index;
+                    _self.SelectedQuestion = index;
                 },
                 'setBookAfterCreation': function (book) {
-                    that.bookAfterCreation = book;
+                    _self.bookAfterCreation = book;
                 }
             }
         }])
         .service('navService', function ($mdSidenav, $mdUtil, $log, $timeout) {
-            var $scope = this;
-            $scope.toggleRight1 = buildToggler('nav1');
-            $scope.toggleRight2 = buildToggler('nav2');
-            $scope.toggleRight3 = buildToggler('nav3');
-            $scope.toggleRight4 = buildToggler('nav4');
-            $scope.toggleRight5 = buildToggler('nav5');
-            $scope.toggleRight6 = buildToggler('nav6');
+            var _self = this;
+            _self.toggleRight1 = buildToggler('nav1');
+            _self.toggleRight2 = buildToggler('nav2');
+            _self.toggleRight3 = buildToggler('nav3');
+            _self.toggleRight4 = buildToggler('nav4');
+            _self.toggleRight5 = buildToggler('nav5');
+            _self.toggleRight6 = buildToggler('nav6');
 
             function buildToggler(navID) {
                 var debounceFn = $mdUtil.debounce(function () {
@@ -167,37 +167,37 @@
                 return debounceFn;
             }
 
-            /*$scope.close = function () {
+            /*_self.close = function () {
              $mdSidenav('nav1').close()
              .then(function () {
              $log.debug("close LEFT is done");
              });
              }
-             $scope.close = function () {
+             _self.close = function () {
              $mdSidenav('nav2').close()
              .then(function () {
              $log.debug("close LEFT is done");
              });
              }
-             $scope.close = function () {
+             _self.close = function () {
              $mdSidenav('nav3').close()
              .then(function () {
              $log.debug("close RIGHT is done");
              });
              };
-             $scope.close = function () {
+             _self.close = function () {
              $mdSidenav('nav4').close()
              .then(function () {
              $log.debug("close RIGHT is done");
              });
              };
-             $scope.close = function () {
+             _self.close = function () {
              $mdSidenav('nav5').close()
              .then(function () {
              $log.debug("close RIGHT is done");
              });
              };
-             $scope.close = function () {
+             _self.close = function () {
              $mdSidenav('nav6').close()
              .then(function () {
              $log.debug("close RIGHT is done");
@@ -283,7 +283,6 @@
                 for (var key in questions.val()) {
                     _self.questionId.push(key);
                     _self.questions.push(questions.val()[key]);
-                    console.log(_self.questions)
                     deferred.resolve(_self.questions);
                 }
             });

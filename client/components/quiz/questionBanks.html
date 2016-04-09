@@ -557,7 +557,7 @@
                 </h2>
             </div>
         </md-toolbar>
-        <div layout-padding class="show-question-section-main-div" ng-show="quiz.showView">
+        <div layout-padding class="show-question-section-main-div" ng-show="quiz.showQuestionDetails">
             <p><b>Question : {{$index + 1 + " : " + quiz.questionView.html}}</b></p>
 
             <p><b>Options :</b></p>
@@ -834,8 +834,8 @@
                     <md-input-container flex="50" ng-if="quiz.question.type == 3">
                         <label>Sub Question Type</label>
                         <md-select ng-model="quiz.subQuestionType" style="min-width: 200px;">
-                            <md-option value="checkbox">Checkbox</md-option>
-                            <md-option value="radio">Radio</md-option>
+                            <md-option ng-value="2">Checkbox</md-option>
+                            <md-option ng-value="1">Radio</md-option>
                         </md-select>
                     </md-input-container>
                 </div>
@@ -865,6 +865,7 @@
                                             ng-click="quiz.deleteOption($index)">
                             </md-input-container>
                         </div>
+
                         <div layout="row" layout-align="start end">
                             <!-- <md-button class="backColorSeaGreen"  style="color:white" ng-click="quiz.addOption();">
                                 Add Option</md-button> -->
@@ -879,7 +880,7 @@
                                 Add Question
                             </md-button>
                         </div>
-                        <div layout-align="center center" layout="column" ng-if="quiz.subQuestionType === 'radio'">
+                        <div layout-align="center center" layout="column" ng-if="quiz.subQuestionType === 1">
                             <div layout="row" ng-repeat="option in quiz.question.options">
                                 <md-radio-group ng-model="quiz.myAnswer" style="margin-top: 10px;margin-left: 20px">
                                     <md-radio-button
@@ -900,7 +901,7 @@
                                 Add Option
                             </md-button>
                         </div>
-                        <div layout-align="center center" layout="column" ng-if="quiz.subQuestionType === 'checkbox'">
+                        <div layout-align="center center" layout="column" ng-if="quiz.subQuestionType === 2">
                             <div layout="row" ng-repeat="option in quiz.question.options">
                                 <md-checkbox md-no-ink aria-label="Checkbox No Ink"
                                              class="md-primary" ng-model="option.id"
@@ -2579,7 +2580,7 @@
                 <!--<div flex style="height:100% !important; margin-left: -3px ">
                     <md-card style="margin-top:1px; margin-bottom: 1px;  margin-right: -48px ; overflow-y: auto; color: #000000;height: 104.8%;border-bottom: 1px solid grey; background-color: #F2F2F2">
                         <md-card-content>
-                            <md-card ng-show="quiz.showView"
+                            <md-card ng-show="quiz.showQuestionDetails"
                                      style="word-wrap: break-word;box-shadow: none; background-color: #F2F2F2; margin: -6%">
                                 <md-card-content>
                                     <p><b>Type :</b> {{quiz.questionView.Type}}</p>
