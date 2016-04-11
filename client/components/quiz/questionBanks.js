@@ -115,8 +115,38 @@
         // _self.dataPush = dataPush;
         // _self.setSelectedQuiz = setSelectedQuiz;
 
-        // _self.books = [];
-        // _self.booksId = [];
+
+        _self.books = [];
+        _self.booksId = [];
+        _self.quizes = [];
+        _self.chaptersId = [];
+        _self.chapters = [];
+        _self.topicsId = [];
+        _self.topics = [];
+        _self.questions = [];
+        _self.groups = [];
+        //QUIZ SCHEDULED variables & functions
+        _self.quizesList = [];
+        _self.quizesListKey = [];
+        _self.subGroup = [];
+        _self.myDatabase = [];
+        _self.selectedGroup = null;
+        // _self.dataPush = dataPush;
+        // _self.setSelectedQuiz = setSelectedQuiz;
+        _self.questionSetQuestions = [];
+        _self.questionSetAddQuestion = questionSetAddQuestion;
+
+
+        function questionSetAddQuestion(questionSet) {
+            questionSet["discussion-html"] = "discussion-html";
+            angular.forEach(questionSet.options, function (val) {
+               delete val.$$hashKey;
+            });
+            _self.questionSetQuestions.push(questionSet);
+            console.log(_self.questionSetQuestions)
+            _self.questionSet = { options: []};
+            console.log(questionSet);
+        }
 
             // _self.setSelectedQuiz = setSelectedQuiz;
 
@@ -146,6 +176,12 @@
             angular.forEach(_self.question.options, function (val, index) {
                 index == _self.correct ? _self.question.options[_self.correct].correct = true : _self.question.options[index].correct = false ;
             });
+        };
+        _self.correctQuestionSetAnswer = function () {
+            angular.forEach(_self.questionSet.options, function (val, index) {
+                index == _self.correct ? _self.questionSet.options[_self.correct].correct = true : _self.questionSet.options[index].correct = false;
+            });
+            console.log(_self.questionSet.options)
         };
 
         // authService.resolveUserPage()
@@ -1122,7 +1158,7 @@
         var topMargin = 50;
         this.showCheckText = false;
         this.topicId = $stateParams.id;
-
+        _self.questionSet = {};
 
         //
         //
@@ -1164,6 +1200,16 @@
                 "discussion-html": "discussion-html",
                 correct: false
             }];
+
+            _self.questionSet.options = [{
+                html: '',
+                "discussion-html": "discussion-html",
+                correct: false
+            }, {
+                html: '',
+                "discussion-html": "discussion-html",
+                correct: false
+            }];
             if (_self.myType.name === "1") {
                 _self.showRadioOptions = true;
                 _self.showCheckOptions = false;
@@ -1194,6 +1240,16 @@
             // _self.myTop.push(topMargin + 'px');
             // idCounter++;
             _self.question.options.push({
+                html: '',
+                correct: false,
+                "discussion-html": "discussion-html"
+            });
+        };
+        // _self.questionSet.options = [];
+        _self.addQuestionSetOption = function () {
+            console.log(_self.questionSet);
+            alert("")
+            _self.questionSet.options.push({
                 html: '',
                 correct: false,
                 "discussion-html": "discussion-html"
@@ -1283,40 +1339,48 @@
 
         //Save and Exit Button
         this.showAnswer = function (question) {
-            // delete question.desc;
-           console.log("11111111111111111111111111111111",question)
-            var arr = question.options;
-            angular.forEach(question.options, function (data,index) {
-                delete data.$$hashKey;
-            });
-            angular.forEach(question.options, function (data,index) {
-                // delete arr[index].$$hashKey;
-                if(question.options[index].html === ""){
-                    arr.splice(index,1);
-                }
-            });
-            question.options = arr;
+
             question['discussion-html'] = "discussion-html";
-            /* if (question.type === 1) {
-             angular.forEach(_self.question.options, function (data) {
-             if (data.html == _self.myAnswer.html) {
-             data.correct = true;
-             } else {
-             data.correct = false;
-             }
-             });
-             }
+            if(question.type == 3) {
+                question['title'] = "title";
+                delete question.options;
+                console.log("111111111111111111111111111111111111111111111111",_self.questionSetQuestions)
+                question.questiones = _self.questionSetQuestions;
+            }else {
+                delete question.desc;
+                var arr = question.options;
+                angular.forEach(question.options, function (data, index) {
+                    delete data.$$hashKey;
+                });
+                angular.forEach(question.options, function (data, index) {
+                    // delete arr[index].$$hashKey;
+                    if (question.options[index].html === "") {
+                        arr.splice(index, 1);
+                    }
+                });
+                question.options = arr;
+                question['html'] = "html-";
+                /* if (question.type === 1) {
+                 angular.forEach(_self.question.options, function (data) {
+                 if (data.html == _self.myAnswer.html) {
+                 data.correct = true;
+                 } else {
+                 data.correct = false;
+                 }
+                 });
+                 }
 
-             _self.question.Type = _self.myType.name;
-             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
+                 _self.question.Type = _self.myType.name;
+                 ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
 
-             _self.question = {};
-             abc();
-             });
+                 _self.question = {};
+                 abc();
+                 });
 
-             _self.myAnswer = undefined;
+                 _self.myAnswer = undefined;
 
-             }*/
+                 }*/
+            }
             quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question);
             _self.question = {};
             _self.question.html = null;

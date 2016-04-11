@@ -9,6 +9,31 @@
     border: none;
 }
 
+.book-img-quiz {
+    height: 39px;
+    margin-left: 20px;
+}
+
+.delete-icon-option {
+    fill: gray;
+    position: absolute;
+    top: 10px;
+}
+
+.quiz-select-item {
+    position: absolute !important;
+    right: -10px !important;
+    top: 3px !important;
+    fill: #888787 !important;
+}
+
+.quiz-select-item-book {
+    position: absolute !important;
+    right: 5px !important;
+    fill: #888787 !important;
+    top: 45px !important;
+}
+
 .quiz-sidebar-nav md-list-item {
     padding: 0 !important;
 }
@@ -142,9 +167,11 @@
 .quiz-search-box-3 {
     background-color: #00A7F8;
 }
+
 .quiz-search-box-5 {
     background-color: #FF9800;
 }
+
 .quiz-menu-col {
     height: calc(100vh - 64px);
 }
