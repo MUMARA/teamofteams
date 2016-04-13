@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"sourceMap": true,
+        "outDir": "functions/",
+        "rootDir": "src/",
+        "moduleResolution": "node"
+	},
+    "files": [
+            "src/signup/handler.ts"
+        ]
+}

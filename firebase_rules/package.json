@@ -11,6 +11,8 @@
   "dependencies": {
     "chai": "^3.5.0",
     "firebase-bolt": "^0.8.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
     "mocha": "^2.4.5"
   }
 }

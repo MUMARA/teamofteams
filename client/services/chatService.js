@@ -50,9 +50,10 @@
                     timestamp   : fireTimeStamp,
                     title       : channelTitle
                 }
-                var request = refs.refgroupchannel.child(groupID).push(newChannel, function(err){
-                    cb(err);
-                })
+                var request = refs.refgroupchannel.child(groupID).push();
+                request.update(newChannel, function(err){
+                    cb(err, request.key(), channelTitle);
+                });
             },
             createSubGroupChannel: function(groupID, subgroupID, channelTitle, userID, cb){
                 var newChannel = {
@@ -60,9 +61,10 @@
                     timestamp   : fireTimeStamp,
                     title       : channelTitle
                 }
-                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push(newChannel, function(err){
-                    cb(err);
-                })
+                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push();
+                request.update(newChannel, function(err){
+                    cb(err, request.key(), channelTitle);
+                });
             },
             getGroupChannel: function(groupID){
                 return $firebaseArray(refs.refgroupchannel.child(groupID))

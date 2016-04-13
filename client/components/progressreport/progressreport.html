@@ -35,12 +35,16 @@
                     </div>
                     <div layout="row" layout-align="center end" layout-fill>
                         <div flex>
-                            <div layout="column" ng-repeat="q in report.questions track by $index">
+                            <div class="leftmargin20px" layout-padding ng-if="!report.answers && progressreport.user.userID != report.userID">
+                                Report Not Submitted
+                            </div>
+                            <div layout="column" ng-repeat="q in report.questions track by $index" ng-if="progressreport.user.userID == report.userID || report.answers ">
                                 <md-input-container flex class="leftmargin20px" layout="row">
                                     <label>{{q}}</label>
                                     <textarea ng-model="report.answers[$index]" class="foreColorBlack" ng-disabled="progressreport.user.userID != report.userID || !progressreport.subgroupID"></textarea>
                                 </md-input-container>
                             </div>
+
                         </div>
                     </div>
                     <div layout="row" layout-align="space-around center" layout-fill>

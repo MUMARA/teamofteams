@@ -39,7 +39,7 @@
                     <div ng-repeat="subgroup in createSubGroup.subgroups track by $index" layout="row"
                          class="backColorWhite md-whiteframe-z2 bottommargin5px subgroupcard">
                         <subgroupcard-directive subgroup="subgroup"
-                                                ng-click="createSubGroup.veiwSubgroup(subgroup,$index)"
+                                                ng-click="createSubGroup.veiwSubgroup(subgroup,$index); createSubGroup.becomeMember=[];"
                                                 class="nooutline cursorPointer"></subgroupcard-directive>
                         <ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"
                                     style="position: relative; left: -30px; top: 30px;"></ng-md-icon>
@@ -147,6 +147,13 @@
                                 </span>
                         </md-chip>
                     </md-chips>
+                    <md-chips ng-repeat="mems in createSubGroup.becomeAdmin">
+                        <md-chip style="height:40px" class="backColorDarkGrey">
+                            <img ng-src="{{mems.member.userSyncObj['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                 class="md-avatar" alt="user" style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;"/>
+                            <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{mems.member.userSyncObj.firstName + ' ' + mems.member.userSyncObj.lastName +" "}}</span>
+                        </md-chip>
+                    </md-chips>
                     <!--<md-chips ng-repeat="admin in createSubGroup.selectedAdminArray">
                         <md-chip style="height:40px" class="backColorDarkGrey">
                             <img ng-src="{{admin['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
@@ -185,7 +192,20 @@
                                   ng-hide="mems.membershipType == 1 || mems.membershipType == 2">
                                     &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"
                                                        ng-click="createSubGroup.deleteMember(mems.userID)"></ng-md-icon>
-                                </span>
+                            </span>
+                        </md-chip>
+                    </md-chips>
+                    <md-chips ng-repeat="mems in createSubGroup.becomeMember">
+                        <md-chip style="height:40px" class="backColorDarkGrey" >
+                            <img ng-src="{{mems['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                 class="md-avatar" alt="user"
+                                 style="width: 40px; height: 40px; border-radius: 50%; margin-left: -15px;"/>
+                            <span style="margin-left: 10px; position:relative; top:-16px;" class="foreColorWhite">{{mems.firstName + ' ' + mems.lastName +" "}}</span>
+                            <!--<span style="position:relative; top:-8px;" class="fillColorWhite"
+                                  ng-hide="mems.membershipType == 1 || mems.membershipType == 2">
+                                    &nbsp; <ng-md-icon icon="close" size="24" class="nooutline"
+                                                       ng-click="createSubGroup.deleteMember(mems.userID)"></ng-md-icon>
+                            </span>-->
                         </md-chip>
                     </md-chips>
                 </div>
@@ -256,6 +276,7 @@
                                         ng-class="member.isMember ? 'fillColorWhite' : 'fillColorDarkGrey' ">
                                 <!-- <ng-md-icon icon="done" ng-class="(createSubGroup.filterUser(member.user.profile.$id)) ? 'fillColorWhite' : 'fillColorDarkGrey' "> -->
                             </ng-md-icon>
+                      
                             <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                  class="md-avatar icon40px imageRound nooutline" layout-margin alt="user"/>
                             <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
@@ -293,7 +314,7 @@
                 </ng-md-icon>
                 <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                      class="md-avatar icon40px imageRound nooutline" layout-margin alt="user"/>
-                <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}}</span>
+                <span class="foreColorWhite">{{member.user.profile.firstName + ' ' + member.user.profile.lastName}} {{member.isMember}}</span>
             </md-list-item>
         </md-list>
         <p><br></p>
@@ -328,7 +349,6 @@
             </md-list-item>
         </md-list>
         <p><br></p>
-
         <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;">
             <md-button class="md-raised" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('member');"
                        md-ripple-size="auto">Done
