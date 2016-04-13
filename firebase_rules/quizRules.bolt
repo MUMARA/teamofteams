@@ -4,18 +4,6 @@
 // matches the currently signed-in user.
 //----------------------------------
 
-function isAuthenticatedUser(userid) {
-  return auth != null && auth.uid == userid;
-}
-
-function isAuthenticated() {
-    return auth != null;
-}
-
-type CurrentTimeStamp extends Number {
-  validate() {    this <= Date.now; }
-}
-
 // Quiz Rules
 //-----------------------------------------------------------------------------------
 //       MemberType type extends globally and MemberType Number Validations Should Be
@@ -52,35 +40,6 @@ function isCurrentUserQuestionBankAdmin(questionBankUniqueID) {
 function isCurrentUserQuestionBankMember(questionBankUniqueID) {
     prior(root["question-bank-memberships"][questionBankUniqueID][auth.uid] != null)
 }
-
-//---------------------------------------------------
-//         Function For SubGroup
-//----------------------------------------------------
-
-function  isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist($groupid,$subgroupid) {
-  return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() != null)
-}
-
-function isSubGroupMembersSubGroupIdAuthIDExist($groupid ,$subgroupid) {
- return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid].val() != null )
-}
-
-
-
-function subGroupMembersMemberShipAnyType($groupid,$subgroupid) {
-  return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() > 0)
-}
-
-
-function isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) {
- return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() == 1)
-}
-
-function isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) {
- return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() == 2)
-}
-
-
 
 //----------------------------------
 // Define function to test if the Question Bank Owner himself creating it for the first time

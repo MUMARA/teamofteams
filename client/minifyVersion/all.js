@@ -679,7 +679,14 @@ angular.module('core', [
                 });
             }
         };
-        function onSuccessErrorChannelCreation(err){
+        function onSuccessErrorChannelCreation(err, channelID, channelTitle){
+            if (that.messagesArray.length == 0) {
+                var channel = {
+                    $id: channelID,
+                    title: channelTitle
+                };
+                that.gotoChannel(channel);
+            }
             if (err) {
                 messageService.showFailure(err);
             } else {
@@ -1795,6 +1802,7 @@ angular.module('core', [
           });
           globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
             backdropPermission();
+            angular.element(document).find("firepad").blur();
           });
           globalRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
@@ -1812,6 +1820,7 @@ angular.module('core', [
           });
           globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
             backdropPermission();
+            angular.element(document).find("firepad").blur();
           });
           globalRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
@@ -2688,7 +2697,7 @@ angular.module('core', [
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart;       
+            this.quizStart = quizStart;
 
             this.progressReport = function() {
                 $mdSidenav('right').toggle().then(function() {
@@ -2955,7 +2964,7 @@ angular.module('core', [
                             //for subgroup activity stream record -- END --
 
                             messageService.showSuccess('Checkin Successfully!');
-                        } // else checkoutFlag 
+                        } // else checkoutFlag
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
@@ -3323,12 +3332,14 @@ angular.module('core', [
                     }
                     for (var i in group) {
                         if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
-                            var temp = {};
-                            temp.pId = group.$id; // group Name == pId
-                            temp.subgroupId = i;
-                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
-                            temp.data = group[i];
-                            tmp.subGroups.push(temp);
+                            checkinService.getSubGroupTitleCb(group.$id, i, function(title){
+                                var temp = {};
+                                temp.pId = group.$id; // group Name == pId
+                                temp.subgroupId = i;
+                                temp.subgroupTitle = title
+                                temp.data = group[i];
+                                tmp.subGroups.push(temp);
+                            })
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);
@@ -4385,7 +4396,7 @@ angular.module('core', [
                     'cancelSubGroupCreation': function(userId) {
                         console.log("SubGroup Creation Cancelled");
                         soundService.playFail();
-                        $location.path('/user/' + userService.getCurrentUser().userID)
+                        $location.path('/user/' + userService.getCurrentUser().userID);
                     },
                     'uploadPicture': function(file, groupID) {
                         var defer = $q.defer();
@@ -4440,7 +4451,7 @@ angular.module('core', [
 
                             })
                             .catch(function(err) {
-                                defer.reject(err)
+                                defer.reject(err);
                             });
 
                         return defer.promise;
@@ -4502,7 +4513,7 @@ angular.module('core', [
                                 if (error) {
                                     messageService.showFailure("Team not created");
                                 } else {
-                                    messageService.showSuccess('Team Created Successfully')
+                                    messageService.showSuccess('Team Created Successfully');
                                 }
                             });
                         }
@@ -4654,10 +4665,10 @@ angular.module('core', [
                         // });
 
                         firebaseService.getRefMain().child("user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID + "/").remove(function(err) {
-                            console.log(err);
+                            // console.log(err);
 
                             firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
-                                console.log(err);
+                                // console.log(err);
                                 if (!submembers) {
                                     firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").once('value', function(snapshot){
                                         submembers = snapshot.val();
@@ -4668,7 +4679,7 @@ angular.module('core', [
                                     });
                                 } else {
                                     firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
-                                        console.log(err);
+                                        // console.log(err);
                                     });
                                 }
 
@@ -4761,7 +4772,7 @@ angular.module('core', [
             } else if (group.val()['membership-type'] == 2) {
                 that.groupAdmin = true;
             }
-        })
+        });
 
 
         this.ActiveSideNavBar = function(sideNav) {
@@ -4820,15 +4831,16 @@ angular.module('core', [
         };
         this.subgroupPage = function() {
             // $location.path('user/group/' + this.groupid + '/subgroup');
-            $state.go('user.subgroup', { groupID: groupID })
+            $state.go('user.subgroup', { groupID: groupID });
         };
         this.openPolicyPage = function() {
             // $location.path('/user/group/' + groupId + '/geoFencing');
-            $state.go('user.policy', { groupID: groupID })
+            $state.go('user.policy', { groupID: groupID });
         };
 
 
         this.veiwSubgroup = function(subgroupData, index) {
+            var once = true;
 
             // this.showEditSubGroup = true;
             // that.showTeamAttendace = false;
@@ -4860,8 +4872,12 @@ angular.module('core', [
                         SubgroupObj.$loaded().then(function(data) {
                             that.subgroupData = data;
                             //that.group.groupID = data.$id;
-                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
-                            that.teamsettingpanel = true;
+                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : '';
+
+                            if(once){
+                                that.teamsettingpanel = true;
+                                once = false;
+                            }
 
                             firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot) {
                                 that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
@@ -4899,7 +4915,7 @@ angular.module('core', [
             }, function(err) {
                 //console.log(err)
 
-            })
+            });
 
         };
 
@@ -4927,6 +4943,8 @@ angular.module('core', [
                 //if is member
                 if(that.submembers.length > 0) {
                     for (var i = 0; i < that.submembers.length; i++) {
+                        that.members[index].isMember = false;
+                        that.members[index].isAdmin = false;
                         if (val.userID === that.submembers[i].userID) {
                             that.members[index].isMember = true;
                             that.members[index].isAdmin = (that.members[index].membershipType == 1 || that.members[index].membershipType == 2) ? true : false;
@@ -4944,6 +4962,18 @@ angular.module('core', [
                     }
                 }
             }); //that.members.forEach
+
+            //if in becomeMember then show white class for arrow on sidenav
+            if(that.becomeMember.length > 0) {
+                that.becomeMember.forEach(function(val, i){
+                    for(var x = 0; x <= that.members.length; x++) {
+                        if(that.members[x].userID == val.$id){
+                            that.members[x].isMember = true;
+                            break;
+                        }
+                    }
+                });
+            }
         };
 
         this.afterSelectMember = function(id){
@@ -4996,7 +5026,16 @@ angular.module('core', [
             var _flag = true;
             //if(that.memberss.length > 0) {
             that.becomeMember.forEach(function(val, i){
+                console.log(val);
                 if(val == userObj){
+
+                    for(var x = 0; x <= that.members.length; x++) {
+                        if(that.members[x].userID == val.$id){
+                            that.members[x].isMember = true;
+                            break;
+                        }
+                    }
+
                     _flag = false;
                 }
             });//checking if userobj is exists or not
@@ -5011,6 +5050,15 @@ angular.module('core', [
             }
 
             if(_flag) {
+                for(var x = 0; x <= that.members.length; x++) {
+                    if(that.members[x].userID == userObj.$id){
+                          that.members[x].isMember = true;
+                          //console.log(that.members[x]['user']['profile']['profile-image']);
+                          userObj['profile-image'] = that.members[x]['user']['profile']['profile-image'] || '';
+                          break;
+                    }
+                }
+
                 that.becomeMember.push(userObj);
                 that.memberss.selectedUsersArray.push(userObj.$id);
                 that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
@@ -5112,7 +5160,8 @@ angular.module('core', [
                         notificationString;
 
                     if (unlistedMembersArray &&  that.membersArray && unlistedMembersArray.length === that.membersArray.length) {
-                        notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        // notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                        notificationString = 'AAdding Members Successful.';
                         messageService.showFailure(notificationString);
                     } else if (unlistedMembersArray.length) {
                         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
@@ -5152,7 +5201,7 @@ angular.module('core', [
                 that.becomeAdmin.push(obj);
 
                 //after add in  becomeMember chnage arrow css
-                this.afterSelectAdmin(obj.member.user.profile.email)
+                this.afterSelectAdmin(obj.member.user.profile.email);
             }
 
 
@@ -5224,6 +5273,16 @@ angular.module('core', [
         //         if(val.userSyncObj.email == admin.userSyncObj.email && val.membershipType != 1){
                     createSubGroupService.DeleteUserMemberShip(admin.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
 
+                    console.log('watch', true)
+                    for(var i = 0; i <= that.members.length; i++){
+                        if(that.members[i].userID === admin.userID){
+                                        console.log('watch',that.members[i]);
+                            that.members[i].isAdmin = false;
+                            that.members[i].isMember = false;
+                            console.log('watch',that.members[i]);
+                        }
+                    }
+
                     //publish an activity stream record -- START --
                     var type = 'subgroup';
                     var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
@@ -5263,7 +5322,7 @@ angular.module('core', [
             createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
                 that.selectedAdminArray = data;
                 cb();
-            })
+            });
         }
 
 
@@ -5306,7 +5365,7 @@ angular.module('core', [
                 var x = utilService.base64ToBlob($rootScope.newImg);
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                that.saveFile(x, mimeType, that.subgroupData.$id).then(function(data) {
+                that.saveFile(x, mimeType, groupID, that.subgroupData.$id).then(function(data) {
                         // console.log('subgroup img  uploaded ' + data)
                         // console.log(3)
                         //console.log(SubgroupObj)
@@ -5350,8 +5409,6 @@ angular.module('core', [
                         that.processingSave = false;
                         that.teamsettingpanel = false;
                         that.selectedindex = undefined;
-
-
                     });
                 } else {
                     //create team
@@ -5365,14 +5422,14 @@ angular.module('core', [
             }
         }
 
-        function saveFile(file, type, groupID) {
+        function saveFile(file, type, groupID, subgroupid) {
             var defer = $q.defer();
             //if(!that.group.groupID)return alert('Pleas provide group url firstt');
             //var groupID= that.group.groupID;
             var xhr = new XMLHttpRequest();
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.subgroupData.$id + "&file_type=" + type);
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + groupID + '&subgroupID=' + subgroupid  + "&file_type=" + type);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -5380,7 +5437,7 @@ angular.module('core', [
                         var response = JSON.parse(xhr.responseText);
                         defer.resolve(that.upload_file(file, response.signed_request, response.url));
                     } else {
-                        defer.reject(essageService.showFailure("Could not get signed URL."))
+                        defer.reject(essageService.showFailure("Could not get signed URL."));
                     }
                 }
             };
@@ -5413,7 +5470,7 @@ angular.module('core', [
 
         this.canActivate = function() {
             return authService.resolveUserPage();
-        }
+        };
 
 
         // side navigation
@@ -5455,11 +5512,11 @@ angular.module('core', [
                 // alert(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
-                    messageService.showSuccess('Picture uploaded....')
+                    messageService.showSuccess('Picture uploaded....');
                         // console.log(url);
                         //document.getElementById("preview").src = url;
                         // that.subgroupData.imgLogoUrl = url;
-                    defer.resolve(url + '?random=' + new Date())
+                    defer.resolve(url + '?random=' + new Date());
                         //document.getElementById("avatar_url").value = url;
                 }
             };
@@ -9922,9 +9979,10 @@ angular.module('core')
                     timestamp   : fireTimeStamp,
                     title       : channelTitle
                 }
-                var request = refs.refgroupchannel.child(groupID).push(newChannel, function(err){
-                    cb(err);
-                })
+                var request = refs.refgroupchannel.child(groupID).push();
+                request.update(newChannel, function(err){
+                    cb(err, request.key(), channelTitle);
+                });
             },
             createSubGroupChannel: function(groupID, subgroupID, channelTitle, userID, cb){
                 var newChannel = {
@@ -9932,9 +9990,10 @@ angular.module('core')
                     timestamp   : fireTimeStamp,
                     title       : channelTitle
                 }
-                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push(newChannel, function(err){
-                    cb(err);
-                })
+                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push();
+                request.update(newChannel, function(err){
+                    cb(err, request.key(), channelTitle);
+                });
             },
             getGroupChannel: function(groupID){
                 return $firebaseArray(refs.refgroupchannel.child(groupID))
@@ -10338,6 +10397,17 @@ angular.module('core')
                                 // }
                             });
                         });
+                        firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).child(subgroup.key()).on('child_changed', function(chsubgroup) {
+                            console.log('watch', chsubgroup)
+                            // firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).off();
+                            // userData.forEach(function(val, indx) {
+                            //     // if (val.id === userID) {
+                            //         if (val.groupsubgroup === (group.key() + ' / ' + rmsubgroup.key())) {
+                            //             userData.splice(indx);
+                            //         }
+                            //     // }
+                            // });
+                        });
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
                             userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
@@ -10372,7 +10442,7 @@ angular.module('core')
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
                         });
                         firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
-                            console.log('user2', snapshot.key(), snapshot.val())
+                            // console.log('user2', snapshot.key(), snapshot.val())
                             $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
                                 // console.log('user', userdata)
                                 // checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key()).on('value', function(ss){
@@ -15426,6 +15496,7 @@ var s = {
 
                 return locationID;
             },
+
             getGroupTitle: function(GroupID){
                 var title;
                 refs.main.child('groups').child(GroupID).once('value', function(snapshot){
@@ -15439,12 +15510,21 @@ var s = {
             getSubGroupTitle: function(GroupID, subGroupID){
                 var title;
                 refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
-                    console.log('TITLE', snapshot.val().title)
+                    console.log('SUB TITLE2', GroupID, subGroupID, snapshot.val().title, snapshot.val())
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
                 });
                 return title;
+            }, //getSubGroupTitle
+            getSubGroupTitleCb: function(GroupID, subGroupID, cb){
+                refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
+                    console.log('SUB TITLE2', GroupID, subGroupID, snapshot.val().title, snapshot.val())
+                    if (snapshot.val()) {
+                        var title = snapshot.val().title ? snapshot.val().title : '';
+                        cb(title);
+                    }
+                });
             }, //getSubGroupTitle
             ChekinUpdateSatatus: ChekinUpdateSatatus
 
