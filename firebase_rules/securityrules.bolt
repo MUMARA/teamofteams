@@ -416,7 +416,7 @@ path /group-activity-streams/{groupid} {
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
 
-  write()    {   (true || isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) || isAuthenticated() && isGroupJoined(this['verb']) }
+  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) || isAuthenticated() && isGroupJoined(this['verb']) }
 
   // validate() { prior(root['groups'][$groupid].val() != null)     }
 
@@ -1301,7 +1301,9 @@ type BooleanOrNull {
    Saturday : BooleanOrNull[]
   }
 /*Subgroup Policies*/
-path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
+path /subgroup-policies/{groupid}{
+  read(){ isAuthenticated() && userGroupMembershipAnyType($groupid) }
+  /{subgroupid} is SubgroupAppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)  ||
@@ -1313,7 +1315,7 @@ path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
              /*isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)     ||
              isSubGroupGroupIDOwner(this) ||*/
-            //isSubGroupGroupIDAdmin(this) }
+            //isSubGroupGroupIDAdmin(this)
 
   update() {  isAuthenticated() &&
               isCurrentUserGroupOwner(groupid)    ||
@@ -1321,7 +1323,7 @@ path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
               isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
             }
  }
-
+}
 type AppliedPolicyType {
    hasPolicy   :  Boolean,
    policyID    :    String,
@@ -1477,6 +1479,10 @@ type ChatChannelType {
      isAuthenticated() && userGroupMembershipAnyType(groupid)
    }
    /{documentid}  {
+     /history {
+       create() { collaboratorGroupWriter(groupid, documentid) }
+       delete() { collaboratorGroupWriter(groupid, documentid) }
+     }
    read() {
      isAuthenticated() && userGroupMembershipAnyType(groupid)
    }
@@ -1488,7 +1494,14 @@ type ChatChannelType {
    }
  }
 }
-
+function collaboratorGroupWriter(groupid, documentid){
+  return prior(root["firepad-groups-access"][groupid][documentid][auth.uid] != null ||
+               root["firepad-groups-rules"][groupid][documentid]["allUsers"] == true)
+}
+function collaboratorSubGroupWriter(groupid, subgroupid ,documentid){
+  return prior(root["firepad-subgroups-access"][groupid][subgroupid][documentid][auth.uid] != null ||
+               root["firepad-subgroups-rules"][groupid][subgroupid][documentid]["allUsers"] == true)
+}
 /*firebase Subgroup*/
 
  path /firepad-subgroups/{groupid}/{subgroupid}{
@@ -1496,6 +1509,11 @@ type ChatChannelType {
      isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
    }
    /{documentid}  {
+     /history {
+       create(){ collaboratorSubGroupWriter(groupid, subgroupid ,documentid) }
+
+       delete(){ collaboratorSubGroupWriter(groupid, subgroupid ,documentid) }
+     }
    read() {
      isAuthenticated() && subGroupMembersMemberShipAnyType(groupid,subgroupid)
    }
@@ -1639,9 +1657,24 @@ path /activities-seen-by-user/{userid} is ActivityType {
 type ActivityType {
   timestamp: CurrentTimeStamp
 }
-/*type AllUserType {
-  allUsers:  Boolean;
-}*/
+
+
+//----------------------------------
+// Define isCurrentUser() function to test if the given user id
+// matches the currently signed-in user.
+//----------------------------------
+
+function isAuthenticatedUser(userid) {
+  return auth != null && auth.uid == userid;
+}
+
+function isAuthenticated() {
+    return auth != null;
+}
+
+type CurrentTimeStamp extends Number {
+  validate() {    this <= now; }
+}
 
 // Quiz Rules
 //-----------------------------------------------------------------------------------
@@ -1678,6 +1711,33 @@ function isCurrentUserQuestionBankAdmin(questionBankUniqueID) {
 
 function isCurrentUserQuestionBankMember(questionBankUniqueID) {
     prior(root["question-bank-memberships"][questionBankUniqueID][auth.uid] != null)
+}
+
+//---------------------------------------------------
+//         Function For SubGroup
+//----------------------------------------------------
+
+function  isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist($groupid,$subgroupid) {
+  return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() != null)
+}
+
+function isSubGroupMembersSubGroupIdAuthIDExist($groupid ,$subgroupid) {
+ return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid].val() != null )
+}
+
+
+
+function subGroupMembersMemberShipAnyType($groupid,$subgroupid) {
+  return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() > 0)
+}
+
+
+function isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) {
+ return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() == 1)
+}
+
+function isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) {
+ return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() == 2)
 }
 
 
