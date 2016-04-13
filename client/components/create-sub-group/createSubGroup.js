@@ -121,15 +121,16 @@
         };
         this.subgroupPage = function() {
             // $location.path('user/group/' + this.groupid + '/subgroup');
-            $state.go('user.subgroup', { groupID: groupID })
+            $state.go('user.subgroup', { groupID: groupID });
         };
         this.openPolicyPage = function() {
             // $location.path('/user/group/' + groupId + '/geoFencing');
-            $state.go('user.policy', { groupID: groupID })
+            $state.go('user.policy', { groupID: groupID });
         };
 
 
         this.veiwSubgroup = function(subgroupData, index) {
+            var once = true;
 
             // this.showEditSubGroup = true;
             // that.showTeamAttendace = false;
@@ -161,8 +162,12 @@
                         SubgroupObj.$loaded().then(function(data) {
                             that.subgroupData = data;
                             //that.group.groupID = data.$id;
-                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
-                            that.teamsettingpanel = true;
+                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : '';
+                            
+                            if(once){
+                                that.teamsettingpanel = true;
+                                once = false;    
+                            }
 
                             firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot) {
                                 that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
@@ -247,6 +252,18 @@
                     }
                 }
             }); //that.members.forEach
+            
+            //if in becomeMember then show white class for arrow on sidenav     
+            if(that.becomeMember.length > 0) {       
+                that.becomeMember.forEach(function(val, i){
+                    for(var x = 0; x <= that.members.length; x++) {
+                        if(that.members[x].userID == val.$id){
+                            that.members[x].isMember = true;
+                            break;
+                        }
+                    }
+                });
+            }
         };
 
         this.afterSelectMember = function(id){
@@ -295,16 +312,25 @@
             }); //that.members.forEach
         };
 
-        this.selectedMember = function(userObj, index) {
+        this.selectedMember = function(userObj, index) { 
             var _flag = true;
             //if(that.memberss.length > 0) {
             that.becomeMember.forEach(function(val, i){
+                console.log(val);
                 if(val == userObj){
+                    
+                    for(var x = 0; x <= that.members.length; x++) {
+                        if(that.members[x].userID == val.$id){
+                            that.members[x].isMember = true;
+                            break;
+                        }
+                    }
+                    
                     _flag = false;
                 }
             });//checking if userobj is exists or not
             //}
-
+            
             if(that.submembers.length > 0){
                 that.submembers.forEach(function(val, inx) {
                     if (val.userID == userObj.$id) {
@@ -314,10 +340,11 @@
             }
 
             if(_flag) {
-                
                 for(var x = 0; x <= that.members.length; x++) {
                     if(that.members[x].userID == userObj.$id){
                           that.members[x].isMember = true;
+                          //console.log(that.members[x]['user']['profile']['profile-image']);
+                          userObj['profile-image'] = that.members[x]['user']['profile']['profile-image'] || '';
                           break;
                     }
                 }
@@ -464,7 +491,7 @@
                 that.becomeAdmin.push(obj);
 
                 //after add in  becomeMember chnage arrow css
-                this.afterSelectAdmin(obj.member.user.profile.email)
+                this.afterSelectAdmin(obj.member.user.profile.email);
             }
 
 
@@ -489,7 +516,7 @@
                     //checking if team has policy then assigned policy to member
                     if (that.becomeMember.length == index + 1) {
                         policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg) {
-
+                            
                         });
                     }
                 }); //that.becomeMember.forEach
@@ -535,6 +562,16 @@
         //    that.submembers.forEach(function(val,indx){
         //         if(val.userSyncObj.email == admin.userSyncObj.email && val.membershipType != 1){
                     createSubGroupService.DeleteUserMemberShip(admin.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
+                    
+                    console.log('watch', true)
+                    for(var i = 0; i <= that.members.length; i++){
+                        if(that.members[i].userID === admin.userID){
+                                        console.log('watch',that.members[i]);
+                            that.members[i].isAdmin = false;
+                            that.members[i].isMember = false;
+                            console.log('watch',that.members[i]);
+                        }
+                    } 
 
                     //publish an activity stream record -- START --
                     var type = 'subgroup';
@@ -575,7 +612,7 @@
             createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
                 that.selectedAdminArray = data;
                 cb();
-            })
+            });
         }
 
 
@@ -662,8 +699,6 @@
                         that.processingSave = false;
                         that.teamsettingpanel = false;
                         that.selectedindex = undefined;
-
-
                     });
                 } else {
                     //create team
@@ -684,18 +719,16 @@
             var xhr = new XMLHttpRequest();
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
-            console.log(groupID, subgroupid)
+            // console.log(groupID, subgroupid);
             xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + subgroupid + '&subgroupID=' + groupID + "&file_type=" + type);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
 
                         var response = JSON.parse(xhr.responseText);
-                        console.log('response')
-                        console.log(response)
                         defer.resolve(that.upload_file(file, response.signed_request, response.url));
                     } else {
-                        defer.reject(essageService.showFailure("Could not get signed URL."))
+                        defer.reject(essageService.showFailure("Could not get signed URL."));
                     }
                 }
             };
@@ -728,7 +761,7 @@
 
         this.canActivate = function() {
             return authService.resolveUserPage();
-        }
+        };
 
 
         // side navigation
@@ -770,11 +803,11 @@
                 // alert(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
-                    messageService.showSuccess('Picture uploaded....')
+                    messageService.showSuccess('Picture uploaded....');
                         // console.log(url);
                         //document.getElementById("preview").src = url;
                         // that.subgroupData.imgLogoUrl = url;
-                    defer.resolve(url + '?random=' + new Date())
+                    defer.resolve(url + '?random=' + new Date());
                         //document.getElementById("avatar_url").value = url;
                 }
             };

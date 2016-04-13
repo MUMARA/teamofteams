@@ -78,7 +78,7 @@ angular.module('core')
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
                         });
                         firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
-                            console.log('user2', snapshot.key(), snapshot.val())
+                            // console.log('user2', snapshot.key(), snapshot.val())
                             $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
                                 // console.log('user', userdata)
                                 // checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key()).on('value', function(ss){
