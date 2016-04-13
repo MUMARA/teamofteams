@@ -99,7 +99,14 @@
                 });
             }
         };
-        function onSuccessErrorChannelCreation(err){
+        function onSuccessErrorChannelCreation(err, channelID, channelTitle){
+            if (that.messagesArray.length == 0) {
+                var channel = {
+                    $id: channelID,
+                    title: channelTitle
+                };
+                that.gotoChannel(channel);
+            }
             if (err) {
                 messageService.showFailure(err);
             } else {
