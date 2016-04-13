@@ -55,7 +55,7 @@
                     'cancelSubGroupCreation': function(userId) {
                         console.log("SubGroup Creation Cancelled");
                         soundService.playFail();
-                        $location.path('/user/' + userService.getCurrentUser().userID)
+                        $location.path('/user/' + userService.getCurrentUser().userID);
                     },
                     'uploadPicture': function(file, groupID) {
                         var defer = $q.defer();
@@ -110,7 +110,7 @@
 
                             })
                             .catch(function(err) {
-                                defer.reject(err)
+                                defer.reject(err);
                             });
 
                         return defer.promise;
@@ -172,7 +172,7 @@
                                 if (error) {
                                     messageService.showFailure("Team not created");
                                 } else {
-                                    messageService.showSuccess('Team Created Successfully')
+                                    messageService.showSuccess('Team Created Successfully');
                                 }
                             });
                         }
@@ -324,10 +324,10 @@
                         // });
 
                         firebaseService.getRefMain().child("user-subgroup-memberships/" + userID + "/" + groupID + "/" + subgroupID + "/").remove(function(err) {
-                            console.log(err);
+                            // console.log(err);
 
                             firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
-                                console.log(err);
+                                // console.log(err);
                                 if (!submembers) {
                                     firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").once('value', function(snapshot){
                                         submembers = snapshot.val();
@@ -338,7 +338,7 @@
                                     });
                                 } else {
                                     firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
-                                        console.log(err);
+                                        // console.log(err);
                                     });
                                 }
 

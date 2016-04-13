@@ -44,6 +44,17 @@ angular.module('core')
                                 // }
                             });
                         });
+                        firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).child(subgroup.key()).on('child_changed', function(chsubgroup) {
+                            console.log('watch', chsubgroup)
+                            // firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).off();
+                            // userData.forEach(function(val, indx) {
+                            //     // if (val.id === userID) {
+                            //         if (val.groupsubgroup === (group.key() + ' / ' + rmsubgroup.key())) {
+                            //             userData.splice(indx);
+                            //         }
+                            //     // }
+                            // });
+                        });
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
                             userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
@@ -78,7 +89,7 @@ angular.module('core')
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
                         });
                         firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
-                            console.log('user2', snapshot.key(), snapshot.val())
+                            // console.log('user2', snapshot.key(), snapshot.val())
                             $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
                                 // console.log('user', userdata)
                                 // checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key()).on('value', function(ss){
