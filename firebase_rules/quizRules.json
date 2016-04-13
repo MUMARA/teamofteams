@@ -8,7 +8,7 @@
             ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2)"
           },
           "timestamp": {
-            ".validate": "newData.isNumber() && newData.val() <= Date.now"
+            ".validate": "newData.isNumber() && newData.val() <= now"
           },
           "$other": {
             ".validate": "false"
@@ -27,7 +27,7 @@
             ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2)"
           },
           "timestamp": {
-            ".validate": "newData.isNumber() && newData.val() <= Date.now"
+            ".validate": "newData.isNumber() && newData.val() <= now"
           },
           "$other": {
             ".validate": "false"
@@ -119,7 +119,7 @@
                 },
                 ".validate": "newData.hasChildren(['timestamp', 'title', 'desc'])",
                 "timestamp": {
-                  ".validate": "newData.isNumber() && newData.val() <= Date.now"
+                  ".validate": "newData.isNumber() && newData.val() <= now"
                 },
                 "title": {
                   ".validate": "newData.isString()"
@@ -134,7 +134,7 @@
             },
             ".validate": "newData.hasChildren(['timestamp', 'title', 'desc'])",
             "timestamp": {
-              ".validate": "newData.isNumber() && newData.val() <= Date.now"
+              ".validate": "newData.isNumber() && newData.val() <= now"
             },
             "title": {
               ".validate": "newData.isString()"
@@ -149,7 +149,7 @@
         },
         ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'imgLogoUrl'])",
         "timestamp": {
-          ".validate": "newData.isNumber() && newData.val() <= Date.now"
+          ".validate": "newData.isNumber() && newData.val() <= now"
         },
         "title": {
           ".validate": "newData.isString()"
@@ -330,7 +330,7 @@
             ".validate": "newData.isNumber()"
           },
           "timestamp": {
-            ".validate": "newData.isNumber() && newData.val() <= Date.now"
+            ".validate": "newData.isNumber() && newData.val() <= now"
           },
           "$other": {
             ".validate": "false"

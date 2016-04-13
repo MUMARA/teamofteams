@@ -416,7 +416,7 @@ path /group-activity-streams/{groupid} {
   read()     {    isGroupMembersIdExist(groupid)       &&
                   groupMemberShipAnyType(groupid) }
 
-  write()    {   (true || isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) || isAuthenticated() && isGroupJoined(this['verb']) }
+  write()    {   (isAuthenticated() &&  isGroupMembersIdExist(groupid)  &&  groupMemberShipAnyType(groupid)) || isAuthenticated() && isGroupJoined(this['verb']) }
 
   // validate() { prior(root['groups'][$groupid].val() != null)     }
 
@@ -1301,7 +1301,9 @@ type BooleanOrNull {
    Saturday : BooleanOrNull[]
   }
 /*Subgroup Policies*/
-path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
+path /subgroup-policies/{groupid}{
+  read(){ isAuthenticated() && userGroupMembershipAnyType($groupid) }
+  /{subgroupid} is SubgroupAppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)  ||
@@ -1313,7 +1315,7 @@ path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
              /*isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)     ||
              isSubGroupGroupIDOwner(this) ||*/
-            //isSubGroupGroupIDAdmin(this) }
+            //isSubGroupGroupIDAdmin(this)
 
   update() {  isAuthenticated() &&
               isCurrentUserGroupOwner(groupid)    ||
@@ -1321,7 +1323,7 @@ path /subgroup-policies/{groupid}/{subgroupid} is SubgroupAppliedPolicyType {
               isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
             }
  }
-
+}
 type AppliedPolicyType {
    hasPolicy   :  Boolean,
    policyID    :    String,
