@@ -163,10 +163,10 @@
                             that.subgroupData = data;
                             //that.group.groupID = data.$id;
                             that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : '';
-                            
+
                             if(once){
                                 that.teamsettingpanel = true;
-                                once = false;    
+                                once = false;
                             }
 
                             firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot) {
@@ -252,9 +252,9 @@
                     }
                 }
             }); //that.members.forEach
-            
-            //if in becomeMember then show white class for arrow on sidenav     
-            if(that.becomeMember.length > 0) {       
+
+            //if in becomeMember then show white class for arrow on sidenav
+            if(that.becomeMember.length > 0) {
                 that.becomeMember.forEach(function(val, i){
                     for(var x = 0; x <= that.members.length; x++) {
                         if(that.members[x].userID == val.$id){
@@ -312,25 +312,25 @@
             }); //that.members.forEach
         };
 
-        this.selectedMember = function(userObj, index) { 
+        this.selectedMember = function(userObj, index) {
             var _flag = true;
             //if(that.memberss.length > 0) {
             that.becomeMember.forEach(function(val, i){
                 console.log(val);
                 if(val == userObj){
-                    
+
                     for(var x = 0; x <= that.members.length; x++) {
                         if(that.members[x].userID == val.$id){
                             that.members[x].isMember = true;
                             break;
                         }
                     }
-                    
+
                     _flag = false;
                 }
             });//checking if userobj is exists or not
             //}
-            
+
             if(that.submembers.length > 0){
                 that.submembers.forEach(function(val, inx) {
                     if (val.userID == userObj.$id) {
@@ -348,7 +348,7 @@
                           break;
                     }
                 }
-                
+
                 that.becomeMember.push(userObj);
                 that.memberss.selectedUsersArray.push(userObj.$id);
                 that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
@@ -516,7 +516,7 @@
                     //checking if team has policy then assigned policy to member
                     if (that.becomeMember.length == index + 1) {
                         policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg) {
-                            
+
                         });
                     }
                 }); //that.becomeMember.forEach
@@ -562,7 +562,7 @@
         //    that.submembers.forEach(function(val,indx){
         //         if(val.userSyncObj.email == admin.userSyncObj.email && val.membershipType != 1){
                     createSubGroupService.DeleteUserMemberShip(admin.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
-                    
+
                     console.log('watch', true)
                     for(var i = 0; i <= that.members.length; i++){
                         if(that.members[i].userID === admin.userID){
@@ -571,7 +571,7 @@
                             that.members[i].isMember = false;
                             console.log('watch',that.members[i]);
                         }
-                    } 
+                    }
 
                     //publish an activity stream record -- START --
                     var type = 'subgroup';
@@ -720,7 +720,7 @@
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
             // console.log(groupID, subgroupid);
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + subgroupid + '&subgroupID=' + groupID + "&file_type=" + type);
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + groupID + '&subgroupID=' + subgroupid  + "&file_type=" + type);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
