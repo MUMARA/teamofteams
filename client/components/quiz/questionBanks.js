@@ -1261,6 +1261,11 @@
                 _self.question.options.splice(optionIndex, 1);
             }
         };
+        this.deleteQuestionSetOption = function (optionIndex) {
+            if (optionIndex > -1) {
+                _self.questionSet.options.splice(optionIndex, 1);
+            }
+        };
 
         //Sets Answer if Type CheckBox is selected.
         _self.setCheckBoxValue = function (questionId) {
