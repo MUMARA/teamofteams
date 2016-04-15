@@ -157,19 +157,23 @@
 }
 
 .quiz-search-box-1 {
-    background-color: #CAA100;
-}
-
-.quiz-search-box-2 {
+    /*background-color: #CAA100;*/
     background-color: #C851DB;
 }
 
+.quiz-search-box-2 {
+    background-color: lightseagreen;
+         /*background-color: #00A7F8;*/
+
+}
+
 .quiz-search-box-3 {
-    background-color: #00A7F8;
+    background-color: lightcoral;
 }
 
 .quiz-search-box-5 {
-    background-color: #FF9800;
+    /*background-color: #FF9800;*/
+    background-color: #00A7F8;
 }
 
 .quiz-menu-col {
