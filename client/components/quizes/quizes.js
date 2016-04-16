@@ -7,12 +7,15 @@
     angular
         .module('app.quiz')
 
+
+        /*********************Local Service For Testing UI**************/
+
         .service("myQuizData", function(){
             var QuizDatah = [];
             this._saveQuizData = function(qData){
                 //console.log(studentObj);
                 QuizDatah.push(qData);
-                console.log(qData);
+               // console.log(qData);
             };
 
             this._getQuizData = function(){
@@ -20,6 +23,8 @@
 
             }
         })
+
+
 
         .controller('QuizesController', QuizesController);
 
@@ -128,7 +133,7 @@
         function createQuize(qData, img){
             qData.img = img;
 
-            console.log(qData);
+          //  console.log(qData);
 
 
             myQuizData._saveQuizData(qData);
@@ -136,7 +141,7 @@
             addBook();
 
         }
-
+        $scope.QuizDataFromService = myQuizData._getQuizData();
         function getQuizDataAll(){
             $scope.QuizDataFromService = myQuizData._getQuizData();
             console.log($scope.QuizDataFromService)
