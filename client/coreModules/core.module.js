@@ -22,7 +22,8 @@ angular.module('core', [
     'ui-leaflet',
     'angular.filter',
     'ngFileSaver',
-    'truncate'
+    'truncate',
+    'ngSanitize'
   ]).filter('groupUsers', function() {
       return function(users, groupID) {
         var filteredUsers = [];

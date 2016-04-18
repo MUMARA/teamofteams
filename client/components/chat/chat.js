@@ -3,9 +3,9 @@
  */
 (function() {
     'use strict';
-    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', ChatController]);
+    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', '$sanitize', ChatController]);
 
-    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state) {
+    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state, $sanitize) {
         var that = this;
         var user = userService.getCurrentUser();
         this.setFocus = function() {
@@ -119,21 +119,6 @@
             groupService.setActivePanel('chat');
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
-            if (that.subgroupID) {
-                chatService.getSubGroupChannel(that.groupID, that.subgroupID).$loaded().then(function(snapshot){
-                    that.channels = snapshot;
-                    if(snapshot.length > 0) {
-                        that.gotoChannel(snapshot[0])
-                    }
-                });
-            } else {
-                chatService.getGroupChannel(that.groupID).$loaded().then(function(snapshot){
-                    that.channels = snapshot;
-                    if(snapshot.length > 0) {
-                        that.gotoChannel(snapshot[0])
-                    }
-                });
-            }
             that.activeTitle = 'Select Channel to Start Chat';
             that.activeChannelID = null;
             that.activeTeamChannelID = null;
@@ -148,6 +133,21 @@
                 that.viewChannelMessages(that.activeChannelID);
             }
             that.ScrollToMessage();
+            if (that.subgroupID) {
+                chatService.getSubGroupChannel(that.groupID, that.subgroupID).$loaded().then(function(snapshot){
+                    that.channels = snapshot;
+                    if(!that.activeChannelID && that.channels.length > 0) {
+                        that.gotoChannel(that.channels[0]); 
+                    }
+                });
+            } else {
+                chatService.getGroupChannel(that.groupID).$loaded().then(function(snapshot){
+                    that.channels = snapshot;
+                    if(!that.activeChannelID && that.channels.length > 0) {
+                        that.gotoChannel(that.channels[0]); 
+                    }
+                });
+            }
         }
         init();
 

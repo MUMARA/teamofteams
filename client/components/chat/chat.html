@@ -27,7 +27,7 @@
                         </div>
                         <img ng-src="{{chat.getUserProfile(message.from)['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound chatuserimg" />
                         <div class="backColorSeaGreen chatmsg padding10px">
-                            <span ng-bind-html="message.text | multilineFilter"></span>
+                            <pre ng-bind-html="message.text | linky" style="font-family: Roboto, 'Helvetica Neue', sans-serif;"></pre>
                         </div>
                     </div>
                     <!-- Msg From  -->
@@ -44,7 +44,7 @@
                         </div>
                         <img ng-src="{{chat.getUserProfile(message.from)['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon40px imageRound chatuserimgRight" />
                         <div class="backColorSeaGreen chatmsgRight padding10px">
-                            <span ng-bind-html="message.text | multilineFilter"></span>
+                            <pre ng-bind-html="message.text | linky" style="font-family: Roboto, 'Helvetica Neue', sans-serif;"></pre>
                         </div>
                     </div>
                 </div>
