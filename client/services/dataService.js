@@ -45,7 +45,7 @@ angular.module('core')
                             });
                         });
                         firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).child(subgroup.key()).on('child_changed', function(chsubgroup) {
-                            console.log('watch', chsubgroup)
+                            // console.log('watch', chsubgroup)
                             // firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).off();
                             // userData.forEach(function(val, indx) {
                             //     // if (val.id === userID) {
