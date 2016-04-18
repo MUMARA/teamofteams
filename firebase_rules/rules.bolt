@@ -1479,26 +1479,25 @@ type ChatChannelType {
      isAuthenticated() && userGroupMembershipAnyType(groupid)
    }
    /{documentid}  {
-     /history {
+     /history/{historyid} {
        create() { collaboratorGroupWriter(groupid, documentid) }
-       delete() { collaboratorGroupWriter(groupid, documentid) }
      }
    read() {
      isAuthenticated() && userGroupMembershipAnyType(groupid)
    }
-   create() {
-         isAuthenticated() && userGroupMembershipAnyType(groupid)
+   /users {
+     create() { isAuthenticated() && userGroupMembershipAnyType(groupid) }
+     update() { isAuthenticated() && userGroupMembershipAnyType(groupid) }
    }
-   update() {
-         isAuthenticated() && userGroupMembershipAnyType(groupid)
-   }
+
+
  }
 }
 function collaboratorGroupWriter(groupid, documentid){
-  return prior(root["firepad-groups-access"][groupid][documentid][auth.uid] != null ||
-               root["firepad-groups-rules"][groupid][documentid]["allUsers"] == true)
+  return prior(root["firepad-groups-rules"][groupid][documentid]["allUsers"].val() == false ? root["firepad-groups-access"][groupid][documentid][auth.uid].val() != null : true)
 }
 function collaboratorSubGroupWriter(groupid, subgroupid ,documentid){
+
   return prior(root["firepad-subgroups-access"][groupid][subgroupid][documentid][auth.uid] != null ||
                root["firepad-subgroups-rules"][groupid][subgroupid][documentid]["allUsers"] == true)
 }

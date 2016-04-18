@@ -37,6 +37,12 @@ angular.module('core')
             getCurrentUser: function() {
                 return user;
             },
+            getUserProfile : function(userID,callback) {
+                var ref = new Firebase(appConfig.myFirebase);
+                ref.child('users').child(userID).once('value',function(snapshot){
+                  callback(snapshot.val());
+                })
+            },
             getCurrentUserID: function() {
                 return user.userID;
             },
