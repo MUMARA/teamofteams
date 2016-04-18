@@ -57,7 +57,7 @@
                     <div style="border-right: 1px solid lightgrey;">
                         <img src="img/arrow.svg" class="icon20px padding10px">
                     </div>
-                    <textarea style="width:100%;outline:none;resize: none;" row="5" type="text" name="msg" ng-model="chat.text.msg" aria-label="Team of Teams Text Msg Box" class="serachbox2" required ng-disabled="!chat.activeChannelID"></textarea>
+                    <textarea style="width:100%;outline:none;resize: none;" row="3" type="text" name="msg" ng-keyup="chat.sendMsgUpKey($event)" ng-model="chat.text.msg" aria-label="Team of Teams Text Msg Box" class="serachbox2" required ng-disabled="!chat.activeChannelID"></textarea>
                 </div>
                 <md-button type="submit" ng-disabled="chatForm.msg.$invalid || !chat.activeChannelID" class="backColorSeaGreen foreColorWhite">SEND</md-button>
             </form>

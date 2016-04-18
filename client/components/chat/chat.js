@@ -43,6 +43,14 @@
             var element = document.getElementById('messagebox');
             element.scrollTop = element.scrollHeight - element.clientHeight;
         };
+        this.sendMsgUpKey = function (event) {
+            if (event.keyCode == 13 && !event.shiftKey) {
+                if (that.activeChannelID && that.text) {
+                    that.SendMsg();
+                    event.preventDefault();
+                }
+            }
+        };
         this.SendMsg = function() {
             if (that.subgroupID) {
                 chatService.TeamSendMessages(that.groupID, that.subgroupID, that.activeChannelID, user, that.text).then(function() {
