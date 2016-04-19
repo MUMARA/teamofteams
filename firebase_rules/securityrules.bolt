@@ -1729,6 +1729,7 @@ function isQuestionBankOwnerCreating(pathUserID, value) {
       create() { isQuestionBankOwnerCreating(UserID, this) }
       update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }*/
 path /user-question-banks/{userid}{
+    read() {isAuthenticatedUser(userid)}
     /{questionBankUniqueID} is QuestionBankMembership {
           read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
           create() { isQuestionBankOwnerCreating(userid, this) }

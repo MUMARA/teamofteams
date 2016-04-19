@@ -1131,7 +1131,8 @@
           },
           ".write": "data.val() == null && (newData.child('memberships-type').val() == 1 && (auth != null && auth.uid == $userid)) || data.val() != null && newData.val() != null && (newData.child('memberships-type').val() == 1 && (auth != null && auth.uid == $userid) || auth != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1) && newData.child('memberships-type').val() == 2)",
           ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
-        }
+        },
+        ".read": "auth != null && auth.uid == $userid"
       }
     },
     "question-bank-memberships": {
