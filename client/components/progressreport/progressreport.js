@@ -86,7 +86,7 @@
                             checkin: snapshot.val().timestamp,
                             checkindate: newDate,
                             location: snapshot.val()['identified-location-id'],
-                            checkout: 0
+                            checkout: ''
                         });
                         that.count++;
                     } else if (snapshot.val().message == 'Checked-out') {
