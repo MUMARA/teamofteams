@@ -27,7 +27,7 @@ function isAuthenticated() {
 
 path /users {
   /{userid} is UserType {
-   update() { isAuthenticatedUser($userid)}
+   update() { isAuthenticatedUser(userid)}
    read()   { isAuthenticated() }
   }
 }
@@ -72,8 +72,8 @@ type StatusType extends Number {
 
 path /users-presence/{userid} is UserPresence {
    read()     {     isAuthenticated()      }
-   create()   {  isAuthenticatedUser($userid)  }
-   update()   {  isAuthenticatedUser($userid)  }
+   create()   {  isAuthenticatedUser(userid)  }
+   update()   {  isAuthenticatedUser(userid)  }
 
    //---------------------------------------
    //   path for connections/ConnectionID
@@ -88,7 +88,7 @@ type UserPresence {
 }
 
 type ConnectionIDStatus{
-      delete()   {  isAuthenticatedUser($userid) }
+      delete()   {  isAuthenticatedUser(userid) }
       "type"     :  Number,                               //  1 = mobile, 2 = tablet, 3 = web, 4 = iWatch , 5 = hololens
       "started"  : CurrentTimeStamp
 }
@@ -110,8 +110,8 @@ type DescLenght extends String {
 //===================================
 
 path /user-group-memberships/{userid} {
-   read()     {      isAuthenticatedUser($userid)    }
-   validate() {    doesUserExist($userid) }
+   read()     {      isAuthenticatedUser(userid)    }
+   validate() {    doesUserExist(userid) }
 }
 
 function doesUserExist(userid) {
@@ -158,12 +158,12 @@ path /user-group-memberships/{userid}/{groupid} is UserGroupSubGroupMemberShipTy
 
   }
 
-function userGroupMembershipAnyType($groupid) {
-    return prior(root['user-group-memberships'][auth.uid][$groupid]['membership-type'].val() > 0)
+function userGroupMembershipAnyType(groupid) {
+    return prior(root['user-group-memberships'][auth.uid][groupid]['membership-type'].val() > 0)
  }
 
- function isGroupIdExist($groupid) {
-    return prior(root['user-group-memberships'][auth.uid][$groupid].val() != null)
+ function isGroupIdExist(groupid) {
+    return prior(root['user-group-memberships'][auth.uid][groupid].val() != null)
  }
 
 
@@ -184,13 +184,13 @@ function authOwnerAdminEdit(that) {
 }
 
 
-function isCurrentUserGroupOwner ($groupid) {
-    return  prior(root['user-group-memberships'][auth.uid][$groupid]['membership-type'].val() == 1)
+function isCurrentUserGroupOwner (groupid) {
+    return  prior(root['user-group-memberships'][auth.uid][groupid]['membership-type'].val() == 1)
  }
 
 
  function isCurrentUserGroupAdmin (groupid) {
-    return  prior(root['user-group-memberships'][auth.uid][$groupid]['membership-type'].val() == 2)
+    return  prior(root['user-group-memberships'][auth.uid][groupid]['membership-type'].val() == 2)
  }
 
 
@@ -219,9 +219,9 @@ path /group-members/{groupid} {
 }
 
 path /group-members/{groupid}/{userid} is UserGroupSubGroupMemberShipType {
-  read()   {  isAuthenticatedUser($userid) }
+  read()   {  isAuthenticatedUser(userid) }
 
-  create() {   isAuthenticatedUser($userid)              &&  this['membership-type'].val() == 1 ||
+  create() {   isAuthenticatedUser(userid)              &&  this['membership-type'].val() == 1 ||
               isCurrentUserGroupOwner(groupid)           &&        this['membership-type'].val() >= 2     ||
               isCurrentUserGroupAdmin(groupid)           &&        this['membership-type'].val() >= 2
 
@@ -242,21 +242,21 @@ path /group-members/{groupid}/{userid} is UserGroupSubGroupMemberShipType {
 //function For Group-member
 //===================================
 
-function isGroupMembersIdExist($groupid) {
-  return prior(root['group-members'][$groupid][auth.uid] != null);
+function isGroupMembersIdExist(groupid) {
+  return prior(root['group-members'][groupid][auth.uid] != null);
 }
 
-function groupMemberShipAnyType($groupid) {
-    return prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() > 0)
+function groupMemberShipAnyType(groupid) {
+    return prior(root['group-members'][groupid][auth.uid]['membership-type'].val() > 0)
  }
 
-function isCurrentUserGroupMembersOwner($groupid) {
-    return  prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() == 1 )
+function isCurrentUserGroupMembersOwner(groupid) {
+    return  prior(root['group-members'][groupid][auth.uid]['membership-type'].val() == 1 )
  }
 
 
- function isCurrentUserGroupMembersAdmin($groupid) {
-    return  prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() ==2 )
+ function isCurrentUserGroupMembersAdmin(groupid) {
+    return  prior(root['group-members'][groupid][auth.uid]['membership-type'].val() ==2 )
  }
 
 /*
@@ -478,10 +478,10 @@ path /subgroup-activity-streams/{groupid} {
     index()  {  "published" }
 
     read()     {    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
-                    isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist($groupid,$subgroupid)  }
+                    isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid)  }
 
     write()    {   (isAuthenticated()                        &&
-                    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
+                    isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) ||
                     isCurrentSubUserGroupMembersOwner(groupid,subgroupid)      ||
                     isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)  ) }
 
@@ -510,7 +510,7 @@ path /subgroup-activity-streams/{groupid} {
     //-----------------------------------------------
     /{userid} {
       write() {
-              isAuthenticatedUser($userid) &&
+              isAuthenticatedUser(userid) &&
               isGroupMembersIdExist(groupid)      &&
               groupMemberShipAnyType(groupid)
       }
@@ -536,7 +536,7 @@ path /group-check-in-records/{groupid} {
     //-----------------------------------------------
     /{userid} {
       write() {
-              isAuthenticatedUser($userid) &&
+              isAuthenticatedUser(userid) &&
               isGroupMembersIdExist(groupid)      &&
               groupMemberShipAnyType(groupid)
       }
@@ -566,7 +566,7 @@ path /group-membership-requests/{groupid} {
     //-----------------------------------------------
 
     /{userid} {
-      read()  { isAuthenticatedUser($userid) }
+      read()  { isAuthenticatedUser(userid) }
       write() {  isAuthenticated()  }
    }
 
@@ -576,8 +576,8 @@ path /group-membership-requests/{groupid} {
  //====================================
 
 path /group-membership-requests-by-user/{userid} {
-      read() { isAuthenticatedUser($userid) }
-      write() { isAuthenticatedUser($userid) }
+      read() { isAuthenticatedUser(userid) }
+      write() { isAuthenticatedUser(userid) }
 
     //Path for group-membership-requests-by-user/{userid}/{groupid}
     //-----------------------------------------------------------
@@ -607,7 +607,7 @@ path /group-membership-requests-by-user/{userid} {
    read() { isGroupMembersIdExist(groupid)            &&
             isCurrentUserGroupMembersOwner(groupid)   ||
             isCurrentUserGroupMembersAdmin(groupid)  ||
-            groupMemberShipAnyType($groupid) }
+            groupMemberShipAnyType(groupid) }
 
    write() {
             isGroupMembersIdExist(groupid)            &&
@@ -682,27 +682,27 @@ type MemberCountGreaterThanEqualToZero extends Number{
 //         Function For SubGroup
 //----------------------------------------------------
 
-function  isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist($groupid,$subgroupid) {
-  return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() != null)
+function  isSubGroupMembersSubGroupIdAuthIDMemberShipTypeExist(groupid,subgroupid) {
+  return prior(root['subgroup-members'][groupid][subgroupid][auth.uid]['membership-type'].val() != null)
 }
 
-function isSubGroupMembersSubGroupIdAuthIDExist($groupid ,$subgroupid) {
- return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid].val() != null )
-}
-
-
-
-function subGroupMembersMemberShipAnyType($groupid,$subgroupid) {
-  return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() > 0)
+function isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) {
+ return prior(root['subgroup-members'][groupid][subgroupid][auth.uid].val() != null )
 }
 
 
-function isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) {
- return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() == 1)
+
+function subGroupMembersMemberShipAnyType(groupid,subgroupid) {
+  return prior(root['subgroup-members'][groupid][subgroupid][auth.uid]['membership-type'].val() > 0)
 }
 
-function isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) {
- return prior(root['subgroup-members'][$groupid][$subgroupid][auth.uid]['membership-type'].val() == 2)
+
+function isCurrentSubUserGroupMembersOwner(groupid,subgroupid) {
+ return prior(root['subgroup-members'][groupid][subgroupid][auth.uid]['membership-type'].val() == 1)
+}
+
+function isCurrentSubUserGroupMembersAdmin(groupid,subgroupid) {
+ return prior(root['subgroup-members'][groupid][subgroupid][auth.uid]['membership-type'].val() == 2)
 }
 
 
@@ -751,24 +751,23 @@ type SubGroupsNameInfo {
 //================================
 
 path /subgroup-members/{groupid}/{subgroupid} {
-
-  read() {  isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)     &&
-            subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
+  //
+  read() {   isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) && subGroupMembersMemberShipAnyType(groupid,subgroupid) }
    create() { isGroupMembersIdExist(groupid)              &&
               isCurrentUserGroupMembersOwner(groupid)      ||
               isCurrentUserGroupMembersAdmin(groupid) ||
-              isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) ||
-              isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
+              isCurrentSubUserGroupMembersOwner(groupid,subgroupid) ||
+              isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)
             }
     // path for /subgroup-members/{groupid}/{userid}
    //------------------------------------------------
    /{userid} is UserGroupSubGroupMemberShipType {
-     read(){ subGroupMembersMemberShipAnyType($groupid,$subgroupid) || isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)  }
+     read(){ subGroupMembersMemberShipAnyType(groupid,subgroupid) || isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)  }
      create() {  isGroupMembersIdExist(groupid)              &&
                  isCurrentUserGroupMembersOwner(groupid)      ||
                  isCurrentUserGroupMembersAdmin(groupid)      ||
-                 isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) ||
-              isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
+                 isCurrentSubUserGroupMembersOwner(groupid,subgroupid) ||
+              isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)
             }
      update(){ isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)}
      delete(){ isCurrentSubUserGroupMembersOwner(groupid, subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid, subgroupid)}
@@ -862,7 +861,7 @@ path /subgroup-check-in-current/{groupid} {
      /{userid} {
         write() {
                   isAuthenticated()                        &&
-                  isAuthenticatedUser($userid)             &&
+                  isAuthenticatedUser(userid)             &&
                   isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid) &&
                   subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
 
@@ -879,14 +878,14 @@ path /subgroup-check-in-current/{groupid} {
 /*subgroup-check-in-current-by-user*/
 path /subgroup-check-in-current-by-user/{userid} {
     read() {
-          isAuthenticatedUser($userid) ||
-          ifUserUserIDExist($userid) }
+          isAuthenticatedUser(userid) ||
+          ifUserUserIDExist(userid) }
 
     write() {
           isAuthenticated() &&
           isSubGroupGroupIDExist(this) ||
           isSubGroupGroupIDOwner(this) ||
-          isSubGroupGroupIDAdmin(this) ||   isAuthenticatedUser($userid)  } // greater than 0 old rules
+          isSubGroupGroupIDAdmin(this) ||   isAuthenticatedUser(userid)  } // greater than 0 old rules
 
 }
 function ifUserUserIDExist(userid) {
@@ -923,7 +922,7 @@ path /subgroup-check-in-records/{groupid} {
 
     write() {
             isAuthenticated()                &&
-            isGroupMembersIdExist(groupid)          &&
+            isGroupMembersIdExist(groupid)          ||
             isCurrentUserGroupMembersOwner(groupid) ||
             isCurrentUserGroupMembersAdmin(groupid) }
 
@@ -934,13 +933,13 @@ path /subgroup-check-in-records/{groupid} {
     /{subgroupid} {
             read() {
                isAuthenticated()                        &&
-               isSubGroupMembersSubGroupIdAuthIDExist(groupid,subgroupid) &&
+               isSubGroupMembersSubGroupIdAuthIDExist(groupid,subgroupid) ||
                isCurrentSubUserGroupMembersOwner(groupid,subgroupid)      ||
                isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)  }
 
              write() {
                isAuthenticated()                        &&
-               isSubGroupMembersSubGroupIdAuthIDExist(groupid,subgroupid) &&
+               isSubGroupMembersSubGroupIdAuthIDExist(groupid,subgroupid) ||
                isCurrentSubUserGroupMembersOwner(groupid,subgroupid)      ||
                isCurrentSubUserGroupMembersAdmin(groupid,subgroupid) }
 
@@ -949,7 +948,7 @@ path /subgroup-check-in-records/{groupid} {
    /{userid} {
       write() {
                 isAuthenticated()                             &&
-                isAuthenticatedUser($userid)                  &&
+                isAuthenticatedUser(userid)                  &&
                 isSubGroupMembersSubGroupIdAuthIDExist(groupid ,subgroupid)      ||
                 subGroupMembersMemberShipAnyType(groupid,subgroupid)  }
 
@@ -962,9 +961,9 @@ path /subgroup-check-in-records/{groupid} {
 /*user-subgroup-memberships*/
 path /user-subgroup-memberships/{userid} {
     read() {
-                isAuthenticatedUser($userid) || (isAuthenticated() && ifUserUserIDExist($userid))   }
+                isAuthenticatedUser(userid) || (isAuthenticated() && ifUserUserIDExist(userid))   }
 
-      validate() {  ifUserUserIDExist($userid) }
+      validate() {  ifUserUserIDExist(userid) }
 
    // path for  /user-subgroup-memberships/{userid}/{groupid}
    //-------------------------------------------------------------
@@ -988,7 +987,7 @@ path /user-subgroup-memberships/{userid} {
                 isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
                 isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)  }
 
-        create() {   isAuthenticated()  &&  this['membership-type'].val() == 1 ||
+        create() {  isAuthenticated()  &&  this['membership-type'].val() == 1 ||
                   isUserSubGroupMemberShipExist(groupid,subgroupid) ||
                 isUserCurrentSubgroupMemberShipOwner(groupid, subgroupid) ||
                 isUserCurrentSubgroupMemberShipAdmin(groupid, subgroupid)  }
@@ -1012,19 +1011,19 @@ path /user-subgroup-memberships/{userid} {
 
 
 
-function isUserCurrentSubgroupMemberShipOwner($groupid,subgroupId) {
-      return prior(root['user-subgroup-memberships'][auth.uid][$groupid][subgroupId]['membership-type'].val() == 1)
+function isUserCurrentSubgroupMemberShipOwner(groupid,subgroupId) {
+      return prior(root['user-subgroup-memberships'][auth.uid][groupid][subgroupId]['membership-type'].val() == 1)
 
 }
 
 
-function isUserSubGroupMemberShipExist($groupid,subgroupId) {
-      return prior(root['user-subgroup-memberships'][auth.uid][$groupid][subgroupId].val() != null)
+function isUserSubGroupMemberShipExist(groupid,subgroupId) {
+      return prior(root['user-subgroup-memberships'][auth.uid][groupid][subgroupId].val() != null)
 
 }
 
-function isUserCurrentSubgroupMemberShipAdmin($groupid,subgroupId) {
-      return prior(root['user-subgroup-memberships'][auth.uid][$groupid][subgroupId]['membership-type'].val() == 2)
+function isUserCurrentSubgroupMemberShipAdmin(groupid,subgroupId) {
+      return prior(root['user-subgroup-memberships'][auth.uid][groupid][subgroupId]['membership-type'].val() == 2)
 
 }
 
@@ -1053,15 +1052,15 @@ path /subgroup-membership-requests/{groupid} {
    // path for  /subgroup-membership-requests/{groupid}/{subgroupid}/{userid}
    //----------------------------------------------------------------------
      /{userid} is SubGroupMembershipRequest{
-        read()  { isAuthenticatedUser($userid) }
-        write() { isAuthenticatedUser($userid) }
+        read()  { isAuthenticatedUser(userid) }
+        write() { isAuthenticatedUser(userid) }
 
      }
    }
 }
 
 type SubGroupMembershipRequest {
-   validate()   { ifUserUserIDExist($userid) }
+   validate()   { ifUserUserIDExist(userid) }
    'message'    : MessageLength,
    'timestamp'  :  CurrentTimeStamp
 }
@@ -1078,8 +1077,8 @@ type SubGroupMembershipRequest {
 /*Subgroup Membership Requests By User*/
  path /subgroup-membership-requests-by-user/{userid} {
 
-  read()     { isAuthenticatedUser($userid) }
-  validate() {    ifUserUserIDExist($userid)  }
+  read()     { isAuthenticatedUser(userid) }
+  validate() {    ifUserUserIDExist(userid)  }
 
     // path for   /subgroup-membership-requests-by-user/{userid}/{groupid}
    //----------------------------------------------------------------------
@@ -1111,17 +1110,17 @@ type SubGroupRequestByUserTimeStamp {
  //==========================================
 /*Group Private Chats*/
 path /group-private-chats/{groupid}/{chatid} {
-    read() { isAuthenticated() && isChatIdExist($groupid,$chatid)  }
+    read() { isAuthenticated() && isChatIdExist(groupid,chatid)  }
 
    // path for   /group-private-chats/{groupid}/{chatid}/{automessageid}
    //----------------------------------------------------------------------
   /{automessageid} {
-   create() { isAuthenticated() && isChatIdExist($groupid,$chatid) }
+   create() { isAuthenticated() && isChatIdExist(groupid,chatid) }
   }
 }
 
-function isChatIdExist($groupid,$chatid) {
- return prior(root['user-private-chat-refs'][auth.uid][$groupid][$chatid].val() != null )
+function isChatIdExist(groupid,chatid) {
+ return prior(root['user-private-chat-refs'][auth.uid][groupid][chatid].val() != null )
 }
 
 
@@ -1130,9 +1129,9 @@ function isChatIdExist($groupid,$chatid) {
  //==========================================
 /*User Private Chat Refs*/
  path /user-private-chat-refs/{userid}/{groupid} {
-  read()  { isAuthenticatedUser($userid) }
+  read()  { isAuthenticatedUser(userid) }
 
-  write() { isAuthenticatedUser($userid) &&
+  write() { isAuthenticatedUser(userid) &&
             isGroupIdExist(groupid)       &&
             userGroupMembershipAnyType(groupid)   }
  }
@@ -1168,8 +1167,8 @@ path /group-chats/{groupid} {
   }
 }
 
-function isGroupGroupIDExist($groupid) {
-  return prior(root['groups'][$groupid] != null)
+function isGroupGroupIDExist(groupid) {
+  return prior(root['groups'][groupid] != null)
  }
 
 type ChatInfo {
@@ -1226,7 +1225,7 @@ path /subgroup-chats/{groupid} {
 }
 
 function isSubGroupSubGroupIdExist(groupid , subgroupid) {
-  return prior(root['subgroups'][$groupid][$subgroupid].val() != null )
+  return prior(root['subgroups'][groupid][subgroupid].val() != null )
 }
 
 
@@ -1302,16 +1301,16 @@ type BooleanOrNull {
   }
 /*Subgroup Policies*/
 path /subgroup-policies/{groupid}{
-  read(){ isAuthenticated() && userGroupMembershipAnyType($groupid) }
+  read(){ isAuthenticated() && userGroupMembershipAnyType(groupid) }
   /{subgroupid} is SubgroupAppliedPolicyType {
   read()  {  isAuthenticated() &&
              isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)  ||
-             isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) ||
-             subGroupMembersMemberShipAnyType($groupid,$subgroupid)
+             isCurrentSubUserGroupMembersOwner(groupid,subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid,subgroupid) ||
+             subGroupMembersMemberShipAnyType(groupid,subgroupid)
           }
 
-  create() {  isAuthenticated() && isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
+  create() {  isAuthenticated() && isCurrentSubUserGroupMembersOwner(groupid,subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid,subgroupid) }
              /*isCurrentUserGroupOwner(groupid)    ||
              isCurrentUserGroupAdmin(groupid)     ||
              isSubGroupGroupIDOwner(this) ||*/
@@ -1320,7 +1319,7 @@ path /subgroup-policies/{groupid}{
   update() {  isAuthenticated() &&
               isCurrentUserGroupOwner(groupid)    ||
               isCurrentUserGroupAdmin(groupid)     ||
-              isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)
+              isCurrentSubUserGroupMembersOwner(groupid,subgroupid) || isCurrentSubUserGroupMembersAdmin(groupid,subgroupid)
             }
  }
 }
@@ -1606,7 +1605,7 @@ path /firepad-groups-rules/{groupid}{
       userGroupMembershipAnyType(groupid)
       }
       create() { isAuthenticated() }
-      update() { isCurrentUserGroupMembersOwner($groupid) || isCurrentUserGroupMembersAdmin($groupid) || isGroupCollaboratorCreater(groupid, documentid)}
+      update() { isCurrentUserGroupMembersOwner(groupid) || isCurrentUserGroupMembersAdmin(groupid) || isGroupCollaboratorCreater(groupid, documentid)}
 }
   }
   /*firepad SubGroup Access */
@@ -1650,8 +1649,8 @@ type FirepadRulesType {
 }
 
 path /activities-seen-by-user/{userid} is ActivityType {
-     read() { isAuthenticatedUser($userid)}
-     write() { isAuthenticatedUser($userid)}
+     read() { isAuthenticatedUser(userid)}
+     write() { isAuthenticatedUser(userid)}
 }
 type ActivityType {
   timestamp: CurrentTimeStamp
