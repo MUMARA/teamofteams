@@ -17,6 +17,7 @@
         var currentUserSubGroupsMembersAndMemberShips = {};
         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
         var lastSeenTimeStamp = null;
+        var ref = firebaseService.getRefMain();
 
         //object for those who will be notify....
 
@@ -40,6 +41,8 @@
 
             //getting current user subgroup members
             //getSubGroupsMembersOfCurrentUsers ();
+
+            userGroupEvents();
 
         } //init
 
@@ -326,6 +329,141 @@
             return currentUserSubGroupsMembersAndMemberShips;
         }
 
+
+
+        //new service  # start
+
+        var userGroupz = {};
+        var userSubGroupz = {};
+        var subgroupsOfGroup = {};
+
+        function userGroupEvents(){
+            //group added
+            ref.child('user-group-memberships').child(userID).on('child_added', function(group){
+                if(group) {
+                    console.log('watch added raw', group.val());
+                    var obj = {
+                        'membership-type': group.val()['membership-type'],
+                        'title': ''
+                    };
+                    userGroupz[group.key()] = obj;
+
+                    console.log('watch added', userGroupz);
+
+                    //subgroup add event
+                    userSubGroupEvents(group.key());
+
+                    //get subgroups of this group is memebership type is owner
+                    (group.val()['membership-type'] === 1) ? getSubgroupOfGroups(group.key()) : null;
+                }
+            });
+
+            //group changed
+            ref.child('user-group-memberships').child(userID).on('child_changed', function(group){
+                if(group) {
+                    console.log('watch changed raw', group.val());
+                    var obj = {
+                        'membership-type': group.val()['membership-type'],
+                        'title': ''
+                    };
+                    userGroupz[group.key()] = obj;
+                    console.log('watch changed', userGroupz);
+                }
+            });
+
+            //group removed
+            ref.child('user-group-memberships').child(userID).on('child_removed', function(group){
+                if(group) {
+                    console.log('watch removed raw', group.val());
+                    delete userGroupz[group.key()];
+                    console.log('watch remove', userGroupz);
+                }
+            });
+        }
+
+        function userSubGroupEvents(groupid){
+            //subgroup added
+            ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_added', function(subgroup){
+                if(subgroup) {
+                    console.log('watch added raw', subgroup.val());
+                    var obj = {
+                        'membership-type': subgroup.val()['membership-type'],
+                        'title': ''
+                    };
+
+                    if(userSubGroupz.hasOwnProperty(groupid)){
+                        userSubGroupz[groupid][subgroup.key()] = obj;
+                    } else {
+                        userSubGroupz[groupid] = {};
+                        userSubGroupz[groupid][subgroup.key()] = obj;
+                    }
+
+                    console.log('watch added', userSubGroupz);
+                }
+            });
+
+            //group changed
+            ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_changed', function(subgroup){
+                if(subgroup) {
+                    console.log('watch added raw', subgroup.val());
+                    var obj = {
+                        'membership-type': subgroup.val()['membership-type'],
+                        'title': ''
+                    };
+                    userSubGroupz[groupid][subgroup.key()] = obj;
+                    console.log('watch changed', userSubGroupz);
+                }
+            });
+
+            //group removed
+            ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_removed', function(subgroup){
+                if(subgroup) {
+                    console.log('watch added raw', subgroup.val());
+                    delete userSubGroupz[groupid][subgroup.key()];
+                    console.log('watch delete', userSubGroupz);
+                }
+            });
+        }
+
+        function getSubgroupOfGroups(groupid){
+            //subgroup added
+            ref.child('subgroups').child(groupid).on('child_added', function(subgroup){
+
+                if(subgroupsOfGroup.hasOwnProperty(groupid)){
+                    subgroupsOfGroup[groupid].push(subgroup.key());
+                } else {
+                    subgroupsOfGroup[groupid] = [];
+                    subgroupsOfGroup[groupid].push(subgroup.key());
+                }
+
+                console.log(subgroupsOfGroup);
+
+            });
+
+            //subgroup removed
+            ref.child('subgroups').child(groupid).on('child_removed', function(subgroup){
+                var index = subgroupsOfGroup[groupid].indexOf(subgroup.key());
+
+                //remove from array of subgroups
+                subgroupsOfGroup[groupid].splice(index, 1);
+            });
+
+        }
+    
+        function getCurrentUserGroups(){
+            return userGroupz;
+        }
+        function getCurrentUserSubgroups(){
+            return userSubGroupz;
+        }
+        function getSubgroupsOfGroup(){
+            return subgroupsOfGroup;
+        }
+
+        //new service  # end
+
+
+
         // type = group, subgroup, policy, progressReport, firepad, chat
         //targetinfo = {id: '', url: '', title: '', type: '' }
         //area = {type: '', action: ''}
@@ -449,7 +587,7 @@
                 //seen: false
             };
 
-            var ref = firebaseService.getRefMain();
+
             var pushObj = ref.child('group-activity-streams/' + activityGroupOrSubGroupID).push();
             var activityPushID = pushObj.key();
 
@@ -518,7 +656,10 @@
             getActivities: getActivities,
             activityStream: activityStream,
             activityHasSeen: activityHasSeen,
-            getSubgroupNamesAndMemberships: getSubgroupNamesAndMemberships
+            getSubgroupNamesAndMemberships: getSubgroupNamesAndMemberships,
+            getCurrentUserGroups: getCurrentUserGroups,
+            getCurrentUserSubgroups:getCurrentUserSubgroups,
+            getSubgroupsOfGroup: getSubgroupsOfGroup
         };
     } //activityStreamService
 })();

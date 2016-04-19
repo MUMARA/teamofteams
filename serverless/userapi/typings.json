@@ -1,0 +1,5 @@
+{
+  "ambientDependencies": {
+    "mongoose": "registry:dt/mongoose#3.8.5+20160316155526"
+  }
+}
