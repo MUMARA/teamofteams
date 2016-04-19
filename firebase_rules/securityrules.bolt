@@ -1708,7 +1708,7 @@ function isCurrentUserQuestionBankAdmin(questionBankUniqueID) {
 }
 
 function isCurrentUserQuestionBankMember(questionBankUniqueID) {
-    prior(root['question-bank-memberships'][questionBankUniqueID][auth.uid] != null)
+    prior(root['question-bank-memberships'][questionBankUniqueID][auth.uid].val() != null)
 }
 
 
@@ -1768,7 +1768,7 @@ path /question-bank/{questionBankUniqueID} is QuestionBank {
     }
 }
 type QuestionBank {
-
+    imgLogoUrl: String,
     timestamp  : CurrentTimeStamp,                   //Timestamp type extends globally
     title    : String,
     desc     : String

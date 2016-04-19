@@ -1266,7 +1266,10 @@
             }
           }
         },
-        ".validate": "newData.hasChildren(['timestamp', 'title', 'desc'])",
+        ".validate": "newData.hasChildren(['imgLogoUrl', 'timestamp', 'title', 'desc'])",
+        "imgLogoUrl": {
+          ".validate": "newData.isString()"
+        },
         "timestamp": {
           ".validate": "newData.isNumber() && newData.val() <= now"
         },
