@@ -264,57 +264,7 @@
                 </div>
             </md-toolbar>
             <div class="quiz-md-card-1">
-                <md-list class="quiz-sidebar-nav">
-                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books"
-                                  id="bookId{{$index}}"
-                                  ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
-                                  ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-                        <!-- Books Side-->
-                        <div layout="row" class="subgroupcard" style="height: 120px">
-                            <div class="subgrouplogo" style="height: 120px">
-                                <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
-                            </div>
-                            <div layout="column" flex>
-                                <div layout="row" layout-align="space-between center">
-                                    <div layout-padding>{{book.title}}</div>
-                                    <!--<ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"-->
-                                                <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
-                                </div>
-                                <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
-                                    <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                                         class="icon40px imageRound" alt="user" layout-margin/>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- <div style="background-color: #f7f7f7;border-bottom:solid #E5E5E5 "
-                              layout="column" layout-align="center center"
-                              ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
-                              ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-                             &lt;!&ndash;class="{{selected}}" (tahir Changes) ng-click="quizes.setSelectedBook(this, $index); !quizes.showQuizList && quizes.showChapters($index); quizes.showQuizList && quizes.showQuizes($index);"&ndash;&gt;
-
-                             <div layout="row" style="width: 100%">
-                                 <img flex="33" ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}"
-                                      class="md-card-image" alt="Washed Out">
-
-                                 <div flex="67" style="background-color: #F7F7F7;">
-                                     <span><b>{{book.title}}</b></span>
-                                     <br/>
-                                     &lt;!&ndash;<span style="font-size: 12px">{{book.description}}</span>&ndash;&gt;
-                                     &lt;!&ndash;<img src="img/1dropdown.svg" style="height: 25px; width: 25px; margin-left: 134px">&ndash;&gt;
-                                     <img style="border-radius: 50%;height: 50px; margin-top: 30px; align:right"
-                                          ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                                          class="userImg"/>
-                                 </div>
-                             </div>
-                             <div layout="row" layout-align="center center"
-                                  style="margin-top:5%;position: relative;">
-                             </div>
-                         </div> -->
-                        <md-divider></md-divider>
-                    </md-list-item>
-                    <md-divider></md-divider>
-                </md-list>
+                
             </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Add book" ng-click="quizes.addBook()">
@@ -378,6 +328,58 @@
             </div>
         </md-toolbar>
         <div class="quiz-md-card-1">
+            
+            <md-list class="quiz-sidebar-nav">
+                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books"
+                                  id="bookId{{$index}}"
+                                  ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
+                                  ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
+                        <!-- Books Side-->
+                        <div layout="row" class="subgroupcard" style="height: 120px">
+                            <div class="subgrouplogo" style="height: 120px">
+                                <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
+                            </div>
+                            <div layout="column" flex>
+                                <div layout="row" layout-align="space-between center">
+                                    <div layout-padding>{{book.title}}</div>
+                                    <!--<ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"-->
+                                                <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
+                                </div>
+                                <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
+                                    <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                         class="icon40px imageRound" alt="user" layout-margin/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div style="background-color: #f7f7f7;border-bottom:solid #E5E5E5 "
+                              layout="column" layout-align="center center"
+                              ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
+                              ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
+                             &lt;!&ndash;class="{{selected}}" (tahir Changes) ng-click="quizes.setSelectedBook(this, $index); !quizes.showQuizList && quizes.showChapters($index); quizes.showQuizList && quizes.showQuizes($index);"&ndash;&gt;
+
+                             <div layout="row" style="width: 100%">
+                                 <img flex="33" ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}"
+                                      class="md-card-image" alt="Washed Out">
+
+                                 <div flex="67" style="background-color: #F7F7F7;">
+                                     <span><b>{{book.title}}</b></span>
+                                     <br/>
+                                     &lt;!&ndash;<span style="font-size: 12px">{{book.description}}</span>&ndash;&gt;
+                                     &lt;!&ndash;<img src="img/1dropdown.svg" style="height: 25px; width: 25px; margin-left: 134px">&ndash;&gt;
+                                     <img style="border-radius: 50%;height: 50px; margin-top: 30px; align:right"
+                                          ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                          class="userImg"/>
+                                 </div>
+                             </div>
+                             <div layout="row" layout-align="center center"
+                                  style="margin-top:5%;position: relative;">
+                             </div>
+                         </div> -->
+                        <md-divider></md-divider>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                </md-list>
             <!--   <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-1">
                <div class="md-toolbar-tools quiz-search-box-1">
                <h2 ng-hide="quizes.chapterSearch" flex="80" style="color:white">
@@ -422,7 +424,7 @@
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Eat cake"
                        ng-hide="quizes.showQuizList"
-                       ng-click="quizes.addChapter()">
+                       ng-click="">  <!-- empty because of dublicate-->
                 <ng-md-icon icon="add" style="fill: #fff;"></ng-md-icon>
             </md-button>
         </div>
