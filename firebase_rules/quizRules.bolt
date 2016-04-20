@@ -225,10 +225,11 @@ function isCurrentUserGroupMembersOwner($groupid) {
 
 //}
 
-path /quizes/{userId}/{quizId} is QuizMembership {
+path /user-quiz/{userId}/{quizId} is QuizMembership {
       read() { isAuthenticatedUser(userId) }
       create() { isAuthenticatedUser(userId) }
 }
+
 
 type QuizMembership {
   "memberships-type": Number,
@@ -245,8 +246,8 @@ path /answers/{userid}/{quizId}/{answerId}/{questionId}/{optionId} is Boolean { 
 
 
 
-path /quizes/{questionBankUniqueID}/{quizID} is Quiz {
-    validate() { this.hasChildren(['questions']) } 
+/*path /quizes/{questionBankUniqueID}/{quizID} is Quiz {
+    validate() { this.hasChildren(['questions']) }*/
 
 //--------------------------
 //  Answer User
