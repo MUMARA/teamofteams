@@ -264,7 +264,72 @@
                 </div>
             </md-toolbar>
             <div class="quiz-md-card-1">
-                <md-list class="quiz-sidebar-nav">
+                
+            </div>
+            <md-button class="md-button md-fab md-mini md-fab-bottom-right"
+                       aria-label="Add book" ng-click="quizes.addBook()">
+                <ng-md-icon icon="add" style="fill: #fff"></ng-md-icon>
+            </md-button>
+        </md-content>
+    </md-sidenav>
+
+    <div class="gradient2 quiz-menu-col">
+        <a ng-click="quizes.booksNav = !quizes.booksNav" id="menu-toggle" class="menu-item-btn">
+            <img ng-src="img/menu.svg" style=" height: 45px;">
+        </a>
+        <br>
+        <md-divider style="background-color: white;"></md-divider>
+        <br>
+
+        <div>
+            <div ng-style="(quizes.books.length == 0) && {'display':'none'}">
+                <div id="quizBankIcon" ng-click="quizes.showQuizBankFunc()" class="selectedTab menu-item-btn">
+                    <img ng-src="img/1book.svg" style="height: 39px;  margin-left: 20px;  "/>
+                </div>
+                <div id="quizIcon" ng-click="quizes.showQuiz()" class="menu-item-btn">
+                    <img ng-src="img/1add_quiz.svg"/>
+                </div>
+                <div id="quizAssignIcon" ng-click="quizes.showAssignQuiz()" class="menu-item-btn">
+                    <img ng-src="img/1calendar.svg"/>
+                </div>
+                <div id="quizResultIcon" ng-click="quizes.showAttemptQuiz()" class="menu-item-btn">
+                    <img ng-src="img/comment.svg"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Chapter Side-->
+    <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
+        <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
+            <div class="md-toolbar-tools quiz-search-box-1" layout="row">
+
+
+                <h2 ng-hide="quizes.quizSearch">
+                    <span>Question Banks</span>
+
+                </h2>
+
+                <div flex layout="row">
+                    <md-input-container class="search-input-quiz" ng-show="quizes.quizSearch">
+                        <input type="text" ng-model="cSearch"
+                               aria-label="Chapter Search Box">
+                    </md-input-container>
+
+                    <img ng-click="quizes.quizSearch = !quizes.quizSearch;"
+                         ng-if="quizes.quizSearch"
+                         src="img/closeIcon.png" class="close-img">
+
+                    <div class="img-div">
+                        <img ng-if="!quizes.quizSearch" src="img/1dropdown.svg"/>
+                        <img ng-if="!quizes.quizSearch" src="img/1search.svg"
+                             ng-click="quizes.quizSearch = !quizes.quizSearch"/>
+                    </div>
+                </div>
+            </div>
+        </md-toolbar>
+        <div class="quiz-md-card-1">
+            
+            <md-list class="quiz-sidebar-nav">
                     <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books"
                                   id="bookId{{$index}}"
                                   ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
@@ -315,69 +380,6 @@
                     </md-list-item>
                     <md-divider></md-divider>
                 </md-list>
-            </div>
-            <md-button class="md-button md-fab md-mini md-fab-bottom-right"
-                       aria-label="Add book" ng-click="quizes.addBook()">
-                <ng-md-icon icon="add" style="fill: #fff"></ng-md-icon>
-            </md-button>
-        </md-content>
-    </md-sidenav>
-
-    <div class="gradient2 quiz-menu-col">
-        <a ng-click="quizes.booksNav = !quizes.booksNav" id="menu-toggle" class="menu-item-btn">
-            <img ng-src="img/menu.svg" style=" height: 45px;">
-        </a>
-        <br>
-        <md-divider style="background-color: white;"></md-divider>
-        <br>
-
-        <div>
-            <div ng-style="(quizes.books.length == 0) && {'display':'none'}">
-                <div id="quizBankIcon" ng-click="quizes.showQuizBankFunc()" class="selectedTab menu-item-btn">
-                    <img ng-src="img/1book.svg" style="height: 39px;  margin-left: 20px;  "/>
-                </div>
-                <div id="quizIcon" ng-click="quizes.showQuiz()" class="menu-item-btn">
-                    <img ng-src="img/1add_quiz.svg"/>
-                </div>
-                <div id="quizAssignIcon" ng-click="quizes.showAssignQuiz()" class="menu-item-btn">
-                    <img ng-src="img/1calendar.svg"/>
-                </div>
-                <div id="quizResultIcon" ng-click="quizes.showAttemptQuiz()" class="menu-item-btn">
-                    <img ng-src="img/comment.svg"/>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--Chapter Side-->
-    <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
-        <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
-            <div class="md-toolbar-tools quiz-search-box-1" layout="row">
-
-
-                <h2 ng-hide="quizes.quizSearch">
-                    <span>Question Bank</span>
-
-                </h2>
-
-                <div flex layout="row">
-                    <md-input-container class="search-input-quiz" ng-show="quizes.quizSearch">
-                        <input type="text" ng-model="cSearch"
-                               aria-label="Chapter Search Box">
-                    </md-input-container>
-
-                    <img ng-click="quizes.quizSearch = !quizes.quizSearch;"
-                         ng-if="quizes.quizSearch"
-                         src="img/closeIcon.png" class="close-img">
-
-                    <div class="img-div">
-                        <img ng-if="!quizes.quizSearch" src="img/1dropdown.svg"/>
-                        <img ng-if="!quizes.quizSearch" src="img/1search.svg"
-                             ng-click="quizes.quizSearch = !quizes.quizSearch"/>
-                    </div>
-                </div>
-            </div>
-        </md-toolbar>
-        <div class="quiz-md-card-1">
             <!--   <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar-1">
                <div class="md-toolbar-tools quiz-search-box-1">
                <h2 ng-hide="quizes.chapterSearch" flex="80" style="color:white">
@@ -422,7 +424,7 @@
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Eat cake"
                        ng-hide="quizes.showQuizList"
-                       ng-click="quizes.addChapter()">
+                       ng-click="">  <!-- empty because of dublicate-->
                 <ng-md-icon icon="add" style="fill: #fff;"></ng-md-icon>
             </md-button>
         </div>
@@ -672,7 +674,7 @@
                 <div layout="row">
                     <md-input-container flex>
                         <label>Quiz ID</label>
-                        <input name="bookID" ng-model="quizes.bookID" required
+                        <input name="bookID" ng-model="quizes.quizesData.bookID" required
                                ng-pattern="/^([a-z0-9]){3,20}$/" minlength="3" maxlength="50"
                                check-book-existance="" md-sidenav-focus>
 
@@ -692,7 +694,7 @@
                     <md-input-container flex>
                         <label>Quiz Title</label>
                         <input name="bookTitle"
-                               ng-model="quizes.name" minlength="3" maxlength="50" required
+                               ng-model="quizes.quizesData.name" minlength="3" maxlength="50" required
                                md-sidenav-focus>
 
                         <div ng-show="bookForm.$submitted || bookForm.bookTitle.$touched"
@@ -707,7 +709,7 @@
                     <md-input-container flex>
                         <label>Description</label>
                     <textarea minlength="10"
-                              maxlength="200" name="bookDesc" required ng-model="quizes.desc"
+                              maxlength="200" name="bookDesc" required ng-model="quizes.quizesData.desc"
                               cols="25" rows="3"></textarea>
 
                         <div ng-show="bookForm.$submitted || bookForm.bookDesc.$touched"
@@ -736,7 +738,7 @@
             <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
             <md-button class="backColorSeaGreen color-white"
                        ng-disabled="bookForm.$invalid || !newImg" class="md-primary"
-                       ng-click="quizes.createQuize(quizes, $root.newImg); $root.newImg = null">
+                       ng-click="quizes.createQuize(quizes.quizesData, $root.newImg); $root.newImg = null">
                 Create
             </md-button>
             <md-button ng-click="quizes.closeBook()"
