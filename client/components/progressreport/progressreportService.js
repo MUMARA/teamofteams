@@ -160,7 +160,7 @@
 			return dailyProgressReport;
 		} //getDailyProgressReport
 		function updateReport(report, cb) {
-			// console.log('report', report)
+			//console.log('report', report)
 			firebaseService.getRefProgressReport().child(report.groupID).child(report.subgroupID).child(report.userID).child(report.reportID).update({ 'answers': report.answers }, function(err) {
 				if (err) {
 					// console.log('err', err)
