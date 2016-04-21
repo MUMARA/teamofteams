@@ -207,7 +207,8 @@ function isCurrentUserGroupOwner (groupid) {
 //===================================
 
 path /group-members/{groupid} {
-  read() { isGroupMembersIdExist(groupid) && groupMemberShipAnyType(groupid)  } // i think blockmember type is -1 so blockmembers cannot read the group for that we want member-shiptype should be greater than 0
+  read() {    isCurrentUserGroupOwner(groupid)           ||
+              isCurrentUserGroupAdmin(groupid)  } // i think blockmember type is -1 so blockmembers cannot read the group for that we want member-shiptype should be greater than 0
   create() {  isAuthenticated()                          &&
               isCurrentUserGroupOwner(groupid)           ||
               isCurrentUserGroupAdmin(groupid)
@@ -243,7 +244,7 @@ path /group-members/{groupid}/{userid} is UserGroupSubGroupMemberShipType {
 //===================================
 
 function isGroupMembersIdExist(groupid) {
-  return prior(root['group-members'][groupid][auth.uid] != null);
+  return prior(root['group-members'][groupid][auth.uid].val() != null);
 }
 
 function groupMemberShipAnyType(groupid) {

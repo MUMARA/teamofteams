@@ -90,7 +90,7 @@
     "group-members": {
       "$groupid": {
         ".write": "data.val() == null && (auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2)",
-        ".read": "root.child('group-members').child($groupid).child(auth.uid).val() != null && root.child('group-members').child($groupid).child(auth.uid).child('membership-type').val() > 0",
+        ".read": "root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 1 || root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() == 2",
         "$userid": {
           ".validate": "newData.hasChildren(['membership-type', 'timestamp'])",
           "membership-type": {
