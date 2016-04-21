@@ -1407,6 +1407,275 @@
         });
         question.options = arr;
         /* if (question.type === 1) {
+=======
+        _self.myTop = ['40px', '50px'];
+        var topMargin = 50;
+        this.showCheckText = false;
+        this.topicId = $stateParams.id;
+        _self.questionSet = {};
+
+        //
+        //
+        //Answer Types.
+        this.types = [{
+            name: 'Radio Button'
+        }, {
+            name: 'CheckBox'
+        }, {
+            name: 'Question Set'
+        }];
+        // this.question = {
+        //     options: [{
+        //         html: '',
+        //         "discussion-html": "discussion-html",
+        //         correct: false
+        //     }]
+        // };
+
+        //If Answer Type Changes.
+        this.typeChanged = function () {
+
+            _self.radioValue = '';
+            _self.myAnswer = undefined;
+            _self.myTop = ['40px', '90px'];
+            topMargin = 50;
+            angular.forEach(_self.question.options, function (data) {
+                if (data.id === true) {
+                    data.id = false;
+                }
+            });
+        };
+
+        //Setting different inputs.
+        this.setBoxValue = function () {
+            this.showAddButton = true;
+            _self.question.options = [{
+                html: '',
+                "discussion-html": "discussion-html",
+                correct: false
+            }];
+
+            _self.questionSet.options = [{
+                html: '',
+                "discussion-html": "discussion-html",
+                correct: false
+            }, {
+                html: '',
+                "discussion-html": "discussion-html",
+                correct: false
+            }];
+            if (_self.myType.name === "1") {
+                _self.showRadioOptions = true;
+                _self.showCheckOptions = false;
+                _self.showQuestionSet = false;
+                _self.answerTag = [];
+                _self.myAnswer = undefined;
+            } else if (_self.myType.name === "2") {
+                _self.showCheckOptions = true;
+                _self.showRadioOptions = false;
+                _self.showQuestionSet = false;
+                _self.answerTag = [];
+                _self.myAnswer = undefined;
+            } else {
+                _self.showCheckOptions = false;
+                _self.showRadioOptions = false;
+                _self.showQuestionSet = true;
+                _self.answerTag = [];
+                _self.myAnswer = undefined;
+            }
+        };
+        //Push new input fields.
+        this.addOption = function () {
+
+            //Radio margin.
+            // if (topMargin < 100) {
+            //     topMargin += 50;
+            // }
+            // _self.myTop.push(topMargin + 'px');
+            // idCounter++;
+            _self.question.options.push({
+                html: '',
+                correct: false,
+                "discussion-html": "discussion-html"
+            });
+        };
+        // _self.questionSet.options = [];
+        _self.addQuestionSetOption = function () {
+            console.log(_self.questionSet);
+            alert("")
+            _self.questionSet.options.push({
+                html: '',
+                correct: false,
+                "discussion-html": "discussion-html"
+            });
+        };
+        //Delete Option
+        this.deleteOption = function (optionIndex) {
+            if (optionIndex > -1) {
+                _self.question.options.splice(optionIndex, 1);
+            }
+        };
+        this.deleteQuestionSetOption = function (optionIndex) {
+            if (optionIndex > -1) {
+                _self.questionSet.options.splice(optionIndex, 1);
+            }
+        };
+
+        //Sets Answer if Type CheckBox is selected.
+        _self.setCheckBoxValue = function (questionId) {
+            if (_self.question.options[questionId].id === true) {
+                _self.question.options[questionId].correct = true;
+                _self.answerTag.push('one');
+            } else if (_self.question.options[questionId].id === false) {
+                _self.question.options[questionId].correct = false;
+                _self.answerTag.pop();
+            }
+        };
+        //        //Add more Questions, Saves data to firebase and clears input fields.
+        // _self.addQuestionsAndContinue = function () {
+        //     alert("")
+        //     _self.showRadioOptions = false;
+        //     _self.showCheckOptions = false;
+        //     _self.showQuestionSet = false;
+        //     _self.showAddButton = false;
+        //     if (_self.myType.name === 'Radio Button') {
+        //         angular.forEach(_self.question.options, function (data) {
+        //             if (data.html == _self.myAnswer.html) {
+        //                 data.correct = true;
+        //             } else {
+        //                 data.correct = false;
+        //             }
+        //         });
+        //     }
+        //     angular.forEach(_self.question.options, function (data) {
+        //         delete data.$$hashKey;
+        //         delete data.$$mdSelectId;
+        //         delete data.id;
+        //     });
+        //     _self.question.Type = _self.myType.name;
+        //     ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question);
+        //     _self.question = {
+        //         title: '',
+        //         desc: '',
+        //         type: '',
+        //         // Answer: [],
+        //         options: [{
+        //             html: '',
+        //             correct: false,
+        //             'discussion-html': "discussion-html"
+        //         }]
+        //     };
+        //     _self.myAnswer = undefined;
+        // }
+        //Redirect on close
+        // this.prev = function () {
+        //     $timeout(function () {
+        //         $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
+        //     });
+        // };
+
+        /*  type Question {
+         title: String,
+         type: QuestionType, //QuestionTupe
+         html: String,
+         options: Option[] | Null,
+         questiones: QuestionSet[] | Null,
+         "discussion-html" : String
+         }
+         type QuestionSet {
+         title: String,
+         type: QuestionType, //QuestionTupe
+         html: String,
+         options: Option[] | Null,
+         "discussion-html" : String
+         }
+         type Option {
+         "html": String,
+         "correct": Boolean,
+         "discussion-html" : String
+         }*/
+
+
+        //Save and Exit Button
+        this.showAnswer = function (question) {
+
+            question['discussion-html'] = "discussion-html";
+            if(question.type == 3) {
+                question['title'] = "title";
+                delete question.options;
+                question.questiones = _self.questionSetQuestions;
+            }else {
+                delete question.desc;
+                var arr = question.options;
+                angular.forEach(question.options, function (data, index) {
+                    delete data.$$hashKey;
+                });
+                angular.forEach(question.options, function (data, index) {
+                    // delete arr[index].$$hashKey;
+                    if (question.options[index].html === "") {
+                        arr.splice(index, 1);
+                    }
+                });
+                question.options = arr;
+                question['html'] = "html-";
+                /* if (question.type === 1) {
+                 angular.forEach(_self.question.options, function (data) {
+                 if (data.html == _self.myAnswer.html) {
+                 data.correct = true;
+                 } else {
+                 data.correct = false;
+                 }
+                 });
+                 }
+
+                 _self.question.Type = _self.myType.name;
+                 ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
+
+                 _self.question = {};
+                 abc();
+                 });
+
+                 _self.myAnswer = undefined;
+
+                 }*/
+            }
+            quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question);
+            _self.question = {};
+            _self.question.html = null;
+            _self.question.title = null;
+            _self.correct = null;
+            _self.closeQuestion();
+            /*if (_self.myType.name === 'Radio Button') {
+             angular.forEach(_self.question.options, function (data) {
+             if (data.html == _self.myAnswer.html) {
+             data.correct = true;
+             } else {
+             data.correct = false;
+             }
+             });
+             }*/
+            /* angular.forEach(_self.question.options, function (data) {
+             delete data.$$hashKey;
+             delete data.$$mdSelectId;
+             delete data.id;
+             });*/
+            // _self.question.Type = _self.myType.name;
+            /*myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
+
+             _self.question = {};
+             abc();
+             });
+             */
+            // _self.myAnswer = undefined;
+
+        };
+
+
+        //View Dialog Box.
+        /*this.showAdvanced = function (ev) {
+         _self.question.Type = _self.myType.name;
+         if (_self.myType.name === 'Radio Button') {
+>>>>>>> 7b9baaaa761dea4bbb7c046d343889be6af63230
          angular.forEach(_self.question.options, function (data) {
          if (data.html == _self.myAnswer.html) {
          data.correct = true;
