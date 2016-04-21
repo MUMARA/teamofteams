@@ -52,7 +52,7 @@
     // Create Function for Book, Chapter, Topic , question and Open Side nav bar
     _self.createBook = createBook;
     _self.addChapter = addChapter;
-    _self.createChapter = createChapter;
+    _self.CreateChapter = CreateChapter;
     _self.addTopic = addTopic;
     _self.createTopic = createTopic;
     _self.addQuestion = addQuestion;
@@ -169,7 +169,7 @@
       quizBankService.loadQuestionBanks().then(
         function(data) {
           _self.books = data;
-          console.log(data, 'console.log(questionBank.val())');
+          // console.log(data, 'console.log(questionBank.val())');
         }
       )
     }
@@ -577,7 +577,7 @@
 
     function setSelectedBook(_self, index) {
       _self.selectedBookIndex = index;
-      quizService.setSelectedBook(index);
+      // quizService.setSelectedBook(index);
 
       _self.selectedQuestionIndex = null;
       _self.selectedTopicIndex = null;
@@ -609,7 +609,6 @@
       quizService.setQuestionObject(null);
       // quizService.book = bookIndex;
       _self.bookId = quizBankService.bookId[bookIndex];
-
       _self.showQuestionDetails = false;
       _self.questionView = null;
       quizBankService.loadChapters(_self.bookId).then(
@@ -944,6 +943,11 @@
         'timestamp': Firebase.ServerValue.TIMESTAMP
       };
       quizBankService.createQuestionBank(_self.questionBankObject);
+      // quizBankService.loadQuestionBanks("off").then(
+      //   function(data) {
+      //     _self.books = data;
+      //   }
+      // )
       _self.questionbankObj = {}
         /*userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
          'memberships-type': 1,
@@ -1067,17 +1071,27 @@
      }, 0)
      }*/
 
-    _self.bookId = $stateParams.id;
-    _self.Title = '';
-    _self.Description = '';
+    // _self.bookId = $stateParams.id;
+    // _self.Title = '';
+    // _self.Description = '';
 
-    function createChapter(chapterObj) {
+    function CreateChapter(chapterObj) {
       _self.chapterObj = {
         title: chapterObj.title,
         desc: chapterObj.desc,
         timestamp: Firebase.ServerValue.TIMESTAMP
       };
       quizBankService.createChapter(_self.bookId, _self.chapterObj);
+      quizBankService.loadChapters(_self.bookId).then(
+        function(chapters) {
+          _self.chapters = chapters;
+        });
+      // quizBankService.loadQuestionBanks("off").then(
+      //   function(data) {
+      //     _self.books = data;
+      //   }
+      // )
+
       _self.chapterObj = {};
       _self.showChapter();
       /*
@@ -1109,9 +1123,9 @@
     }
 
 
-    _self.Title = '';
-    _self.Description = '';
-    _self.chapterId = $stateParams.id;
+    // _self.Title = '';
+    // _self.Description = '';
+    // _self.chapterId = $stateParams.id;
 
     function createTopic(topicObj) {
       _self.topicObj = {
@@ -1120,6 +1134,10 @@
         'timestamp': Firebase.ServerValue.TIMESTAMP
       };
       quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj);
+      quizBankService.loadTopic(_self.bookId, _self.chapterId).then(function(
+        topics) {
+        _self.topics = topics;
+      });
       _self.topicObj = {};
       _self.showTopic();
     }
@@ -1144,19 +1162,16 @@
     }
     _self.showTextangular = []
     _self.closeTextangular = function(sideNavId, index) {
-      alert("");
       !isNaN(sideNavId) ? _self.showTextangular[sideNavId] = !
         _self.showTextangular[
           sideNavId] :
         $mdSidenav(sideNavId).toggle();
-      //  _self.showTextangular = !_self.showTextangular;
     }
     _self.showTextangularForQuestionSet = []
     _self.showTextangularSideNav = function(sideNavId, index) {
       !isNaN(sideNavId) ? _self.showTextangularForQuestionSet[
           sideNavId] = !_self.showTextangularForQuestionSet[sideNavId] :
         $mdSidenav(sideNavId).toggle();
-      //  _self.showTextangular = !_self.showTextangular;
     }
 
     function addQuestion() {
@@ -1374,7 +1389,6 @@
 
     //Save and Exit Button
     this.showAnswer = function(question) {
-      console.log(question, "111111111111111111111111111111111")
       if (question.type == 3) {
         question['title'] = "title";
         delete question.options;
@@ -1415,6 +1429,10 @@
       }
       quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId,
         question);
+      quizBankService.loadQuestions(_self.bookId, _self.chapterId, _self.topicId)
+        .then(function(questions) {
+          _self.questions = questions;
+        });
       _self.questionSetQuestions = [];
       _self.question = {};
       _self.question.html = null;
