@@ -644,6 +644,9 @@
 
         function answer(groupForm) {
             that.processingSave = true;
+            var userObj = activityStreamService.getCurrentUserGroups();
+            var memberType = userObj[this.groupId]['membership-type']
+            
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
