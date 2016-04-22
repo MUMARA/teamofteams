@@ -342,17 +342,18 @@
           "chapters").child(chapterUniqueId).child("topics").child(
           topicUniqueId).child("questions")
         // Questions Ref Value CallBack on Value Events
-      var questionsRefValueCallBack = questionsRef.once('value', function(
-        questions) {
-        _self.questionId.push(questions.key());
-        _self.questions.push(questions.val());
-        deferred.resolve(_self.questions);
-        // for (var key in questions.val()) {
-        //   _self.questionId.push(key);
-        //   _self.questions.push(questions.val()[key]);
-        //   deferred.resolve(_self.questions);
-        // }
-      });
+      var questionsRefValueCallBack = questionsRef.on('child_added',
+        function(
+          questions) {
+          _self.questionId.push(questions.key());
+          _self.questions.push(questions.val());
+          deferred.resolve(_self.questions);
+          // for (var key in questions.val()) {
+          //   _self.questionId.push(key);
+          //   _self.questions.push(questions.val()[key]);
+          //   deferred.resolve(_self.questions);
+          // }
+        });
       // Questions off Value Events
       // questionsRef.off("value", questionsRefValueCallBack)
       return deferred.promise;
