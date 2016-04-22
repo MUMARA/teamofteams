@@ -1107,14 +1107,15 @@ angular.module('core')
                                             // if create admin of group then add subgroups admin of that group -- END
                                             if (newType === 2) {
                                                 var subgroups = activityStreamService.getSubgroupsOfGroup();
-                                                if (subgroups[groupObj.$id].length > 0){
+                                                console.log('subgroups', subgroups[groupObj.$id]);
+                                                if (subgroups[groupObj.$id] || subgroups[groupObj.$id].length > 0){
                                                     subgroups[groupObj.$id].forEach(function(val,index){
                                                         self.addRemoveAdminOfGroup(groupObj.$id, val, member.userSyncObj.$id, newType);
                                                     });
                                                 }    
                                             } else {
                                                 var subgroups = activityStreamService.getSubgroupsOfGroup();
-                                                if (subgroups[groupObj.$id].length > 0) {
+                                                if (subgroups[groupObj.$id] || subgroups[groupObj.$id].length > 0) {
                                                     subgroups[groupObj.$id].forEach(function (val, index) {
                                                         self.addRemoveAdminOfGroup(groupObj.$id, val, member.userSyncObj.$id, null);
                                                     });
