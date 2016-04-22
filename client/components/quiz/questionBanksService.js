@@ -273,8 +273,9 @@
 
       // Store chapters Ref
       var chapterRef = firebaseService.getRefQuestionBank().child(
-        questionBankUniqueID).child(
-        "chapters")
+          questionBankUniqueID).child(
+          "chapters")
+        // chapters off Value Events
       chapterRef.off('child_added');
       // chapter Ref Value CallBack on Value Events
       var chapterRefValueCallBack = chapterRef.on('child_added', function(
@@ -311,7 +312,10 @@
       // Store topicRef Ref
       var topicRef = firebaseService.getRefQuestionBank().child(
         questionBankUniqueID).child(
-        "chapters").child(chapterUniqueId).child("topics")
+        "chapters").child(chapterUniqueId).child("topics");
+      // Topic off Value Events
+
+      topicRef.off('child_added');
 
       // Topic Ref Value CallBack on Value Events
       var TopicValueCallBack = topicRef.on('child_added',
@@ -327,7 +331,7 @@
           //   deferred.resolve(_self.topics);
           // }
         });
-      // Topic off Value Events
+
       // topicRef.off("value", TopicValueCallBack)
       return deferred.promise;
     };
@@ -341,7 +345,9 @@
           questionBankUniqueID).child(
           "chapters").child(chapterUniqueId).child("topics").child(
           topicUniqueId).child("questions")
-        // Questions Ref Value CallBack on Value Events
+        // Questions off Value Events
+      questionsRef.off('child_added');
+      // Questions Ref Value CallBack on Value Events
       var questionsRefValueCallBack = questionsRef.on('child_added',
         function(
           questions) {
@@ -354,8 +360,7 @@
           //   deferred.resolve(_self.questions);
           // }
         });
-      // Questions off Value Events
-      // questionsRef.off("value", questionsRefValueCallBack)
+
       return deferred.promise;
     };
     _self.createQuestion = function(questionBankUniqueID, chapterUniqueId,
