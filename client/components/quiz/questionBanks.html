@@ -326,7 +326,7 @@
 
     <div class="gradient3 quiz-menu-col">
         <a ng-click="quiz.booksNav = !quiz.booksNav" id="menu-toggle" class="menu-item-btn">
-            <img ng-src="img/menu.svg" style=" height: 45px;">
+            <img ng-src="img/menu.svg" style="margin-left: 12px; height: 45px;">
         </a>
         <br>
         <md-divider></md-divider>
@@ -802,7 +802,6 @@
         <md-button ng-disabled="topicForm.$invalid" class="backColorSeaGreen color-white"
                    ng-click="quiz.createTopic(quiz.topicObj)">Create
         </md-button>
-        </md-button>
         <md-button ng-click="quiz.closeTopic()" class="backColorSeaGreen color-white">
             Close
         </md-button>
@@ -865,12 +864,13 @@
   </div>
 </md-sidenav>
 <!--Add Question Sidenav Start-->
-<md-sidenav class="md-sidenav-right add-question-nav md-whiteframe-z2 backColorLightSeaGreen" md-component-id="nav3">
+<md-sidenav class="md-sidenav-right add-question-nav backColorLightSeaGreen" md-component-id="nav3">
     <ng-md-icon icon="close" size="30" class="nooutline close-icon" ng-click="quiz.closeQuestion()">
     </ng-md-icon>
-    <md-content layout-padding class="backColorLightSeaGreen">
-        <form>
-            <h1 class="create-sidenav-heading">Add Question</h1>
+    <div>
+        <h1 class="create-sidenav-heading">Add Question</h1>
+        <md-content layout-padding class="backColorLightSeaGreen">
+            <form name="groupForm">
             <!--Question Title-->
             <div layout="column">
                    <div layout="row">
@@ -888,7 +888,7 @@
                     <label>Question Title</label>
                     <input name="questionTitle" ng-model="quiz.question.title"
                            minlength="3" maxlength="30" required
-                           ng-change="quiz.showButton1 = true" autofocus="true">
+                           ng-change="quiz.showButton1 = true">
 
                     <div ng-show="groupForm.$submitted || groupForm.questionTitle.$touched"
                          ng-messages="groupForm.questionTitle.$error">
@@ -937,7 +937,6 @@
             </div>
             <!--Answer Type-->
             <div class="div1">
-
                 <div layout="row">
 
                     <md-input-container flex="50" ng-if="quiz.question.type == 3">
@@ -949,8 +948,6 @@
                         </md-select>
                     </md-input-container>
                 </div>
-
-
                 <div ng-show="quiz.question.type == 3">
                     <div layout="column" layout-align="center center">
                     <div layout="row">
@@ -1232,19 +1229,21 @@
                         Add Option
                     </md-button>
                 </div>
+            </div>
 
-                <!--Bottom Buttons-->
-                <div style="position: fixed;bottom: 5px;right: 90px;">
-                    <md-button style="color:#ffffff;" class="backColorSeaGreen"
-                               ng-click="quiz.showAnswer(quiz.question);">
-                        Create
-                    </md-button>
-                    <md-button style="color:#ffffff;" class="backColorSeaGreen" ng-click="quiz.closeQuestion();">
-                        Cancel
-                    </md-button>
-                </div>
         </form>
-    </md-content>
+        </md-content>
+    </div>
+    <!--Bottom Buttons-->
+    <div style="position: fixed;bottom: 5px;right: 15px;">
+        <md-button style="color:#ffffff;" class="backColorSeaGreen"
+                   ng-click="quiz.showAnswer(quiz.question);">
+            Create
+        </md-button>
+        <md-button style="color:#ffffff;" class="backColorSeaGreen" ng-click="quiz.closeQuestion();">
+            Cancel
+        </md-button>
+    </div>
 </md-sidenav>
 <!--Add Question Sidenav End-->
 

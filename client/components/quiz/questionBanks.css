@@ -286,7 +286,7 @@ blockquote {
 }
 
 .add-question-nav {
-    margin-left: 45px;
+    /*margin-left: 45px;*/
     width: 50%;
     min-width: 50%;
     max-width: 100%;
