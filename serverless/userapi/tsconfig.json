@@ -8,6 +8,7 @@
         "moduleResolution": "node"
 	},
     "files": [
-            "src/signup/handler.ts"
+            "src/signup/handler.ts",
+            "src/lib/User.ts"
         ]
 }
