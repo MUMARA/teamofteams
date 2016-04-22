@@ -264,7 +264,8 @@
                 </div>
             </md-toolbar>
             <div class="quiz-md-card-1">
-                
+                 <ul><li ng-repeat="quiz in quiz.qData">{{quiz}}</li></ul>
+                  
             </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Add book" ng-click="quizes.addBook()">

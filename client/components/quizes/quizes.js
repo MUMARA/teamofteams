@@ -10,12 +10,13 @@
 
         /*********************Local Service For Testing UI**************/
 
-        .service("myQuizData", function(){
-            var QuizDatah = [];
+        .service("myQuizData", function($firebaseArray){
+            var ref =  new Firebase('https://geniuz.firebaseio.com/quiz');
+            var QuizDatah = $firebaseArray(ref);
             this._saveQuizData = function(qData){
-                //console.log(studentObj);
-                QuizDatah.push(qData);
-               // console.log(qData);
+                // console.log(studentObj);
+                QuizDatah.$add(qData);
+            //    console.log('this is q data',qData);
             };
 
             this._getQuizData = function(){
@@ -133,7 +134,7 @@
         function createQuize(qData, img){
             qData.img = img;
 
-          //  console.log(qData);
+        //    console.log('my uis', qData);
 
 
             myQuizData._saveQuizData(qData);
