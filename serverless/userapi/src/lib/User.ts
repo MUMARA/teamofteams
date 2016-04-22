@@ -2,7 +2,18 @@
 
 
 export class User {
-    public static Signup(){
-        
+
+    email: string;
+    userID: string;
+
+
+
+    constructor(email, userID) {
+        this.email = email;
+        this.userID = userID;
+    }
+
+    Signup(): string {
+        return this.email + " // " + this.userID;
     }
 }

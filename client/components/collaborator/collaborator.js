@@ -3,6 +3,14 @@
  */
 (function() {
   'use strict';
+  function findWithAttr(array, attr, value) {
+        for (var i = 0; i < array.length; i += 1) {
+          if (array[i][attr] === value) {
+            return i;
+          }
+        }
+        return -1;
+      }
   angular.module('app.collaborator')
     // .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
     .filter('collaboratorUsers', function() {
@@ -19,19 +27,14 @@
         return filteredUsers;
       };
 
-      function findWithAttr(array, attr, value) {
-        for (var i = 0; i < array.length; i += 1) {
-          if (array[i][attr] === value) {
-            return i;
-          }
-        }
-        return -1;
-      }
+
     })
-    .controller('CollaboratorController', ['firebaseService', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', '$state', '$firebaseObject', '$rootScope', 'CollaboratorService', '$q', collaboratorFunction]);
 
 
-  function collaboratorFunction(firebaseService, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope, $state, $firebaseObject, $rootScope, CollaboratorService, $q) {
+    .controller('CollaboratorController', ['firebaseService', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', '$state', '$firebaseObject', '$rootScope', 'CollaboratorService', '$q','$document', collaboratorFunction]);
+
+
+  function collaboratorFunction(firebaseService, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope, $state, $firebaseObject, $rootScope, CollaboratorService, $q,$document) {
 
     var globalRef = firebaseService.getRefMain();
 
@@ -55,6 +58,7 @@
       displayName: "C#",
       codeMirrorName: "text/x-csharp"
     }, ];
+    that.documentType = "Rich Text";
     that.isNormal = true;
     that.mode = "Rich Text";
     var pushDocumentNode, firebaseDocumentId, firepad;
@@ -68,6 +72,8 @@
     that.permissionObj = {};
     that.permissionMembers = {};
     that.allUsers;
+    var editorExists = false;
+    that.Editors = []
 
     init();
     $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
@@ -243,7 +249,31 @@
       }
     };
 
+   function createClickEvent(node,type,callback){
+    //    node.addEventListener(type, myFunc,true);
+    //    function myFunc() {
+    //        that.channelBottomSheet = false;
+    //        document.body.removeEventListener('click', myFunc,true)
+    //     }
+    $('body').click(function(evt){
+       if(evt.target.id == "channelBottomSheet")
+          return;
+          if(evt.target.id == "fabButton")
+          return;
+          if($(evt.target).closest('#fabButton').length)
+          return;
+       //For descendants of menu_content being clicked, remove this check if you do not want to put constraint on descendants.
+       if($(evt.target).closest('#channelBottomSheet').length)
+          return;
+       console.log(evt.target);
+        that.channelBottomSheet = false;
+      //Do processing of click event here for every element except with id menu_content
+    });
+   }
+     createClickEvent(document.body,'click');
+
     that.channelBottomSheetfunc = function() {
+        // createClickEvent(document.body,'click');
       if (that.channelBottomSheet)
         that.channelBottomSheet = false;
       else
@@ -332,9 +362,28 @@
           globalRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
             that.backdrop = that.allUsers = snapshot.val();
             if(!that.allUsers){
-              globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-              backdropPermission();
-            });
+                $firebaseObject(globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID)).$loaded(function(response){
+                    console.log(response);
+                    that.permissionObj = {};
+                    response.forEach(function(element,item){
+                        console.log("Element:", element + "," + item);
+                        that.permissionObj[item] = true;
+
+                    })
+                })
+            //   globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
+            // //   backdropPermission();
+            //     console.log(snapshot);
+            // });
+            }
+            else {
+                that.users.forEach(function(user) {
+                    if (user.groupID == that.groupID) {
+                        if (!that.permissionObj[user.id]) {
+                            that.permissionObj[user.id] = true;
+                        }
+                    }
+                });
             }
 
           });
@@ -352,7 +401,63 @@
         that.history = $firebaseArray(localRef.child("history").limitToLast(300));
       }
 
+      localRef.child('history').on('child_added',function(snapshot){
+        addEditor(snapshot.val());
+      })
+    }
 
+
+function editTimestamp(user) {
+  for (var i = 0; i < that.Editors.length; i++) {
+    if(that.Editors[i].id == user.a){
+      that.Editors[i].timestamp = user.t;
+      // editorExists = false;
+    }
+  }
+}
+function addEditor(snapshot){
+    angular.forEach(that.Editors,function(item){
+      if(item.id == snapshot.a){
+        editorExists = true;
+        editTimestamp(snapshot);
+      }
+    })
+  if(!editorExists){
+    userService.getUserProfile(snapshot.a,function(user){
+      angular.forEach(that.Editors,function(item){
+        if(item.id == snapshot.a){
+          editorExists = true;
+          editTimestamp(snapshot);
+        }
+      })
+      if(!editorExists){
+        that.Editors.push({
+          id: snapshot.a,
+          timestamp: snapshot.t,
+          name : user.firstName + " " + user.lastName,
+          img: user['profile-image'] != undefined ? user['profile-image'] : ""
+        })
+      }
+      })
+  }
+  else {
+    editorExists = false;
+  }
+  console.log("that.Editors:", that.Editors);
+}
+// that.EditorDetails = function(userId) {
+//    console.log(userId);
+// }
+
+
+    function userAccessToggles() {
+         that.users.forEach(function(user) {
+             if (user.groupID == that.groupID) {
+                 if (!that.permissionObj[user.id]) {
+                     that.permissionObj[user.id] = true;
+                     }
+              }
+        });
     }
 
     function permissions() {
@@ -396,6 +501,7 @@
           // that.backdrop = that.permission[that.user.userID];
         } else {
           that.backdrop = true;
+          userAccessToggles();
         }
       })
 

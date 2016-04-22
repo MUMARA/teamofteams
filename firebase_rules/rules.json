@@ -998,9 +998,13 @@
       "$groupid": {
         "$documentid": {
           "history": {
-            ".write": "data.val() == null && (root.child('firepad-groups-access').child($groupid).child($documentid).child(auth.uid).val() != null || root.child('firepad-groups-rules').child($groupid).child($documentid).child('allUsers').val() == true) || data.val() != null && newData.val() == null && (root.child('firepad-groups-access').child($groupid).child($documentid).child(auth.uid).val() != null || root.child('firepad-groups-rules').child($groupid).child($documentid).child('allUsers').val() == true)"
+            "$historyid": {
+              ".write": "data.val() == null && (root.child('firepad-groups-rules').child($groupid).child($documentid).child('allUsers').val() == false ? root.child('firepad-groups-access').child($groupid).child($documentid).child(auth.uid).val() != null : true)"
+            }
           },
-          ".write": "data.val() == null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0",
+          "users": {
+            ".write": "data.val() == null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0 || data.val() != null && newData.val() != null && auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
+          },
           ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"
         },
         ".read": "auth != null && root.child('user-group-memberships').child(auth.uid).child($groupid).child('membership-type').val() > 0"

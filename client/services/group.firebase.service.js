@@ -859,7 +859,7 @@ angular.module('core')
                             firebaseService.getRefGroupMembers().child(groupObj.groupID).update(response.memberJSON, function(err) {
                                 if (err) {
                                     //handle this scenario
-                                    console.log('adding membersJSON to group failed', err);
+                                    // console.log('adding membersJSON to group failed', err);
                                 } else {
                                     addMembersToGroupDefer.resolve();
                                 }
@@ -1103,6 +1103,25 @@ angular.module('core')
                                             activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                             //for group activity stream record -- END --
 
+                                            // if create admin of group then add subgroups admin of that group -- START
+                                            // if create admin of group then add subgroups admin of that group -- END
+                                            if (newType === 2) {
+                                                var subgroups = activityStreamService.getSubgroupsOfGroup();
+                                                console.log('subgroups', subgroups[groupObj.$id]);
+                                                if (subgroups[groupObj.$id] || subgroups[groupObj.$id].length > 0){
+                                                    subgroups[groupObj.$id].forEach(function(val,index){
+                                                        self.addRemoveAdminOfGroup(groupObj.$id, val, member.userSyncObj.$id, newType);
+                                                    });
+                                                }    
+                                            } else {
+                                                var subgroups = activityStreamService.getSubgroupsOfGroup();
+                                                if (subgroups[groupObj.$id] || subgroups[groupObj.$id].length > 0) {
+                                                    subgroups[groupObj.$id].forEach(function (val, index) {
+                                                        self.addRemoveAdminOfGroup(groupObj.$id, val, member.userSyncObj.$id, null);
+                                                    });
+                                                }    
+                                            }
+
                                             defer.resolve();
 
                                             // //publish an activity for membership changed.
@@ -1150,7 +1169,6 @@ angular.module('core')
 
                     return defer.promise;
                 },
-
                 asyncRemoveUserFromGroup: function(memberID, groupID) {
                     var defer, self,
                         errorHandler;
@@ -1528,7 +1546,73 @@ angular.module('core')
                         });
 
                     return defer.promise;
-                }
-            };
-        }
+                },
+                addRemoveAdminOfGroup: function(groupId, subgroupId, userId, memberType) {
+                    var self = this;
+                    var ref = firebaseService.getRefMain();
+
+                    var obj = (memberType) ? { 'membership-type': memberType, 'timestamp': firebaseTimeStamp } : null;
+
+                    // Create the data we want to update
+                    var updatedUserData = {};
+                    updatedUserData["subgroup-members/" + groupId + '/'+ subgroupId + '/' + userId] = obj;
+                    updatedUserData["user-subgroup-memberships/" + userId + '/' + groupId + '/'+ subgroupId] = obj;
+
+                    //UPDATE MULTIPATH
+                    ref.update(updatedUserData, function(err){
+                        if(err){
+                            console.log(err);
+                        } else {
+                            // console.log('done');
+                        }
+                    });
+
+                    //update subgroup member count
+                    self.subgroupMemberUpdate(groupId, subgroupId, userId, memberType);
+
+                }, // addRemoveAdminOfGroup
+                subgroupMemberUpdate: function(groupId, subgroupId, userId, type) {
+                    var ref = firebaseService.getRefMain();
+
+                    //if type is true then increment in subgroup member-count, else decrement in subgroup member-count
+
+                    if (type) {
+                        //checking if user id already a member of this subgroup then don't increment member-count
+                        ref.child('subgroup-members').child(groupId).child(subgroupId).child(userId).once('value', function(snapshot){
+                            if(snapshot.val()){
+                                if(snapshot.val()['membership-type'] !== 2 && snapshot.val()['membership-type'] !== 3){
+                                    ref.child('subgroups').child(groupId).child(subgroupId).once('value', function(subgroup){
+                                        var count = subgroup.val()['members-count'];
+                                        ref.child('subgroups').child(groupId).child(subgroupId).child('members-count').set(count+1, function(){
+                                            // console.log('count updated');
+                                        });
+                                    });
+                                }
+                            } else {
+                                ref.child('subgroups').child(groupId).child(subgroupId).once('value', function(subgroup){
+                                    var count = subgroup.val()['members-count'];
+                                    ref.child('subgroups').child(groupId).child(subgroupId).child('members-count').set(count+1, function(){
+                                        // console.log('count updated');
+                                    });
+                                });
+                            }
+                        }); //ref.child('subgroup-members')
+                    } else {
+                        //checking if user id already a member of this subgroup then decrement member-count
+                        ref.child('subgroup-members').child(groupId).child(subgroupId).child(userId).once('value', function(snapshot){
+                            if(snapshot.val()){
+                                if(snapshot.val()['membership-type'] === 2 || snapshot.val()['membership-type'] === 3) {
+                                    ref.child('subgroups').child(groupId).child(subgroupId).once('value', function(subgroup){
+                                        var count = subgroup.val()['members-count'];
+                                        ref.child('subgroups').child(groupId).child(subgroupId).child('members-count').set(count-1, function(){
+                                            // console.log('count updated');
+                                        });
+                                    });
+                                }
+                            } //if snapshot
+                        }); //ref.child('subgroup-members')
+                    } // else
+                } // subgroupMemberUpdate
+            }; // return
+        } // factory
     ]);
