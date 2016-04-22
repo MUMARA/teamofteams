@@ -1,10 +1,10 @@
 {
-  "name": "signup",
+  "name": "signin",
   "runtime": "nodejs4.3",
   "description": "Serverless Lambda function for project: userapi",
   "customName": false,
   "customRole": false,
-  "handler": "signup/handler.handler",
+  "handler": "handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -13,8 +13,8 @@
   },
   "endpoints": [
     {
-      "path": "signup",
-      "method": "POST",
+      "path": "signin",
+      "method": "GET",
       "type": "AWS",
       "authorizationType": "none",
       "authorizerFunction": false,
@@ -30,9 +30,11 @@
         "default": {
           "statusCode": "200",
           "responseParameters": {},
-          "responseModels": {},
+          "responseModels": {
+            "application/json;charset=UTF-8": "Empty"
+          },
           "responseTemplates": {
-            "application/json": ""
+            "application/json;charset=UTF-8": ""
           }
         }
       }

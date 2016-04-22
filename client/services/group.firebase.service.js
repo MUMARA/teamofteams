@@ -1551,7 +1551,7 @@ angular.module('core')
                     var self = this;
                     var ref = firebaseService.getRefMain();
 
-                    var obj = (memberType) ? {'membership-type': memberType, 'timestamp': firebaseTimeStamp } : null;
+                    var obj = (memberType) ? { 'membership-type': memberType, 'timestamp': firebaseTimeStamp } : null;
 
                     // Create the data we want to update
                     var updatedUserData = {};

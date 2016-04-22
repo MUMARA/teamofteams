@@ -1,10 +1,10 @@
 {
   "name": "signup",
   "runtime": "nodejs4.3",
-  "description": "Serverless Lambda function for project: userapi",
+  "description": "Serverless Lambda function for project: serverless-byrukc",
   "customName": false,
   "customRole": false,
-  "handler": "signup/handler.handler",
+  "handler": "handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -30,9 +30,11 @@
         "default": {
           "statusCode": "200",
           "responseParameters": {},
-          "responseModels": {},
+          "responseModels": {
+            "application/json;charset=UTF-8": "Empty"
+          },
           "responseTemplates": {
-            "application/json": ""
+            "application/json;charset=UTF-8": ""
           }
         }
       }
