@@ -111,6 +111,7 @@
 
     function CreateDocument(documentTitle, groupID, subgroupID,documentType,user) {
       var deferred = $q.defer();
+      var firebaseObj = {};
       var firebaseLocalRef = firepadRef,pushDocumentNode,firebaseDocumentId;
       var updateDocument = {},
       createdBy = {
@@ -120,35 +121,29 @@
         imgUrl:$rootScope.userImg || ""
 
       };
+        firebaseObj = {
+          title: documentTitle,
+          type: documentType,
+          createdBy: createdBy,
+          timestamp: Date.now()
+      }
       if (subgroupID) {
         // firebaseLocalRef = new Firebase(ref);
         // firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
         pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID).push();
         firebaseDocumentId = pushDocumentNode.key();
-        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
-        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/type"] = documentType;
-        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
-        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
-        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
-        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/type"] = documentType;
-        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
-        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId] = firebaseObj;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId] = firebaseObj;
         updateDocument['firepad-subgroups-access/' + groupID + "/" + subgroupID + '/' + firebaseDocumentId + '/' + user.userID] = 1;
         updateDocument['firepad-subgroups-rules/' + groupID + "/" + subgroupID + '/' + firebaseDocumentId + '/allUsers'] = true;
 
       } else {
         // firebaseLocalRef = new Firebase(ref);
         // firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
-        pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
+         pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
         firebaseDocumentId = pushDocumentNode.key();
-        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
-        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/type"] = documentType;
-        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
-        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
-        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/title"] = documentTitle;
-        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/type"] = documentType;
-        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/createdBy"] = createdBy;
-        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId ] = firebaseObj;
+        updateDocument["firepad-groups-documents/" + groupID + "/" + firebaseDocumentId ] = firebaseObj;
         updateDocument['firepad-groups-access/' + groupID + "/" + firebaseDocumentId + '/' + user.userID] = 1;
         updateDocument['firepad-groups-rules/' + groupID + "/" + firebaseDocumentId + '/allUsers'] = true;
 

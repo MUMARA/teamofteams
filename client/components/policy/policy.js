@@ -23,6 +23,7 @@
             this.showarrow = undefined;
             this.isLocationbased = false;
             this.isTimebased = false;
+            that.selectedTeamNew = [];
             this.isProgressReport = false;
             this.isProcessing = false;
             that.fencing = true;
@@ -336,7 +337,7 @@
                                 that.subGroupNames.forEach(function(val, indx) {
                                     if (val.subgroupID == subgroup.subgroupID) {
                                         that.subGroupNames[indx].hasPolicy = true;
-
+                                        
                                         that.selectedTeamNew.push(that.subGroupNames[indx]);
                                         // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
                                     }
@@ -348,7 +349,12 @@
                                     if (val.subgroupID == subgroup.subgroupID) {
                                         that.subGroupNames[indx].hasPolicy = true;
 
-                                        that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                        if (that.selectedTeamNew) { // checkin if not undefined
+                                            that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                        } else {    // if undefined
+                                            that.selectedTeamNew = [];
+                                            that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                        }    
                                         // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
                                     }
                                 }); // that.subGroupNames

@@ -68,7 +68,6 @@
                         return defer.promise;
 
                     },
-
                     'getGroupImgFromServer': function() {
                         var defer = $q.defer();
                         $http({
@@ -93,7 +92,6 @@
                         return defer.promise;
 
                     }
-
                 };
 
                 function Uint8ToString(u8a) {
