@@ -218,7 +218,7 @@
     _self.topicsId = [];
     _self.questions = [];
     _self.questionId = [];
-
+    _self.abc = []
     _self.loadQuestionBanks = function() {
       _self.books = [];
       _self.bookId = [];
@@ -226,16 +226,29 @@
       var bookRef = firebaseService.getRefUserQuestionBanks().child(
         userService.getCurrentUser()
         .userID).on('child_added', function(questionBankUniqueID) {
-        firebaseService.getRefQuestionBank().child(questionBankUniqueID
-          .key()).on('value', function(questionBank) {
-          _self.books.push(questionBank.val());
-          _self.bookId.push(questionBank.key());
+        a(questionBankUniqueID.key(), function(res) {
           deferred.resolve(_self.books)
-        });
+        })
+
+
+
       });
 
       return deferred.promise;
     };
+
+    function a(questionBankUniqueID, cb) {
+      firebaseService.getRefQuestionBank().child(questionBankUniqueID).once(
+        'value',
+        function(questionBank) {
+          _self.abc.push(questionBank.val())
+          console.log(_self.abc)
+          console.log(questionBank.val(), "33333333333333333333")
+          _self.books.push(questionBank.val());
+          _self.bookId.push(questionBank.key());
+          cb()
+        });
+    }
     _self.createQuestionBank = function(questionBankObject) {
       // firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).set();
       var questionBankUniqueId = firebaseService.getRefUserQuestionBanks().child(
@@ -253,6 +266,7 @@
         .set(questionBankObject);
     };
     _self.loadChapters = function(questionBankUniqueID) {
+
       var deferred = $q.defer();
       _self.chapters = [];
       _self.chaptersId = [];
@@ -262,16 +276,16 @@
           questionBankUniqueID).child(
           "chapters")
         // chapter Ref Value CallBack on Value Events
-      var chapterRefValueCallBack = chapterRef.on('value', function(
+      var chapterRefValueCallBack = chapterRef.once('value', function(
         ChaptersUniqueId) {
         for (var key in ChaptersUniqueId.val()) {
           _self.chaptersId.push(key);
           _self.chapters.push(ChaptersUniqueId.val()[key]);
+
           deferred.resolve(_self.chapters);
         }
       });
-      // off Value Events
-      chapterRef.off("value", chapterRefValueCallBack)
+
       return deferred.promise;
     };
     _self.createChapter = function(questionBankUniqueID, chapterObject) {
@@ -294,7 +308,7 @@
         "chapters").child(chapterUniqueId).child("topics")
 
       // Topic Ref Value CallBack on Value Events
-      var TopicValueCallBack = topicRef.on('value',
+      var TopicValueCallBack = topicRef.once('value',
         function(topics) {
           for (var key in topics.val()) {
             _self.topicsId.push(key);
@@ -304,7 +318,7 @@
           }
         });
       // Topic off Value Events
-      topicRef.off("value", TopicValueCallBack)
+      // topicRef.off("value", TopicValueCallBack)
       return deferred.promise;
     };
     _self.loadQuestions = function(questionBankUniqueID, chapterUniqueId,
@@ -318,7 +332,7 @@
           "chapters").child(chapterUniqueId).child("topics").child(
           topicUniqueId).child("questions")
         // Questions Ref Value CallBack on Value Events
-      var questionsRefValueCallBack = questionsRef.on('value', function(
+      var questionsRefValueCallBack = questionsRef.once('value', function(
         questions) {
         for (var key in questions.val()) {
           _self.questionId.push(key);
@@ -327,7 +341,7 @@
         }
       });
       // Questions off Value Events
-      questionsRef.off("value", questionsRefValueCallBack)
+      // questionsRef.off("value", questionsRefValueCallBack)
       return deferred.promise;
     };
     _self.createQuestion = function(questionBankUniqueID, chapterUniqueId,

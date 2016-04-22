@@ -560,7 +560,6 @@
     function setSelectedChapter(_self, index) {
       _self.selectedQuestionIndex = null;
       _self.selectedTopicIndex = null;
-      _self.selectedChapterIndex = index;
       quizService.setSelectedChapter(index);
       quizService.setSelectedTopic(null);
       // quizService.setSelectedQuestion(null);
@@ -576,7 +575,6 @@
     }
 
     function setSelectedBook(_self, index) {
-      _self.selectedBookIndex = index;
       // quizService.setSelectedBook(index);
 
       _self.selectedQuestionIndex = null;
@@ -602,13 +600,14 @@
 
     /*  Question Bank   */
     function showChapters(bookIndex) {
-
+      _self.selectedBookIndex = bookIndex;
       quizService.setQuestionObject(null);
       quizService.setChapter(null, null);
       quizService.setTopic(null, null);
       quizService.setQuestionObject(null);
       // quizService.book = bookIndex;
       _self.bookId = quizBankService.bookId[bookIndex];
+
       _self.showQuestionDetails = false;
       _self.questionView = null;
       quizBankService.loadChapters(_self.bookId).then(
@@ -637,6 +636,7 @@
     }
 
     function showTopics(chapterIndex) {
+      _self.selectedChapterIndex = chapterIndex;
       quizService.setTopic(null, null);
       quizService.setQuestionObject(null);
       _self.topics = [];
@@ -665,6 +665,7 @@
     }
 
     function showQuestions(topicIndex) {
+      _self.selectedTopicIndex = topicIndex;
       _self.topicId = quizBankService.topicsId[topicIndex];
       _self.showQuestionDetails = false;
       _self.questionView = null;
@@ -686,7 +687,8 @@
        });*/
     }
     // Shows Question Details
-    function showQuestionView(question) {
+    function showQuestionView(question, index) {
+      _self.selectedQuestionIndex = index;
       if (question !== null) {
         quizService.setQuestionObject(question);
       }
@@ -1597,55 +1599,28 @@
 
 
         //Save and Exit Button
-        this.showAnswer = function (question) {
+        this.showAnswer = function(question) {
 
-            question['discussion-html'] = "discussion-html";
-            if(question.type == 3) {
-                question['title'] = "title";
-                delete question.options;
-                question.questiones = _self.questionSetQuestions;
-            }else {
-                delete question.desc;
-                var arr = question.options;
-                angular.forEach(question.options, function (data, index) {
-                    delete data.$$hashKey;
-                });
-                angular.forEach(question.options, function (data, index) {
-                    // delete arr[index].$$hashKey;
-                    if (question.options[index].html === "") {
-                        arr.splice(index, 1);
-                    }
-                });
-                question.options = arr;
-                question['html'] = "html-";
-                /* if (question.type === 1) {
-                 angular.forEach(_self.question.options, function (data) {
-                 if (data.html == _self.myAnswer.html) {
-                 data.correct = true;
-                 } else {
-                 data.correct = false;
-                 }
-                 });
-                 }
-
-                 _self.question.Type = _self.myType.name;
-                 ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
-
-                 _self.question = {};
-                 abc();
-                 });
-
-                 _self.myAnswer = undefined;
-
-                 }*/
-            }
-            quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question);
-            _self.question = {};
-            _self.question.html = null;
-            _self.question.title = null;
-            _self.correct = null;
-            _self.closeQuestion();
-            /*if (_self.myType.name === 'Radio Button') {
+          question['discussion-html'] = "discussion-html";
+          if (question.type == 3) {
+            question['title'] = "title";
+            delete question.options;
+            question.questiones = _self.questionSetQuestions;
+          } else {
+            delete question.desc;
+            var arr = question.options;
+            angular.forEach(question.options, function(data, index) {
+              delete data.$$hashKey;
+            });
+            angular.forEach(question.options, function(data, index) {
+              // delete arr[index].$$hashKey;
+              if (question.options[index].html === "") {
+                arr.splice(index, 1);
+              }
+            });
+            question.options = arr;
+            question['html'] = "html-";
+            /* if (question.type === 1) {
              angular.forEach(_self.question.options, function (data) {
              if (data.html == _self.myAnswer.html) {
              data.correct = true;
@@ -1653,20 +1628,48 @@
              data.correct = false;
              }
              });
-             }*/
-            /* angular.forEach(_self.question.options, function (data) {
-             delete data.$$hashKey;
-             delete data.$$mdSelectId;
-             delete data.id;
-             });*/
-            // _self.question.Type = _self.myType.name;
-            /*myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
+             }
+
+             _self.question.Type = _self.myType.name;
+             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
 
              _self.question = {};
              abc();
              });
-             */
-            // _self.myAnswer = undefined;
+
+             _self.myAnswer = undefined;
+
+             }*/
+          }
+          quizBankService.createQuestion(_self.bookId, _self.chapterId,
+            _self.topicId, question);
+          _self.question = {};
+          _self.question.html = null;
+          _self.question.title = null;
+          _self.correct = null;
+          _self.closeQuestion();
+          /*if (_self.myType.name === 'Radio Button') {
+           angular.forEach(_self.question.options, function (data) {
+           if (data.html == _self.myAnswer.html) {
+           data.correct = true;
+           } else {
+           data.correct = false;
+           }
+           });
+           }*/
+          /* angular.forEach(_self.question.options, function (data) {
+           delete data.$$hashKey;
+           delete data.$$mdSelectId;
+           delete data.id;
+           });*/
+          // _self.question.Type = _self.myType.name;
+          /*myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
+
+           _self.question = {};
+           abc();
+           });
+           */
+          // _self.myAnswer = undefined;
 
         };
 

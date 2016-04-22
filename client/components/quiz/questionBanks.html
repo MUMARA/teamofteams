@@ -537,7 +537,7 @@
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
                  ng-repeat="question in quiz.questions | filter:qSearch"
-                 ng-click="quiz.setSelectedQuestion(this,$index); quiz.showQuestionView(question);quiz.booksNav = false"
+                 ng-click="quiz.setSelectedQuestion(this,$index); quiz.showQuestionView(question,$index);quiz.booksNav = false"
                  ng-mouseenter="quiz.hover(chapter)"
                  ng-mouseleave="quiz.hover(chapter)"
                  ng-class="{selectedQuestion: $index == quiz.selectedQuestionIndex}">
@@ -1295,7 +1295,10 @@
                                                      ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                                      class="userImg"/>
                                             </div>
+
                                         </div>
+
+
                                         <div layout="row" layout-align="center center"
                                              style="margin-top:5%;position: relative;">
                                         </div>

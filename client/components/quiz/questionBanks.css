@@ -82,7 +82,8 @@ blockquote {
 
 .quiz-md-card-1 {
     height: calc(100vh - 160px);
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 0;
 }
 
