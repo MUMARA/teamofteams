@@ -347,7 +347,7 @@
                     };
                     userGroupz[group.key()] = obj;
 
-                    console.log('watch added', userGroupz);
+                    console.log('watch added', userGroupz, group.val()['membership-type'] );
 
                     //subgroup add event
                     userSubGroupEvents(group.key());
@@ -355,9 +355,10 @@
                     // group users
                     getUserGroupMembers(group.key());
 
-
-                    //get subgroups of this group is memebership type is owner
-                    (group.val()['membership-type'] === 1) ? getSubgroupOfGroups(group.key()) : null;
+                    setTimeout(function () {
+                        //get subgroups of this group is memebership type is owner
+                        (group.val()['membership-type'] === 1) ? getSubgroupOfGroups(group.key()) : null;
+                    },1000);
                 }
             });
 
@@ -400,7 +401,7 @@
                         userSubGroupz[groupid][subgroup.key()] = obj;
                     }
 
-                    // console.log('watch added', userSubGroupz);
+                    console.log('watch added', userSubGroupz);
                     // get subgroup users
                     getUserSubGroupMembers(groupid, subgroup.key());
                 }
@@ -429,9 +430,10 @@
             });
         }
         function getSubgroupOfGroups(groupid) {
+            console.log('watch fireeeeeeeeeeeeeeeeeee');
             //subgroup added
             ref.child('subgroups').child(groupid).on('child_added', function (subgroup) {
-
+                console.log('watch fireeeeeeeeeeeeeeeeeeeee22222222', subgroup);
                 if (subgroupsOfGroup.hasOwnProperty(groupid)) {
                     subgroupsOfGroup[groupid].push(subgroup.key());
                 } else {
@@ -439,7 +441,7 @@
                     subgroupsOfGroup[groupid].push(subgroup.key());
                 }
 
-                console.log(subgroupsOfGroup);
+                console.log('watch added subgrp of grp', subgroupsOfGroup);
 
             });
 
@@ -531,6 +533,7 @@
             return userSubGroupz;
         }
         function getSubgroupsOfGroup() {
+            console.log('watch', subgroupsOfGroup);
             return subgroupsOfGroup;
         }
         //new service  # end
