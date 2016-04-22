@@ -11,8 +11,8 @@
         /*********************Local Service For Testing UI**************/
 
         .service("myQuizData", function($firebaseArray){
-            var ref =  new Firebase('https://geniuz.firebaseio.com/quiz');
-            var QuizDatah = $firebaseArray(ref);
+           var refer =  new Firebase('https://geniuz.firebaseio.com/quiz');
+            var QuizDatah = $firebaseArray(refer);
             this._saveQuizData = function(qData){
                 // console.log(studentObj);
                 QuizDatah.$add(qData);
@@ -20,7 +20,7 @@
             };
 
             this._getQuizData = function(){
-                return QuizDatah;
+                return this.QuizDatah;
 
             }
         })
@@ -130,13 +130,21 @@
 
 
         /*All Function*/
+        
+        // from local firebase data
+            var refer =  new Firebase('https://geniuz.firebaseio.com/quiz');
+            var QuizDatah = $firebaseArray(refer);
+            $scope.qdata  = QuizDatah;
+        // end
+        
 
         function createQuize(qData, img){
             qData.img = img;
 
         //    console.log('my uis', qData);
-
-
+            $scope.qData  = qData;
+             console.log('my quiz data is ',$scope.qData);
+            
             myQuizData._saveQuizData(qData);
             getQuizDataAll();
             addBook();
@@ -150,7 +158,7 @@
 
 
         setTabs();
-
+    
         authService.resolveUserPage()
             .then(function (response) {
                 getUserObj();
