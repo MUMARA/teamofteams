@@ -192,7 +192,6 @@ SUBGROUP-MEMBERS
 				membership-type: 1
 				timestamp: 1457704171876
 
-
 SUBGROUP-NAMES
 	t0t1
 		t0t1s1
@@ -244,14 +243,6 @@ SUBGROUP-POLICIES
 			policyID: ""
 			subgroup-title: "Subgroup 1"
 
-
-SUBGROUP-MEMBERS
-	t0t1
-		t0t1s1
-			usuf52
-				membership-type: 1
-				timestamp: 1457704171876
-
 GROUPS
 	t0t1
 		subgroups-count: 1
@@ -297,10 +288,10 @@ SUBGROUPS
 			title: "Subgroup 1"
 
 
-SUBGROUPS-NAMES	
+SUBGROUPS-NAMES
 	t0t1
 		t0t1s1
-			ownerImgUrl: ""	
+			ownerImgUrl: ""
 			subgroupImgUrl: ""
 			title: "Subgroup 1"
 
@@ -325,7 +316,7 @@ SUBGROUP-ACTIVITY-STREAMS
 
 
 -------------------------------
-09 - A. Add Member in SubGroup 
+09 - A. Add Member in SubGroup
 
 subgroup-activity-streams
      t0t1
@@ -353,7 +344,7 @@ subgroup-activity-streams
                     verb: "subgroup-member-assigned"
 
                 -KDONSzULVGGMN1Sw225
-                        actor  
+                        actor
                                 displayName: "Usuf Qutubuddin"
                                 email: "usuf52@gmail.com"
                                 id: "usuf52"
@@ -367,7 +358,7 @@ subgroup-activity-streams
 
 subgroup-members
     t0t1
-        t0t1s1  
+        t0t1s1
             arsalan
                 membership-type: 3
                 timestamp: 1458567240884
@@ -379,7 +370,7 @@ subgroups
              members-count: 2
 
 
-user-subgroup-memberships  
+user-subgroup-memberships
     arsalan
          t0t1
             t0t1s1
@@ -430,7 +421,7 @@ subgroup-activity-streams
 
 subgroup-members
     t0t1
-        t0t1s1  
+        t0t1s1
             arsalan
                 membership-type: 2
                 timestamp: 1458567240852
@@ -442,7 +433,7 @@ subgroups
              members-count: 2                       (should be two but not updated yet)
 
 
-user-subgroup-memberships  
+user-subgroup-memberships
     arsalan
          t0t1
             t0t1s1
@@ -477,7 +468,7 @@ subgroup-activity-streams
                                 id: "usuf52"
                                 profile-image: ""
                                 type: "user"
-                                
+
                         displayName: "Usuf Qutubuddin removed as member arsalan rajpu..."
                         language: "en"
                         object
@@ -495,7 +486,7 @@ subgroup-activity-streams
 
 subgroup-members
     t0t1
-        t0t1s1  
+        t0t1s1
             arsalan             (Will be Removed)
                 membership-type: 3
                 timestamp: 1458567240884
@@ -504,10 +495,10 @@ subgroup-members
 subgroups
     t0t1
         t0t1s1
-             members-count: 1       
+             members-count: 1
 
 
-user-subgroup-memberships  
+user-subgroup-memberships
     arsalan
          t0t1
             t0t1s1              (Will be Removed)
@@ -641,17 +632,17 @@ USER-POLICIES
 				title: "Policy tot1"
 
 SUBGROUPS
-	t0t1			
+	t0t1
 		t0t1s1
 			policyID:	"-KCa0mKFXEUGu3JajGd4"
 
-SUBGROUP-POLICIES									
+SUBGROUP-POLICIES
 	t0t1
 		t0t1s1
 			hasPolicy: true
 			policy-title: "Policy tot1"
 			policyID: "-KCa0mKFXEUGu3JajGd4"
-			subgroup-title: "Subgroup 1" 							
+			subgroup-title: "Subgroup 1"
 
 POLICIES
 	t0t1
@@ -740,7 +731,7 @@ GROUP-ACTIVITY-STREAMS
         ‣ t0t1s2
             •  usuf52
                 ∘  identified-location-id: "Other"
-                ∘  location  
+                ∘  location
                     ‣ lat: 24.8614622
                     ‣ lon: 67.0099388
                 ∘  message: "Checked-in"
@@ -823,7 +814,7 @@ GROUP-ACTIVITY-STREAMS
                     ‣  type: "progressReport"
                     ‣  url: "t0t1/t0t1s2"
                 ∘  verb: "progressReport-created"
-                
+
             • -KCok8AxuQor9v9Gw9VZ
                 ∘  actor
                     ‣  displayName: "Usuf Qutubuddin"
@@ -859,7 +850,7 @@ GROUPS
 SUBGROUP-CHECK-IN-CURRENT
 	t0t1
 		 t0t1s2
-			 usuf52	
+			 usuf52
 				 identified-location-id: "Other"
 				 location
 					 lat: 24.8614622
@@ -888,7 +879,7 @@ SUBGROUP-CHECK-IN-RECORDS
 		 t0t1s2
 			 usuf52
 				 -KCo7mPw9A9OgnLGvo5-
-				 -KCoCooS6rPETA8-yYp_  
+				 -KCoCooS6rPETA8-yYp_
 					 identified-location-id: "Other"
 					 location
 						 lat: 24.8614622
@@ -919,7 +910,7 @@ SUBGROUP-ACTIVITY-STREAMS
                     ‣  type: "user"
                 ∘  displayName: "Usuf Qutubuddin checkout from Sub Group 2"
                 ∘  language: "en"
-                ∘  object  
+                ∘  object
                     ‣  displayName: "Usuf Qutubuddin"
                     ‣  email: "usuf52@gmail.com"
                     ‣  id: "usuf52"
@@ -943,16 +934,16 @@ SUBGROUP-ACTIVITY-STREAMS
         ‣  t0t1s2
             •  usuf52
                 ∘  -KCo7maAdwNxGvKoYl8-
-                    ‣  answers 
+                    ‣  answers
                             0: "answer of 1"
                             1: "answer2"
                     ‣  date: 1457942375021
                     ‣  policyID: "-KCa0mKFXEUGu3JajGd4"
                     ‣  questionID: "-KCa0mKGR4Z-C4dVuQ0J"
-                    
+
 
 subgroup-activity-streams
-    t0t1                    
+    t0t1
         t0t1s1
             -KCzRGRjLUYRQFQgrHfm
                     actor
@@ -997,7 +988,7 @@ group-membership-requests-by-user
     ∘  group01
         ‣  timestamp: 1457955415263
 
-SUBGROUP-ACTIVITY-STREAMS		
+SUBGROUP-ACTIVITY-STREAMS
 • group01
     ∘ KCouXQUwem9s9XpkGNs
         ‣  actor
@@ -1015,9 +1006,9 @@ SUBGROUP-ACTIVITY-STREAMS
             •  type: "group"
         ‣  published: 1457955416003
         ‣  verb: "group-join"
-        
+
  -------------------------------
- 
+
  -------------------------------
 17. Approve Group Membership Request:
 
@@ -1036,15 +1027,15 @@ user-group-memberships
         ‣  timestamp: 1457955815524
 
 
-group-membership-requests								
-• group01 
+group-membership-requests
+• group01
     ∘  usuf52                                            (remove this node after approved membership)
         ‣  membershipNo: ""
         ‣  message: "Please add me in your Team."
         ‣  timestamp: 1457955816202
 
 groups
-• group01 
+• group01
     ∘ members-count: 2          (+1 from last count)
 
 
@@ -1066,7 +1057,7 @@ group-activity-streams
             •  type: "group"
         ‣  published: 1457955818647
         ‣  verb: "group-approve-member"
-        
+
 -------------------------------
 
 -------------------------------
@@ -1074,7 +1065,7 @@ group-activity-streams
 
 (Sent request to group: group02 (Team of Teams) and now reject the membership request)
 
-group-membership-requests								
+group-membership-requests
 • group02
     ∘  usuf52                                            (remove this node after approved membership)
         ‣  membershipNo: ""
@@ -1185,7 +1176,7 @@ group-members
     ∘  arsalan                   (Delete this node on delete group membership)
 
 groups
-• t0t1 
+• t0t1
     ∘ members-count: 1     (-1 from last count)
 
 group-activity-streams
@@ -1208,11 +1199,11 @@ group-activity-streams
         ‣  verb: "group-member-removed"
 -------------------------------
 
-######################       end region version 02    ######################       
+######################       end region version 02    ######################
 
 
  # invitation Type  -- START --
- 
+
 group-invites: {//This will be created and deleted by group admin
 	groupid : {
 		auto-generated—invite-id: {//push will generate the id
@@ -1227,7 +1218,7 @@ group-invites: {//This will be created and deleted by group admin
 	}
 
 }
- 
+
 
 subgroup-invites: {//This will be created and deleted by admin or sub-group admin
 	groupid : {
@@ -1256,9 +1247,9 @@ subgroup-invites: {//This will be created and deleted by admin or sub-group admi
 
 
 
- 
 
-##############       region version 01        ############## 
+
+##############       region version 01        ##############
 
 Signup
 -------------------------------------

@@ -23,6 +23,7 @@
             this.showarrow = undefined;
             this.isLocationbased = false;
             this.isTimebased = false;
+            that.selectedTeamNew = [];
             this.isProgressReport = false;
             this.isProcessing = false;
             that.fencing = true;

@@ -610,7 +610,7 @@
             createSubGroupService.DeleteUserMemberShip(admin.userSyncObj.$id, groupID, that.activeID, that.submembers.length);
 
             console.log('watch', true)
-            for (var i = 0; i <= that.members.length; i++) {
+            for (var i = 0; i < that.members.length; i++) {
                 if (that.members[i].userID === admin.userID) {
                     console.log('watch', that.members[i]);
                     that.members[i].isAdmin = false;
@@ -691,6 +691,9 @@
         function answer(groupForm) {
 
             that.processingSave = true;
+            var userObj = activityStreamService.getCurrentUserGroups();
+            var memberType = userObj[this.groupId]['membership-type']
+            
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
