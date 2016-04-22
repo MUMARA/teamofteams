@@ -3,15 +3,17 @@
 
 export class User {
 
-    email: string
-    userID: string
+    email: string;
+    userID: string;
 
-    public static Signup(){
-        
-    }
+
 
     constructor(email, userID) {
         this.email = email;
         this.userID = userID;
+    }
+
+    Signup(): string {
+        return this.email + " // " + this.userID;
     }
 }
