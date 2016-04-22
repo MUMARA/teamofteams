@@ -273,17 +273,23 @@
 
       // Store chapters Ref
       var chapterRef = firebaseService.getRefQuestionBank().child(
-          questionBankUniqueID).child(
-          "chapters")
-        // chapter Ref Value CallBack on Value Events
-      var chapterRefValueCallBack = chapterRef.once('value', function(
+        questionBankUniqueID).child(
+        "chapters")
+      chapterRef.off('child_added');
+      // chapter Ref Value CallBack on Value Events
+      var chapterRefValueCallBack = chapterRef.on('child_added', function(
         ChaptersUniqueId) {
-        for (var key in ChaptersUniqueId.val()) {
-          _self.chaptersId.push(key);
-          _self.chapters.push(ChaptersUniqueId.val()[key]);
+        _self.chaptersId.push(ChaptersUniqueId.key());
+        _self.chapters.push(ChaptersUniqueId.val());
 
-          deferred.resolve(_self.chapters);
-        }
+        deferred.resolve(_self.chapters);
+        // console.log(ChaptersUniqueId.val())
+        // for (var key in ChaptersUniqueId.val()) {
+        //   _self.chaptersId.push(key);
+        //   _self.chapters.push(ChaptersUniqueId.val()[key]);
+        //
+        //   deferred.resolve(_self.chapters);
+        // }
       });
 
       return deferred.promise;
@@ -308,14 +314,18 @@
         "chapters").child(chapterUniqueId).child("topics")
 
       // Topic Ref Value CallBack on Value Events
-      var TopicValueCallBack = topicRef.once('value',
+      var TopicValueCallBack = topicRef.on('child_added',
         function(topics) {
-          for (var key in topics.val()) {
-            _self.topicsId.push(key);
-            _self.topics.push(topics.val()[key]);
-            console.log(_self.topics)
-            deferred.resolve(_self.topics);
-          }
+          _self.topicsId.push(topics.key());
+          _self.topics.push(topics.val());
+          console.log(topics.val())
+          deferred.resolve(_self.topics);
+          // for (var key in topics.val()) {
+          //   _self.topicsId.push(key);
+          //   _self.topics.push(topics.val()[key]);
+          //   console.log(_self.topics)
+          //   deferred.resolve(_self.topics);
+          // }
         });
       // Topic off Value Events
       // topicRef.off("value", TopicValueCallBack)
@@ -334,11 +344,14 @@
         // Questions Ref Value CallBack on Value Events
       var questionsRefValueCallBack = questionsRef.once('value', function(
         questions) {
-        for (var key in questions.val()) {
-          _self.questionId.push(key);
-          _self.questions.push(questions.val()[key]);
-          deferred.resolve(_self.questions);
-        }
+        _self.questionId.push(questions.key());
+        _self.questions.push(questions.val());
+        deferred.resolve(_self.questions);
+        // for (var key in questions.val()) {
+        //   _self.questionId.push(key);
+        //   _self.questions.push(questions.val()[key]);
+        //   deferred.resolve(_self.questions);
+        // }
       });
       // Questions off Value Events
       // questionsRef.off("value", questionsRefValueCallBack)
