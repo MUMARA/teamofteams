@@ -257,7 +257,7 @@ function isCurrentUserGroupMembersOwner(groupid) {
 
 
  function isCurrentUserGroupMembersAdmin(groupid) {
-    return  prior(root['group-members'][groupid][auth.uid]['membership-type'].val() ==2 )
+    return  prior(root['group-members'][groupid][auth.uid]['membership-type'].val() == 2 )
  }
 
 /*
@@ -606,8 +606,8 @@ path /group-membership-requests-by-user/{userid} {
  path /subgroups/{groupid} {
 
    read() { isGroupMembersIdExist(groupid)            &&
-            isCurrentUserGroupMembersOwner(groupid)   ||
-            isCurrentUserGroupMembersAdmin(groupid)  ||
+            /*isCurrentUserGroupMembersOwner(groupid)   ||
+            isCurrentUserGroupMembersAdmin(groupid)  ||*/
             groupMemberShipAnyType(groupid) }
 
    write() {
