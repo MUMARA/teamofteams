@@ -899,26 +899,30 @@
                 </md-input-container>
                 <!--Question Description-->
       </div>   <div ng-if="quiz.question.type">
+        <div layout="row">
+
 
         <ng-md-icon  icon="mode_edit" class="fillColorWhite nooutline" ng-click="quiz.closeTextangular('showTextangular')">
             <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
                 Edit
             </md-tooltip>
           </ng-md-icon>
-                <md-input-container style="width: 95%;" >
 
-                    <label style="font-weight:lighter;">HTML</label>
-                        <textarea  name="questionDescription" row="10" disabled="true" ng-model="quiz.question.html"
+                  <div ta-bind="ta-bind" ng-model="quiz.question.html">
+                    {{quiz.question.html}}
+                  </div>
+                </div>                    <!-- <label style="font-weight:lighter;">HTML</label> -->
+                        <!-- <textarea  name="questionDescription" row="10" disabled="true" ng-model="quiz.question.html"
                                   minlength="10" maxlength="200" required>
-                       </textarea>
-
+                       </textarea> -->
+<!--
                     <div ng-show="groupForm.$submitted || groupForm.questionDescription.$touched"
                          ng-messages="groupForm.questionDescription.$error">
                         <div class="invalid_color" ng-message="required">This is required.</div>
                         <div class="invalid_color" ng-message="minlength">Required minimum length 10</div>
                         <div class="invalid_color" ng-message="md-maxlength">Required minimum length 200</div>
-                    </div>
-                </md-input-container>
+                    </div> -->
+
                 <md-input-container style="width: 95%;" >
 
                     <label style="font-weight:lighter;">Discussion HTML</label>
