@@ -1,34 +1,20 @@
 {
-  "name": "userapi",
+  "name": "serverless-userapi",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "serverless use api",
+  "main": "\"\"",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Muhammad Kamran <smkamranqadri@yahoo.com>",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.0.31",
-    "body-parser": "^1.10.0",
-    "ejs": "^1.0.0",
-    "express": "^4.10.6",
-    "firebase": "^2.0.6",
+    "ejs": "^2.4.1",
+    "firebase": "^2.4.2",
     "firebase-token-generator": "^2.0.0",
-    "formidable": "^1.0.15",
-    "mongoose": "^4.1.9",
-    "morgan": "^1.5.0",
-    "multipart": "^0.1.5",
-    "node-gcm": "^0.9.15",
-    "node-uuid": "^1.4.2",
+    "mongoose": "^4.4.13",
+    "node-uuid": "^1.4.7",
     "postmark": "^1.2.1",
-    "q": "^1.2.0",
-    "sendgrid": "^1.4.0"
-  },
-  "devDependencies": {
-    "expect.js": "^0.3.1",
-    "frisby": "^0.8.5",
-    "mocha": "^2.0.1",
-    "superagent": "^0.21.0"
+    "q": "^1.4.1"
   }
 }

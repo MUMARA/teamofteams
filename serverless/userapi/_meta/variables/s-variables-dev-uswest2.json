@@ -1,5 +1,0 @@
-{
-  "region": "us-west-2",
-  "resourcesStackName": "userapi-dev-r",
-  "iamRoleArnLambda": "arn:aws:iam::099907686962:role/userapi-dev-r-IamRoleLambda-1CO509GP7U5WZ"
-}

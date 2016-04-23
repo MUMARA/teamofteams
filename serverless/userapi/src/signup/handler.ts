@@ -1,11 +1,7 @@
-/// <reference path="../../typings/main.d.ts" />
+/// <reference path="../../typings/tsd.d.ts" />
 
-import {User} from '../lib/User';
+import {userSignup} from '../lib/controller/userController'
 
-
-exports.handler = function(event, context: Context) {
-   var user = new User(event.email, event.userID); 
-    
-   context.succeed(user.Signup());
+exports.handler = function(event, context: Context, cb) {
+    userSignup(event, context);
 };
-
