@@ -914,10 +914,9 @@
                         </ng-md-icon>
                         <md-input-container style="width: 95%;">
 
-                            <label style="font-weight:lighter;">HTML</label>
-                        <textarea name="questionDescription" row="10" disabled="true" ng-model="quiz.question.html"
-                                  minlength="10" maxlength="200" required>
-                       </textarea>
+                            <p >Question</p>
+                        <div> {{quiz.question.html}}
+                       </div>
 
                             <div ng-show="groupForm.$submitted || groupForm.questionDescription.$touched"
                                  ng-messages="groupForm.questionDescription.$error">
