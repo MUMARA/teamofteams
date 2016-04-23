@@ -324,9 +324,9 @@
         </md-content>
     </md-sidenav>
 
-    <div class="gradient2 quiz-menu-col">
+    <div class="gradient3 quiz-menu-col">
         <a ng-click="quiz.booksNav = !quiz.booksNav" id="menu-toggle" class="menu-item-btn">
-            <img ng-src="img/menu.svg" style=" height: 45px;">
+            <img ng-src="img/menu.svg" style="margin-left: 12px; height: 45px;">
         </a>
         <br>
         <md-divider></md-divider>
@@ -573,15 +573,16 @@
                 </h2>
             </div>
         </md-toolbar>
-        <div layout-padding class="show-question-section-main-div" ng-show="quiz.showQuestionDetails">
+        <div layout-padding class="show-question-section-main-div" ng-if="quiz.questionView.type != 3"
+             ng-show="quiz.showQuestionDetails">
             <p><b>Question : {{$index + 1 + " : " + quiz.questionView.html}}</b></p>
 
             <p><b>Options :</b></p>
 
             <div class="options-question" ng-repeat="option in quiz.questionView.options">
                 <span ng-if="!option.correct">Option {{$index+1}} : {{option.html}}</span>
-                <span ng-if="option.correct">Option {{$index+1}} : {{option.html}}<ng-md-icon
-                        icon="done"></ng-md-icon></span>
+                <span ng-if="option.correct">Option {{$index+1}} : {{option.html}}
+                    <ng-md-icon icon="done"></ng-md-icon></span>
             </div>
             <!--<div ng-if="quiz.questionView.type === 1">
                 <h4>Correct Answer</h4>
@@ -593,6 +594,19 @@
                     {{option}}
                 </h6>
             </div>-->
+        </div>
+        <div ng-show="quiz.questionView.type == 3">
+            <h4>Question : {{quiz.questionView.html}}</h4>
+            <div ng-repeat="questionSet in quiz.questionView.questiones">
+                <h5>Sub question ; {{questionSet.html}}</h5>
+                <div ng-repeat="option in questionSet.options">
+                    <span ng-if="!option.correct">Option {{$index+1}} : {{option.html}}</span>
+                    <span ng-if="option.correct">
+                        Option {{$index+1}} : {{option.html}}
+                        <ng-md-icon icon="done" style="fill: green"></ng-md-icon>
+                    </span>
+                </div>
+            </div>
         </div>
     </md-content>
 </div>
@@ -730,7 +744,7 @@
         <!--<md-button class="md-raised md-primary">Submit</md-button>-->
         <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
         <md-button ng-disabled="chapterForm.$invalid"
-                   class="backColorSeaGreen color-white" ng-click="quiz.createChapter(quiz.chapterObj)">
+                   class="backColorSeaGreen color-white" ng-click="quiz.CreateChapter(quiz.chapterObj)">
             Create
         </md-button>
         </md-button>
@@ -788,28 +802,93 @@
         <md-button ng-disabled="topicForm.$invalid" class="backColorSeaGreen color-white"
                    ng-click="quiz.createTopic(quiz.topicObj)">Create
         </md-button>
-        </md-button>
         <md-button ng-click="quiz.closeTopic()" class="backColorSeaGreen color-white">
             Close
         </md-button>
     </div>
 </md-sidenav>
-<!--Create Topic Navigation End-->
-
+<!-- Show Text Angular Editor Navigation start-->
+<md-sidenav class="md-sidenav-right text-angular-nav backColorLightSeaGreen" style="z-index:600;" md-component-id="showTextangular" >
+   <div layout="column">
+     <div text-angular style="outline:none;" class="Height80vh" ng-model="quiz.question.html"></div>
+        <div layout="row" layout-align="end center" layout-padding layout-margin="">
+          <md-button ng-click="quiz.closeTextangular('showTextangular')" class="backColorSeaGreen color-white">
+              Save
+          </md-button>
+          <md-button ng-click="quiz.closeTextangular('showTextangular')" class="md-raised">
+              Cancel
+          </md-button>
+        </div>
+  </div>
+</md-sidenav>
+<!-- Show Text Angular Editor Navigation start for question set-->
+<md-sidenav class="md-sidenav-right text-angular-nav backColorLightSeaGreen" style="z-index:600;" md-component-id="ShowQuestionsetSideNav" >
+   <div layout="column">
+     <div text-angular style="outline:none;" class="Height80vh" ng-model="quiz.questionSet.html"></div>
+        <div layout="row" layout-align="end center" layout-padding layout-margin="">
+          <md-button ng-click="quiz.closeTextangular('ShowQuestionsetSideNav')" class="backColorSeaGreen color-white">
+              Save
+          </md-button>
+          <md-button ng-click="quiz.closeTextangular('ShowQuestionsetSideNav')" class="md-raised">
+              Cancel
+          </md-button>
+        </div>
+  </div>
+</md-sidenav>
+<!-- Show Text Angular Editor Navigation start for question Set option-->
+<md-sidenav ng-repeat="option in quiz.questionSet.options" class="md-sidenav-right text-angular-nav backColorLightSeaGreen" style="z-index:600;" md-is-open="quiz.showTextangularForQuestionSet[$index]">
+   <div layout="column">
+     <div text-angular style="outline:none;" class="Height80vh" ng-model="option.html"></div>
+        <div layout="row" layout-align="end center" layout-padding layout-margin="">
+          <md-button ng-click="quiz.showTextangularSideNav($index)" class="backColorSeaGreen color-white">
+              Save
+          </md-button>
+          <md-button ng-click="quiz.showTextangularSideNav($index)" class="md-raised">
+              Cancel
+          </md-button>
+        </div>
+  </div>
+</md-sidenav>
+<!-- Show Text Angular Editor Navigation start for option-->
+<md-sidenav ng-repeat="option in quiz.question.options" class="md-sidenav-right text-angular-nav backColorLightSeaGreen" style="z-index:600;" md-is-open="quiz.showTextangular[$index]">
+   <div layout="column">
+     <div text-angular style="outline:none;" class="Height80vh" ng-model="option.html"></div>
+        <div layout="row" layout-align="end center" layout-padding layout-margin="">
+          <md-button ng-click="quiz.closeTextangular($index)" class="backColorSeaGreen color-white">
+              Save
+          </md-button>
+          <md-button ng-click="quiz.closeTextangular($index)" class="md-raised">
+              Cancel
+          </md-button>
+        </div>
+  </div>
+</md-sidenav>
 <!--Add Question Sidenav Start-->
-<md-sidenav class="md-sidenav-right add-question-nav md-whiteframe-z2 backColorLightSeaGreen" md-component-id="nav3">
+<md-sidenav class="md-sidenav-right add-question-nav backColorLightSeaGreen" md-component-id="nav3">
     <ng-md-icon icon="close" size="30" class="nooutline close-icon" ng-click="quiz.closeQuestion()">
     </ng-md-icon>
-    <md-content layout-padding class="backColorLightSeaGreen">
-        <form>
-            <h1 class="create-sidenav-heading">Add Question</h1>
+    <div>
+        <h1 class="create-sidenav-heading">Add Question</h1>
+        <md-content layout-padding class="backColorLightSeaGreen">
+            <form name="groupForm">
             <!--Question Title-->
-            <div layout="row">
+            <div layout="column">
+                   <div layout="row">
+              <md-input-container flex="50">
+                  <!-- <label ng-value="quiz.myType = user">Question Type</label> -->
+                  <label>Question Type</label>
+                  <md-select ng-model="quiz.question.type" md-on-close="quiz.setBoxValue()"
+                             ng-change="quiz.typeChanged()">
+                      <md-option ng-value="1">Radio Button</md-option>
+                      <md-option ng-value="2">Check Box</md-option>
+                      <md-option ng-value="3">Question Set</md-option>
+                  </md-select>
+              </md-input-container>
                 <md-input-container flex>
                     <label>Question Title</label>
                     <input name="questionTitle" ng-model="quiz.question.title"
                            minlength="3" maxlength="30" required
-                           ng-change="quiz.showButton1 = true" autofocus="true">
+                           ng-change="quiz.showButton1 = true">
 
                     <div ng-show="groupForm.$submitted || groupForm.questionTitle.$touched"
                          ng-messages="groupForm.questionTitle.$error">
@@ -819,10 +898,17 @@
                     </div>
                 </md-input-container>
                 <!--Question Description-->
-                <md-input-container flex>
+      </div>   <div ng-if="quiz.question.type">
+
+        <ng-md-icon  icon="mode_edit" class="fillColorWhite nooutline" ng-click="quiz.closeTextangular('showTextangular')">
+            <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                Edit
+            </md-tooltip>
+          </ng-md-icon>
+                <md-input-container style="width: 95%;" >
 
                     <label style="font-weight:lighter;">HTML</label>
-                        <textarea name="questionDescription" ng-model="quiz.question.html"
+                        <textarea  name="questionDescription" row="10" disabled="true" ng-model="quiz.question.html"
                                   minlength="10" maxlength="200" required>
                        </textarea>
 
@@ -833,21 +919,26 @@
                         <div class="invalid_color" ng-message="md-maxlength">Required minimum length 200</div>
                     </div>
                 </md-input-container>
+                <md-input-container style="width: 95%;" >
+
+                    <label style="font-weight:lighter;">Discussion HTML</label>
+                        <textarea  name="questiondiscussionHtml" row="10"  ng-model="quiz.question.discussionHtml"
+                                  minlength="10" maxlength="200" required>
+                       </textarea>
+
+                    <div ng-show="groupForm.$submitted || groupForm.questiondiscussionHtml.$touched"
+                         ng-messages="groupForm.questiondiscussionHtml.$error">
+                        <div class="invalid_color" ng-message="required">This is required.</div>
+                        <div class="invalid_color" ng-message="minlength">Required minimum length 10</div>
+                        <div class="invalid_color" ng-message="md-maxlength">Required minimum length 200</div>
+                    </div>
+                </md-input-container>
+              </div>
             </div>
             <!--Answer Type-->
             <div class="div1">
-
                 <div layout="row">
-                    <md-input-container flex="50">
-                        <!-- <label ng-value="quiz.myType = user">Question Type</label> -->
-                        <label>Question Type</label>
-                        <md-select ng-model="quiz.question.type" md-on-close="quiz.setBoxValue()"
-                                   ng-change="quiz.typeChanged()">
-                            <md-option ng-value="1">Radio Button</md-option>
-                            <md-option ng-value="2">Check Box</md-option>
-                            <md-option ng-value="3">Question Set</md-option>
-                        </md-select>
-                    </md-input-container>
+
                     <md-input-container flex="50" ng-if="quiz.question.type == 3">
                         <label>Sub Question Type</label>
 
@@ -857,17 +948,37 @@
                         </md-select>
                     </md-input-container>
                 </div>
-
-
                 <div ng-show="quiz.question.type == 3">
                     <div layout="column" layout-align="center center">
+                    <div layout="row">
+
                         <md-input-container style="padding-right: 50px">
                             <label>Question {{$index + 1}}</label>
                             <input type="text" ng-model="quiz.questionSet.html">
-                            <ng-md-icon icon="delete" ng-disabled="!quiz.questionSet.html"
-                                        class="nooutline delete-icon-option"
-                                        ng-click="quiz.deleteOption($index)">
+
+                            <span layout="row">
+                              <ng-md-icon  icon="mode_edit" class="fillColorWhite nooutline" ng-click="quiz.showTextangularSideNav('ShowQuestionsetSideNav')">
+                                 <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                     Edit
+                                 </md-tooltip>
+                               </ng-md-icon>
+                               <ng-md-icon icon="delete" ng-disabled="!quiz.questionSet.html"
+                                           class="nooutline delete-icon-option"
+                                           ng-click="quiz.deleteOption($index)">
+                               </ng-md-icon></span>
                         </md-input-container>
+                        <md-input-container style="padding-right: 50px">
+                            <label>discussionHtml</label>
+                            <input type="text" ng-model="quiz.questionSet.discussionHtml">
+
+                            <span layout="row">
+                               <ng-md-icon icon="delete" ng-disabled="!quiz.questionSet.html"
+                                           class="nooutline delete-icon-option"
+                                           ng-click="quiz.deleteOption($index)">
+                               </ng-md-icon></span>
+                        </md-input-container>
+
+                    </div>
                         <!-- <div layout="row" ng-repeat="option in quiz.question.QuestionOptions">
                             <md-radio-group ng-model="quiz.myAnswer" style="margin-top: 10px;margin-left: 20px">
                                 <md-radio-button
@@ -883,8 +994,6 @@
                                             ng-click="quiz.deleteOption($index)">
                             </md-input-container>
                         </div> -->
-
-
                         <!--         <div layout="row" ng-repeat="questionset in quiz.questionSetQuestions">
                                      &lt;!&ndash;<md-radio-group ng-model="quiz.correct" style="margin-top: 10px;margin-left: 20px">
                                          <md-radio-button
@@ -900,7 +1009,6 @@
                                                      ng-click="quiz.deleteOption($index)">
                                      </md-input-container>&ndash;&gt;
                                  </div>-->
-
                         <div layout="row" layout-align="start end">
                             <!-- <md-button class="backColorSeaGreen"  style="color:white" ng-click="quiz.addOption();">
                                 Add Option</md-button> -->
@@ -920,8 +1028,9 @@
                         <div layout-align="center center" layout="column" ng-if="quiz.questionSet.type === 1">
                             <div layout="row">
 
-                                <md-radio-group ng-change="quiz.correctQuestionSetAnswer()" ng-model="quiz.correct" style="margin-top: 10px;margin-left: 20px">
-                                    <div ng-repeat="option in quiz.questionSet.options">
+                                <md-radio-group ng-change="quiz.correctQuestionSetAnswer()" ng-model="quiz.correct"
+                                                style="margin-top: 10px;margin-left: 20px">
+                                    <div ng-repeat="option in quiz.questionSet.options" layout="row">
                                         <md-radio-button
                                                 ng-value="$index" ng-disabled="!option.html"
                                                 aria-label="Radio-Button">
@@ -929,9 +1038,28 @@
                                         <md-input-container style="margin:0px">
                                             <label>Option {{$index + 1}}</label>
                                             <input type="text" ng-model="option.html">
-                                            <ng-md-icon icon="delete" ng-disabled="!option.html"
-                                                        class="nooutline delete-icon-option"
-                                                        ng-click="quiz.deleteOption($index)">
+                                            <span layout="row">
+                                              <ng-md-icon  icon="mode_edit" class="fillColorWhite nooutline" ng-click="quiz.showTextangularSideNav($index)">
+                                                 <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                                     Edit
+                                                 </md-tooltip>
+                                               </ng-md-icon>
+                                               <ng-md-icon icon="delete" ng-disabled="!option.html"
+                                                           class="nooutline delete-icon-option"
+                                                           ng-click="quiz.deleteOption($index)">
+                                                </ng-md-icon>
+                                              </span>
+
+                                        </md-input-container>
+                                        <md-input-container style="margin:0px">
+                                            <label>discussionHtml</label>
+                                            <input type="text" ng-model="option.discussionHtml">
+                                            <span layout="row">
+                                             <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
+                                                           class="nooutline delete-icon-option"
+                                                           ng-click="quiz.deleteOption($index)">
+                                                </ng-md-icon>
+                                              </span>
                                         </md-input-container>
                                     </div>
                                 </md-radio-group>
@@ -942,7 +1070,7 @@
                                 Add Option
                             </md-button>
                         </div>
-            <div layout-align="center center" layout="column" ng-if="quiz.questionSet.type  === 2">
+                        <div layout-align="center center" layout="column" ng-if="quiz.questionSet.type  === 2">
                             <div layout="row" ng-repeat="option in quiz.questionSet.options">
                                 <md-checkbox md-no-ink aria-label="Checkbox No Ink"
                                              class="md-primary" ng-model="option.correct"
@@ -952,8 +1080,15 @@
                                 <md-input-container style="margin-left: 10px;">
                                     <label>Option {{$index + 1}}</label>
                                     <input type="text" ng-model="option.html">
-                                    <ng-md-icon icon="delete" ng-disabled="!option.html" class="nooutline quiz-dlt-btn"
+                                    <ng-md-icon icon="delete"  ng-disabled="!option.html" class="nooutline quiz-dlt-btn"
                                                 ng-click="quiz.deleteOption($index)">
+                                </md-input-container>
+                                <md-input-container style="margin-left: 10px;">
+                                    <label>discussionHtml</label>
+                                    <input type="text" ng-model="option.discussionHtml">
+                                    <ng-md-icon icon="delete"  ng-disabled="!option.discussionHtml" class="nooutline quiz-dlt-btn"
+                                                ng-click="quiz.deleteOption($index)">
+
                                 </md-input-container>
                             </div>
                             <md-button class="backColorSeaGreen color-white" ng-click="quiz.addQuestionSetOption();">
@@ -972,21 +1107,50 @@
                                                  ng-disabled="!option.html"
                                                  aria-label="Radio-Button">
                                 </md-radio-button>
-                                <md-input-container style=" margin-top: -45px; margin-left: 30px;">
+                                <md-input-container style=" margin-top: -45px; margin-left: 30px;" >
                                     <label>Option {{$index + 1}}</label>
-                                    <input type="text" ng-model="option.html">
+                                    <input type="text" ng-model="option.html" disabled>
                                     <!-- <textarea  required="required"></textarea> -->
                                     <!-- <img style="background-color:red;"src="./components/quiz/images/deleteIcon.png"
                                          ng-click="quiz.deleteOption($index)"
                                          role="button" tabindex="0"
                                          style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
-                                    <ng-md-icon icon="delete" ng-disabled="!option.html"
+                                  <span layout="row">
+                                    <ng-md-icon icon="delete"   ng-disabled="!option.html"
                                                 class="nooutline delete-icon-option"
                                                 ng-click="quiz.deleteOption($index)">
+                                                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                                    Delete
+                                                </md-tooltip>
+                                    </ng-md-icon>
+                                   <ng-md-icon  icon="mode_edit" class="fillColorWhite nooutline" ng-click="quiz.closeTextangular($index)">
+                                      <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                          Edit
+                                      </md-tooltip>
+                                    </ng-md-icon></span>
+                                </md-input-container>
+                                <md-input-container style=" margin-top: -45px; margin-left: 30px;" >
+                                    <label>Discussion-Html</label>
+                                    <textarea  md-maxlength="150" rows="5" ng-model="option.discussionHtml"></textarea>
+                                    <!-- <textarea  required="required"></textarea> -->
+                                    <!-- <img style="background-color:red;"src="./components/quiz/images/deleteIcon.png"
+                                         ng-click="quiz.deleteOption($index)"
+                                         role="button" tabindex="0"
+                                         style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
+                                  <span layout="row">
+                                    <ng-md-icon icon="delete"   ng-disabled="!option.html"
+                                                class="nooutline delete-icon-option"
+                                                ng-click="quiz.deleteOption($index)">
+                                                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                                    Delete
+                                                </md-tooltip>
+                                    </ng-md-icon>
+                                  </span>
                                 </md-input-container>
                             </div>
                         </md-radio-group>
                     </div>
+
                     <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
                         Add Option
                     </md-button>
@@ -1001,18 +1165,50 @@
                                      ng-disabled="!option.html">
                             <!-- style="margin-top: 20px;" -->
                         </md-checkbox>
+                        <div layout="row" flex="100">
 
-                        <md-input-container style="margin-left: 10px;">
+
+                        <md-input-container style="margin-left: 10px;" flex="50">
                             <label>Option {{$index + 1}}</label>
-                            <input type="text" ng-model="option.html">
+                            <input type="text" ng-model="option.html" disabled>
                             <!-- <textarea  required="required"></textarea> -->
                             <!-- <img style="background-color:red;"src="./components/quiz/images/deleteIcon.png"
                                  ng-click="quiz.deleteOption($index)"
                                  role="button" tabindex="0"
                                  style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
-                            <ng-md-icon icon="delete" ng-disabled="!option.html" class="nooutline delete-icon-option"
-                                        ng-click="quiz.deleteOption($index)">
+                                 <span layout="row">
+                                   <ng-md-icon icon="delete"   ng-disabled="!option.html"
+                                               class="nooutline delete-icon-option"
+                                               ng-click="quiz.deleteOption($index)">
+                                               <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                                   Delete
+                                               </md-tooltip>
+                                   </ng-md-icon>
+                                  <ng-md-icon  icon="mode_edit" class="fillColorWhite nooutline" ng-click="quiz.closeTextangular($index)">
+                                     <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                         Edit
+                                     </md-tooltip>
+                                   </ng-md-icon></span>
                         </md-input-container>
+                        <md-input-container style="margin-left: 30px;" flex>
+                            <label>Discussion-Html</label>
+                            <textarea  md-maxlength="150" rows="5" ng-model="option.discussionHtml"></textarea>
+                            <!-- <textarea  required="required"></textarea> -->
+                            <!-- <img style="background-color:red;"src="./components/quiz/images/deleteIcon.png"
+                                 ng-click="quiz.deleteOption($index)"
+                                 role="button" tabindex="0"
+                                 style=" width: 25px; height: 25px; margin-left: 80%; margin-top: 30px;"> -->
+                          <span layout="row">
+                            <ng-md-icon icon="delete"   ng-disabled="!option.html"
+                                        class="nooutline delete-icon-option"
+                                        ng-click="quiz.deleteOption($index)">
+                                        <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                            Delete
+                                        </md-tooltip>
+                            </ng-md-icon>
+                          </span>
+                        </md-input-container>
+                        </div>
                         <!-- <div layout="row"> -->
                         <!-- <div> -->
                         <!-- <label >Option
@@ -1033,19 +1229,21 @@
                         Add Option
                     </md-button>
                 </div>
+            </div>
 
-                <!--Bottom Buttons-->
-                <div style="position: fixed;bottom: 5px;right: 15px;">
-                    <md-button style="color:#ffffff;" class="backColorSeaGreen"
-                               ng-click="quiz.showAnswer(quiz.question);">
-                        Create
-                    </md-button>
-                    <md-button style="color:#ffffff;" class="backColorSeaGreen" ng-click="quiz.closeQuestion();">
-                        Cancel
-                    </md-button>
-                </div>
         </form>
-    </md-content>
+        </md-content>
+    </div>
+    <!--Bottom Buttons-->
+    <div style="position: fixed;bottom: 5px;right: 15px;">
+        <md-button style="color:#ffffff;" class="backColorSeaGreen"
+                   ng-click="quiz.showAnswer(quiz.question);">
+            Create
+        </md-button>
+        <md-button style="color:#ffffff;" class="backColorSeaGreen" ng-click="quiz.closeQuestion();">
+            Cancel
+        </md-button>
+    </div>
 </md-sidenav>
 <!--Add Question Sidenav End-->
 
@@ -2015,7 +2213,8 @@
                                                              ng-repeat="topic in quiz.topics | filter:tSNSearch"
                                                              ng-click="quiz.setSelectedTopics(this);
                                                              !quiz.showQuizBar && quiz.showQuestions($index);
-                                                             quiz.showQuizBar && quiz.showQuizQuestions($index);" id="topicId{{$index}}"
+                                                             quiz.showQuizBar && quiz.showQuizQuestions($index);"
+                                                             id="topicId{{$index}}"
                                                              ng-mouseenter="quiz.hover(chapter)"
                                                              ng-mouseleave="quiz.hover(chapter)"
                                                              class="{{selectedTopic}}">

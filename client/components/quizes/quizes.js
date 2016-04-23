@@ -6,6 +6,7 @@
 
     angular
         .module('app.quiz')
+<<<<<<< HEAD
         .controller('QuizesController', QuizesController);
 
     QuizesController.$inject = ['quizesBankService', "$rootScope", "appConfig",
@@ -19,6 +20,34 @@
                             messageService, $stateParams, utilService, $q, $mdDialog, quizesService,
                             $location, userService, naveService, $firebaseArray, $timeout, $mdToast,
                             firebaseService, $firebaseObject, $sce, authService, $mdSidenav) {
+=======
+
+
+        /*********************Local Service For Testing UI**************/
+
+        .service("myQuizData", function($firebaseArray){
+           var refer =  new Firebase('https://geniuz.firebaseio.com/quiz');
+            var QuizDatah = $firebaseArray(refer);
+            this._saveQuizData = function(qData){
+                // console.log(studentObj);
+                QuizDatah.$add(qData);
+            //    console.log('this is q data',qData);
+            };
+
+            this._getQuizData = function(){
+                return this.QuizDatah;
+
+            }
+        })
+
+
+
+        .controller('QuizesController', QuizesController);
+
+    QuizesController.$inject = ["myQuizData","$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
+
+    function QuizesController(myQuizData,$rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
+>>>>>>> 464c3a7974f0c6dceb290874cde827c61e64be25
 
         /*Private Variables*/
         var _self = this;
@@ -108,6 +137,7 @@
         _self.topics = [];
         _self.questions = [];
 
+<<<<<<< HEAD
         //QUIZ SCEDULE variables & functions
         // _self.closeAssignQuiz = closeAssignQuiz;
         // _self.setSelectedGroup = setSelectedGroup;
@@ -150,6 +180,45 @@
             questionSet["title"] = "discussion-html";
             angular.forEach(questionSet.options, function(val) {
                 delete val.$$hashKey;
+=======
+
+        /*All Function*/
+        
+        // from local firebase data
+            var refer =  new Firebase('https://geniuz.firebaseio.com/quiz');
+            var QuizDatah = $firebaseArray(refer);
+            $scope.qdata  = QuizDatah;
+        // end
+        
+
+        function createQuize(qData, img){
+            qData.img = img;
+
+        //    console.log('my uis', qData);
+            $scope.qData  = qData;
+             console.log('my quiz data is ',$scope.qData);
+            
+            myQuizData._saveQuizData(qData);
+            getQuizDataAll();
+            addBook();
+
+        }
+        $scope.QuizDataFromService = myQuizData._getQuizData();
+        function getQuizDataAll(){
+            $scope.QuizDataFromService = myQuizData._getQuizData();
+            console.log($scope.QuizDataFromService)
+        }
+
+
+        setTabs();
+    
+        authService.resolveUserPage()
+            .then(function (response) {
+                getUserObj();
+                initializeView();
+            }, function (err) {
+                alert('Error in Line 86: ' + err);
+>>>>>>> 464c3a7974f0c6dceb290874cde827c61e64be25
             });
             _self.questionSetQuestions.push(questionSet);
             console.log(_self.questionSetQuestions)
