@@ -265,7 +265,7 @@
             </md-toolbar>
             <div class="quiz-md-card-1">
                 <md-list class="quiz-sidebar-nav">
-                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books"
+                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books track by $index"
                                   id="bookId{{$index}}"
                                   ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
                                   ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
@@ -317,7 +317,7 @@
                 </md-list>
             </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
-                       aria-label="Add book" ng-click="quizes.addBook()">
+                       aria-label="Add book" ng-click="quizes.ShowNavBar()">
                 <ng-md-icon icon="add" style="fill: #fff"></ng-md-icon>
             </md-button>
         </md-content>
@@ -670,25 +670,7 @@
         <md-content class="backColorLightSeaGreen">
             <form name="bookForm" layout-padding>
                 <div layout="row">
-                    <md-input-container flex>
-                        <label>Quiz ID</label>
-                        <input name="bookID" ng-model="quizes.quizesData.bookID" required
-                               ng-pattern="/^([a-z0-9]){3,20}$/" minlength="3" maxlength="50"
-                               check-book-existance="" md-sidenav-focus>
 
-                        <div ng-show="bookForm.$submitted || bookForm.bookID.$touched"
-                             ng-messages="bookForm.bookID.$error">
-                            <div class="invalid_color" ng-message="required">This is required.</div>
-                            <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-                            <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to
-                                20
-                            </div>
-                            <div class="invalid_color" ng-message="maxlength">Required maximum length 50</div>
-                            <div class="invalid_color id_Error" ng-message="checkBookExistance">This quiz ID is not
-                                available.
-                            </div>
-                        </div>
-                    </md-input-container>
                     <md-input-container flex>
                         <label>Quiz Title</label>
                         <input name="bookTitle"
@@ -735,8 +717,8 @@
             <!--<md-button class="md-raised md-primary">Submit</md-button>-->
             <!--<md-button ng-disabled="bookForm.$invalid" class="md-primary" ng-click="quizAddBook.addBook(); $root.newImg = null">Create</md-button>-->
             <md-button class="backColorSeaGreen color-white"
-                       ng-disabled="bookForm.$invalid || !newImg" class="md-primary"
-                       ng-click="quizes.createQuize(quizes.quizesData, $root.newImg); $root.newImg = null">
+                       ng-disabled="bookForm.$invalid" class="md-primary"
+                       ng-click="quizes.createQuiz(quizes.quizesData, $root.newImg); $root.newImg = null">
                 Create
             </md-button>
             <md-button ng-click="quizes.closeBook()"
@@ -755,7 +737,7 @@
         <h1 class="md-toolbar-tools"><strong>Select Chapters</strong></h1>
     </md-toolbar>
     <md-list class="quiz-sidebar-nav">
-        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books"
+        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books track by $index"
                       id="bookId{{$index}}"
                       ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
                       ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
@@ -807,7 +789,8 @@
     </md-list>
     <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
         <md-list role="list">
-            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled"><button class="md-no-style md-button md-ink-ripple" type="button" ng-transclude="" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
+            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled">
+            class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
             <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
             <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
             <span class="foreColorWhite ng-binding">Muhammad Ali Mughal</span>
@@ -816,7 +799,7 @@
         <p><br></p>
 
         <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
-            <button class="md-raised md-button md-ink-ripple" type="button" ng-transclude="" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
+            <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
             </span></button>
         </div>
     </md-content>
@@ -882,7 +865,7 @@
     </md-toolbar>
     <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
         <md-list role="list">
-            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled"><button class="md-no-style md-button md-ink-ripple" type="button" ng-transclude="" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
+            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled"><button class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
             <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
             <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
             <span class="foreColorWhite ng-binding">Muhammad Ali Mughal</span>
@@ -891,7 +874,7 @@
         <p><br></p>
 
         <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
-            <button class="md-raised md-button md-ink-ripple" type="button" ng-transclude="" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
+            <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
             </span></button>
         </div>
     </md-content>
@@ -977,7 +960,7 @@
                     <div style="border: 1px none ; background-color: #F2F2F2;overflow:auto">
                         <!-- height: 400%;-->
                         <div style="background-color: #f2f2f2; overflow:auto">
-                            <div style=" " ng-repeat="book in quizes.books" id="bookId{{$index}}">
+                            <div style=" " ng-repeat="book in quizes.books track by $index" id="bookId{{$index}}">
                                 <div style=" background-color: #f7f7f7; height: 126px">
                                     <div style="background-color: #f7f7f7; height: 121px;border-bottom:solid #E5E5E5 "
                                          layout="column" layout-align="center center"
@@ -2565,7 +2548,7 @@
     </md-toolbar>
     <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
         <md-list role="list">
-            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled"><button class="md-no-style md-button md-ink-ripple" type="button" ng-transclude="" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
+            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled"><button class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
             <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
             <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
             <span class="foreColorWhite ng-binding">Muhammad Ali Mughal</span>
@@ -2574,7 +2557,7 @@
         <p><br></p>
 
         <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
-            <button class="md-raised md-button md-ink-ripple" type="button" ng-transclude="" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
+            <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
             </span></button>
         </div>
     </md-content>

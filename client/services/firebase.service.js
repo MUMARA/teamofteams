@@ -46,6 +46,7 @@ angular.module('core')
             var questionBank = null;
             var userQuestionBanks = null;
             var questionBankMemberships = null;
+            var userQuiz = null;
 
             return {
                 addUpdateHandler: function() {
@@ -175,6 +176,9 @@ angular.module('core')
                 getRefQuestionBankMemberships:  function() {
                     return questionBankMemberships;
                 },
+                getRefUserQuiz:  function() {
+                    return userQuiz;
+                },
                 logout: function() {
                   console.log('unauth the firebase');
                   ref.unauth();
@@ -229,7 +233,8 @@ angular.module('core')
                                 questionBank = ref.child('question-bank');
                                 userQuestionBanks = ref.child('user-question-banks');
                                 questionBankMemberships = ref.child('question-bank-memberships');
-                                
+                                userQuiz = ref.child('user-quiz');
+
                                 
 
                                 /*presence API work*/

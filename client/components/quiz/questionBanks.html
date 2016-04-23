@@ -265,7 +265,7 @@
             </md-toolbar>
             <div class="quiz-md-card-1">
                 <md-list class="quiz-sidebar-nav">
-                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quiz.books"
+                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quiz.books track by $index"
                                   id="bookId{{$index}}"
                                   ng-click="quiz.setSelectedBook(this, $index); quiz.showChapters($index); quiz.showQuizes($index);"
                                   ng-class="{selectedBook: $index == quiz.selectedBookIndex,previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}">
