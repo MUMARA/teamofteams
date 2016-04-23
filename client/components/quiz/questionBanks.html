@@ -332,7 +332,7 @@
         <md-divider></md-divider>
         <br>
 
-        <!-- <div>
+        <div>
             <div ng-style="(quiz.books.length == 0) && {'display':'none'}">
                 <div id="quizBankIcon" ng-click="quiz.showQuizBankFunc()" class="selectedTab menu-item-btn">
                     <img ng-src="img/1book.svg" class="book-img-quiz"/>
@@ -347,7 +347,7 @@
                     <img ng-src="img/comment.svg"/>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
     <!--Chapter Side-->
     <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
@@ -899,30 +899,26 @@
                 </md-input-container>
                 <!--Question Description-->
       </div>   <div ng-if="quiz.question.type">
-        <div layout="row">
-
 
         <ng-md-icon  icon="mode_edit" class="fillColorWhite nooutline" ng-click="quiz.closeTextangular('showTextangular')">
             <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
                 Edit
             </md-tooltip>
           </ng-md-icon>
+                <md-input-container style="width: 95%;" >
 
-                  <div ta-bind="ta-bind" ng-model="quiz.question.html">
-                    {{quiz.question.html}}
-                  </div>
-                </div>                    <!-- <label style="font-weight:lighter;">HTML</label> -->
-                        <!-- <textarea  name="questionDescription" row="10" disabled="true" ng-model="quiz.question.html"
+                    <label style="font-weight:lighter;">HTML</label>
+                        <textarea  name="questionDescription" row="10" disabled="true" ng-model="quiz.question.html"
                                   minlength="10" maxlength="200" required>
-                       </textarea> -->
-<!--
+                       </textarea>
+
                     <div ng-show="groupForm.$submitted || groupForm.questionDescription.$touched"
                          ng-messages="groupForm.questionDescription.$error">
                         <div class="invalid_color" ng-message="required">This is required.</div>
                         <div class="invalid_color" ng-message="minlength">Required minimum length 10</div>
                         <div class="invalid_color" ng-message="md-maxlength">Required minimum length 200</div>
-                    </div> -->
-
+                    </div>
+                </md-input-container>
                 <md-input-container style="width: 95%;" >
 
                     <label style="font-weight:lighter;">Discussion HTML</label>
