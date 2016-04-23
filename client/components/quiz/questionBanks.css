@@ -278,7 +278,7 @@ blockquote {
     background-color: #fff
 }
 .text-angular-nav {
-    margin-left: 45px;
+    /*margin-left: 45px;*/
     width: 80%;
     min-width: 50%;
     max-width: 100%;
