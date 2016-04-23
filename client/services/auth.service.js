@@ -67,7 +67,7 @@ angular.module('core')
                 },
                 signup: function(userInfo, successFn, failureFn) {
                     var self = this;
-                    $http.post('https://cb77cs1c8a.execute-api.us-east-1.amazonaws.com/dev/signup', {
+                    $http.post(appConfig.apiBaseUrl + '/api/signup', {
                         email: userInfo.email,
                         firstName: userInfo.firstName,
                         lastName: userInfo.lastName,
@@ -77,8 +77,8 @@ angular.module('core')
                     success(function(data, status, headers, config) {
                         // this callback will be called asynchronously
                         // when the response is available
-                        console.log("response: " + headers);
-                        console.log('signup response object: ' + JSON.stringify(data));
+                        //console.log("response: " + data);
+                        //console.log('signup response object: ' + JSON.stringify(data));
                         successFn(data);
                     }).
                     error(function(data, status, headers, config) {
