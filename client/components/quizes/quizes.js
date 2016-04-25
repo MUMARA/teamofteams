@@ -180,14 +180,10 @@
             console.log("initQuiz");
             quizesBankService.loadQuiz().then(
                 function(data) {
-                    console.log("loadQuiz");
                     _self.quizesData = data;
-                     console.log(data, 'Quizes Data');
-
                 }
             )
         }
-
         initQuiz();
 
 
@@ -619,12 +615,13 @@
         /*  Question Bank   */
         function showChapters(bookIndex) {
 
+
             quizesService.setQuestionObject(null);
             quizesService.setChapter(null, null);
             quizesService.setTopic(null, null);
             quizesService.setQuestionObject(null);
             // quizesService.book = bookIndex;
-            _self.bookId = quizesBankService.bookId[bookIndex];
+            _self.bookId = quizesBankService.quizID[bookIndex];
             _self.showQuestionDetails = false;
             _self.questionView = null;
             quizesBankService.loadChapters(_self.bookId).then(
