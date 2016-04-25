@@ -23,31 +23,8 @@ angular.module('core', [
     'angular.filter',
     'ngFileSaver',
     'truncate',
-    'ngSanitize'
-  ]).filter('groupUsers', function() {
-      return function(users, groupID) {
-        var filteredUsers = [];
-        users.forEach(function(user) {
-          if (user.groupID == groupID) {
-            var userNew = findWithAttr(filteredUsers, 'fullName', user.fullName) == -1;
-            if (userNew) {
-              filteredUsers.push(user);
-            }
-          }
-        });
-        return filteredUsers;
-      };
-
-      function findWithAttr(array, attr, value) {
-        for (var i = 0; i < array.length; i += 1) {
-          if (array[i][attr] === value) {
-            return i;
-          }
-        }
-        return -1;
-      }
-    })
-  .filter('trustUrl', ['$sce', function($sce) {
+    "textAngular"
+  ]).filter('trustUrl', ['$sce', function($sce) {
     return function(url) {
       /*var temp;
        $.get(url).success(function(data){
@@ -87,9 +64,12 @@ angular.module('core', [
       var hours = Math.floor((seconds % 86400) / 3600);
       var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
       var timeString = '';
-      if (days > 0) timeString += (days > 1) ? (days + " days ") : (days + " day ");
-      if (hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (hours + " hour ");
-      if (minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
+      if (days > 0) timeString += (days > 1) ? (days + " days ") : (days +
+        " day ");
+      if (hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (
+        hours + " hour ");
+      if (minutes >= 0) timeString += (minutes > 1) ? (minutes +
+        " minutes ") : (minutes + " minute ");
       return timeString;
     }
   }])
@@ -119,6 +99,7 @@ angular.module('core', [
   }])
   .filter('multilineFilter', ['$sce', function($sce) {
     return function(text) {
-      if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g, '<br />'));
+      if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g,
+        '<br />'));
     }
   }]);

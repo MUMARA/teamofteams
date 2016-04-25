@@ -5,10 +5,6 @@
         <img src="img/Untitled-3.svg" ng-click="navToolbar.shiftToUserPage()" class="nooutline icon30px cursorPointer">
         <span class="cursorPointer nooutline" ng-click="navToolbar.shiftToUserPage()"><strong>TEAM OF TEAMS</strong></span>
         <md-progress-circular md-diameter="45" ng-show="navToolbar.checkinSending" class="nomargin" md-mode="indeterminate"></md-progress-circular>
-        <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
-            {{navToolbar.showUrlObj.groupTitle}} /
-            {{navToolbar.showUrlObj.subgroupTitle}}
-        </div>
     </div>
     <div layout="row" layout-align="end center">
         <!-- EMTP -->
@@ -53,17 +49,48 @@
             </div>
             </md-card>
         </div>
+
+        <div layout="row" layout-align="center" class="leftmargin20px" ng-if="navToolbar.checkout">
+            {{navToolbar.showUrlObj.groupTitle}} /
+            {{navToolbar.showUrlObj.subgroupTitle}}
+        </div>
         <div layout="row" layout-align="end center" class="leftmargin20px rightmargin20px">
-            <ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()">
-                <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                  Quiz Builder
-                </md-tooltip>
-            </ng-md-icon>
-            <!--<ng-md-icon icon="hangouts" class="fillColorWhite nooutline leftmargin10px">
+
+            <div >
+                <!--<md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">-->
+                    <!--Profile-->
+                <!--</md-tooltip>-->
+                <md-menu md-offset="0 50">
+                    <ng-md-icon ng-click="$mdOpenMenu($event)" icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()">
+                        <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                            Quiz
+                        </md-tooltip>
+                    </ng-md-icon>
+                    <!--<img  ng-src="{{navToolbar.userObj['profile-image'] || $root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px nooutline leftmargin10px">-->
+                    <md-menu-content>
+                        <md-menu-item>
+                            <md-button ng-click="navToolbar.quizCreate()">Question Banks</md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="navToolbar.quizStart()">Quiz Builder</md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+
+            <!--<ng-md-icon icon="description" class="fillColorWhite nooutline leftmargin10px" ng-click="navToolbar.quizStart()">-->
+                <!--<md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">-->
+                  <!--Quiz-->
+                <!--</md-tooltip>-->
+            <!--</ng-md-icon>-->
+
+
+
+            <ng-md-icon icon="hangouts" class="fillColorWhite nooutline leftmargin10px">
                 <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
                     Chat
                 </md-tooltip>
-            </ng-md-icon>-->
+            </ng-md-icon>
             <!-- <ng-md-icon icon="notifications" class="fillColorWhite nooutline leftmargin10px" title="Quiz">
             </ng-md-icon> -->
             <div id="notification">
@@ -90,10 +117,10 @@
                                           </div>
                                           <div  class="nopadding nomargin">
                                               <em>{{navToolbar.returnMoment(notify.published)}}</em>
-                                          </div>
+                                          </div> 
                                       </div>
                                   </div>
-
+                            
                                   <md-divider md-outset></md-divider>
                               </div>
                           </md-list-item>

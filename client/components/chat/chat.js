@@ -3,9 +3,9 @@
  */
 (function() {
     'use strict';
-    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', '$sanitize', ChatController]);
+    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', ChatController]);
 
-    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state, $sanitize) {
+    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state) {
         var that = this;
         var user = userService.getCurrentUser();
         this.setFocus = function() {
@@ -13,7 +13,7 @@
         };
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().to(timestamp);
+                return moment().from(timestamp);
             } else {
                 return ''
             }
@@ -42,14 +42,6 @@
         this.ScrollToMessage = function() {
             var element = document.getElementById('messagebox');
             element.scrollTop = element.scrollHeight - element.clientHeight;
-        };
-        this.sendMsgUpKey = function (event) {
-            if (event.keyCode == 13 && !event.shiftKey) {
-                if (that.activeChannelID && that.text) {
-                    that.SendMsg();
-                    event.preventDefault();
-                }
-            }
         };
         this.SendMsg = function() {
             if (that.subgroupID) {
@@ -107,14 +99,7 @@
                 });
             }
         };
-        function onSuccessErrorChannelCreation(err, channelID, channelTitle){
-            if (that.messagesArray.length == 0) {
-                var channel = {
-                    $id: channelID,
-                    title: channelTitle
-                };
-                that.gotoChannel(channel);
-            }
+        function onSuccessErrorChannelCreation(err){
             if (err) {
                 messageService.showFailure(err);
             } else {
@@ -127,6 +112,11 @@
             groupService.setActivePanel('chat');
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
+            if (that.subgroupID) {
+                that.channels = chatService.getSubGroupChannel(that.groupID, that.subgroupID);
+            } else {
+                that.channels = chatService.getGroupChannel(that.groupID);
+            }
             that.activeTitle = 'Select Channel to Start Chat';
             that.activeChannelID = null;
             that.activeTeamChannelID = null;
@@ -141,21 +131,6 @@
                 that.viewChannelMessages(that.activeChannelID);
             }
             that.ScrollToMessage();
-            if (that.subgroupID) {
-                chatService.getSubGroupChannel(that.groupID, that.subgroupID).$loaded().then(function(snapshot){
-                    that.channels = snapshot;
-                    if(!that.activeChannelID && that.channels.length > 0) {
-                        that.gotoChannel(that.channels[0]); 
-                    }
-                });
-            } else {
-                chatService.getGroupChannel(that.groupID).$loaded().then(function(snapshot){
-                    that.channels = snapshot;
-                    if(!that.activeChannelID && that.channels.length > 0) {
-                        that.gotoChannel(that.channels[0]); 
-                    }
-                });
-            }
         }
         init();
 

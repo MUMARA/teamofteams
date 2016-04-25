@@ -20,7 +20,7 @@
     <div flex layout-padding class="backColorWhite nomargin nopadding md-whiteframe-z2" name="memberSetingDiv" novalidate>
         <h1 style="color: #d3d3d3;" class="nomargin" layout-padding>Members Setting</h1>
         <md-divider md-outset class="nopadding"></md-divider>
-        <md-content layout="row" class="viewHeight-250 nopadding" style="height: 80vh !important;">
+        <md-content layout="row" class="viewHeight-250 nopadding">
             <md-tabs  id="memberSettingTab" md-dynamic-height md-border-bottom flex>
               <md-tab label="All Members">
                 <md-content class="viewHeight-250">
@@ -51,34 +51,34 @@
                             </tr>
                         </thead>
                         <tbody md-body>
-                        <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== -1">
-                            <td md-cell>
-                                <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound" alt="user" layout-margin />
-                            </td>
-                            <td md-cell>
-                                <div layout="column" layout-align="space-around start">
-                                    <span><strong>{{member.userSyncObj.firstName + ' ' + member.userSyncObj.lastName}}</strong></span>
-                                    <span>{{member.userSyncObj.email}}</span>
-                                </div>
-                            </td>
-                            <td md-cell>{{member.membershipNo}}</td>
-                            <td md-cell style="width:10%">
-                                <md-select aria-label="userSetting" ng-model="member.membershipType" ng-disabled="member.membershipType == 1">
-                                    <md-option value="1" ng-if="member.membershipType == 1">
-                                        <span>Owner</span>
-                                        <ng-md-icon icon="person" class="leftmargin10px" size="20"></ng-md-icon>
-                                    </md-option>
-                                    <md-option value="2" ng-click="userSetting.changeMemberRole(2, member)">Admin
-                                    </md-option>
-                                    <md-option value="3" ng-click="userSetting.changeMemberRole(3, member)">Member
-                                    </md-option>
-                                    <md-option value="-1" ng-click="userSetting.changeMemberRole(-1, member)" >Block Membership
-                                    </md-option>
-                                    <md-option ng-click="userSetting.changeMemberRole(null, member)" value="5">Delete Membership
-                                    </md-option>
-                                </md-select>
-                            </td>
-                        </tr>
+                            <tr md-row ng-repeat="member in userSetting.members | filter : userSetting.searchbox | orderBy: ['firstName', 'lastName']" class="hoverLightGrey3" ng-if="member.membershipType !== -1">
+                                <td md-cell>
+                                    <img ng-src="{{member.user.profile['profile-image'] || 'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="icon50px imageRound" alt="user" layout-margin />
+                                </td>
+                                <td md-cell>
+                                    <div layout="column" layout-align="space-around start">
+                                        <span><strong>{{member.userSyncObj.firstName + ' ' + member.userSyncObj.lastName}}</strong></span>
+                                        <span>{{member.userSyncObj.email}}</span>
+                                    </div>
+                                </td>
+                                <td md-cell>{{member.membershipNo}}</td>
+                                <td md-cell style="width:10%">
+                                    <md-select aria-label="userSetting" ng-model="member.membershipType" ng-disabled="member.membershipType == 1">
+                                        <md-option value="1" ng-if="member.membershipType == 1">
+                                            <span>Owner</span>
+                                            <ng-md-icon icon="person" class="leftmargin10px" size="20"></ng-md-icon>
+                                        </md-option>
+                                        <md-option value="2" ng-click="userSetting.changeMemberRole(2, member)">Admin
+                                        </md-option>
+                                        <md-option value="3" ng-click="userSetting.changeMemberRole(3, member)">Member
+                                        </md-option>
+                                        <md-option value="-1" ng-click="userSetting.changeMemberRole(-1, member)" >Block Membership
+                                        </md-option>
+                                        <md-option ng-click="userSetting.changeMemberRole(null, member)" value="5">Delete Membership
+                                        </md-option>
+                                    </md-select>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                   </div>

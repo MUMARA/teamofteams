@@ -42,35 +42,15 @@
             if(pname === 'collaborator') {
               groupService.setActivePanel('collaborator');
             }
-            if(pname === 'membershipcard') {
-              groupService.setActivePanel('membershipcard');
-            }
             that.panel.subgroupID = subgroupID;
             if (that.panel.subgroupID) {
-              if(that.panel.active == 'collaborator'){
                 CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
-                    console.log('in showPanel')
                     $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId });
                 })
-              }
-              else {
-                    $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID});
-              }
-
             } else {
-              if(that.panel.active == 'collaborator'){
                 CollaboratorService.getinitGroupDocument(that.groupID, function(docId) {
-                    console.log('in - showPanel')
                     $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID, docID: docId });
                 });
-              }
-              else {
-                    if(that.panel.active == 'progressreport') {
-                        $state.go('user.group.' + 'activity', { groupID: that.groupID});
-                    } else {
-                        $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID});
-                    }
-              }
             }
         };
 
@@ -197,7 +177,7 @@
                                                 //     });
                                             } else {
                                                 that.subgroups.push(subgroup);
-                                                subgroupChildRemovedEvent(subgroup.$id);
+                                                subgroupChildRemovedEvent(subgroup.$id); 
                                             }
                                         });
                                     }

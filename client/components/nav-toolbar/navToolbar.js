@@ -46,6 +46,11 @@
             this.PersonalSetting = PersonalSetting;
             this.showSubGroup = showSubGroup;
             this.shiftToUserPage = shiftToUserPage;
+            this.quizCreate = quizCreate;
+
+
+
+
             //this.doChange = doChange;
             this.updateStatus = updateStatus;
 
@@ -55,7 +60,7 @@
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart;
+            this.quizStart = quizStart;       
 
             this.progressReport = function() {
                 $mdSidenav('right').toggle().then(function() {
@@ -75,7 +80,7 @@
             function quizStart() {
                 // console.log('done')
                 // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
-                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
+                $state.go('user.quizes', {userID: userService.getCurrentUser().userID});
             }
 
             //moment.js
@@ -322,7 +327,7 @@
                             //for subgroup activity stream record -- END --
 
                             messageService.showSuccess('Checkin Successfully!');
-                        } // else checkoutFlag
+                        } // else checkoutFlag 
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
@@ -690,14 +695,12 @@
                     }
                     for (var i in group) {
                         if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
-                            checkinService.getSubGroupTitleCb(group.$id, i, function(title){
-                                var temp = {};
-                                temp.pId = group.$id; // group Name == pId
-                                temp.subgroupId = i;
-                                temp.subgroupTitle = title
-                                temp.data = group[i];
-                                tmp.subGroups.push(temp);
-                            })
+                            var temp = {};
+                            temp.pId = group.$id; // group Name == pId
+                            temp.subgroupId = i;
+                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
+                            temp.data = group[i];
+                            tmp.subGroups.push(temp);
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);
@@ -740,6 +743,11 @@
             function PersonalSetting() {
                 // $location.path('/user/' + userID + '/personalSettings')
                 $state.go('user.personal-settings', {userID: userService.getCurrentUser().userID})
+            }
+
+            function quizCreate() {
+                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
+
             }
 
             this.progressReportSideNav = function(){

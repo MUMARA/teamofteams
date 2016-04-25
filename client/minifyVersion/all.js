@@ -22,32 +22,8 @@ angular.module('core', [
     'ui-leaflet',
     'angular.filter',
     'ngFileSaver',
-    'truncate',
-    'ngSanitize'
-  ]).filter('groupUsers', function() {
-      return function(users, groupID) {
-        var filteredUsers = [];
-        users.forEach(function(user) {
-          if (user.groupID == groupID) {
-            var userNew = findWithAttr(filteredUsers, 'fullName', user.fullName) == -1;
-            if (userNew) {
-              filteredUsers.push(user);
-            }
-          }
-        });
-        return filteredUsers;
-      };
-
-      function findWithAttr(array, attr, value) {
-        for (var i = 0; i < array.length; i += 1) {
-          if (array[i][attr] === value) {
-            return i;
-          }
-        }
-        return -1;
-      }
-    })
-  .filter('trustUrl', ['$sce', function($sce) {
+    'truncate'
+  ]).filter('trustUrl', ['$sce', function($sce) {
     return function(url) {
       /*var temp;
        $.get(url).success(function(data){
@@ -584,9 +560,9 @@ angular.module('core', [
  */
 (function() {
     'use strict';
-    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', '$sanitize', ChatController]);
+    angular.module('app.chat', ['core']).controller('ChatController', ['messageService', 'groupService', 'chatService', 'userService', '$mdBottomSheet', '$mdDialog', '$stateParams', '$state', ChatController]);
 
-    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state, $sanitize) {
+    function ChatController(messageService, groupService, chatService, userService, $mdBottomSheet, $mdDialog, $stateParams, $state) {
         var that = this;
         var user = userService.getCurrentUser();
         this.setFocus = function() {
@@ -594,7 +570,7 @@ angular.module('core', [
         };
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().to(timestamp);
+                return moment().from(timestamp);
             } else {
                 return ''
             }
@@ -623,14 +599,6 @@ angular.module('core', [
         this.ScrollToMessage = function() {
             var element = document.getElementById('messagebox');
             element.scrollTop = element.scrollHeight - element.clientHeight;
-        };
-        this.sendMsgUpKey = function (event) {
-            if (event.keyCode == 13 && !event.shiftKey) {
-                if (that.activeChannelID && that.text) {
-                    that.SendMsg();
-                    event.preventDefault();
-                }
-            }
         };
         this.SendMsg = function() {
             if (that.subgroupID) {
@@ -688,14 +656,7 @@ angular.module('core', [
                 });
             }
         };
-        function onSuccessErrorChannelCreation(err, channelID, channelTitle){
-            if (that.messagesArray.length == 0) {
-                var channel = {
-                    $id: channelID,
-                    title: channelTitle
-                };
-                that.gotoChannel(channel);
-            }
+        function onSuccessErrorChannelCreation(err){
             if (err) {
                 messageService.showFailure(err);
             } else {
@@ -708,6 +669,11 @@ angular.module('core', [
             groupService.setActivePanel('chat');
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
+            if (that.subgroupID) {
+                that.channels = chatService.getSubGroupChannel(that.groupID, that.subgroupID);
+            } else {
+                that.channels = chatService.getGroupChannel(that.groupID);
+            }
             that.activeTitle = 'Select Channel to Start Chat';
             that.activeChannelID = null;
             that.activeTeamChannelID = null;
@@ -722,21 +688,6 @@ angular.module('core', [
                 that.viewChannelMessages(that.activeChannelID);
             }
             that.ScrollToMessage();
-            if (that.subgroupID) {
-                chatService.getSubGroupChannel(that.groupID, that.subgroupID).$loaded().then(function(snapshot){
-                    that.channels = snapshot;
-                    if(!that.activeChannelID && that.channels.length > 0) {
-                        that.gotoChannel(that.channels[0]); 
-                    }
-                });
-            } else {
-                chatService.getGroupChannel(that.groupID).$loaded().then(function(snapshot){
-                    that.channels = snapshot;
-                    if(!that.activeChannelID && that.channels.length > 0) {
-                        that.gotoChannel(that.channels[0]); 
-                    }
-                });
-            }
         }
         init();
 
@@ -772,8 +723,6 @@ angular.module('core', [
             if (keyCode === 13) {
                 if (user.length === 1) {
                     that.CheckInuser(user[0].groupID, user[0].subgroupID, user[0].id, user[0].type);
-                } else {
-                    messageService.fastFailure('User not found!');
                 }
             }
         }
@@ -835,60 +784,10 @@ angular.module('core', [
 (function() {
     'use strict';
     angular.module('app.progressreport', ['core'])
-		.factory('ProgressReportService', ['$q', 'activityStreamService', 'firebaseService', ProgressReportService]);
-    function ProgressReportService($q, activityStreamService, firebaseService) {
+		.factory('ProgressReportService', ['activityStreamService', 'firebaseService', ProgressReportService]);
+    function ProgressReportService(activityStreamService, firebaseService) {
 
 		var dailyProgressReport = [];
-
-        //crearting progress Report
-
-        function createProgressReport(obj, Policy, checkoutFlag) {     //obj = {groupId: '', subgroupId: '',userId; '' }
-            var deferred = $q.defer();
-            //checking daily progress report is exists or not -- START --
-            firebaseService.getRefMain().child('subgroup-progress-reports').child(obj.groupId).child(obj.subgroupId).child(obj.userId)
-                .orderByChild('date').startAt(new Date().setHours(0, 0, 0, 0)).endAt(new Date().setHours(23, 59, 59, 0)).once('value', function(snapshot) {
-
-                    if (snapshot.val() === null) { //if null then create daily report dummy
-                        //cerating Dummy Report Object on Checkin....
-                        var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(obj.groupId)
-                            .child(obj.subgroupId).child(obj.userId).push({
-                                date: Firebase.ServerValue.TIMESTAMP,
-                                //date: new Date().setHours(0,0,0,0),
-                                questionID: Policy.latestProgressReportQuestionID,
-                                policyID: Policy.policyID,
-                                answers: ''
-                        });
-
-                        //for progress activity stream record -- START --
-                        var type = 'progressReport';
-                        var targetinfo = {id: progressRprtObj.key(), url: obj.groupId+'/'+obj.subgroupId, title: obj.groupId+'/'+obj.subgroupId, type: 'progressReport' };
-                        var area = {type: 'progressReport-created'};
-                        var group_id = obj.groupId+'/'+obj.subgroupId;
-                        var memberuserID = obj.userId;
-                        var _object = null;
-                        //for group activity record
-                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
-                        //for progress activity stream record -- END --
-
-                        deferred.resolve({ 'result': false, 'message': 'notSubmitted' });
-
-                    } else {
-                        for(var object in snapshot.val()) {
-                            //console.log(snapshot.val()[obj])
-                            if(snapshot.val()[object].answers === "" && checkoutFlag === true) {  //now checking if answers has given or not on checkout
-                                //if not submited report then show msg
-                                deferred.resolve({ 'result': false, 'message': 'notSubmitted' });
-                            } else {
-                                //if submited report then nuthing
-                                deferred.resolve({ 'result': true, 'message': null });
-                            }
-                        }
-                    }
-
-                });
-
-            return deferred.promise;
-        } //createProgressReport
 
 		//getting daily progress report
 		function getReports(userArray, groupID, subgroupID) {
@@ -991,7 +890,7 @@ angular.module('core', [
 			return dailyProgressReport;
 		} //getDailyProgressReport
 		function updateReport(report, cb) {
-			//console.log('report', report)
+			// console.log('report', report)
 			firebaseService.getRefProgressReport().child(report.groupID).child(report.subgroupID).child(report.userID).child(report.reportID).update({ 'answers': report.answers }, function(err) {
 				if (err) {
 					// console.log('err', err)
@@ -1179,8 +1078,7 @@ angular.module('core', [
 			updateReport: updateReport,
 			getGroupDailyProgressReport: getGroupDailyProgressReport,
 			getSingleSubGroupReport: getSingleSubGroupReport,
-            getGroupReportByDates: getGroupReportByDates,
-            createProgressReport: createProgressReport
+			getGroupReportByDates: getGroupReportByDates
         }
     }; //ProgressReportService
 })();
@@ -1195,9 +1093,7 @@ angular.module('core', [
     function ProgressReportController(firebaseService, $state, messageService, $timeout, groupService, ProgressReportService, dataService, userService, $stateParams) {
         var that = this;
         this.loadingData = false;
-        this.showParam = false;
         this.setFocus = function(startDate , endDate) {
-            that.showParam = !that.showParam
             that.loadingData = true;
              if(startDate && endDate) {
                  $timeout(function() {
@@ -1207,7 +1103,7 @@ angular.module('core', [
                  	// console.log(that.startDate.setHours(0,0,0,0) , that.endDate.setHours(23,59,59,0));
                  }, 2000);
              }else{
-                 //document.getElementById("UserSearch").focus();
+                 document.getElementById("#UserSearch").focus();
                  that.loadingData = false;
              }
 
@@ -1273,7 +1169,7 @@ angular.module('core', [
                             checkin: snapshot.val().timestamp,
                             checkindate: newDate,
                             location: snapshot.val()['identified-location-id'],
-                            checkout: ''
+                            checkout: 0
                         });
                         that.count++;
                     } else if (snapshot.val().message == 'Checked-out') {
@@ -1338,12 +1234,12 @@ angular.module('core', [
 (function() {
   'use strict';
   angular.module('app.collaborator', ['core'])
-    .factory('CollaboratorService', ['$q', '$firebaseArray','$rootScope','firebaseService', CollaboratorService]);
+    .factory('CollaboratorService', ['$q', '$firebaseArray', 'ref','$rootScope', CollaboratorService]);
 
-  function CollaboratorService($q, $firebaseArray, $rootScope,firebaseService) {
-    var currentGroup,currentSubGroup,subGroupUsers = [];
+  function CollaboratorService($q, $firebaseArray, ref,$rootScope) {
+    var currentGroup,currentSubGroup,subGroupUsers =[];
     var currentDocumentId ="";
-    var firepadRef = firebaseService.getRefMain(), pushDocumentNode, firebaseDocumentId, filteredUsers = [];
+    var firepadRef, pushDocumentNode, firebaseDocumentId, filteredUsers = [];
     return {
       getCurrentDocumentId :getCurrentDocumentId,
       setCurrentDocumentId:setCurrentDocumentId,
@@ -1385,8 +1281,8 @@ angular.module('core', [
 
     function getinitGroupDocument(groupID, cb) {
       var val = "";
-    //   firepadRef = new Firebase(ref)
-      firepadRef.child("firepad-groups/"+groupID).limitToFirst(1).once('value',function(snapshot){
+      firepadRef = new Firebase(ref).child("firepad-groups/"+groupID);
+      firepadRef.limitToFirst(1).once('value',function(snapshot){
         for(var a in snapshot.val()){
            val = a;
         }
@@ -1396,14 +1292,14 @@ angular.module('core', [
 
     function getGroupMembers(groupID,subgroupID) {
       if(subgroupID){
-        // firepadRef = new Firebase(ref).child("group-members/"+subgroupID+"/"+groupID);
-        $firebaseArray(firepadRef.child("group-members/"+subgroupID+"/"+groupID)).$loaded().then(function(x){
+        firepadRef = new Firebase(ref).child("group-members/"+subgroupID+"/"+groupID);
+        $firebaseArray(firepadRef).$loaded().then(function(x){
            return x;
         });
       }
       else {
-        // firepadRef = new Firebase(ref).child("group-members/"+groupID);
-        $firebaseArray(firepadRef.child("group-members/"+groupID)).$loaded().then(function(x){
+        firepadRef = new Firebase(ref).child("group-members/"+groupID);
+        $firebaseArray(firepadRef).$loaded().then(function(x){
            return x;
          });
       }
@@ -1412,8 +1308,8 @@ angular.module('core', [
 
     function getinitSubGroupDocument(groupID,subgroupID,cb){
       var val = "";
-    //   firepadRef = new Firebase(ref).child("firepad-subgroups/"+groupID+'/'+subgroupID);
-      firepadRef.child("firepad-subgroups/"+groupID+'/'+subgroupID).limitToFirst(1).once('value',function(snapshot){
+      firepadRef = new Firebase(ref).child("firepad-subgroups/"+groupID+'/'+subgroupID);
+      firepadRef.limitToFirst(1).once('value',function(snapshot){
         for(var a in snapshot.val()){
            val = a;
         }
@@ -1424,29 +1320,29 @@ angular.module('core', [
 
 
     function addAccessUser(documentId, groupID, subgroupID, userID,access) {
-    //   var firebaseLocalRef;
-    //   firepadRef = new Firebase(ref);
+      var firebaseLocalRef;
+      firepadRef = new Firebase(ref);
       var updateDocument = {};
       if (subgroupID) {
-        // firebaseLocalRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId);
+        firebaseLocalRef = new Firebase(ref).child('firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId);
           updateDocument['firepad-subgroups-rules/' + groupID + '/' + subgroupID + '/' + documentId + '/allUsers'] = true;
           updateDocument['firepad-subgroups-access/' + groupID + '/' + subgroupID + '/' + documentId + '/' + userID] = access;
       }
       else {
-        // firebaseLocalRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + documentId);
+        firebaseLocalRef = new Firebase(ref).child('firepad-groups-access/' + groupID + '/' + documentId);
           updateDocument['firepad-groups-rules/' + groupID + '/' + documentId + '/allUsers'] = true;
           updateDocument['firepad-groups-access/' + groupID +  '/' + documentId + '/' + userID] = access;
       }
       firepadRef.update(updateDocument, function(error) {
         if (error) {
+          console.log("Error From AccessUsers:", error);
         }
       });
     }
 
     function CreateDocument(documentTitle, groupID, subgroupID,documentType,user) {
       var deferred = $q.defer();
-      var firebaseObj = {};
-      var firebaseLocalRef = firepadRef,pushDocumentNode,firebaseDocumentId;
+      var firebaseLocalRef,pushDocumentNode,firebaseDocumentId;
       var updateDocument = {},
       createdBy = {
         firstName:user.firstName,
@@ -1455,35 +1351,42 @@ angular.module('core', [
         imgUrl:$rootScope.userImg || ""
 
       };
-        firebaseObj = {
-          title: documentTitle,
-          type: documentType,
-          createdBy: createdBy,
-          timestamp: Date.now()
-      }
       if (subgroupID) {
-        // firebaseLocalRef = new Firebase(ref);
-        // firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID);
         pushDocumentNode = firebaseLocalRef.child("firepad-subgroups/" + groupID + "/" + subgroupID).push();
         firebaseDocumentId = pushDocumentNode.key();
-        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId] = firebaseObj;
-        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId] = firebaseObj;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-subgroups/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-subgroups-documents/" + groupID + "/" + subgroupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
         updateDocument['firepad-subgroups-access/' + groupID + "/" + subgroupID + '/' + firebaseDocumentId + '/' + user.userID] = 1;
         updateDocument['firepad-subgroups-rules/' + groupID + "/" + subgroupID + '/' + firebaseDocumentId + '/allUsers'] = true;
 
       } else {
-        // firebaseLocalRef = new Firebase(ref);
-        // firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
-         pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
+        firebaseLocalRef = new Firebase(ref);
+        firepadRef = firebaseLocalRef.child("firepad-groups/" + groupID);
+        pushDocumentNode = firebaseLocalRef.child("firepad-groups/" + groupID).push();
         firebaseDocumentId = pushDocumentNode.key();
-        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId ] = firebaseObj;
-        updateDocument["firepad-groups-documents/" + groupID + "/" + firebaseDocumentId ] = firebaseObj;
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-groups/" + groupID + "/" + firebaseDocumentId + "/timestamp"] = Date.now();
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/title"] = documentTitle;
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/type"] = documentType;
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/createdBy"] = createdBy;
+        updateDocument["firepad-groups-documents/" + groupID + "/" +firebaseDocumentId + "/timestamp"] = Date.now();
         updateDocument['firepad-groups-access/' + groupID + "/" + firebaseDocumentId + '/' + user.userID] = 1;
         updateDocument['firepad-groups-rules/' + groupID + "/" + firebaseDocumentId + '/allUsers'] = true;
 
       }
       firebaseLocalRef.update(updateDocument, function(error) {
         if (error) {
+          console.log("error due to :", error);
           deferred.reject(error);
         }
         else {
@@ -1500,19 +1403,12 @@ angular.module('core', [
  */
 (function() {
   'use strict';
-  function findWithAttr(array, attr, value) {
-        for (var i = 0; i < array.length; i += 1) {
-          if (array[i][attr] === value) {
-            return i;
-          }
-        }
-        return -1;
-      }
   angular.module('app.collaborator')
-    // .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
+    .constant("ref", "https://luminous-torch-4640.firebaseio.com/")
     .filter('collaboratorUsers', function() {
       return function(users, groupID) {
         var filteredUsers = [];
+        // console.log(JSON.stringify(users));
         users.forEach(function(user) {
           if (user.groupID == groupID) {
             var userNew = findWithAttr(filteredUsers, 'fullName', user.fullName) == -1;
@@ -1524,16 +1420,21 @@ angular.module('core', [
         return filteredUsers;
       };
 
-
+      function findWithAttr(array, attr, value) {
+        for (var i = 0; i < array.length; i += 1) {
+          if (array[i][attr] === value) {
+            return i;
+          }
+        }
+        return -1;
+      }
     })
+    .controller('CollaboratorController', ['firebaseService', 'ref', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', '$state', '$firebaseObject', '$rootScope', 'CollaboratorService', '$q', collaboratorFunction]);
 
 
-    .controller('CollaboratorController', ['firebaseService', "$firebaseArray", 'FileSaver', 'Blob', 'groupService', '$stateParams', 'userService', 'dataService', 'messageService', '$timeout', '$scope', '$state', '$firebaseObject', '$rootScope', 'CollaboratorService', '$q','$document', collaboratorFunction]);
+  function collaboratorFunction(firebaseService, ref, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope, $state, $firebaseObject, $rootScope, CollaboratorService, $q) {
 
-
-  function collaboratorFunction(firebaseService, $firebaseArray, FileSaver, Blob, groupService, $stateParams, userService, dataService, messageService, $timeout, $scope, $state, $firebaseObject, $rootScope, CollaboratorService, $q,$document) {
-
-    var globalRef = firebaseService.getRefMain();
+    var globalRef = new Firebase(ref);
 
     // componentHandler.upgradeAllRegistered();
     var firepadRef;
@@ -1555,7 +1456,6 @@ angular.module('core', [
       displayName: "C#",
       codeMirrorName: "text/x-csharp"
     }, ];
-    that.documentType = "Rich Text";
     that.isNormal = true;
     that.mode = "Rich Text";
     var pushDocumentNode, firebaseDocumentId, firepad;
@@ -1566,20 +1466,19 @@ angular.module('core', [
     that.document = "Create/Open Document";
     that.showLoader = false;
     that.admins = [];
-    that.permissionObj = {};
     that.permissionMembers = {};
-    that.allUsers;
-    var editorExists = false;
-    that.Editors = []
 
     init();
     $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
       data.forEach(function(member) {
         if (member["membership-type"] == 1 || member["membership-type"] == 2) {
+          console.log("admins",member);
           that.admins.push(member);
           that.permissionMembers[member.$id] = true;
         }
       });
+      console.log("that.admins", that.admins);
+      console.log("that.permissionMembers", that.permissionMembers);
     });
 
     if (!that.subgroupID) {
@@ -1602,6 +1501,7 @@ angular.module('core', [
 
     } else {
       firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgroups) {
+        // console.log("abc:", subgroups.val());
         if (subgroups.val()['membership-type'] == 1) {
           that.isOwner = true;
           that.isAdmin = true;
@@ -1625,33 +1525,32 @@ angular.module('core', [
     }
 
     that.gotoDocument = function(openDoc) {
-    //   firepadRef = new Firebase(ref);
+      firepadRef = new Firebase(ref);
       if (that.subgroupID) {
         $state.go("user.group.subgroup-collaborator", {
           groupID: that.groupID,
           subgroupID: that.subgroupID,
           docID: openDoc.$id
         });
-        // that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
-        // console.log(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers").toString());
+        that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
       } else {
         $state.go("user.group.collaborator", {
           groupID: that.groupID,
           docID: openDoc.$id
         });
-        // that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+        that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
       }
 
-      // that.allUsers.$loaded(function() {
-      // });
+      that.allUsers.$loaded(function() {
+        console.log(openDoc.$id, that.allUsers)
+      });
     };
 
 
     function initiateFirepad(refArgument, arg) {
       var codeMirror = CodeMirror(document.getElementById('firepad'), {
         lineNumbers: that.mode == "Rich Text" ? false : true,
-        mode: that.mode,
-        lineWrapping: true
+        mode: that.mode
       });
       firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
         richTextShortcuts: that.isNormal,
@@ -1662,6 +1561,7 @@ angular.module('core', [
       });
       firepad.on("ready", function() {
         that.ready = false;
+        console.log("Usera", that.user);
         firepad.setUserId(that.user.userID);
         firepad.setUserColor("#ccccc");
         that.showLoader = false;
@@ -1673,18 +1573,19 @@ angular.module('core', [
 
 
     that.toggleAllUser = function(val) {
-    //   var firepadRef = new Firebase(ref);
+      var firepadRef = new Firebase(ref);
       var obj;
       if (that.subgroupID) {
-        obj = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers"));
+        obj = $firebaseObject(firepadRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers"));
       } else {
-        obj = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+        obj = $firebaseObject(firepadRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
       }
       obj.$value = val;
       obj.$save();
     };
 
     that.checkboxClicked = function(userStatus, user) {
+      console.log("called");
       if (userStatus) {
         user.id == that.createdBy.userID ? userStatus = 1 : userStatus = 2;
       } else {
@@ -1695,25 +1596,41 @@ angular.module('core', [
           userStatus = 1
         }
       });
-    //   firepadRef = new Firebase(ref);
+      console.log(user);
+      firepadRef = new Firebase(ref);
       var updateDocument = {};
       if (that.subgroupID) {
         updateDocument["firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
-        globalRef.update(updateDocument, function(err) {
+        // globalRef.child('firepad-subgroups-access/finalyear/morning/-KCJfxThRM2tRXE9q_Vh').on('child_added', function (snapshot) {
+        //    console.log("child_added val ", snapshot.val());
+        //    console.log("child_added key ", snapshot.key());
+        //  });
+        //that.allUsers = $firebaseObject(firepadRef.child("firepad-subgroups-rules/"+that.groupID+"/"+that.subgroupID+'/'+$stateParams.docID+"/allUsers")).$value;
+        firepadRef.update(updateDocument, function(err) {
           if (err) {
+            console.log(err);
           }
         })
       } else {
         updateDocument["firepad-groups-access/" + that.groupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
-        globalRef.update(updateDocument, function(err) {
+        // globalRef.child('firepad-groups-access/finalyear/-KCJZdghiEKGV7C9NRfj').on('child_added', function (snapshot) {
+        //    console.log("child_added val ", snapshot.val());
+        //    console.log("child_added key ", snapshot.key());
+        //  });
+        //that.allUsers = $firebaseObject(firepadRef.child("firepad-groups-rules/"+that.groupID+"/"+$stateParams.docID+"/allUsers"));
+        firepadRef.update(updateDocument, function(err) {
           if (err) {
+            console.log(err);
           }
         })
       }
+      console.log(that.allUsers);
+      // that.backdrop = userStatus;
+      // console.log(that.permission[user]);
     };
     that.createDocument = function() {
-    //   var firebaseLocalRef;
-    //   var updateDocument = {};
+      var firebaseLocalRef;
+      var updateDocument = {};
       that.showLoader = true;
       that.createdBy = {
         firstName: that.user.firstName,
@@ -1746,31 +1663,7 @@ angular.module('core', [
       }
     };
 
-   function createClickEvent(node,type,callback){
-    //    node.addEventListener(type, myFunc,true);
-    //    function myFunc() {
-    //        that.channelBottomSheet = false;
-    //        document.body.removeEventListener('click', myFunc,true)
-    //     }
-    $('body').click(function(evt){
-       if(evt.target.id == "channelBottomSheet")
-          return;
-          if(evt.target.id == "fabButton")
-          return;
-          if($(evt.target).closest('#fabButton').length)
-          return;
-       //For descendants of menu_content being clicked, remove this check if you do not want to put constraint on descendants.
-       if($(evt.target).closest('#channelBottomSheet').length)
-          return;
-       console.log(evt.target);
-        that.channelBottomSheet = false;
-      //Do processing of click event here for every element except with id menu_content
-    });
-   }
-     createClickEvent(document.body,'click');
-
     that.channelBottomSheetfunc = function() {
-        // createClickEvent(document.body,'click');
       if (that.channelBottomSheet)
         that.channelBottomSheet = false;
       else
@@ -1786,6 +1679,7 @@ angular.module('core', [
           type: 'html;charset=utf-8'
         });
         FileSaver.saveAs(data, 'data.html');
+        console.log(firepad.getHtml())
       }
 
     };
@@ -1799,16 +1693,18 @@ angular.module('core', [
     };
 
 
-    function backdropPermission() {
+    function backdropPermission(fireRef) {
       if (that.subgroupID) {
-        globalRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+        fireRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
+          console.log("backdrop", that.backdrop);
         });
       } else {
-        globalRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+        fireRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
+          console.log("backdrop", that.backdrop);
         });
       }
 
@@ -1824,291 +1720,140 @@ angular.module('core', [
       that.groupID = $stateParams.groupID;
       that.user = userService.getCurrentUser();
       that.users = dataService.getUserData();
+      console.log("All Users:", that.users);
       that.activeTitle = "Collaborator";
-      var localRef = globalRef;
+      var accessRef = new Firebase(ref);
       // that.groupMembers = CollaboratorService.getGroupMembers(that.groupID);
+      // console.log(that.groupMembers);
       if ($stateParams.docID) {
         if (that.subgroupID) {
           that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
-          localRef = globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID); //this will be the user created documents
-          globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            backdropPermission();
+          globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID); //this will be the user created documents
+          console.log('subgrouppppppppppppppppppppppppppp');
+          accessRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
           });
-          globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            backdropPermission();
-            angular.element(document).find("firepad").blur();
+          accessRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
           });
-          globalRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
+          accessRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
+            console.log("For all users", snapshot.val());
             that.backdrop = that.allUsers = snapshot.val();
-            if(!that.allUsers){
-              globalRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-              backdropPermission();
-            });
-            }
           });
         } else {
           that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
-          localRef = globalRef.child("firepad-groups/" + that.groupID).child($stateParams.docID);
-          globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            backdropPermission();
+          globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child($stateParams.docID);
+          console.log('grouppppppppppppppppppppppppppp');
+          accessRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
           });
-          globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            backdropPermission();
-            angular.element(document).find("firepad").blur();
+          accessRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
+            console.log("child_added val ", snapshot.val());
+            console.log("child_added key ", snapshot.key());
+            backdropPermission(accessRef);
           });
-          globalRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
+          accessRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
+            console.log("For all users", snapshot.val());
             that.backdrop = that.allUsers = snapshot.val();
-            if(!that.allUsers){
-                $firebaseObject(globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID)).$loaded(function(response){
-                    console.log(response);
-                    that.permissionObj = {};
-                    response.forEach(function(element,item){
-                        console.log("Element:", element + "," + item);
-                        that.permissionObj[item] = true;
-
-                    })
-                })
-            //   globalRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).once('value', function(snapshot) {
-            // //   backdropPermission();
-            //     console.log(snapshot);
-            // });
-            }
-            else {
-                that.users.forEach(function(user) {
-                    if (user.groupID == that.groupID) {
-                        if (!that.permissionObj[user.id]) {
-                            that.permissionObj[user.id] = true;
-                        }
-                    }
-                });
-            }
 
           });
-
         }
-        localRef.once('value', function(snapshot) {
+        globalRef.once('value', function(snapshot) {
           that.document = snapshot.val().title;
           that.createdBy = snapshot.val().createdBy;
           that.mode = snapshot.val().type;
           that.isNormal = that.mode == "Rich Text" ? true : false;
-          console.log("localRef",localRef.toString())
-          initiateFirepad(localRef);
+          initiateFirepad(globalRef);
           permissions();
         });
-        that.history = $firebaseArray(localRef.child("history").limitToLast(300));
       }
 
-      localRef.child('history').on('child_added',function(snapshot){
-        addEditor(snapshot.val());
-      })
+      // that.allUsers = false;
+      that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
     }
 
+    /* function getUserPermissions(userID) {
+       //var defered = $q.defer();
 
-function editTimestamp(user) {
-  for (var i = 0; i < that.Editors.length; i++) {
-    if(that.Editors[i].id == user.a){
-      that.Editors[i].timestamp = user.t;
-      // editorExists = false;
-    }
-  }
-}
-function addEditor(snapshot){
-    angular.forEach(that.Editors,function(item){
-      if(item.id == snapshot.a){
-        editorExists = true;
-        editTimestamp(snapshot);
-      }
-    })
-  if(!editorExists){
-    userService.getUserProfile(snapshot.a,function(user){
-      angular.forEach(that.Editors,function(item){
-        if(item.id == snapshot.a){
-          editorExists = true;
-          editTimestamp(snapshot);
-        }
-      })
-      if(!editorExists){
-        that.Editors.push({
-          id: snapshot.a,
-          timestamp: snapshot.t,
-          name : user.firstName + " " + user.lastName,
-          img: user['profile-image'] != undefined ? user['profile-image'] : ""
-        })
-      }
-      })
-  }
-  else {
-    editorExists = false;
-  }
-  console.log("that.Editors:", that.Editors);
-}
-// that.EditorDetails = function(userId) {
-//    console.log(userId);
-// }
-
-
-    function userAccessToggles() {
-         that.users.forEach(function(user) {
-             if (user.groupID == that.groupID) {
-                 if (!that.permissionObj[user.id]) {
-                     that.permissionObj[user.id] = true;
-                     }
-              }
-        });
-    }
+       // firepadRef.once("value",function(snapshot){
+       //   if(that.allUsers){
+       //     that.backdrop = true;
+       //   }
+       // });
+       //$firebaseArray(firepadRef).$loaded().then(function(arr) {
+       //    cb(arr);
+       //  })
+       return firepadRef;
+         // return $firebaseArray(firepadRef);
+     }*/
 
     function permissions() {
-
-      var firepadRef = "";
+      that.permissionObj = {};
+      var firepadPermissions = new Firebase(ref);
       if (that.subgroupID) {
-        firepadRef = globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID);
+        firepadRef = firepadPermissions.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID);
+        console.log(firepadRef.toString());
       } else {
-        firepadRef = globalRef.child("firepad-groups-rules").child(that.groupID).child($stateParams.docID);
+        firepadRef = firepadPermissions.child("firepad-groups-rules").child(that.groupID).child($stateParams.docID);
+        console.log(firepadRef.toString());
       }
 
       firepadRef.once('value', function(snapshot) {
         that.allUsers = snapshot.val().allUsers;
         if (!that.allUsers) {
-        //   var firepadPermissions = new Firebase(ref);
+          var firepadPermissions = new Firebase(ref);
           if (that.subgroupID) {
-            globalRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+            firepadPermissions.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
               that.backdrop = snapshot.exists();
+              console.log("backdrop", that.backdrop);
             });
-            $firebaseArray(globalRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
+            $firebaseArray(firepadPermissions.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
               that.permission = data;
+              console.log("permissions:", that.permission);
               that.permission.forEach(function(val) {
                 that.permissionObj[val.$id] = true;
               });
             })
           } else {
-            globalRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
+            firepadPermissions.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
               that.backdrop = snapshot.exists();
+              console.log("backdrop", that.backdrop);
             })
-            $firebaseArray(globalRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
+            $firebaseArray(firepadPermissions.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
               that.permission = data;
+              console.log("permissions:", that.permission);
+              console.log("permissions:", that.permission[0]["$id"]);
               that.permission.forEach(function(val) {
                 that.permissionObj[val.$id] = true;
               });
+              console.log(that.permissionObj);
             })
           }
 
+
+
+
+
+          //console.log(that.permission);
+          //console.log(that.permission[0].$id);
+          //that.permission.forEach(function(user){
           //  if(user.$id == that.user.userID)
           //    that.backdrop = true;
           //})
           // that.backdrop = that.permission[that.user.userID];
         } else {
           that.backdrop = true;
-          userAccessToggles();
         }
       })
 
     }
   }
-})();
-
-/**
- * on 2/02/2016.
- */
-(function() {
-    'use strict';
-    angular.module('app.membershipcard', ['core']).controller('MembershipcardController', ['$filter', '$timeout', 'firebaseService', 'groupService', 'dataService', 'userService', '$stateParams', MembershipcardController]);
-
-    function MembershipcardController($filter, $timeout, firebaseService, groupService, dataService, userService, $stateParams) {
-        var that = this;
-
-        this.setFocus = function() {
-            document.getElementById("#UserSearch").focus();
-        };
-        this.returnMoment = function (timestamp) {
-            if (timestamp) {
-                return moment().to(timestamp);
-            } else {
-                return ''
-            }
-        };
-        this.toggle = function (item, list) {
-            var idx = list.indexOf(item);
-            if (idx > -1) list.splice(idx, 1);
-            else list.push(item);
-        };
-        this.exists = function (item, list) {
-            return list.indexOf(item) > -1;
-        };
-        this.showCardData = function (user) {
-            that.showParams = false;
-            that.barcodeLoader[user.id] = true;
-            firebaseService.getRefUsers().child(user.id).once('value', function(snapshot1){
-                firebaseService.getRefGroupMembers().child(that.groupID).child(user.id).once('value', function(snapshot2){
-                    firebaseService.getRefGroupsNames().child(that.groupID).once('value', function(snapshot3){
-                        that.cards.push({
-                            userID: user.id,
-                            firstName: snapshot1.val().firstName,
-                            lastName: snapshot1.val().lastName,
-                            profileImage: snapshot1.val()["profile-image"],
-                            membershipNo: snapshot2.getPriority(),
-                            groupTitle: snapshot3.val().title,
-                            groupImgUrl: snapshot3.val().groupImgUrl
-                        });
-                        $timeout(function(){
-                            that.barcodeLoader[user.id] = false;
-                            JsBarcode("#barcode" + user.id,user.id,{format:"CODE128 B", height:30, width: 2});
-                        },5000)
-                    });
-                });
-            });
-        };
-        this.showCardAll = function (selectionusers, allusers) {
-            console.log('user', selectionusers)
-            console.log('user', allusers)
-            if (selectionusers.length > 0) {
-                selectionusers.forEach(function(val,inx){
-                    console.log('user', inx)
-                    that.showCardData(val);
-                });
-            } else {
-                $filter('groupUsers')(allusers, that.groupID).forEach(function(val,inx){
-                    console.log('user', val)
-                    that.showCardData(val);
-                });
-            }
-
-        };
-        this.printCard = function() {
-            var printContents = document.getElementById('cardDetail').innerHTML;
-            var originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-        };
-        this.downloadPDF = function() {
-            var source = angular.element(document.getElementById('cardDetail'));
-            // var source = $('#cardDetail');
-            source.css("background-color","white");
-            html2canvas(source, {
-                onrendered: function(canvas) {
-                    var image = Canvas2Image.convertToJPEG(canvas)
-                    console.log(image.src)
-                    angular.element(document.getElementById('output')).append(canvas)
-                    var pdf = new jsPDF('p', 'pt', 'letter');
-                    pdf.addImage( image.src, 'JPEG',-20,-5);
-                    pdf.save('membershipcard.pdf');
-                }
-            });
-        };
-        function init(){
-            groupService.setActivePanel('membershipcard');
-            that.groupID = $stateParams.groupID;
-            that.subgroupID = $stateParams.subgroupID;
-            that.showParams = true;
-            that.report = [];
-            that.users = dataService.getUserData();
-            that.cards = [];
-            that.selectedUser = [];
-            that.barcodeLoader = {};
-        }
-        init();
-
-    } //MembershipcardController
 })();
 
 (function() {
@@ -2477,9 +2222,9 @@ function addEditor(snapshot){
 
     angular
         .module('app.group')
-        .controller('GroupController', ['activityStreamService', 'firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
+        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
 
-    function GroupController(activityStreamService, firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
+    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
         var that = this;
         //adminof subgroup checkin member
         this.openSetting = function () {
@@ -2516,42 +2261,21 @@ function addEditor(snapshot){
             if(pname === 'collaborator') {
               groupService.setActivePanel('collaborator');
             }
-            if(pname === 'membershipcard') {
-              groupService.setActivePanel('membershipcard');
-            }
             that.panel.subgroupID = subgroupID;
             if (that.panel.subgroupID) {
-              if(that.panel.active == 'collaborator'){
                 CollaboratorService.getinitSubGroupDocument(that.groupID, that.panel.subgroupID, function(docId) {
-                    console.log('in showPanel')
                     $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID, docID: docId });
                 })
-              }
-              else {
-                    $state.go('user.group.subgroup-' + (that.panel.active || 'activity'), { groupID: that.groupID, subgroupID: that.panel.subgroupID});
-              }
-
             } else {
-              if(that.panel.active == 'collaborator'){
                 CollaboratorService.getinitGroupDocument(that.groupID, function(docId) {
-                    console.log('in - showPanel')
                     $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID, docID: docId });
                 });
-              }
-              else {
-                    if(that.panel.active == 'progressreport') {
-                        $state.go('user.group.' + 'activity', { groupID: that.groupID});
-                    } else {
-                        $state.go('user.group.' + (that.panel.active || 'activity'), { groupID: that.groupID});
-                    }
-              }
             }
         };
 
         init();
 
-        function init() {
-            console.log('watch 1: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
+        function init () {
             that.isOwner = false;
             that.isMember = false;
             that.isAdmin = false;
@@ -2573,13 +2297,13 @@ function addEditor(snapshot){
                     if (subg.val()) {
                         firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgrp){
                             if (subgrp.val() && subgrp.val()['membership-type'] > 0) {
-                                checkGroup();
+                                checkGroup()
                             } else {
                                 that.reqObj.subgroupID = subg.key();
                                 that.reqObj.subgrouptitle = (subg.val() && subg.val().title) ? subg.val().title : false;
-                                loadGroup(function() {
+                                loadGroup(function(){
                                     that.errorMsg = "You have to be Member of Team before access";
-                                });
+                                })
                             }
                         });
                     } else {
@@ -2587,7 +2311,7 @@ function addEditor(snapshot){
                     }
                 });
             } else {
-                checkGroup();
+                checkGroup()
             }
         }
         function loadGroup (cb) {
@@ -2605,19 +2329,19 @@ function addEditor(snapshot){
                 }
             });
         }
-        function checkGroup() {
+        function checkGroup () {
             if (that.groupID) {
-                loadGroup(function() {
-                    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups) {
+                loadGroup(function(){
+                    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups){
                         if (groups.val() && groups.val()['membership-type'] == 1) {
                             that.isOwner = true;
                             that.isAdmin = true;
                             that.isMember = true;
-                            that.adminOf = "Group";
+                            that.adminOf = "Group"
                         } else if (groups.val() && groups.val()['membership-type'] == 2) {
                             that.isAdmin = true;
                             that.isMember = true;
-                            that.adminOf = "Group";
+                            that.adminOf = "Group"
                         } else if (groups.val() && groups.val()['membership-type'] == 3) {
                             that.isMember = true;
                         }
@@ -2625,14 +2349,14 @@ function addEditor(snapshot){
                             that.errorMsg = "You have to be Member of Team before access";
                         } else {
                             if (that.isMember) {
-                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo) {
+                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo){
                                     that.group.onlinemember = (groupinfo.val() && groupinfo.val().count) ? groupinfo.val().count : 0;
-                                });
-                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo) {
+                                })
+                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo){
                                     that.group.members = groupinfo.val() ? groupinfo.val() : 0;
-                                });
+                                })
                             }
-                            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups) {
+                            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
                                 for (var subgroup in subgroups.val()) {
                                     if (subgroups.val()[subgroup]['membership-type'] == 1) {
                                         that.isOwner = true;
@@ -2647,31 +2371,20 @@ function addEditor(snapshot){
                                         that.isMember = true;
                                     }
                                     if (that.isMember) {
-                                        firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).on('value', function(subgroupData) {
+                                        firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).on('value', function(subgroupData){
                                             var subgroup = subgroupData.val();
                                             subgroup['$id'] = subgroupData.key();
                                             if (that.subgroups.length > 0) {
-                                                for (var i = 0; i <= that.subgroups.length; i++) {
-                                                    if (that.subgroups[i].$id === subgroupData.key()) {
-                                                        that.subgroups[i] = subgroup;
-                                                        return false;
+                                                that.subgroups.forEach(function(subgrp, indx){
+                                                    if (subgrp.$id === subgroupData.key()) {
+                                                        subgrp = subgroup
                                                     }
-                                                    if (i + 1 == that.subgroups.length) {
+                                                    if (that.subgroups.length === (indx + 1) ) {
                                                         that.subgroups.push(subgroup);
-                                                        subgroupChildRemovedEvent(subgroup.$id);
                                                     }
-                                                } //for loop
-                                                // that.subgroups.forEach(function(subgrp, indx) {
-                                                //         if (subgrp.$id === subgroupData.key()) {
-                                                //             subgrp = subgroup;
-                                                //         }
-                                                //         if (that.subgroups.length === (indx + 1)) {
-                                                //             that.subgroups.push(subgroup);
-                                                //         }
-                                                //     });
+                                                });
                                             } else {
                                                 that.subgroups.push(subgroup);
-                                                subgroupChildRemovedEvent(subgroup.$id);
                                             }
                                         });
                                     }
@@ -2680,20 +2393,9 @@ function addEditor(snapshot){
                             });
                         }
                     });
-                });
+                })
             }
-        } //checkGroup
-        function subgroupChildRemovedEvent(subgroup) {
-            firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).off('value');
-            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(subgroup).on('child_removed', function(Oldsnapshot) {
-                console.log('watch 2: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
-                that.subgroups.forEach(function(v) {
-                    if (v.$id == subgroup) {
-                        that.subgroups.splice(v, 1);
-                    }
-                });
-            });
-        } //subgroupChildRemovedEvent
+        }
     }
 })();
 
@@ -2761,16 +2463,16 @@ function addEditor(snapshot){
       };
     })
 
-    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$interval','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $interval, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
             var self = this;
-            self.displayNotificationBox = false;
+            self.show = false;
             var userID = userService.getCurrentUser().userID;
             self.myUserId = userID;
-            this.notifications = [];
+            this.notifications = []
            //filter Array in reverse
 
             /*VM properties*/
@@ -2807,18 +2509,23 @@ function addEditor(snapshot){
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart;
+            this.quizStart = quizStart
 
-            this.progressReport = function() {
-                $mdSidenav('right').toggle().then(function() {
-                    //self.openNav = !self.openNav;
-                });
+            //   notification activities
+            self.showNotification = function(){
+                self.show = !self.show;
             };
+
+            this.progressReport = function(){
+              $mdSidenav('right').toggle().then(function(){
+                //self.openNav = !self.openNav;
+              });
+            }
             //#document.onkey
             this.count = function(e){
               console.log(document);
               console.log(e);
-            };
+          };
                 // alert(this.test)
             this.setFocus = function() {
                 document.getElementById("#GroupSearch").focus();
@@ -2906,15 +2613,15 @@ function addEditor(snapshot){
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
-                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot) {
-                        self.showUrlObj.groupTitle = snapshot.val();
-                    });
-                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot) {
-                        self.showUrlObj.subgroupTitle = snapshot.val();
-                    });
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.subgroupTitle = snapshot.val()
+                    })
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
+                        self.showUrlObj.groupTitle = snapshot.val()
+                    })
                     // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
-            });
+            })
 
             checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('child_changed', function(snapshot, prevChildKey) {
                 // console.log(snapshot.val());
@@ -3016,32 +2723,17 @@ function addEditor(snapshot){
                 if(group){
                     groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
                 } else {
-                    groupObj = {
+                     groupObj = {
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    };
+                    }
                 }
-                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject) {
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
                     if(result){
                         self.checkinSending = false;
-                        if (checkoutFlag) {
-                            //when successfully checkout then add activity Stream
-                            //for subgroup activity stream record -- START --
-                            var type = 'subgroup';
-                            var targetinfo = {id: groupObj.subgroupId, url: groupObj.groupId+'/'+groupObj.subgroupId, title: self.showUrlObj.subgroupTitle, type: 'subgroup-checkout' };
-                            var area = {type: 'subgroup-checkout'};
-                            var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
-                            var memberuserID = userID;
-                            var _object = null;
-                            //for group activity record
-                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
-                            //for subgroup activity stream record -- END --
-
-                            //showing toaster of checkout
+                        if(checkoutFlag){
                             messageService.showSuccess('Checkout Successfully!');
-
-                            //checking is report is submitted or not.. if not then open side navbar for getting progress report
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
                                 var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId };
@@ -3057,29 +2749,14 @@ function addEditor(snapshot){
                                 // self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {
-                            //when successfully checkin successfully
-
                             self.checkinSending = false;
-
-                            //add activity Stream
-                            //for subgroup activity stream record -- START --
-                            var _type = 'subgroup';
-                            var _targetinfo = {id: group.subgroupId, url: group.pId+'/'+group.subgroupId, title: group.subgroupTitle, type: 'subgroup-checkin' };
-                            var _area = {type: 'subgroup-checkin'};
-                            var _group_id = group.pId+'/'+group.subgroupId;
-                            var _memberuserID = userID;
-                            var __object = null;
-                            //for group activity record
-                            activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuserID, __object);
-                            //for subgroup activity stream record -- END --
-
                             messageService.showSuccess('Checkin Successfully!');
-                        } // else checkoutFlag
+                        }
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
                     }
-                }); // checkinService.ChekinUpdateSatatus
+                });
             }
 
             function updateStatus1(group, checkoutFlag, event) {
@@ -3272,7 +2949,7 @@ function addEditor(snapshot){
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    };
+                    }
                 }
 
                 // //checking daily progress report is exists or not -- START --
@@ -3407,7 +3084,7 @@ function addEditor(snapshot){
             }
             function shiftToUserPage() {
                 // $location.path('/user/' + userService.getCurrentUser().userID)
-                $state.go('user.dashboard', { userID: userService.getCurrentUser().userID });
+                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
             }
             this.checkTeamAvailable = function () {
                 if (self.groups.length === 0) {
@@ -3417,22 +3094,22 @@ function addEditor(snapshot){
                 }
             };
             this.checkinClick = function(event) {
-                self.displayNotificationBox = false;
+                self.show = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
-                    return;
+                    return
                 }
                 if (self.groups.length === 0) {
-                    return;
+                    return
                 }
                 if (!self.switchMsg) {
                     if (self.checkout) {
                         updateStatus(false, true, event);
                         //self.updateStatus(self.showUrlObj.group, true)
-                        return;
+                        return
                     }
                 }
-                self.switchMsg = !self.switchMsg;
+                self.switchMsg = !self.switchMsg
                 self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId) {
                     var tmp = {
@@ -3442,18 +3119,16 @@ function addEditor(snapshot){
                     }
                     for (var i in group) {
                         if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
-                            checkinService.getSubGroupTitleCb(group.$id, i, function(title){
-                                var temp = {};
-                                temp.pId = group.$id; // group Name == pId
-                                temp.subgroupId = i;
-                                temp.subgroupTitle = title
-                                temp.data = group[i];
-                                tmp.subGroups.push(temp);
-                            })
+                            var temp = {};
+                            temp.pId = group.$id; // group Name == pId
+                            temp.subgroupId = i;
+                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
+                            temp.data = group[i];
+                            tmp.subGroups.push(temp)
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);
-                });
+                })
             };
             function showSubGroup(group, pId) {
                 self.subgroups = [];
@@ -3463,7 +3138,7 @@ function addEditor(snapshot){
                         temp.pId = group.$id; // group Name == pId
                         temp.subgroupId = i;
                         temp.data = group[i];
-                        self.subgroups.push(temp);
+                        self.subgroups.push(temp)
                     }
                 }
             }
@@ -3512,26 +3187,12 @@ function addEditor(snapshot){
                 });
             };
 
-            // ## Notification -- START
-
             //getting notifications
             activityStreamService.init();
             this.notifications = activityStreamService.getActivities();
-
-            //   enable/disable notificaiton box and also on click will set seen notfication
-            self.showNotification = function() {
-                self.displayNotificationBox = !self.displayNotificationBox;
-                if (!self.displayNotificationBox) {
-
-                    //has seen activities..... update timestamp of seen
-                    activityStreamService.activityHasSeen();
-                }
-            };
-
-            // ## Notification -- END
-
-        } //NavToolbarController
+        }
     ]);
+
 })();
 
 /**
@@ -4491,7 +4152,7 @@ function addEditor(snapshot){
                                 cb();
                                 messageService.showSuccess("Team creation Successful...");
                                 // console.log(JSON.stringify());
-                                // console.log("this User is from createSubGroupService:", userService.getCurrentUser());
+                                console.log("this User is from createSubGroupService:", userService.getCurrentUser());
                                 CollaboratorService.CreateDocument("Team of Teams Information", group.$id, SubgroupInfo.subgroupID, 'Rich Text', userService.getCurrentUser())
                                     .then(function(response) {
                                         CollaboratorService.addAccessUser(response.docId, group.$id, SubgroupInfo.subgroupID, userService.getCurrentUser().userID, 1);
@@ -4506,7 +4167,7 @@ function addEditor(snapshot){
                     'cancelSubGroupCreation': function(userId) {
                         console.log("SubGroup Creation Cancelled");
                         soundService.playFail();
-                        $location.path('/user/' + userService.getCurrentUser().userID);
+                        $location.path('/user/' + userService.getCurrentUser().userID)
                     },
                     'uploadPicture': function(file, groupID) {
                         var defer = $q.defer();
@@ -4555,13 +4216,13 @@ function addEditor(snapshot){
                             .then(function(data) {
                                 var reader = new FileReader();
                                 reader.onload = function() {
-                                    defer.resolve(reader.result);
+                                    defer.resolve(reader.result)
                                 };
                                 reader.readAsDataURL(data.data.profilePicture);
 
                             })
                             .catch(function(err) {
-                                defer.reject(err);
+                                defer.reject(err)
                             });
 
                         return defer.promise;
@@ -4586,16 +4247,11 @@ function addEditor(snapshot){
 
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
                                 subgroupNameRef.title = subgroupRef.title;
-                                subgroupNameRef.subgroupImgUrl = subgroupInfo.imgLogoUrl || '';
-                                //subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();
                                         //groupForm.$submitted = false;
                                         //$rootScope.newImg = null;
-
-                                        //update subgroup-policy
-                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );
 
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
@@ -4607,12 +4263,12 @@ function addEditor(snapshot){
                                         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                         //for group activity stream record -- END --
 
-                                        messageService.showSuccess('Team Edited Successfully');
+                                        messageService.showSuccess('Team Edited Successfully')
 
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");
-                                    });
+                                    })
                             }, function(group) {
                                 cb();
                                 // groupForm.$submitted = false;
@@ -4623,7 +4279,7 @@ function addEditor(snapshot){
                                 if (error) {
                                     messageService.showFailure("Team not created");
                                 } else {
-                                    messageService.showSuccess('Team Created Successfully');
+                                    messageService.showSuccess('Team Created Successfully')
                                 }
                             });
                         }
@@ -4779,19 +4435,10 @@ function addEditor(snapshot){
 
                             firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
                                 // console.log(err);
-                                if (!submembers) {
-                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").once('value', function(snapshot){
-                                        submembers = snapshot.val();
-                                        console.log('testest', submembers)
-                                        firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
-                                            console.log(err);
-                                        });
-                                    });
-                                } else {
-                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
-                                        // console.log(err);
-                                    });
-                                }
+
+                                firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                    // console.log(err);
+                                });
 
 
 
@@ -4821,14 +4468,14 @@ function addEditor(snapshot){
 /**
  * Created by sj on 6/10/2015.
  */
-(function () {
+(function() {
     'use strict';
     angular
         .module('app.createSubGroup')
-        .controller('CreateSubGroupController', ['activityStreamService', 'CollaboratorService', '$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
+        .controller('CreateSubGroupController', ['activityStreamService','CollaboratorService', '$scope', 'policyService', '$firebaseArray', 'checkinService', 'subgroupFirebaseService', '$rootScope', 'messageService', '$firebaseObject', '$stateParams', 'groupFirebaseService', 'firebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil', '$q', 'appConfig', CreateSubGroupController])
         .controller("DialogController", ["$mdDialog", DialogController]);
 
-    function CreateSubGroupController(activityStreamService, CollaboratorService, $scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
+    function CreateSubGroupController(activityStreamService,CollaboratorService, $scope, policyService, $firebaseArray, checkinService, subgroupFirebaseService, $rootScope, messageService, $firebaseObject, $stateParams, groupFirebaseService, firebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil, $q, appConfig) {
 
 
         $rootScope.croppedImage = {};
@@ -4841,10 +4488,10 @@ function addEditor(snapshot){
         var groupID = $stateParams.groupID;
         this.groupId = groupID;
         var groupData = subgroupFirebaseService.getFirebaseGroupObj(groupID);
-        /*VM functions*/
-        // this.searchUser = '';
-        // this.processTeamAttendance =false;
-        // this.showEditSubGroup = false;
+            /*VM functions*/
+            // this.searchUser = '';
+            // this.processTeamAttendance =false;
+            // this.showEditSubGroup = false;
         this.groupid = groupID;
         this.activeID = null;
         this.subgroupData = 0;
@@ -4876,33 +4523,33 @@ function addEditor(snapshot){
         this.memberSideNav = true;
 
         that.groupAdmin = false;
-        firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function (group) {
+        firebaseService.getRefUserGroupMemberships().child(user.userID).child(groupID).once('value', function(group){
             if (group.val()['membership-type'] == 1) {
                 that.groupAdmin = true;
             } else if (group.val()['membership-type'] == 2) {
                 that.groupAdmin = true;
             }
-        });
+        })
 
 
-        this.ActiveSideNavBar = function (sideNav) {
+        this.ActiveSideNavBar = function(sideNav) {
             that.adminSideNav = true;
             that.memberSideNav = true;
             $mdSidenav(sideNav).toggle();
 
-            /* if(sideNav === 'admin') {
-                 that.adminSideNav = false;
-                 that.memberSideNav = true;
-             } else if(sideNav === 'member') {
-                 that.adminSideNav = true;
-                 that.memberSideNav = false;
-             } else {
-                 this.adminSideNav = true;
-                 this.memberSideNav = true;
-             }*/
+           /* if(sideNav === 'admin') {
+                that.adminSideNav = false;
+                that.memberSideNav = true;
+            } else if(sideNav === 'member') {
+                that.adminSideNav = true;
+                that.memberSideNav = false;
+            } else {
+                this.adminSideNav = true;
+                this.memberSideNav = true;
+            }*/
         };
 
-        this.createTeam = function () {
+        this.createTeam = function(){
             that.subgroupData = {
                 // subgroupID: "",
                 // title: "",
@@ -4927,30 +4574,29 @@ function addEditor(snapshot){
          };*/
 
 
-        this.openUserSettingPage = function () {
+        this.openUserSettingPage = function() {
             // $location.path('/user/group/' + groupID + '/user-setting');
-            $state.go('user.user-setting', { groupID: groupID });
+            $state.go('user.user-setting', {groupID: groupID});
         };
-        this.openEditGroup = function () {
+        this.openEditGroup = function() {
             // $location.path('user/group/' + groupID + '/edit-group');
-            $state.go('user.edit-group', { groupID: groupID })
-        };
-        this.openGeoFencingPage = function () {
+            $state.go('user.edit-group', {groupID: groupID})
+        }
+        this.openGeoFencingPage = function() {
             // $location.path('/user/group/' + groupID + '/geoFencing');
-            $state.go('user.geo-fencing', { groupID: groupID })
+            $state.go('user.geo-fencing', {groupID: groupID})
         };
-        this.subgroupPage = function () {
+        this.subgroupPage = function() {
             // $location.path('user/group/' + this.groupid + '/subgroup');
-            $state.go('user.subgroup', { groupID: groupID });
-        };
-        this.openPolicyPage = function () {
+            $state.go('user.subgroup', {groupID: groupID})
+        }
+        this.openPolicyPage = function() {
             // $location.path('/user/group/' + groupId + '/geoFencing');
-            $state.go('user.policy', { groupID: groupID });
-        };
+            $state.go('user.policy', {groupID: groupID})
+        }
 
 
-        this.veiwSubgroup = function (subgroupData, index) {
-            var once = true;
+        this.veiwSubgroup = function(subgroupData, index) {
 
             // this.showEditSubGroup = true;
             // that.showTeamAttendace = false;
@@ -4963,9 +4609,9 @@ function addEditor(snapshot){
             that.becomeAdmin = [];
 
             //load user Admins
-            loadAdminUSers(this.groupid, that.activeID, function () {
+            loadAdminUSers(this.groupid, that.activeID, function(){
                 subgroupFirebaseService.getSubgroupSyncObjAsync(groupID, that.activeID, user.userID)
-                    .then(function (syncObj) {
+                    .then(function(syncObj) {
                         that.subgroupSyncObj = syncObj;
                         // console.log(syncObj);
                         //console.log(data === obj); // true
@@ -4979,17 +4625,13 @@ function addEditor(snapshot){
                         SubgroupObj = $firebaseObject(firebaseService.getRefSubGroups().child(groupID).child(that.activeID));
                         // console.log(1)
                         // console.log(SubgroupObj)
-                        SubgroupObj.$loaded().then(function (data) {
+                        SubgroupObj.$loaded().then(function(data) {
                             that.subgroupData = data;
                             //that.group.groupID = data.$id;
-                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : '';
+                            that.img = data['logo-image'] && data['logo-image'].url ? data['logo-image'].url : ''
+                            that.teamsettingpanel = true;
 
-                            if (once) {
-                                that.teamsettingpanel = true;
-                                once = false;
-                            }
-
-                            firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function (snaphot) {
+                            firebaseService.getRefMain().child('subgroup-policies').child(groupID).child(that.activeID).on('value', function(snaphot) {
                                 that.subgroupPolicy = snaphot.val() ? snaphot.val()['policy-title'] : false;
                             });
                             // },50000)
@@ -5006,12 +4648,12 @@ function addEditor(snapshot){
             /* $mdDialog.cancel();*/
             $rootScope.newImg = null;
             // $location.path('/user/group/' + groupID);
-            $state.go('user.group', { groupID: groupID });
+            $state.go('user.group', {groupID: groupID});
 
         }
 
 
-        this.showAdvanced = function (ev) {
+        this.showAdvanced = function(ev) {
             $rootScope.tmpImg = $rootScope.newImg;
             $rootScope.newImg = '';
             $mdDialog.show({
@@ -5019,20 +4661,20 @@ function addEditor(snapshot){
                 templateUrl: 'directives/dilogue2.tmpl.html',
                 targetEvent: ev,
                 escapeToClose: false
-            }).then(function (picture) {
+            }).then(function(picture) {
                 $rootScope.newImg = picture;
                 //console.log("this is image" + picture)
-            }, function (err) {
+            }, function(err) {
                 //console.log(err)
 
-            });
+            })
 
         };
 
 
         groupFirebaseService.getGroupSyncObjAsync(groupID, user.userID)
-            .then(function (syncObj) {
-                $timeout(function () {
+            .then(function(syncObj) {
+                $timeout(function() {
 
                     that.groupSyncObj = syncObj;
                     // that.groupSyncObj.groupSyncObj.$bindTo(that, "group");
@@ -5048,13 +4690,11 @@ function addEditor(snapshot){
 
             });
 
-        this.assignMemberClick = function () {
-            that.members.forEach(function (val, index) {
+        this.assignMemberClick = function() {
+            that.members.forEach(function(val, index){
                 //if is member
-                if (that.submembers.length > 0) {
+                if(that.submembers.length > 0) {
                     for (var i = 0; i < that.submembers.length; i++) {
-                        that.members[index].isMember = false;
-                        that.members[index].isAdmin = false;
                         if (val.userID === that.submembers[i].userID) {
                             that.members[index].isMember = true;
                             that.members[index].isAdmin = (that.members[index].membershipType == 1 || that.members[index].membershipType == 2) ? true : false;
@@ -5063,7 +4703,7 @@ function addEditor(snapshot){
                     }
                 }
                 //if is admin member
-                if (that.selectedAdminArray.length > 0) {
+                if(that.selectedAdminArray.length > 0) {
                     for (var i = 0; i < that.selectedAdminArray.length; i++) {
                         if (val.user.profile.email === that.selectedAdminArray[i].email) {
                             that.members[index].isAdmin = true;
@@ -5072,33 +4712,21 @@ function addEditor(snapshot){
                     }
                 }
             }); //that.members.forEach
-
-            //if in becomeMember then show white class for arrow on sidenav
-            if (that.becomeMember.length > 0) {
-                that.becomeMember.forEach(function (val, i) {
-                    for (var x = 0; x <= that.members.length; x++) {
-                        if (that.members[x].userID == val.$id) {
-                            that.members[x].isMember = true;
-                            break;
-                        }
-                    }
-                });
-            }
         };
 
-        this.afterSelectMember = function (id) {
+        this.afterSelectMember = function(id){
             var _flag = false;
-            that.members.forEach(function (val, index) {
+            that.members.forEach(function(val, index){
                 // console.log('that.members', val)
-                if (_flag) {
+                if(_flag){
                     return;
                 }
 
-                if (id === val.userID) {
+                if(id === val.userID){
                     //if is member
-                    if (that.becomeMember.length > 0) {
+                    if(that.becomeMember.length > 0) {
                         for (var i = 0; i < that.becomeMember.length; i++) {
-                            if (id == that.becomeMember[i].$id) {
+                            if(id == that.becomeMember[i].$id) {
                                 that.members[index].isMember = true;
                                 _flag = true;
                                 break;
@@ -5110,15 +4738,15 @@ function addEditor(snapshot){
             }); //that.members.forEach
         };
 
-        this.afterSelectAdmin = function (email) {
+        this.afterSelectAdmin = function(email){
             var _flag = false;
-            that.members.forEach(function (val, index) {
-                if (_flag) {
+            that.members.forEach(function(val, index){
+                if(_flag){
                     return false;
                 }
-                if (email == val.user.profile.email) {
+                if(email == val.user.profile.email){
                     //if is admin member
-                    if (that.becomeAdmin.length > 0) {
+                    if(that.becomeAdmin.length > 0) {
                         for (var i = 0; i < that.becomeAdmin.length; i++) {
                             // console.log('that.becomeAdminmembers', that.becomeAdmin[i])
                             if (email === that.becomeAdmin[i].member.user.profile.email && email === val.user.profile.email) {
@@ -5132,43 +4760,25 @@ function addEditor(snapshot){
             }); //that.members.forEach
         };
 
-        this.selectedMember = function (userObj, index) {
+        this.selectedMember = function(userObj, index) {
             var _flag = true;
             //if(that.memberss.length > 0) {
-            that.becomeMember.forEach(function (val, i) {
-                console.log(val);
-                if (val == userObj) {
-
-                    for (var x = 0; x <= that.members.length; x++) {
-                        if (that.members[x].userID == val.$id) {
-                            that.members[x].isMember = true;
-                            break;
-                        }
-                    }
-
+            that.becomeMember.forEach(function(val, i){
+                if(val == userObj){
                     _flag = false;
                 }
             });//checking if userobj is exists or not
             //}
 
-            if (that.submembers.length > 0) {
-                that.submembers.forEach(function (val, inx) {
+            if(that.submembers.length > 0){
+                that.submembers.forEach(function(val, inx) {
                     if (val.userID == userObj.$id) {
                         _flag = false;
                     }
                 });
             }
 
-            if (_flag) {
-                for (var x = 0; x <= that.members.length; x++) {
-                    if (that.members[x].userID == userObj.$id) {
-                        that.members[x].isMember = true;
-                        //console.log(that.members[x]['user']['profile']['profile-image']);
-                        userObj['profile-image'] = that.members[x]['user']['profile']['profile-image'] || '';
-                        break;
-                    }
-                }
-
+            if(_flag) {
                 that.becomeMember.push(userObj);
                 that.memberss.selectedUsersArray.push(userObj.$id);
                 that.memberss.memberIDs = that.memberss.selectedUsersArray.join();
@@ -5193,10 +4803,10 @@ function addEditor(snapshot){
         //     return false;
         // };
 
-        this.selectedMemberSave = function () {
-            if (that.becomeMember.length > 0) {
+        this.selectedMemberSave = function(){
+            if(that.becomeMember.length > 0){
                 var membersIDarray = [];    //for policy
-                that.becomeMember.forEach(function (userObj, index) {
+                that.becomeMember.forEach(function(userObj,index){
 
                     var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
                         groupID: groupID,
@@ -5209,15 +4819,15 @@ function addEditor(snapshot){
                     //for activity Stream Array
                     //now checking is user is also exist in selectedAdminList then not publish activity stream by member
                     var _flag_notInBecomeAdminArray = true;
-                    if (that.becomeAdmin.length > 0) {
-                        that.becomeAdmin.forEach(function (val, index) {
-                            if (val.member.user.profile == userObj.$id) {
+                    if(that.becomeAdmin.length > 0){
+                        that.becomeAdmin.forEach(function(val,index){
+                            if(val.member.user.profile == userObj.$id) {
                                 _flag_notInBecomeAdminArray = false;
                             }
                         });
                     }
                     //publish activity Stream
-                    if (_flag_notInBecomeAdminArray) {        //if not exists in becomeAdminArray then publish activity as member
+                    if(_flag_notInBecomeAdminArray){        //if not exists in becomeAdminArray then publish activity as member
                         userActivityStreamOnAddMemberOrAdmin(userObj, subgroupObj, true, false);
                     }
                     //for activity Stream Array
@@ -5225,8 +4835,8 @@ function addEditor(snapshot){
                     membersIDarray.push(userObj.$id);
 
                     //checking if team has policy then assigned policy to member
-                    if (that.becomeMember.length == index + 1) {
-                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function (result, msg) {
+                    if(that.becomeMember.length == index+1){
+                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg){
 
                         });
                     }
@@ -5235,43 +4845,42 @@ function addEditor(snapshot){
             } //if
         }; //this.selectedMemberSave
 
-        function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData) {
+        function saveMemberToFirebase(user, subgroupObj, memberIDs, membersSyncArray, groupData){
             subgroupFirebaseService.asyncUpdateSubgroupMembers(user, subgroupObj, memberIDs, membersSyncArray, groupData)
 
 
-                // .then(function(response) {
-                //     // console.log("Adding Members Successful");
-                //     var unlistedMembersArray = response.unlistedMembersArray,
-                //         notificationString;
-                //
-                //     if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
-                //         notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
-                //         messageService.showFailure(notificationString);
-                //     } else if (unlistedMembersArray.length) {
-                //         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
-                //         messageService.showSuccess(notificationString);
-                //     } else {
-                //         notificationString = 'Adding Members Successful.';
-                //         console.log("SubgroupObj",subgroupObj); //subgroupID
-                //         console.log("groupObj",groupData); // $id
-                //         var members = memberIDs.split(',');
-                //         for (var i = 0; i < members.length; i++) {
-                //           CollaboratorService.addAccessUser(CollaboratorService.getCurrentDocumentId(),groupData.$id,subgroupObj.subgroupID,members[i]);
-                //         }
-                //         messageService.showFailure(notificationString);
-                //     }
-                // }, function(reason) {
-                //     messageService.showFailure(reason);
-                // }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
+                    // .then(function(response) {
+                    //     // console.log("Adding Members Successful");
+                    //     var unlistedMembersArray = response.unlistedMembersArray,
+                    //         notificationString;
+                    //
+                    //     if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                    //         notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showFailure(notificationString);
+                    //     } else if (unlistedMembersArray.length) {
+                    //         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
+                    //         messageService.showSuccess(notificationString);
+                    //     } else {
+                    //         notificationString = 'Adding Members Successful.';
+                    //         console.log("SubgroupObj",subgroupObj); //subgroupID
+                    //         console.log("groupObj",groupData); // $id
+                    //         var members = memberIDs.split(',');
+                    //         for (var i = 0; i < members.length; i++) {
+                    //           CollaboratorService.addAccessUser(CollaboratorService.getCurrentDocumentId(),groupData.$id,subgroupObj.subgroupID,members[i]);
+                    //         }
+                    //         messageService.showFailure(notificationString);
+                    //     }
+                    // }, function(reason) {
+                    //     messageService.showFailure(reason);
+                    // }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
 
-                .then(function (response) {
+                .then(function(response) {
                     // console.log("Adding Members Successful");
                     var unlistedMembersArray = response.unlistedMembersArray,
                         notificationString;
 
-                    if (unlistedMembersArray && that.membersArray && unlistedMembersArray.length === that.membersArray.length) {
-                        // notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
-                        notificationString = 'AAdding Members Successful.';
+                    if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                        notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
                         messageService.showFailure(notificationString);
                     } else if (unlistedMembersArray.length) {
                         notificationString = 'Adding Members Successful, except ( ' + unlistedMembersArray.join(', ') + ' ).';
@@ -5280,94 +4889,47 @@ function addEditor(snapshot){
                         notificationString = 'Adding Members Successful.';
                         messageService.showFailure(notificationString);
                     }
-                }, function (reason) {
+                }, function(reason) {
                     messageService.showFailure(reason);
                 }); // subgroupFirebaseService.asyncUpdateSubgroupMembers
 
 
         }
 
-        this.selectedAdmin = function (newType, member) {
-            var obj = { type: newType, member: member };
+        this.selectedAdmin = function(newType, member) {
+            var obj = {type: newType, member: member};
             var _flag = true;
 
             //if(that.memberss.length > 0) {
-            that.becomeAdmin.forEach(function (val, i) {
-                if (val.member == member) {
+            that.becomeAdmin.forEach(function(val, i){
+                if(val.member == member){
                     _flag = false;
                 }
             }); //checking if admin is exists or not
             //}
 
-            if (that.selectedAdminArray.length > 0) {
-                that.selectedAdminArray.forEach(function (val, i) {
-                    if (val == member.user.profile.email) {
+            if(that.selectedAdminArray.length > 0) {
+                that.selectedAdminArray.forEach(function(val,i){
+                    if(val == member.user.profile.email){
                         _flag = false;
                     }
                 });
             }
 
-            if (_flag) {
+            if(_flag) {
                 that.becomeAdmin.push(obj);
 
                 //after add in  becomeMember chnage arrow css
-                this.afterSelectAdmin(obj.member.user.profile.email);
+                this.afterSelectAdmin(obj.member.user.profile.email)
             }
+
+
         };
 
-        function OnCreateAddAdmin(subgroupid, cb) {
-            //SUBGROUPS => members - count,
-
-            var subgroupAdmin = { 'membership-type': 2, 'timestamp': Firebase.ServerValue.TIMESTAMP };
-            var subgroupOwner = { 'membership-type': 1, 'timestamp': Firebase.ServerValue.TIMESTAMP };
-            var membersLength = 0;
-            var updateObject = {};
-
-            var groupMembers = activityStreamService.getCurrentUserGroups();
-            var gMembers = groupMembers[groupID]['users'];
-            for (var member in gMembers) {
-                if (user.userID !== member) {   // checking if this is not active user
-                    if (gMembers[member]['membership-type'] === 1) {
-                        for (var i = 0; i <= that.members.length; i++) {
-                            if (that.members[i]["userID"] === member) {
-                                updateObject['subgroup-members/' + groupID + '/' + subgroupid + '/' + member] = subgroupOwner;
-                                updateObject['user-subgroup-memberships/' + member + '/' + groupID + '/' + subgroupid] = subgroupOwner;
-
-                                membersLength++;
-                                break;
-                            }
-                        }
-                    } else if (gMembers[member]['membership-type'] === 2) {
-                        for (var j = 0; j <= that.members.length; j++) {
-                            if (that.members[j]["userID"] === member) {
-                                updateObject['subgroup-members/' + groupID + '/' + subgroupid + '/' + member] = subgroupAdmin;
-                                updateObject['user-subgroup-memberships/' + member + '/' + groupID + '/' + subgroupid] = subgroupAdmin;
-                                membersLength++;
-                                break;
-                            }
-                        }
-                    }
-                } // if not active user
-            } // for in
-
-            var ref = firebaseService.getRefMain();
-            ref.update(updateObject, function (err) {
-                if (!err) {
-                    ref.child('subgroups').child(groupID).child(subgroupid).once('value', function (snapshot) {
-                        var count = snapshot.val()['members-count'];
-                        ref.child('subgroups').child(groupID).child(subgroupid).update({ 'members-count': count + membersLength });
-                    });
-                }
-            });
-
-            cb();
-
-        } // OnCreateAddAdmin
-
-        this.selectedAdminSave = function () {
-            if (that.becomeAdmin.length > 0) {
+        this.selectedAdminSave = function(){
+            if(that.becomeAdmin.length > 0){
                 var membersIDarray = [];    //for policy
-                that.becomeAdmin.forEach(function (val, index) {
+                that.becomeAdmin.forEach(function(val, index) {
 
                     var subgroupObj = angular.extend({}, that.subgroupSyncObj.subgroupSyncObj, {
                         groupID: groupID,
@@ -5377,108 +4939,99 @@ function addEditor(snapshot){
                     //for coluser checking
                     saveAdminToFirebase(val.type, val.member, groupID, that.activeID, subgroupObj);
 
+
+
                     membersIDarray.push(val.member.userID);
                     //checking if team has policy then assigned policy to member
                     if (that.becomeMember.length == index + 1) {
-                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function (result, msg) {
+                        policyService.assignTeamPolicyToMultipleMembers(membersIDarray, groupID, that.activeID, function(result, msg) {
 
                         });
                     }
                 }); //that.becomeMember.forEach
             } //if
-        }; // selectedAdminSave
+        }; //selectedAdminSave
 
-        function saveAdminToFirebase(newType, member, groupID, activeID, subgroupObj) {
-            createSubGroupService.changeMemberRole(newType, member, groupID, activeID).then(function () {
+        function saveAdminToFirebase(newType, member, groupID, activeID, subgroupObj){
+            createSubGroupService.changeMemberRole(newType, member, groupID, activeID).then(function() {
                 messageService.showSuccess("New Admin selected");
                 //publish activity Stream
-                $timeout(function () {
+                $timeout(function(){
                     userActivityStreamOnAddMemberOrAdmin(member.user.profile, subgroupObj, false, true);
-                }, 1000);
-            }, function (reason) {
+                },1000);
+            }, function(reason) {
                 messageService.showFailure(reason);
             });
         }
 
-        function userActivityStreamOnAddMemberOrAdmin(userObj, subgroupObj, isMember, isAdmin) {
+        function userActivityStreamOnAddMemberOrAdmin (userObj, subgroupObj, isMember, isAdmin) {
             var areaType;
 
-            if (isMember) {
+            if(isMember){
                 areaType = 'subgroup-member-assigned';
             }
 
-            if (isAdmin) {
+            if(isAdmin){
                 areaType = 'subgroup-admin-assigned';
             }
 
             //publish an activity stream record -- START --
             var type = 'subgroup';
-            var targetinfo = { id: subgroupObj.$id, url: groupID + '/' + subgroupObj.$id, title: subgroupObj.title, type: 'subgroup' };
-            var area = { type: areaType };
-            var group_id = groupID + '/' + subgroupObj.$id;
+            var targetinfo = {id: subgroupObj.$id, url: groupID+'/'+subgroupObj.$id, title: subgroupObj.title, type: 'subgroup' };
+            var area = {type: areaType };
+            var group_id = groupID+'/'+subgroupObj.$id;
             var memberuserID = userObj.$id;
             //for group activity record
             activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
             //for group activity stream record -- END --
+        }
 
-        } // userActivityStreamOnAddMemberOrAdmin
+        this.deleteAdminMember = function(admin){
+           var adminMemberId = '';
+           that.submembers.forEach(function(val,indx){
+                if(val.userSyncObj.email == admin.email && val.membershipType != 1){
+                    createSubGroupService.DeleteUserMemberShip(val.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
 
-        this.deleteAdminMember = function (admin) {
-            var adminMemberId = '';
-            //    that.submembers.forEach(function(val,indx){
-            //         if(val.userSyncObj.email == admin.userSyncObj.email && val.membershipType != 1){
-            createSubGroupService.DeleteUserMemberShip(admin.userSyncObj.$id, groupID, that.activeID, that.submembers.length);
+                    //publish an activity stream record -- START --
+                    var type = 'subgroup';
+                    var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
+                    var area = {type: 'subgroup-admin-removed' };
+                    var group_id = groupID+'/'+that.activeID;
+                    var memberuserID = val.userSyncObj.$id;
+                    //for group activity record
+                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
+                    //for group activity stream record -- END --
 
-            console.log('watch', true)
-            for (var i = 0; i < that.members.length; i++) {
-                if (that.members[i].userID === admin.userID) {
-                    console.log('watch', that.members[i]);
-                    that.members[i].isAdmin = false;
-                    that.members[i].isMember = false;
-                    console.log('watch', that.members[i]);
                 }
-            }
+           });
+
+           that.selectedAdminArray.forEach(function(val, indx){
+                if(val.email == admin.email && val.membershipType != 1){
+                    that.selectedAdminArray.splice(indx, 1);
+                }
+           });
+
+       };
+
+        this.deleteMember = function(userID){
+            createSubGroupService.DeleteUserMemberShip(userID,groupID,that.activeID,that.submembers.length);
 
             //publish an activity stream record -- START --
             var type = 'subgroup';
-            var targetinfo = { id: that.activeID, url: groupID + '/' + that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
-            var area = { type: 'subgroup-admin-removed' };
-            var group_id = groupID + '/' + that.activeID;
-            var memberuserID = admin.userSyncObj.$id;
-            //for group activity record
-            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
-            //for group activity stream record -- END --
-
-            // }
-            //    });  //that.submembers.forEach
-
-            //    that.selectedAdminArray.forEach(function(val, indx){
-            //         if(val.email == admin.email && val.membershipType != 1){
-            //             that.selectedAdminArray.splice(indx, 1);
-            //         }
-            //    });
-
-        };
-
-        this.deleteMember = function (userID) {
-            createSubGroupService.DeleteUserMemberShip(userID, groupID, that.activeID, that.submembers.length);
-
-            //publish an activity stream record -- START --
-            var type = 'subgroup';
-            var targetinfo = { id: that.activeID, url: groupID + '/' + that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
-            var area = { type: 'subgroup-member-removed' };
-            var group_id = groupID + '/' + that.activeID;
+            var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
+            var area = {type: 'subgroup-member-removed' };
+            var group_id = groupID+'/'+that.activeID;
             var memberuserID = userID;
             //for group activity record
             activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
             //for group activity stream record -- END --
         };
 
-        function loadAdminUSers(groupid, subgroupid, cb) {
-            createSubGroupService.getAdminUsers(groupid, subgroupid, function (data) {
+        function loadAdminUSers(groupid, subgroupid, cb){
+            createSubGroupService.getAdminUsers(groupid, subgroupid, function(data){
                 that.selectedAdminArray = data;
                 cb();
-            });
+            })
         }
 
 
@@ -5495,29 +5048,25 @@ function addEditor(snapshot){
         }
 
         function filterUser2(email) {
-            // console.log(that.selectedAdminArray[0].email);
+        	// console.log(that.selectedAdminArray[0].email);
             var disableItem = false;
-            if (that.selectedAdminArray && that.selectedAdminArray.length > 0) {
-                for (var i = 0; i < that.selectedAdminArray.length; i++) {
-                    if (email === that.selectedAdminArray[i].email) {
-                        disableItem = true;
-                    }
+            if(that.selectedAdminArray && that.selectedAdminArray.length > 0) {
+	            for (var i = 0; i < that.selectedAdminArray.length; i++) {
+	                if (email === that.selectedAdminArray[i].email) {
+	                    disableItem = true;
+	                }
 
-                }
+	            }
             }
             return disableItem;
         }
 
         function answer(groupForm) {
-
-            that.processingSave = true;
-            var userObj = activityStreamService.getCurrentUserGroups();
-            var memberType = userObj[this.groupId]['membership-type']
-
+           that.processingSave = true;
             var fromDataFlag;
             //return if form has invalid model.
             if (groupForm.$invalid) {
-                that.processingSave = false;
+                 that.processingSave = false;
                 return;
             }
             //if ($rootScope.croppedImage && $rootScope.croppedImage.src) {
@@ -5525,35 +5074,33 @@ function addEditor(snapshot){
                 var x = utilService.base64ToBlob($rootScope.newImg);
                 var temp = $rootScope.newImg.split(',')[0];
                 var mimeType = temp.split(':')[1].split(';')[0];
-                that.saveFile(x, mimeType, groupID, that.subgroupData.$id).then(function (data) {
-                    // console.log('subgroup img  uploaded ' + data)
-                    // console.log(3)
-                    //console.log(SubgroupObj)
+                that.saveFile(x, mimeType, that.subgroupData.$id).then(function(data) {
+                        // console.log('subgroup img  uploaded ' + data)
+                        // console.log(3)
+                        //console.log(SubgroupObj)
 
-                    if (SubgroupObj) {
-                        //edit team
-                        SubgroupObj['logo-image'].url = data;
-                        that.selectedMemberSave();
-                        that.selectedAdminSave();
-                        createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function () {
-                            that.processingSave = false;
-                            that.teamsettingpanel = false;
-                            that.selectedindex = undefined;
-                        });
-                    } else {
-                        // create team
-                        that.subgroupData.imgLogoUrl = data;
-                        createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function () {
-                            OnCreateAddAdmin(that.subgroupData.subgroupID, function () {
+                        if(SubgroupObj) {
+                            //edit team
+                            SubgroupObj['logo-image'].url = data;
+                            that.selectedMemberSave();
+                            that.selectedAdminSave();
+                            createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function(){
+                                that.processingSave = false;
                                 that.teamsettingpanel = false;
                                 that.selectedindex = undefined;
                             });
-                        });
-                        that.processingSave = false;
-                    } // else
-                    // $rootScope.newImg=null;
-                })
-                    .catch(function (err) {
+                        } else {
+                            //create team
+                            that.subgroupData.imgLogoUrl = data;
+                            createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID,function(){
+                                that.teamsettingpanel = false;
+                                that.selectedindex = undefined;
+                            });
+                            that.processingSave = false;
+                        }
+                            // $rootScope.newImg=null;
+                    })
+                    .catch(function(err) {
                         // return alert('picture upload failed' + err)
                         that.processingSave = false;
                         that.teamsettingpanel = false;
@@ -5563,46 +5110,45 @@ function addEditor(snapshot){
                 // console.log(x);
             } else {
                 fromDataFlag = false;
-                if (SubgroupObj) {
+                if(SubgroupObj) {
                     //edit team
                     that.selectedMemberSave();
                     that.selectedAdminSave();
-                    createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID, function () {
+                    createSubGroupService.editSubgroup(that.subgroupData, SubgroupObj, groupID,function(){
                         that.processingSave = false;
                         that.teamsettingpanel = false;
                         that.selectedindex = undefined;
+
+
                     });
                 } else {
-                    // create team
-                    createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function () {
-                        console.log(that.subgroupData);
-                        OnCreateAddAdmin(that.subgroupData.subgroupID, function () {
-                            that.teamsettingpanel = false;
-                            that.selectedindex = undefined;
-                        });
+                    //create team
+                    createSubGroupService.createSubGroup(user.userID, groupData, that.subgroupData, that.subgroups, fromDataFlag, groupID, function(){
+                        that.selectedindex = undefined;
+                       that.teamsettingpanel = false;
                     });
                     that.processingSave = false;
-                } // else
+
+                }
             }
         }
 
-        function saveFile(file, type, groupID, subgroupid) {
+        function saveFile(file, type, groupID) {
             var defer = $q.defer();
             //if(!that.group.groupID)return alert('Pleas provide group url firstt');
             //var groupID= that.group.groupID;
             var xhr = new XMLHttpRequest();
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
-            // console.log(groupID, subgroupid);
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savesubgroupprofilepicture?groupID=" + groupID + '&subgroupID=' + subgroupid + "&file_type=" + type);
-            xhr.onreadystatechange = function () {
+            xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.subgroupData.$id + "&file_type=" + type);
+            xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
 
                         var response = JSON.parse(xhr.responseText);
                         defer.resolve(that.upload_file(file, response.signed_request, response.url));
                     } else {
-                        defer.reject(essageService.showFailure("Could not get signed URL."));
+                        defer.reject(essageService.showFailure("Could not get signed URL."))
                     }
                 }
             };
@@ -5633,9 +5179,9 @@ function addEditor(snapshot){
 
         //Cropper Code End
 
-        this.canActivate = function () {
+        this.canActivate = function() {
             return authService.resolveUserPage();
-        };
+        }
 
 
         // side navigation
@@ -5644,10 +5190,10 @@ function addEditor(snapshot){
         this.toggleAdmin = AdminToggler('rights');
 
         function buildToggler(navID) {
-            var debounceFn = $mdUtil.debounce(function () {
+            var debounceFn = $mdUtil.debounce(function() {
                 $mdSidenav(navID)
                     .toggle()
-                    .then(function () {
+                    .then(function() {
                         // console.log("toggle " + navID + " is done");
                     });
             }, 300);
@@ -5656,10 +5202,10 @@ function addEditor(snapshot){
         }
 
         function AdminToggler(navID) {
-            var debounceFnc = $mdUtil.debounce(function () {
+            var debounceFnc = $mdUtil.debounce(function() {
                 $mdSidenav(navID)
                     .toggle()
-                    .then(function () {
+                    .then(function() {
                         // console.log("toggle " + navID + " is done");
                     });
             }, 300);
@@ -5673,19 +5219,19 @@ function addEditor(snapshot){
             var xhr = new XMLHttpRequest();
             xhr.open("PUT", signed_request);
             xhr.setRequestHeader('x-amz-acl', 'public-read');
-            xhr.onload = function (data) {
+            xhr.onload = function(data) {
                 // alert(xhr.status);
                 //alert(xhr.responseText);
                 if (xhr.status === 200) {
-                    messageService.showSuccess('Picture uploaded....');
-                    // console.log(url);
-                    //document.getElementById("preview").src = url;
-                    // that.subgroupData.imgLogoUrl = url;
-                    defer.resolve(url + '?random=' + new Date());
-                    //document.getElementById("avatar_url").value = url;
+                    messageService.showSuccess('Picture uploaded....')
+                        // console.log(url);
+                        //document.getElementById("preview").src = url;
+                        // that.subgroupData.imgLogoUrl = url;
+                    defer.resolve(url + '?random=' + new Date())
+                        //document.getElementById("avatar_url").value = url;
                 }
             };
-            xhr.onerror = function (error) {
+            xhr.onerror = function(error) {
                 defer.reject(messageService.showSuccess('Could not upload file.'));
             };
             xhr.send(file);
@@ -5694,13 +5240,13 @@ function addEditor(snapshot){
 
         that.OwnerRef = $firebaseObject(firebaseService.getRefGroups().child(groupID))
             .$loaded()
-            .then(function (groupData) {
+            .then(function(groupData) {
 
                 if (groupData['group-owner-id']) {
                     //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/*.child('profile-image')*/)
                     that.picRef = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']) /*.child('profile-image')*/)
                         .$loaded()
-                        .then(function (userData) {
+                        .then(function(userData) {
 
                             that.userObj = userData;
 
@@ -5711,14 +5257,14 @@ function addEditor(snapshot){
 
         function closeAdminToggler() {
             $mdSidenav('rights').close()
-                .then(function () {
+                .then(function() {
                     // console.log("close LEFT is done");
                 });
         }
 
         function closeToggleAdmin() {
             $mdSidenav('right').close()
-                .then(function () {
+                .then(function() {
                     // console.log("close LEFT is done");
                 });
         }
@@ -5730,10 +5276,10 @@ function addEditor(snapshot){
                 img: ''
             }
         };
-        this.openFileSelect = function () {
+        this.openFileSelect = function() {
             angular.element('#ImageUpload').click();
         };
-        this.hide = function (picture) {
+        this.hide = function(picture) {
             // console.log("dialog box pic" + picture)
             $mdDialog.hide(picture);
         };
@@ -5878,7 +5424,6 @@ function addEditor(snapshot){
 
                 /*VM properties*/
                 this.message = {};
-                this.membershipNo = [];
                 this.group = {
                     groupID: "",
                     message: "Please add me in your Team.",
@@ -6017,9 +5562,9 @@ function addEditor(snapshot){
     'use strict';
 
     angular.module('app.personalSettings')
-        .controller('PersonalSettingsController', ['activityStreamService', 'dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
+        .controller('PersonalSettingsController', ['dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
 
-            function(activityStreamService, dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
+            function(dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
 
                 /*Private Variables*/
                 var that = this;
@@ -6198,19 +5743,8 @@ function addEditor(snapshot){
                         if (group.ownerID === that.loggedInUserData.userID) {
                             firebaseService.getRefGroups().child(group.groupID).update({'owner-img-url' : imgurl})
                             firebaseService.getRefGroupsNames().child(group.groupID).update({'ownerImgUrl' : imgurl})
-
                         }
                     })
-                    var subgroups = activityStreamService.getSubgroupNamesAndMemberships()
-                    for (var group in subgroups) {
-                        for (var subgroup in subgroups[group]) {
-                            if(subgroups[group][subgroup] == 1) {
-                                firebaseService.getRefSubGroups().child(group).child(subgroup).update({'owner-img-url' : imgurl})
-                                firebaseService.getRefSubGroupsNames().child(group).child(subgroup).update({'ownerImgUrl' : imgurl})
-                            }
-                        }
-                    }
-                    console.dir(subgroups);
                     return defer.promise;
                 }
 
@@ -6367,34 +5901,30 @@ function addEditor(snapshot){
 
                 var subgroupPolicyActivity = {};
 
-                if (selectedTeams && selectedTeams.length > 0) {
-                    //getting subgroups which are selected....
-                    selectedTeams.forEach(function(val, indx) {
-                        //add property hasPolicy in subgroupNames..
-                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/hasPolicy"] = true;
-                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policyID"] = newPolicyKey;
-                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policy-title"] = obj['title'];                    
+                //getting subgroups which are selected....
+                selectedTeams.forEach(function(val, indx){
+                    //add property hasPolicy in subgroupNames..
+                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
 
-                        //add policy id into subgroup node
-                        multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+                    //add policy id into subgroup node
+                    multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
 
-                        //for policy - group/subgroup activity record -- start --
-                        subgroupPolicyActivity[val.subgroupID] = {
-                            type: 'policy',
-                            targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
-                            area: {type: 'policy-assigned-team'},
-                            group_id: groupID+'/'+val.subgroupID,
-                            memberuser_id: null,
-                            object_is_Team: {   "type": 'subgroup',
-                                                "id": val.subgroupID, //an index should be set on this
-                                                "url": groupID+'/'+val.subgroupID,
-                                                "displayName": val.subgroupTitle
-                                            }
-                        };
-                        //for policy - group/subgroup activity record -- end --
+                    //for policy - group/subgroup activity record -- start --
+                    subgroupPolicyActivity[val.subgroupID] = {
+                        type: 'policy',
+                        targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
+                        area: {type: 'policy-assigned-team'},
+                        group_id: groupID+'/'+val.subgroupID,
+                        memberuser_id: null,
+                        object_is_Team: {   "type": 'subgroup',
+                                            "id": val.subgroupID, //an index should be set on this
+                                            "url": groupID+'/'+val.subgroupID,
+                                            "displayName": val.subgroupTitle
+                                        }
+                    };
+                    //for policy - group/subgroup activity record -- end --
 
-                    }); //selectedTeams.forEach
-                }
+                }); //selectedTeams.forEach
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {
@@ -6531,7 +6061,6 @@ function addEditor(snapshot){
             this.showarrow = undefined;
             this.isLocationbased = false;
             this.isTimebased = false;
-            that.selectedTeamNew = [];
             this.isProgressReport = false;
             this.isProcessing = false;
             that.fencing = true;
@@ -6623,11 +6152,6 @@ function addEditor(snapshot){
             this.subGroupNames = [];
             this.subGroupNames = policyService.getSubGroupNames(that.groupId);
 
-            // $timeout(function() {
-            //     console.log('watch', that.subGroupNames);
-            // }, 2000);
-            
-
             //on controller load...... END
 
 
@@ -6641,17 +6165,17 @@ function addEditor(snapshot){
             this.openCreateSubGroupPage = function() {
                 $state.go('user.create-subgroup', {
                     groupID: groupId
-                });
-            };
+                })
+            }
             this.openUserSettingPage = function() {
                 $state.go('user.user-setting', {
                     groupID: groupId
-                });
+                })
             };
             this.openEditGroup = function() {
                 $state.go('user.edit-group', {
                     groupID: groupId
-                });
+                })
             };
 
             that.groupAdmin = false
@@ -6802,7 +6326,7 @@ function addEditor(snapshot){
                     // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
                 }
                 // console.log(that.selectedTimesForAllow);
-            };
+            }
             //scheduler for time base -- END --
 
 
@@ -6811,7 +6335,7 @@ function addEditor(snapshot){
             this.LoadSubGroupUsers = function(groupID, subgroupID) {
                 that.selectedTeamMembers[subgroupID] = policyService.getSubGroupMembers(groupID, subgroupID);
                 //that.selectedTeamMembers = policyService.getSubGroupMembers(that.groupId, 'hotemail');
-            };
+            }
             //Selected SubGroup Members for Assigning Policies
 
             //Selected SubGroup for Assign Policies
@@ -6825,7 +6349,7 @@ function addEditor(snapshot){
                 });
                 if (_flag) {
 
-                    //Add SubGroups  
+                    //Add SubGroups    //-K91WU-ZDR8kujgvU9gZ
                     that.selectedTeams.push(subgroup);
 
                     if (onEditPolicy) { //on click policy (edit mode)
@@ -6837,43 +6361,20 @@ function addEditor(snapshot){
                             }
                         });
                     } else {
-                        //confrim prompt, checking policy is applied on selected subgroup or not... 
-                        if (subgroup.policyID.length > 2) {  // if subgroup.policyID 
-                            var doYouWant = confirm('Policy has already assigned on this team. Do you want to apply this policy?');
-                            if (doYouWant) {
-                                //after add in local selected team array chnage hasPolicy true in firebase team array
-                                that.subGroupNames.forEach(function(val, indx) {
-                                    if (val.subgroupID == subgroup.subgroupID) {
-                                        that.subGroupNames[indx].hasPolicy = true;
-                                        
-                                        that.selectedTeamNew.push(that.subGroupNames[indx]);
-                                        // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
-                                    }
-                                }); // that.subGroupNames
-                            } // doYouWant
-                        } else {
-                                //after add in local selected team array chnage hasPolicy true in firebase team array
-                                that.subGroupNames.forEach(function(val, indx) {
-                                    if (val.subgroupID == subgroup.subgroupID) {
-                                        that.subGroupNames[indx].hasPolicy = true;
-
-                                        if (that.selectedTeamNew) { // checkin if not undefined
-                                            that.selectedTeamNew.push(that.subGroupNames[indx]);
-                                        } else {    // if undefined
-                                            that.selectedTeamNew = [];
-                                            that.selectedTeamNew.push(that.subGroupNames[indx]);
-                                        }    
-                                        // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
-                                    }
-                                }); // that.subGroupNames
-                        }
-
+                        //after add in local selected team array chnage hasPolicy true in firebase team array
+                        that.subGroupNames.forEach(function(val, indx) {
+                            if (val.subgroupID == subgroup.subgroupID) {
+                                that.subGroupNames[indx].hasPolicy = true;
+                            } //else {
+                            //     that.subGroupNames[indx].hasPolicy = false;
+                            // }
+                        });
                     }
 
                     //Load SubGropMemebrs
                     that.LoadSubGroupUsers(that.groupId, subgroup.subgroupID);
                 } //_flag
-            }; //selectedTeam
+            } //selectedTeam
             //Selected SubGroup for Assign Policies
 
             //on create policy
@@ -6896,8 +6397,8 @@ function addEditor(snapshot){
                 }
             };//this.newPolicy
 
+
             this.selectedPolicy = function(policy, index) {
-                that.selectedTeamNew = [];                      //for assign policy on subgroup, create a array when click from policy.html and then send to firebase
                 that.showarrow = index;
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
@@ -7106,8 +6607,7 @@ function addEditor(snapshot){
                     // console.log('members', that.selectedTeamMembers);
 
                     //calling policy service function to add in firebase
-                    //policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
-                    policyService.answer(obj, that.groupId, that.selectedTeamNew, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
+                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
                         //Load Group Policies from given GroupID
                         //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
                         if (that.activePolicyId) {  //if edit
@@ -7275,6 +6775,7 @@ function addEditor(snapshot){
                         return defer.promise;
 
                     },
+
                     'getGroupImgFromServer': function() {
                         var defer = $q.defer();
                         $http({
@@ -7299,6 +6800,7 @@ function addEditor(snapshot){
                         return defer.promise;
 
                     }
+
                 };
 
                 function Uint8ToString(u8a) {
@@ -7326,10 +6828,11 @@ function addEditor(snapshot){
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'activityStreamService', 'firebaseService', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
-    function UserSettingController($rootScope, messageService, $stateParams, activityStreamService, firebaseService, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
 
         var that = this;
+        var user = userService.getCurrentUser();
         this.hide = hide;
         var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
@@ -7389,7 +6892,14 @@ function addEditor(snapshot){
                 groupFirebaseService.approveMembership(groupID, user, requestedMember, that.group)
                     .then(function(res) {
                         if(requestedMember.teamrequest){
-                            approveTeamMembership(requestedMember);
+                            requestedMember.teamrequest.forEach(function(val, indx){
+                                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
+                                    messageService.showSuccess("Approved Request Successfully");
+                                    // CollaboratorService.addAccessUser()
+                                }, function(err){
+                                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
+                                })
+                            })
                         } else{
                             messageService.showSuccess("Approved Request Successfully");
                         }
@@ -7398,33 +6908,6 @@ function addEditor(snapshot){
                     });
             // });
         }
-
-        function approveTeamMembership(requestedMember) {
-            requestedMember.teamrequest.forEach(function(val, indx){
-                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
-                    userActivityStreamOnAddMember(groupID, val.subgroupID, val.subgrouptitle, requestedMember.userID);
-                    messageService.showSuccess("Approved Request Successfully");
-                    // CollaboratorService.addAccessUser()
-                }, function(err){
-                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + err);
-                })
-            })
-        }
-
-        function userActivityStreamOnAddMember(groupID, subgroupID, subgrouptitle, userID) {
-            var areaType = 'subgroup-member-assigned';
-            //publish an activity stream record -- START --
-            var type = 'subgroup';
-            var targetinfo = {id: subgroupID, url: groupID+'/'+subgroupID, title: subgrouptitle, type: 'subgroup' };
-            var area = {type: areaType };
-            var group_id = groupID+'/'+subgroupID;
-            var memberuserID = userID;
-            //for group activity record
-            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
-            //for group activity stream record -- END --
-        }
-
-
 
         //For owner/admin: Rejects membership request.
         function rejectMembership(requestedMember) {
@@ -7443,23 +6926,7 @@ function addEditor(snapshot){
         function changeMemberRole(newType, member) {
             groupFirebaseService.changeMemberRole(newType, member, that.group, user)
                 .then(function(res) {
-                    if (newType) {
-                        messageService.showSuccess("Changed Role Successfully");
-                    } else {
-                        firebaseService.getRefUserSubGroupMemberships().child(member.userID).child(groupID).once('value', function(snapshot) {
-                            for (var key in snapshot.val()) {
-                                createSubGroupService.DeleteUserMemberShip(member.userID, groupID, key, '');
-                                var type = 'subgroup';
-                                var targetinfo = {id: key, url: groupID+'/'+key, title: key, type: 'subgroup' };
-                                var area = {type: 'subgroup-member-removed' };
-                                var group_id = groupID+'/'+key;
-                                var memberuserID = member.userID;
-                                //for group activity record
-                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
-                            }
-                            messageService.showSuccess("Membership Deleted Successfully");
-                        })
-                    }
+                    messageService.showSuccess("Changed Role Successfully");
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });
@@ -9405,8 +8872,7 @@ function addEditor(snapshot){
         'app.manualattendace',
         'app.progressreport',
         'app.chat',
-        'app.collaborator',
-        'app.membershipcard'
+        'app.collaborator'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',
@@ -9426,9 +8892,9 @@ function addEditor(snapshot){
 
     "use strict";
 
-    angular.module('core').factory('activityStreamService', ['$timeout', '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+    angular.module('core').factory('activityStreamService', ["$http", "appConfig", '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
 
-    function activityStreamService($timeout, $firebaseObject, firebaseService, userService, $rootScope) {
+    function activityStreamService($http, appConfig, $firebaseObject, firebaseService, userService, $rootScope) {
         var user = '';
         var userID = '';
         var actor = '';
@@ -9437,8 +8903,6 @@ function addEditor(snapshot){
         var currentUserSubGroupNamesAndMemberShips = {};
         var currentUserSubGroupsMembersAndMemberShips = {};
         var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
-        var lastSeenTimeStamp = null;
-        var ref = firebaseService.getRefMain();
 
         //object for those who will be notify....
 
@@ -9453,9 +8917,8 @@ function addEditor(snapshot){
                 'profile-image': $rootScope.userImg || ''
             };
 
-            //getting curent user groups and then getting its notification/activities but first we get timestamp of seen activities to get records of activities
-            getLastSeenActivityTimeStamp();
-            //getGroupsOfCurrentUser();
+            //getting curent use groups and then getting its notification/activities
+            getGroupsOfCurrentUser();
 
             //getting current user subgroup names
             getSubGroupsOfCurrentUsers();
@@ -9463,102 +8926,49 @@ function addEditor(snapshot){
             //getting current user subgroup members
             //getSubGroupsMembersOfCurrentUsers ();
 
-            userGroupEvents();
-
         } //init
 
-        //getting last seen activity from activities-seen-by-user
-        function getLastSeenActivityTimeStamp() {
-            var onchnaged = 0;      //because firebaretimestamp run twice thats y use this strategy....
-            var once = 0;
-            firebaseService.getRefActivitySeen().child(userID).on('value', function (snapshot) {
-
-                lastSeenTimeStamp = (snapshot.val() && snapshot.val().timestamp) ? snapshot.val().timestamp : '';
-
-                if (once === 0 && onchnaged === 0) {
-                    // console.log('activitiess', 'once');
-                    getGroupsOfCurrentUser(lastSeenTimeStamp);
-                    once++;
-                }
-
-                onchnaged++;
-
-                if (once !== 0 && onchnaged === 2) {
-                    // console.log('activitiess', 'on update');
-                    LastChildAddedClosed();
-                    $timeout(function () {
-                        getGroupsOfCurrentUser(lastSeenTimeStamp);
-                    }, 1000);
-
-                    onchnaged = 0;
-                }
-
-                //getGroupsOfCurrentUser(snapshot.val());
-            });
-
-            // firebaseService.getRefActivitySeen().child(userID).on('child_changed', function(snapshot) {
-            //     //console.log(snapshot.key(), snapshot.val());
-            //     getGroupsOfCurrentUser(snapshot.val());
-            // });
-        }   // getLastSeenActivityTimeStamp
-
-        function LastChildAddedClosed() {
-            for (var group in currentUserSubGroupNamesAndMemberShips) {
-                // console.log('watch group', group);
-                firebaseService.getRefGroupsActivityStreams().child(group).off("child_added");
-                for (var subgroup in currentUserSubGroupNamesAndMemberShips[group]) {
-                    firebaseService.getRefSubGroupsActivityStreams().child(group).off('child_added');
-                    firebaseService.getRefSubGroupsActivityStreams().child(group).child(subgroup).off("child_added");
-                    // console.log('watch subgroup', subgroup);
-                }
-            }
-        }        // LastChildAddedClosed
-
-
-
         //for activity step1
-        function getGroupsOfCurrentUser(date) {
+        function getGroupsOfCurrentUser() {
             //child_added on user-group-memberships
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function (group) {
+
                 if (group && group.key()) {
                     //create a object of group name and membership-type
                     currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
 
-                    $timeout(function () {
-                        //getting activities by groupID
-                        getActivityOfCurrentUserByGroup(group.key(), date);
+                    //getting activities by groupID
+                    getActivityOfCurrentUserByGroup(group.key());
 
-                        //getting activity by subgroup
-                        getActivityOfCurrentUserBySubGroup(group.key(), date);
-                    }, 1000);
-
+                    //getting activity by subgroup
+                    getActivityOfCurrentUserBySubGroup(group.key());                    
                 }
             });
-
+            
             //child_changed on user-group-memberships
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_changed', function (group) {
                 // console.log('group child_changed', group.val());
                 //change membership in currentUserGroupNamesAndMemberShips
                 currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
-
+                
                 // delete all activity from user activity array of group.key()
-                // if (group.val()['membership-type'] == '-1') {
-                //     currentUserActivities.forEach(function (val, index) {
-                //         if (val.groupID == group.key()) {
+                // if (group.val()['membership-type'] == '-1') { 
+                //     currentUserActivities.forEach(function (val, index) { 
+                //         if (val.groupID == group.key()) { 
                 //             //remove all notifications if user blocked
                 //             currentUserActivities.splice(val, 1);
-                //         }
+                //         } 
                 //     })
                 // }
-
+                
             });
-
+            
             //child_removed on user-group-memberships
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_removed', function (group) {
                 // console.log('group child_removed', group.val());
                 //delete group from currentUserGroupNamesAndMemberShips
                 delete currentUserGroupNamesAndMemberShips[group.key()];
-
+                
                 // delete all activity from user activity array of group.key()  (remove activity related from group)
                 // currentUserActivities.forEach(function (val, index) {
                 //     if (val.groupID == group.key()) {
@@ -9570,50 +8980,23 @@ function addEditor(snapshot){
 
         }
         //for activity group
-        function getActivityOfCurrentUserByGroup(groupID, date) {
-            //getting activity streams from firebase node: group-activity-streams.startAt(startDate.setHours(0, 0, 0, 0))
-            if (date) {
-                //close child_added Event....
-                firebaseService.getRefGroupsActivityStreams().child(groupID).off("child_added");
-
-                firebaseService.getRefGroupsActivityStreams().child(groupID)
-                    .orderByChild('published').startAt(date).on("child_added", function (snapshot) {
-                        if (snapshot && snapshot.val()) {
-                            currentUserActivities.push({
-                                groupID: groupID,
-                                displayMessage: snapshot.val().displayName,
-                                activityID: snapshot.key(),
-                                published: snapshot.val().published,
-                                // seen: false
-                            });
-                        }
+        function getActivityOfCurrentUserByGroup(groupID) {
+            //getting activity streams from firebase node: group-activity-streams
+            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function (snapshot) {
+                if (snapshot && snapshot.val()) {
+                    currentUserActivities.push({
+                        groupID: groupID,
+                        displayMessage: snapshot.val().displayName,
+                        activityID: snapshot.key(),
+                        published: snapshot.val().published
                     });
-            } else {
-
-                firebaseService.getRefGroupsActivityStreams().child(groupID)
-                    .orderByChild('published').on("child_added", function (snapshot) {
-                        if (snapshot && snapshot.val()) {
-                            currentUserActivities.push({
-                                groupID: groupID,
-                                displayMessage: snapshot.val().displayName,
-                                activityID: snapshot.key(),
-                                published: snapshot.val().published,
-                                // seen: false
-                            });
-                        }
-                    });
-            }
+                }
+            });
         }
 
         //for getting subgroups of current user
         function getSubGroupsOfCurrentUsers() {
             firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function (snapshot) {
-
-                //register subgroup added
-                //addedUserSubgroupMembershipOnSubgroupEvent(snapshot.key());
-
-                //register removed event of any subgroup membership
-                removeUserSubgroupMembershipOnGroupEvent(snapshot.key());
 
                 for (var subgroup in snapshot.val()) {
                     if (currentUserSubGroupNamesAndMemberShips && currentUserSubGroupNamesAndMemberShips[snapshot.key()]) {
@@ -9625,83 +9008,46 @@ function addEditor(snapshot){
 
                     //getting subgroup members
                     getSubGroupsMembersOfCurrentUsers(snapshot.key(), subgroup);
-
-
                 }
             });
-        }   // getSubGroupsOfCurrentUsers
 
-        function removeUserSubgroupMembershipOnGroupEvent(group) {
-            firebaseService.getRefUserSubGroupMemberships().child(userID).child(group).on('child_removed', function (snapshot) {
-                // console.log('watch subgroup child_removed', snapshot.val(), snapshot.key());
 
-                //for (var subgroup in snapshot.val()) {
-                //delete membership type from subgroup object
-                if (snapshot.key()) {
-                    delete currentUserSubGroupNamesAndMemberShips[group][snapshot.key()];
+            firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_removed', function (snapshot) {
+                // console.log('subgroup child_removed', snapshot.val());
+                
+                for (var subgroup in snapshot.val()) {
+                    //delete membership type from subgroup object     
+                    delete currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup];
+                    // // delete all activity from user activity array of subgroup (remove activity related from subgroup)
+                    // currentUserActivities.forEach(function (val, index) {
+                    //     if (val.subgroupID == subgroup) {
+                    //         //remove all notifications if user blocked
+                    //         currentUserActivities.splice(val, 1);
+                    //     }
+                    // });    
                 }
-
-                // // delete all activity from user activity array of subgroup (remove activity related from subgroup)
-                // currentUserActivities.forEach(function (val, index) {
-                //     if (val.subgroupID == subgroup) {
-                //         //remove all notifications if user blocked
-                //         currentUserActivities.splice(val, 1);
-                //     }
-                // });
-                //}
             });
-        }   // removeUserSubGroupMembershipEvent
-
-        function addedUserSubgroupMembershipOnSubgroupEvent(group) {
-            firebaseService.getRefUserSubGroupMemberships().child(userID).child(group).on('child_added', function (snapshot) {
-                console.log('watch: ', snapshot.key(), snapshot.val());
-            });
-        }   // addedUserSubgroupMembershipOnSubgroupEvent
-
-
-
+        }
+        
+        
+        
         //for activity of subgroup
-        function getActivityOfCurrentUserBySubGroup(groupID, date) {
+        function getActivityOfCurrentUserBySubGroup(groupID) {
             //getting activity streams from firebase node: subgroup-activity-streams
-            if (date) {
-                //close child_added Event....
-                firebaseService.getRefSubGroupsActivityStreams().child(groupID).off('child_added');
-
-                firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function (subgroup) {
-                    if (subgroup && subgroup.val()) {
-                        firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key())
-                            .orderByChild('published').startAt(date).on("child_added", function (snapshot) {
-                                if (snapshot && snapshot.val()) {
-                                    currentUserActivities.push({
-                                        groupID: groupID,
-                                        subgroupID: subgroup.key(),
-                                        displayMessage: snapshot.val().displayName,
-                                        activityID: snapshot.key(),
-                                        published: snapshot.val().published,
-                                        // seen: false
-                                    });
-                                }
-                            });
-                    }
-                });
-            } else {
-                firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function (subgroup) {
-                    if (subgroup && subgroup.val()) {
-                        firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function (snapshot) {
-                            if (snapshot && snapshot.val()) {
-                                currentUserActivities.push({
-                                    groupID: groupID,
-                                    subgroupID: subgroup.key(),
-                                    displayMessage: snapshot.val().displayName,
-                                    activityID: snapshot.key(),
-                                    published: snapshot.val().published,
-                                    // seen: false
-                                });
-                            }
+            firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
+                    if (snapshot && snapshot.val()) {
+                        currentUserActivities.push({
+                            groupID: groupID,
+                            subgroupID: subgroup.key(),
+                            displayMessage: snapshot.val().displayName,
+                            activityID: snapshot.key(),
+                            published: snapshot.val().published
                         });
                     }
-                });
-            }
+                });                
+
+            });
         }
 
         //for getting subgroups members of current user
@@ -9722,16 +9068,16 @@ function addEditor(snapshot){
                     currentUserSubGroupsMembersAndMemberShips[groupID] = {};
                     currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
                     currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] })
-                }
+                }               
                 //currentUserSubGroupsMembers[groupID][subgroupID] = snapshot.key();
             }); //firebaseService.getRefSubGroupMembers
-
+            
             //remove subgroup when child_removed from subgroup
             firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_removed', function (snapshot) {
                 // console.log('member child_removed: ', snapshot.key(), snapshot.val());
                 //when member remove from subgroup then update array of  currentUserSubGroupsMembersAndMemberShips
                 delete currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID];
-
+    
             });
         } //getSubGroupsMembersOfCurrentUsers
 
@@ -9749,230 +9095,16 @@ function addEditor(snapshot){
             return currentUserSubGroupsMembersAndMemberShips;
         }
 
-
-
-        //new service  # start
-
-        var userGroupz = {};
-        var userSubGroupz = {};
-        var subgroupsOfGroup = {};
-
-        function userGroupEvents() {
-            //group added
-            ref.child('user-group-memberships').child(userID).on('child_added', function (group) {
-                if (group) {
-                    console.log('watch added raw', group.val());
-                    var obj = {
-                        'membership-type': group.val()['membership-type'],
-                        'title': ''
-                    };
-                    userGroupz[group.key()] = obj;
-
-                    console.log('watch added', userGroupz, group.val()['membership-type'] );
-
-                    //subgroup add event
-                    userSubGroupEvents(group.key());
-
-                    // group users
-                    getUserGroupMembers(group.key());
-
-                    setTimeout(function () {
-                        //get subgroups of this group is memebership type is owner
-                        (group.val()['membership-type'] === 1) ? getSubgroupOfGroups(group.key()) : null;
-                    },1000);
-                }
-            });
-
-            //group changed
-            ref.child('user-group-memberships').child(userID).on('child_changed', function (group) {
-                if (group) {
-                    console.log('watch changed raw', group.val());
-                    var obj = {
-                        'membership-type': group.val()['membership-type'],
-                        'title': ''
-                    };
-                    userGroupz[group.key()] = obj;
-                    console.log('watch changed', userGroupz);
-                }
-            });
-
-            //group removed
-            ref.child('user-group-memberships').child(userID).on('child_removed', function (group) {
-                if (group) {
-                    console.log('watch removed raw', group.val());
-                    delete userGroupz[group.key()];
-                    console.log('watch remove', userGroupz);
-                }
-            });
-        }
-        function userSubGroupEvents(groupid) {
-            // subgroup added
-            ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_added', function (subgroup) {
-                if (subgroup) {
-                    console.log('watch added raw', subgroup.val());
-                    var obj = {
-                        'membership-type': subgroup.val()['membership-type'],
-                        'title': ''
-                    };
-
-                    if (userSubGroupz.hasOwnProperty(groupid)) {
-                        userSubGroupz[groupid][subgroup.key()] = obj;
-                    } else {
-                        userSubGroupz[groupid] = {};
-                        userSubGroupz[groupid][subgroup.key()] = obj;
-                    }
-
-                    console.log('watch added', userSubGroupz);
-                    // get subgroup users
-                    getUserSubGroupMembers(groupid, subgroup.key());
-                }
-            });
-
-            // group changed
-            ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_changed', function (subgroup) {
-                if (subgroup) {
-                    console.log('watch added raw', subgroup.val());
-                    var obj = {
-                        'membership-type': subgroup.val()['membership-type'],
-                        'title': ''
-                    };
-                    userSubGroupz[groupid][subgroup.key()] = obj;
-                    console.log('watch changed', userSubGroupz);
-                }
-            });
-
-            //group removed
-            ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_removed', function (subgroup) {
-                if (subgroup) {
-                    console.log('watch added raw', subgroup.val());
-                    delete userSubGroupz[groupid][subgroup.key()];
-                    console.log('watch delete', userSubGroupz);
-                }
-            });
-        }
-        function getSubgroupOfGroups(groupid) {
-            console.log('watch fireeeeeeeeeeeeeeeeeee');
-            //subgroup added
-            ref.child('subgroups').child(groupid).on('child_added', function (subgroup) {
-                console.log('watch fireeeeeeeeeeeeeeeeeeeee22222222', subgroup);
-                if (subgroupsOfGroup.hasOwnProperty(groupid)) {
-                    subgroupsOfGroup[groupid].push(subgroup.key());
-                } else {
-                    subgroupsOfGroup[groupid] = [];
-                    subgroupsOfGroup[groupid].push(subgroup.key());
-                }
-
-                console.log('watch added subgrp of grp', subgroupsOfGroup);
-
-            });
-
-            //subgroup removed
-            ref.child('subgroups').child(groupid).on('child_removed', function (subgroup) {
-                var index = subgroupsOfGroup[groupid].indexOf(subgroup.key());
-
-                // remove from array of subgroups
-                subgroupsOfGroup[groupid].splice(index, 1);
-            });
-
-        }
-        function getUserGroupMembers(groupid) {
-            // group-members child_added
-            ref.child('group-members').child(groupid).on('child_added', function (user) {
-                           console.log('child_added',user.key(),user.val() )
-                var obj = {
-                    'membership-type': user.val()['membership-type'],
-                    'title': ''
-                };
-                if (userGroupz.hasOwnProperty(groupid)) {
-                    if (userGroupz[groupid].hasOwnProperty("users")) {
-                        userGroupz[groupid]["users"][user.key()] = obj;
-                    } else {
-                        userGroupz[groupid]["users"] = {};
-                        userGroupz[groupid]["users"][user.key()] = obj;
-                    }
-                }
-            });
-
-            // group-members child_changed
-            ref.child('group-members').child(groupid).on('child_changed', function (user) {
-                console.log('child_changed',user.key(),user.val() )
-                var obj = {
-                    'membership-type': user.val()['membership-type'],
-                    'title': ''
-                };
-                userGroupz[groupid]["users"][user.key()] = obj;
-            });
-        }
-        function getUserSubGroupMembers(groupid, subgroupid) {
-            // subgroup-members child_added
-            ref.child('subgroup-members').child(groupid).child(subgroupid).on('child_added', function (user) {
-                var obj = {
-                    'membership-type': user.val()['membership-type'],
-                    'title': ''
-                };
-
-                if (userSubGroupz[groupid].hasOwnProperty(subgroupid)) {
-                    if (userSubGroupz[groupid][subgroupid].hasOwnProperty("users")) {
-                        userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;
-                    } else {
-                        userSubGroupz[groupid][subgroupid]["users"] = {};
-                        userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;
-                    }
-                }
-            });
-
-            // subgroup-members child_changed
-            ref.child('subgroup-members').child(groupid).child(subgroupid).on('child_changed', function (user) {
-                var obj = {
-                    'membership-type': user.val()['membership-type'],
-                    'title': ''
-                };
-                if (userSubGroupz[groupid][subgroupid].hasOwnProperty("users")) { 
-                    if (userSubGroupz[groupid][subgroupid]["users"].hasOwnProperty(user.key())) {
-                        userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;        
-                    } else {
-                        userSubGroupz[groupid][subgroupid]["users"][user.key()] = {};
-                        userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;
-                    }
-                }
-                
-                
-            });
-
-            // subgroup-members child_changed
-            ref.child('subgroup-members').child(groupid).child(subgroupid).on('child_removed', function (user) {
-                delete userSubGroupz[groupid][subgroupid]["users"][user.key()];
-            });
-
-
-        }
-
-        function getCurrentUserGroups() {
-            return userGroupz;
-        }
-        function getCurrentUserSubgroups() {
-            return userSubGroupz;
-        }
-        function getSubgroupsOfGroup() {
-            console.log('watch', subgroupsOfGroup);
-            return subgroupsOfGroup;
-        }
-        //new service  # end
-
-
-
         // type = group, subgroup, policy, progressReport, firepad, chat
         //targetinfo = {id: '', url: '', title: '', type: '' }
         //area = {type: '', action: ''}
         //memberUserID = if object is user for notification
 
-        // activities - seen - by - user
-        // userid
-        //timesapan:
         function activityHasSeen() {
-            firebaseService.getRefActivitySeen().child(userID).update({ timestamp: firebaseTimeStamp }, function (err) {
-                if (!err) {
-                    currentUserActivities.splice(0, currentUserActivities.length);
+            var multipath = {};
+            currentUserActivities.forEach(function (val, index) {
+                if (val.seen === false) {
+                    multipath['/user-activity-streams/' + userID + '/' + val.activityID + '/seen'] = true;
                 }
             });
         }
@@ -10049,9 +9181,6 @@ function addEditor(snapshot){
                     'subgroup-member-removed': actor.displayName + " removed as member " + object.displayName + " from " + target.displayName,
                     'subgroup-admin-removed': actor.displayName + " removed as admin " + object.displayName + " from " + target.displayName,
                     'subgroup-join': actor.displayName + " sent team of teams join request of " + target.displayName,
-                    'subgroup-checkin': actor.displayName + " checkin " + target.displayName,
-                    'subgroup-checkout': actor.displayName + " checkout from " + target.displayName,
-
                 }, //subgroup
                 'policy': {
                     'policy-created': actor.displayName + " created policy " + target.displayName,
@@ -10084,7 +9213,7 @@ function addEditor(snapshot){
                 //seen: false
             };
 
-
+            var ref = firebaseService.getRefMain();
             var pushObj = ref.child('group-activity-streams/' + activityGroupOrSubGroupID).push();
             var activityPushID = pushObj.key();
 
@@ -10151,12 +9280,7 @@ function addEditor(snapshot){
         return {
             init: init,
             getActivities: getActivities,
-            activityStream: activityStream,
-            activityHasSeen: activityHasSeen,
-            getSubgroupNamesAndMemberships: getSubgroupNamesAndMemberships,
-            getCurrentUserGroups: getCurrentUserGroups,
-            getCurrentUserSubgroups: getCurrentUserSubgroups,
-            getSubgroupsOfGroup: getSubgroupsOfGroup
+            activityStream: activityStream
         };
     } //activityStreamService
 })();
@@ -10365,10 +9489,9 @@ angular.module('core')
                     timestamp   : fireTimeStamp,
                     title       : channelTitle
                 }
-                var request = refs.refgroupchannel.child(groupID).push();
-                request.update(newChannel, function(err){
-                    cb(err, request.key(), channelTitle);
-                });
+                var request = refs.refgroupchannel.child(groupID).push(newChannel, function(err){
+                    cb(err);
+                })
             },
             createSubGroupChannel: function(groupID, subgroupID, channelTitle, userID, cb){
                 var newChannel = {
@@ -10376,10 +9499,9 @@ angular.module('core')
                     timestamp   : fireTimeStamp,
                     title       : channelTitle
                 }
-                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push();
-                request.update(newChannel, function(err){
-                    cb(err, request.key(), channelTitle);
-                });
+                var request = refs.refsubgroupchannel.child(groupID).child(subgroupID).push(newChannel, function(err){
+                    cb(err);
+                })
             },
             getGroupChannel: function(groupID){
                 return $firebaseArray(refs.refgroupchannel.child(groupID))
@@ -10707,12 +9829,6 @@ angular.module('core')
             getCurrentUser: function() {
                 return user;
             },
-            getUserProfile : function(userID,callback) {
-                var ref = new Firebase(appConfig.myFirebase);
-                ref.child('users').child(userID).once('value',function(snapshot){
-                  callback(snapshot.val());
-                })
-            },
             getCurrentUserID: function() {
                 return user.userID;
             },
@@ -10778,28 +9894,6 @@ angular.module('core')
                         groupsubgroupTitle[group.key()] = groupmasterdata.title;
                     });
                     firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_added', function(subgroup, prevChildKey) {
-                        // console.log('user', subgroup.val())
-                        firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).on('child_removed', function(rmsubgroup) {
-                            firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).off();
-                            userData.forEach(function(val, indx) {
-                                // if (val.id === userID) {
-                                    if (val.groupsubgroup === (group.key() + ' / ' + rmsubgroup.key())) {
-                                        userData.splice(indx, 1);
-                                    }
-                                // }
-                            });
-                        });
-                        firebaseService.getRefUserSubGroupMemberships().child(userID).child(group.key()).child(subgroup.key()).on('child_changed', function(chsubgroup) {
-                            // console.log('watch', chsubgroup)
-                            // firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).off();
-                            // userData.forEach(function(val, indx) {
-                            //     // if (val.id === userID) {
-                            //         if (val.groupsubgroup === (group.key() + ' / ' + rmsubgroup.key())) {
-                            //             userData.splice(indx);
-                            //         }
-                            //     // }
-                            // });
-                        });
                         checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).on('child_changed', function(snapshot, prevChildKey) {
                             userData.forEach(function(val, indx) {
                                 if (val.id === snapshot.key()) {
@@ -10834,13 +9928,7 @@ angular.module('core')
                             groupsubgroupTitle[subgroup.key()] = subgroupmasterdata.title;
                         });
                         firebaseService.getRefSubGroupMembers().child(group.key()).child(subgroup.key()).on('child_added', function(snapshot, prevChildKey) {
-                            // console.log('user2', snapshot.key(), snapshot.val())
                             $firebaseObject(checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key())).$loaded().then(function(userdata) {
-                                // console.log('user', userdata)
-                                // checkinService.getRefCheckinCurrentBySubgroup().child(group.key()).child(subgroup.key()).child(snapshot.key()).on('value', function(ss){
-                                //     console.log('user', ss.key())
-                                //     console.log('user', ss.val())
-                                // })
                                 if (userdata.type === 1) {
                                     var type = true;
                                 } else {
@@ -10849,64 +9937,35 @@ angular.module('core')
                                 var message = userdata.message;
                                 var timestamp = userdata.timestamp;
                                 $firebaseObject(firebaseService.getRefUsers().child(userdata.$id)).$loaded().then(function(usermasterdata) {
-                                    // console.log('user change 4', userdata.$id)
                                     firebaseService.getRefUsers().child(userdata.$id).on('child_changed', function(snapshot, prevChildKey) {
-                                        // console.log('user change', snapshot.key(), snapshot.val(), userData.length)
-                                        // for (var i = 0; i <= userData.length; i++) {
-                                        //     // console.log('user change 2', i, userData[i].id, userdata.$id)
-                                        //     if (userData[i].id === userdata.$id) {
-                                        //         // console.log('user change 3', val.id)
-                                        //         if (snapshot.key() === "profile-image") {
-                                        //             userData[i].profileImage = snapshot.val();
-                                        //         }
-                                        //         if (snapshot.key() === "firstName") {
-                                        //             userData[i].firstName = snapshot.val();
-                                        //         }
-                                        //         if (snapshot.key() === "lastName") {
-                                        //             userData[i].lastName = snapshot.val();
-                                        //         }
-                                        //         if (snapshot.key() === "contactNumber") {
-                                        //             userData[i].contactNumber = snapshot.val();
-                                        //         }
-                                        //         break;
-                                        //     }
-                                            userData.forEach(function(val, indx) {
-                                                    // console.log('user 2', val.id, userdata.$id)
-                                                if (val.id === userdata.$id) {
-                                                    // console.log('user 1', val.id === userdata.$id)
-                                                    console.log('user 1', snapshot.key())
-                                                    if (snapshot.key() === "profile-image") {
-                                                        val.profileImage = snapshot.val();
-                                                    }
-                                                    if (snapshot.key() === "firstName") {
-                                                        val.firstName = snapshot.val();
-                                                        val.fullName = val.firstName + ' ' + val.lastName;
-                                                    }
-                                                    if (snapshot.key() === "lastName") {
-                                                        console.log('user 2', val.lastName)
-                                                        val.lastName = snapshot.val();
-                                                        val.fullName = val.firstName + ' ' + val.lastName;
-                                                    }
-                                                    if (snapshot.key() === "contactNumber") {
-                                                        val.contactNumber = snapshot.val();
-                                                    }
-                                                }
-                                            });
-                                        // }
-                                    });
-                                    firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
                                             if (val.id === userdata.$id) {
-                                                if (snapshot.key() === "profile-image") {
+                                                if (snapshot.key() === "profileImage") {
                                                     val.profileImage = snapshot.val();
                                                 }
                                                 if (snapshot.key() === "firstName") {
                                                     val.firstName = snapshot.val();
-                                                    val.fullName = val.firstName + ' ' + val.lastName;
                                                 }
                                                 if (snapshot.key() === "lastName") {
                                                     val.lastName = snapshot.val();
-                                                    val.fullName = val.firstName + ' ' + val.lastName;
+                                                }
+                                                if (snapshot.key() === "contactNumber") {
+                                                    val.contactNumber = snapshot.val();
+                                                }
+                                            }
+                                        });
+                                    });
+                                    firebaseService.getRefUsers().child(userdata.$id).on('child_added', function(snapshot, prevChildKey) {
+                                        userData.forEach(function(val, indx) {
+                                            if (val.id === userdata.$id) {
+                                                if (snapshot.key() === "profileImage") {
+                                                    val.profileImage = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "firstName") {
+                                                    val.firstName = snapshot.val();
+                                                }
+                                                if (snapshot.key() === "lastName") {
+                                                    val.lastName = snapshot.val();
                                                 }
                                                 if (snapshot.key() === "contactNumber") {
                                                     val.contactNumber = snapshot.val();
@@ -10921,10 +9980,10 @@ angular.module('core')
                                             }
                                         })
                                     });*/
-                                    userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(usersPresense, prevChildKey) {
+                                    userPresenceService.getRefUsersPresense().child(userdata.$id).child('connections').on('value', function(snapshot, prevChildKey) {
                                         userData.forEach(function(val, indx) {
                                             if (val.id === userdata.$id) {
-                                                if (usersPresense.val()) {
+                                                if (snapshot.val()) {
                                                     /*for (var key in snapshot.val()) {
                                                         if (snapshot.val()[key].type === 1) {
                                                             val.onlineweb = 1;
@@ -10940,91 +9999,35 @@ angular.module('core')
                                                 }
                                             }
                                         });
-                                        firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
-                                            // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
-                                            // console.log('user', userdata.$id)
-                                            if (userData.length > 0) {
-                                                for (var indx = 0; indx <= userData.length; indx++) {
-                                                    // console.log(val.id);
-                                                    // console.log(userdata.$id)
-                                                    // console.log(userData[indx])
-                                                    if (userData[indx].id === userdata.$id && userData[indx].groupID === group.key() && userData[indx].subgroupID === subgroup.key()) {
-                                                        userData[indx].id = userdata.$id;
-                                                        userData[indx].type = type;
-                                                        userData[indx].groupsubgroup = group.key() + ' / ' + subgroup.key();
-                                                        userData[indx].groupsubgroupTitle = groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()];
-                                                        userData[indx].groupID = group.key();
-                                                        userData[indx].groupTitle = groupsubgroupTitle[group.key()];
-                                                        userData[indx].subgroupID = subgroup.key();
-                                                        userData[indx].subgroupTitle = groupsubgroupTitle[subgroup.key()];
-                                                        userData[indx].membershipNo  = snapshot.getPriority() || '';
-                                                        userData[indx].contactNumber = usermasterdata.contactNumber || '';
-                                                        userData[indx].onlinestatus = usersPresense.val() ? true : false,
-                                                        /*userData[indx].onlineweb = 0;
-                                                        userData[indx].onlineios = 0;
-                                                        userData[indx].onlineandroid = 0;*/
-                                                        userData[indx].timestamp = timestamp;
-                                                        userData[indx].message = message;
-                                                        userData[indx].profileImage = usermasterdata['profile-image'] || '';
-                                                        userData[indx].firstName = usermasterdata.firstName;
-                                                        userData[indx].lastName = usermasterdata.lastName;
-                                                        userData[indx].fullName = usermasterdata.firstName + ' ' + usermasterdata.lastName;
-                                                        break;
-                                                    }
-                                                    if (userData.length === indx + 1) {
-                                                        userData.push({
-                                                            id: userdata.$id,
-                                                            type: type,
-                                                            groupsubgroup: group.key() + ' / ' + subgroup.key(),
-                                                            groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
-                                                            groupID: group.key(),
-                                                            groupTitle: groupsubgroupTitle[group.key()],
-                                                            subgroupID: subgroup.key(),
-                                                            subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                                            membershipNo : snapshot.getPriority() || '',
-                                                            contactNumber: usermasterdata.contactNumber || '',
-                                                            onlinestatus: usersPresense.val() ? true : false,
-                                                            /*onlineweb: 0,
-                                                            onlineios: 0,
-                                                            onlineandroid: 0,*/
-                                                            timestamp: timestamp,
-                                                            message: message,
-                                                            profileImage: usermasterdata['profile-image'] || '',
-                                                            firstName: usermasterdata.firstName,
-                                                            lastName: usermasterdata.lastName,
-                                                            fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
-                                                        });
-                                                    }
-                                                };
-                                            } else {
-                                                userData.push({
-                                                    id: userdata.$id,
-                                                    type: type,
-                                                    groupsubgroup: group.key() + ' / ' + subgroup.key(),
-                                                    groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
-                                                    groupID: group.key(),
-                                                    groupTitle: groupsubgroupTitle[group.key()],
-                                                    subgroupID: subgroup.key(),
-                                                    subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                                    membershipNo : snapshot.getPriority() || '',
-                                                    contactNumber: usermasterdata.contactNumber || '',
-                                                    onlinestatus: usersPresense.val() ? true : false,
-                                                    /*onlineweb: 0,
-                                                    onlineios: 0,
-                                                    onlineandroid: 0,*/
-                                                    timestamp: timestamp,
-                                                    message: message,
-                                                    profileImage: usermasterdata['profile-image'] || '',
-                                                    firstName: usermasterdata.firstName,
-                                                    lastName: usermasterdata.lastName,
-                                                    fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
-                                                });
-                                            }
-                                        });
                                     });
+                                    // firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
+                                    //     // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
+                                        userData.push({
+                                            id: userdata.$id,
+                                            type: type,
+                                            groupsubgroup: group.key() + ' / ' + subgroup.key(),
+                                            groupsubgroupTitle: groupsubgroupTitle[group.key()] + ' / ' + groupsubgroupTitle[subgroup.key()],
+                                            groupID: group.key(),
+                                            groupTitle: groupsubgroupTitle[group.key()],
+                                            subgroupID: subgroup.key(),
+                                            subgroupTitle: groupsubgroupTitle[subgroup.key()],
+                                            //membershipNo : snapshot.getPriority() || '',
+                                            contactNumber: usermasterdata.contactNumber || '',
+                                            onlinestatus: false,
+                                            /*onlineweb: 0,
+                                            onlineios: 0,
+                                            onlineandroid: 0,*/
+                                            timestamp: timestamp,
+                                            message: message,
+                                            profileImage: usermasterdata['profile-image'] || '',
+                                            firstName: usermasterdata.firstName,
+                                            lastName: usermasterdata.lastName,
+                                            fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
+                                        });
+                                    // });
                                 });
-                            }); //$firebaseObject
-                        }); //firebaseService.getRefSubGroupMembers child_added
+                            });
+                        });
                     });
                 });
             }
@@ -11035,13 +10038,6 @@ angular.module('core')
 
             function setUserGroups () {
                 firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function(group, prevChildKey) {
-                	firebaseService.getRefUserGroupMemberships().child(userID).child(group.key()).on('child_removed', function() {
-                		userGroups.forEach(function(val,indx) {
-                            if(val.groupID === group.key()) {
-                                userGroups.splice(indx, 1);
-                            }
-                        });
-                	});
                     firebaseService.getRefGroups().child(group.key()).on('value', function(snapshot) {
                         var groupmasterdata = snapshot.val();
                         var eflag = true;
@@ -11238,28 +10234,12 @@ angular.module('core')
                     position: 'top left right'
                 });
             },
-            fast: function(message) {
-                $mdToast.show({
-                    template: '<md-toast class="md-toast-animating">' + message + '</md-toast>',
-                    hideDelay: 500,
-                    //hideDelay: 200000,
-                    position: 'top left right'
-                });
-            },
             showSuccess: function(message) {
                 this.show(message || 'Process successful.');
                 soundService.playSuccess();
             },
             showFailure: function(message) {
                 this.show(message || 'Process failed.');
-                soundService.playFail();
-            },
-            fastSuccess: function(message) {
-                this.fast(message || 'Process successful.');
-                soundService.playSuccess();
-            },
-            fastFailure: function(message) {
-                this.fast(message || 'Process failed.');
                 soundService.playFail();
             },
             changePosition: function(position) {
@@ -11343,7 +10323,6 @@ angular.module('core')
             var userPolicies = null;
             var progressReport = null;
             var subgroupPolicies = null;
-            var activitySeen = null;
 
             return {
                 addUpdateHandler: function() {
@@ -11461,10 +10440,7 @@ angular.module('core')
                 getRefSubgroupPolicies: function(){
                         return subgroupPolicies;
                 },
-                getRefActivitySeen: function() {
-                    return activitySeen;
-                },
-                logout: function() {
+                logout: function(){
                   console.log('unauth the firebase');
                   ref.unauth();
                   var authdata = ref.getAuth();
@@ -11514,7 +10490,6 @@ angular.module('core')
                                 userPolicies = ref.child("user-policies");
                                 progressReport = ref.child('subgroup-progress-reports');
                                 subgroupPolicies = ref.child('subgroup-policies');
-                                activitySeen = ref.child('activities-seen-by-user');
 
                                 /*presence API work*/
                                 //explicitly passing references to avoid circular dependency issue.
@@ -13006,15 +11981,15 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
-                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot) {
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
                                                         var countsubgroup = snapshot.val()["subgroups-count"] + 1;
                                                         // console.log(countsubgroup, 'testing')
-                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function() {
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
                                                             if (error) {
                                                                 errorHandler();
                                                             }
-                                                        });
-                                                    });
+                                                        })
+                                                    })
                                                     // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
@@ -13093,7 +12068,7 @@ angular.module('core')
                                                                 })
                                                                 .catch(function(d) {
                                                                     //debugger;
-                                                                });
+                                                                })
                                                             // for (var member in mems) {
                                                             //
                                                             //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
@@ -13531,7 +12506,7 @@ angular.module('core')
                             firebaseService.getRefGroupMembers().child(groupObj.groupID).update(response.memberJSON, function(err) {
                                 if (err) {
                                     //handle this scenario
-                                    // console.log('adding membersJSON to group failed', err);
+                                    console.log('adding membersJSON to group failed', err);
                                 } else {
                                     addMembersToGroupDefer.resolve();
                                 }
@@ -13622,9 +12597,7 @@ angular.module('core')
                             if (err) {
                                 errorHandler();
                             } else {
-                                if (requestedMember.membershipNo) {
-                                    firebaseService.getRefGroupMembers().child(groupID).child(userID).setPriority(requestedMember.membershipNo);
-                                }
+                                firebaseService.getRefGroupMembers().child(groupID).child(userID).setPriority(requestedMember.membershipNo);
                                 //step1: change membership-type of user in user-membership list
                                 firebaseService.getRefUserGroupMemberships().child(userID + '/' + groupID)
                                     .set(userMembershipObj[userID], function(err) {
@@ -13775,25 +12748,6 @@ angular.module('core')
                                             activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                             //for group activity stream record -- END --
 
-                                            // if create admin of group then add subgroups admin of that group -- START
-                                            // if create admin of group then add subgroups admin of that group -- END
-                                            if (newType === 2) {
-                                                var subgroups = activityStreamService.getSubgroupsOfGroup();
-                                                console.log('subgroups', subgroups[groupObj.$id]);
-                                                if (subgroups[groupObj.$id] || subgroups[groupObj.$id].length > 0){
-                                                    subgroups[groupObj.$id].forEach(function(val,index){
-                                                        self.addRemoveAdminOfGroup(groupObj.$id, val, member.userSyncObj.$id, newType);
-                                                    });
-                                                }    
-                                            } else {
-                                                var subgroups = activityStreamService.getSubgroupsOfGroup();
-                                                if (subgroups[groupObj.$id] || subgroups[groupObj.$id].length > 0) {
-                                                    subgroups[groupObj.$id].forEach(function (val, index) {
-                                                        self.addRemoveAdminOfGroup(groupObj.$id, val, member.userSyncObj.$id, null);
-                                                    });
-                                                }    
-                                            }
-
                                             defer.resolve();
 
                                             // //publish an activity for membership changed.
@@ -13841,6 +12795,7 @@ angular.module('core')
 
                     return defer.promise;
                 },
+
                 asyncRemoveUserFromGroup: function(memberID, groupID) {
                     var defer, self,
                         errorHandler;
@@ -13922,42 +12877,6 @@ angular.module('core')
 
                     //update group meta-data
                     var groupDataRef = firebaseService.getRefGroups().child(groupID);
-                    groupDataRef.once('value', function(snapshot) {
-                        var updateObj = {};
-                        var dataObject = snapshot.val();
-
-                        if (checkinObj && checkinObj.type == 1) {
-                            updateObj['members-checked-in'] = {
-                                   count: dataObject['members-checked-in'].count - 1
-                              };
-                          }
-
-
-                        // if (checkinObj && checkinObj.type == 1) {
-                        //     updateObj['members-checked-in'] = {
-                        //         count: dataObject['members-checked-in'].count - 1
-                        //     };
-                        // }
-
-
-                        updateObj['members-count'] = dataObject['members-count'] - 1;
-                        groupDataRef.update(updateObj, function(err) {
-                            if (err) {
-                                defer.reject();
-                            } else {
-                                defer.resolve();
-                            }
-                        });
-                    });
-
-                    return defer.promise;
-                },
-                asyncUpdateSubGroupDataForRemoveUser: function(checkinObj, groupID, userID) {
-                    var defer = $q.defer();
-
-                    // var groupDataRef = firebaseService.getRefUserSubGroupMemberships().child(userID).child(groupID).once('value', function(snapshot){});
-                    //update group meta-data
-                    var groupDataRef = firebaseService.getRefSubGroups().child(groupID);
                     groupDataRef.once('value', function(snapshot) {
                         var updateObj = {};
                         var dataObject = snapshot.val();
@@ -14218,75 +13137,9 @@ angular.module('core')
                         });
 
                     return defer.promise;
-                },
-                addRemoveAdminOfGroup: function(groupId, subgroupId, userId, memberType) {
-                    var self = this;
-                    var ref = firebaseService.getRefMain();
-
-                    var obj = (memberType) ? { 'membership-type': memberType, 'timestamp': firebaseTimeStamp } : null;
-
-                    // Create the data we want to update
-                    var updatedUserData = {};
-                    updatedUserData["subgroup-members/" + groupId + '/'+ subgroupId + '/' + userId] = obj;
-                    updatedUserData["user-subgroup-memberships/" + userId + '/' + groupId + '/'+ subgroupId] = obj;
-
-                    //UPDATE MULTIPATH
-                    ref.update(updatedUserData, function(err){
-                        if(err){
-                            console.log(err);
-                        } else {
-                            // console.log('done');
-                        }
-                    });
-
-                    //update subgroup member count
-                    self.subgroupMemberUpdate(groupId, subgroupId, userId, memberType);
-
-                }, // addRemoveAdminOfGroup
-                subgroupMemberUpdate: function(groupId, subgroupId, userId, type) {
-                    var ref = firebaseService.getRefMain();
-
-                    //if type is true then increment in subgroup member-count, else decrement in subgroup member-count
-
-                    if (type) {
-                        //checking if user id already a member of this subgroup then don't increment member-count
-                        ref.child('subgroup-members').child(groupId).child(subgroupId).child(userId).once('value', function(snapshot){
-                            if(snapshot.val()){
-                                if(snapshot.val()['membership-type'] !== 2 && snapshot.val()['membership-type'] !== 3){
-                                    ref.child('subgroups').child(groupId).child(subgroupId).once('value', function(subgroup){
-                                        var count = subgroup.val()['members-count'];
-                                        ref.child('subgroups').child(groupId).child(subgroupId).child('members-count').set(count+1, function(){
-                                            // console.log('count updated');
-                                        });
-                                    });
-                                }
-                            } else {
-                                ref.child('subgroups').child(groupId).child(subgroupId).once('value', function(subgroup){
-                                    var count = subgroup.val()['members-count'];
-                                    ref.child('subgroups').child(groupId).child(subgroupId).child('members-count').set(count+1, function(){
-                                        // console.log('count updated');
-                                    });
-                                });
-                            }
-                        }); //ref.child('subgroup-members')
-                    } else {
-                        //checking if user id already a member of this subgroup then decrement member-count
-                        ref.child('subgroup-members').child(groupId).child(subgroupId).child(userId).once('value', function(snapshot){
-                            if(snapshot.val()){
-                                if(snapshot.val()['membership-type'] === 2 || snapshot.val()['membership-type'] === 3) {
-                                    ref.child('subgroups').child(groupId).child(subgroupId).once('value', function(subgroup){
-                                        var count = subgroup.val()['members-count'];
-                                        ref.child('subgroups').child(groupId).child(subgroupId).child('members-count').set(count-1, function(){
-                                            // console.log('count updated');
-                                        });
-                                    });
-                                }
-                            } //if snapshot
-                        }); //ref.child('subgroup-members')
-                    } // else
-                } // subgroupMemberUpdate
-            }; // return
-        } // factory
+                }
+            };
+        }
     ]);
 
 /**
@@ -14873,7 +13726,6 @@ angular.module('core')
                                 } else {
                                     addMembersToGroupDefer.resolve();
                                 }
-                                console.log('user2 added')
                             });
 
                             promises.push(addMembersToGroupDefer.promise);
@@ -15126,9 +13978,9 @@ var s = {
         .module('core')
         .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['ProgressReportService', 'activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
+    checkinService.$inject = ['activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
 
-    function checkinService(ProgressReportService, activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
+    function checkinService(activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
 
         /*private variables*/
         var refs, fireTimeStamp;
@@ -15291,54 +14143,47 @@ var s = {
 
         //checkinDailyProgress
         function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb){
-            if (Policy && Policy.progressReport) {
+               if(Policy && Policy.progressReport) {
+                //checking daily progress report is exists or not -- START --
+                //firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
+                firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).orderByChild('date')
+                .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
+                    if(snapshot.val() === null) { //if null then create daily report dummy
+                        //cerating Dummy Report Object on Checkin....
+                        var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push({
+                            date: Firebase.ServerValue.TIMESTAMP,
+                            //date: new Date().setHours(0,0,0,0),
+                            questionID: Policy.latestProgressReportQuestionID,
+                            policyID: Policy.policyID,
+                            answers: ''
+                        });
 
-                var uObject = { groupId: groupObj.groupId, subgroupId: groupObj.subgroupId, userId: groupObj.userId };
-                ProgressReportService.createProgressReport(uObject, Policy, checkoutFlag).then(function(data) {
-                    cb(data.result, data.message);
+                        //for group activity stream record -- START --
+                        var type = 'progressReport';
+                        var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
+                        var area = {type: 'progressReport-created'};
+                        var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
+                        var memberuserID = groupObj.userId;
+                        var _object = null;
+                        //for group activity record
+                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+                        //for group activity stream record -- END --
+
+                        cb(false, 'notSubmitted');
+                    } else {
+                        for(var obj in snapshot.val()) {
+                            //console.log(snapshot.val()[obj])
+                            if(snapshot.val()[obj].answers === "" && checkoutFlag === true) {  //now checking if answers has given or not on checkout
+                                //if not submited report then show msg
+                                cb(false, 'notSubmitted');
+                            } else {
+                                //if submited report then nuthing
+                                cb(true, null);
+                            }
+                        }
+                    }
                 });
-
-                // //checking daily progress report is exists or not -- START --
-                // //firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
-                // firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).orderByChild('date')
-                // .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
-                //     if(snapshot.val() === null) { //if null then create daily report dummy
-                //         //cerating Dummy Report Object on Checkin....
-                //         var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push({
-                //             date: Firebase.ServerValue.TIMESTAMP,
-                //             //date: new Date().setHours(0,0,0,0),
-                //             questionID: Policy.latestProgressReportQuestionID,
-                //             policyID: Policy.policyID,
-                //             answers: ''
-                //         });
-                //         //for group activity stream record -- START --
-                //         var type = 'progressReport';
-                //         var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
-                //         var area = {type: 'progressReport-created'};
-                //         var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
-                //         var memberuserID = groupObj.userId;
-                //         var _object = null;
-                //         //for group activity record
-                //         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
-                //         //for group activity stream record -- END --
-
-                //         cb(false, 'notSubmitted');
-                //     } else {
-                //         for(var obj in snapshot.val()) {
-                //             //console.log(snapshot.val()[obj])
-                //             if(snapshot.val()[obj].answers === "" && checkoutFlag === true) {  //now checking if answers has given or not on checkout
-                //                 //if not submited report then show msg
-                //                 cb(false, 'notSubmitted');
-                //             } else {
-                //                 //if submited report then nuthing
-                //                 cb(true, null);
-                //             }
-                //         }
-                //     }
-                // });
-                // // checking daily progress report is exists or not -- END --
-
-
+                //checking daily progress report is exists or not -- END --
             } else {//if(Policy && Policy.dailyReport)
                 //if not assign any daily report policy (Daily Report policy has false)
                 cb(true, '');
@@ -15972,7 +14817,6 @@ var s = {
 
                 return locationID;
             },
-
             getGroupTitle: function(GroupID){
                 var title;
                 refs.main.child('groups').child(GroupID).once('value', function(snapshot){
@@ -15986,21 +14830,12 @@ var s = {
             getSubGroupTitle: function(GroupID, subGroupID){
                 var title;
                 refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
-                    console.log('SUB TITLE2', GroupID, subGroupID, snapshot.val().title, snapshot.val())
+                    // console.log(snapshot.val().title)
                     if (snapshot.val()) {
                         title = snapshot.val().title ? snapshot.val().title : '';
                     }
                 });
                 return title;
-            }, //getSubGroupTitle
-            getSubGroupTitleCb: function(GroupID, subGroupID, cb){
-                refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
-                    console.log('SUB TITLE2', GroupID, subGroupID, snapshot.val().title, snapshot.val())
-                    if (snapshot.val()) {
-                        var title = snapshot.val().title ? snapshot.val().title : '';
-                        cb(title);
-                    }
-                });
             }, //getSubGroupTitle
             ChekinUpdateSatatus: ChekinUpdateSatatus
 
@@ -16551,23 +15386,6 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         }
       });
       // end firepad states
-      $stateProvider.state('user.group.membershipcard', {
-        url: '/tab/membershipcard',
-        templateUrl: 'components/membershipcard/membershipcard.html',
-        controller: 'MembershipcardController',
-        controllerAs: 'membershipcard',
-      });
-      $stateProvider.state('user.group.subgroup-membershipcard', {
-        url: '/:subgroupID/tab/membershipcard',
-        templateUrl: 'components/membershipcard/membershipcard.html',
-        controller: 'MembershipcardController',
-        controllerAs: 'membershipcard',
-        resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
-        }
-      });
       $stateProvider.state('user.edit-group', {
         url: '/:groupID/setting/edit',
         templateUrl: 'components/edit-group/edit-group.html',
@@ -16592,6 +15410,18 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'PolicyController',
         controllerAs: 'policy',
       });
+      /*$stateProvider.state('user.subgroup', {
+          url: '/:groupID/subgroup',
+          templateUrl: 'components/subgroup/subgroup.html',
+          controller: 'SubgroupController',
+          controllerAs: 'subgroup'
+      });*/
+      /*$stateProvider.state('user.geo-fencing', {
+          url: '/:groupID/geo-fencing',
+          templateUrl: 'components/geo-fencing/geo-fencing.html',
+          controller: 'GeoFencingController',
+          controllerAs: 'geoFencing'
+      });*/
       $stateProvider.state('user.create-channels', {
         url: '/:groupID/create-channels',
         templateUrl: 'components/create-channels/create-channels.html',
@@ -16606,7 +15436,7 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
       });
       $stateProvider.state('user.quiz', {
         url: '/:userID/quiz',
-        templateUrl: 'components/quiz/quiz.html',
+        templateUrl: 'components/quiz/questionBanks.html',
         controller: 'QuizController',
         controllerAs: 'quiz'
       });
@@ -16622,3 +15452,512 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
 
   function AppController($router) {}
 })();
+
+/*
+    AppController.$routeConfig = [{
+        // Define url for this route
+        path: '/',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'home'
+        }
+    }, {
+        // Define url for this route
+        path: '/signin',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'signin'
+        }
+    }, {
+        // Define url for this route
+        path: '/forgotpassword',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'forgot'
+        }
+    }, {
+        // Define url for this route
+        path: '/signup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navLoginbar',
+            'main': 'signUp'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'user'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/user/:userID/create-group',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createGroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'group'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/create-subgroup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createSubGroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/subgroup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'subgroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/joinGroup',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'joinGroup'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/personalSettings',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'personalSettings'
+        }
+
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/user-setting',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'userSetting'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/edit-group',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'editGroup'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/geoFencing',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'geoFencing'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/create-channels',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createChannels'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/:teamID/create-teams-channels',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'createTeamsChannels'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quiz'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddBook',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddBook'
+        }
+
+
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddChapter/:id',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddChapter'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddTopic/:id',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddTopic'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAddQuestion/:id',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAddQuestion'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizCreate',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizCreate'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAttempt',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAttempt'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quiz-attempting',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAttempting'
+        }
+    }, {
+        // Define url for this route
+        path: '/pages/group/:groupID/quizAttempt',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAttempt'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizAssign',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizAssign'
+        }
+    }, {
+        // Define url for this route
+        path: '/user/:userID/quiz/quizResult',
+
+        // Map components to viewports for this route
+        components: {
+
+            // Load home component in main viewport
+            'nav': 'navToolbar',
+            'main': 'quizResult'
+        }
+    }]
+*/
+//function AppController($router) {
+
+
+/*            $router.config([
+                {
+                    // Define url for this route
+                    path: '/',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'home'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/signin',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'signin'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/forgotpassword',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'forgot'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/signup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navLoginbar',
+                        'main': 'signup'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/user/:userID',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'user'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/user/:userID/create-group',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'createGroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'group'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/create-subgroup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'createSubGroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/subgroup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'subgroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/joinGroup',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'joinGroup'
+                    }
+
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/personalSettings',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'personalSettings'
+                    }
+
+                },{
+                    // Define url for this route
+                    path: '/pages/group/:groupID/user-setting',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'userSetting'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/edit-group',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'editGroup'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/geoFencing',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'geoFencing'
+                    }
+                },
+                {
+                    // Define url for this route
+                    path: '/pages/group/:groupID/create-channels',
+
+                    // Map components to viewports for this route
+                    components: {
+
+                        // Load home component in main viewport
+                        'nav': 'navToolbar',
+                        'main': 'createChannels'
+                    }
+                }
+            ]);*/
+// }
+/* AppController.prototype.canActivate =function(){
+     alert('IM mainCtrl');
+     return authService.resolveUserPage();
+ }*/
+
+
+// })();

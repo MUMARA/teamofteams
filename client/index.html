@@ -10,16 +10,11 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
     <link href="img/favico/favicon.ico" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="components/quiz/questionBanks.css">
 </head>
 <body ng-app="myApp" ng-controller="AppController as app">
     <ui-view name="nav" ></ui-view>
     <ui-view name="main"></ui-view>
-    <!--Jquery Script-->
-    <script   src="https://code.jquery.com/jquery-2.2.3.js"   integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4="   crossorigin="anonymous"></script>
-    <!-- jsPDF script -->
-    <script src="https://cdn.rawgit.com/hongru/canvas2image/master/canvas2image.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
-    <script src="https://parall.ax/parallax/js/jspdf.js"></script>
     <!-- Angular -->
     <script src="bower_components/angular/angular.js"></script>
     <!-- UI Router -->
@@ -31,12 +26,11 @@
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-aria/angular-aria.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <!-- Angular Audio -->
     <script src="bower_components/angular-audio/app/angular.audio.js"></script>
     <!-- Firebase -->
-    <!--<script src="bower_components/firebase/firebase.js"></script>-->
-    <script src="bower_components/firebase/firebase-debug.js"></script>
+    <script src="bower_components/firebase/firebase.js"></script>
+     <script src="bower_components/firebase/firebase-debug.js"></script>
     <!-- <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script> -->
     <script src="bower_components/angularfire/dist/angularfire.min.js"></script>
     <!-- Local Storage -->
@@ -47,6 +41,12 @@
         <!-- <link rel="stylesheet" href="./bower_components/material-design-lite/material.min.css"> -->
         <!-- <script src="./bower_components/material-design-lite/material.min.js"></script> -->
     <!--Material Design Lite-->
+
+    <!-- Text Angular Start-->
+    <script src="bower_components/textAngular/textAngular.min.js"></script>     
+    <!-- Text Angular End-->
+
+
         <!--<link rel="stylesheet" href="./bower_components/mui/mui.css">-->
         <script src="./bower_components/mui/mui.js"></script>
     <!-- Angular-Trancate -->
@@ -70,12 +70,6 @@
     <script src="bower_components/angular-filter/dist/angular-filter.js"></script>
     <!-- Date & Time Moment Library -->
     <script src="bower_components/moment/moment.js"></script>
-    <!-- RxJs Library -->
-    <script src="bower_components/rxjs/dist/rx.all.js"></script>
-    <!-- Js Barcode Library -->
-    <script   src="https://code.jquery.com/jquery-2.2.1.js"   integrity="sha256-eNcUzO3jsv0XlJLveFEkbB8bA7/CroNpNVk3XpmnwHc="   crossorigin="anonymous"></script>
-    <script src="https://cdn.rawgit.com/lindell/JsBarcode/master/JsBarcode.all.min.js"></script>
-    <!-- <script src="bower_components/JsBarcode/JsBarcode.js"></script> -->
     <!-- Collaborator -->
     <link rel="stylesheet" href="lib/collaborator/codemirror/lib/codemirror.css">
     <link rel="stylesheet" href="lib/collaborator/firepad/dist/firepad.css">
@@ -88,6 +82,72 @@
 
     <script src="lib/collaborator/bower_components/angular-file-saver/dist/angular-file-saver.bundle.min.js"></script>
     <!-- Custom Libraries Start -->
-    <script src="minifyVersion/all.js"></script>
+    <script src="coreModules/core.module.js"></script>
+    <script src="coreModules/firebase-as-array.js"></script>
+    <script src="components/user/userService.js"></script>
+    <script src="components/user/user.js"></script>
+    <script src="components/activity/activity.js"></script>
+    <script src="components/chat/chat.js"></script>
+    <script src="components/report/report.js"></script>
+    <script src="components/manualattendace/manualattendace.js"></script>
+    <script src="components/progressreport/progressreportService.js"></script>
+    <script src="components/progressreport/progressreport.js"></script>
+    <script src="components/collaborator/collaboratorService.js"></script>
+    <script src="components/collaborator/collaborator.js"></script>
+    <script src="components/group/groupService.js"></script>
+    <script src="components/group/group.js"></script>
+    <script src="components/home/home.js"></script>
+    <script src="components/nav-loginbar/navLoginbar.js"></script>
+    <script src="components/nav-toolbar/navToobarService.js"></script>
+    <script src="components/nav-toolbar/navToolbar.js"></script>
+    <script src="components/signin/signInService.js"></script>
+    <script src="components/signin/signin.js"></script>
+    <script src="components/sign-up/signUpService.js"></script>
+    <script src="components/sign-up/signUp.js"></script>
+    <script src="components/forgot/forgotService.js"></script>
+    <script src="components/forgot/forgot.js"></script>
+    <script src="components/create-group/createGroupService.js"></script>
+    <script src="components/create-group/createGroup.js"></script>
+    <script src="components/policy/policyService.js"></script>
+    <script src="components/policy/policy.js"></script>
+    <script src="components/edit-group/editGroupService.js"></script>
+    <script src="components/edit-group/edit-group.js"></script>
+    <script src="components/create-sub-group/createSubGroupService.js"></script>
+    <script src="components/create-sub-group/createSubGroup.js"></script>
+    <script src="components/join-group/joinGroupService.js"></script>
+    <script src="components/join-group/joinGroup.js"></script>
+    <script src="components/personal-settings/personal-settingsService.js"></script>
+    <script src="components/personal-settings/personal-settings.js"></script>
+    <script src="components/user-setting/userSettingService.js"></script>
+    <script src="components/user-setting/userSetting.js"></script>
+    <script src="components/quiz/questionBanksService.js"></script>
+    <script src="components/quiz/questionBanks.js"></script>
+    <script src="components/quizes/quizes.js"></script>
+    <script src="components/quizes/quizesService.js"></script>
+    <script src="components/componentsCoreModule.js"></script>
+    <script src="services/auth.service.js"></script>
+    <script src="services/chatService.js"></script>
+    <script src="services/user.service.js"></script>
+    <script src="services/dataService.js"></script>
+    <script src="services/util.service.js"></script>
+    <script src="services/message.service.js"></script>
+    <script src="services/confirmDialog.service.js"></script>
+    <script src="services/firebase.service.js"></script>
+    <script src="services/user.firebase.service.js"></script>
+    <script src="services/group.firebase.service.js"></script>
+    <script src="services/sound.service.js"></script>
+    <script src="services/userPresence.firebase.js"></script>
+    <script src="services/userHelper.firebase.js"></script>
+    <script src="services/subgroup.firebase.service.js"></script>
+    <script src="services/checkin.service.js"></script>
+    <script src="services/activityStreamService.js"></script>
+    <script src="directives/groupcardDirective.js"></script>
+    <script src="directives/subgroupcardDirective.js"></script>
+    <script src="directives/checkUserID.directive.js"></script>
+    <script src="directives/compareTo.directive.js"></script>
+    <script src="directives/checkUserID.directive.js"></script>
+    <script src="directives/checkGroupExistance.directive.js"></script>
+    <script src="app-dev.js"></script>
+    <script src="config/appRoutes.js"></script>
 </body>
 </html>
