@@ -5,23 +5,44 @@ blockquote {
   font-size: 1.5em;
   border-left: 5px solid #8BCDDC
 }
+.foreColorWhite {
+  color: #fff;
+}
 .IconCenter {
-position: absolute;
-top: 200px;
-fill: transparent;
-right: 50%;
+  position: absolute;
+  top: 110;
+  fill: transparent;
+  padding-top: 10%;
+  padding-left: 45%;
+  padding-right: 35%;
+  padding-bottom: 10%;
 }
 .IconCenter:hover{
-position: absolute;
-top: 200px;
-fill: gray;
-right: 50%;
-fill: gray;
+  position: absolute;
+  top: 110;
+  fill: #8BCDDC;
+  padding-top: 10%;
+  padding-left: 45%;
+  padding-right: 35%;
+  padding-bottom: 25%;
 }
 .questionHtmlHeight {
   width: 100%;
   height: 200px;
   background-color: white;
+  overflow: auto;
+}
+.optionHtml {
+  width: 100%;
+  height: 100px;
+  background-color: white;
+  overflow: auto;
+}
+.questionSetHtmlHeight {
+  width: 100%;
+  background-color: white;
+  height: 100px;
+  overflow: auto;
 }
   .Height80vh {
     height: 80vh !important;
@@ -34,7 +55,9 @@ fill: gray;
     fill:#fff;
   }
     /* Text Angular Css end */
-
+.full-width-radio{
+  width: 100%;
+}
 .quiz-sidenav-g {
     z-index: 0 !important;
     overflow-x: hidden;
