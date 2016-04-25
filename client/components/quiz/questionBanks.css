@@ -101,7 +101,8 @@ fill: gray;
     height: calc(100vh - 160px);
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0;
+    padding: 8px;
+    margin: 0 !important;
 }
 
 .quiz-md-card-item {
