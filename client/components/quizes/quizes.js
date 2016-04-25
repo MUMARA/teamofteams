@@ -184,10 +184,6 @@
                     _self.quizesData = data;
                      console.log(data, 'Quizes Data');
 
-
-
-
-
                 }
             )
         }

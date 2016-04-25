@@ -249,25 +249,16 @@
             var deferred = $q.defer();
             firebaseService.getRefUserQuiz().child(
                 userService.getCurrentUser().userID).on('value', function(quizUniqueID) {
-
-                loadingQuizes(quizUniqueID.key(), function() {
-                    deferred.resolve(_self.quiz)
-                })
+                for (var key in quizUniqueID.val()) {
+                    _self.quiz.push(quizUniqueID.val()[key]);
+                    _self.quizID.push(key);
+                    deferred.resolve(_self.quiz);
+                }
             });
-
             return deferred.promise;
         };
 
-        function loadingQuizes(quizUniqueID, cb) {
 
-            firebaseService.getRefUserQuiz().child(quizUniqueID).once(
-                'value',
-                function(quizes) {
-                    _self.quiz.push(quizes.val());
-                    _self.quizID.push(quizes.key());
-                    cb()
-                });
-        }
 
 
 
