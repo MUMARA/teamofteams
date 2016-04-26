@@ -5,8 +5,8 @@
   'use strict';
 
   angular
-    .module('app.quiz')
-    .controller('QuizController', QuizController);
+      .module('app.quiz')
+      .controller('QuizController', QuizController);
 
   QuizController.$inject = ['quizBankService', "$rootScope", "appConfig",
     "messageService", "$stateParams", "utilService", "$q", "$mdDialog",
@@ -16,9 +16,9 @@
   ];
 
   function QuizController(quizBankService, $rootScope, appConfig,
-    messageService, $stateParams, utilService, $q, $mdDialog, quizService,
-    $location, userService, navService, $firebaseArray, $timeout, $mdToast,
-    firebaseService, $firebaseObject, $sce, authService, $mdSidenav) {
+                          messageService, $stateParams, utilService, $q, $mdDialog, quizService,
+                          $location, userService, navService, $firebaseArray, $timeout, $mdToast,
+                          firebaseService, $firebaseObject, $sce, authService, $mdSidenav) {
 
     /*Private Variables*/
     var _self = this;
@@ -152,11 +152,9 @@
         delete val.$$hashKey;
       });
       _self.questionSetQuestions.push(questionSet);
-      console.log(_self.questionSetQuestions)
       _self.questionSet = {
         options: []
       };
-      console.log(questionSet);
     }
 
     // _self.setSelectedQuiz = setSelectedQuiz;
@@ -167,10 +165,10 @@
      });*/
     function initQuestionBank() {
       quizBankService.loadQuestionBanks().then(
-        function(data) {
-          _self.books = data;
-          // console.log(data, 'console.log(questionBank.val())');
-        }
+          function(data) {
+            _self.books = data;
+            // console.log(data, 'console.log(questionBank.val())');
+          }
       )
     }
 
@@ -186,16 +184,15 @@
     _self.correctAnswer = function() {
       angular.forEach(_self.question.options, function(val, index) {
         index == _self.correct ? _self.question.options[_self.correct].correct =
-          true : _self.question.options[index].correct = false;
+            true : _self.question.options[index].correct = false;
       });
     };
     _self.correctQuestionSetAnswer = function() {
       angular.forEach(_self.questionSet.options, function(val, index) {
         index == _self.correct ? _self.questionSet.options[_self.correct]
-          .correct = true : _self.questionSet.options[index].correct =
-          false;
+            .correct = true : _self.questionSet.options[index].correct =
+            false;
       });
-      console.log(_self.questionSet.options)
     };
 
     // authService.resolveUserPage()
@@ -560,7 +557,6 @@
     function setSelectedChapter(_self, index) {
       _self.selectedQuestionIndex = null;
       _self.selectedTopicIndex = null;
-      _self.selectedChapterIndex = index;
       quizService.setSelectedChapter(index);
       quizService.setSelectedTopic(null);
       // quizService.setSelectedQuestion(null);
@@ -576,7 +572,6 @@
     }
 
     function setSelectedBook(_self, index) {
-      _self.selectedBookIndex = index;
       // quizService.setSelectedBook(index);
 
       _self.selectedQuestionIndex = null;
@@ -602,19 +597,20 @@
 
     /*  Question Bank   */
     function showChapters(bookIndex) {
-
+      _self.selectedBookIndex = bookIndex;
       quizService.setQuestionObject(null);
       quizService.setChapter(null, null);
       quizService.setTopic(null, null);
       quizService.setQuestionObject(null);
       // quizService.book = bookIndex;
       _self.bookId = quizBankService.bookId[bookIndex];
+
       _self.showQuestionDetails = false;
       _self.questionView = null;
       quizBankService.loadChapters(_self.bookId).then(
-        function(chapters) {
-          _self.chapters = chapters;
-        });
+          function(chapters) {
+            _self.chapters = chapters;
+          });
 
       // _self.bookId = _self.booksId[bookIndex];
       // quizService.setBook(_self.bookId, bookIndex);
@@ -637,6 +633,7 @@
     }
 
     function showTopics(chapterIndex) {
+      _self.selectedChapterIndex = chapterIndex;
       quizService.setTopic(null, null);
       quizService.setQuestionObject(null);
       _self.topics = [];
@@ -651,7 +648,7 @@
       _self.chapterId = quizBankService.chaptersId[chapterIndex];
       // quizService.setChapter(_self.chapterId, chapterIndex);
       quizBankService.loadTopic(_self.bookId, _self.chapterId).then(function(
-        topics) {
+          topics) {
         _self.topics = topics;
       });
       /*   _self.topics = [];
@@ -665,14 +662,15 @@
     }
 
     function showQuestions(topicIndex) {
+      _self.selectedTopicIndex = topicIndex;
       _self.topicId = quizBankService.topicsId[topicIndex];
       _self.showQuestionDetails = false;
       _self.questionView = null;
       _self.questions = [];
       quizBankService.loadQuestions(_self.bookId, _self.chapterId, _self.topicId)
-        .then(function(questions) {
-          _self.questions = questions;
-        });
+          .then(function(questions) {
+            _self.questions = questions;
+          });
       /*_self.topicId = _self.topicsId[topicIndex];
        quizBankService.loa
        quizService.setTopic(_self.topicId, topicIndex);
@@ -686,7 +684,8 @@
        });*/
     }
     // Shows Question Details
-    function showQuestionView(question) {
+    function showQuestionView(question, index) {
+      _self.selectedQuestionIndex = index;
       if (question !== null) {
         quizService.setQuestionObject(question);
       }
@@ -949,51 +948,51 @@
       //   }
       // )
       _self.questionbankObj = {}
-        /*userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
-         'memberships-type': 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
-         "memberships-type": 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
-         // userQuestionBanksRef1.child("question-bank").child(_self.bookID).child("memberships").child(userService.getCurrentUser().userID).set({
-         //     "memberships-type": 1,
-         // });
-         if ($rootScope.newImg) {
-         var x = utilService.base64ToBlob($rootScope.newImg);
-         var temp = $rootScope.newImg.split(',')[0];
-         var mimeType = temp.split(':')[1].split(';')[0];
-         _self.saveFile(x, mimeType, _self.bookID)
-         .then(function (url) {
-         // _self.temps.imgLogoUrl = url + '?random=' + new Date();
-         //its for sending data on firebase by Name's node
-         userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
-         'memberships-type': 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
-         "memberships-type": 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
+      /*userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
+       'memberships-type': 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+       userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
+       "memberships-type": 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+       userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
+       // userQuestionBanksRef1.child("question-bank").child(_self.bookID).child("memberships").child(userService.getCurrentUser().userID).set({
+       //     "memberships-type": 1,
+       // });
+       if ($rootScope.newImg) {
+       var x = utilService.base64ToBlob($rootScope.newImg);
+       var temp = $rootScope.newImg.split(',')[0];
+       var mimeType = temp.split(':')[1].split(';')[0];
+       _self.saveFile(x, mimeType, _self.bookID)
+       .then(function (url) {
+       // _self.temps.imgLogoUrl = url + '?random=' + new Date();
+       //its for sending data on firebase by Name's node
+       userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
+       'memberships-type': 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+       userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
+       "memberships-type": 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+       userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
 
-         // quizService.setBookAfterCreation(_self.bookID)
-         // ref.child(_self.bookID).set(temp);
-         _self.name = "";
-         _self.desc = "";
-         _self.bookID = "";
-         //_self.newImg = null;
-         alert('book creation successful');
-         // $location.path('/user/' + user.userID)
-         })
-         .catch(function () {
-         //bookForm.$submitted = false;
-         //return messageService.showSuccess('picture upload failed')
-         alert('picture upload failed');
-         });
-         }*/
+       // quizService.setBookAfterCreation(_self.bookID)
+       // ref.child(_self.bookID).set(temp);
+       _self.name = "";
+       _self.desc = "";
+       _self.bookID = "";
+       //_self.newImg = null;
+       alert('book creation successful');
+       // $location.path('/user/' + user.userID)
+       })
+       .catch(function () {
+       //bookForm.$submitted = false;
+       //return messageService.showSuccess('picture upload failed')
+       alert('picture upload failed');
+       });
+       }*/
 
     }
 
@@ -1015,14 +1014,14 @@
       var defer = $q.defer();
       var xhr = new XMLHttpRequest();
       xhr.open("GET", appConfig.apiBaseUrl +
-        "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" +
-        type);
+          "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" +
+          type);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);
             defer.resolve(upload_file(file, response.signed_request,
-              response.url));
+                response.url));
           } else {
             defer.reject(alert("Could not get signed URL."));
           }
@@ -1083,9 +1082,9 @@
       };
       quizBankService.createChapter(_self.bookId, _self.chapterObj);
       quizBankService.loadChapters(_self.bookId).then(
-        function(chapters) {
-          _self.chapters = chapters;
-        });
+          function(chapters) {
+            _self.chapters = chapters;
+          });
       // quizBankService.loadQuestionBanks("off").then(
       //   function(data) {
       //     _self.books = data;
@@ -1135,7 +1134,7 @@
       };
       quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj);
       quizBankService.loadTopic(_self.bookId, _self.chapterId).then(function(
-        topics) {
+          topics) {
         _self.topics = topics;
       });
       _self.topicObj = {};
@@ -1163,15 +1162,15 @@
     _self.showTextangular = []
     _self.closeTextangular = function(sideNavId, index) {
       !isNaN(sideNavId) ? _self.showTextangular[sideNavId] = !
-        _self.showTextangular[
-          sideNavId] :
-        $mdSidenav(sideNavId).toggle();
+          _self.showTextangular[
+              sideNavId] :
+          $mdSidenav(sideNavId).toggle();
     }
     _self.showTextangularForQuestionSet = []
     _self.showTextangularSideNav = function(sideNavId, index) {
       !isNaN(sideNavId) ? _self.showTextangularForQuestionSet[
           sideNavId] = !_self.showTextangularForQuestionSet[sideNavId] :
-        $mdSidenav(sideNavId).toggle();
+          $mdSidenav(sideNavId).toggle();
     }
 
     function addQuestion() {
@@ -1297,8 +1296,6 @@
     };
     // _self.questionSet.options = [];
     _self.addQuestionSetOption = function() {
-      console.log(_self.questionSet);
-      alert("")
       _self.questionSet.options.push({
         html: '',
         correct: false,
@@ -1307,8 +1304,16 @@
     };
     //Delete Option
     this.deleteOption = function(optionIndex) {
+      alert(optionIndex)
+      _self.question.options.splice(optionIndex, 1);
+
+      // if (optionIndex > -1) {
+      // }
+    };
+    //Delete Question Set Option
+    this.deleteQuestionSetOption = function (optionIndex) {
       if (optionIndex > -1) {
-        _self.question.options.splice(optionIndex, 1);
+        _self.questionSet.options.splice(optionIndex, 1);
       }
     };
 
@@ -1407,174 +1412,170 @@
         });
         question.options = arr;
         /* if (question.type === 1) {
-=======
-        _self.myTop = ['40px', '50px'];
-        var topMargin = 50;
-        this.showCheckText = false;
-        this.topicId = $stateParams.id;
-        _self.questionSet = {};
+         =======
+         _self.myTop = ['40px', '50px'];
+         var topMargin = 50;
+         this.showCheckText = false;
+         this.topicId = $stateParams.id;
+         _self.questionSet = {};
 
-        //
-        //
-        //Answer Types.
-        this.types = [{
-            name: 'Radio Button'
-        }, {
-            name: 'CheckBox'
-        }, {
-            name: 'Question Set'
-        }];
-        // this.question = {
-        //     options: [{
-        //         html: '',
-        //         "discussion-html": "discussion-html",
-        //         correct: false
-        //     }]
-        // };
+         //
+         //
+         //Answer Types.
+         this.types = [{
+         name: 'Radio Button'
+         }, {
+         name: 'CheckBox'
+         }, {
+         name: 'Question Set'
+         }];
+         // this.question = {
+         //     options: [{
+         //         html: '',
+         //         "discussion-html": "discussion-html",
+         //         correct: false
+         //     }]
+         // };
 
-        //If Answer Type Changes.
-        this.typeChanged = function () {
+         //If Answer Type Changes.
+         this.typeChanged = function () {
 
-            _self.radioValue = '';
-            _self.myAnswer = undefined;
-            _self.myTop = ['40px', '90px'];
-            topMargin = 50;
-            angular.forEach(_self.question.options, function (data) {
-                if (data.id === true) {
-                    data.id = false;
-                }
-            });
-        };
+         _self.radioValue = '';
+         _self.myAnswer = undefined;
+         _self.myTop = ['40px', '90px'];
+         topMargin = 50;
+         angular.forEach(_self.question.options, function (data) {
+         if (data.id === true) {
+         data.id = false;
+         }
+         });
+         };
 
-        //Setting different inputs.
-        this.setBoxValue = function () {
-            this.showAddButton = true;
-            _self.question.options = [{
-                html: '',
-                "discussion-html": "discussion-html",
-                correct: false
-            }];
+         //Setting different inputs.
+         this.setBoxValue = function () {
+         this.showAddButton = true;
+         _self.question.options = [{
+         html: '',
+         "discussion-html": "discussion-html",
+         correct: false
+         }];
 
-            _self.questionSet.options = [{
-                html: '',
-                "discussion-html": "discussion-html",
-                correct: false
-            }, {
-                html: '',
-                "discussion-html": "discussion-html",
-                correct: false
-            }];
-            if (_self.myType.name === "1") {
-                _self.showRadioOptions = true;
-                _self.showCheckOptions = false;
-                _self.showQuestionSet = false;
-                _self.answerTag = [];
-                _self.myAnswer = undefined;
-            } else if (_self.myType.name === "2") {
-                _self.showCheckOptions = true;
-                _self.showRadioOptions = false;
-                _self.showQuestionSet = false;
-                _self.answerTag = [];
-                _self.myAnswer = undefined;
-            } else {
-                _self.showCheckOptions = false;
-                _self.showRadioOptions = false;
-                _self.showQuestionSet = true;
-                _self.answerTag = [];
-                _self.myAnswer = undefined;
-            }
-        };
-        //Push new input fields.
-        this.addOption = function () {
+         _self.questionSet.options = [{
+         html: '',
+         "discussion-html": "discussion-html",
+         correct: false
+         }, {
+         html: '',
+         "discussion-html": "discussion-html",
+         correct: false
+         }];
+         if (_self.myType.name === "1") {
+         _self.showRadioOptions = true;
+         _self.showCheckOptions = false;
+         _self.showQuestionSet = false;
+         _self.answerTag = [];
+         _self.myAnswer = undefined;
+         } else if (_self.myType.name === "2") {
+         _self.showCheckOptions = true;
+         _self.showRadioOptions = false;
+         _self.showQuestionSet = false;
+         _self.answerTag = [];
+         _self.myAnswer = undefined;
+         } else {
+         _self.showCheckOptions = false;
+         _self.showRadioOptions = false;
+         _self.showQuestionSet = true;
+         _self.answerTag = [];
+         _self.myAnswer = undefined;
+         }
+         };
+         //Push new input fields.
+         this.addOption = function () {
 
-            //Radio margin.
-            // if (topMargin < 100) {
-            //     topMargin += 50;
-            // }
-            // _self.myTop.push(topMargin + 'px');
-            // idCounter++;
-            _self.question.options.push({
-                html: '',
-                correct: false,
-                "discussion-html": "discussion-html"
-            });
-        };
-        // _self.questionSet.options = [];
-        _self.addQuestionSetOption = function () {
-            console.log(_self.questionSet);
-            alert("")
-            _self.questionSet.options.push({
-                html: '',
-                correct: false,
-                "discussion-html": "discussion-html"
-            });
-        };
-        //Delete Option
-        this.deleteOption = function (optionIndex) {
-            if (optionIndex > -1) {
-                _self.question.options.splice(optionIndex, 1);
-            }
-        };
-        this.deleteQuestionSetOption = function (optionIndex) {
-            if (optionIndex > -1) {
-                _self.questionSet.options.splice(optionIndex, 1);
-            }
-        };
+         //Radio margin.
+         // if (topMargin < 100) {
+         //     topMargin += 50;
+         // }
+         // _self.myTop.push(topMargin + 'px');
+         // idCounter++;
+         _self.question.options.push({
+         html: '',
+         correct: false,
+         "discussion-html": "discussion-html"
+         });
+         };
+         // _self.questionSet.options = [];
+         _self.addQuestionSetOption = function () {
+         console.log(_self.questionSet);
+         alert("")
+         _self.questionSet.options.push({
+         html: '',
+         correct: false,
+         "discussion-html": "discussion-html"
+         });
+         };
+         //Delete Option
+         this.deleteOption = function (optionIndex) {
+         if (optionIndex > -1) {
+         _self.question.options.splice(optionIndex, 1);
+         }
+         };
 
-        //Sets Answer if Type CheckBox is selected.
-        _self.setCheckBoxValue = function (questionId) {
-            if (_self.question.options[questionId].id === true) {
-                _self.question.options[questionId].correct = true;
-                _self.answerTag.push('one');
-            } else if (_self.question.options[questionId].id === false) {
-                _self.question.options[questionId].correct = false;
-                _self.answerTag.pop();
-            }
-        };
-        //        //Add more Questions, Saves data to firebase and clears input fields.
-        // _self.addQuestionsAndContinue = function () {
-        //     alert("")
-        //     _self.showRadioOptions = false;
-        //     _self.showCheckOptions = false;
-        //     _self.showQuestionSet = false;
-        //     _self.showAddButton = false;
-        //     if (_self.myType.name === 'Radio Button') {
-        //         angular.forEach(_self.question.options, function (data) {
-        //             if (data.html == _self.myAnswer.html) {
-        //                 data.correct = true;
-        //             } else {
-        //                 data.correct = false;
-        //             }
-        //         });
-        //     }
-        //     angular.forEach(_self.question.options, function (data) {
-        //         delete data.$$hashKey;
-        //         delete data.$$mdSelectId;
-        //         delete data.id;
-        //     });
-        //     _self.question.Type = _self.myType.name;
-        //     ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question);
-        //     _self.question = {
-        //         title: '',
-        //         desc: '',
-        //         type: '',
-        //         // Answer: [],
-        //         options: [{
-        //             html: '',
-        //             correct: false,
-        //             'discussion-html': "discussion-html"
-        //         }]
-        //     };
-        //     _self.myAnswer = undefined;
-        // }
-        //Redirect on close
-        // this.prev = function () {
-        //     $timeout(function () {
-        //         $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
-        //     });
-        // };
 
-        /*  type Question {
+         //Sets Answer if Type CheckBox is selected.
+         _self.setCheckBoxValue = function (questionId) {
+         if (_self.question.options[questionId].id === true) {
+         _self.question.options[questionId].correct = true;
+         _self.answerTag.push('one');
+         } else if (_self.question.options[questionId].id === false) {
+         _self.question.options[questionId].correct = false;
+         _self.answerTag.pop();
+         }
+         };
+         //        //Add more Questions, Saves data to firebase and clears input fields.
+         // _self.addQuestionsAndContinue = function () {
+         //     alert("")
+         //     _self.showRadioOptions = false;
+         //     _self.showCheckOptions = false;
+         //     _self.showQuestionSet = false;
+         //     _self.showAddButton = false;
+         //     if (_self.myType.name === 'Radio Button') {
+         //         angular.forEach(_self.question.options, function (data) {
+         //             if (data.html == _self.myAnswer.html) {
+         //                 data.correct = true;
+         //             } else {
+         //                 data.correct = false;
+         //             }
+         //         });
+         //     }
+         //     angular.forEach(_self.question.options, function (data) {
+         //         delete data.$$hashKey;
+         //         delete data.$$mdSelectId;
+         //         delete data.id;
+         //     });
+         //     _self.question.Type = _self.myType.name;
+         //     ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question);
+         //     _self.question = {
+         //         title: '',
+         //         desc: '',
+         //         type: '',
+         //         // Answer: [],
+         //         options: [{
+         //             html: '',
+         //             correct: false,
+         //             'discussion-html': "discussion-html"
+         //         }]
+         //     };
+         //     _self.myAnswer = undefined;
+         // }
+         //Redirect on close
+         // this.prev = function () {
+         //     $timeout(function () {
+         //         $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
+         //     });
+         // };
+
+         /*  type Question {
          title: String,
          type: QuestionType, //QuestionTupe
          html: String,
@@ -1597,55 +1598,28 @@
 
 
         //Save and Exit Button
-        this.showAnswer = function (question) {
+        this.showAnswer = function(question) {
 
-            question['discussion-html'] = "discussion-html";
-            if(question.type == 3) {
-                question['title'] = "title";
-                delete question.options;
-                question.questiones = _self.questionSetQuestions;
-            }else {
-                delete question.desc;
-                var arr = question.options;
-                angular.forEach(question.options, function (data, index) {
-                    delete data.$$hashKey;
-                });
-                angular.forEach(question.options, function (data, index) {
-                    // delete arr[index].$$hashKey;
-                    if (question.options[index].html === "") {
-                        arr.splice(index, 1);
-                    }
-                });
-                question.options = arr;
-                question['html'] = "html-";
-                /* if (question.type === 1) {
-                 angular.forEach(_self.question.options, function (data) {
-                 if (data.html == _self.myAnswer.html) {
-                 data.correct = true;
-                 } else {
-                 data.correct = false;
-                 }
-                 });
-                 }
-
-                 _self.question.Type = _self.myType.name;
-                 ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
-
-                 _self.question = {};
-                 abc();
-                 });
-
-                 _self.myAnswer = undefined;
-
-                 }*/
-            }
-            quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question);
-            _self.question = {};
-            _self.question.html = null;
-            _self.question.title = null;
-            _self.correct = null;
-            _self.closeQuestion();
-            /*if (_self.myType.name === 'Radio Button') {
+          question['discussion-html'] = "discussion-html";
+          if (question.type == 3) {
+            question['title'] = "title";
+            delete question.options;
+            question.questiones = _self.questionSetQuestions;
+          } else {
+            delete question.desc;
+            var arr = question.options;
+            angular.forEach(question.options, function(data, index) {
+              delete data.$$hashKey;
+            });
+            angular.forEach(question.options, function(data, index) {
+              // delete arr[index].$$hashKey;
+              if (question.options[index].html === "") {
+                arr.splice(index, 1);
+              }
+            });
+            question.options = arr;
+            question['html'] = "html-";
+            /* if (question.type === 1) {
              angular.forEach(_self.question.options, function (data) {
              if (data.html == _self.myAnswer.html) {
              data.correct = true;
@@ -1653,20 +1627,48 @@
              data.correct = false;
              }
              });
-             }*/
-            /* angular.forEach(_self.question.options, function (data) {
-             delete data.$$hashKey;
-             delete data.$$mdSelectId;
-             delete data.id;
-             });*/
-            // _self.question.Type = _self.myType.name;
-            /*myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
+             }
+
+             _self.question.Type = _self.myType.name;
+             ref.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
 
              _self.question = {};
              abc();
              });
-             */
-            // _self.myAnswer = undefined;
+
+             _self.myAnswer = undefined;
+
+             }*/
+          }
+          quizBankService.createQuestion(_self.bookId, _self.chapterId,
+              _self.topicId, question);
+          _self.question = {};
+          _self.question.html = null;
+          _self.question.title = null;
+          _self.correct = null;
+          _self.closeQuestion();
+          /*if (_self.myType.name === 'Radio Button') {
+           angular.forEach(_self.question.options, function (data) {
+           if (data.html == _self.myAnswer.html) {
+           data.correct = true;
+           } else {
+           data.correct = false;
+           }
+           });
+           }*/
+          /* angular.forEach(_self.question.options, function (data) {
+           delete data.$$hashKey;
+           delete data.$$mdSelectId;
+           delete data.id;
+           });*/
+          // _self.question.Type = _self.myType.name;
+          /*myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(_self.question, function () {
+
+           _self.question = {};
+           abc();
+           });
+           */
+          // _self.myAnswer = undefined;
 
         };
 
@@ -1675,7 +1677,7 @@
         /*this.showAdvanced = function (ev) {
          _self.question.Type = _self.myType.name;
          if (_self.myType.name === 'Radio Button') {
->>>>>>> 7b9baaaa761dea4bbb7c046d343889be6af63230
+         >>>>>>> 7b9baaaa761dea4bbb7c046d343889be6af63230
          angular.forEach(_self.question.options, function (data) {
          if (data.html == _self.myAnswer.html) {
          data.correct = true;
@@ -1697,11 +1699,11 @@
          }*/
       }
       quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId,
-        question);
+          question);
       quizBankService.loadQuestions(_self.bookId, _self.chapterId, _self.topicId)
-        .then(function(questions) {
-          _self.questions = questions;
-        });
+          .then(function(questions) {
+            _self.questions = questions;
+          });
       _self.questionSetQuestions = [];
       _self.question = {};
       _self.question.html = null;
