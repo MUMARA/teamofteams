@@ -88,6 +88,8 @@ So below keyword will be reserve
     user
     profile
     pages
+    questionbank
+    quiz
 
 =========================================================
 
