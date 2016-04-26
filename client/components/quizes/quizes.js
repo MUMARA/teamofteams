@@ -25,6 +25,7 @@
         _self.img = '../../img/userImg1.svg';
         _self.show = false;
         _self.showQuestionDetails = false;
+        _self.addQuestionBank = addQuestionBank;
         // _self.showQuizBank = true;
         _self.showQuizList = false;
         _self.showQuizAssign = false;
@@ -95,6 +96,7 @@
         // _self.afterLoad = afterLoad;
         // Get only one id
         _self.bookId = '';
+        _self.quizId = '';
         _self.chapterId = '';
         _self.topicId = '';
 
@@ -1061,6 +1063,7 @@
 
             _self.chapterObj = {};
             _self.showChapter();
+            _self.showQuestionBank ();
             /*
              console.log(_self.Title + " " + _self.Description);
              ref.child("question-bank-chapters").child(_self.bookId).push({
@@ -1073,10 +1076,26 @@
              });*/
         }
 
+             /* Adding question Bank */
+             
+             function addQuestionBank() {
+              if (_self.bookId) {
+                $timeout(function() {
+                    _self.showChapter = naveService.toggleRight2;
+                    _self.showChapter();
+                }, 0);
+            } else {
+                messageService.showSuccess('Please Select Question Bank');
+            }
+             }
+             
+             
+             /*End*/
+
         function addChapter() {
             if (_self.bookId) {
                 $timeout(function() {
-                    _self.showChapter = naveService.toggleRight2;
+                    _self.showChapter = naveService.toggleRight3;
                     _self.showChapter();
                 }, 0);
             } else {

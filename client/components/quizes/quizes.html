@@ -398,7 +398,7 @@
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Eat cake"
                        ng-hide="quizes.showQuizList"
-                       ng-click="quizes.addChapter()">
+                       ng-click="quizes.addQuestionBank()">
                 <ng-md-icon icon="add" style="fill: #fff;"></ng-md-icon>
             </md-button>
         </div>
@@ -474,7 +474,7 @@
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Eat cake"
                        ng-hide="quizes.showQuizList"
-                       ng-click="quizes.addChapter()">
+                       ng-click="">
                 <ng-md-icon icon="add" style="fill: #fff;"></ng-md-icon>
             </md-button>
         </div>
@@ -710,7 +710,7 @@
 <!--Create Chapter Navigation Start-->
 <md-sidenav style="width: 35%;" class="md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope" md-component-id="nav2" tabindex="-1">
     <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
-        <h1 class="md-toolbar-tools"><strong>Select Chapters</strong></h1>
+        <h1 class="md-toolbar-tools"><strong>Select Books</strong></h1>
     </md-toolbar>
     <md-list class="quiz-sidebar-nav">
         <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books track by $index"
@@ -718,8 +718,8 @@
                       ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
                       ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
             <!-- Books Side-->
-            <div layout="row" class="subgroupcard" style="height: 120px">
-                <div class="subgrouplogo" style="height: 120px">
+            <div layout="row" class="subgroupcard" style="height: 32px">
+                <div class="subgrouplogo" style="height: 33px">
                     <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
                 </div>
                 <div layout="column" flex>
@@ -728,10 +728,10 @@
                         <!--<ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"-->
                         <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
                     </div>
-                    <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
+                    <!--<div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
                         <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                              class="icon40px imageRound" alt="user" layout-margin/>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
