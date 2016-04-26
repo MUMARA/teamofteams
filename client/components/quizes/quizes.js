@@ -961,6 +961,7 @@
             quizesBankService.createQuiz(_self.quizesData);
 
             _self.quizesData = {};
+            initQuiz();
 
         }
 
