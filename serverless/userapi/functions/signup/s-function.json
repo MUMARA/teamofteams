@@ -5,7 +5,7 @@
   "customName": false,
   "customRole": false,
   "handler": "signup/handler.handler",
-  "timeout": 6,
+  "timeout": 20,
   "memorySize": 1024,
   "authorizer": {},
   "custom": {
@@ -30,9 +30,11 @@
         "default": {
           "statusCode": "200",
           "responseParameters": {},
-          "responseModels": {},
+          "responseModels": {
+            "application/json;charset=UTF-8": "Empty"
+          },
           "responseTemplates": {
-            "application/json": ""
+            "application/json;charset=UTF-8": ""
           }
         }
       }

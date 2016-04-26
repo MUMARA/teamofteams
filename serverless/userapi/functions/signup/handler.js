@@ -1,8 +1,6 @@
-/// <reference path="../../typings/main.d.ts" />
-"use strict";
-var User_1 = require('../lib/User');
-exports.handler = function (event, context) {
-    var user = new User_1.User(event.email, event.userID);
-    context.succeed(user.Signup());
+/// <reference path="../../typings/tsd.d.ts" />
+var userController_1 = require('../lib/controller/userController');
+exports.handler = function (event, context, cb) {
+    userController_1.userSignup(event, context);
 };
 //# sourceMappingURL=handler.js.map

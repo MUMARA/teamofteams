@@ -208,7 +208,8 @@ function isCurrentUserGroupOwner (groupid) {
 
 path /group-members/{groupid} {
   read() {    isCurrentUserGroupOwner(groupid)           ||
-              isCurrentUserGroupAdmin(groupid)  } // i think blockmember type is -1 so blockmembers cannot read the group for that we want member-shiptype should be greater than 0
+              isCurrentUserGroupAdmin(groupid) ||
+              userGroupMembershipAnyType(groupid) } // i think blockmember type is -1 so blockmembers cannot read the group for that we want member-shiptype should be greater than 0
   create() {  isAuthenticated()                          &&
               isCurrentUserGroupOwner(groupid)           ||
               isCurrentUserGroupAdmin(groupid)
@@ -1924,8 +1925,7 @@ path /quizes/{quizId}/{questionBankUniqueID}/{chapterId}/{topicId}/{questionId} 
 
 
 type QuizQuestionDesc {
-
-   title   : String,
+  title   : String,
    type    : QuestionType,
    desc    : String,
    options : Option[]
@@ -1933,14 +1933,21 @@ type QuizQuestionDesc {
 //--------------------------
 //  User Quizes
 //--------------------------
-path /user-quiz/{userId}/{quizId} is QuizMembership {
-      read() { isAuthenticatedUser(userId) }
-      create() { isAuthenticatedUser(userId) }
+path /user-quiz/{userId} {
+  read() { isAuthenticatedUser(userId) }
+    /{quizId} is QuizMembership {
+
+        create() { isAuthenticated() }
+   }
 }
+
 
 type QuizMembership {
   "memberships-type": Number,
-  timestamp: CurrentTimeStamp
+   timestamp: CurrentTimeStamp,
+   title: String,
+   desc: String,
+   imgLogoUrl: String | Null
 }
 function isQuizOwner(quizId) {
   return prior(root["quizes"][auth.uid][quizId]["memberships-type"].val() == 1)
