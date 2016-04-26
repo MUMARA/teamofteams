@@ -415,6 +415,7 @@
                         <span><b>{{chapter.title}}</b></span>
                     </div>
                     <img src="img/1dots.svg" class="img-dots">
+
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedChapterIndex" layout="column"
                          layout-align="center end">
                         <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
@@ -494,6 +495,7 @@
                         <span><b>{{topic.title}}</b></span>
                     </div>
                     <img src="img/1dots.svg" class="img-dots">
+
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedTopicIndex" layout="column"
                          layout-align="center end">
                         <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
@@ -550,6 +552,7 @@
                         <span><b>{{question.title}}</b></span>
                     </div>
                     <img src="img/1dots.svg" class="img-dots">
+
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedQuestionIndex"
                          layout="column"
                          layout-align="center end">
@@ -597,8 +600,10 @@
         </div>
         <div ng-show="quiz.questionView.type == 3">
             <h4>Question : {{quiz.questionView.html}}</h4>
+
             <div ng-repeat="questionSet in quiz.questionView.questiones">
                 <h5>Sub question ; {{questionSet.html}}</h5>
+
                 <div ng-repeat="option in questionSet.options">
                     <span ng-if="!option.correct">Option {{$index+1}} : {{option.html}}</span>
                     <span ng-if="option.correct">
@@ -905,14 +910,14 @@
                         <!--Question Description-->
                     </div>
                     <div ng-if="quiz.question.type">
-                    <div layout="row">
-                      <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
-                                  ng-click="quiz.closeTextangular('showTextangular')">
-                      </ng-md-icon>
-                      <span class="foreColorWhite">Question Text</span>
-                    </div>
-                        <div ta-bind="ta-bind" ng-model="quiz.question.html" >
-                          {{quiz.question.html}}
+                        <div layout="row">
+                            <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
+                                        ng-click="quiz.closeTextangular('showTextangular')">
+                            </ng-md-icon>
+                            <span class="foreColorWhite">Question Text</span>
+                        </div>
+                        <div ta-bind="ta-bind" ng-model="quiz.question.html">
+                            {{quiz.question.html}}
                         </div>
                         <!-- <md-input-container style="width: 95%;">
 
@@ -958,34 +963,33 @@
                     </div>
                     <div ng-show="quiz.question.type == 3">
                         <div layout="column">
-                                <div layout="row">
-                                  <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
-                                              ng-click="quiz.showTextangularSideNav('ShowQuestionsetSideNav')">
-                                  </ng-md-icon>
-                                  <span class="foreColorWhite">Question</span>
-                                </div>
-                                <div ta-bind="ta-bind" ng-model="quiz.questionSet.html">
-                                  {{quiz.questionSet.html}}
-                                </div>
+                            <div layout="row">
+                                <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
+                                            ng-click="quiz.showTextangularSideNav('ShowQuestionsetSideNav')">
+                                </ng-md-icon>
+                                <span class="foreColorWhite">Question</span>
+                            </div>
+                            <div ta-bind="ta-bind" ng-model="quiz.questionSet.html">
+                                {{quiz.questionSet.html}}
+                            </div>
 
 
+                            <!-- <md-input-container style="padding-right: 50px">
+                                <label>Question {{$index + 1}}</label>
+                                <input type="text" ng-model="quiz.questionSet.html">
 
-                                <!-- <md-input-container style="padding-right: 50px">
-                                    <label>Question {{$index + 1}}</label>
-                                    <input type="text" ng-model="quiz.questionSet.html">
 
-
-                                </md-input-container> -->
-                                <md-input-container style="width:95%;">
-                                    <label>discussionHtml</label>
-                                    <input type="text" ng-model="quiz.questionSet.discussionHtml">
+                            </md-input-container> -->
+                            <md-input-container style="width:95%;">
+                                <label>discussionHtml</label>
+                                <input type="text" ng-model="quiz.questionSet.discussionHtml">
 
                             <span layout="row">
                                <ng-md-icon icon="delete" ng-disabled="!quiz.questionSet.html"
                                            class="nooutline delete-icon-option"
                                            ng-click="quiz.deleteOption($index)">
                                </ng-md-icon></span>
-                                </md-input-container>
+                            </md-input-container>
 
 
                             <!-- <div layout="row" ng-repeat="option in quiz.question.QuestionOptions">
@@ -1040,17 +1044,18 @@
                                     <md-radio-group ng-change="quiz.correctQuestionSetAnswer()" ng-model="quiz.correct"
                                                     style="margin-top: 10px;margin-left: 20px">
                                         <div ng-repeat="option in quiz.questionSet.options">
-                                            <md-radio-button
-                                                    ng-value="$index" ng-disabled="!option.html"
-                                                    aria-label="Radio-Button">
+                                            <md-radio-button class="radio-btn-option"
+                                                             ng-value="$index" ng-disabled="!option.html"
+                                                             aria-label="Radio-Button">
                                             </md-radio-button>
                                             <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
-                                                          ng-click="quiz.showTextangularSideNav($index)">
+                                                        ng-click="quiz.showTextangularSideNav($index)">
                                             </ng-md-icon>
                                             <span class="foreColorWhite ">Option {{$index + 1}}</span>
-                                              <div ng-model="option.html" ta-bind="ta-bind" style="display:block;">
+
+                                            <div ng-model="option.html" ta-bind="ta-bind" style="display:block;">
                                                 {{option.html}}
-                                              </div>
+                                            </div>
 
                                             <!-- <md-input-container style="margin:0px">
                                                 <label>Option {{$index + 1}}</label>
@@ -1058,18 +1063,18 @@
 
 
                                             </md-input-container> -->
-                                          <div layout="row">
-                                            <md-input-container style="margin:0px">
-                                                <label>discussionHtml</label>
-                                                <input type="text" ng-model="option.discussionHtml">
+                                            <div layout="row">
+                                                <md-input-container style="margin:0px">
+                                                    <label>discussionHtml</label>
+                                                    <input type="text" ng-model="option.discussionHtml">
                                             <span layout="row">
                                              <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
                                                          class="nooutline delete-icon-option"
                                                          ng-click="quiz.deleteQuestionSetOption($index)">
                                              </ng-md-icon>
                                               </span>
-                                            </md-input-container>
-                                          </div>
+                                                </md-input-container>
+                                            </div>
                                         </div>
                                     </md-radio-group>
 
@@ -1087,35 +1092,35 @@
                                                  ng-disabled="!option.html">
                                     </md-checkbox>
                                     <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
-                                                  ng-click="quiz.showTextangularSideNav($index)">
+                                                ng-click="quiz.showTextangularSideNav($index)">
 
                                     </ng-md-icon>
                                     <span class="foreColorWhite ">Option {{$index + 1}}</span>
 
                                     <div ng-model="option.html" ta-bind="ta-bind">
-                                      {{option.html}}
+                                        {{option.html}}
                                     </div>
 
-                                        <!-- <md-input-container style="margin-left: 10px;" flex="50">
-                                            <label>Option {{$index + 1}}</label>
-                                            <input type="text" ng-model="option.html" disabled>
-                                         <span layout="row">
-                                          </span>
-                                        </md-input-container> -->
-                                        <div layout="row">
-                                            <md-input-container flex>
-                                                <label>Discussion-Html</label>
+                                    <!-- <md-input-container style="margin-left: 10px;" flex="50">
+                                        <label>Option {{$index + 1}}</label>
+                                        <input type="text" ng-model="option.html" disabled>
+                                     <span layout="row">
+                                      </span>
+                                    </md-input-container> -->
+                                    <div layout="row">
+                                        <md-input-container flex>
+                                            <label>Discussion-Html</label>
                                                 <textarea md-maxlength="150" rows="5" style="width:95%;"
                                                           ng-model="option.discussionHtml"></textarea>
 
-                                            </md-input-container>
+                                        </md-input-container>
                                             <span layout="row">
                                              <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
                                                          class="nooutline delete-icon-option"
                                                          ng-click="quiz.deleteQuestionSetOption($index)">
                                              </ng-md-icon>
                                             </span>
-                                        </div>
+                                    </div>
                                     <!-- <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
                                                   ng-click="quiz.showTextangularSideNav($index)">
 
@@ -1157,35 +1162,35 @@
                     <!--RadioBoxes InputFields-->
                     <div ng-show="quiz.question.type == 1">
                         <div layout="row">
-                            <md-radio-group class="full-width-radio" ng-model="quiz.correct" ng-change="quiz.correctAnswer()">
+                            <md-radio-group class="full-width-radio" ng-model="quiz.correct"
+                                            ng-change="quiz.correctAnswer()">
                                 <div ng-repeat="option in quiz.question.options">
                                     <md-radio-button ng-value="$index" name="chapterForm.correct"
-                                                     ng-disabled="!option.html"
+                                                     ng-disabled="!option.html" class="radio-btn-option"
                                                      aria-label="Radio-Button">
                                     </md-radio-button>
+                                    <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline "
+                                                ng-click="quiz.closeTextangular($index)">
 
-                                        <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline "
-                                                    ng-click="quiz.closeTextangular($index)">
-
-                                        </ng-md-icon>
-                                        <span class="foreColorWhite ">Option {{$index + 1}}</span>
+                                    </ng-md-icon>
+                                    <span class="foreColorWhite ">Option {{$index + 1}}</span>
 
                                     <div ng-model="option.html" ta-bind="ta-bind">
                                         {{option.html}}
-                                       </div>
+                                    </div>
 
-                                        <!-- <md-input-container flex="50" style=" margin-top: -45px; margin-left: 30px;">
-                                            <label>Option {{$index + 1}}</label>
-                                            <input type="text" ng-model="option.html" disabled>
-                                            <span layout="row">
+                                    <!-- <md-input-container flex="50" style=" margin-top: -45px; margin-left: 30px;">
+                                        <label>Option {{$index + 1}}</label>
+                                        <input type="text" ng-model="option.html" disabled>
+                                        <span layout="row">
 
 
-                                            </span>
-                                        </md-input-container> -->
+                                        </span>
+                                    </md-input-container> -->
 
-                                        <div layout="row">
-                                            <md-input-container flex>
-                                                <label>Discussion-Html</label>
+                                    <div layout="row">
+                                        <md-input-container flex>
+                                            <label>Discussion-Html</label>
                                         <textarea md-maxlength="150" rows="5"
                                                   ng-model="option.discussionHtml" style="width:95%;"></textarea>
                                             <span layout="row">
@@ -1194,12 +1199,12 @@
                                                            ng-click="quiz.deleteOption($index)">
                                                </ng-md-icon>
                                              </span>
-                                            </md-input-container>
-                                        </div>
+                                        </md-input-container>
                                     </div>
-
                                 </div>
-                            </md-radio-group>
+
+                        </div>
+                        </md-radio-group>
 
                         <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
                             Add Option
@@ -1208,7 +1213,7 @@
                     <!--CheckBoxes-->
                     <!--CheckBoxes Input Fields-->
                     <div ng-show="quiz.question.type == 2">
-                        <div  ng-repeat="option in quiz.question.options">
+                        <div ng-repeat="option in quiz.question.options">
                             <md-checkbox md-no-ink aria-label="Checkbox No Ink"
                                          class="md-primary" ng-model="option.correct"
                                          ng-change="quiz.setCheckBoxValue($index)"
@@ -1222,27 +1227,27 @@
                             <span class="foreColorWhite ">Option {{$index + 1}}</span>
 
                             <div ng-model="option.html" ta-bind="ta-bind">
-                              {{option.html}}
+                                {{option.html}}
                             </div>
 
-                                <!-- <md-input-container style="margin-left: 10px;" flex="50">
-                                    <label>Option {{$index + 1}}</label>
-                                    <input type="text" ng-model="option.html" disabled>
-                                 <span layout="row">
-                                  </span>
-                                </md-input-container> -->
-                                <div layout="row">
-                                    <md-input-container flex>
-                                        <label>Discussion-Html</label>
+                            <!-- <md-input-container style="margin-left: 10px;" flex="50">
+                                <label>Option {{$index + 1}}</label>
+                                <input type="text" ng-model="option.html" disabled>
+                             <span layout="row">
+                              </span>
+                            </md-input-container> -->
+                            <div layout="row">
+                                <md-input-container flex>
+                                    <label>Discussion-Html</label>
                                         <textarea md-maxlength="150" rows="5" style="width:95%;"
                                                   ng-model="option.discussionHtml"></textarea>
 
-                                    </md-input-container>
-                                    <ng-md-icon icon="delete" ng-disabled="!option.html" style="padding-top: 25px"
-                                                class="nooutline delete-icon-option"
-                                                ng-click="quiz.deleteOption($index)">
-                                    </ng-md-icon>
-                                </div>
+                                </md-input-container>
+                                <ng-md-icon icon="delete" ng-disabled="!option.html" style="padding-top: 25px"
+                                            class="nooutline delete-icon-option"
+                                            ng-click="quiz.deleteOption($index)">
+                                </ng-md-icon>
+                            </div>
                         </div>
                         <md-button ng-click="quiz.addOption();" style="color:white;" class="backColorSeaGreen">
                             Add Option
