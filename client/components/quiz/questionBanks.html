@@ -976,7 +976,7 @@
 
 
                                 </md-input-container> -->
-                                <md-input-container style="padding-right: 50px;width:95%;">
+                                <md-input-container style="width:95%;">
                                     <label>discussionHtml</label>
                                     <input type="text" ng-model="quiz.questionSet.discussionHtml">
 
@@ -1039,35 +1039,37 @@
 
                                     <md-radio-group ng-change="quiz.correctQuestionSetAnswer()" ng-model="quiz.correct"
                                                     style="margin-top: 10px;margin-left: 20px">
-                                        <div ng-repeat="option in quiz.questionSet.options" layout="row">
+                                        <div ng-repeat="option in quiz.questionSet.options">
                                             <md-radio-button
                                                     ng-value="$index" ng-disabled="!option.html"
                                                     aria-label="Radio-Button">
                                             </md-radio-button>
-                                            <span layout="row">
-                                              <div ng-model="option.html" ta-bind="ta-bind" class="optionHtml">
+                                            <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
+                                                          ng-click="quiz.showTextangularSideNav($index)">
+                                            </ng-md-icon>
+                                            <span class="foreColorWhite ">Option {{$index + 1}}</span>
+                                              <div ng-model="option.html" ta-bind="ta-bind" style="display:block;">
                                                 {{option.html}}
                                               </div>
-                                              <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
-                                                            ng-click="quiz.showTextangularSideNav($index)">
-                                              </ng-md-icon>
-                                            </span>
+
                                             <!-- <md-input-container style="margin:0px">
                                                 <label>Option {{$index + 1}}</label>
                                                 <input type="text" ng-model="option.html">
 
 
                                             </md-input-container> -->
+                                          <div layout="row">
                                             <md-input-container style="margin:0px">
                                                 <label>discussionHtml</label>
                                                 <input type="text" ng-model="option.discussionHtml">
                                             <span layout="row">
                                              <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
                                                          class="nooutline delete-icon-option"
-                                                         ng-click="quiz.deleteOption($index)">
+                                                         ng-click="quiz.deleteQuestionSetOption($index)">
                                              </ng-md-icon>
                                               </span>
                                             </md-input-container>
+                                          </div>
                                         </div>
                                     </md-radio-group>
 
@@ -1079,22 +1081,50 @@
                                 </md-button>
                             </div>
                             <div layout-align="center center" layout="column" ng-if="quiz.questionSet.type  === 2">
-                                <div layout="row" ng-repeat="option in quiz.questionSet.options">
+                                <div ng-repeat="option in quiz.questionSet.options">
                                     <md-checkbox md-no-ink aria-label="Checkbox No Ink"
                                                  class="md-primary" ng-model="option.correct"
                                                  ng-disabled="!option.html">
                                     </md-checkbox>
-                                    <span layout="row">
+                                    <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
+                                                  ng-click="quiz.showTextangularSideNav($index)">
+
+                                    </ng-md-icon>
+                                    <span class="foreColorWhite ">Option {{$index + 1}}</span>
+
+                                    <div ng-model="option.html" ta-bind="ta-bind">
+                                      {{option.html}}
+                                    </div>
+
+                                        <!-- <md-input-container style="margin-left: 10px;" flex="50">
+                                            <label>Option {{$index + 1}}</label>
+                                            <input type="text" ng-model="option.html" disabled>
+                                         <span layout="row">
+                                          </span>
+                                        </md-input-container> -->
+                                        <div layout="row">
+                                            <md-input-container flex>
+                                                <label>Discussion-Html</label>
+                                                <textarea md-maxlength="150" rows="5" style="width:95%;"
+                                                          ng-model="option.discussionHtml"></textarea>
+
+                                            </md-input-container>
+                                            <span layout="row">
+                                             <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
+                                                         class="nooutline delete-icon-option"
+                                                         ng-click="quiz.deleteQuestionSetOption($index)">
+                                             </ng-md-icon>
+                                            </span>
+                                        </div>
+                                    <!-- <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
+                                                  ng-click="quiz.showTextangularSideNav($index)">
+
+                                      </ng-md-icon>
+
                                       <div ng-model="option.html" ta-bind="ta-bind">
                                         {{option.html}}
-                                      </div>
-                                      <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
-                                                    ng-click="quiz.showTextangularSideNav($index)">
-                                            <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                                                Edit
-                                            </md-tooltip>
-                                        </ng-md-icon>
-                                    </span>
+                                      </div> -->
+
                                     <!-- <md-input-container style="margin-left: 10px;">
                                         <label>Option {{$index + 1}}</label>
                                         <input type="text" ng-model="option.html">
@@ -1107,14 +1137,14 @@
                                               </ng-md-icon>
                                               </span>
                                     </md-input-container> -->
-                                    <md-input-container style="margin-left: 10px;">
+                                    <!-- <md-input-container style="margin-left: 10px;">
                                         <label>discussionHtml</label>
                                         <input type="text" ng-model="option.discussionHtml">
                                         <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
                                                     class="nooutline quiz-dlt-btn"
                                                     ng-click="quiz.deleteOption($index)">
 
-                                    </md-input-container>
+                                    </md-input-container> -->
                                 </div>
                                 <md-button class="backColorSeaGreen color-white"
                                            ng-click="quiz.addQuestionSetOption();">
@@ -1134,13 +1164,13 @@
                                                      aria-label="Radio-Button">
                                     </md-radio-button>
 
-
-
-                                        <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
+                                        <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline "
                                                     ng-click="quiz.closeTextangular($index)">
 
                                         </ng-md-icon>
-                                        <div ng-model="option.html" ta-bind="ta-bind">
+                                        <span class="foreColorWhite ">Option {{$index + 1}}</span>
+
+                                    <div ng-model="option.html" ta-bind="ta-bind">
                                         {{option.html}}
                                        </div>
 
@@ -1170,7 +1200,6 @@
 
                                 </div>
                             </md-radio-group>
-                        </div>
 
                         <md-button class="backColorSeaGreen" style="color:white" ng-click="quiz.addOption();">
                             Add Option
@@ -1179,24 +1208,23 @@
                     <!--CheckBoxes-->
                     <!--CheckBoxes Input Fields-->
                     <div ng-show="quiz.question.type == 2">
-                        <div layout="row" ng-repeat="option in quiz.question.options">
+                        <div  ng-repeat="option in quiz.question.options">
                             <md-checkbox md-no-ink aria-label="Checkbox No Ink"
                                          class="md-primary" ng-model="option.correct"
                                          ng-change="quiz.setCheckBoxValue($index)"
                                          ng-disabled="!option.html">
                             </md-checkbox>
-                            <div layout="row" flex="100">
-                              <div layout="row">
-                                <div ng-model="option.html" ta-bind="ta-bind">
-                                   {{option.html}}
-                                </div>
-                                <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline"
-                                            ng-click="quiz.closeTextangular($index)">
-                                    <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                                        Edit
-                                    </md-tooltip>
-                                </ng-md-icon>
-                              </div>
+
+                            <ng-md-icon icon="mode_edit" class="fillColorWhite nooutline "
+                                        ng-click="quiz.closeTextangular($index)">
+
+                            </ng-md-icon>
+                            <span class="foreColorWhite ">Option {{$index + 1}}</span>
+
+                            <div ng-model="option.html" ta-bind="ta-bind">
+                              {{option.html}}
+                            </div>
+
                                 <!-- <md-input-container style="margin-left: 10px;" flex="50">
                                     <label>Option {{$index + 1}}</label>
                                     <input type="text" ng-model="option.html" disabled>
@@ -1204,21 +1232,17 @@
                                   </span>
                                 </md-input-container> -->
                                 <div layout="row">
-                                    <md-input-container style="margin-left: 30px;" flex>
+                                    <md-input-container flex>
                                         <label>Discussion-Html</label>
-                                        <textarea md-maxlength="150" rows="5"
+                                        <textarea md-maxlength="150" rows="5" style="width:95%;"
                                                   ng-model="option.discussionHtml"></textarea>
 
                                     </md-input-container>
                                     <ng-md-icon icon="delete" ng-disabled="!option.html" style="padding-top: 25px"
                                                 class="nooutline delete-icon-option"
                                                 ng-click="quiz.deleteOption($index)">
-                                        <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                                            Delete
-                                        </md-tooltip>
                                     </ng-md-icon>
                                 </div>
-                            </div>
                         </div>
                         <md-button ng-click="quiz.addOption();" style="color:white;" class="backColorSeaGreen">
                             Add Option
