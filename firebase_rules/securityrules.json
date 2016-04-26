@@ -1441,19 +1441,28 @@
     "user-quiz": {
       "$userId": {
         "$quizId": {
-          ".validate": "newData.hasChildren(['memberships-type', 'timestamp'])",
+          ".validate": "newData.hasChildren(['memberships-type', 'timestamp', 'title', 'desc'])",
           "memberships-type": {
             ".validate": "newData.isNumber()"
           },
           "timestamp": {
             ".validate": "newData.isNumber() && newData.val() <= now"
           },
+          "title": {
+            ".validate": "newData.isString()"
+          },
+          "desc": {
+            ".validate": "newData.isString()"
+          },
+          "imgLogoUrl": {
+            ".validate": "newData.isString() || newData.val() == null"
+          },
           "$other": {
             ".validate": "false"
           },
-          ".write": "data.val() == null && (auth != null && auth.uid == $userId)",
-          ".read": "auth != null && auth.uid == $userId"
-        }
+          ".write": "data.val() == null && auth != null"
+        },
+        ".read": "auth != null && auth.uid == $userId"
       }
     }
   }
