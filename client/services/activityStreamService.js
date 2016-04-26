@@ -340,14 +340,14 @@
             //group added
             ref.child('user-group-memberships').child(userID).on('child_added', function (group) {
                 if (group) {
-                    console.log('watch added raw', group.val());
+                    // console.log('watch added raw', group.val());
                     var obj = {
                         'membership-type': group.val()['membership-type'],
                         'title': ''
                     };
                     userGroupz[group.key()] = obj;
 
-                    console.log('watch added', userGroupz, group.val()['membership-type'] );
+                    // console.log('watch added', userGroupz, group.val()['membership-type'] );
 
                     //subgroup add event
                     userSubGroupEvents(group.key());
@@ -388,7 +388,7 @@
             // subgroup added
             ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_added', function (subgroup) {
                 if (subgroup) {
-                    console.log('watch added raw', subgroup.val());
+                    // console.log('watch added raw', subgroup.val());
                     var obj = {
                         'membership-type': subgroup.val()['membership-type'],
                         'title': ''
@@ -401,7 +401,7 @@
                         userSubGroupz[groupid][subgroup.key()] = obj;
                     }
 
-                    console.log('watch added', userSubGroupz);
+                    // console.log('watch added', userSubGroupz);
                     // get subgroup users
                     getUserSubGroupMembers(groupid, subgroup.key());
                 }
@@ -410,13 +410,13 @@
             // group changed
             ref.child('user-subgroup-memberships').child(userID).child(groupid).on('child_changed', function (subgroup) {
                 if (subgroup) {
-                    console.log('watch added raw', subgroup.val());
+                    // console.log('watch added raw', subgroup.val());
                     var obj = {
                         'membership-type': subgroup.val()['membership-type'],
                         'title': ''
                     };
                     userSubGroupz[groupid][subgroup.key()] = obj;
-                    console.log('watch changed', userSubGroupz);
+                    // console.log('watch changed', userSubGroupz);
                 }
             });
 
@@ -430,10 +430,10 @@
             });
         }
         function getSubgroupOfGroups(groupid) {
-            console.log('watch fireeeeeeeeeeeeeeeeeee');
+            // console.log('watch fireeeeeeeeeeeeeeeeeee');
             //subgroup added
             ref.child('subgroups').child(groupid).on('child_added', function (subgroup) {
-                console.log('watch fireeeeeeeeeeeeeeeeeeeee22222222', subgroup);
+                // console.log('watch fireeeeeeeeeeeeeeeeeeeee22222222', subgroup);
                 if (subgroupsOfGroup.hasOwnProperty(groupid)) {
                     subgroupsOfGroup[groupid].push(subgroup.key());
                 } else {
@@ -441,7 +441,7 @@
                     subgroupsOfGroup[groupid].push(subgroup.key());
                 }
 
-                console.log('watch added subgrp of grp', subgroupsOfGroup);
+                // console.log('watch added subgrp of grp', subgroupsOfGroup);
 
             });
 
