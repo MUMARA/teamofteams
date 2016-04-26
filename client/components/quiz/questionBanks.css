@@ -10,21 +10,13 @@ blockquote {
 }
 .IconCenter {
   position: absolute;
-  top: 110;
-  fill: transparent;
-  padding-top: 10%;
-  padding-left: 45%;
-  padding-right: 35%;
-  padding-bottom: 10%;
+  top: 53%;
+  left: 6%;
 }
-.IconCenter:hover{
+.optionTextCenter {
   position: absolute;
-  top: 110;
-  fill: #8BCDDC;
-  padding-top: 10%;
-  padding-left: 45%;
-  padding-right: 35%;
-  padding-bottom: 25%;
+  top: 55%;
+  left: 11%;
 }
 .questionHtmlHeight {
   width: 100%;

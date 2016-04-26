@@ -152,11 +152,9 @@
         delete val.$$hashKey;
       });
       _self.questionSetQuestions.push(questionSet);
-      console.log(_self.questionSetQuestions)
       _self.questionSet = {
         options: []
       };
-      console.log(questionSet);
     }
 
     // _self.setSelectedQuiz = setSelectedQuiz;
@@ -195,7 +193,6 @@
           .correct = true : _self.questionSet.options[index].correct =
           false;
       });
-      console.log(_self.questionSet.options)
     };
 
     // authService.resolveUserPage()
@@ -1299,8 +1296,6 @@
     };
     // _self.questionSet.options = [];
     _self.addQuestionSetOption = function() {
-      console.log(_self.questionSet);
-      alert("")
       _self.questionSet.options.push({
         html: '',
         correct: false,
@@ -1309,9 +1304,17 @@
     };
     //Delete Option
     this.deleteOption = function(optionIndex) {
-      if (optionIndex > -1) {
-        _self.question.options.splice(optionIndex, 1);
-      }
+      alert(optionIndex)
+      _self.question.options.splice(optionIndex, 1);
+
+      // if (optionIndex > -1) {
+      // }
+    };
+    //Delete Question Set Option
+    this.deleteQuestionSetOption = function (optionIndex) {
+        if (optionIndex > -1) {
+            _self.questionSet.options.splice(optionIndex, 1);
+        }
     };
 
     //Sets Answer if Type CheckBox is selected.
@@ -1517,11 +1520,7 @@
                 _self.question.options.splice(optionIndex, 1);
             }
         };
-        this.deleteQuestionSetOption = function (optionIndex) {
-            if (optionIndex > -1) {
-                _self.questionSet.options.splice(optionIndex, 1);
-            }
-        };
+
 
         //Sets Answer if Type CheckBox is selected.
         _self.setCheckBoxValue = function (questionId) {
