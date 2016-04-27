@@ -1263,7 +1263,7 @@
             }
           }
         },
-        ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'imgLogoUrl'])",
+        ".validate": "newData.hasChildren(['timestamp', 'title', 'desc'])",
         "timestamp": {
           ".validate": "newData.isNumber() && newData.val() <= now"
         },
@@ -1274,7 +1274,7 @@
           ".validate": "newData.isString()"
         },
         "imgLogoUrl": {
-          ".validate": "newData.isString()"
+          ".validate": "newData.isString() || newData.val() == null"
         },
         "$other": {
           ".validate": "false"
@@ -1316,46 +1316,99 @@
     },
     "quizes": {
       "$quizId": {
-        "$questionBankUniqueID": {
-          "$chapterId": {
-            "$topicId": {
-              "$questionId": {
-                ".validate": "newData.hasChildren(['title', 'type', 'desc'])",
-                "title": {
-                  ".validate": "newData.isString()"
-                },
-                "type": {
-                  ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
-                },
-                "desc": {
-                  ".validate": "newData.isString()"
-                },
-                "options": {
-                  "$key4": {
-                    ".validate": "newData.hasChildren(['html', 'correct', 'discussionHtml'])",
-                    "html": {
+        "questionbanks": {
+          "$questionBankUniqueID": {
+            "chapters": {
+              "$chapterId": {
+                "topics": {
+                  "$topicId": {
+                    "questions": {
+                      "$questionId": {
+                        ".validate": "newData.hasChildren(['title', 'type', 'desc'])",
+                        "title": {
+                          ".validate": "newData.isString()"
+                        },
+                        "type": {
+                          ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
+                        },
+                        "desc": {
+                          ".validate": "newData.isString()"
+                        },
+                        "options": {
+                          "$key4": {
+                            ".validate": "newData.hasChildren(['html', 'correct', 'discussionHtml'])",
+                            "html": {
+                              ".validate": "newData.isString()"
+                            },
+                            "correct": {
+                              ".validate": "newData.isBoolean()"
+                            },
+                            "discussionHtml": {
+                              ".validate": "newData.isString()"
+                            },
+                            "$other": {
+                              ".validate": "false"
+                            }
+                          }
+                        },
+                        "$other": {
+                          ".validate": "false"
+                        },
+                        ".write": "data.val() == null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2)",
+                        ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+                      }
+                    },
+                    ".validate": "newData.hasChildren(['title'])",
+                    "title": {
                       ".validate": "newData.isString()"
                     },
-                    "correct": {
-                      ".validate": "newData.isBoolean()"
-                    },
-                    "discussionHtml": {
-                      ".validate": "newData.isString()"
+                    "imgLogoUrl": {
+                      ".validate": "newData.isString() || newData.val() == null"
                     },
                     "$other": {
                       ".validate": "false"
                     }
                   }
                 },
+                ".validate": "newData.hasChildren(['title'])",
+                "title": {
+                  ".validate": "newData.isString()"
+                },
+                "imgLogoUrl": {
+                  ".validate": "newData.isString() || newData.val() == null"
+                },
                 "$other": {
                   ".validate": "false"
-                },
-                ".write": "data.val() == null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2)",
-                ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+                }
               }
+            },
+            ".validate": "newData.hasChildren(['title'])",
+            "title": {
+              ".validate": "newData.isString()"
+            },
+            "imgLogoUrl": {
+              ".validate": "newData.isString() || newData.val() == null"
+            },
+            "$other": {
+              ".validate": "false"
             }
           }
-        }
+        },
+        ".validate": "newData.hasChildren(['title', 'desc'])",
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "desc": {
+          ".validate": "newData.isString()"
+        },
+        "imgLogoUrl": {
+          ".validate": "newData.isString() || newData.val() == null"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".write": "data.val() == null && root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1",
+        ".read": "root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
       }
     },
     "quiz-in-progress": {
@@ -1441,26 +1494,18 @@
     "user-quiz": {
       "$userId": {
         "$quizId": {
-          ".validate": "newData.hasChildren(['memberships-type', 'timestamp', 'title', 'desc'])",
+          ".validate": "newData.hasChildren(['memberships-type', 'timestamp'])",
           "memberships-type": {
             ".validate": "newData.isNumber()"
           },
           "timestamp": {
             ".validate": "newData.isNumber() && newData.val() <= now"
           },
-          "title": {
-            ".validate": "newData.isString()"
-          },
-          "desc": {
-            ".validate": "newData.isString()"
-          },
-          "imgLogoUrl": {
-            ".validate": "newData.isString() || newData.val() == null"
-          },
           "$other": {
             ".validate": "false"
           },
-          ".write": "data.val() == null && auth != null"
+          ".write": "data.val() == null && (newData.child('memberships-type').val() == 1 && (auth != null && auth.uid == $userId))",
+          ".read": "root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
         },
         ".read": "auth != null && auth.uid == $userId"
       }
