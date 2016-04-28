@@ -129,9 +129,9 @@
         controller: 'ActivityController',
         controllerAs: 'activity',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.report', {
@@ -146,9 +146,9 @@
         controller: 'ReportController',
         controllerAs: 'report',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.manualattendace', {
@@ -163,9 +163,9 @@
         controller: 'ManualAttendaceController',
         controllerAs: 'manualattendace',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.progressreport', {
@@ -180,9 +180,9 @@
         controller: 'ProgressReportController',
         controllerAs: 'progressreport',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.chat', {
@@ -197,9 +197,9 @@
         controller: 'ChatController',
         controllerAs: 'chat',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       // firepad States
@@ -215,9 +215,9 @@
         controller: 'CollaboratorController',
         controllerAs: 'collaborator',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       // end firepad states
@@ -269,12 +269,12 @@
         controller: 'CreateTeamsChannelsController',
         controllerAs: 'createTeamsChannels'
       });
-        $stateProvider.state('user.quiz', {
-            url: '/:userID/quiz',
-            templateUrl: 'components/quiz/questionBanks.html',
-            controller: 'QuizController',
-            controllerAs: 'quiz'
-        });
+      $stateProvider.state('user.questionbank', {
+        url: '/user/:userId/questionbank',
+        templateUrl: 'components/quiz/questionBanks.html',
+        controller: 'QuizController',
+        controllerAs: 'quiz'
+      });
       $stateProvider.state('user.quizes', {
         url: '/:userID/quizes',
         templateUrl: 'components/quizes/quizes.html',

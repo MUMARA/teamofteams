@@ -12,16 +12,17 @@
     "messageService", "$stateParams", "utilService", "$q", "$mdDialog",
     "quizService", "$location", "userService", "navService",
     "$firebaseArray", "$timeout", "$mdToast", "firebaseService",
-    "$firebaseObject", "$sce", "authService", "$mdSidenav"
+    "$firebaseObject", "$sce", "authService", "$mdSidenav", "$state"
   ];
 
   function QuizController(quizBankService, $rootScope, appConfig,
     messageService, $stateParams, utilService, $q, $mdDialog, quizService,
     $location, userService, navService, $firebaseArray, $timeout, $mdToast,
-    firebaseService, $firebaseObject, $sce, authService, $mdSidenav) {
+    firebaseService, $firebaseObject, $sce, authService, $mdSidenav, $state) {
 
     /*Private Variables*/
     var _self = this;
+    _self.booksNav = true;
     _self.img = '../../img/userImg1.svg';
     _self.show = false;
     _self.showQuestionDetails = false;
@@ -97,7 +98,7 @@
     _self.bookId = '';
     _self.chapterId = '';
     _self.topicId = '';
-
+    _self.Id = "";
     //all books chapters , topics , questions Id
     _self.books = [];
     _self.booksId = [];
@@ -143,7 +144,13 @@
     // _self.setSelectedQuiz = setSelectedQuiz;
     _self.questionSetQuestions = [];
     _self.questionSetAddQuestion = questionSetAddQuestion;
-
+    _self.questionbankObj = {
+      title: "",
+      desc: "",
+      imgLogoUrl: "",
+      'timestamp': "",
+      bookUniqueId: ""
+    }
 
     function questionSetAddQuestion(questionSet) {
       // questionSet["discussion-html"] = "discussion-html";
@@ -607,17 +614,23 @@
 
       _self.showQuestionDetails = false;
       _self.questionView = null;
-      quizBankService.loadChapters(_self.bookId).then(
-        function(chapters) {
-          _self.chapters = chapters;
-        });
+      $state.go("user.questionbank", {
+        questionBankUniqueID: _self.bookId
+      });
+
+      quizBankService
+        .loadChapters(_self.bookId).then(
+          function(chapters) {
+            _self.chapters = chapters;
+          });
 
       // _self.bookId = _self.booksId[bookIndex];
       // quizService.setBook(_self.bookId, bookIndex);
       _self.chapterId = null;
       _self.topicId = null;
       _self.show = true;
-      _self.chapters = [];
+      _self
+        .chapters = [];
       _self.topics = [];
       _self.questions = [];
 
@@ -647,10 +660,11 @@
       // _self.chapterId = _self.chaptersId[chapterIndex];
       _self.chapterId = quizBankService.chaptersId[chapterIndex];
       // quizService.setChapter(_self.chapterId, chapterIndex);
-      quizBankService.loadTopic(_self.bookId, _self.chapterId).then(function(
-        topics) {
-        _self.topics = topics;
-      });
+      quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
+        function(
+          topics) {
+          _self.topics = topics;
+        });
       /*   _self.topics = [];
        _self.questions = [];
        ref.child('question-bank-topic').child(_self.bookId).child(_self.chapterId).on('child_added', function (snapShot) {
@@ -934,65 +948,68 @@
     }
 
     function createBook(questionBankObject, img) {
+
+      var questionBankUniqueID = _self.questionbankObj.bookUniqueId;
+      console.log(questionBankObject, _self.questionbankObj.bookUniqueId,
+          "sssssssssssss")
+        // delete _self.questionbankObj.bookUniqueId;
       ShowNavBar();
-      _self.questionBankObject = {
-        title: questionBankObject.name,
-        desc: questionBankObject.desc,
-        imgLogoUrl: img || 'img/question-bank.png',
-        'timestamp': Firebase.ServerValue.TIMESTAMP
-      };
-      quizBankService.createQuestionBank(_self.questionBankObject);
+
       // quizBankService.loadQuestionBanks("off").then(
       //   function(data) {
       //     _self.books = data;
       //   }
       // )
-      _self.questionbankObj = {}
-        /*userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
-         'memberships-type': 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
-         "memberships-type": 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
-         // userQuestionBanksRef1.child("question-bank").child(_self.bookID).child("memberships").child(userService.getCurrentUser().userID).set({
-         //     "memberships-type": 1,
-         // });
-         if ($rootScope.newImg) {
-         var x = utilService.base64ToBlob($rootScope.newImg);
-         var temp = $rootScope.newImg.split(',')[0];
-         var mimeType = temp.split(':')[1].split(';')[0];
-         _self.saveFile(x, mimeType, _self.bookID)
-         .then(function (url) {
-         // _self.temps.imgLogoUrl = url + '?random=' + new Date();
-         //its for sending data on firebase by Name's node
-         userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
-         'memberships-type': 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
-         "memberships-type": 1,
-         'timestamp': Firebase.ServerValue.TIMESTAMP
-         });
-         userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
 
-         // quizService.setBookAfterCreation(_self.bookID)
-         // ref.child(_self.bookID).set(temp);
-         _self.name = "";
-         _self.desc = "";
-         _self.bookID = "";
-         //_self.newImg = null;
-         alert('book creation successful');
-         // $location.path('/user/' + user.userID)
-         })
-         .catch(function () {
-         //bookForm.$submitted = false;
-         //return messageService.showSuccess('picture upload failed')
-         alert('picture upload failed');
-         });
-         }*/
+      /*userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
+       'memberships-type': 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+       userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
+       "memberships-type": 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+       userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
+       // userQuestionBanksRef1.child("question-bank").child(_self.bookID).child("memberships").child(userService.getCurrentUser().userID).set({
+       //     "memberships-type": 1,
+       // });*/
+      if ($rootScope.newImg) {
+        var x = utilService.base64ToBlob($rootScope.newImg);
+        var temp = $rootScope.newImg.split(',')[0];
+        var mimeType = temp.split(':')[1].split(';')[0];
+        _self.saveFile(x, mimeType, questionBankUniqueID)
+          .then(function(url) {
+            _self.imgLogoUrl = url + '?random=' + new Date();
+            _self.questionbankObj = {
+              title: questionBankObject.name,
+              desc: questionBankObject.desc,
+              imgLogoUrl: _self.imgLogoUrl || 'img/question-bank.png',
+              'timestamp': Firebase.ServerValue.TIMESTAMP
+            };
+            quizBankService.createQuestionBank(questionBankUniqueID, _self.questionbankObj);
+            //  its for sending data on firebase by Name's node
+            //  userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
+            //  'memberships-type': 1,
+            //  'timestamp': Firebase.ServerValue.TIMESTAMP
+            //  });
+            //  userQuestionBanksRef1.child("question-bank-memberships").child(_self.bookID).child(userService.getCurrentUser().userID).set({
+            //  "memberships-type": 1,
+            //  'timestamp': Firebase.ServerValue.TIMESTAMP
+            //  });
+            //  userQuestionBanksRef1.child("question-bank").child(_self.bookID).set(_self.temps);
+
+            // quizService.setBookAfterCreation(_self.bookID)
+            // ref.child(_self.bookID).set(temp);
+
+            //_self.newImg = null;
+            // $location.path('/user/' + user.userID)
+          })
+          .catch(function() {
+            //bookForm.$submitted = false;
+            //return messageService.showSuccess('picture upload failed')
+            alert('picture upload failed');
+          });
+      }
 
     }
 
@@ -1027,9 +1044,9 @@
           }
         }
       };
-      defer.resolve(true);
+      // defer.resolve(true);
       /*remove it*/
-      //            xhr.send();
+      xhr.send();
       return defer.promise;
     };
 
@@ -1133,10 +1150,11 @@
         'timestamp': Firebase.ServerValue.TIMESTAMP
       };
       quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj);
-      quizBankService.loadTopic(_self.bookId, _self.chapterId).then(function(
-        topics) {
-        _self.topics = topics;
-      });
+      quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
+        function(
+          topics) {
+          _self.topics = topics;
+        });
       _self.topicObj = {};
       _self.showTopic();
     }
@@ -1311,10 +1329,10 @@
       // }
     };
     //Delete Question Set Option
-    this.deleteQuestionSetOption = function (optionIndex) {
-        if (optionIndex > -1) {
-            _self.questionSet.options.splice(optionIndex, 1);
-        }
+    this.deleteQuestionSetOption = function(optionIndex) {
+      if (optionIndex > -1) {
+        _self.questionSet.options.splice(optionIndex, 1);
+      }
     };
 
     //Sets Answer if Type CheckBox is selected.
@@ -1698,7 +1716,8 @@
 
          }*/
       }
-      quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId,
+      quizBankService.createQuestion(_self.bookId, _self.chapterId, _self
+        .topicId,
         question);
       quizBankService.loadQuestions(_self.bookId, _self.chapterId, _self.topicId)
         .then(function(questions) {

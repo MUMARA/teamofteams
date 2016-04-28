@@ -272,7 +272,7 @@
                         <!-- Books Side-->
                         <div layout="row" class="subgroupcard" style="height: 120px">
                             <div flex="30" class="subgrouplogo" style="height: 120px">
-                                <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
+                                <img ng-src="{{book['imgLogoUrl'] || 'img/question-bank.png'}}" class="book-img"/>
                             </div>
                             <div flex="60" layout="column" flex>
                                 <div layout="row" layout-align="space-between center">
@@ -645,6 +645,20 @@
                             </div>
                         </div>
                     </md-input-container>-->
+                    <md-input-container flex>
+                        <label>Book Id</label>
+                        <input name="bookId" type="text" check-questionbank-existance=""
+                               ng-model="quiz.questionbankObj.bookUniqueId" ng-pattern="/^([a-z0-9]){3,20}$/"  required
+                               md-sidenav-focus>
+
+                        <div ng-show="bookForm.$submitted || bookForm.bookId.$touched"
+                             ng-messages="bookForm.bookId.$error">
+                            <div class="invalid_color" ng-message="required">This is required.</div>
+                            <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20</div>
+                            <div layout="row" class="invalid_color id_Error" ng-message="checkQuestionbankExistance">This name is not available.</div>
+
+                        </div>
+                    </md-input-container>
                     <md-input-container flex>
                         <label>Book Title</label>
                         <input name="bookTitle"
