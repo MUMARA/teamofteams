@@ -952,7 +952,7 @@
         function createQuiz(quizesData, img) {
             ShowNavBar();
 
-            _self.quizesData = {
+            _self.quizData = {
                 'memberships-type': 1,
                 title: quizesData.name,
                 desc: quizesData.desc,
@@ -960,9 +960,10 @@
                 'timestamp': Firebase.ServerValue.TIMESTAMP
             };
 
-            quizesBankService.createQuiz(_self.quizesData);
+            quizesBankService.createQuiz(_self.quizData);
 
-            _self.quizesData = {};
+            _self.quizData = {};
+
 
         }
 
