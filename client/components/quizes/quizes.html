@@ -247,7 +247,7 @@
 
                     <div flex layout="row">
                         <md-input-container class="search-input-quiz" ng-show="quizes.booksSearch">
-                            <input type="text" ng-model="bSearch"
+                            <input type="text" ng-model="quizes.query"
                                    aria-label="Chapter Search Box">
                         </md-input-container>
 
@@ -265,7 +265,7 @@
             </md-toolbar>
             <div class="quiz-md-card-1">
                 <md-list class="quiz-sidebar-nav">
-                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.quizesData track by $index"
+                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.quizesData | filter: quizes.query track by $index"
                                   id="bookId{{$index}}"
                                   ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
                                   ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
@@ -413,7 +413,7 @@
 
                 <div flex layout="row">
                     <md-input-container class="search-input-quiz" ng-show="quizes.chapterSearch">
-                        <input type="text" ng-model="cSearch"
+                        <input type="text" ng-model="quizes.cSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
@@ -454,7 +454,7 @@
                </div>
                </md-toolbar>-->
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="chapter in quizes.chapters | filter:cSearch"
+                 ng-repeat="chapter in quizes.chapters | filter:quizes.cSearch"
                  ng-click="quizes.setSelectedChapter(this, $index); quizes.showTopics($index);"
                  id="chapid{{$index}}" ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
@@ -489,7 +489,7 @@
 
                 <div flex layout="row">
                     <md-input-container class="search-input-quiz" ng-show="quizes.topicSearch">
-                        <input type="text" ng-model="tSearch"
+                        <input type="text" ng-model="quizes.tSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
@@ -530,7 +530,7 @@
                 </div>
             </md-toolbar>-->
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="topic in quizes.topics | filter:tSearch"
+                 ng-repeat="topic in quizes.topics | filter:quizes.tSearch"
                  ng-click="quizes.setSelectedTopic(this,$index);quizes.showQuestions($index);"
                  ng-mouseenter="quizes.hover(chapter)" ng-mouseleave="quizes.hover(chapter)"
                  ng-class="{selectedTopic: $index == quizes.selectedTopicIndex,
@@ -563,7 +563,7 @@
 
                 <div flex layout="row">
                     <md-input-container class="search-input-quiz" ng-show="quizes.questionSearch">
-                        <input type="text" ng-model="qSearch"
+                        <input type="text" ng-model="quizes.qSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
@@ -581,7 +581,7 @@
         </md-toolbar>
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="question in quizes.questions | filter:qSearch"
+                 ng-repeat="question in quizes.questions | filter:quizes.qSearch"
                  ng-click="quizes.setSelectedQuestion(this,$index); quizes.showQuestionView(question);quizes.booksNav = false"
                  ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
