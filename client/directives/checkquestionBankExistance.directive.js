@@ -9,17 +9,17 @@
 
   angular
     .module('core')
-    .directive("checkGroupExistance", checkGroupExistance);
+    .directive("checkQuestionbankExistance", checkQuestionbankExistance);
 
-  checkGroupExistance.$inject = ['firebaseService', '$q', 'appConfig'];
+  checkQuestionbankExistance.$inject = ['firebaseService', '$q', 'appConfig'];
 
-  function checkGroupExistance(firebaseService, $q, appConfig) {
+  function checkQuestionbankExistance(firebaseService, $q, appConfig) {
     var path;
     //hits a GET to server, to check userID availability.
-    var asyncCheckGroupExistance = function(modelValue, b, v) {
+    var asyncCheckQuestionBankExists = function(modelValue, b, v) {
       var defer = $q.defer();
 
-      firebaseService.asyncCheckIfGroupExists(setChild(modelValue)).then(
+      firebaseService.asyncCheckIfQuestionBankExists(setChild(modelValue)).then(
         function(response) {
           if (response.exists) {
             defer.reject(); // reject if group already exixts
@@ -42,9 +42,9 @@
 
       require: "ngModel",
       link: function(scope, element, attributes, ngModel) {
-        path = attributes['grouppath']
-        ngModel.$asyncValidators.checkGroupExistance =
-          asyncCheckGroupExistance;
+         path = attributes['questionbankpath']
+        ngModel.$asyncValidators.checkQuestionbankExistance =
+          asyncCheckQuestionBankExists;
       }
     };
   }

@@ -229,9 +229,6 @@
         a(questionBankUniqueID.key(), function(res) {
           deferred.resolve(_self.books)
         })
-
-
-
       });
 
       return deferred.promise;
@@ -241,28 +238,26 @@
       firebaseService.getRefQuestionBank().child(questionBankUniqueID).once(
         'value',
         function(questionBank) {
-          _self.abc.push(questionBank.val())
-          console.log(_self.abc)
-          console.log(questionBank.val(), "33333333333333333333")
           _self.books.push(questionBank.val());
           _self.bookId.push(questionBank.key());
           cb()
         });
     }
-    _self.createQuestionBank = function(questionBankObject) {
+    _self.createQuestionBank = function(questionBankUniqueID,
+      questionBankObject) {
       // firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).set();
-      var questionBankUniqueId = firebaseService.getRefUserQuestionBanks().child(
-        userService.getCurrentUser().userID).push({
+      firebaseService.getRefUserQuestionBanks().child(
+        userService.getCurrentUser().userID).child(questionBankUniqueID).set({
         'memberships-type': 1,
         'timestamp': Firebase.ServerValue.TIMESTAMP
       });
       firebaseService.getRefQuestionBankMemberships().child(
-          questionBankUniqueId.key()).child(userService.getCurrentUser().userID)
+          questionBankUniqueID).child(userService.getCurrentUser().userID)
         .set({
           "memberships-type": 1,
           'timestamp': Firebase.ServerValue.TIMESTAMP
         });
-      firebaseService.getRefQuestionBank().child(questionBankUniqueId.key())
+      firebaseService.getRefQuestionBank().child(questionBankUniqueID)
         .set(questionBankObject);
     };
     _self.loadChapters = function(questionBankUniqueID) {

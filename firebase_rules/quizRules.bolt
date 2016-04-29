@@ -110,7 +110,7 @@ path /question-bank/{questionBankUniqueID} is QuestionBank {
     }
 }
 type QuestionBank {
-
+    im
     timestamp  : CurrentTimestamp,                   //Timestamp type extends globally
     title    : String,
     desc     : String
