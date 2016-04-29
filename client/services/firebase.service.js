@@ -49,6 +49,7 @@ angular.module('core')
       var questionBank = null;
       var userQuestionBanks = null;
       var questionBankMemberships = null;
+      var questionBankNames = null;
 
       return {
         addUpdateHandler: function() {
@@ -179,6 +180,9 @@ angular.module('core')
         getRefQuestionBankMemberships: function() {
           return questionBankMemberships;
         },
+        getRefQuestionBankNames: function() {
+          return questionBankNames;
+        },
         logout: function() {
           console.log('unauth the firebase');
           ref.unauth();
@@ -245,8 +249,8 @@ angular.module('core')
                 activitySeen = ref.child('activities-seen-by-user');
                 questionBank = ref.child('question-bank');
                 userQuestionBanks = ref.child('user-question-banks');
-                questionBankMemberships = ref.child(
-                  'question-bank-memberships');
+                questionBankMemberships = ref.child('question-bank-memberships');
+                questionBankNames = ref.child('question-bank-names');
 
 
 
@@ -300,7 +304,7 @@ angular.module('core')
         },
         asyncCheckIfQuestionBankExists: function(questionBankUniqueID) {
           var deferred = $q.defer();
-          questionBank.child(questionBankUniqueID).once('value', function(
+          questionBankNames.child(questionBankUniqueID).once('value', function(
             snapshot) {
             var exists = (snapshot.val() !== null);
             deferred.resolve({

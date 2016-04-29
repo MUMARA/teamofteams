@@ -4,49 +4,48 @@
 
 //directive to validate userID asynchronously from server, over singup page.
 
-(function() {
-  'use strict';
+(function () {
+    'use strict';
 
-  angular
-    .module('core')
-    .directive("checkQuestionbankExistance", checkQuestionbankExistance);
+    angular
+        .module('core')
+        .directive("checkQuestionbankExistance", checkQuestionbankExistance);
 
-  checkQuestionbankExistance.$inject = ['firebaseService', '$q', 'appConfig'];
+    checkQuestionbankExistance.$inject = ['firebaseService', '$q', 'appConfig'];
 
-  function checkQuestionbankExistance(firebaseService, $q, appConfig) {
-    var path;
-    //hits a GET to server, to check userID availability.
-    var asyncCheckQuestionBankExists = function(modelValue, b, v) {
-      var defer = $q.defer();
+    function checkQuestionbankExistance(firebaseService, $q, appConfig) {
+        var path;
+        //hits a GET to server, to check userID availability.
+        var asyncCheckQuestionBankExists = function (modelValue, b, v) {
+            var defer = $q.defer();
 
-      firebaseService.asyncCheckIfQuestionBankExists(setChild(modelValue)).then(
-        function(response) {
-          if (response.exists) {
-            defer.reject(); // reject if group already exixts
-          } else {
-            defer.resolve()
-          }
-        });
-      return defer.promise;
-    };
+            firebaseService.asyncCheckIfQuestionBankExists(setChild(modelValue)).then(
+                function (response) {
+                    if (response.exists) {
+                        defer.reject(); // reject if group already exixts
+                    } else {
+                        defer.resolve()
+                    }
+                });
+            return defer.promise;
+        };
 
-    function setChild(modelValue) {
-      if (path) {
-        return path + '/' + modelValue
-      } else {
-        return modelValue
-      }
+        function setChild(modelValue) {
+            if (path) {
+                return path + '/' + modelValue
+            } else {
+                return modelValue
+            }
 
+        }
+
+        return {
+            require: "ngModel",
+            link: function (scope, element, attributes, ngModel) {
+                path = attributes['questionbankpath'];
+                ngModel.$asyncValidators.checkQuestionbankExistance = asyncCheckQuestionBankExists;
+            }
+        };
     }
-    return {
-
-      require: "ngModel",
-      link: function(scope, element, attributes, ngModel) {
-         path = attributes['questionbankpath']
-        ngModel.$asyncValidators.checkQuestionbankExistance =
-          asyncCheckQuestionBankExists;
-      }
-    };
-  }
 
 })();

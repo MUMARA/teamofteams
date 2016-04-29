@@ -257,6 +257,7 @@
           "memberships-type": 1,
           'timestamp': Firebase.ServerValue.TIMESTAMP
         });
+        firebaseService.getRefQuestionBankNames().child(questionBankUniqueID).set({title:questionBankObject.title});
       firebaseService.getRefQuestionBank().child(questionBankUniqueID)
         .set(questionBankObject);
     };
@@ -268,8 +269,7 @@
 
       // Store chapters Ref
       var chapterRef = firebaseService.getRefQuestionBank().child(
-          questionBankUniqueID).child(
-          "chapters")
+          questionBankUniqueID).child("chapters");
         // chapters off Value Events
       chapterRef.off('child_added');
       // chapter Ref Value CallBack on Value Events
