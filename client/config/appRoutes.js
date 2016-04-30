@@ -270,7 +270,7 @@
         controllerAs: 'createTeamsChannels'
       });
       $stateProvider.state('user.questionbank', {
-        url: '/user/:userId/questionbank',
+        url: '/user/:userId/questionbanks',
         templateUrl: 'components/quiz/questionBanks.html',
         controller: 'QuizController',
         controllerAs: 'quiz'
