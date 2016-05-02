@@ -1153,6 +1153,19 @@
         }
       }
     },
+    "question-bank-names": {
+      "$questionBankUniqueID": {
+        ".validate": "newData.hasChildren(['title'])",
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".write": "data.val() == null && auth != null"
+      },
+      ".read": "auth != null"
+    },
     "question-bank": {
       "$questionBankUniqueID": {
         "chapters": {
@@ -1163,7 +1176,7 @@
                   "$questionId": {
                     "questiones": {
                       "$key3": {
-                        ".validate": "newData.hasChildren(['title', 'type', 'html', 'discussionHtml'])",
+                        ".validate": "newData.hasChildren(['title', 'type', 'html', 'discussion'])",
                         "title": {
                           ".validate": "newData.isString()"
                         },
@@ -1175,14 +1188,14 @@
                         },
                         "options": {
                           "$key4": {
-                            ".validate": "newData.hasChildren(['html', 'correct', 'discussionHtml'])",
+                            ".validate": "newData.hasChildren(['html', 'correct', 'discussion'])",
                             "html": {
                               ".validate": "newData.isString()"
                             },
                             "correct": {
                               ".validate": "newData.isBoolean()"
                             },
-                            "discussionHtml": {
+                            "discussion": {
                               ".validate": "newData.isString()"
                             },
                             "$other": {
@@ -1190,7 +1203,7 @@
                             }
                           }
                         },
-                        "discussionHtml": {
+                        "discussion": {
                           ".validate": "newData.isString()"
                         },
                         "$other": {
@@ -1198,7 +1211,7 @@
                         }
                       }
                     },
-                    ".validate": "newData.hasChildren(['title', 'type', 'html', 'discussionHtml'])",
+                    ".validate": "newData.hasChildren(['title', 'type', 'html', 'discussion'])",
                     "title": {
                       ".validate": "newData.isString()"
                     },
@@ -1210,14 +1223,14 @@
                     },
                     "options": {
                       "$key4": {
-                        ".validate": "newData.hasChildren(['html', 'correct', 'discussionHtml'])",
+                        ".validate": "newData.hasChildren(['html', 'correct', 'discussion'])",
                         "html": {
                           ".validate": "newData.isString()"
                         },
                         "correct": {
                           ".validate": "newData.isBoolean()"
                         },
-                        "discussionHtml": {
+                        "discussion": {
                           ".validate": "newData.isString()"
                         },
                         "$other": {
@@ -1225,7 +1238,7 @@
                         }
                       }
                     },
-                    "discussionHtml": {
+                    "discussion": {
                       ".validate": "newData.isString()"
                     },
                     "$other": {
@@ -1336,14 +1349,14 @@
                         },
                         "options": {
                           "$key4": {
-                            ".validate": "newData.hasChildren(['html', 'correct', 'discussionHtml'])",
+                            ".validate": "newData.hasChildren(['html', 'correct', 'discussion'])",
                             "html": {
                               ".validate": "newData.isString()"
                             },
                             "correct": {
                               ".validate": "newData.isBoolean()"
                             },
-                            "discussionHtml": {
+                            "discussion": {
                               ".validate": "newData.isString()"
                             },
                             "$other": {
@@ -1407,8 +1420,8 @@
         "$other": {
           ".validate": "false"
         },
-        ".write": "data.val() == null && root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1",
-        ".read": "root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
+        ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1",
+        ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
       }
     },
     "quiz-in-progress": {
@@ -1416,7 +1429,7 @@
         "$subgroupId": {
           "$quizId": {
             ".validate": "newData.isBoolean()",
-            ".write": "data.val() == null && root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
+            ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
           }
         }
       }
@@ -1505,7 +1518,7 @@
             ".validate": "false"
           },
           ".write": "data.val() == null && (newData.child('memberships-type').val() == 1 && (auth != null && auth.uid == $userId))",
-          ".read": "root.child('quizes').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
+          ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
         },
         ".read": "auth != null && auth.uid == $userId"
       }

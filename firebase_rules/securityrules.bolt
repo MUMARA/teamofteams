@@ -1776,7 +1776,22 @@ type QuestionBankMembership {
      timestamp: CurrentTimeStamp                     //MemberType type extends globally
 }
 
+path /question-bank-names {
+    read() {
+      isAuthenticated()
+    }
 
+  /{questionBankUniqueID} is QuestionBankName {
+    create() {
+      isAuthenticated()
+    }
+  }
+
+
+}
+type QuestionBankName {
+  title: String
+}
 //----------------------------------
 //      question-bank (Before creating a QuestionBank, create a owner membership first)
 //----------------------------------
@@ -1816,19 +1831,19 @@ type Question {
    html: String,
    options: Map<String, Option>,
   // questiones: QuestionSet[] | Null,
-   "discussionHtml" : String
+   "discussion" : String
 }
 type QuestionSet {
    title: String,
    type: QuestionType, //QuestionTupe
    html: String,
    options: Map<String, Option>,
-   "discussionHtml" : String
+   "discussion" : String
 }
 type Option {
   "html": String,
   "correct": Boolean,
-  "discussionHtml" : String
+  "discussion" : String
 }
 //-----------------------------------------------------------
 // Options Type 1 Radio Button , 2 CheckBox And 3 question Set
@@ -1883,7 +1898,7 @@ type QuizQuestionDesc {
    title   : String,
    type    : QuestionType,
    desc    : String,
-  options: Map<String, Option>
+   options: Map<String, Option>
 }
 type Quiz {
   title: String,
@@ -1973,6 +1988,6 @@ type QuizMembership {
    timestamp: CurrentTimeStamp,
 }
 function isQuizOwner(quizId) {
-  return prior(root["quizes"][auth.uid][quizId]["memberships-type"].val() == 1)
+  return prior(root["user-quiz"][auth.uid][quizId]["memberships-type"].val() == 1)
 }
 //===========================================================  23/1/16
