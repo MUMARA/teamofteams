@@ -247,7 +247,7 @@
 
                     <div flex layout="row">
                         <md-input-container class="search-input-quiz" ng-show="quizes.booksSearch">
-                            <input type="text" ng-model="bSearch"
+                            <input type="text" ng-model="quizes.query"
                                    aria-label="Chapter Search Box">
                         </md-input-container>
 
@@ -265,7 +265,7 @@
             </md-toolbar>
             <div class="quiz-md-card-1">
                 <md-list class="quiz-sidebar-nav">
-                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.quizesData track by $index"
+                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.quizesData | filter: quizes.query track by $index"
                                   id="bookId{{$index}}"
                                   ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
                                   ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
@@ -420,7 +420,7 @@
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Eat cake"
                        ng-hide="quizes.showQuizList"
-                       ng-click="quizes.addChapter()">
+                       ng-click="quizes.addQuestionBank()">
                 <ng-md-icon icon="add" style="fill: #fff;"></ng-md-icon>
             </md-button>
         </div>
@@ -435,7 +435,7 @@
 
                 <div flex layout="row">
                     <md-input-container class="search-input-quiz" ng-show="quizes.chapterSearch">
-                        <input type="text" ng-model="cSearch"
+                        <input type="text" ng-model="quizes.cSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
@@ -476,7 +476,7 @@
                </div>
                </md-toolbar>-->
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="chapter in quizes.chapters | filter:cSearch"
+                 ng-repeat="chapter in quizes.chapters | filter:quizes.cSearch"
                  ng-click="quizes.setSelectedChapter(this, $index); quizes.showTopics($index);"
                  id="chapid{{$index}}" ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
@@ -496,7 +496,7 @@
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Eat cake"
                        ng-hide="quizes.showQuizList"
-                       ng-click="quizes.addChapter()">
+                       ng-click="">
                 <ng-md-icon icon="add" style="fill: #fff;"></ng-md-icon>
             </md-button>
         </div>
@@ -511,7 +511,7 @@
 
                 <div flex layout="row">
                     <md-input-container class="search-input-quiz" ng-show="quizes.topicSearch">
-                        <input type="text" ng-model="tSearch"
+                        <input type="text" ng-model="quizes.tSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
@@ -552,7 +552,7 @@
                 </div>
             </md-toolbar>-->
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="topic in quizes.topics | filter:tSearch"
+                 ng-repeat="topic in quizes.topics | filter:quizes.tSearch"
                  ng-click="quizes.setSelectedTopic(this,$index);quizes.showQuestions($index);"
                  ng-mouseenter="quizes.hover(chapter)" ng-mouseleave="quizes.hover(chapter)"
                  ng-class="{selectedTopic: $index == quizes.selectedTopicIndex,
@@ -585,7 +585,7 @@
 
                 <div flex layout="row">
                     <md-input-container class="search-input-quiz" ng-show="quizes.questionSearch">
-                        <input type="text" ng-model="qSearch"
+                        <input type="text" ng-model="quizes.qSearch"
                                aria-label="Chapter Search Box">
                     </md-input-container>
 
@@ -603,7 +603,7 @@
         </md-toolbar>
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="question in quizes.questions | filter:qSearch"
+                 ng-repeat="question in quizes.questions | filter:quizes.qSearch"
                  ng-click="quizes.setSelectedQuestion(this,$index); quizes.showQuestionView(question);quizes.booksNav = false"
                  ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
@@ -732,7 +732,7 @@
 <!--Create Chapter Navigation Start-->
 <md-sidenav style="width: 35%;" class="md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope" md-component-id="nav2" tabindex="-1">
     <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
-        <h1 class="md-toolbar-tools"><strong>Select Chapters</strong></h1>
+        <h1 class="md-toolbar-tools"><strong>Select Books</strong></h1>
     </md-toolbar>
     <md-list class="quiz-sidebar-nav">
         <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books track by $index"
@@ -740,8 +740,8 @@
                       ng-click="quizes.addQuestionBank(this, $index);"
                       ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
             <!-- Books Side-->
-            <div layout="row" class="subgroupcard" style="height: 120px">
-                <div class="subgrouplogo" style="height: 120px">
+            <div layout="row" class="subgroupcard" style="height: 32px">
+                <div class="subgrouplogo" style="height: 33px">
                     <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
                 </div>
                 <div layout="column" flex>
@@ -750,10 +750,10 @@
                         <!--<ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"-->
                         <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
                     </div>
-                    <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
+                    <!--<div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
                         <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                              class="icon40px imageRound" alt="user" layout-margin/>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
