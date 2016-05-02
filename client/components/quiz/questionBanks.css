@@ -9,7 +9,24 @@ blockquote {
 .foreColorWhite {
     color: #fff;
 }
-
+div[ta-bind="ta-bind"] h1 {
+  margin-top: 0px
+}
+div[ta-bind="ta-bind"] h2 {
+  margin-top: 0px
+}
+/*div[ta-bind="ta-bind"] p {
+  margin-top: 0px
+}*/
+div[ta-bind="ta-bind"] h5 {
+  margin-top: 0px
+}
+div[ta-bind="ta-bind"] h6 {
+  margin-top: 0px
+}
+.marginTop16px {
+  margin-top: 16px;
+}
 .IconCenter {
     position: absolute;
     top: 53%;

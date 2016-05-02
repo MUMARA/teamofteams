@@ -339,16 +339,22 @@
                 </h2>
             </div>
         </md-toolbar>
-        <div layout-padding class="show-question-section-main-div" ng-if="quiz.questionView.type != 3"
+        <div class="show-question-section-main-div" ng-if="quiz.questionView.type != 3"
              ng-show="quiz.showQuestionDetails">
-            <p><b>Question : {{$index + 1 + " : " + quiz.questionView.html}}</b></p>
+             <div layout="row">
+              <b class="marginTop16px"> Question : {{$index + 1 + " : "}}</b> &nbsp; &nbsp;<div ng-model="quiz.questionView.html" ta-bind="ta-bind" >{{quiz.questionView.html}}</div>
 
+             </div>
+            <md-divider></md-divider>
             <p><b>Options :</b></p>
-
             <div class="options-question" ng-repeat="option in quiz.questionView.options">
-                <span ng-if="!option.correct">Option {{$index+1}} : {{option.html}}</span>
-                <span ng-if="option.correct">Option {{$index+1}} : {{option.html}}
-                    <ng-md-icon icon="done"></ng-md-icon></span>
+              <div layout="row" ng-if="!option.correct">
+                <span  class="marginTop16px" >Option {{$index+1}} : </span> &nbsp; &nbsp; <span ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
+              </div>
+              <div layout="row" ng-if="option.correct">
+                <span class="marginTop16px" >Option {{$index+1}} : </span> &nbsp; &nbsp;<span ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
+                  <ng-md-icon icon="done" style="fill: green;margin-top: 12px;"></ng-md-icon>
+              </div>
             </div>
             <!--<div ng-if="quiz.questionView.type === 1">
                 <h4>Correct Answer</h4>
@@ -362,17 +368,22 @@
             </div>-->
         </div>
         <div ng-show="quiz.questionView.type == 3">
-            <h4>Question : {{quiz.questionView.html}}</h4>
-
+          <div layout="row">
+            <h4>Question : </h4> &nbsp; &nbsp;<div ng-model="quiz.questionView.html" ta-bind="ta-bind">{{quiz.questionView.html}}</div>
+          </div>
             <div ng-repeat="questionSet in quiz.questionView.questiones">
-                <h5>Sub question ; {{questionSet.html}}</h5>
+              <div layout="row">
+                <h5 style="margin-top:19px;">Sub question : </h5> &nbsp; &nbsp; <div ng-model="questionSet.html" ta-bind="ta-bind">{{questionSet.html}}</div>
+              </div>
+                  <div ng-repeat="option in questionSet.options">
+                    <div layout="row" ng-if="!option.correct">
+                      <span style="margin-top:15px;">Option {{$index+1}} : </span> &nbsp; &nbsp;  <span  ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
 
-                <div ng-repeat="option in questionSet.options">
-                    <span ng-if="!option.correct">Option {{$index+1}} : {{option.html}}</span>
-                    <span ng-if="option.correct">
-                        Option {{$index+1}} : {{option.html}}
+                    </div>
+                    <div layout="row"  ng-if="option.correct" >
+                      <span style="margin-top:15px;">Option {{$index+1}} :   </span>  &nbsp; &nbsp; <span  ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
                         <ng-md-icon icon="done" style="fill: green"></ng-md-icon>
-                    </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -598,10 +609,10 @@
     <div layout="column">
         <div text-angular style="outline:none;" class="Height80vh" ng-model="quiz.question.html"></div>
         <div layout="row" layout-align="end center" layout-padding layout-margin="">
-            <md-button ng-click="quiz.closeTextangular('showTextangular')" class="backColorSeaGreen color-white">
+            <md-button aria-label="Show Text Angular" ng-click="quiz.closeTextangular('showTextangular')" class="backColorSeaGreen color-white">
                 Save
             </md-button>
-            <md-button ng-click="quiz.closeTextangular('showTextangular')" class="md-raised">
+            <md-button aria-label="Show Text Angular" ng-click="quiz.closeTextangular('showTextangular')" class="md-raised">
                 Cancel
             </md-button>
         </div>
@@ -613,10 +624,10 @@
     <div layout="column">
         <div text-angular style="outline:none;" class="Height80vh" ng-model="quiz.questionSet.html"></div>
         <div layout="row" layout-align="end center" layout-padding layout-margin="">
-            <md-button ng-click="quiz.closeTextangular('ShowQuestionsetSideNav')" class="backColorSeaGreen color-white">
+            <md-button aria-label="Show Text Angular" ng-click="quiz.closeTextangular('ShowQuestionsetSideNav')" class="backColorSeaGreen color-white">
                 Save
             </md-button>
-            <md-button ng-click="quiz.closeTextangular('ShowQuestionsetSideNav')" class="md-raised">
+            <md-button aria-label="Show Text Angular" ng-click="quiz.closeTextangular('ShowQuestionsetSideNav')" class="md-raised">
                 Cancel
             </md-button>
         </div>
@@ -644,10 +655,10 @@
     <div layout="column">
         <div text-angular style="outline:none;" class="Height80vh" ng-model="option.html"></div>
         <div layout="row" layout-align="end center" layout-padding layout-margin="">
-            <md-button ng-click="quiz.closeTextangular($index)" class="backColorSeaGreen color-white">
+            <md-button aria-label="Show Text Angular" ng-click="quiz.closeTextangular($index)" class="backColorSeaGreen color-white">
                 Save
             </md-button>
-            <md-button ng-click="quiz.closeTextangular($index)" class="md-raised">
+            <md-button aria-label="Show Text Angular" ng-click="quiz.closeTextangular($index)" class="md-raised">
                 Cancel
             </md-button>
         </div>
@@ -691,7 +702,7 @@
                     </div>
                     <div ng-if="quiz.question.type">
                         <div layout="row">
-                          <md-button class="md-button md-mini BackGroundColorSkyBlue md-icon-button" style="padding-top:6px;" ng-click="quiz.closeTextangular('showTextangular')">
+                          <md-button aria-label="Show Text Angular" class="md-button md-mini BackGroundColorSkyBlue md-icon-button" style="padding-top:6px;" ng-click="quiz.closeTextangular('showTextangular')">
                             <ng-md-icon icon="mode_edit"  class="fillColorWhite nooutline"></ng-md-icon>
                           </md-button>
 
@@ -726,7 +737,7 @@
                         <md-input-container style="width: 95%;">
 
                             <label style="font-weight:lighter;">Answer Explanation</label>
-                        <textarea name="questiondiscussionHtml" row="10" ng-model="quiz.question.discussionHtml"
+                        <textarea name="questiondiscussionHtml" row="10" ng-model="quiz.question.discussion"
                                   minlength="10" maxlength="200" required>
                        </textarea>
 
@@ -775,8 +786,8 @@
 
                             </md-input-container> -->
                             <md-input-container style="width:95%;">
-                                <label>discussionHtml</label>
-                                <input type="text" ng-model="quiz.questionSet.discussionHtml">
+                                <label>Discussion</label>
+                                <input type="text" ng-model="quiz.questionSet.discussion">
 
                             <span layout="row">
                                <ng-md-icon icon="delete" ng-disabled="!quiz.questionSet.html"
@@ -863,9 +874,9 @@
                                             <div layout="row">
                                                 <md-input-container style="margin:0px">
                                                     <label>Option Explanation</label>
-                                                    <input type="text" ng-model="option.discussionHtml">
+                                                    <input type="text" ng-model="option.discussion">
                                             <span layout="row">
-                                             <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
+                                             <ng-md-icon icon="delete" ng-disabled="!option.discussion"
                                                          class="nooutline delete-icon-option"
                                                          ng-click="quiz.deleteQuestionSetOption($index)">
                                              </ng-md-icon>
@@ -911,11 +922,11 @@
                                         <md-input-container flex>
                                             <label>Option Explanation</label>
                                                 <textarea md-maxlength="150" rows="5" style="width:95%;"
-                                                          ng-model="option.discussionHtml"></textarea>
+                                                          ng-model="option.discussion"></textarea>
 
                                         </md-input-container>
                                             <span layout="row">
-                                             <ng-md-icon icon="delete" ng-disabled="!option.discussionHtml"
+                                             <ng-md-icon icon="delete" ng-disabled="!option.discussion"
                                                          class="nooutline delete-icon-option"
                                                          ng-click="quiz.deleteQuestionSetOption($index)">
                                              </ng-md-icon>
@@ -973,7 +984,7 @@
                                                 ng-click="quiz.closeTextangular($index)">
 
                                     </ng-md-icon> -->
-                                    <md-button class="md-button md-mini BackGroundColorSkyBlue md-icon-button" style="padding-top:6px;" ng-click="quiz.closeTextangular($index)">
+                                    <md-button aria-label="Show Text Angular" class="md-button md-mini BackGroundColorSkyBlue md-icon-button" style="padding-top:6px;" ng-click="quiz.closeTextangular($index)">
                                       <ng-md-icon icon="mode_edit"  class="fillColorWhite nooutline"></ng-md-icon>
                                     </md-button>
                                     <span class="foreColorWhite ">Option {{$index + 1}}</span>
@@ -995,7 +1006,7 @@
                                         <md-input-container flex>
                                             <label>Option Explanation</label>
                                         <textarea md-maxlength="150" rows="5"
-                                                  ng-model="option.discussionHtml" style="width:95%;"></textarea>
+                                                  ng-model="option.discussion" style="width:95%;"></textarea>
                                             <span layout="row">
                                                <ng-md-icon icon="delete" ng-disabled="!option.html"
                                                            class="nooutline delete-icon-option"
@@ -1027,7 +1038,7 @@
                                         ng-click="quiz.closeTextangular($index)">
 
                             </ng-md-icon> -->
-                            <md-button class="md-button md-mini BackGroundColorSkyBlue md-icon-button"  style="padding-top:6px;" ng-click="quiz.closeTextangular($index)">
+                            <md-button aria-label="Show Text Angular" class="md-button md-mini BackGroundColorSkyBlue md-icon-button"  style="padding-top:6px;" ng-click="quiz.closeTextangular($index)">
                               <ng-md-icon icon="mode_edit"  class="fillColorWhite nooutline"></ng-md-icon>
                             </md-button>
                             <span class="foreColorWhite">Option {{$index + 1}}</span>
@@ -1046,7 +1057,7 @@
                                 <md-input-container flex>
                                     <label>Option Explanation</label>
                                         <textarea md-maxlength="150" rows="5" style="width:95%;"
-                                                  ng-model="option.discussionHtml"></textarea>
+                                                  ng-model="option.discussion"></textarea>
 
                                 </md-input-container>
                                 <ng-md-icon icon="delete" ng-disabled="!option.html" style="padding-top: 25px"
