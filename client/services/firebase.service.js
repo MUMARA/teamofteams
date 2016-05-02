@@ -47,6 +47,7 @@ angular.module('core')
             var userQuestionBanks = null;
             var questionBankMemberships = null;
             var userQuiz = null;
+            var quiz = null;
 
             return {
                 addUpdateHandler: function() {
@@ -179,6 +180,9 @@ angular.module('core')
                 getRefUserQuiz:  function() {
                     return userQuiz;
                 },
+                getRefQuiz:  function() {
+                    return quiz;
+                },
                 logout: function() {
                   console.log('unauth the firebase');
                   ref.unauth();
@@ -234,6 +238,10 @@ angular.module('core')
                                 userQuestionBanks = ref.child('user-question-banks');
                                 questionBankMemberships = ref.child('question-bank-memberships');
                                 userQuiz = ref.child('user-quiz');
+                                quiz = ref.child('quizes');
+
+
+
 
                                 
 

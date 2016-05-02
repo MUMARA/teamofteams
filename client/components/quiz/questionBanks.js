@@ -947,7 +947,7 @@
       //     _self.books = data;
       //   }
       // )
-      _self.questionbankObj = {}
+      _self.questionbankObj = {};
       /*userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child(_self.bookID).set({
        'memberships-type': 1,
        'timestamp': Firebase.ServerValue.TIMESTAMP

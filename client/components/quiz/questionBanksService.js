@@ -40,9 +40,7 @@
        }
        }
        })*/
-      .service('quizBankService', ['firebaseService', 'userService', '$q',
-        quizBank
-      ])
+      .service('quizBankService', ['firebaseService', 'userService', '$q', quizBank])
       .factory('quizService', ["$location", function($location) {
         var _self = this;
 
@@ -218,7 +216,7 @@
     _self.topicsId = [];
     _self.questions = [];
     _self.questionId = [];
-    _self.abc = []
+    _self.abc = [];
     _self.loadQuestionBanks = function() {
       _self.books = [];
       _self.bookId = [];

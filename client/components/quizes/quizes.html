@@ -395,6 +395,28 @@
                     <!--<img src="img/1dots.svg" class="img-dots">-->
                 <!--</div>-->
             <!--</div>-->
+            <div class="md-whiteframe-2dp quiz-md-card-item"
+                 ng-repeat="chapter in quiz.chapters | filter:cSearch"
+                 ng-click="quiz.setSelectedChapter(this, $index); quiz.showTopics($index);"
+                 id="chapid{{$index}}" ng-mouseenter="quiz.hover(chapter)"
+                 ng-mouseleave="quiz.hover(chapter)"
+                 ng-class="{selectedChapter: $index == quiz.selectedChapterIndex,
+                 previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}"
+                 on-chapter-render>
+                <div title="{{chapter.description}}" layout="row" class="item-content">
+                    <img src="img/1chapter.svg">
+
+                    <div flex layout="row" layout-align="start center">
+                        <span flex="10"></span>
+                        <span><b>{{chapter.title}}</b></span>
+                    </div>
+                    <img src="img/1dots.svg" class="img-dots">
+                    <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedChapterIndex" layout="column"
+                         layout-align="center end">
+                        <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                    </div>
+                </div>
+            </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
                        aria-label="Eat cake"
                        ng-hide="quizes.showQuizList"
@@ -715,7 +737,7 @@
     <md-list class="quiz-sidebar-nav">
         <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books track by $index"
                       id="bookId{{$index}}"
-                      ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
+                      ng-click="quizes.addQuestionBank(this, $index);"
                       ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
             <!-- Books Side-->
             <div layout="row" class="subgroupcard" style="height: 120px">
