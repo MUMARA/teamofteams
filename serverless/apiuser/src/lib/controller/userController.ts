@@ -3,6 +3,7 @@
 import * as nodeUuid from 'node-uuid';
 import * as fs from 'fs';
 import * as ejs from 'ejs';
+import * as path from 'path';
 
 import {User, IUser} from '../model/userModel';
 import {credentials} from '../config/credentials';
@@ -14,6 +15,15 @@ import {client} from '../config/postmark';
 
 let appconfig = credentials.product;
 let verificationEmailTemplate = '';
+
+fs.readFile(path.resolve(__dirname + '../views/verificationEmail.ejs'), function (err, template) {
+    if (err) {
+        console.log('file read error: ' + err);
+    } else {
+        console.log('file read succeed');
+        verificationEmailTemplate = template + '';
+    }
+});
 
 export function userSignup(event, context: Context) {
 
@@ -84,21 +94,27 @@ export function userSignup(event, context: Context) {
                             statusDesc: "error occurred while saving user details."
                         });
                     } else {
-                        context.succeed({
-                            uid: user.userID,
-                            statusCode: 1,
-                            statusDesc: "signed up successfully."
-                        });
 
                         //send a verification email to new user.
-                        sendVerificationEmail(userObj);
+                        sendVerificationEmail(userObj, function () {
+                            context.succeed({
+                                uid: user.userID,
+                                statusCode: 1,
+                                statusDesc: "signed up successfully. Text Changed"
+                            });
+
+                        });
+
+
                     }
                 });
             }
         });
     }
 
-    function sendVerificationEmail(user: IUser) {
+    function sendVerificationEmail(user: IUser, cb: () => void) {
+        console.log('started sending email')
+        console.log(verificationEmailTemplate);
         var template = ejs.render(verificationEmailTemplate, {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -108,17 +124,23 @@ export function userSignup(event, context: Context) {
             domain: appconfig.DOMAIN,
             supportEmail: appconfig.SUPPORT
         });
+        console.dir(template)
         var payload = {
             "To": user.email,
             "From": appconfig.SUPPORT,
             "Subject": 'Verify your ' + appconfig.TITLE + ' membership',
             "HtmlBody": template
         };
+        console.dir(payload);
         client.sendEmail(payload, function (err, data) {
             if (err) {
                 console.log('email sent error: ' + user.email);
                 return console.error(err.message);
-            }
+            } //else {
+            console.log('Email Sent')
+            console.dir(data)
+            cb();
+            //}
         });
     }
 }
@@ -165,30 +187,30 @@ export function userSignin(event, context: Context) {
         User.findOneAndUpdate({
             email: user.email
         }, {
-            $set: {
-                lastLogin: currentDate.toISOString(),
-                lastGenerated: user.lastGenerated,
-                token: token
-            }
-        }, function (err, user) {
-            var userObj;
-            if (err) {
-                context.succeed({
-                    statusCode: 0,
-                    statusDesc: "error occurred."
-                });
-            } else {
-                userObj = getUserObjForResponse(user);
-                userObj.token = token;
-                context.succeed({
-                    statusCode: 1,
-                    statusDesc: "signed in successfully.",
-                    user: userObj
-                });
-            }
-        });
+                $set: {
+                    lastLogin: currentDate.toISOString(),
+                    lastGenerated: user.lastGenerated,
+                    token: token
+                }
+            }, function (err, user) {
+                var userObj;
+                if (err) {
+                    context.succeed({
+                        statusCode: 0,
+                        statusDesc: "error occurred."
+                    });
+                } else {
+                    userObj = getUserObjForResponse(user);
+                    userObj.token = token;
+                    context.succeed({
+                        statusCode: 1,
+                        statusDesc: "signed in successfully.",
+                        user: userObj
+                    });
+                }
+            });
     }
-    
+
     function getToken(currentDate, user) {
         var token;
 
@@ -202,7 +224,7 @@ export function userSignin(event, context: Context) {
 
         return token;
     }
-    
+
     function createNewToken(user) {
         //storing the Date for generated token, to validate the token for next 24 hrs.
         user.lastGenerated = (new Date()).toISOString();
@@ -211,10 +233,10 @@ export function userSignin(event, context: Context) {
             uid: user.userID,
             data: getUserObjForResponse(user)
         }, {
-            debug: true
-        });
+                debug: true
+            });
     }
-    
+
     function getUserObjForResponse(user) {
         return {
             email: user.email,

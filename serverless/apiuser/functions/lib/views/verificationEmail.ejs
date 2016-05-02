@@ -1,0 +1,23 @@
+Dear <%= firstName %> <%= lastName %>,
+<br>
+<br>
+Thank you for signing up !
+<br/>
+Please verify your email address (<a href="mailto:<%= email %>"><%= email %></a>)
+for the Team of Teams account.&nbsp; Just click the link below to verify you email.
+<br>
+<br>
+<a href="<%= baseUrl %>api/verifyemail/<%= token %>" target="_blank">
+    <%= domain %>api/verifyemail/<%= token %>
+</a>
+<br>
+<br>
+If you have any questions, contact us anytime at <a href="mailto:<%= supportEmail %>"><%= supportEmail %></a>.
+<br>
+<br>
+Best Wishes,
+<br>
+TeamofTeams
+<br>
+<br>
+<a href="<%= domain %>" target="_blank"><%= domain %></a>

@@ -1,7 +1,9 @@
 /// <reference path="../../../typings/tsd.d.ts" />
 "use strict";
 var nodeUuid = require('node-uuid');
+var fs = require('fs');
 var ejs = require('ejs');
+var path = require('path');
 var userModel_1 = require('../model/userModel');
 var credentials_1 = require('../config/credentials');
 var tokenGenerator_1 = require('../config/tokenGenerator');
@@ -9,6 +11,15 @@ var fireHandler = require('./fireHandler');
 var postmark_1 = require('../config/postmark');
 var appconfig = credentials_1.credentials.product;
 var verificationEmailTemplate = '';
+fs.readFile(path.resolve(__dirname + '../views/verificationEmail.ejs'), function (err, template) {
+    if (err) {
+        console.log('file read error: ' + err);
+    }
+    else {
+        console.log('file read succeed');
+        verificationEmailTemplate = template + '';
+    }
+});
 function userSignup(event, context) {
     var emailReg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     if (!emailReg.test(event.email) || (typeof event.userID !== 'string') || event.userID.length < 3 || event.userID.length > 20) {
@@ -75,19 +86,22 @@ function userSignup(event, context) {
                         });
                     }
                     else {
-                        context.succeed({
-                            uid: user.userID,
-                            statusCode: 1,
-                            statusDesc: "signed up successfully."
-                        });
                         //send a verification email to new user.
-                        sendVerificationEmail(userObj);
+                        sendVerificationEmail(userObj, function () {
+                            context.succeed({
+                                uid: user.userID,
+                                statusCode: 1,
+                                statusDesc: "signed up successfully. Text Changed"
+                            });
+                        });
                     }
                 });
             }
         });
     }
-    function sendVerificationEmail(user) {
+    function sendVerificationEmail(user, cb) {
+        console.log('started sending email');
+        console.log(verificationEmailTemplate);
         var template = ejs.render(verificationEmailTemplate, {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -97,17 +111,23 @@ function userSignup(event, context) {
             domain: appconfig.DOMAIN,
             supportEmail: appconfig.SUPPORT
         });
+        console.dir(template);
         var payload = {
             "To": user.email,
             "From": appconfig.SUPPORT,
             "Subject": 'Verify your ' + appconfig.TITLE + ' membership',
             "HtmlBody": template
         };
+        console.dir(payload);
         postmark_1.client.sendEmail(payload, function (err, data) {
             if (err) {
                 console.log('email sent error: ' + user.email);
                 return console.error(err.message);
-            }
+            } //else {
+            console.log('Email Sent');
+            console.dir(data);
+            cb();
+            //}
         });
     }
 }
