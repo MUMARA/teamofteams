@@ -1,4 +1,16 @@
 /* Text Angular Css start */
+div button[name="insertImage"] {
+    display: none !important;
+  }
+  div button[name="insertLink"] {
+    display: none !important;
+  }
+  div button[name="html"] {
+    display: none !important;
+  }
+  div button[name="insertVideo"] {
+    display: none !important;
+  }
 blockquote {
     padding: 10px 20px;
     margin: 20px 20px 20px;
