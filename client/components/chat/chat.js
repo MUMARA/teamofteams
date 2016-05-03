@@ -13,7 +13,7 @@
         };
         this.returnMoment = function (timestamp) {
             if (timestamp) {
-                return moment().from(timestamp);
+                return moment().to(timestamp);
             } else {
                 return ''
             }
@@ -99,7 +99,14 @@
                 });
             }
         };
-        function onSuccessErrorChannelCreation(err){
+        function onSuccessErrorChannelCreation(err, channelID, channelTitle){
+            if (that.messagesArray.length == 0) {
+                var channel = {
+                    $id: channelID,
+                    title: channelTitle
+                };
+                that.gotoChannel(channel);
+            }
             if (err) {
                 messageService.showFailure(err);
             } else {
@@ -113,9 +120,19 @@
             that.groupID = $stateParams.groupID;
             that.subgroupID = $stateParams.subgroupID;
             if (that.subgroupID) {
-                that.channels = chatService.getSubGroupChannel(that.groupID, that.subgroupID);
+                chatService.getSubGroupChannel(that.groupID, that.subgroupID).$loaded().then(function(snapshot){
+                    that.channels = snapshot;
+                    if(snapshot.length > 0) {
+                        that.gotoChannel(snapshot[0])
+                    }
+                });
             } else {
-                that.channels = chatService.getGroupChannel(that.groupID);
+                chatService.getGroupChannel(that.groupID).$loaded().then(function(snapshot){
+                    that.channels = snapshot;
+                    if(snapshot.length > 0) {
+                        that.gotoChannel(snapshot[0])
+                    }
+                });
             }
             that.activeTitle = 'Select Channel to Start Chat';
             that.activeChannelID = null;

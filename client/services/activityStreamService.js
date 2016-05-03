@@ -32,7 +32,7 @@
             };
 
             //getting curent user groups and then getting its notification/activities but first we get timestamp of seen activities to get records of activities
-            getLastSeenActivityTimeStamp();    
+            getLastSeenActivityTimeStamp();
             //getGroupsOfCurrentUser();
 
             //getting current user subgroup names
@@ -68,7 +68,7 @@
 
                     onchnaged = 0;
                 }
-                
+
                 //getGroupsOfCurrentUser(snapshot.val());
             });
 
@@ -90,7 +90,7 @@
             }
         }        // LastChildAddedClosed
 
-        
+
 
         //for activity step1
         function getGroupsOfCurrentUser(date) {
@@ -107,34 +107,34 @@
                         //getting activity by subgroup
                         getActivityOfCurrentUserBySubGroup(group.key(), date);
                     }, 1000);
-                                        
+
                 }
             });
-            
+
             //child_changed on user-group-memberships
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_changed', function (group) {
                 // console.log('group child_changed', group.val());
                 //change membership in currentUserGroupNamesAndMemberShips
                 currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
-                
+
                 // delete all activity from user activity array of group.key()
-                // if (group.val()['membership-type'] == '-1') { 
-                //     currentUserActivities.forEach(function (val, index) { 
-                //         if (val.groupID == group.key()) { 
+                // if (group.val()['membership-type'] == '-1') {
+                //     currentUserActivities.forEach(function (val, index) {
+                //         if (val.groupID == group.key()) {
                 //             //remove all notifications if user blocked
                 //             currentUserActivities.splice(val, 1);
-                //         } 
+                //         }
                 //     })
                 // }
-                
+
             });
-            
+
             //child_removed on user-group-memberships
             firebaseService.getRefUserGroupMemberships().child(userID).on('child_removed', function (group) {
                 // console.log('group child_removed', group.val());
                 //delete group from currentUserGroupNamesAndMemberShips
                 delete currentUserGroupNamesAndMemberShips[group.key()];
-                
+
                 // delete all activity from user activity array of group.key()  (remove activity related from group)
                 // currentUserActivities.forEach(function (val, index) {
                 //     if (val.groupID == group.key()) {
@@ -149,6 +149,9 @@
         function getActivityOfCurrentUserByGroup(groupID, date) {
             //getting activity streams from firebase node: group-activity-streams.startAt(startDate.setHours(0, 0, 0, 0))
             if (date) {
+                //close child_added Event....
+                firebaseService.getRefGroupsActivityStreams().child(groupID).off("child_added");
+                  
                 firebaseService.getRefGroupsActivityStreams().child(groupID)
                     .orderByChild('published').startAt(date).on("child_added", function(snapshot) {
                     if (snapshot && snapshot.val()) {
@@ -162,6 +165,7 @@
                     }
                 });
             } else {
+                
                 firebaseService.getRefGroupsActivityStreams().child(groupID)
                     .orderByChild('published').on("child_added", function(snapshot) {
                     if (snapshot && snapshot.val()) {
@@ -181,7 +185,7 @@
         function getSubGroupsOfCurrentUsers() {
             firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function(snapshot) {
 
-                //register subgroup added 
+                //register subgroup added
                 //addedUserSubgroupMembershipOnSubgroupEvent(snapshot.key());
 
                 //register removed event of any subgroup membership
@@ -205,22 +209,22 @@
 
         function removeUserSubgroupMembershipOnGroupEvent(group) {
             firebaseService.getRefUserSubGroupMemberships().child(userID).child(group).on('child_removed', function (snapshot) {
-                console.log('watch subgroup child_removed', snapshot.val(), snapshot.key());
-                
-                for (var subgroup in snapshot.val()) {
-                    //delete membership type from subgroup object     
-                    if (subgroup) {
-                        delete currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup]; 
+                // console.log('watch subgroup child_removed', snapshot.val(), snapshot.key());
+
+                //for (var subgroup in snapshot.val()) {
+                    //delete membership type from subgroup object
+                    if (snapshot.key()) {
+                        delete currentUserSubGroupNamesAndMemberShips[group][snapshot.key()];
                     }
-                    
+
                     // // delete all activity from user activity array of subgroup (remove activity related from subgroup)
                     // currentUserActivities.forEach(function (val, index) {
                     //     if (val.subgroupID == subgroup) {
                     //         //remove all notifications if user blocked
                     //         currentUserActivities.splice(val, 1);
                     //     }
-                    // });    
-                }
+                    // });
+                //}
             });
         }   // removeUserSubGroupMembershipEvent
 
@@ -229,13 +233,16 @@
                 console.log('watch: ', snapshot.key(), snapshot.val());
             });
         }   // addedUserSubgroupMembershipOnSubgroupEvent
-        
-        
-        
+
+
+
         //for activity of subgroup
         function getActivityOfCurrentUserBySubGroup(groupID, date) {
             //getting activity streams from firebase node: subgroup-activity-streams
             if (date) {
+                //close child_added Event....
+                firebaseService.getRefSubGroupsActivityStreams().child(groupID).off('child_added');
+                
                 firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
                     if (subgroup && subgroup.val()) {
                         firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key())
@@ -250,7 +257,7 @@
                                     // seen: false
                                 });
                             }
-                        });                
+                        });
                     }
                 });
             } else {
@@ -268,7 +275,7 @@
                                     // seen: false
                                 });
                             }
-                        });                
+                        });
                     }
                 });
             }
@@ -292,16 +299,16 @@
                     currentUserSubGroupsMembersAndMemberShips[groupID] = {};
                     currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
                     currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] })
-                }               
+                }
                 //currentUserSubGroupsMembers[groupID][subgroupID] = snapshot.key();
             }); //firebaseService.getRefSubGroupMembers
-            
+
             //remove subgroup when child_removed from subgroup
             firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_removed', function (snapshot) {
                 // console.log('member child_removed: ', snapshot.key(), snapshot.val());
                 //when member remove from subgroup then update array of  currentUserSubGroupsMembersAndMemberShips
                 delete currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID];
-    
+
             });
         } //getSubGroupsMembersOfCurrentUsers
 
@@ -326,7 +333,7 @@
 
         // activities - seen - by - user
             // userid
-                //timesapan: 
+                //timesapan:
         function activityHasSeen() {
             firebaseService.getRefActivitySeen().child(userID).update({ timestamp: firebaseTimeStamp }, function(err) {
                 if (!err) {

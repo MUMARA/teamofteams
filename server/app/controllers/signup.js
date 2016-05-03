@@ -36,7 +36,7 @@ exports.signUp = function(req, res) {
     var emailReg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
     //validates email address and userID missing
-    if (!emailReg.test(req.body.email) || (typeof req.body.userID !== 'string') || req.body.userID.length < 3) {
+    if (!emailReg.test(req.body.email) || (typeof req.body.userID !== 'string') || req.body.userID.length < 3 || req.body.userID.length > 20) {
         res.send({
             statusCode: 0,
             statusDesc: "email address Or userID is invalid."

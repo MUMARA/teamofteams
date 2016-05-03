@@ -55,7 +55,7 @@
                     'cancelSubGroupCreation': function(userId) {
                         console.log("SubGroup Creation Cancelled");
                         soundService.playFail();
-                        $location.path('/user/' + userService.getCurrentUser().userID)
+                        $location.path('/user/' + userService.getCurrentUser().userID);
                     },
                     'uploadPicture': function(file, groupID) {
                         var defer = $q.defer();
@@ -110,7 +110,7 @@
 
                             })
                             .catch(function(err) {
-                                defer.reject(err)
+                                defer.reject(err);
                             });
 
                         return defer.promise;
@@ -136,7 +136,7 @@
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
                                 subgroupNameRef.title = subgroupRef.title;
                                 subgroupNameRef.subgroupImgUrl = subgroupInfo.imgLogoUrl || '';
-                                subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
+                                //subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();
@@ -144,7 +144,7 @@
                                         //$rootScope.newImg = null;
 
                                         //update subgroup-policy
-                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );                                        
+                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );
 
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
@@ -172,7 +172,7 @@
                                 if (error) {
                                     messageService.showFailure("Team not created");
                                 } else {
-                                    messageService.showSuccess('Team Created Successfully')
+                                    messageService.showSuccess('Team Created Successfully');
                                 }
                             });
                         }
@@ -328,10 +328,19 @@
 
                             firebaseService.getRefMain().child("subgroup-members/" + groupID + "/" + subgroupID + "/" + userID + "/").remove(function(err) {
                                 // console.log(err);
-
-                                firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
-                                    // console.log(err);
-                                });
+                                if (!submembers) {
+                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").once('value', function(snapshot){
+                                        submembers = snapshot.val();
+                                        console.log('testest', submembers)
+                                        firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                            console.log(err);
+                                        });
+                                    });
+                                } else {
+                                    firebaseService.getRefMain().child("subgroups/" + groupID + "/" + subgroupID + "/members-count").set(submembers - 1, function(err) {
+                                        // console.log(err);
+                                    });
+                                }
 
 
 
