@@ -621,10 +621,18 @@
             quizesService.setQuestionObject(null);
             // quizService.book = bookIndex;
             _self.bookId = quizesBankService.bookId[quizIndex];
-
+            _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
 
             _self.showQuestionDetails = false;
             _self.questionView = null;
+            quizesBankService.loadQuizes(_self.quizId).then(
+                function(questionBanks) {
+                    console.log(questionBanks);
+                    _self.questionBanks = questionBanks;
+
+                    //_self.chapters = chapters;
+                });
+
             /*quizesBankService.loadChapters(_self.bookId).then(
                 function(chapters) {
                     _self.chapters = chapters;

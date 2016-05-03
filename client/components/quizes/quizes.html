@@ -396,7 +396,7 @@
                 <!--</div>-->
             <!--</div>-->
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="chapter in quiz.chapters | filter:cSearch"
+                 ng-repeat="chapter in quizes.questionBanks | filter:cSearch"
                  ng-click="quiz.setSelectedChapter(this, $index); quiz.showTopics($index);"
                  id="chapid{{$index}}" ng-mouseenter="quiz.hover(chapter)"
                  ng-mouseleave="quiz.hover(chapter)"
