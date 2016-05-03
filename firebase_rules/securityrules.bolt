@@ -1990,4 +1990,3 @@ type QuizMembership {
 function isQuizOwner(quizId) {
   return prior(root["user-quiz"][auth.uid][quizId]["memberships-type"].val() == 1)
 }
-//===========================================================  23/1/16
