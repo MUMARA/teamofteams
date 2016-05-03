@@ -271,7 +271,7 @@
       });
       $stateProvider.state('user.questionbank', {
         url: '/user/:userId/questionbanks',
-        templateUrl: 'components/quiz/questionBanks.html',
+        templateUrl: 'components/questionBank/questionBanks.html',
         controller: 'QuizController',
         controllerAs: 'quiz'
       });

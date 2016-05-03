@@ -2,44 +2,6 @@
   'use strict';
   angular
     .module('app.quiz', ['core'])
-    /*.directive('onBookRender', function ($timeout, quizService) {
-     return {
-     restrict: 'A',
-     link: function (scope, element, attr) {
-     if (scope.$last) {
-     $timeout(function () {
-     $('#bookId' + quizService.getBookIndex() + '').addClass('selectedBook')
-     }, 0);
-     }
-     }
-     }
-     })*/
-    /*.directive('onChapterRender', function ($timeout, quizService) {
-     return {
-     restrict: 'A',
-     link: function (scope, element, attr) {
-     $timeout(function () {
-     if (scope.$last) {
-     //$('#chapid' + quizService.getChapterIndex() + '').addClass('selectedChapter')
-     }
-     }, 0);
-
-
-     }
-     }
-     })*/
-    /*.directive('onTopicRender', function ($timeout, quizService) {
-     return {
-     restrict: 'A',
-     link: function (scope, element, attr) {
-     if (scope.$last) {
-     $timeout(function () {
-     $('#topicId' + quizService.getTopicIndex() + '').addClass('selectedTopic')
-     }, 0);
-     }
-     }
-     }
-     })*/
     .service('quizBankService', ['firebaseService', 'userService', '$q',
       quizBank
     ])
@@ -168,43 +130,6 @@
         }, 200);
         return debounceFn;
       }
-
-      /*_self.close = function () {
-       $mdSidenav('nav1').close()
-       .then(function () {
-       $log.debug("close LEFT is done");
-       });
-       }
-       _self.close = function () {
-       $mdSidenav('nav2').close()
-       .then(function () {
-       $log.debug("close LEFT is done");
-       });
-       }
-       _self.close = function () {
-       $mdSidenav('nav3').close()
-       .then(function () {
-       $log.debug("close RIGHT is done");
-       });
-       };
-       _self.close = function () {
-       $mdSidenav('nav4').close()
-       .then(function () {
-       $log.debug("close RIGHT is done");
-       });
-       };
-       _self.close = function () {
-       $mdSidenav('nav5').close()
-       .then(function () {
-       $log.debug("close RIGHT is done");
-       });
-       };
-       _self.close = function () {
-       $mdSidenav('nav6').close()
-       .then(function () {
-       $log.debug("close RIGHT is done");
-       });
-       };*/
     });
 
 
@@ -257,7 +182,10 @@
           "memberships-type": 1,
           'timestamp': Firebase.ServerValue.TIMESTAMP
         });
-        firebaseService.getRefQuestionBankNames().child(questionBankUniqueID).set({title:questionBankObject.title});
+      firebaseService.getRefQuestionBankNames().child(questionBankUniqueID)
+        .set({
+          title: questionBankObject.title
+        });
       firebaseService.getRefQuestionBank().child(questionBankUniqueID)
         .set(questionBankObject);
     };
@@ -269,8 +197,8 @@
 
       // Store chapters Ref
       var chapterRef = firebaseService.getRefQuestionBank().child(
-          questionBankUniqueID).child("chapters");
-        // chapters off Value Events
+        questionBankUniqueID).child("chapters");
+      // chapters off Value Events
       chapterRef.off('child_added');
       // chapter Ref Value CallBack on Value Events
       var chapterRefValueCallBack = chapterRef.on('child_added', function(
@@ -279,13 +207,6 @@
         _self.chapters.push(ChaptersUniqueId.val());
 
         deferred.resolve(_self.chapters);
-        // console.log(ChaptersUniqueId.val())
-        // for (var key in ChaptersUniqueId.val()) {
-        //   _self.chaptersId.push(key);
-        //   _self.chapters.push(ChaptersUniqueId.val()[key]);
-        //
-        //   deferred.resolve(_self.chapters);
-        // }
       });
 
       return deferred.promise;
@@ -317,17 +238,9 @@
         function(topics) {
           _self.topicsId.push(topics.key());
           _self.topics.push(topics.val());
-          console.log(topics.val())
           deferred.resolve(_self.topics);
-          // for (var key in topics.val()) {
-          //   _self.topicsId.push(key);
-          //   _self.topics.push(topics.val()[key]);
-          //   console.log(_self.topics)
-          //   deferred.resolve(_self.topics);
-          // }
         });
 
-      // topicRef.off("value", TopicValueCallBack)
       return deferred.promise;
     };
     _self.loadQuestions = function(questionBankUniqueID, chapterUniqueId,
@@ -337,11 +250,13 @@
       _self.questionId = [];
       //Store questions Ref
       var questionsRef = firebaseService.getRefQuestionBank().child(
-          questionBankUniqueID).child(
-          "chapters").child(chapterUniqueId).child("topics").child(
-          topicUniqueId).child("questions")
-        // Questions off Value Events
+        questionBankUniqueID).child(
+        "chapters").child(chapterUniqueId).child("topics").child(
+        topicUniqueId).child("questions")
+
+      // Questions off Value Events
       questionsRef.off('child_added');
+
       // Questions Ref Value CallBack on Value Events
       var questionsRefValueCallBack = questionsRef.on('child_added',
         function(
@@ -349,41 +264,12 @@
           _self.questionId.push(questions.key());
           _self.questions.push(questions.val());
           deferred.resolve(_self.questions);
-          // for (var key in questions.val()) {
-          //   _self.questionId.push(key);
-          //   _self.questions.push(questions.val()[key]);
-          //   deferred.resolve(_self.questions);
-          // }
         });
 
       return deferred.promise;
     };
     _self.createQuestion = function(questionBankUniqueID, chapterUniqueId,
       topicUniqueId, questionObject) {
-      /*            var questionObject = {
-       title: "title",
-       type: 3, //QuestionTupe
-       html: "htmlsllssllss",
-       questiones: [{
-       title: "Title",
-       type: 1, // it only just radio and CheckBox
-       html: "HTML",
-       options: [{
-       "html": "hello ",
-       "correct": false,
-       "discussion-html": "sajklksjls"
-       },
-       {
-       "html": "helkkdjjs",
-       "correct": true,
-       "discussion-html": "hekejejsd"
-       }],
-       "discussion-html" : "String"
-
-       },
-       ],
-       "discussion-html": "hgshshs"
-       }*/
       firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
         'chapters').child(chapterUniqueId).child("topics").child(
         topicUniqueId).child("questions").push(questionObject);
