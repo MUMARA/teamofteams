@@ -1176,10 +1176,7 @@
                   "$questionId": {
                     "questiones": {
                       "$key3": {
-                        ".validate": "newData.hasChildren(['title', 'type', 'html', 'discussion'])",
-                        "title": {
-                          ".validate": "newData.isString()"
-                        },
+                        ".validate": "newData.hasChildren(['type', 'html', 'discussion'])",
                         "type": {
                           ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
                         },
@@ -1420,7 +1417,7 @@
         "$other": {
           ".validate": "false"
         },
-        ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1",
+        ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1",
         ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
       }
     },
