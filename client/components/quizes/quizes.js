@@ -51,6 +51,7 @@
         _self.ShowNavBar = ShowNavBar;
         // Create Function for Book, Chapter, Topic , question and Open Side nav bar
         _self.createQuiz = createQuiz;
+        _self.addQBank = addQBank;
         _self.addChapter = addChapter;
         _self.CreateChapter = CreateChapter;
         _self.addTopic = addTopic;
@@ -169,13 +170,11 @@
             quizesBankService.loadQuestionBanks().then(
                 function(data) {
                     _self.books = data;
-                    // console.log(data, 'console.log(questionBank.val())');
+                    console.log(_self.books, "_self.books");
                 }
             )
         }
-
         initQuestionBank();
-
         function initQuiz() {
             console.log("initQuiz");
             quizesBankService.loadQuiz().then(
@@ -1083,7 +1082,7 @@
              });*/
         }
 
-        function addChapter() {
+        function addQBank() {
             if (_self.bookId) {
                 $timeout(function() {
                     _self.showChapter = naveService.toggleRight2;
@@ -1092,6 +1091,17 @@
             } else {
                 messageService.showSuccess('Please Select Book');
             }
+        }
+        function addChapter() {
+           /* if (_self.bookId) {
+                $timeout(function() {
+                    _self.showChapter = naveService.toggleRight2;
+                    _self.showChapter();
+                }, 0);
+            } else {
+                messageService.showSuccess('Please Select Book');
+            }*/
+            console.log("Add Chapter")
         }
 
         function closeChapter() {
