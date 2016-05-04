@@ -1756,7 +1756,7 @@
 
         function addQuestionBank(qBank, quizIndex){
             //alert('Haider');
-
+    console.log(qBank,"11111")
             _self.selectedQuestionBank = {
                 title: qBank.book.title,
                 imgLogoUrl: qBank.book.imgLogoUrl
