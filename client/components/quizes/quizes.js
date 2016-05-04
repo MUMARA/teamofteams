@@ -613,13 +613,16 @@
 
         /*  Question Bank   */
         function showChapters(quizIndex) {
+
             _self.selectedBookIndex = quizIndex;
             quizesService.setQuestionObject(null);
             quizesService.setChapter(null, null);
             quizesService.setTopic(null, null);
             quizesService.setQuestionObject(null);
+            _self.questionBanks = null;
             // quizService.book = bookIndex;
             _self.bookId = quizesBankService.bookId[quizIndex];
+            console.log(_self.bookId);
             _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
 
             _self.showQuestionDetails = false;
@@ -1083,7 +1086,7 @@
         }
 
         function addQBank() {
-            if (_self.bookId) {
+            if (_self.quizId) {
                 $timeout(function() {
                     _self.showChapter = naveService.toggleRight2;
                     _self.showChapter();
