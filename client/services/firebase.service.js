@@ -50,7 +50,9 @@ angular.module('core')
       var userQuestionBanks = null;
       var questionBankMemberships = null;
       var questionBankNames = null;
-
+      var quizNames = null;
+      var userQuiz = null;
+      var quiz = null;
       return {
         addUpdateHandler: function() {
           ref.onAuth(function(authData) {
@@ -183,6 +185,15 @@ angular.module('core')
         getRefQuestionBankNames: function() {
           return questionBankNames;
         },
+        getRefUserQuiz: function() {
+          return userQuiz;
+        },
+        getRefQuiz: function() {
+          return quiz;
+        },
+        getRefQuizNames: function() {
+          return quizNames;
+        },
         logout: function() {
           console.log('unauth the firebase');
           ref.unauth();
@@ -249,9 +260,12 @@ angular.module('core')
                 activitySeen = ref.child('activities-seen-by-user');
                 questionBank = ref.child('question-bank');
                 userQuestionBanks = ref.child('user-question-banks');
-                questionBankMemberships = ref.child('question-bank-memberships');
+                questionBankMemberships = ref.child(
+                  'question-bank-memberships');
                 questionBankNames = ref.child('question-bank-names');
-
+                quizNames = ref.child('quiz-name');
+                userQuiz = ref.child('user-quiz');
+                quiz = ref.child('quizes');
 
 
                 /*presence API work*/
@@ -304,14 +318,28 @@ angular.module('core')
         },
         asyncCheckIfQuestionBankExists: function(questionBankUniqueID) {
           var deferred = $q.defer();
-          questionBankNames.child(questionBankUniqueID).once('value', function(
-            snapshot) {
-            var exists = (snapshot.val() !== null);
-            deferred.resolve({
-              exists: exists,
-              questionbank: snapshot.val()
+          questionBankNames.child(questionBankUniqueID).once('value',
+            function(
+              snapshot) {
+              var exists = (snapshot.val() !== null);
+              deferred.resolve({
+                exists: exists,
+                questionbank: snapshot.val()
+              });
             });
-          });
+          return deferred.promise;
+        },
+        asyncCheckIfQuizExists: function(quizID) {
+          var deferred = $q.defer();
+          quizNames.child(quizID).once('value',
+            function(
+              snapshot) {
+              var exists = (snapshot.val() !== null);
+              deferred.resolve({
+                exists: exists,
+                quizbank: snapshot.val()
+              });
+            });
           return deferred.promise;
         }
       };
