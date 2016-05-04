@@ -1,0 +1,217 @@
+function isSignedIn() {
+    return auth != null
+}
+
+//----------------------------------
+// Define isCurrentUser() function to test if the given user id
+// matches the currently signed-in user.
+//----------------------------------
+
+function isCurrentUser(uid) {
+    return isSignedIn() && auth.uid == uid
+}
+
+type CurrentTimestamp extends Number {
+  validate() {    this <= Date.now; }
+}
+
+//-----------------------------------------------------------------------------------
+//       MemberType type extends globally and MemberType Number Validations Should Be
+//-----------------------------------------------------------------------------------
+function memberTypeShouldBe(that , num){
+    return that  == num;
+}
+
+type QuestionBankMember extends Number {
+
+    validate(){
+        memberTypeShouldBe(this , 1) || memberTypeShouldBe(this , 2); // Owner = 1, Admin = 2
+    }
+
+}
+
+function isQuestionBankOwner(questionBankMember) {
+    return memberTypeShouldBe(questionBankMember , 1)
+}
+
+function isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, value){
+   return isSignedIn() && isCurrentUserQuestionBankOwner(questionBankUniqueID) && memberTypeShouldBe(value["member-type"], 2);
+}
+
+function isCurrentUserQuestionBankOwner(questionBankUniqueID) {
+    return isCurrentUserQuestionBankMember(questionBankUniqueID) &&
+    prior(memberTypeShouldBe(root.question-bank-memberships[questionBankUniqueID][auth.uid]["member-type"], 1));
+}
+function isCurrentUserQuestionBankAdmin(questionBankUniqueID) {
+    return isCurrentUserQuestionBankMember(questionBankUniqueID) &&
+    prior(memberTypeShouldBe(root.question-bank-memberships[questionBankUniqueID][auth.uid]["member-type"], 2));
+}
+
+function isCurrentUserQuestionBankMember(questionBankUniqueID) {
+    prior(root.question-bank-memberships[questionBankUniqueID][auth.uid] != null)
+}
+
+
+
+//----------------------------------
+// Define function to test if the Question Bank Owner himself creating it for the first time
+//----------------------------------
+
+function isQuestionBankOwnerCreating(pathUserID, value) {
+    return isQuestionBankOwner(value["member-type"]) &&  isCurrentUser(pathUserID);
+}
+
+//----------------------------------
+//      question-bank-memberships (Before creating a QuestionBank, create a owner membership first)
+//----------------------------------
+path /user-question-banks/{userid}/{questionBankUniqueID} is QuestionBankMembership {
+      read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+      create() { isQuestionBankOwnerCreating(UserID, this) }
+      update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+}
+//----------------------------------
+//      question-bank-memberships (Before creating a QuestionBank, create a owner membership first)
+//----------------------------------
+
+path /question-bank-memberships/{questionBankUniqueID}/{UserID} is QuestionBankMembership {
+    read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+    create() { isQuestionBankOwnerCreating(UserID, this) }
+    update() { isQuestionBankOwnerCreating(UserID, this)  || isQuestionBankOwnerAppointingAdmin(questionBankUniqueID, this) }
+}
+
+type QuestionBankMembership {
+    "member-type" : QuestionBankMember,
+    timestamp: CurrentTimestamp                     //MemberType type extends globally
+}
+
+
+//----------------------------------
+//      question-bank (Before creating a QuestionBank, create a owner membership first)
+//----------------------------------
+path /question-bank/{questionBankUniqueID} is QuestionBank {
+  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+  create() { isSignedIn() }
+  update() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
+    /chapters/{chapterId} is ChapterAndTopic {
+        /topics/{topicId} is ChapterAndTopic {
+            /questions/{questionId} is Question {
+            }
+        }
+    }
+}
+type QuestionBank {
+
+    timestamp  : CurrentTimestamp,                   //Timestamp type extends globally
+    title    : String,
+    desc     : String
+}
+type ChapterAndTopic {
+    timestamp  : CurrentTimestamp,                   //Timestamp type extends globally
+    title    : String,
+    desc     : String
+}
+type Question {
+   title: String,
+   type: QuestionType, //QuestionTupe
+   html: String,
+  options: Option[] | Null,
+  questiones: QuestionSet[] | Null,
+  "discussion-html" : String
+}
+type QuestionSet {
+   title: String,
+   type: QuestionType, //QuestionTupe
+   html: String,
+  options: Option[] | Null,
+  "discussion-html" : String
+}
+type Option {
+  "html": String,
+  "correct": Boolean,
+  "discussion-html" : String
+}
+//-----------------------------------------------------------
+// Options Type 1 Radio Button , 2 CheckBox And 3 question Set
+//---------------------------------------------------------
+
+function optionsTypeShouldBe(that , num) {
+    return that == num
+}
+
+type QuestionType extends Number{
+   validate() {
+   optionsTypeShouldBe(this , 1 ) || optionsTypeShouldBe(this , 2 ) || optionsTypeShouldBe(this , 3 );
+   }
+}
+
+
+ //Discuss
+//----------------------------------
+//      Question Bank Quizes
+//----------------------------------
+/*
+path /question-bank-quizes/{questionBankID} is QuestionBankQuiz {
+  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+  create() { isSignedIn() }
+  update() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+}
+
+type QuestionBankQuiz {
+
+    validate(){this.hasChildren(['quizID'])}
+    $quizID : Boolean
+}*/
+
+//----------------------------------
+//      Group Quizes
+//----------------------------------
+
+path /group-quizes/{groupID}/{quizId} {
+ read() { isSignedIn() &&  groupMemberShipAny($groupid) }
+ create() { groupMemberShipAny($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
+ update() { groupMemberShipAny($groupid) && isGroupMembersIdExist($groupid) || isCurrentUserGroupMembersAdmin($groupid) }
+          /options is String[] { }
+}
+
+//===================================
+//function For Group-member
+//===================================
+
+function isGroupMembersIdExist($groupid) {
+  return prior(root['group-members'][$groupid][auth.uid] != null);
+}
+
+function groupMemberShipAny($groupid) {
+    return prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() > 0)
+ }
+
+function isCurrentUserGroupMembersOwner($groupid) {
+    return  prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() == 1 )
+ }
+
+
+ function isCurrentUserGroupMembersAdmin($groupid) {
+    return  prior(root['group-members'][$groupid][auth.uid]['membership-type'].val() ==2 )
+ }
+
+//----------------------------------
+//      Quizes
+//----------------------------------
+
+path /quizes/{quizID}  is QuizDesc {
+  read() { isSignedIn() && isCurrentUserQuestionBankMember(questionBankUniqueID) }
+  create() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
+  update() { isQuestionBankOwnerCreating(UserID, this)  ||
+             isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+}
+
+type QuizDesc {
+    title           : String,
+    desc            : String,
+    duration        : Number,
+    'num-questions' : Number
+
+}

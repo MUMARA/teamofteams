@@ -1,0 +1,372 @@
+/* Text Angular Css start */
+div button[name="insertImage"] {
+    display: none !important;
+  }
+  div button[name="insertLink"] {
+    display: none !important;
+  }
+  div button[name="html"] {
+    display: none !important;
+  }
+  div button[name="insertVideo"] {
+    display: none !important;
+  }
+blockquote {
+    padding: 10px 20px;
+    margin: 20px 20px 20px;
+    font-size: 1.5em;
+    border-left: 5px solid #8BCDDC
+}
+
+.foreColorWhite {
+    color: #fff;
+}
+div[ta-bind="ta-bind"] h1 {
+  margin-top: 0px
+}
+div[ta-bind="ta-bind"] h2 {
+  margin-top: 0px
+}
+/*div[ta-bind="ta-bind"] p {
+  margin-top: 0px
+}*/
+div[ta-bind="ta-bind"] h5 {
+  margin-top: 0px
+}
+div[ta-bind="ta-bind"] h6 {
+  margin-top: 0px
+}
+.marginTop16px {
+  margin-top: 16px;
+}
+.IconCenter {
+    position: absolute;
+    top: 53%;
+    left: 6%;
+}
+
+.optionTextCenter {
+    position: absolute;
+    top: 55%;
+    left: 11%;
+}
+
+.questionHtmlHeight {
+    width: 100%;
+    height: 200px;
+    background-color: white;
+    overflow: auto;
+}
+
+.optionHtml {
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    overflow: auto;
+}
+
+.questionSetHtmlHeight {
+    width: 100%;
+    background-color: white;
+    height: 100px;
+    overflow: auto;
+}
+
+.Height80vh {
+    height: 80vh !important;
+    outline: none;
+    padding: 8px;
+    overflow: auto;
+}
+
+.BackGroundColorSkyBlue {
+    background-color: #32B4CA !important;
+    fill: #fff;
+}
+
+.radio-btn-option {
+    display: inline-block;
+}
+
+/* Text Angular Css end */
+.full-width-radio {
+    width: 100%;
+}
+
+.quiz-sidenav-g {
+    z-index: 0 !important;
+    overflow-x: hidden;
+}
+
+.quiz-sidebar-nav {
+    padding: 0 !important;
+    list-style: none;
+    border: none;
+}
+
+.book-img-quiz {
+    height: 39px;
+    margin-left: 20px;
+}
+
+.delete-icon-option {
+    fill: gray;
+}
+
+.quiz-select-item {
+    position: absolute !important;
+    right: -10px !important;
+    top: 3px !important;
+    fill: #888787 !important;
+}
+
+.quiz-select-item-book {
+    position: absolute !important;
+    right: 5px !important;
+    fill: #888787 !important;
+    top: 45px !important;
+}
+
+.quiz-sidebar-nav md-list-item {
+    padding: 0 !important;
+}
+
+.quiz-sidebar-nav md-list-item button {
+    padding: 0 !important;
+}
+
+.book-img {
+    height: 120px;
+    width: 100%;
+}
+
+.quiz-columns-content {
+    width: 100%;
+}
+
+.quiz-col {
+    overflow-x: hidden;
+    width: 20%;
+}
+
+.quiz-col-margin-none {
+    overflow-x: hidden;
+    margin-left: 0 !important;
+    width: 20%;
+}
+
+.quiz-md-card-1 {
+    height: calc(100vh - 160px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    margin: 0 !important;
+}
+
+.quiz-md-card-item {
+    height: 70px;
+    border-top: 1px solid #ccc;
+    padding-top: 0 !important;
+    outline: none;
+    margin: 1px !important;
+    background-color: #FAFAFA;
+}
+
+.item-content {
+    font-size: 12px;
+    box-shadow: 0 20px 20px -20px rgba(0, 0, 0, 0.8);
+    position: relative;
+    border: 1px none;
+    margin-top: 14px
+}
+
+.item-content img {
+    margin-left: 15px;
+    margin-top: 2px;
+    height: 30px;
+    width: 30px;
+    float: right
+}
+
+.item-content div {
+    margin: 5px;
+    margin-left: -10px
+}
+
+.item-content .img-dots {
+    margin-left: 15px;
+    margin-top: 5px;
+    height: 30px;
+    width: 30px;
+    float: right
+}
+
+.img-div {
+    width: 100%;
+    text-align: right;
+}
+
+.search-input-quiz {
+    margin: 0 0 0 0;
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.search-input-quiz .md-input {
+    border-color: #fff !important;
+    font-size: 12px;
+    color: #FFFFFF;
+    margin-top: 30px
+}
+
+.close-img {
+    outline: none;
+    width: 20px;
+    height: 20px;
+    margin: 30px 0 0 -25px;
+    z-index: 4
+}
+
+.img-div :last-child {
+    margin-right: 15px;
+}
+
+.img-div img {
+    height: 16px;
+    z-index: 4;
+    width: 16px;
+    float: right;
+    outline: none;
+}
+
+.book-list-item {
+    border-top: 1px solid #ccc;
+}
+
+.quiz-search-bar {
+    margin: 0 !important;
+}
+
+.quiz-search-box-0 {
+    background: #8AC441 !important;
+}
+
+.quiz-search-box-1 {
+    /*background-color: #CAA100;*/
+    background-color: #C851DB;
+}
+
+.quiz-search-box-2 {
+    background-color: lightseagreen;
+    /*background-color: #00A7F8;*/
+
+}
+
+.quiz-search-box-3 {
+    background-color: lightcoral;
+}
+
+.quiz-search-box-5 {
+    /*background-color: #FF9800;*/
+    background-color: #00A7F8;
+}
+
+.quiz-menu-col {
+    height: calc(100vh - 64px);
+}
+
+.menu-item-btn {
+    border: 1px none;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.menu-item-btn .quiz-menu-btn {
+    width: 39px;
+    height: 63px;
+    margin-left: 16px
+}
+
+.menu-item-btn img {
+    height: 39px;
+    margin-top: 4px;
+    margin-left: 14px;
+}
+
+.show-question-section-main-div {
+    margin: 0;
+    word-wrap: break-word;
+    box-shadow: none;
+    /*background-color: #F2F2F2;*/
+}
+
+.options-question span {
+    /*margin-left: -1%!important;*/
+    white-space: pre
+}
+
+.options-question ng-md-icon {
+    fill: green
+}
+
+.create-sidenav-heading {
+    color: #d3d3d3;
+    padding-left: 8px;
+}
+
+.color-white {
+    color: #fff !important;
+}
+
+.quiz-dlt-btn {
+    fill: gray;
+    position: absolute;
+    top: 10px;
+}
+
+.close-icon {
+    fill: #d3d3d3
+}
+
+/*  OLD CSS */
+
+.add-books-nav {
+    margin-left: 10px;
+    width: 50%;
+    min-width: 50%;
+    max-width: 100%;
+    background-color: #fff;
+}
+
+.add-chapter-nav {
+    margin-left: 45px;
+    width: 50%;
+    min-width: 50%;
+    max-width: 100%;
+    background-color: #fff
+}
+
+.add-topic-nav {
+    margin-left: 45px;
+    width: 50%;
+    min-width: 50%;
+    max-width: 100%;
+    background-color: #fff
+}
+
+.text-angular-nav {
+    /*margin-left: 45px;*/
+    width: 80%;
+    min-width: 50%;
+    max-width: 100%;
+    background-color: #fff
+}
+
+.add-question-nav {
+    /*margin-left: 45px;*/
+    width: 50%;
+    min-width: 50%;
+    max-width: 100%;
+    background-color: #fff;
+    color: #2b2b2b;
+}

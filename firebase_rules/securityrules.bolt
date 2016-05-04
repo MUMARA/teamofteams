@@ -1834,7 +1834,6 @@ type Question {
    "discussion" : String
 }
 type QuestionSet {
-   title: String,
    type: QuestionType, //QuestionTupe
    html: String,
    options: Map<String, Option>,
@@ -1881,6 +1880,7 @@ create() {  isAuthenticatedUser(userId)}
 path /quizes/{quizId} is Quiz {
       read() { isQuizOwner(quizId) }
       create() { isQuizOwner(quizId) }
+      update() { isQuizOwner(quizId) }
       /questionbanks/{questionBankUniqueID} is QuizQuestionBank {
         /chapters/{chapterId}  is QuizChapter {
           /topics/{topicId} is QuizTopic  {
@@ -1990,4 +1990,3 @@ type QuizMembership {
 function isQuizOwner(quizId) {
   return prior(root["user-quiz"][auth.uid][quizId]["memberships-type"].val() == 1)
 }
-//===========================================================  23/1/16

@@ -75,7 +75,13 @@
             function quizStart() {
                 // console.log('done')
                 // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
-                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
+                $state.go('user.quizes', {userID: userService.getCurrentUser().userID});
+            }
+              this.quizCreate = function() {
+                  
+                $state.go('user.questionbank', {
+                 userId: userService.getCurrentUser().userID
+              });
             }
 
             //moment.js
