@@ -478,7 +478,6 @@
 
 
     //AddQuestion Controller Work
-    var _self = this;
 
     var idCounter = 3;
     this.showRadioOptions = false;
