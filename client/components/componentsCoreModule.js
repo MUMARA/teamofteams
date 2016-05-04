@@ -30,8 +30,8 @@
         'app.manualattendace',
         'app.progressreport',
         'app.chat',
-        'app.collaborator'
-
+        'app.collaborator',
+        'app.membershipcard'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',
