@@ -16,9 +16,9 @@
     ];
 
     function QuizesController(quizesBankService, $rootScope, appConfig,
-                            messageService, $stateParams, utilService, $q, $mdDialog, quizesService,
-                            $location, userService, naveService, $firebaseArray, $timeout, $mdToast,
-                            firebaseService, $firebaseObject, $sce, authService, $mdSidenav) {
+                              messageService, $stateParams, utilService, $q, $mdDialog, quizesService,
+                              $location, userService, naveService, $firebaseArray, $timeout, $mdToast,
+                              firebaseService, $firebaseObject, $sce, authService, $mdSidenav) {
 
         /*Private Variables*/
         var _self = this;
@@ -622,7 +622,7 @@
             _self.questionBanks = null;
             // quizService.book = bookIndex;
             _self.bookId = quizesBankService.bookId[quizIndex];
-            console.log(_self.bookId);
+
             _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
 
             _self.showQuestionDetails = false;
@@ -636,9 +636,9 @@
                 });
 
             /*quizesBankService.loadChapters(_self.bookId).then(
-                function(chapters) {
-                    _self.chapters = chapters;
-                });*/
+             function(chapters) {
+             _self.chapters = chapters;
+             });*/
 
             // _self.bookId = _self.booksId[bookIndex];
             // quizService.setBook(_self.bookId, bookIndex);
@@ -962,11 +962,11 @@
             ShowNavBar();
 
             _self.quizData = {
-            //    'memberships-type': 1,
+                //    'memberships-type': 1,
                 title: quizesData.name,
                 desc: quizesData.desc,
                 imgLogoUrl: img || 'img/question-bank.png',
-            //    'timestamp': Firebase.ServerValue.TIMESTAMP
+                //    'timestamp': Firebase.ServerValue.TIMESTAMP
             };
 
             quizesBankService.createQuiz(_self.quizData);
