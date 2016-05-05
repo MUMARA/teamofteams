@@ -119,7 +119,7 @@
 
             <div class="md-whiteframe-2dp quiz-md-card-item"
                  ng-repeat="questionbank in quizes.questionBanks | filter:cSearch"
-                 ng-click="quizes.setSelectedChapter(this, $index); quiz.showTopics($index);"
+                 ng-click="quizes.setSelectedChapter(this, $index);"
                  id="chapid{{$index}}" ng-mouseenter="quiz.hover(questionbank)"
                  ng-mouseleave="quiz.hover(questionbank)"
                  ng-class="{selectedChapter: $index == quiz.selectedChapterIndex,
@@ -230,8 +230,8 @@
         </md-toolbar>
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="topic in quizes.topics | filter:quizes.tSearch"
-                 ng-click="quizes.setSelectedTopic(this,$index);quizes.showQuestions($index);"
+                 ng-repeat="topic in quizes.QuizTopics | filter:quizes.tSearch"
+                 ng-click="quizes.setSelectedTopic(topic,$index);quizes.showQuestions($index);"
                  ng-mouseenter="quizes.hover(chapter)" ng-mouseleave="quizes.hover(chapter)"
                  ng-class="{selectedTopic: $index == quizes.selectedTopicIndex,
                  previousSelected: $index == quizes.selectedTopicIndex && quizes.selectedQuestionIndex !== null}">
@@ -280,7 +280,7 @@
         </md-toolbar>
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="question in quizes.questions | filter:quizes.qSearch"
+                 ng-repeat="question in quizes.quizQuestion | filter:quizes.qSearch"
                  ng-click="quizes.setSelectedQuestion(this,$index); quizes.showQuestionView(question);quizes.booksNav = false"
                  ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
@@ -291,7 +291,7 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{question.Title}}</b></span>
+                        <span><b>{{question.title}}</b></span>
                     </div>
                     <img src="img/1dots.svg" class="img-dots">
                 </div>
@@ -481,41 +481,10 @@
                 <div layout="column" flex>
                     <div layout="row" layout-align="space-between center">
                         <div layout-padding>{{chapter.title}}</div>
-                        <!--<ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"-->
-                        <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
                     </div>
-                    <!--<div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
-                        <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                             class="icon40px imageRound" alt="user" layout-margin/>
-                    </div>-->
-                </div>
+                  </div>
             </div>
 
-            <!-- <div style="background-color: #f7f7f7;border-bottom:solid #E5E5E5 "
-                  layout="column" layout-align="center center"
-                  ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
-                  ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-                 &lt;!&ndash;class="{{selected}}" (tahir Changes) ng-click="quizes.setSelectedBook(this, $index); !quizes.showQuizList && quizes.showChapters($index); quizes.showQuizList && quizes.showQuizes($index);"&ndash;&gt;
-
-                 <div layout="row" style="width: 100%">
-                     <img flex="33" ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}"
-                          class="md-card-image" alt="Washed Out">
-
-                     <div flex="67" style="background-color: #F7F7F7;">
-                         <span><b>{{book.title}}</b></span>
-                         <br/>
-                         &lt;!&ndash;<span style="font-size: 12px">{{book.description}}</span>&ndash;&gt;
-                         &lt;!&ndash;<img src="img/1dropdown.svg" style="height: 25px; width: 25px; margin-left: 134px">&ndash;&gt;
-                         <img style="border-radius: 50%;height: 50px; margin-top: 30px; align:right"
-                              ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                              class="userImg"/>
-                     </div>
-                 </div>
-                 <div layout="row" layout-align="center center"
-                      style="margin-top:5%;position: relative;">
-                 </div>
-             </div> -->
-            <md-divider></md-divider>
         </md-list-item>
         <md-divider></md-divider>
     </md-list>
@@ -537,61 +506,6 @@
     </md-content>
 </md-sidenav>
 
-
-<!--<md-sidenav class="md-sidenav-right add-chapter-nav backColorLightSeaGreen" md-component-id="nav2">
-    <ng-md-icon icon="close" size="30" class="nooutline close-icon" ng-click="quizes.closeChapter()">
-    </ng-md-icon>
-    <div>
-        <h1 class="create-sidenav-heading">Add Chapter</h1>
-        <md-content layout-padding class="backColorLightSeaGreen">
-            <form name="chapterForm">
-                <div layout="column">
-                    <md-input-container>
-                        <label>Chapter Title</label>
-                        <input name="chapterTitle"
-                               ng-model="quizes.Title" minlength="3" maxlength="40" required>
-                        &lt;!&ndash;check-chapter-existance=""&ndash;&gt;
-                        <div ng-show="chapterForm.$submitted || chapterForm.chapterTitle.$touched"
-                             ng-messages="chapterForm.chapterTitle.$error">
-                            <div class="invalid_color" ng-message="required">This is required.</div>
-                            <div class="invalid_color" ng-message="minlength">Required minimum length 3</div>
-                            <div class="invalid_color" ng-message="maxlength">Required maximum length 30</div>
-                        </div>
-                    </md-input-container>
-                    <md-input-container>
-                        <label>Chapter Description</label>
-                    <textarea name="chapterDescription" ng-model="quizes.Description"
-                              minlength="10" maxlength="200" required>
-                    </textarea>
-
-
-
-<md-sidenav style="width: 35%;" class="md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope" md-component-id="nav5" tabindex="-1">
-    <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
-        <h1 class="md-toolbar-tools"><strong>Select Chapters</strong></h1>
-    </md-toolbar>
-    <md-list class="quiz-sidebar-nav">
-        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="chapter in quizes.Quizchapters track by $index" ng-click="quizes.QuizAddchapters(chapter,$index)"
-                      ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-            <!-- Books Side-->
-
-
-    <!-- <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
-        <md-list role="list">
-            <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled">
-            class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
-            <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
-            <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
-            <span class="foreColorWhite ng-binding">Muhammad Ali Mughal</span>
-        </div></button></md-list-item>
-        </md-list>
-        <p><br></p>
-
-        <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
-            <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
-            </span></button>
-        </div>
-    </md-content> -->
 
 <!--Create Chapter Navigation End-->
 
@@ -896,7 +810,7 @@
                                                             style="margin: 4px 0px -3px 0px !important; background-color: #FAFAFA;"
                                                             ng-repeat="chapter in quizes.chapters | filter:cSNSearch"
                                                             ng-click="quizes.setSelectedChapters(this);
-                                                            !quizes.showQuizBar && quizes.showTopics($index);
+                                                            !quizes.showQuizBar;
                                                             quizes.showQuizBar && quizes.showQuizTopics($index);" id="chapid{{$index}}"
                                                             class="{{selected}}">
                                                         <md-card-content style="padding: 0 !important;overflow: auto "
@@ -954,8 +868,8 @@
                                                     <md-card style="margin: 1px !important;"
                                                              ng-repeat="topic in quizes.topics | filter:tSNSearch"
                                                              ng-click="quizes.setSelectedTopics(this);
-                    !quizes.showQuizBar && quizes.showQuestions($index);
-                    quizes.showQuizBar && quizes.showQuizQuestions($index);" id="topicId{{$index}}"
+                                                             !quizes.showQuizBar && quizes.showQuestions($index);
+                                                             quizes.showQuizBar && quizes.showQuizQuestions($index);" id="topicId{{$index}}"
                                                              ng-mouseenter="quizes.hover(chapter)"
                                                              ng-mouseleave="quizes.hover(chapter)"
                                                              class="{{selectedTopic}}">
@@ -1502,19 +1416,26 @@
     <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
         <h1 class="md-toolbar-tools"><strong>Select Questions</strong></h1>
     </md-toolbar>
-    <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
-        <md-list role="list">
-            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled"><button class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
-            <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
-            <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
-            <span class="foreColorWhite ng-binding">Muhammad Ali Mughal</span>
-        </div></button></md-list-item><!-- end ngRepeat: member in createSubGroup.members track by $index -->
-        </md-list>
-        <p><br></p>
+    <md-list class="quiz-sidebar-nav">
+        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="question in quizes.questionbanksQuestion track by $index"
+                      id="bookId{{$index}}"
+                      ng-click="quizes.QuizAddQuestion(question, $index);"
+                      ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
+            <!-- Books Side-->
+            <div layout="row" class="subgroupcard" style="height: 32px">
+                <div layout="column" flex>
+                    <div layout="row" layout-align="space-between center">
+                        <div layout-padding>{{question.title}}</div>
+                    </div>
+                  </div>
+            </div>
 
+        </md-list-item>
+        <md-divider></md-divider>
+    </md-list>
         <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
             <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
             </span></button>
         </div>
-    </md-content>
+
 </md-sidenav>
