@@ -282,7 +282,7 @@
     }
 
     function createQuiz(quizesData, img) {
-      ShowNavBar();
+      // ShowNavBar();
       _self.createBookLoader = true;
       var quizId = quizesData.id;
       if ($rootScope.newImg) {
@@ -298,9 +298,10 @@
               imgLogoUrl: _self.imgLogoUrl || 'img/question-bank.png',
             };
             quizesBankService.createQuiz(quizId, _self.quizData);
-            _self.quizData = {};
+            _self.quizesData = {};
             _self.createBookLoader = false;
-            // ShowNavBar();
+            ShowNavBar();
+            $rootScope.newImg = null;
           })
           .catch(function() {
             _self.createBookLoader = false;
@@ -310,11 +311,13 @@
         _self.quizData = {
           title: quizesData.name,
           desc: quizesData.desc,
-          imgLogoUrl: _self.imgLogoUrl || 'img/question-bank.png',
+          imgLogoUrl: img || 'img/question-bank.png',
         };
         quizesBankService.createQuiz(quizId, _self.quizData);
-        _self.quizData = {};
+        _self.quizesData = {};
         _self.createBookLoader = false;
+        ShowNavBar();
+
       }
     }
 

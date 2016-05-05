@@ -403,12 +403,16 @@
             </form>
         </md-content>
         <div layout="row" layout-align="center end">
-            <md-button class="backColorSeaGreen color-white"
+          <md-button layout="row" layout-align="center center" ng-disabled="bookForm.$invalid" class="backColorSeaGreen foreColorWhite displayFlex"  ng-click="quizes.createQuiz(quizes.quizesData, $root.newImg); $root.newImg = null">
+              <md-progress-circular ng-show="quizes.createBookLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+              <span> Create</span>
+          </md-button>
+            <!-- <md-button class="backColorSeaGreen color-white" layout="row"
                        ng-disabled="bookForm.$invalid" class="md-primary"
                        ng-click="quizes.createQuiz(quizes.quizesData, $root.newImg); $root.newImg = null">
-                       <md-progress-circular ng-show="quiz.createBookLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
-                Create
-            </md-button>
+                       <md-progress-circular ng-show="quizes.createBookLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                <span> Create</span>
+            </md-button> -->
             <md-button ng-click="quizes.closeBook()"
                        class="backColorSeaGreen color-white">
                 Close
