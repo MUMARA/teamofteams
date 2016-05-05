@@ -143,7 +143,7 @@
     _self.topicsId = [];
     _self.questions = [];
     _self.questionId = [];
-    _self.abc = []
+    _self.abc = [];
     _self.loadQuestionBanks = function() {
       _self.books = [];
       _self.bookId = [];
@@ -160,16 +160,13 @@
     };
 
     function a(questionBankUniqueID, cb) {
-      firebaseService.getRefQuestionBank().child(questionBankUniqueID).once(
-        'value',
-        function(questionBank) {
+      firebaseService.getRefQuestionBank().child(questionBankUniqueID).once('value',function(questionBank) {
           _self.books.push(questionBank.val());
           _self.bookId.push(questionBank.key());
           cb()
         });
     }
-    _self.createQuestionBank = function(questionBankUniqueID,
-      questionBankObject) {
+    _self.createQuestionBank = function(questionBankUniqueID, questionBankObject) {
       // firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).set();
       firebaseService.getRefUserQuestionBanks().child(
         userService.getCurrentUser().userID).child(questionBankUniqueID).set({
@@ -212,23 +209,27 @@
       return deferred.promise;
     };
     _self.createChapter = function(questionBankUniqueID, chapterObject) {
-      firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
-        'chapters').push(chapterObject);
+      var deferred = $q.defer();
+      firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters').push(chapterObject, function(err){
+        err==null?deferred.resolve('Save Topic'):deferred.reject();
+      });
+      return deferred.promise;
     };
-    _self.createTopic = function(questionBankUniqueID, chapterUniqueId,
-      topicObject) {
-      firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
-        'chapters').child(chapterUniqueId).child("topics").push(
-        topicObject);
+    _self.createTopic = function(questionBankUniqueID, chapterUniqueId, topicObject) {
+      var deferred = $q.defer();
+      firebaseService.getRefQuestionBank().child(questionBankUniqueID)
+          .child('chapters').child(chapterUniqueId).child("topics").push(topicObject, function(err){
+            err==null?deferred.resolve('Save Topic'):deferred.reject();
+          });
+      return deferred.promise;
     };
     _self.loadTopic = function(questionBankUniqueID, chapterUniqueId) {
       var deferred = $q.defer();
       _self.topics = [];
       _self.topicsId = [];
       // Store topicRef Ref
-      var topicRef = firebaseService.getRefQuestionBank().child(
-        questionBankUniqueID).child(
-        "chapters").child(chapterUniqueId).child("topics");
+      var topicRef = firebaseService.getRefQuestionBank().child(questionBankUniqueID)
+          .child("chapters").child(chapterUniqueId).child("topics");
       // Topic off Value Events
 
       topicRef.off('child_added');
@@ -243,8 +244,7 @@
 
       return deferred.promise;
     };
-    _self.loadQuestions = function(questionBankUniqueID, chapterUniqueId,
-      topicUniqueId) {
+    _self.loadQuestions = function(questionBankUniqueID, chapterUniqueId, topicUniqueId) {
       var deferred = $q.defer();
       _self.questions = [];
       _self.questionId = [];
@@ -268,11 +268,14 @@
 
       return deferred.promise;
     };
-    _self.createQuestion = function(questionBankUniqueID, chapterUniqueId,
-      topicUniqueId, questionObject) {
-      firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
-        'chapters').child(chapterUniqueId).child("topics").child(
-        topicUniqueId).child("questions").push(questionObject);
+    _self.createQuestion = function(questionBankUniqueID, chapterUniqueId, topicUniqueId, questionObject) {
+      var deferred = $q.defer();
+      firebaseService.getRefQuestionBank().child(questionBankUniqueID).child('chapters')
+          .child(chapterUniqueId).child("topics").child(topicUniqueId)
+          .child("questions").push(questionObject, function(err){
+            err==null?deferred.resolve('Save Question'):deferred.reject();
+          });
+      return deferred.promise;
     };
   }
 

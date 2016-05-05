@@ -842,17 +842,17 @@
     <div layout="row" layout-align="center end">
         <md-button ng-if="quiz.question.type == 1" style="color:#ffffff;" class="backColorSeaGreen"
                    ng-disabled="(!quiz.question.title) || (!quiz.question.html) || (!quiz.question.discussion) || !(quiz.correct == 0 || quiz.correct > 0)"
-                   ng-click="quiz.showAnswer(quiz.question);">
+                   ng-click="quiz.createQuestion(quiz.question);">
             Create
         </md-button>
         <md-button ng-if="quiz.question.type == 2" style="color:#ffffff;" class="backColorSeaGreen"
                    ng-disabled="(!quiz.question.title) || (!quiz.question.discussion)"
-                   ng-click="quiz.showAnswer(quiz.question);">
+                   ng-click="quiz.createQuestion(quiz.question);">
             Create {{quiz.correct}}
         </md-button>
         <md-button ng-if="quiz.question.type == 3" style="color:#ffffff;" class="backColorSeaGreen"
                    ng-disabled="(!quiz.question.title) || (!quiz.question.discussion) || (!quiz.question.html) || (!quiz.questionSet.html) || (!quiz.questionSet.discussion)"
-                   ng-click="quiz.showAnswer(quiz.question);">
+                   ng-click="quiz.createQuestion(quiz.question);">
             Create
         </md-button>
         <md-button style="color:#ffffff;" class="backColorSeaGreen" ng-click="quiz.closeQuestion();">
