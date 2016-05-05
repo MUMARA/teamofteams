@@ -53,6 +53,7 @@ angular.module('core')
       var quizNames = null;
       var userQuiz = null;
       var quiz = null;
+
       return {
         addUpdateHandler: function() {
           ref.onAuth(function(authData) {
