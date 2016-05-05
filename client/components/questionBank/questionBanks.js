@@ -128,8 +128,8 @@
     }
 
     function questionSetAddQuestion(questionSet) {
-      console.log(questionSet,"11111111111111")
-      // questionSet["title"] = "discussion-html";
+      console.log(questionSet, "11111111111111")
+        // questionSet["title"] = "discussion-html";
       angular.forEach(questionSet.options, function(val) {
         delete val.$$hashKey;
       });

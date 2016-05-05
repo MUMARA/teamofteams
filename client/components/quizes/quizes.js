@@ -283,18 +283,39 @@
 
     function createQuiz(quizesData, img) {
       ShowNavBar();
+      _self.createBookLoader = true;
       var quizId = quizesData.id;
-      _self.quizData = {
-        title: quizesData.name,
-        desc: quizesData.desc,
-        imgLogoUrl: img || 'img/question-bank.png',
-      };
-
-      quizesBankService.createQuiz(quizId, _self.quizData);
-
-      _self.quizData = {};
-
-
+      if ($rootScope.newImg) {
+        var x = utilService.base64ToBlob($rootScope.newImg);
+        var temp = $rootScope.newImg.split(',')[0];
+        var mimeType = temp.split(':')[1].split(';')[0];
+        _self.saveFile(x, mimeType, quizesData.id)
+          .then(function(url) {
+            _self.imgLogoUrl = url + '?random=' + new Date();
+            _self.quizData = {
+              title: quizesData.name,
+              desc: quizesData.desc,
+              imgLogoUrl: _self.imgLogoUrl || 'img/question-bank.png',
+            };
+            quizesBankService.createQuiz(quizId, _self.quizData);
+            _self.quizData = {};
+            _self.createBookLoader = false;
+            // ShowNavBar();
+          })
+          .catch(function() {
+            _self.createBookLoader = false;
+            alert('picture upload failed');
+          });
+      } else {
+        _self.quizData = {
+          title: quizesData.name,
+          desc: quizesData.desc,
+          imgLogoUrl: _self.imgLogoUrl || 'img/question-bank.png',
+        };
+        quizesBankService.createQuiz(quizId, _self.quizData);
+        _self.quizData = {};
+        _self.createBookLoader = false;
+      }
     }
 
     _self.selectBookPoster = function(ev) {
@@ -328,9 +349,9 @@
           }
         }
       };
-      defer.resolve(true);
+      // defer.resolve(true);
       /*remove it*/
-      //            xhr.send();
+      xhr.send();
       return defer.promise;
     };
 
@@ -434,8 +455,11 @@
 
       _self.bookId = quizesBankService.bookId[quizIndex];
       _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
-      quizesBankService.addQuestionBank(_self.selectedQuestionBank, _self.bookId,
-        _self.quizId);
+      quizesBankService.addQuizQuestionBank(_self.selectedQuestionBank, _self
+        .bookId,
+        _self.quizId).then(function(res) {
+        _self.questionBanks.push(_self.selectedQuestionBank)
+      });
 
 
 
@@ -475,7 +499,7 @@
       quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
         _self.chapterId, _self.topicId, _self.QuestionId, _self.questionObject
       ).then(function(res) {
-        _self.questionbanksQuestion.push(_self.questionObject)
+        _self.quizQuestion.push(_self.questionObject)
       });
     }
 

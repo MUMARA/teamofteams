@@ -272,11 +272,18 @@
       return deferred.promise;
     };
 
-    _self.addQuestionBank = function(qBank, questionBankUniqueId,
+    _self.addQuizQuestionBank = function(qBank, questionBankUniqueId,
       quizUniqueId) {
-
+        var deferred = $q.defer();
       firebaseService.getRefQuiz().child(quizUniqueId).child(
-        'questionbanks').child(questionBankUniqueId).set(qBank);
+        'questionbanks').child(questionBankUniqueId).set(qBank , function(err) {
+          if (err == null) {
+            deferred.resolve("saved");
+          } else {
+            deferred.reject("Error: " + err);
+          }
+        });
+        return deferred.promise;
     };
     _self.addQuizChapter = function(quizId, questionBankUniqueId,
       chapterId, chaptertitle) {
@@ -293,7 +300,6 @@
         }
       });
       return deferred.promise;
-
     };
 
     _self.loadTopic = function(questionBankUniqueID, chapterUniqueId) {

@@ -403,11 +403,10 @@
             </form>
         </md-content>
         <div layout="row" layout-align="center end">
-            <md-progress-circular class="" ng-show="bookForm.$submitted"
-                                  md-mode="indeterminate"></md-progress-circular>
             <md-button class="backColorSeaGreen color-white"
                        ng-disabled="bookForm.$invalid" class="md-primary"
                        ng-click="quizes.createQuiz(quizes.quizesData, $root.newImg); $root.newImg = null">
+                       <md-progress-circular ng-show="quiz.createBookLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
                 Create
             </md-button>
             <md-button ng-click="quizes.closeBook()"
