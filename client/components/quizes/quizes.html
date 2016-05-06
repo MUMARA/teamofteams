@@ -29,7 +29,7 @@
                 <md-list class="quiz-sidebar-nav">
                     <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.Quiz | filter: quizes.query track by $index"
                                   id="bookId{{$index}}"
-                                  ng-click="quizes.setSelectedBook(this, $index); quizes.showChapters($index); quizes.showQuizes($index);"
+                                  ng-click="quizes.setSelectedBook(this, $index); quizes.showQuizQuestionBank($index); quizes.showQuizes($index);"
                                   ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
                         <!-- Books Side-->
                         <div layout="row" class="subgroupcard" style="height: 120px">
@@ -118,8 +118,8 @@
         <div class="quiz-md-card-1">
 
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="questionbank in quizes.questionBanks | filter:cSearch"
-                 ng-click="quizes.setSelectedChapter(this, $index);"
+                 ng-repeat="questionbank in quizes.quizQuestionBanks | filter:cSearch"
+                 ng-click="quizes.showQuizChapter(this, $index);"
                  id="chapid{{$index}}" ng-mouseenter="quiz.hover(questionbank)"
                  ng-mouseleave="quiz.hover(questionbank)"
                  ng-class="{selectedChapter: $index == quiz.selectedChapterIndex,
@@ -477,7 +477,7 @@
     </md-toolbar>
     <md-list class="quiz-sidebar-nav">
       <md-list-item layout="row" layout-align="start center" ng-repeat="chapter in quizes.questionBankschapters track by $index" class="buttonHover nooutline" ng-click="quizes.QuizAddchapters(chapter, $index);">
-          <ng-md-icon size="24" icon="done" ng-class="subgroup.hasPolicy ? 'fillColorWhite' : 'fillColorDarkGrey' " style="margin-top: 10px">
+          <ng-md-icon size="24" icon="done" ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' " style="margin-top: 10px">
           </ng-md-icon>
           <span class="leftmargin10px foreColorWhite">{{chapter.title}}</span>
       </md-list-item>
@@ -814,7 +814,7 @@
                                                     <md-card
                                                             style="margin: 4px 0px -3px 0px !important; background-color: #FAFAFA;"
                                                             ng-repeat="chapter in quizes.chapters | filter:cSNSearch"
-                                                            ng-click="quizes.setSelectedChapters(this);
+                                                            ng-click="quizes.showQuizChapter(this);
                                                             !quizes.showQuizBar;
                                                             quizes.showQuizBar && quizes.showQuizTopics($index);" id="chapid{{$index}}"
                                                             class="{{selected}}">
