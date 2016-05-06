@@ -454,7 +454,8 @@
     </md-list>
     <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
         <md-list role="list">
-            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled">
+            <!-- ngRepeat: member in createSubGroup.members track by $index -->
+            <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled">
             class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
             <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
             <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
@@ -475,21 +476,22 @@
         <h1 class="md-toolbar-tools"><strong>Select Chapters</strong></h1>
     </md-toolbar>
     <md-list class="quiz-sidebar-nav">
-        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="chapter in quizes.questionBankschapters track by $index"
+      <md-list-item layout="row" layout-align="start center" ng-repeat="chapter in quizes.questionBankschapters track by $index" class="buttonHover nooutline" ng-click="quizes.QuizAddchapters(chapter, $index);">
+          <ng-md-icon size="24" icon="done" ng-class="subgroup.hasPolicy ? 'fillColorWhite' : 'fillColorDarkGrey' " style="margin-top: 10px">
+          </ng-md-icon>
+          <span class="leftmargin10px foreColorWhite">{{chapter.title}}</span>
+      </md-list-item>
+        <!-- <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="chapter in quizes.questionBankschapters track by $index"
                       id="bookId{{$index}}"
                       ng-click="quizes.QuizAddchapters(chapter, $index);"
                       ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-            <!-- Books Side-->
-            <div layout="row" class="subgroupcard" style="height: 32px">
-                <div layout="column" flex>
-                    <div layout="row" layout-align="space-between center">
+                    <div layout="row" layout-align="space-between center"  class="subgroupcard" style="height: 32px">
+                      <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
                         <div layout-padding>{{chapter.title}}</div>
                     </div>
-                  </div>
-            </div>
 
         </md-list-item>
-        <md-divider></md-divider>
+        <md-divider></md-divider> -->
     </md-list>
     <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
         <md-list role="list">
