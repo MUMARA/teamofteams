@@ -280,7 +280,7 @@
         </md-toolbar>
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="question in quizes.quizQuestion | filter:quizes.qSearch"
+                 ng-repeat="question in quizes.quizQuestion track by $index | filter:quizes.qSearch"
                  ng-click="quizes.setSelectedQuestion(this,$index); quizes.showQuestionView(question);quizes.booksNav = false"
                  ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
