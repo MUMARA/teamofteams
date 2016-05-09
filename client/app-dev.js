@@ -33,7 +33,7 @@ console.log('watch service worker 1');
 if ('serviceWorker' in navigator) {
       console.log('watch service worker 2');
     navigator.serviceWorker
-      .register('./services/serviceWorker.js')
+      .register('./sw.js')
       .then(function() {
         console.log('Service Worker Registered');
       });
