@@ -6,7 +6,7 @@ var development = {
         BASEURL: 'https://panacloudapi.herokuapp.com/',
         // BASEURL: 'https://127.0.0.1:3000/',
         TITLE: 'Team of Teams',
-        SUPPORT: 'support@teamofteams.io',
+        SUPPORT: 'zia@panacloud.com',
         DOMAIN: 'https://app.teamofteams.io/'
     },
     /*firebase credentials*/
