@@ -1324,6 +1324,19 @@
         }
       }
     },
+    "quiz-name": {
+      "$quizId": {
+        ".validate": "newData.hasChildren(['title'])",
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".write": "data.val() == null && auth != null"
+      },
+      ".read": "auth != null"
+    },
     "quizes": {
       "$quizId": {
         "questionbanks": {
@@ -1334,14 +1347,48 @@
                   "$topicId": {
                     "questions": {
                       "$questionId": {
-                        ".validate": "newData.hasChildren(['title', 'type', 'desc'])",
+                        "questiones": {
+                          "$key3": {
+                            ".validate": "newData.hasChildren(['type', 'html', 'discussion'])",
+                            "type": {
+                              ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
+                            },
+                            "html": {
+                              ".validate": "newData.isString()"
+                            },
+                            "options": {
+                              "$key4": {
+                                ".validate": "newData.hasChildren(['html', 'correct', 'discussion'])",
+                                "html": {
+                                  ".validate": "newData.isString()"
+                                },
+                                "correct": {
+                                  ".validate": "newData.isBoolean()"
+                                },
+                                "discussion": {
+                                  ".validate": "newData.isString()"
+                                },
+                                "$other": {
+                                  ".validate": "false"
+                                }
+                              }
+                            },
+                            "discussion": {
+                              ".validate": "newData.isString()"
+                            },
+                            "$other": {
+                              ".validate": "false"
+                            }
+                          }
+                        },
+                        ".validate": "newData.hasChildren(['title', 'type', 'html', 'discussion'])",
                         "title": {
                           ".validate": "newData.isString()"
                         },
                         "type": {
                           ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
                         },
-                        "desc": {
+                        "html": {
                           ".validate": "newData.isString()"
                         },
                         "options": {
@@ -1361,19 +1408,17 @@
                             }
                           }
                         },
+                        "discussion": {
+                          ".validate": "newData.isString()"
+                        },
                         "$other": {
                           ".validate": "false"
-                        },
-                        ".write": "data.val() == null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2)",
-                        ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+                        }
                       }
                     },
                     ".validate": "newData.hasChildren(['title'])",
                     "title": {
                       ".validate": "newData.isString()"
-                    },
-                    "imgLogoUrl": {
-                      ".validate": "newData.isString() || newData.val() == null"
                     },
                     "$other": {
                       ".validate": "false"
@@ -1383,9 +1428,6 @@
                 ".validate": "newData.hasChildren(['title'])",
                 "title": {
                   ".validate": "newData.isString()"
-                },
-                "imgLogoUrl": {
-                  ".validate": "newData.isString() || newData.val() == null"
                 },
                 "$other": {
                   ".validate": "false"
