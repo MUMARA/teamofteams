@@ -39,7 +39,7 @@
                             </div>
                             <div flex="60" layout="column" flex>
                                 <div layout="row" layout-align="space-between center">
-                                    <div layout-padding>{{book.title}}</div>
+                                    <div layout-padding>{{book.title | truncate:20}}</div>
                                 </div>
                                 <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
                                     <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="quiz-select-item-book" ng-if="$index === quiz.selectedBookIndex">
-                                <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                                <ng-md-icon icon="keyboard_arrow_right" size="30"  class="arrowright"></ng-md-icon>
                             </div>
                         </div>
                         <md-divider></md-divider>
@@ -127,13 +127,13 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{chapter.title | truncate:15}}</b></span>
+                        <span><b>{{chapter.title | truncate:20}}</b></span>
                     </div>
-                    <img src="img/1dots.svg" class="img-dots">
+                    <!--<img src="img/1dots.svg" class="img-dots">-->
 
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedChapterIndex" layout="column"
                          layout-align="center end">
-                        <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                        <ng-md-icon icon="keyboard_arrow_right" size="30"  class="arrowright"></ng-md-icon>
                     </div>
                 </div>
             </div>
@@ -183,13 +183,13 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{topic.title}}</b></span>
+                        <span><b>{{topic.title | truncate:20}}</b></span>
                     </div>
-                    <img src="img/1dots.svg" class="img-dots">
+                    <!--<img src="img/1dots.svg" class="img-dots">-->
 
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedTopicIndex" layout="column"
                          layout-align="center end">
-                        <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                        <ng-md-icon icon="keyboard_arrow_right" size="30"  class="arrowright"></ng-md-icon>
                     </div>
                 </div>
             </div>
@@ -239,14 +239,14 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{question.title}}</b></span>
+                        <span><b>{{question.title | truncate:20}}</b></span>
                     </div>
-                    <img src="img/1dots.svg" class="img-dots">
+                    <!--<img src="img/1dots.svg" class="img-dots">-->
 
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedQuestionIndex"
                          layout="column"
                          layout-align="center end">
-                        <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
+                        <ng-md-icon icon="keyboard_arrow_right" size="30"  class="arrowright"></ng-md-icon>
                     </div>
                 </div>
             </div>

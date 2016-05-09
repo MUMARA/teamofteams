@@ -1,16 +1,20 @@
 /* Text Angular Css start */
 div button[name="insertImage"] {
     display: none !important;
-  }
-  div button[name="insertLink"] {
+}
+
+div button[name="insertLink"] {
     display: none !important;
-  }
-  div button[name="html"] {
+}
+
+div button[name="html"] {
     display: none !important;
-  }
-  div button[name="insertVideo"] {
+}
+
+div button[name="insertVideo"] {
     display: none !important;
-  }
+}
+
 blockquote {
     padding: 10px 20px;
     margin: 20px 20px 20px;
@@ -21,24 +25,30 @@ blockquote {
 .foreColorWhite {
     color: #fff;
 }
+
 div[ta-bind="ta-bind"] h1 {
-  margin-top: 0px
+    margin-top: 0px
 }
+
 div[ta-bind="ta-bind"] h2 {
-  margin-top: 0px
+    margin-top: 0px
 }
+
 /*div[ta-bind="ta-bind"] p {
   margin-top: 0px
 }*/
 div[ta-bind="ta-bind"] h5 {
-  margin-top: 0px
+    margin-top: 0px
 }
+
 div[ta-bind="ta-bind"] h6 {
-  margin-top: 0px
+    margin-top: 0px
 }
+
 .marginTop16px {
-  margin-top: 16px;
+    margin-top: 16px;
 }
+
 .IconCenter {
     position: absolute;
     top: 53%;
@@ -229,6 +239,10 @@ div[ta-bind="ta-bind"] h6 {
 
 .img-div :last-child {
     margin-right: 15px;
+}
+
+.arrowright {
+    margin-right: 10px !important;
 }
 
 .img-div img {
