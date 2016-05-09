@@ -177,7 +177,7 @@
         </md-toolbar>
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="chapter in quizes.quizChapters | filter:quizes.cSearch"
+                 ng-repeat="chapter in quizes.quizChapters | filter:quizes.cSearch track by $index"
                  ng-click="quizes.showTopics($index);"
                  id="chapid{{$index}}" ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
@@ -280,7 +280,7 @@
         </md-toolbar>
         <div class="quiz-md-card-1">
             <div class="md-whiteframe-2dp quiz-md-card-item"
-                 ng-repeat="question in quizes.quizQuestion track by $index | filter:quizes.qSearch"
+                 ng-repeat="question in quizes.quizQuestion | filter:quizes.qSearch track by $index"
                  ng-click="quizes.setSelectedQuestion(this,$index); quizes.showQuestionView(question);quizes.booksNav = false"
                  ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
@@ -397,7 +397,7 @@
                 <div class="dialog-demo-content cropper-main-button" id="cropperDialogue"
                      layout="row" layout-wrap>
                     <img ng-src="{{$root.newImg || 'img/image.svg'}}" alt="img/image.svg"
-                         class="cropper-main-image nooutline" ng-click="quizes.selectBookPoster($event)"/>
+                         class="cropper-main-image nooutline" ng-click="quizes.selectQuizImage($event)"/>
                 </div>
                 <image-cropper></image-cropper>
             </form>

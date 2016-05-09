@@ -257,6 +257,7 @@
     };
     _self.addQuizQuestion = function(quizid, questionBankUniqueID,
       chapterUniqueId, topicUniqueId, questionId, questionsObj) {
+      console.log(questionsObj)
       var deferred = $q.defer();
       firebaseService.getRefQuiz().child(quizid).child(
         'questionbanks').child(questionBankUniqueID).child("chapters").child(

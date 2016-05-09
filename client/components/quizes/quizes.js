@@ -129,7 +129,7 @@
 
     _self.questionSetQuestions = [];
 
-
+    // initailize QuestionBank
     function initQuestionBank() {
       quizesBankService.loadQuestionBanks().then(
         function(data) {
@@ -138,7 +138,7 @@
       )
     }
     initQuestionBank();
-
+    // initailize Quiz
     function initQuiz() {
       quizesBankService.loadQuiz().then(
         function(data) {
@@ -151,10 +151,6 @@
 
 
 
-    /* End My Code */
-
-    /*All Function*/
-
     // setTabs();
 
 
@@ -162,6 +158,8 @@
     //   _self.selectedQuestionIndex = null;
     //
     // }
+
+    // Show Quiz Qustion Bank start
     function showQuizQuestionBank(quizIndex) {
       _self.selectedBookIndex = quizIndex;
       quizesService.setQuestionObject(null);
@@ -192,40 +190,51 @@
       _self.topicsId = [];
       _self.questionsId = [];
 
-    }
-    // Show Quiz's question Banks' Chapters
+    } // Show Quiz Qustion Bank end
+
+    // Show Quiz's question Banks' Chapters start
     function showQuizChapter(ele, index) {
+
       _self.quizChapters = [];
       _self.quizChapterId = [];
       _self.questionBankschaptersId = [];
       _self.questionBankschapters = [];
       _self.questionBankUniqueID = quizesBankService.questionBanksId[index];
+      var bookIndx = quizesBankService.bookId.indexOf(_self.questionBankUniqueID);
+      _self.questionBanksAllChapters = _self.books[bookIndx].chapters;
+      for (var chaptersUniqueId in _self.questionBanksAllChapters) {
+        _self.questionBankschaptersId.push(chaptersUniqueId)
+        _self.questionBankschapters.push(_self.questionBanksAllChapters[
+          chaptersUniqueId])
+        _self.questionBanksAllChapters[
+          chaptersUniqueId].SelectedChapter = false
 
+      }
       quizesBankService.loadQuizChapter(_self.quizId, _self.questionBankUniqueID)
-        .then(function(quizChapters) {
-          for (var quizChapter in quizChapters[0]) {
-            _self.quizChapters.push(quizChapters[0][quizChapter])
+        .then(function(Chapters) {
+          for (var quizChapter in Chapters[0]) {
+            _self.quizChapters.push(Chapters[0][quizChapter])
+
             _self.quizChapterId.push(quizChapter)
+            angular.forEach(_self.questionBankschaptersId, function(val, i) {
+              if (val === quizChapter) {
+                _self.questionBanksAllChapters[
+                  val].SelectedChapter = true
+              }
+            })
           }
         })
-      var bookIndx = quizesBankService.bookId.indexOf(_self.questionBankUniqueID);
-      // _self.questionBankschapters = _self.books[bookIndx].chapters;
-      for (var chaptersUniqueId in _self.questionBankschapters) {
-        _self.questionBankschaptersId.push(chaptersUniqueId)
-        _self.questionBankschapters.push(_self.questionBankschapters[
-          chaptersUniqueId])
-        _self.questionBankschapters.push(_self.questionBankschapters[
-          chaptersUniqueId].SelectedChapter = false)
-      }
+
+
       _self.selectedQuestionIndex = null;
       _self.selectedTopicIndex = null;
       _self.selectedChapterIndex = index;
       // quizesService.showQuizChapter(index);
       // quizesService.setSelectedTopic(null);
-    }
+    } // Show Quiz's question Banks' Chapters end
     /*  Question Bank   */
 
-
+    // Show Quiz's Topic start
     function showTopics(chapterIndex) {
       _self.QuizTopics = [];
       _self.QuizTopicsId = [];
@@ -235,6 +244,7 @@
       _self.showQuestionDetails = false;
       // lOAD Quiz Topics
       _self.chapterId = _self.quizChapterId[chapterIndex];
+
       quizesBankService.loadQuizTopic(_self.quizId, _self.questionBankUniqueID,
         _self.chapterId).then(function(quizChapters) {
         for (var quizTopics in quizChapters[0].topics) {
@@ -249,23 +259,25 @@
       for (var topicUniqueId in _self.questionBankTopics) {
         _self.questionBankTopicsId.push(topicUniqueId);
       }
-    }
+    } // Show Quiz's Topic end
 
+    // Show Quiz's Question start
     function showQuestions(topicIndex) {
       _self.questionbanksQuestion = []
       _self.questionbanksQuestionId = []
       _self.quizQuestion = []
       _self.quizQuestionId = []
       _self.topicId = _self.questionBankTopicsId[topicIndex];
-      // lOAD Quiz Topics
 
+      // lOAD Quiz Questions
       quizesBankService.loadQuestions(_self.quizId, _self.questionBankUniqueID,
-        _self.chapterId, _self.topicId).then(function(quizTopics) {
-        for (var quizQuestion in quizTopics[0].questions) {
-          _self.quizQuestion.push(quizTopics[0].questions[quizQuestion])
-          _self.quizQuestionId.push(quizQuestion)
-        }
-      })
+          _self.chapterId, _self.topicId).then(function(quizTopics) {
+          for (var quizQuestion in quizTopics[0].questions) {
+            _self.quizQuestion.push(quizTopics[0].questions[quizQuestion])
+            _self.quizQuestionId.push(quizQuestion)
+          }
+        })
+        // Load QuestionBank Questions
       for (var questionbanksQuestionKeys in _self.questionBankTopics[
             _self.topicId]
           .questions) {
@@ -274,7 +286,8 @@
           .questions[questionbanksQuestionKeys]);
         _self.questionbanksQuestionId.push(questionbanksQuestionKeys)
       }
-    }
+    } // Show Quiz's Question end
+
     // Shows Question Details
     function showQuestionView(question) {
       if (question !== null) {
@@ -288,11 +301,12 @@
       _self.showbook = naveService.toggleRight1;
       _self.showbook();
     }
-
+    // create Quiz Function start
     function createQuiz(quizesData, img) {
       // ShowNavBar();
       _self.createBookLoader = true;
       var quizId = quizesData.id;
+      // if new Image save to amazon first then save url in firebase
       if ($rootScope.newImg) {
         var x = utilService.base64ToBlob($rootScope.newImg);
         var temp = $rootScope.newImg.split(',')[0];
@@ -317,6 +331,7 @@
             alert('picture upload failed');
           });
       } else {
+        // if Image is not new then Save default image in firebase
         _self.quizData = {
           title: quizesData.name,
           desc: quizesData.desc,
@@ -328,9 +343,10 @@
         ShowNavBar();
 
       }
-    }
+    } // create Quiz Function end
 
-    _self.selectBookPoster = function(ev) {
+    // select Quiz Image function start
+    _self.selectQuizImage = function(ev) {
       $mdDialog.show({
         controller: "DialogController as ctrl",
         templateUrl: 'directives/dilogue2.tmpl.html',
@@ -341,8 +357,9 @@
 
       });
 
-    };
+    }; // select Quiz Image function end
 
+    // Image Url Function Start
     _self.saveFile = function(file, type, quizID) {
       var defer = $q.defer();
       var xhr = new XMLHttpRequest();
@@ -353,6 +370,8 @@
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);
+            console.log(file, response.signed_request,
+              response.url)
             defer.resolve(upload_file(file, response.signed_request,
               response.url));
           } else {
@@ -364,8 +383,9 @@
       /*remove it*/
       xhr.send();
       return defer.promise;
-    };
+    }; // Image Url Function end
 
+    // Image Uploader Function start
     function upload_file(file, signed_request, url) {
 
       var defer = $q.defer();
@@ -386,7 +406,7 @@
       };
       xhr.send(file);
       return defer.promise;
-    }
+    } // Image Uploader Function start
 
     function closeBook() {
       _self.showbook = naveService.toggleRight1;
@@ -466,7 +486,7 @@
       };
       _self.bookId = quizesBankService.bookId[quizIndex];
       _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
-      if (_self.questionBanks.length == 0) {
+      if (_self.quizQuestionBanks.length == 0) {
         quizesBankService.addQuizQuestionBank(_self.selectedQuestionBank,
           _self
           .bookId,
@@ -494,7 +514,8 @@
     _self.QuizAddchapters = function(chapter, index) {
       var title = chapter.title;
       _self.chaptersId = _self.questionBankschaptersId[index];
-      if (_self.quizChapters.length == 0) {
+
+      if (_self.quizChapterId.length == 0) {
         quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
           _self.chaptersId,
           title).then(function(res) {
@@ -503,17 +524,22 @@
           })
         })
       } else {
-        angular.forEach(_self.quizChapters, function(val, i) {
-          if (val.title != title && i == _self.quizChapters.length -
+        angular.forEach(_self.quizChapterId, function(val, i) {
+          if (val === _self.chaptersId && i == _self.quizChapters.length -
             1) {
             quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
               _self.chaptersId,
               title).then(function(res) {
               _self.quizChapters.push({
-                title: title
+                title: title,
+                SelectedChapter: true
               })
             })
           }
+          // if (val.title != title && i == _self.quizChapters.length -
+          //   1) {
+          //
+          // }
         })
       }
     }
@@ -531,6 +557,8 @@
         }, function(err) {});
       } else {
         angular.forEach(_self.QuizTopics, function(val, i) {
+          console.log(val.title != title, i)
+          console.log(i == _self.QuizTopics.length - 1, i)
           if (val.title != title && i == _self.QuizTopics.length -
             1) {
             quizesBankService.addQuizTopic(_self.quizId, _self.questionBankUniqueID,
@@ -547,30 +575,30 @@
       }
     }
     _self.QuizAddQuestion = function(questionObj, index) {
-      _self.questionObject = {
-        title: questionObj.title,
-        type: questionObj.type,
-        options: questionObj.options
-      }
+      console.log(questionObj)
+        // _self.questionObject = {
+        //   title: questionObj.title,
+        //   type: questionObj.type,
+        //   options: questionObj.options
+        // }
       _self.QuestionId = _self.questionbanksQuestionId[index];
       if (_self.quizQuestion.length == 0) {
         quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
-          _self.chapterId, _self.topicId, _self.QuestionId, _self.questionObject
+          _self.chapterId, _self.topicId, _self.QuestionId, questionObj
         ).then(function(res) {
-          _self.quizQuestion.push(_self.questionObject)
+          _self.quizQuestion.push(questionObj)
         });
       } else {
         angular.forEach(_self.quizQuestion, function(val, i) {
-          if (val.title != _self.questionObject.title && i == _self
+          if (val.title != questionObj.title && i == _self
             .quizQuestion
             .length -
             1) {
             quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
               _self.chapterId, _self.topicId, _self.QuestionId,
-              _self
-              .questionObject
+              questionObj
             ).then(function(res) {
-              _self.quizQuestion.push(_self.questionObject)
+              _self.quizQuestion.push(questionObj)
 
             });
           }
