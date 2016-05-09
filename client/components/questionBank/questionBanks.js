@@ -125,7 +125,7 @@
       imgLogoUrl: "",
       'timestamp': "",
       bookUniqueId: ""
-    }
+    };
 
     function questionSetAddQuestion(questionSet) {
       console.log(questionSet, "11111111111111")
@@ -388,13 +388,13 @@
         desc: chapterObj.desc,
         timestamp: Firebase.ServerValue.TIMESTAMP
       };
-      quizBankService.createChapter(_self.bookId, _self.chapterObj);
-      quizBankService.loadChapters(_self.bookId).then(
-        function(chapters) {
-          _self.chapters = chapters;
-        });
-      _self.chapterObj = {};
-      _self.showChapter();
+      quizBankService.createChapter(_self.bookId, _self.chapterObj).then(function(){
+        quizBankService.loadChapters(_self.bookId).then(function(chapters) {
+              _self.chapters = chapters;
+            });
+        _self.chapterObj = {};
+        _self.showChapter();
+      });
     }
 
     function addChapter() {
@@ -420,13 +420,14 @@
         desc: topicObj.desc,
         'timestamp': Firebase.ServerValue.TIMESTAMP
       };
-      quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj);
-      quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
-        function(topics) {
-          _self.topics = topics;
-        });
-      _self.topicObj = {};
-      _self.showTopic();
+      quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj).then(function(data){
+        quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
+            function(topics) {
+              _self.topics = topics;
+              _self.topicObj = {};
+              _self.showTopic();
+            });
+      });
     }
 
     function addTopic() {
@@ -479,7 +480,6 @@
 
 
     //AddQuestion Controller Work
-    var _self = this;
 
     var idCounter = 3;
     this.showRadioOptions = false;
@@ -517,7 +517,7 @@
     };
 
     //Setting different inputs.
-    this.setBoxValue = function() {
+    _self.setBoxValue = function() {
       this.showAddButton = true;
       _self.question.options = [{
         html: '',
@@ -551,7 +551,7 @@
       }
     };
     //Push new input fields.
-    this.addOption = function() {
+    _self.addOption = function() {
       _self.question.options.push({
         html: '',
         correct: false,
@@ -566,11 +566,11 @@
       });
     };
     //Delete Option
-    this.deleteOption = function(optionIndex) {
+    _self.deleteOption = function(optionIndex) {
       _self.question.options.splice(optionIndex, 1);
     };
     //Delete Question Set Option
-    this.deleteQuestionSetOption = function(optionIndex) {
+    _self.deleteQuestionSetOption = function(optionIndex) {
       if (optionIndex > -1) {
         _self.questionSet.options.splice(optionIndex, 1);
       }
@@ -589,12 +589,12 @@
 
 
     //Save and Exit Button
-    this.showAnswer = function(question) {
+    _self.createQuestion = function(question) {
       if (question.type == 3) {
-        // question['title'] = "title";
         delete question.options;
         question.questiones = _self.questionSetQuestions;
-      } else {
+      }
+      else {
         delete question.desc;
         var arr = question.options;
         angular.forEach(question.options, function(data, index) {
@@ -608,14 +608,13 @@
         question.options = arr;
 
       }
-      quizBankService.createQuestion(_self.bookId, _self.chapterId,
-        _self.topicId, question);
-      _self.question = {};
-      _self.question.html = null;
-      _self.question.title = null;
-      _self.correct = null;
-      _self.closeQuestion();
-
+      quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question).then(function(){
+        _self.question = {};
+        _self.question.html = null;
+        _self.question.title = null;
+        _self.correct = null;
+        _self.closeQuestion();
+      });
     };
   }
 })();

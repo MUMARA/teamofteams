@@ -16,7 +16,7 @@ import {client} from '../config/postmark';
 let appconfig = credentials.product;
 let verificationEmailTemplate = '';
 
-fs.readFile(path.resolve(__dirname + '../views/verificationEmail.ejs'), function (err, template) {
+fs.readFile(path.resolve(__dirname + '/../views/verificationEmail.ejs'), function (err, template) {
     if (err) {
         console.log('file read error: ' + err);
     } else {
@@ -96,13 +96,19 @@ export function userSignup(event, context: Context) {
                     } else {
 
                         //send a verification email to new user.
-                        sendVerificationEmail(userObj, function () {
-                            context.succeed({
-                                uid: user.userID,
-                                statusCode: 1,
-                                statusDesc: "signed up successfully. Text Changed"
-                            });
-
+                        sendVerificationEmail(userObj, function (err?) {
+                            if (err) {
+                                context.succeed({
+                                    statusCode: 0,
+                                    statusDesc: err
+                                });
+                            } else {
+                                context.succeed({
+                                    uid: user.userID,
+                                    statusCode: 1,
+                                    statusDesc: "signed up successfully. Text Changed"
+                                });
+                            }
                         });
 
 
@@ -112,7 +118,7 @@ export function userSignup(event, context: Context) {
         });
     }
 
-    function sendVerificationEmail(user: IUser, cb: () => void) {
+    function sendVerificationEmail(user: IUser, cb: Function) {
         console.log('started sending email')
         console.log(verificationEmailTemplate);
         var template = ejs.render(verificationEmailTemplate, {
@@ -124,23 +130,20 @@ export function userSignup(event, context: Context) {
             domain: appconfig.DOMAIN,
             supportEmail: appconfig.SUPPORT
         });
-        console.dir(template)
         var payload = {
             "To": user.email,
             "From": appconfig.SUPPORT,
             "Subject": 'Verify your ' + appconfig.TITLE + ' membership',
             "HtmlBody": template
         };
-        console.dir(payload);
         client.sendEmail(payload, function (err, data) {
             if (err) {
                 console.log('email sent error: ' + user.email);
-                return console.error(err.message);
-            } //else {
-            console.log('Email Sent')
-            console.dir(data)
-            cb();
-            //}
+                console.error(err.message);
+                cb(err.message);
+            } else {
+                cb();
+            }
         });
     }
 }
@@ -248,3 +251,4 @@ export function userSignin(event, context: Context) {
         };
     }
 }
+
