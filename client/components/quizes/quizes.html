@@ -27,7 +27,8 @@
             </md-toolbar>
             <div class="quiz-md-card-1">
                 <md-list class="quiz-sidebar-nav">
-                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.Quiz | filter: quizes.query track by $index"
+                    <md-list-item layout-margin class="md-whiteframe-1dp book-list-item"
+                                  ng-repeat="book in quizes.Quiz | filter: quizes.query track by $index"
                                   id="bookId{{$index}}"
                                   ng-click="quizes.setSelectedBook(this, $index); quizes.showQuizQuestionBank($index); quizes.showQuizes($index);"
                                   ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
@@ -40,7 +41,7 @@
                                 <div layout="row" layout-align="space-between center">
                                     <div layout-padding>{{book.title}}</div>
                                     <!--<ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"-->
-                                                <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
+                                    <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
                                 </div>
                                 <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
                                     <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
@@ -61,7 +62,7 @@
         </md-content>
     </md-sidenav>
 
-    <div class="gradient2 quiz-menu-col">
+    <div class="gradient3 quiz-menu-col">
         <a ng-click="quizes.booksNav = !quizes.booksNav" id="menu-toggle" class="menu-item-btn">
             <img ng-src="img/menu.svg" style=" height: 45px;">
         </a>
@@ -87,7 +88,7 @@
         </div>
     </div>
     <!--Chapter Side-->
-    <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
+    <md-content layout-margin class="quiz-col md-whiteframe-1dp">
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-1" layout="row">
 
@@ -133,7 +134,8 @@
                         <span><b>{{questionbank.title}}</b></span>
 
                     </div>
-                    <img src="img/1dots.svg" class="img-dots">
+
+
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedChapterIndex" layout="column"
                          layout-align="center end">
                         <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
@@ -150,7 +152,7 @@
         </div>
     </md-content>
 
-    <md-content layout-margin class="quiz-col md-whiteframe-1dp" flex="18">
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp">
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-5" layout="row">
                 <h2 ng-hide="quizes.chapterSearch">
@@ -189,9 +191,9 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{chapter.title}}</b></span>
+                        <span><b>{{chapter.title | truncate:30}}</b></span>
                     </div>
-                    <img src="img/1dots.svg" class="img-dots">
+
                 </div>
             </div>
             <md-button class="md-button md-fab md-mini md-fab-bottom-right"
@@ -203,7 +205,7 @@
         </div>
     </md-content>
     <!--Topic side-->
-    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex="18">
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp">
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-2" layout="row">
                 <h2 ng-hide="quizes.topicSearch">
@@ -240,9 +242,9 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{topic.title}}</b></span>
+                        <span><b>{{topic.title | truncate:30}}</b></span>
                     </div>
-                    <img src="img/1dots.svg" class="img-dots">
+
                 </div>
             </div>
         </div>
@@ -291,9 +293,9 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{question.title}}</b></span>
+                        <span><b>{{question.title | truncate:30}}</b></span>
                     </div>
-                    <img src="img/1dots.svg" class="img-dots">
+
                 </div>
             </div>
         </div>
@@ -303,7 +305,7 @@
         </md-button>
     </md-content>
 
-    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex>
+    <md-content layout-margin class="quiz-col-margin-none md-whiteframe-1dp">
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-4">
                 <h2>
@@ -336,7 +338,7 @@
 </div>
 
 
-<!--Create Book Navigation Start-->
+<!--Create Quiz Sidenav Start-->
 <md-sidenav class="md-sidenav-right add-books-nav backColorLightSeaGreen" md-component-id="nav1">
     <ng-md-icon icon="close" size="30" class="nooutline close-icon" ng-click="quizes.closeBook()">
     </ng-md-icon>
@@ -349,13 +351,16 @@
                     <md-input-container flex>
                         <label>Quiz Id</label>
                         <input name="QuizId" type="text"
-                               ng-model="quizes.quizesData.id" check-quiz-existance ng-pattern="/^([a-z0-9]){3,20}$/" required
+                               ng-model="quizes.quizesData.id" check-quiz-existance ng-pattern="/^([a-z0-9]){3,20}$/"
+                               required
                                md-sidenav-focus>
 
                         <div ng-show="bookForm.$submitted || bookForm.QuizId.$touched"
                              ng-messages="bookForm.QuizId.$error">
                             <div class="invalid_color" ng-message="required">This is required.</div>
-                            <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to 20  </div>
+                            <div class="invalid_color" ng-message="pattern">Lowercase-alpha numeric only - length 3 to
+                                20
+                            </div>
                             <div layout="row" class="invalid_color id_Error" ng-message="checkQuizExistance">
                                 This ID is not available.
                             </div>
@@ -403,10 +408,13 @@
             </form>
         </md-content>
         <div layout="row" layout-align="center end">
-          <md-button layout="row" layout-align="center center" ng-disabled="bookForm.$invalid" class="backColorSeaGreen foreColorWhite displayFlex"  ng-click="quizes.createQuiz(quizes.quizesData, $root.newImg); $root.newImg = null">
-              <md-progress-circular ng-show="quizes.createBookLoader" md-mode="indeterminate" md-diameter="30"></md-progress-circular>
-              <span> Create</span>
-          </md-button>
+            <md-button layout="row" layout-align="center center" ng-disabled="bookForm.$invalid"
+                       class="backColorSeaGreen foreColorWhite displayFlex"
+                       ng-click="quizes.createQuiz(quizes.quizesData, $root.newImg); $root.newImg = null">
+                <md-progress-circular ng-show="quizes.createBookLoader" md-mode="indeterminate"
+                                      md-diameter="30"></md-progress-circular>
+                <span> Create</span>
+            </md-button>
             <!-- <md-button class="backColorSeaGreen color-white" layout="row"
                        ng-disabled="bookForm.$invalid" class="md-primary"
                        ng-click="quizes.createQuiz(quizes.quizesData, $root.newImg); $root.newImg = null">
@@ -421,131 +429,139 @@
     </div>
     </div>
 </md-sidenav>
-<!--Create Book Navigation End-->
+<!--Create Quiz Sidenav End-->
 
-<!--Create Chapter Navigation Start-->
-<md-sidenav style="width: 35%;" class="md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope" md-component-id="nav2" tabindex="-1">
+<!-- Select Question Bank Sidenav Start-->
+<md-sidenav class="width-35 md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope"
+            md-component-id="nav2" tabindex="-1">
     <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
         <h1 class="md-toolbar-tools"><strong>Select Question Banks</strong></h1>
     </md-toolbar>
-    <md-list class="quiz-sidebar-nav">
-        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="book in quizes.books track by $index"
-                      id="bookId{{$index}}"
-                      ng-click="quizes.addQuestionBank(this, $index);"
-                      ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-            <!-- Books Side-->
-            <div layout="row" class="subgroupcard" style="height: 120px">
-                <div class="subgrouplogo" style="height: 120px">
-                    <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
-                </div>
-                <div layout="column" flex>
-                    <div layout="row" layout-align="space-between center">
-                        <div layout-padding>{{book.title}}</div>
+    <md-content class="backColorLightSeaGreen md-content-column-height">
+        <md-list class="quiz-sidebar-nav">
+            <md-list-item layout-margin class="md-whiteframe-1dp book-list-item"
+                          ng-repeat="book in quizes.books track by $index" id="bookId{{$index}}"
+                          ng-click="quizes.addQuestionBank(this, $index);"
+                          ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
+                <!-- Books Side-->
+                <div layout="row" class="subgroupcard" style="height: 120px">
+                    <div class="subgrouplogo" style="height: 120px">
+                        <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
                     </div>
-                    <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
-                        <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                             class="icon40px imageRound" alt="user" layout-margin/>
+                    <div layout="column" flex>
+                        <div layout="row" layout-align="space-between center">
+                            <div layout-padding>{{book.title | truncate:40}}</div>
+                        </div>
+                        <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
+                            <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
+                                 class="icon40px imageRound" alt="user" layout-margin/>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <md-divider></md-divider>
+            </md-list-item>
             <md-divider></md-divider>
-        </md-list-item>
-        <md-divider></md-divider>
-    </md-list>
-    <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
-        <md-list role="list">
-            <!-- ngRepeat: member in createSubGroup.members track by $index -->
-            <md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled">
-            class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
-            <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
-            <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
-            <span class="foreColorWhite ng-binding">Muhammad Ali Mughal</span>
-        </div></button></md-list-item><!-- end ngRepeat: member in createSubGroup.members track by $index -->
         </md-list>
-        <p><br></p>
-
-        <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
-            <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
-            </span></button>
-        </div>
     </md-content>
+    <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;"
+         class="layout-align-center-center layout-row">
+        <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description"
+                ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto">
+            <span class="ng-scope">Done</span>
+        </button>
+    </div>
 </md-sidenav>
+<!-- Select Question Bank Sidenav End-->
 
-<md-sidenav style="width: 35%;" class="md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope" md-component-id="nav5" tabindex="-1">
+<!-- Select Chapter Sidenav Start-->
+<md-sidenav class="width-35 md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope"
+            md-component-id="nav5" tabindex="-1">
     <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
         <h1 class="md-toolbar-tools"><strong>Select Chapters</strong></h1>
     </md-toolbar>
-    <md-list class="quiz-sidebar-nav">
-      <md-list-item layout="row" layout-align="start center" ng-repeat="chapter in quizes.questionBankschapters track by $index" class="buttonHover nooutline" ng-click="quizes.QuizAddchapters(chapter, $index);">
-          <ng-md-icon size="24" icon="done" ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' " style="margin-top: 10px">
-          </ng-md-icon>
-          <span class="leftmargin10px foreColorWhite">{{chapter.title}}</span>
-      </md-list-item>
-        <!-- <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="chapter in quizes.questionBankschapters track by $index"
-                      id="bookId{{$index}}"
-                      ng-click="quizes.QuizAddchapters(chapter, $index);"
-                      ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-                    <div layout="row" layout-align="space-between center"  class="subgroupcard" style="height: 32px">
-                      <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
-                        <div layout-padding>{{chapter.title}}</div>
-                    </div>
-
-        </md-list-item>
-        <md-divider></md-divider> -->
-    </md-list>
-    <md-content class="backColorLightSeaGreen" style="height:calc(100% - 64px)">
-        <md-list role="list">
-            <!-- ngRepeat: member in createSubGroup.members track by $index --><md-list-item layout="row" layout-align="start center" ng-repeat="member in createSubGroup.members track by $index" class="buttonHover nooutline ng-scope md-clickable layout-align-start-center layout-row" role="listitem" tabindex="-1" aria-disabled="true" disabled="disabled">
-            class="md-no-style md-button md-ink-ripple" type="button" ng-click="createSubGroup.selectedAdmin(2,member)" aria-label="Select Admin" ng-disabled="createSubGroup.filterUser2(member.user.profile.email);" aria-disabled="true" disabled="disabled"><div class="md-list-item-inner ng-scope">
-            <ng-md-icon icon="done" ng-class="member.isAdmin ? 'fillColorWhite' : 'fillColorDarkGrey' " class="fillColorWhite" style=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg></ng-md-icon>
-            <img ng-src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png" class="md-avatar icon40px imageRound nooutline layout-margin" layout-margin="" alt="user" src="https://s3-us-west-2.amazonaws.com/defaultimgs/user.png">
-            <span class="foreColorWhite ng-binding">Muhammad Ali Mughal</span>
-        </div></button></md-list-item><!-- end ngRepeat: member in createSubGroup.members track by $index -->
+    <md-content class="backColorLightSeaGreen md-content-column-height">
+        <md-list class="quiz-sidebar-nav">
+            <md-list-item layout="row" layout-align="start center"
+                          ng-repeat="chapter in quizes.questionBankschapters track by $index"
+                          class="buttonHover nooutline" ng-click="quizes.QuizAddchapters(chapter, $index);">
+                <ng-md-icon size="24" icon="done"
+                            ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                            style="margin-top: 10px"></ng-md-icon>
+                <span class="leftmargin10px foreColorWhite">{{chapter.title}}</span>
+            </md-list-item>
         </md-list>
-        <p><br></p>
-
-        <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
-            <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
-            </span></button>
-        </div>
     </md-content>
+    <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;"
+         class="layout-align-center-center layout-row">
+        <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description"
+                ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto">
+            <span class="ng-scope">Done</span>
+        </button>
+    </div>
 </md-sidenav>
+<!-- Select Chapter Sidenav End-->
 
-
-<!--Create Chapter Navigation End-->
-
-<!--Create Topic Navigation Start-->
-<md-sidenav style="width: 35%;" class="md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope" md-component-id="nav4" tabindex="-1">
+<!-- Select Topic Sidenav Start-->
+<md-sidenav class="width-35 md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope"
+            md-component-id="nav4" tabindex="-1">
     <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
         <h1 class="md-toolbar-tools"><strong>Select Topics</strong></h1>
     </md-toolbar>
-    <md-list class="quiz-sidebar-nav">
-        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="topic in quizes.questionBankTopics track by $index"
-                      ng-click="quizes.addQuizTopic(topic, $index);"
-                      ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-            <!-- Books Side-->
-            <div layout="row" class="subgroupcard" style="height: 32px">
-                <div layout="column" flex>
-                    <div layout="row" layout-align="space-between center">
-                        <div layout-padding>{{topic.title}}</div>
-                        <!--<ng-md-icon ng-show="createSubGroup.selectedindex===$index" icon="chevron_right"-->
-                        <!--style="position: relative; left: -30px; top: 30px;"></ng-md-icon>-->
-                    </div>
-                    <!--<div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
-                        <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
-                             class="icon40px imageRound" alt="user" layout-margin/>
-                    </div>-->
-                </div>
-            </div>
-        </md-list-item>
-    </md-list>
-
-
+    <md-content class="backColorLightSeaGreen md-content-column-height">
+        <md-list class="quiz-sidebar-nav">
+            <md-list-item layout="row" layout-align="start center"
+                          ng-repeat="topic in quizes.questionBankTopics track by $index"
+                          class="buttonHover nooutline" ng-click="quizes.addQuizTopic(topic, $index);">
+                <ng-md-icon size="24" icon="done"
+                            ng-class="topic.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                            style="margin-top: 10px">
+                </ng-md-icon>
+                <span class="leftmargin10px foreColorWhite">{{topic.title}}</span>
+            </md-list-item>
+        </md-list>
+    </md-content>
+    <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;"
+         class="layout-align-center-center layout-row">
+        <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description"
+                ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto">
+            <span class="ng-scope">Done</span>
+        </button>
+    </div>
 </md-sidenav>
-<!--Create Topic Navigation End-->
+<!-- Select Topic Sidenav End-->
 
-<!--Add Question Sidenav Start-->
-<div ng-hide="true" id="groupPage">
+<!-- Select Question Sidenav Start-->
+<md-sidenav class="width-35 md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope"
+            md-component-id="nav3" tabindex="-1">
+    <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
+        <h1 class="md-toolbar-tools"><strong>Select Questions</strong></h1>
+    </md-toolbar>
+    <md-content class="backColorLightSeaGreen md-content-column-height">
+        <md-list class="quiz-sidebar-nav">
+            <md-list-item layout="row" layout-align="start center"
+                          ng-repeat="question in quizes.questionbanksQuestion track by $index"
+                          class="buttonHover nooutline" ng-click="quizes.QuizAddQuestion(question, $index);">
+                <ng-md-icon size="24" icon="done"
+                            ng-class="question.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                            style="margin-top: 10px">
+                </ng-md-icon>
+                <span class="leftmargin10px foreColorWhite">{{question.title}}</span>
+            </md-list-item>
+        </md-list>
+    </md-content>
+    <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;"
+         class="layout-align-center-center layout-row">
+        <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description"
+                ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto">
+            <span class="ng-scope">Done</span>
+        </button>
+    </div>
+</md-sidenav>
+<!-- Select Question Sidenav End-->
+
+
+<!-- Old code -->
+<div ng-if="" id="groupPage">
     <div id="wrapper" style="height: calc(100vh - 58px);border: none darkgoldenrod;">
         <!-- Sidebar -->
         <div id="quiz-sidebar-wrapper" style="z-index:0;height: 100%;border:none;">
@@ -761,7 +777,8 @@
                                         <md-input-container>
                                             <label style="color: #eeacb4">Description</label>
                                             <input style="border-color: white;color: #ffffff"
-                                                   ng-model="quizes.quizDescription" minlength="1" maxlength="50" required
+                                                   ng-model="quizes.quizDescription" minlength="1" maxlength="50"
+                                                   required
                                                    md-sidenav-focus>
 
                                             <div ng-show="bookForm.$submitted || bookForm.bookTitle.$touched"
@@ -816,7 +833,8 @@
                                                             ng-repeat="chapter in quizes.chapters | filter:cSNSearch"
                                                             ng-click="quizes.showQuizChapter(this);
                                                             !quizes.showQuizBar;
-                                                            quizes.showQuizBar && quizes.showQuizTopics($index);" id="chapid{{$index}}"
+                                                            quizes.showQuizBar && quizes.showQuizTopics($index);"
+                                                            id="chapid{{$index}}"
                                                             class="{{selected}}">
                                                         <md-card-content style="padding: 0 !important;overflow: auto "
                                                                          title="{{chapter.description}}">
@@ -874,7 +892,8 @@
                                                              ng-repeat="topic in quizes.topics | filter:tSNSearch"
                                                              ng-click="quizes.setSelectedTopics(this);
                                                              !quizes.showQuizBar && quizes.showQuestions($index);
-                                                             quizes.showQuizBar && quizes.showQuizQuestions($index);" id="topicId{{$index}}"
+                                                             quizes.showQuizBar && quizes.showQuizQuestions($index);"
+                                                             id="topicId{{$index}}"
                                                              ng-mouseenter="quizes.hover(chapter)"
                                                              ng-mouseleave="quizes.hover(chapter)"
                                                              class="{{selectedTopic}}">
@@ -1031,7 +1050,8 @@
                                                 <input style="font-size: 12px;height: 25px;width: 362px;color: #FFFFFF;"
                                                        type="text" ng-model="qqSearch"
                                                        aria-label="Quiz Question Search Box"/>
-                                                <img ng-click="quizes.quizQuestionSearch = false;" src="img/closeIcon.png"
+                                                <img ng-click="quizes.quizQuestionSearch = false;"
+                                                     src="img/closeIcon.png"
                                                      style="width: 20px;height: 20px;margin-top: 5%;margin-left: -5%">
                                             </md-input-container>
                                         </div>
@@ -1048,7 +1068,8 @@
                                     <md-card style="margin: 1px !important"
                                              ng-repeat="quizQuestionObj in quizes.Array | filter:qqSearch"
                                              ng-click="quizes.setSelectedQuestion(this,$index); quizes.showQuestionView(quizQuestionObj.question)"
-                                             ng-mouseenter="quizes.hover(chapter)" ng-mouseleave="quizes.hover(chapter)">
+                                             ng-mouseenter="quizes.hover(chapter)"
+                                             ng-mouseleave="quizes.hover(chapter)">
                                         <!--class="{{selectedQuestion}}ng-class="{selectedQuestion: $index == quizes.selectedQuizQuestionIndex}""  -->
                                         <md-card-content style="padding: 0px !important"
                                                          title="{{question.Description}}"><img src="img/1dots.svg"
@@ -1416,31 +1437,3 @@
         </div>
     </div>
 </div>
-<!--Add Question Sidenav End-->
-<md-sidenav style="width: 35%;" class="md-sidenav-right md-whiteframe-z2 backColorLightSeaGreen ng-scope ng-isolate-scope" md-component-id="nav3" tabindex="-1">
-    <md-toolbar class="md-theme-light backColorSeaGreen leftrightpadding20px md-whiteframe-z2">
-        <h1 class="md-toolbar-tools"><strong>Select Questions</strong></h1>
-    </md-toolbar>
-    <md-list class="quiz-sidebar-nav">
-        <md-list-item layout-margin class="md-whiteframe-1dp book-list-item" ng-repeat="question in quizes.questionbanksQuestion track by $index"
-                      id="bookId{{$index}}"
-                      ng-click="quizes.QuizAddQuestion(question, $index);"
-                      ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-            <!-- Books Side-->
-            <div layout="row" class="subgroupcard" style="height: 32px">
-                <div layout="column" flex>
-                    <div layout="row" layout-align="space-between center">
-                        <div layout-padding>{{question.title}}</div>
-                    </div>
-                  </div>
-            </div>
-
-        </md-list-item>
-        <md-divider></md-divider>
-    </md-list>
-        <div layout="row" layout-align="center center" style="width:100%;bottom: 3px;position: absolute;" class="layout-align-center-center layout-row">
-            <button class="md-raised md-button md-ink-ripple" type="button" aria-label="description" ng-click="createSubGroup.ActiveSideNavBar('admin');" md-ripple-size="auto"><span class="ng-scope">Done
-            </span></button>
-        </div>
-
-</md-sidenav>
