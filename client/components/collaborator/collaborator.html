@@ -1,7 +1,7 @@
 <!-- Activity -->
 <div layout="row" layout-align="space-between start" style="font-size:large;" class="viewHeight backColorWhite">
   <div layout-fill flex>
-    <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227); z-index:1" layout="row">
+    <md-toolbar class="md-whiteframe-4dp" style="background-color: rgb(130, 210, 227);" layout="row">
       <div class="md-toolbar-tools">
         <div class="foreColorDarkGrey">
           <h2>{{collaborator.document}}</h2>
@@ -40,6 +40,35 @@
         </button>
         <ul class="mui-dropdown__menu" id="list-Size" style="z-index: 3;"></ul>
       </div>
+      <!-- <button id="listColor" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        Color
+      </button>
+      <div class="mdl-tooltip" for="listColor">
+        Text Color
+      </div> -->
+      <!--List for Color Dropdown-->
+      <!-- <ul class="mdl-menu  mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Color" for="listColor"></ul> -->
+      <!--button for Font Dropdown-->
+      <!-- <button id="listFont" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        Color
+      </button>
+      <div class="mdl-tooltip" for="listFont">
+        Font
+      </div> -->
+      <!--List for Font Dropdown-->
+      <!-- <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Font" for="listFont"></ul> -->
+      <!--button for Size Dropdown-->
+      <!-- <button id="listSize" class="mdl-button mdl-js-button mdl-js-ripple-effect"> -->
+      <!-- Color -->
+      <!--<i class="material-icons">more_vert</i>-->
+      <!-- </button> -->
+      <!-- <div class="mdl-tooltip" for="listSize"> -->
+      <!-- Size -->
+      <!-- </div> -->
+      <!--List for Size Dropdown-->
+
+      <!-- <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect dropDown-list" id="list-Size" for="listSize"></ul> -->
+
     </div>
     <md-content id="firepad" style="">
       <div ng-if="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID && !collaborator.backdrop" style="height: 100%;width: 100%;background: transparent;z-index: 3;position: absolute"></div>
@@ -55,7 +84,11 @@
           <md-content ng-repeat="document in collaborator.documents track by $index">
             <md-list class="nopadding" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
               <md-list-item class="md-3-line selectable selectedDocumentIcon" ng-click="collaborator.gotoDocument(document)">
-                <img ng-src="{{document.createdBy.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" layout-margin class="imageRound icon50px">
+                <button class="md-button md-icon-button" style="padding: 0 0 0 0;margin: 0 0 0 0;width: 20px">
+                  <ng-md-icon ng-show="collaborator.currentDocument == document.title " icon="chevron_left" style="position: relative; right: 2%;"></ng-md-icon>
+                  <ng-md-icon ng-show="collaborator.currentDocument == document.$id " icon="chevron_left" style="position: relative; right: 2%; "></ng-md-icon>
+                </button>
+                <img ng-src="{{document.imgUrl ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" layout-margin class="imageRound icon50px">
                 <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
                   <h3 class="foreColorDarkGrey">Created By :
                     {{document.createdBy.firstName}}
@@ -83,7 +116,7 @@
                   <h5 class="foreColorDarkGrey">All User</h5>
                 </md-switch>
               </md-list-item>
-              <md-list-item ng-if="!(collaborator.subgroupID.length === 0)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID} : true" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
+              <md-list-item ng-if="!(collaborator.subgroupID.length === 0)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-switch ng-disabled="collaborator.permissionMembers[user.id] || ((collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers)" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1" ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)">
                   <h5 class="">{{user.fullName}}
                     <span ng-if="(collaborator.createdBy.userID !=  user.id) && collaborator.permissionMembers[user.id]">
@@ -95,6 +128,10 @@
                   </h5>
                 </md-switch>
               </md-list-item>
+              <!-- <md-switch ng-disabled="!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID" ng-model="collaborator.allUsers" aria-label="Checkbox 1" ng-if="!(collaborator.subgroupID.length === 0) && collaborator.allUsers" ng-change="collaborator.checkboxClicked(collaborator.allUsers)" ng-repeat="user in collaborator.users | filter : {subgroupID: collaborator.subgroupID}">
+                  <h5 class="foreColorDarkGrey">{{user.fullName}} all user</h5>
+                </md-switch>-->
+
               <md-list-item ng-if="collaborator.subgroupID.length === 0" ng-repeat="user in collaborator.users | collaboratorUsers:collaborator.groupID" ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'">
                 <md-switch ng-change="collaborator.checkboxClicked(collaborator.permissionObj[user.id],user)" ng-disabled="collaborator.permissionMembers[user.id] || ((collaborator.user.userID ===  user.id) || (collaborator.createdBy.userID ===  user.id) || (!collaborator.isAdmin && collaborator.createdBy.userID != collaborator.user.userID) || collaborator.allUsers)" ng-model="collaborator.permissionObj[user.id]" aria-label="Checkbox 1">
                   <h5 class="">{{user.fullName}}
@@ -115,28 +152,26 @@
         <md-tab label="History" class="rightTbs" ng-if="collaborator.history.length">
           <md-content class="backColorSeaGreen">
             <md-list class="nopadding">
-              <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable selectedDocumentIcon" ng-repeat="editor in collaborator.Editors | orderBy: '-timestamp'">
-                <img ng-src="{{editor.img ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" layout-margin class="imageRound icon50px" style="margin-top:1em">
+              <md-list-item ng-class="$index%2==0 ? 'backColorLightSeaGreen' : 'backColorSeaGreen'" class="md-3-line selectable" ng-repeat="(key, value) in collaborator.history | groupBy: 'a'">
                 <div class="md-list-item-text foreColorDarkGrey" style="padding:0px;">
-                  <h3 class="foreColorDarkGrey">Created By : {{ editor.name }}</h3>
-                  <span style="font-size: 13px; color: #ffffff;" class="">
-                    <strong>Last Edited:</strong>
-                      {{editor.timestamp | date:'short'}}</span>
+                  <h3 class="foreColorDarkGrey">Editor :
+                    {{ key }}</h3>
+                  <span style="font-size: 13px; color: #ffffff;">Time :
+                    {{value[value.length-1].t | date : 'M/d/yy'}}</span>
                 </div>
               </md-list-item>
-
             </md-list>
           </md-content>
         </md-tab>
       </md-tabs>
       <!-- Fab button to add a document  -->
-      <md-button  id="fabButton" class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
+      <md-button class="md-fab" aria-label="Create Team of Teams channel" style="margin-top: -20%;margin-left: 80%;width: 40px;height: 40px" ng-click="collaborator.channelBottomSheetfunc()" layout-align="center center" ng-if="!collaborator.channelBottomSheet">
         <ng-md-icon icon="add" class="fillColorWhite" size="20"></ng-md-icon>
       </md-button>
     </md-card>
 
     <!--  Modal for creating a new Document -->
-    <div id="channelBottomSheet" class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" style="z-index:1" ng-if="collaborator.channelBottomSheet">
+    <div class="md-whiteframe-z1 backColorWhite channelBottomSheet animove" layout="column" ng-if="collaborator.channelBottomSheet">
       <h3 class="foreColorDarkGrey">New Document</h3>
       <md-input-container>
         <label>Document Title</label>

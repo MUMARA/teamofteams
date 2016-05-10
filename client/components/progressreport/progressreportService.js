@@ -10,7 +10,7 @@
 		var dailyProgressReport = [];
 
         //crearting progress Report
-
+        
         function createProgressReport(obj, Policy, checkoutFlag) {     //obj = {groupId: '', subgroupId: '',userId; '' }
             var deferred = $q.defer();
             //checking daily progress report is exists or not -- START --
@@ -56,7 +56,7 @@
 
                 });
 
-            return deferred.promise;
+            return deferred.promise;            
         } //createProgressReport
 
 		//getting daily progress report
@@ -160,7 +160,7 @@
 			return dailyProgressReport;
 		} //getDailyProgressReport
 		function updateReport(report, cb) {
-			//console.log('report', report)
+			// console.log('report', report)
 			firebaseService.getRefProgressReport().child(report.groupID).child(report.subgroupID).child(report.userID).child(report.reportID).update({ 'answers': report.answers }, function(err) {
 				if (err) {
 					// console.log('err', err)

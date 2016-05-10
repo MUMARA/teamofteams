@@ -55,7 +55,7 @@
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart;
+            this.quizStart = quizStart;       
 
             this.progressReport = function() {
                 $mdSidenav('right').toggle().then(function() {
@@ -328,7 +328,7 @@
                             //for subgroup activity stream record -- END --
 
                             messageService.showSuccess('Checkin Successfully!');
-                        } // else checkoutFlag
+                        } // else checkoutFlag 
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
@@ -696,14 +696,12 @@
                     }
                     for (var i in group) {
                         if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
-                            checkinService.getSubGroupTitleCb(group.$id, i, function(title){
-                                var temp = {};
-                                temp.pId = group.$id; // group Name == pId
-                                temp.subgroupId = i;
-                                temp.subgroupTitle = title
-                                temp.data = group[i];
-                                tmp.subGroups.push(temp);
-                            })
+                            var temp = {};
+                            temp.pId = group.$id; // group Name == pId
+                            temp.subgroupId = i;
+                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
+                            temp.data = group[i];
+                            tmp.subGroups.push(temp);
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);

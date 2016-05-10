@@ -3,9 +3,9 @@
     'use strict';
 
     angular.module('app.personalSettings')
-        .controller('PersonalSettingsController', ['activityStreamService', 'dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
+        .controller('PersonalSettingsController', ['dataService', '$state', '$location', 'personalSettingsService', '$rootScope', '$mdDialog', '$firebaseArray', 'firebaseService', 'userService', 'utilService', '$q', 'appConfig', '$firebaseObject', '$http', 'authService', '$timeout', 'messageService',
 
-            function(activityStreamService, dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
+            function(dataService, $state, $location, personalSettingsService, $rootScope, $mdDialog, $firebaseArray, firebaseService, userService, utilService, $q, appConfig, $firebaseObject, $http, authService, $timeout, messageService) {
 
                 /*Private Variables*/
                 var that = this;
@@ -184,19 +184,8 @@
                         if (group.ownerID === that.loggedInUserData.userID) {
                             firebaseService.getRefGroups().child(group.groupID).update({'owner-img-url' : imgurl})
                             firebaseService.getRefGroupsNames().child(group.groupID).update({'ownerImgUrl' : imgurl})
-
                         }
                     })
-                    var subgroups = activityStreamService.getSubgroupNamesAndMemberships()
-                    for (var group in subgroups) {
-                        for (var subgroup in subgroups[group]) {
-                            if(subgroups[group][subgroup] == 1) {
-                                firebaseService.getRefSubGroups().child(group).child(subgroup).update({'owner-img-url' : imgurl})
-                                firebaseService.getRefSubGroupsNames().child(group).child(subgroup).update({'ownerImgUrl' : imgurl})
-                            }
-                        }
-                    }
-                    console.dir(subgroups);
                     return defer.promise;
                 }
 

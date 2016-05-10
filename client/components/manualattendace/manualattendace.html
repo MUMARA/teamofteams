@@ -38,7 +38,7 @@
             <tbody md-body>
                 <tr md-row ng-repeat="user in (manualattendace.activeuser = (manualattendace.users | orderBy: ['firstName', 'lastName', 'groupTitle', 'subgroupTitle'] | filter: {groupID: manualattendace.groupID, subgroupID: manualattendace.subgroupID}:true | filter: {fullName: manualattendace.searchbox, membershipNo: manualattendace.searchbox2}))
                 "  class="hoverLightGrey3 nooutline" >
-                    <td md-cell  layout layout-align="center center">
+                    <td md-cell>
                         <ng-md-icon icon="lens" size="10" ng-style="user.onlinestatus ? {'fill':'#8BC53F'} : {'fill':'#c51903'}"></ng-md-icon>
                         <img ng-src="{{user.profileImage ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}" class="imageRound icon40px" ng-style="user.type ? {'border':'3px solid #8BC53F'} : {'border':'3px solid #c51903'}" layout-margin>
                     </td>

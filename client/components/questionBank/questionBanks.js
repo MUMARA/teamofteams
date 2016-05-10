@@ -19,7 +19,7 @@
     messageService, $stateParams, utilService, $q, $mdDialog, quizService,
     $location, userService, navService, $firebaseArray, $timeout, $mdToast,
     firebaseService, $firebaseObject, $sce, authService, $mdSidenav, $state) {
-
+    //quesquestionBankID for amazon service
     /*Private Variables*/
     var _self = this;
     _self.booksNav = true;
@@ -128,8 +128,8 @@
     };
 
     function questionSetAddQuestion(questionSet) {
-      console.log(questionSet,"11111111111111")
-      // questionSet["title"] = "discussion-html";
+      console.log(questionSet, "11111111111111")
+        // questionSet["title"] = "discussion-html";
       angular.forEach(questionSet.options, function(val) {
         delete val.$$hashKey;
       });
@@ -332,11 +332,12 @@
 
     };
 
-    _self.saveFile = function(file, type, quizID) {
+    _self.saveFile = function(file, type, questionBankUniqueID) {
       var defer = $q.defer();
       var xhr = new XMLHttpRequest();
       xhr.open("GET", appConfig.apiBaseUrl +
-        "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" +
+        "/api/savequestionBankPicture?questionBankID=" +
+        questionBankUniqueID + "&file_type=" +
         type);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
