@@ -517,6 +517,7 @@ export function editUser(event, context: Context) {
 };
 
 export function forgotPassword(event, context: Context) {
+
     User.findOne({
         email: event.email
     }, function(err, user) {

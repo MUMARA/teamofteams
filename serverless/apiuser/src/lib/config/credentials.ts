@@ -54,7 +54,7 @@ let production = {
     
     /*Email Sending Service Post Mark API*/    
     postmark:{
-        SERVERAPIKEY: process.env.POSTMARK_API_KEY
+        SERVERAPIKEY: 'bd40d4b9-342b-42d9-9279-b8c61d76d71c'
     },
 
     /*mongoDB ( mongoLab ) credentials*/
@@ -71,4 +71,4 @@ let production = {
 
 };
 
-export let credentials = process.env.NODE_ENV == 'production' ? production : development;   
+export let credentials = process.env.SERVERLESS_STAGE == 'prod' ? production : development;   
