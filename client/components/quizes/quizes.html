@@ -30,7 +30,7 @@
                 <md-list class="quiz-sidebar-nav">
                     <md-list-item layout-margin class="md-whiteframe-1dp book-list-item"
                                   ng-repeat="book in quizes.Quiz | filter: quizes.query track by $index"
-                                  ng-click="quizes.setSelectedBook(this, $index); quizes.showQuizQuestionBank($index); quizes.showQuizes($index);"
+                                  ng-click="quizes.showQuizQuestionBank($index); quizes.showQuizes($index);"
                                   ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
                         <!-- Books Side-->
                         <div layout="row" class="subgroupcard height-120px">
@@ -121,7 +121,7 @@
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
-                        <span><b>{{questionbank.title}}</b></span>
+                        <span><b>{{questionbank.title | truncate:30}}</b></span>
                     </div>
                     <div class="quiz-select-item" flex="10" ng-if="$index === quiz.selectedChapterIndex" layout="column"
                          layout-align="center end">

@@ -161,6 +161,13 @@
 
     // Show Quiz Qustion Bank start
     function showQuizQuestionBank(quizIndex) {
+      _self.quizChapters = [];
+      _self.quizChapterId = [];
+      _self.QuizTopics = [];
+      _self.quizTopicsId = [];
+      _self.quizQuestion = [];
+      _self.quizQuestionId = [];
+      //_self.topics
       _self.selectedBookIndex = quizIndex;
       quizesService.setQuestionObject(null);
       quizesService.setChapter(null, null);
@@ -194,9 +201,12 @@
 
     // Show Quiz's question Banks' Chapters start
     function showQuizChapter(ele, index) {
-
       _self.quizChapters = [];
       _self.quizChapterId = [];
+      _self.QuizTopics = [];
+      _self.quizTopicsId = [];
+      _self.quizQuestion = [];
+      _self.quizQuestionId = [];
       _self.questionBankschaptersId = [];
       _self.questionBankschapters = [];
       _self.questionBankUniqueID = quizesBankService.questionBanksId[index];
@@ -237,8 +247,9 @@
     // Show Quiz's Topic start
     function showTopics(chapterIndex) {
       _self.QuizTopics = [];
-      _self.QuizTopicsId = [];
-
+      _self.quizTopicsId = [];
+      _self.quizQuestion = [];
+      _self.quizQuestionId = [];
       _self.questionBankTopicsId = [];
       _self.questionsId = [];
       _self.showQuestionDetails = false;
