@@ -285,6 +285,7 @@
       var questionBankUniqueID = _self.questionbankObj.bookUniqueId;
       if ($rootScope.newImg) {
         var x = utilService.base64ToBlob($rootScope.newImg);
+        console.log(x);
         var temp = $rootScope.newImg.split(',')[0];
         var mimeType = temp.split(':')[1].split(';')[0];
         _self.saveFile(x, mimeType, questionBankUniqueID)
@@ -371,6 +372,7 @@
       xhr.onerror = function(error) {
         defer.reject(messageService.showSuccess("Could not upload file."));
       };
+      console.log(file);
       xhr.send(file);
       return defer.promise;
     }
@@ -388,13 +390,14 @@
         desc: chapterObj.desc,
         timestamp: Firebase.ServerValue.TIMESTAMP
       };
-      quizBankService.createChapter(_self.bookId, _self.chapterObj).then(function(){
-        quizBankService.loadChapters(_self.bookId).then(function(chapters) {
-              _self.chapters = chapters;
-            });
-        _self.chapterObj = {};
-        _self.showChapter();
-      });
+      quizBankService.createChapter(_self.bookId, _self.chapterObj).then(
+        function() {
+          quizBankService.loadChapters(_self.bookId).then(function(chapters) {
+            _self.chapters = chapters;
+          });
+          _self.chapterObj = {};
+          _self.showChapter();
+        });
     }
 
     function addChapter() {
@@ -420,14 +423,15 @@
         desc: topicObj.desc,
         'timestamp': Firebase.ServerValue.TIMESTAMP
       };
-      quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj).then(function(data){
-        quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
+      quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj)
+        .then(function(data) {
+          quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
             function(topics) {
               _self.topics = topics;
               _self.topicObj = {};
               _self.showTopic();
             });
-      });
+        });
     }
 
     function addTopic() {
@@ -593,8 +597,7 @@
       if (question.type == 3) {
         delete question.options;
         question.questiones = _self.questionSetQuestions;
-      }
-      else {
+      } else {
         delete question.desc;
         var arr = question.options;
         angular.forEach(question.options, function(data, index) {
@@ -608,7 +611,8 @@
         question.options = arr;
 
       }
-      quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId, question).then(function(){
+      quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId,
+        question).then(function() {
         _self.question = {};
         _self.question.html = null;
         _self.question.title = null;
