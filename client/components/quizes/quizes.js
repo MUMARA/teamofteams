@@ -166,16 +166,27 @@
       quizesService.setChapter(null, null);
       quizesService.setTopic(null, null);
       quizesService.setQuestionObject(null);
-      _self.quizQuestionBanks = null;
-      _self.bookId = quizesBankService.bookId[quizIndex];
+      _self.quizQuestionBanks = [];
 
       _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
-
+      angular.forEach(_self.books, function(val) {
+        val.SelectedBook = false;
+      })
       _self.showQuestionDetails = false;
       _self.questionView = null;
       quizesBankService.loadQuizQuestionBank(_self.quizId).then(
         function(questionBanks) {
           _self.quizQuestionBanks = questionBanks;
+          _self.bookId = quizesBankService.questionBanksId[quizIndex];
+          angular.forEach(quizesBankService.questionBanksId, function(
+            QuizQuestionBank) {
+            angular.forEach(quizesBankService.bookId, function(
+              QuestionBank, i) {
+              if (QuizQuestionBank === QuestionBank) {
+                _self.books[i].SelectedBook = true;
+              }
+            })
+          })
 
         });
 
@@ -199,23 +210,24 @@
       _self.quizChapterId = [];
       _self.questionBankschaptersId = [];
       _self.questionBankschapters = [];
+
       _self.questionBankUniqueID = quizesBankService.questionBanksId[index];
       var bookIndx = quizesBankService.bookId.indexOf(_self.questionBankUniqueID);
       _self.questionBanksAllChapters = _self.books[bookIndx].chapters;
+
       for (var chaptersUniqueId in _self.questionBanksAllChapters) {
         _self.questionBankschaptersId.push(chaptersUniqueId)
         _self.questionBankschapters.push(_self.questionBanksAllChapters[
           chaptersUniqueId])
         _self.questionBanksAllChapters[
           chaptersUniqueId].SelectedChapter = false
-
       }
       quizesBankService.loadQuizChapter(_self.quizId, _self.questionBankUniqueID)
         .then(function(Chapters) {
           for (var quizChapter in Chapters[0]) {
             _self.quizChapters.push(Chapters[0][quizChapter])
-
             _self.quizChapterId.push(quizChapter)
+
             angular.forEach(_self.questionBankschaptersId, function(val, i) {
               if (val === quizChapter) {
                 _self.questionBanksAllChapters[
@@ -249,7 +261,13 @@
         _self.chapterId).then(function(quizChapters) {
         for (var quizTopics in quizChapters[0].topics) {
           _self.QuizTopics.push(quizChapters[0].topics[quizTopics])
-          _self.QuizTopicsId.push(quizTopics)
+          _self.QuizTopicsId.push(quizTopics);
+          angular.forEach(_self.questionBankTopicsId, function(val, i) {
+            if (val === quizTopics) {
+              _self.questionBankTopics[
+                val].SelectedTopic = true
+            }
+          })
         }
       })
 
@@ -257,6 +275,7 @@
       _self.questionBankTopics = _self.books[questionBankIndex].chapters[
         _self.chapterId].topics;
       for (var topicUniqueId in _self.questionBankTopics) {
+        _self.questionBankTopics[topicUniqueId].SelectedTopic = false;
         _self.questionBankTopicsId.push(topicUniqueId);
       }
     } // Show Quiz's Topic end
@@ -274,7 +293,14 @@
           _self.chapterId, _self.topicId).then(function(quizTopics) {
           for (var quizQuestion in quizTopics[0].questions) {
             _self.quizQuestion.push(quizTopics[0].questions[quizQuestion])
-            _self.quizQuestionId.push(quizQuestion)
+            _self.quizQuestionId.push(quizQuestion);
+
+            angular.forEach(_self.questionbanksQuestionId, function(val, i) {
+              if (val === quizQuestion) {
+                _self.questionbanksQuestion[
+                  i].SelectedQuestion = true
+              }
+            })
           }
         })
         // Load QuestionBank Questions
@@ -284,7 +310,11 @@
         _self.questionbanksQuestion.push(_self.questionBankTopics[_self
             .topicId]
           .questions[questionbanksQuestionKeys]);
+        _self.questionBankTopics[_self
+            .topicId]
+          .questions[questionbanksQuestionKeys].SelectedQuestion = false;
         _self.questionbanksQuestionId.push(questionbanksQuestionKeys)
+
       }
     } // Show Quiz's Question end
 
@@ -486,6 +516,7 @@
       };
       _self.bookId = quizesBankService.bookId[quizIndex];
       _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
+      console.log(_self.quizQuestionBanks);
       if (_self.quizQuestionBanks.length == 0) {
         quizesBankService.addQuizQuestionBank(_self.selectedQuestionBank,
           _self
@@ -531,8 +562,7 @@
               _self.chaptersId,
               title).then(function(res) {
               _self.quizChapters.push({
-                title: title,
-                SelectedChapter: true
+                title: title
               })
             })
           }
@@ -557,8 +587,6 @@
         }, function(err) {});
       } else {
         angular.forEach(_self.QuizTopics, function(val, i) {
-          console.log(val.title != title, i)
-          console.log(i == _self.QuizTopics.length - 1, i)
           if (val.title != title && i == _self.QuizTopics.length -
             1) {
             quizesBankService.addQuizTopic(_self.quizId, _self.questionBankUniqueID,
@@ -575,12 +603,9 @@
       }
     }
     _self.QuizAddQuestion = function(questionObj, index) {
-      console.log(questionObj)
-        // _self.questionObject = {
-        //   title: questionObj.title,
-        //   type: questionObj.type,
-        //   options: questionObj.options
-        // }
+      _self.questionbanksQuestion[index].SelectedQuestion = true;
+      delete questionObj.SelectedQuestion;
+
       _self.QuestionId = _self.questionbanksQuestionId[index];
       if (_self.quizQuestion.length == 0) {
         quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
