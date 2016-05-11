@@ -2,6 +2,6 @@
 "use strict";
 var userController_1 = require('../lib/controller/userController');
 exports.handler = function (event, context, cb) {
-    userController_1.verifyEmail(event, context);
+    userController_1.checkAvailability(event, context);
 };
 //# sourceMappingURL=handler.js.map

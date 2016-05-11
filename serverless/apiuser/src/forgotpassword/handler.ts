@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
-import {verifyEmail} from '../lib/controller/userController'
+import {forgotPassword} from '../lib/controller/userController'
 
 exports.handler = function(event, context: Context, cb) {
-    verifyEmail(event, context);
+    forgotPassword(event, context);
 };
