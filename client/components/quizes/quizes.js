@@ -149,7 +149,15 @@
     }
     initQuiz();
 
-
+    // Shows Question Details
+    function showQuestionView(question, index) {
+      _self.selectedQuestionIndex = index;
+      if (question !== null) {
+        quizService.setQuestionObject(question);
+      }
+      _self.showQuestionDetails = true;
+      _self.questionView = question;
+    }
 
     // setTabs();
 
@@ -205,7 +213,7 @@
 
     // Show Quiz's question Banks' Chapters start
     function showQuizChapter(ele, index) {
-
+      _self.selectedChapterIndex = index;
       _self.quizChapters = [];
       _self.quizChapterId = [];
       _self.questionBankschaptersId = [];
@@ -240,7 +248,7 @@
 
       _self.selectedQuestionIndex = null;
       _self.selectedTopicIndex = null;
-      _self.selectedChapterIndex = index;
+
       // quizesService.showQuizChapter(index);
       // quizesService.setSelectedTopic(null);
     } // Show Quiz's question Banks' Chapters end
@@ -250,7 +258,7 @@
     function showTopics(chapterIndex) {
       _self.QuizTopics = [];
       _self.QuizTopicsId = [];
-
+      _self.selectedChapterIndex = chapterIndex;
       _self.questionBankTopicsId = [];
       _self.questionsId = [];
       _self.showQuestionDetails = false;
@@ -282,6 +290,7 @@
 
     // Show Quiz's Question start
     function showQuestions(topicIndex) {
+      _self.selectedTopicIndex = topicIndex;
       _self.questionbanksQuestion = []
       _self.questionbanksQuestionId = []
       _self.quizQuestion = []
@@ -319,7 +328,8 @@
     } // Show Quiz's Question end
 
     // Shows Question Details
-    function showQuestionView(question) {
+    function showQuestionView(question, index) {
+      _self.selectedQuestionIndex = index;
       if (question !== null) {
         quizesService.setQuestionObject(question);
       }

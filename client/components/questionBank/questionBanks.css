@@ -94,6 +94,24 @@ div[ta-bind="ta-bind"] h6 {
     fill: #fff;
 }
 
+.fill-fff {
+    fill: #fff !important;
+}
+
+.margin-top-10px {
+    margin-top: 10px !important;
+}
+
+.sidenav-bottom-btn {
+    width: 100% !important;
+    bottom: 3px !important;
+    position: absolute !important;
+}
+
+.height-120px {
+    height: 120px !important;
+}
+
 .radio-btn-option {
     display: inline-block;
 }
@@ -158,11 +176,20 @@ div[ta-bind="ta-bind"] h6 {
     overflow-x: hidden;
     width: 20%;
 }
-
 .quiz-col-margin-none {
     overflow-x: hidden;
     margin-left: 0 !important;
     width: 20%;
+}
+.quizes-col {
+    overflow-x: hidden;
+    width: 16%;
+}
+
+.quizes-col-margin-none {
+    overflow-x: hidden;
+    margin-left: 0 !important;
+    width: 16%;
 }
 
 .quiz-md-card-1 {
