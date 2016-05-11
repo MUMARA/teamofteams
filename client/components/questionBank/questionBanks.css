@@ -94,6 +94,24 @@ div[ta-bind="ta-bind"] h6 {
     fill: #fff;
 }
 
+.fill-fff {
+    fill: #fff !important;
+}
+
+.margin-top-10px {
+    margin-top: 10px !important;
+}
+
+.sidenav-bottom-btn {
+    width: 100% !important;
+    bottom: 3px !important;
+    position: absolute !important;
+}
+
+.height-120px {
+    height: 120px !important;
+}
+
 .radio-btn-option {
     display: inline-block;
 }
