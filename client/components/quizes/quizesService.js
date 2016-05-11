@@ -351,6 +351,26 @@
         });
       return deferred.promise;
     };
+    // Delete Quiz Question Bank
+
+    _self.deleteQuizQuestionBank = function(questionBankUniqueId,
+      quizUniqueId) {
+      var deferred = $q.defer();
+      firebaseService.getRefQuiz().child(quizUniqueId).child(
+        'questionbanks').child(questionBankUniqueId).set(null,
+        function(
+          err) {
+          if (err == null) {
+            deferred.resolve("saved");
+          } else {
+            deferred.reject("Error: " + err);
+          }
+        });
+      return deferred.promise;
+    };
+
+
+
     // _self.loadQuestions = function(questionBankUniqueID, chapterUniqueId,
     //   topicUniqueId) {
     //   var deferred = $q.defer();

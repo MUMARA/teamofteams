@@ -72,18 +72,18 @@
 
         <div>
             <div ng-style="(quiz.books.length == 0) && {'display':'none'}">
-                <div id="quizBankIcon" ng-click="quiz.showQuizBankFunc()" class="selectedTab menu-item-btn">
+                <!-- <div id="quizBankIcon" ng-click="quiz.showQuizBankFunc()" class="selectedTab menu-item-btn">
                     <img ng-src="img/1book.svg" class="book-img-quiz"/>
                 </div>
                 <div id="quizIcon" ng-click="quiz.showQuiz()" class="menu-item-btn">
                     <img ng-src="img/1add_quiz.svg"/>
-                </div>
+                </div> -->
                 <div id="quizAssignIcon" ng-click="quiz.showAssignQuiz()" class="menu-item-btn">
                     <img ng-src="img/1calendar.svg"/>
                 </div>
-                <div id="quizResultIcon" ng-click="quiz.showAttemptQuiz()" class="menu-item-btn">
+                <!-- <div id="quizResultIcon" ng-click="quiz.showAttemptQuiz()" class="menu-item-btn">
                     <img ng-src="img/comment.svg"/>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -123,7 +123,7 @@
                  previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}"
                  on-chapter-render>
                 <div title="{{chapter.description}}" layout="row" class="item-content">
-                    <img src="img/1chapter.svg">
+                    <img src="img/quizChapter.svg">
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
@@ -179,7 +179,7 @@
                  ng-class="{selectedTopic: $index == quiz.selectedTopicIndex,
                  previousSelected: $index == quiz.selectedTopicIndex && quiz.selectedQuestionIndex !== null}">
                 <div layout="row" title="{{topic.description}}" class="item-content">
-                    <img src="img/1topic.svg">
+                    <img src="img/quizTopic.svg">
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
@@ -235,7 +235,7 @@
                  ng-mouseleave="quiz.hover(chapter)"
                  ng-class="{selectedQuestion: $index == quiz.selectedQuestionIndex}">
                 <div layout="row" title="{{question.desc}}" class="item-content">
-                    <img src="img/1questions.svg">
+                    <img src="img/quizQuestion.svg">
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>

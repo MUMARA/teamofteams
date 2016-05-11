@@ -29,22 +29,30 @@
             <div class="quiz-md-card-1">
                 <md-list class="quiz-sidebar-nav">
                     <md-list-item layout-margin class="md-whiteframe-1dp book-list-item"
-                                  ng-repeat="book in quizes.Quiz | filter: quizes.query track by $index"
-                                  ng-click="quizes.setSelectedBook(this, $index); quizes.showQuizQuestionBank($index); quizes.showQuizes($index);"
-                                  ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
+                                  ng-repeat="quiz in quizes.Quiz | filter: quizes.query track by $index"
+                                  ng-click="quizes.showQuizQuestionBank($index); quizes.showQuizes($index);"
+                                  ng-class="{selectedBook: $index == quizes.selectedquizIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
                         <!-- Books Side-->
                         <div layout="row" class="subgroupcard height-120px">
                             <div class="subgrouplogo height-120px">
-                                <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
+                                <img ng-src="{{quiz['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
                             </div>
                             <div layout="column" flex>
                                 <div layout="row" layout-align="space-between center">
-                                    <div layout-padding>{{book.title}}</div>
+                                    <!-- <div x>{{quiz.title}}</div> -->
+                                    <div layout-padding>{{quiz.title | characters:20}}
+                                      <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                                          {{quiz.title}}
+                                      </md-tooltip></div>
                                 </div>
                                 <div layout="row" layout-align="space-between end" layout-fill class="topmargin30px">
                                     <img ng-src="{{navToolbar.userObj['profile-image']||$root.userImg ||'https://s3-us-west-2.amazonaws.com/defaultimgs/user.png'}}"
                                          class="icon40px imageRound" alt="user" layout-margin/>
                                 </div>
+                            </div>
+                            <div class="fillColorDarkGrey arrowCenter"  ng-if="$index === quizes.selectedQuizIndex" layout="column"
+                                 layout-align="center end">
+                                <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
                             </div>
                         </div>
 
@@ -117,7 +125,7 @@
                  ng-click="quizes.showQuizChapter(this, $index);"
                  ng-class="{selectedChapter: $index == quizes.selectedChapterIndex,previousSelected: $index == quiz.selectedChapterIndex && quiz.selectedTopicIndex !== null}">
                 <div title="{{questionbank.desc}}" layout="row" class="item-content">
-                    <img src="img/1chapter.svg">
+                    <img src="img/questionBank.svg">
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
@@ -127,7 +135,8 @@
                           </md-tooltip></b>
 
                     </div>
-                    <div class="fillColorDarkGrey" flex="10" ng-if="$index === quizes.selectedChapterIndex" layout="column"
+
+                    <div class="quiz-select-item" flex="10" ng-if="$index === quizes.selectedquestionBankIndex" layout="column"
                          layout-align="center end">
                         <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
                     </div>
@@ -173,9 +182,9 @@
                  ng-mouseenter="quizes.hover(chapter)"
                  ng-mouseleave="quizes.hover(chapter)"
                  ng-class="{selectedChapter: $index == quizes.selectedChapterIndex,
-                 previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
+                 previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedChapterIndex !== null}">
                 <div title="{{chapter.description}}" layout="row" class="item-content">
-                    <img src="img/1chapter.svg">
+                    <img src="img/quizChapter.svg">
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
@@ -184,7 +193,7 @@
                               {{chapter.title}}
                           </md-tooltip></b>
                     </div>
-                    <div class="fillColorDarkGrey" ng-if="$index === quizes.selectedChapterIndex">
+                    <div class="quiz-select-item" ng-if="$index === quizes.selectedChapterIndex">
                         <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
                     </div>
                 </div>
@@ -230,7 +239,7 @@
                  ng-class="{selectedTopic: $index == quizes.selectedTopicIndex,
                  previousSelected: $index == quizes.selectedTopicIndex && quizes.selectedTopicIndex !== null}">
                 <div layout="row" title="{{topic.description}}" class="item-content">
-                    <img src="img/1topic.svg">
+                    <img src="img/quizTopic.svg">
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
@@ -239,7 +248,7 @@
                               {{topic.title}}
                           </md-tooltip></b>
                     </div>
-                    <div class="fillColorDarkGrey" ng-if="$index === quizes.selectedTopicIndex">
+                    <div class="quiz-select-item" ng-if="$index === quizes.selectedTopicIndex">
                         <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
                     </div>
                 </div>
@@ -284,7 +293,7 @@
                  ng-mouseleave="quizes.hover(chapter)"
                  ng-class="{selectedQuestion: $index == quizes.selectedQuestionIndex}">
                 <div layout="row" title="{{question.Description}}" class="item-content">
-                    <img src="img/1questions.svg">
+                    <img src="img/quizQuestion.svg">
 
                     <div flex layout="row" layout-align="start center">
                         <span flex="10"></span>
@@ -293,7 +302,7 @@
                             {{question.title}}
                         </md-tooltip></b>
                     </div>
-                    <div class="fillColorDarkGrey" ng-if="$index === quizes.selectedQuestionIndex">
+                    <div class="quiz-select-item" ng-if="$index === quizes.selectedQuestionIndex">
                         <ng-md-icon class="" icon="keyboard_arrow_right"></ng-md-icon>
                     </div>
                 </div>
@@ -452,9 +461,10 @@
     <md-content class="backColorLightSeaGreen md-content-column-height">
         <md-list class="quiz-sidebar-nav">
 
-          <md-list-item layout="row" layout-align="start center"
+          <md-list-item layout="row" layout-align="space-between center"
                         ng-repeat="book in quizes.books track by $index"
-                        class="buttonHover nooutline" ng-click="quizes.addQuestionBank(this, $index);">
+                        class="buttonHover nooutline" >
+            <div ng-click="quizes.addQuestionBank(this, $index);">
               <ng-md-icon size="24" icon="done"
                           ng-class="book.SelectedBook ? 'fillColorWhite' : 'fillColorDarkGrey' "
                           style="margin-top: 10px"></ng-md-icon>
@@ -462,7 +472,13 @@
                 <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
                       {{book.title}}
                   </md-tooltip></span>
+            </div>
+            <ng-md-icon size="24" icon="delete" ng-if="book.SelectedBook" ng-click="quizes.deleteQuizQuestionBank($index)"
+                        ng-class="book.SelectedBook ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                        style="margin-top: 10px;margin-right:10px;">
+                      </ng-md-icon>
           </md-list-item>
+
             <!-- <md-list-item layout-margin class="md-whiteframe-1dp book-list-item"
                           ng-repeat="book in quizes.books track by $index" id="bookId{{$index}}"
                           ng-click="quizes.addQuestionBank(this, $index);"
@@ -514,17 +530,22 @@
     </md-toolbar>
     <md-content class="backColorLightSeaGreen md-content-column-height">
         <md-list class="quiz-sidebar-nav">
-            <md-list-item layout="row" layout-align="start center"
+            <md-list-item layout="row" layout-align="space-between center"
                           ng-repeat="chapter in quizes.questionBankschapters track by $index"
-                          class="buttonHover nooutline" ng-click="quizes.QuizAddchapters(chapter, $index);">
-                <ng-md-icon size="24" icon="done"
-                            ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' "
-                            style="margin-top: 10px"></ng-md-icon>
-                <span class="leftmargin10px foreColorWhite">{{chapter.title | characters:35}}
-                  <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                        {{chapter.title}}
-                    </md-tooltip></span>
-
+                          class="buttonHover nooutline" >
+                  <div ng-click="quizes.QuizAddchapters(chapter, $index);">
+                    <ng-md-icon size="24" icon="done"
+                                ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                                style="margin-top: 10px"></ng-md-icon>
+                    <span class="leftmargin10px foreColorWhite">{{chapter.title | characters:35}}
+                      <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                            {{chapter.title}}
+                        </md-tooltip></span>
+                  </div>
+                  <ng-md-icon size="24" icon="delete" ng-if="chapter.SelectedChapter"
+                              ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                              style="margin-top: 10px;margin-right:10px;">
+                            </ng-md-icon>
             </md-list-item>
         </md-list>
     </md-content>
@@ -546,9 +567,10 @@
     </md-toolbar>
     <md-content class="backColorLightSeaGreen md-content-column-height">
         <md-list class="quiz-sidebar-nav">
-            <md-list-item layout="row" layout-align="start center"
+            <md-list-item layout="row" layout-align="space-between center"
                           ng-repeat="topic in quizes.questionBankTopics track by $index"
-                          class="buttonHover nooutline" ng-click="quizes.addQuizTopic(topic, $index);">
+                          class="buttonHover nooutline">
+              <div  ng-click="quizes.addQuizTopic(topic, $index);">
                 <ng-md-icon size="24" icon="done"
                             ng-class="topic.SelectedTopic ? 'fillColorWhite' : 'fillColorDarkGrey' "
                             style="margin-top: 10px">
@@ -558,6 +580,11 @@
                   <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
                         {{topic.title}}
                     </md-tooltip></span>
+              </div>
+              <ng-md-icon size="24" icon="delete" ng-if="topic.SelectedTopic"
+                          ng-class="topic.SelectedTopic ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                          style="margin-top: 10px;margin-right:10px;">
+                        </ng-md-icon>
             </md-list-item>
         </md-list>
     </md-content>
@@ -579,18 +606,24 @@
     </md-toolbar>
     <md-content class="backColorLightSeaGreen md-content-column-height">
         <md-list class="quiz-sidebar-nav">
-            <md-list-item layout="row" layout-align="start center"
+            <md-list-item layout="row" layout-align="space-between center"
                           ng-repeat="question in quizes.questionbanksQuestion track by $index"
-                          class="buttonHover nooutline" ng-click="quizes.QuizAddQuestion(question, $index);">
-                <ng-md-icon size="24" icon="done"
-                            ng-class="question.SelectedQuestion ? 'fillColorWhite' : 'fillColorDarkGrey' "
-                            style="margin-top: 10px">
+                          class="buttonHover nooutline" >
+                    <div ng-click="quizes.addQuizTopic(topic, $index);">
+                      <ng-md-icon size="24" icon="done"
+                                  ng-class="question.SelectedQuestion ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                                  style="margin-top: 10px">
 
-                </ng-md-icon>
-                <span class="leftmargin10px foreColorWhite">{{question.title  | characters:35}}
-                  <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                        {{question.title}}
-                    </md-tooltip></span>
+                      </ng-md-icon>
+                      <span class="leftmargin10px foreColorWhite">{{question.title  | characters:35}}
+                        <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
+                              {{question.title}}
+                          </md-tooltip></span>
+                    </div>
+                    <ng-md-icon size="24" icon="delete" ng-if="question.SelectedQuestion"
+                                ng-class="question.SelectedQuestion ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                                style="margin-top: 10px;margin-right:10px;">
+                              </ng-md-icon>
             </md-list-item>
         </md-list>
     </md-content>

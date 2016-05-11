@@ -169,14 +169,22 @@
 
     // Show Quiz Qustion Bank start
     function showQuizQuestionBank(quizIndex) {
-      _self.selectedBookIndex = quizIndex;
+      _self.quizChapters = [];
+      _self.quizChapterId = [];
+      _self.QuizTopics = [];
+      _self.quizTopicsId = [];
+      _self.quizQuestion = [];
+      _self.quizQuestionId = [];
+      _self.questionView = null;
+      //_self.topics
+      _self.selectedQuizIndex = quizIndex;
       quizesService.setQuestionObject(null);
       quizesService.setChapter(null, null);
       quizesService.setTopic(null, null);
       quizesService.setQuestionObject(null);
       _self.quizQuestionBanks = [];
 
-      _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
+      _self.quizId = quizesBankService.quizesId[_self.selectedQuizIndex];
       angular.forEach(_self.books, function(val) {
         val.SelectedBook = false;
       })
@@ -195,7 +203,6 @@
               }
             })
           })
-
         });
 
       _self.chapterId = null;
@@ -213,9 +220,14 @@
 
     // Show Quiz's question Banks' Chapters start
     function showQuizChapter(ele, index) {
-      _self.selectedChapterIndex = index;
+      _self.selectedquestionBankIndex = index;
+      _self.questionView = null;
       _self.quizChapters = [];
       _self.quizChapterId = [];
+      _self.QuizTopics = [];
+      _self.quizTopicsId = [];
+      _self.quizQuestion = [];
+      _self.quizQuestionId = [];
       _self.questionBankschaptersId = [];
       _self.questionBankschapters = [];
 
@@ -258,7 +270,11 @@
     function showTopics(chapterIndex) {
       _self.QuizTopics = [];
       _self.QuizTopicsId = [];
+      _self.questionView = null;
       _self.selectedChapterIndex = chapterIndex;
+      _self.quizTopicsId = [];
+      _self.quizQuestion = [];
+      _self.quizQuestionId = [];
       _self.questionBankTopicsId = [];
       _self.questionsId = [];
       _self.showQuestionDetails = false;
@@ -292,6 +308,7 @@
     function showQuestions(topicIndex) {
       _self.selectedTopicIndex = topicIndex;
       _self.questionbanksQuestion = []
+      _self.questionView = null;
       _self.questionbanksQuestionId = []
       _self.quizQuestion = []
       _self.quizQuestionId = []
@@ -519,14 +536,14 @@
       _self.showQuestion();
     }
 
+    // Add Quiz QuestionBank function start
     function addQuestionBank(qBank, quizIndex) {
       _self.selectedQuestionBank = {
         title: qBank.book.title,
         imgLogoUrl: qBank.book.imgLogoUrl
       };
       _self.bookId = quizesBankService.bookId[quizIndex];
-      _self.quizId = quizesBankService.quizesId[_self.selectedBookIndex];
-      console.log(_self.quizQuestionBanks);
+      _self.quizId = quizesBankService.quizesId[_self.selectedQuizIndex];
       if (_self.quizQuestionBanks.length == 0) {
         quizesBankService.addQuizQuestionBank(_self.selectedQuestionBank,
           _self
@@ -535,10 +552,11 @@
           _self.quizQuestionBanks.push(_self.selectedQuestionBank)
         });
       } else {
-        angular.forEach(_self.questionBanks, function(val, i) {
+
+        angular.forEach(_self.quizQuestionBanks, function(val, i) {
           if (val.title != _self.selectedQuestionBank.title && i ==
             _self
-            .questionBanks
+            .quizQuestionBanks
             .length -
             1) {
             quizesBankService.addQuizQuestionBank(_self.selectedQuestionBank,
@@ -546,99 +564,148 @@
               .bookId,
               _self.quizId).then(function(res) {
               _self.quizQuestionBanks.push(_self.selectedQuestionBank)
+                //
+              quizesBankService.loadQuizQuestionBank(_self.quizId).then(
+                function(questionBanks) {
+                  _self.quizQuestionBanks = questionBanks;
+                  _self.bookId = quizesBankService.questionBanksId[
+                    quizIndex];
+                  angular.forEach(quizesBankService.questionBanksId,
+                    function(
+                      QuizQuestionBank) {
+                      angular.forEach(quizesBankService.bookId,
+                        function(
+                          QuestionBank, i) {
+                          if (QuizQuestionBank === QuestionBank) {
+                            _self.books[i].SelectedBook = true;
+                          }
+                        })
+                    })
+                });
             });
           }
         })
       }
-    }
+    } // Add QuestionBank function end
 
+    // Add Quiz Chapter function start
     _self.QuizAddchapters = function(chapter, index) {
-      var title = chapter.title;
-      _self.chaptersId = _self.questionBankschaptersId[index];
+        var title = chapter.title;
+        _self.chaptersId = _self.questionBankschaptersId[index];
 
-      if (_self.quizChapterId.length == 0) {
-        quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
-          _self.chaptersId,
-          title).then(function(res) {
-          _self.quizChapters.push({
-            title: title
-          })
-        })
-      } else {
-        angular.forEach(_self.quizChapterId, function(val, i) {
-          if (val === _self.chaptersId && i == _self.quizChapters.length -
-            1) {
-            quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
-              _self.chaptersId,
-              title).then(function(res) {
-              _self.quizChapters.push({
-                title: title
-              })
+        if (_self.quizChapterId.length == 0) {
+          quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
+            _self.chaptersId,
+            title).then(function(res) {
+            _self.quizChapters.push({
+              title: title
             })
-          }
-          // if (val.title != title && i == _self.quizChapters.length -
-          //   1) {
-          //
-          // }
-        })
-      }
-    }
-
-
-    _self.addQuizTopic = function(topicObj, index) {
-      var title = topicObj.title;
-      _self.topicId = _self.questionBankTopicsId[index];
-      if (_self.QuizTopics.length == 0) {
-        quizesBankService.addQuizTopic(_self.quizId, _self.questionBankUniqueID,
-          _self.chapterId, _self.topicId, title).then(function(res) {
-          _self.QuizTopics.push({
-            title: title
           })
-        }, function(err) {});
-      } else {
-        angular.forEach(_self.QuizTopics, function(val, i) {
-          if (val.title != title && i == _self.QuizTopics.length -
-            1) {
-            quizesBankService.addQuizTopic(_self.quizId, _self.questionBankUniqueID,
-              _self.chapterId, _self.topicId, title).then(
-              function(
-                res) {
-                _self.QuizTopics.push({
+        } else {
+          angular.forEach(_self.quizChapterId, function(val, i) {
+            if (val === _self.chaptersId && i == _self.quizChapters.length -
+              1) {
+              quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
+                _self.chaptersId,
+                title).then(function(res) {
+                _self.quizChapters.push({
                   title: title
                 })
-              },
-              function(err) {});
-          }
-        })
-      }
-    }
+              })
+            }
+          })
+        }
+      } // Add Quiz Chapter function end
+
+
+    // Add Quiz Topic function start
+    _self.addQuizTopic = function(topicObj, index) {
+        var title = topicObj.title;
+        _self.topicId = _self.questionBankTopicsId[index];
+        if (_self.QuizTopics.length == 0) {
+          quizesBankService.addQuizTopic(_self.quizId, _self.questionBankUniqueID,
+            _self.chapterId, _self.topicId, title).then(function(res) {
+            _self.QuizTopics.push({
+              title: title
+            })
+          }, function(err) {});
+        } else {
+          angular.forEach(_self.QuizTopics, function(val, i) {
+            if (val.title != title && i == _self.QuizTopics.length -
+              1) {
+              quizesBankService.addQuizTopic(_self.quizId, _self.questionBankUniqueID,
+                _self.chapterId, _self.topicId, title).then(
+                function(
+                  res) {
+                  _self.QuizTopics.push({
+                    title: title
+                  })
+                },
+                function(err) {});
+            }
+          })
+        }
+      } // Add Quiz Topic function end
+
+    // Add Quiz Question function start
     _self.QuizAddQuestion = function(questionObj, index) {
-      _self.questionbanksQuestion[index].SelectedQuestion = true;
-      delete questionObj.SelectedQuestion;
+        _self.questionbanksQuestion[index].SelectedQuestion = true;
+        delete questionObj.SelectedQuestion;
 
-      _self.QuestionId = _self.questionbanksQuestionId[index];
-      if (_self.quizQuestion.length == 0) {
-        quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
-          _self.chapterId, _self.topicId, _self.QuestionId, questionObj
-        ).then(function(res) {
-          _self.quizQuestion.push(questionObj)
-        });
-      } else {
-        angular.forEach(_self.quizQuestion, function(val, i) {
-          if (val.title != questionObj.title && i == _self
-            .quizQuestion
-            .length -
-            1) {
-            quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
-              _self.chapterId, _self.topicId, _self.QuestionId,
-              questionObj
-            ).then(function(res) {
-              _self.quizQuestion.push(questionObj)
+        _self.QuestionId = _self.questionbanksQuestionId[index];
+        if (_self.quizQuestion.length == 0) {
+          quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
+            _self.chapterId, _self.topicId, _self.QuestionId, questionObj
+          ).then(function(res) {
+            _self.quizQuestion.push(questionObj)
+          });
+        } else {
+          angular.forEach(_self.quizQuestion, function(val, i) {
+            if (val.title != questionObj.title && i == _self
+              .quizQuestion
+              .length -
+              1) {
+              quizesBankService.addQuizQuestion(_self.quizId, _self.questionBankUniqueID,
+                _self.chapterId, _self.topicId, _self.QuestionId,
+                questionObj
+              ).then(function(res) {
+                _self.quizQuestion.push(questionObj)
 
+              });
+            }
+          })
+        }
+      } // Add Quiz Question function end
+
+    // Delete functions
+
+    //Delete  Quiz Question Bank
+    _self.deleteQuizQuestionBank = function(quizIndex) {
+      _self.bookId = quizesBankService.bookId[quizIndex];
+      _self.quizId = quizesBankService.quizesId[_self.selectedQuizIndex];
+
+      quizesBankService.deleteQuizQuestionBank(_self.bookId, _self.quizId).then(
+        function(res) {
+          _self.quizQuestionBanks.splice(_self.quizQuestionBanks.indexOf(
+            _self.bookId));
+          quizesBankService.loadQuizQuestionBank(_self.quizId).then(
+            function(questionBanks) {
+              _self.quizQuestionBanks = questionBanks;
+              _self.bookId = quizesBankService.questionBanksId[
+                quizIndex];
+              angular.forEach(quizesBankService.questionBanksId,
+                function(
+                  QuizQuestionBank) {
+                  angular.forEach(quizesBankService.bookId,
+                    function(
+                      QuestionBank, i) {
+                      if (QuizQuestionBank === QuestionBank) {
+                        _self.books[i].SelectedBook = true;
+                      }
+                    })
+                })
             });
-          }
         })
-      }
     }
   }
 })();

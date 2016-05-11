@@ -140,14 +140,22 @@ div[ta-bind="ta-bind"] h6 {
 .delete-icon-option {
     fill: gray;
 }
-
+.deleteIconPositionAbsolute {
+  position: absolute;
+  right: 30px;
+  top: 10px;
+}
 .quiz-select-item {
     position: absolute !important;
     right: -10px !important;
     top: 3px !important;
     fill: #888787 !important;
 }
-
+.arrowCenter {
+  position: absolute;
+  right: 10px;
+  top: 50px;
+}
 .quiz-select-item-book {
     position: absolute !important;
     right: 5px !important;
