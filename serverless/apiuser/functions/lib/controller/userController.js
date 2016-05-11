@@ -7,10 +7,12 @@ var path = require('path');
 var userModel_1 = require('../model/userModel');
 var credentials_1 = require('../config/credentials');
 var tokenGenerator_1 = require('../config/tokenGenerator');
+var firebaseCtrl_1 = require('./firebaseCtrl');
 var fireHandler = require('./fireHandler');
 var postmark_1 = require('../config/postmark');
 var appconfig = credentials_1.credentials.product;
 var verificationEmailTemplate = '';
+var passwordRecoveryEmailTemplate = '';
 fs.readFile(path.resolve(__dirname + '/../views/verificationEmail.ejs'), function (err, template) {
     if (err) {
         console.log('file read error: ' + err);
@@ -18,6 +20,15 @@ fs.readFile(path.resolve(__dirname + '/../views/verificationEmail.ejs'), functio
     else {
         console.log('file read succeed');
         verificationEmailTemplate = template + '';
+    }
+});
+fs.readFile(path.resolve(__dirname + '/../views/passwordRecoveryEmail.ejs'), function (err, template) {
+    if (err) {
+        console.log('file read error: ' + err);
+    }
+    else {
+        console.log('file read succeed');
+        passwordRecoveryEmailTemplate = template + '';
     }
 });
 function userSignup(event, context) {
@@ -117,7 +128,8 @@ function userSignup(event, context) {
             token: user.uuid,
             baseUrl: appconfig.BASEURL,
             domain: appconfig.DOMAIN,
-            supportEmail: appconfig.SUPPORT
+            supportEmail: appconfig.SUPPORT,
+            api: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/verifyemail'
         });
         var payload = {
             "To": user.email,
@@ -238,4 +250,308 @@ function userSignin(event, context) {
     }
 }
 exports.userSignin = userSignin;
+function verifyEmail(event, context) {
+    //check for user with uuid similar to token
+    userModel_1.User.findOneAndUpdate({
+        uuid: event.uuid
+    }, {
+        $set: {
+            status: 1
+        }
+    }, function (err, user) {
+        if (err) {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "error occurred."
+            });
+        }
+        else if (user) {
+            fireHandler.updateUserStatus(user.userID, 1, function (err) {
+                var template;
+                if (err) {
+                    context.succeed({
+                        statusCode: 0,
+                        statusDesc: "account verification failed. please try again."
+                    });
+                }
+                else {
+                    context.succeed({
+                        location: appconfig.DOMAIN + ' signin'
+                    });
+                }
+            });
+        }
+        else {
+            context.succeed({
+                statusCode: 1,
+                statusDesc: "account verification failed. invalid token."
+            });
+        }
+    });
+}
+exports.verifyEmail = verifyEmail;
+;
+function removeUser(event, context) {
+    userModel_1.User.findOneAndRemove({
+        userID: event.userID,
+        password: event.password,
+        token: event.token
+    }, function (err, user) {
+        if (err) {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "error occurred."
+            });
+        }
+        else if (user) {
+            fireHandler.removeUser(user.userID, function (err) {
+                if (err) {
+                    //TODO: handle the case - when user has been deleted from mongoDB but got an error from firebase.
+                    context.succeed({
+                        statusCode: 0,
+                        statusDesc: "user has been removed from local Database but not from firebase."
+                    });
+                }
+                else {
+                    context.succeed({
+                        statusCode: 1,
+                        statusDesc: "user has been removed successfully."
+                    });
+                }
+            });
+        }
+        else {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "invalid credentials."
+            });
+        }
+    });
+}
+exports.removeUser = removeUser;
+;
+function checkAvailability(event, context) {
+    userModel_1.User.findOne({
+        userID: event.userID
+    }, function (err, user) {
+        if (err) {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "error occurred."
+            });
+        }
+        else if (user) {
+            context.succeed({
+                statusCode: 2,
+                statusDesc: "userID already exists."
+            });
+        }
+        else {
+            context.succeed({
+                statusCode: 1,
+                statusDesc: "userID is available for sign up."
+            });
+        }
+    });
+}
+exports.checkAvailability = checkAvailability;
+;
+function changeUserPassword(event, context) {
+    var payload = event;
+    if (!(typeof payload.password === 'string' && payload.password.length >= 3)) {
+        context.succeed({
+            statusCode: 0,
+            statusDesc: "invalid new password."
+        });
+        return;
+    }
+    var userModel = userModel_1.User.findOne({
+        userID: payload.userID,
+        password: payload.password
+    }, function (err, user) {
+        if (err) {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "error occurred."
+            });
+        }
+        else if (user) {
+            userModel.update({
+                password: payload.newPassword
+            }, function (error) {
+                if (error) {
+                    context.succeed({
+                        statusCode: 0,
+                        statusDesc: "error occurred."
+                    });
+                }
+                else {
+                    context.succeed({
+                        statusCode: 1,
+                        statusDesc: "user password has been updated successfully."
+                    });
+                }
+            });
+        }
+        else {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "invalid credentials."
+            });
+        }
+    });
+}
+exports.changeUserPassword = changeUserPassword;
+;
+function checkUserPassword(event, context) {
+    var payload = event;
+    if (!(typeof payload.password === 'string' && payload.password.length >= 3)) {
+        context.succeed({
+            statusCode: 0,
+            statusDesc: "invalid new password."
+        });
+        return;
+    }
+    var userModel = userModel_1.User.findOne({
+        userID: payload.userID,
+        password: payload.password
+    }, function (err, user) {
+        if (err) {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "error occurred."
+            });
+        }
+        else if (user !== null) {
+            context.succeed({
+                statusCode: 1,
+                statusDesc: "Password is correct"
+            });
+        }
+        else {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "invalid credentials."
+            });
+        }
+    });
+}
+exports.checkUserPassword = checkUserPassword;
+;
+function editUser(event, context) {
+    //payLoad ={
+    // userID:req.body.userID,
+    // token : req.body.token,
+    // firstName : req.body.firstName,
+    // lastName  : req.body.lastName,
+    // }
+    var dataToUpdate = {
+        firstName: '',
+        lastName: ''
+    };
+    var payload = event.body;
+    //client should allow firstName and lastName with a length of 3.
+    var validity = {
+        firstName: typeof payload.firstName === 'string' && payload.firstName.length >= 3,
+        lastName: typeof payload.lastName === 'string' && payload.lastName.length >= 3
+    };
+    if (!validity.firstName && !validity.lastName) {
+        context.succeed({
+            statusCode: 0,
+            statusDesc: 'no or invalid fields provided to update.'
+        });
+        return;
+    }
+    var userModel = userModel_1.User.findOne({
+        userID: payload.userID,
+        token: payload.token
+    }, function (err, user) {
+        if (err) {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "error occurred."
+            });
+        }
+        else if (user) {
+            validity.firstName && (dataToUpdate.firstName = payload.firstName);
+            validity.lastName && (dataToUpdate.lastName = payload.lastName);
+            firebaseCtrl_1.firebaseCtrl.asyncUpdateUser(payload.userID, dataToUpdate)
+                .then(function () {
+                userModel.update(dataToUpdate, function (error) {
+                    if (error) {
+                        context.succeed({
+                            statusCode: 0,
+                            statusDesc: "failed while saving to server."
+                        });
+                    }
+                    else {
+                        context.succeed({
+                            statusCode: 1,
+                            statusDesc: "user profile has been updated successfully."
+                        });
+                    }
+                });
+            }, function () {
+                context.succeed({
+                    statusCode: 0,
+                    statusDesc: "failed while saving to server."
+                });
+            });
+        }
+        else {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "invalid credentials."
+            });
+        }
+    });
+}
+exports.editUser = editUser;
+;
+function forgotPassword(event, context) {
+    userModel_1.User.findOne({
+        email: event.email
+    }, function (err, user) {
+        if (err) {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "error occurred."
+            });
+        }
+        else if (user) {
+            sendPasswordRecoveryEmail(user);
+            context.succeed({
+                statusCode: 1,
+                statusDesc: "you would receive an email with a password recovery link, shortly."
+            });
+        }
+        else {
+            context.succeed({
+                statusCode: 0,
+                statusDesc: "user with this email does not exist."
+            });
+        }
+    });
+    function sendPasswordRecoveryEmail(user) {
+        var template = ejs.render(passwordRecoveryEmailTemplate, {
+            user: user,
+            app: appconfig
+        });
+        var payload = {
+            "To": user.email,
+            "From": appconfig.SUPPORT,
+            "Subject": 'Account Recovery Email - "' + appconfig.TITLE,
+            "HtmlBody": template,
+        };
+        postmark_1.client.sendEmail(payload, function (err, json) {
+            if (err) {
+                console.log('email sent error: ' + user.email);
+                return console.error(err.message);
+            }
+            console.log('email sent success: ' + user.email);
+            console.log(json);
+        });
+    }
+}
+exports.forgotPassword = forgotPassword;
 //# sourceMappingURL=userController.js.map

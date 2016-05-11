@@ -287,6 +287,7 @@
         var x = utilService.base64ToBlob($rootScope.newImg);
         var temp = $rootScope.newImg.split(',')[0];
         var mimeType = temp.split(':')[1].split(';')[0];
+          console.dir(x)
         _self.saveFile(x, mimeType, questionBankUniqueID)
           .then(function(url) {
             _self.imgLogoUrl = url + '?random=' + new Date();
@@ -342,7 +343,8 @@
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            var response = JSON.parse(xhr.responseText);
+              var response = JSON.parse(xhr.responseText);
+            console.dir(response)  
             defer.resolve(upload_file(file, response.signed_request,
               response.url));
           } else {
