@@ -720,15 +720,15 @@
 
     //Delete  Topic
     _self.deleteQuizTopics = function(index) {
-      _self.topicId = _self.questionBankTopicsId[index];
-      console.log(_self.topicId);
-      quizesBankService.deleteQuizTopics(_self.quizId, _self.questionBankUniqueID,
-        _self.chapterId, _self.topicId).then(function(res) {
-        _self.QuizTopics.splice(_self.QuizTopics.indexOf(_self.topicId));
-      }, function(err) {});
-    }
-
-    //Delete  Questions
+        _self.topicId = _self.questionBankTopicsId[index];
+        console.log(_self.topicId);
+        quizesBankService.deleteQuizTopics(_self.quizId, _self.questionBankUniqueID,
+          _self.chapterId, _self.topicId).then(function(res) {
+          _self.QuizTopics.splice(_self.QuizTopics.indexOf(_self.topicId));
+        }, function(err) {});
+      }
+      /**/
+      //Delete  Questions
     _self.deleteQuizQuestions = function(index) {
       _self.QuestionId = _self.questionbanksQuestionId[index];
       console.log(_self.QuestionId);
