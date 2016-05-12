@@ -590,6 +590,7 @@
 
     // Add Quiz Chapter function start
     _self.QuizAddchapters = function(chapter, index) {
+
         var title = chapter.title;
         _self.chaptersId = _self.questionBankschaptersId[index];
 
@@ -602,8 +603,9 @@
             })
           })
         } else {
-          angular.forEach(_self.quizChapterId, function(val, i) {
-            if (val === _self.chaptersId && i == _self.quizChapters.length -
+          angular.forEach(_self.questionBankschaptersId, function(val, i) {
+            if (val != _self.chaptersId && i == _self.questionBankschaptersId
+              .length -
               1) {
               quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
                 _self.chaptersId,
@@ -681,31 +683,61 @@
 
     //Delete  Quiz Question Bank
     _self.deleteQuizQuestionBank = function(quizIndex) {
-      _self.bookId = quizesBankService.bookId[quizIndex];
-      _self.quizId = quizesBankService.quizesId[_self.selectedQuizIndex];
+        _self.bookId = quizesBankService.bookId[quizIndex];
+        _self.quizId = quizesBankService.quizesId[_self.selectedQuizIndex];
 
-      quizesBankService.deleteQuizQuestionBank(_self.bookId, _self.quizId).then(
-        function(res) {
-          _self.quizQuestionBanks.splice(_self.quizQuestionBanks.indexOf(
-            _self.bookId));
-          quizesBankService.loadQuizQuestionBank(_self.quizId).then(
-            function(questionBanks) {
-              _self.quizQuestionBanks = questionBanks;
-              _self.bookId = quizesBankService.questionBanksId[
-                quizIndex];
-              angular.forEach(quizesBankService.questionBanksId,
-                function(
-                  QuizQuestionBank) {
-                  angular.forEach(quizesBankService.bookId,
-                    function(
-                      QuestionBank, i) {
-                      if (QuizQuestionBank === QuestionBank) {
-                        _self.books[i].SelectedBook = true;
-                      }
-                    })
-                })
-            });
-        })
+        quizesBankService.deleteQuizQuestionBank(_self.bookId, _self.quizId).then(
+          function(res) {
+            _self.quizQuestionBanks.splice(_self.quizQuestionBanks.indexOf(
+              _self.bookId));
+            quizesBankService.questionBanksId.splice(quizesBankService.questionBanksId
+              .indexOf(_self.bookId))
+            quizesBankService.loadQuizQuestionBank(_self.quizId).then(
+              function(questionBanks) {
+                _self.quizQuestionBanks = questionBanks;
+                _self.bookId = quizesBankService.questionBanksId[
+                  quizIndex];
+                angular.forEach(quizesBankService.questionBanksId,
+                  function(
+                    QuizQuestionBank) {
+                    angular.forEach(quizesBankService.bookId,
+                      function(
+                        QuestionBank, i) {
+                        if (QuizQuestionBank === QuestionBank) {
+                          _self.books[i].SelectedBook = false;
+                        }
+                      })
+                  })
+              });
+          })
+      }
+      //Delete  QuizChapters
+    _self.deleteQuizChapter = function(index) {
+      _self.chaptersId = _self.questionBankschaptersId[index];
+      quizesBankService.deleteQuizChapter(_self.quizId, _self.questionBankUniqueID,
+        _self.chaptersId).then(function(res) {})
     }
+
+    //Delete  Topic
+    _self.deleteQuizTopics = function(index) {
+      _self.topicId = _self.questionBankTopicsId[index];
+      console.log(_self.topicId);
+      quizesBankService.deleteQuizTopics(_self.quizId, _self.questionBankUniqueID,
+        _self.chapterId, _self.topicId).then(function(res) {
+        _self.QuizTopics.splice(_self.QuizTopics.indexOf(_self.topicId));
+      }, function(err) {});
+    }
+
+    //Delete  Questions
+    _self.deleteQuizQuestions = function(index) {
+      _self.QuestionId = _self.questionbanksQuestionId[index];
+      console.log(_self.QuestionId);
+      quizesBankService.deleteQuizQuestions(_self.quizId, _self.questionBankUniqueID,
+        _self.chapterId, _self.topicId, _self.QuestionId).then(function(
+        res) {
+        _self.quizQuestion.splice(_self.quizQuestion.indexOf(_self.QuestionId));
+      }, function(err) {});
+    }
+
   }
 })();

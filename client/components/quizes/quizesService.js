@@ -288,6 +288,7 @@
     };
     _self.addQuizChapter = function(quizId, questionBankUniqueId,
       chapterId, chaptertitle) {
+      alert('addQuizChapter');
       var deferred = $q.defer();
       firebaseService.getRefQuiz().child(quizId).child(
         'questionbanks').child(questionBankUniqueId).child("chapters").child(
@@ -351,7 +352,7 @@
         });
       return deferred.promise;
     };
-    // Delete Quiz Question Bank
+    // Delete Quiz Question Bank Start
 
     _self.deleteQuizQuestionBank = function(questionBankUniqueId,
       quizUniqueId) {
@@ -367,8 +368,64 @@
           }
         });
       return deferred.promise;
+    }; // Delete Quiz Question Bank end
+
+    // Delete Quiz Chapter Start
+
+    _self.deleteQuizChapter = function(quizId, questionBankUniqueId,
+      chapterId) {
+      var deferred = $q.defer();
+      firebaseService.getRefQuiz().child(quizId).child(
+        'questionbanks').child(questionBankUniqueId).child("chapters").child(
+        chapterId).set(null, function(err) {
+        if (err == null) {
+          deferred.resolve("saved");
+        } else {
+          deferred.reject("Error: " + err);
+        }
+      });
+      return deferred.promise;
+
+    }; // Delete Quiz Chapter end
+
+    // Delete Quiz Topic Start
+    _self.deleteQuizTopics = function(quizid, questionBankUniqueID,
+      chapterUniqueId, topicUniqueId) {
+      var deferred = $q.defer();
+      firebaseService.getRefQuiz().child(quizid).child(
+        'questionbanks').child(questionBankUniqueID).child("chapters").child(
+        chapterUniqueId).child("topics").child(topicUniqueId).set(null,
+        function(err) {
+
+          if (err == null) {
+            deferred.resolve("saved");
+          } else {
+            deferred.reject("Error: " + err);
+          }
+        });
+      return deferred.promise;
+    }; // Delete Quiz Topic End
+    // Delete Quiz Question Start
+    _self.deleteQuizQuestions = function(quizid, questionBankUniqueID,
+      chapterUniqueId, topicUniqueId, questionId) {
+      var deferred = $q.defer();
+      firebaseService.getRefQuiz().child(quizid).child(
+        'questionbanks').child(questionBankUniqueID).child("chapters").child(
+        chapterUniqueId).child("topics").child(topicUniqueId).child(
+        "questions").child(
+        questionId).set(null, function(err) {
+        if (err == null) {
+          deferred.resolve("saved");
+        } else {
+          deferred.reject("Error: " + err);
+        }
+      });
+      return deferred.promise;
     };
 
+
+
+    // Delete Quiz Question End
 
 
     // _self.loadQuestions = function(questionBankUniqueID, chapterUniqueId,
