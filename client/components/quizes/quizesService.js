@@ -238,7 +238,6 @@
       });
       return deferred.promise;
     };
-
     _self.addQuizTopic = function(quizid, questionBankUniqueID,
       chapterUniqueId, topicUniqueId, title) {
       var deferred = $q.defer();
@@ -288,7 +287,6 @@
     };
     _self.addQuizChapter = function(quizId, questionBankUniqueId,
       chapterId, chaptertitle) {
-      alert('addQuizChapter');
       var deferred = $q.defer();
       firebaseService.getRefQuiz().child(quizId).child(
         'questionbanks').child(questionBankUniqueId).child("chapters").child(
@@ -308,13 +306,15 @@
       _self.quizChapters = [];
       _self.quizChaptersId = [];
       var deferred = $q.defer();
-      firebaseService.getRefQuiz().child(quizId).child(
-        'questionbanks').child(questionBankUniqueId).child("chapters").once(
-        "value",
+      var loadQuizChapters = firebaseService.getRefQuiz().child(quizId).child(
+        'questionbanks').child(questionBankUniqueId).child("chapters")
+      loadQuizChapters.off("child_added");
+      loadQuizChapters.on(
+        "child_added",
         function(snapshot) {
           _self.quizChapters.push(snapshot.val())
           _self.quizChaptersId.push(snapshot.key())
-          deferred.resolve(_self.quizChapters)
+          deferred.resolve(_self.quizChapters);
         });
       return deferred.promise;
 

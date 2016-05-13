@@ -504,38 +504,6 @@
                             style="margin-top: 10px;margin-right:10px;">
                 </ng-md-icon>
             </md-list-item>
-
-            <!-- <md-list-item layout-margin class="md-whiteframe-1dp book-list-item"
-                          ng-repeat="book in quizes.books track by $index" id="bookId{{$index}}"
-                          ng-click="quizes.addQuestionBank(this, $index);"
-                          ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-                <div layout="row" class="subgroupcard" style="height: 120px">
-                  <ng-md-icon size="24" icon="done"
-                  ng-class="book.SelectedBook ? 'fillColorWhite' : 'fillColorDarkGrey' "
-                              style="margin-top: 10px"></ng-md-icon>
-                    <div class="subgrouplogo" style="height: 120px">
-
-            <md-list-item layout-margin class="md-whiteframe-1dp book-list-item"
-                          ng-repeat="book in quizes.books track by $index"
-                          ng-click="quizes.addQuestionBank(this, $index);"
-                          ng-class="{selectedBook: $index == quizes.selectedBookIndex,previousSelected: $index == quizes.selectedChapterIndex && quizes.selectedTopicIndex !== null}">
-                <div layout="row" class="subgroupcard height-120px">
-                    <div class="subgrouplogo height-120px">
-
-                        <img ng-src="{{book['imgLogoUrl'] || 'img/1angular.png'}}" class="book-img"/>
-                    </div>
-                    <div layout="column" flex>
-                        <div layout="row" layout-align="space-between center">
-
-                            <div layout-padding>{{book.title | characters:35}}
-                              <md-tooltip md-delay="200" md-direction="bottom" md-autohide="true">
-                                    {{book.title}}
-                                </md-tooltip>
-                              </div>
-                            </div>
-                    </div>
-                </div>
-            </md-list-item> -->
         </md-list>
     </md-content>
     <div layout="row" layout-align="center center"
