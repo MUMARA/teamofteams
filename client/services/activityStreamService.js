@@ -457,7 +457,7 @@
         function getUserGroupMembers(groupid) {
             // group-members child_added
             ref.child('group-members').child(groupid).on('child_added', function (user) {
-                           console.log('child_added',user.key(),user.val() )
+                        //    console.log('child_added',user.key(),user.val() )
                 var obj = {
                     'membership-type': user.val()['membership-type'],
                     'title': ''

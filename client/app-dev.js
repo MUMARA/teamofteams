@@ -1,7 +1,19 @@
-//console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaap')
+// Registering ServiceWorker...
+if ('serviceWorker' in navigator) {
+    console.log('Service Worker is supported');
+    navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(function (registration) {
+        console.log(':^)', registration);
+    }).catch(function (error) {
+        console.log(':^(', error);
+        // ref.child("user-errors").child('on-registration').push(error.toJSON(), function (err) {
+        //     console.log('on-registration: ', err);
+        // });
+    });
+} //if serviceWorker
+
 /**
  * Created by ZiaKhan on 05/12/14.
- */
+*/
 
 // Invoke 'strict' JavaScript mode
 'use strict';
@@ -27,17 +39,6 @@ mainApplicationModule.value('appConfig', {
         groupProfilePictureUpload: 'api/groupProfilepicture'
     }
 });
-
-
-console.log('watch service worker 1');
-if ('serviceWorker' in navigator) {
-      console.log('watch service worker 2');
-    navigator.serviceWorker
-      .register('./sw.js')
-      .then(function() {
-        console.log('Service Worker Registered');
-      });
-  }
 
 // Configure the hashbang URLs using the $locationProvider services
 /*mainApplicationModule.config(['$locationProvider',
