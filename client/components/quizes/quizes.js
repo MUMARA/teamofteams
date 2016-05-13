@@ -234,8 +234,8 @@
       _self.questionBankUniqueID = quizesBankService.questionBanksId[index];
       var bookIndx = quizesBankService.bookId.indexOf(_self.questionBankUniqueID);
       _self.questionBanksAllChapters = _self.books[bookIndx].chapters;
-
-      for (var chaptersUniqueId in _self.questionBanksAllChapters) {
+      var chaptersUniqueId;
+      for (chaptersUniqueId in _self.questionBanksAllChapters) {
         _self.questionBankschaptersId.push(chaptersUniqueId)
         _self.questionBankschapters.push(_self.questionBanksAllChapters[
           chaptersUniqueId])
@@ -247,6 +247,14 @@
           angular.forEach(Chapters, function(val) {
               _self.quizChapters.push(val)
               _self.quizChapterId = quizesBankService.quizChaptersId;
+              angular.forEach(_self.quizChapterId, function(val,
+                i) {
+                if (val === _self.quizChapterId[i]) {
+
+                  _self.questionBanksAllChapters[
+                    val].SelectedChapter = true
+                }
+              })
             })
             // for (var quizChapter in Chapters[0]) {
             //
@@ -602,26 +610,33 @@
           quizesBankService.addQuizChapter(_self.quizId, _self.questionBankUniqueID,
             _self.chaptersId,
             title).then(function(res) {
-            //  angular.forEach(quizesBankService.quizChapters ,function(val) {
-            //     _self.quizChapters.push(val)
-            //    _self.quizChapterId = quizesBankService.quizChaptersId;
-            //   })
-            // _self.quizChapters.push({
-            //   title: title
-            // })
-            // quizesBankService.loadQuizChapter(_self.quizId, _self.questionBankUniqueID)
-            //   .then(function(Chapters) {
-            //     for (var quizChapter in Chapters[0]) {
-            //       _self.quizChapterId.push(_self.chaptersId)
-            //       angular.forEach(_self.questionBankschaptersId,
-            //         function(val, i) {
-            //           if (val === quizChapter) {
-            //             _self.questionBanksAllChapters[
-            //               val].SelectedChapter = true
-            //           }
-            //         })
-            //     }
-            //   })
+            _self.quizChapters = []
+            _self.quizChapterId = []
+            angular.forEach(quizesBankService.quizChapters,
+                function(val) {
+                  _self.quizChapters.push(val)
+                  _self.quizChapterId = quizesBankService.quizChaptersId;
+                })
+              //  angular.forEach(quizesBankService.quizChapters ,function(val) {
+              //     _self.quizChapters.push(val)
+              //    _self.quizChapterId = quizesBankService.quizChaptersId;
+              //   })
+              // _self.quizChapters.push({
+              //   title: title
+              // })
+              // quizesBankService.loadQuizChapter(_self.quizId, _self.questionBankUniqueID)
+              //   .then(function(Chapters) {
+              //     for (var quizChapter in Chapters[0]) {
+              //       _self.quizChapterId.push(_self.chaptersId)
+              //       angular.forEach(_self.questionBankschaptersId,
+              //         function(val, i) {
+              //           if (val === quizChapter) {
+              //             _self.questionBanksAllChapters[
+              //               val].SelectedChapter = true
+              //           }
+              //         })
+              //     }
+              //   })
           })
         } else {
           angular.forEach(_self.quizChapterId, function(val, i) {
@@ -766,7 +781,18 @@
     _self.deleteQuizChapter = function(index) {
       _self.chaptersId = _self.questionBankschaptersId[index];
       quizesBankService.deleteQuizChapter(_self.quizId, _self.questionBankUniqueID,
-        _self.chaptersId).then(function(res) {})
+        _self.chaptersId).then(function(res) {
+        angular.forEach(quizesBankService.quizChapters,
+          function(val) {
+            _self.quizChapters.push(val)
+            _self.quizChapterId = quizesBankService.quizChaptersId;
+          })
+        angular.forEach(_self.quizChapterId, function(val,
+          i) {
+          _self.questionBanksAllChapters[
+            val].SelectedChapter = true
+        })
+      })
     }
 
     //Delete  Topic

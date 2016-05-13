@@ -309,12 +309,21 @@
       var loadQuizChapters = firebaseService.getRefQuiz().child(quizId).child(
         'questionbanks').child(questionBankUniqueId).child("chapters")
       loadQuizChapters.off("child_added");
+      loadQuizChapters.off("child_removed");
       loadQuizChapters.on(
         "child_added",
         function(snapshot) {
           _self.quizChapters.push(snapshot.val())
           _self.quizChaptersId.push(snapshot.key())
           deferred.resolve(_self.quizChapters);
+        });
+      loadQuizChapters.on(
+        "child_removed",
+        function(snapshot) {
+          alert("child_removed")
+          _self.quizChapters.splice(snapshot.val())
+          _self.quizChaptersId.splice(snapshot.key())
+          deferred.resolve({});
         });
       return deferred.promise;
 
