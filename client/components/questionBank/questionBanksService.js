@@ -270,9 +270,19 @@
     };
     _self.createQuestion = function(questionBankUniqueID, chapterUniqueId,
       topicUniqueId, questionObject) {
+      var deffered = $q.defer();
       firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
         'chapters').child(chapterUniqueId).child("topics").child(
-        topicUniqueId).child("questions").push(questionObject);
+        topicUniqueId).child("questions").push(questionObject, function(
+        err) {
+        if (err === null) {
+          deffered.resolve("Saved");
+        } else {
+          deffered.reject("Error");
+
+        }
+      });
+      return deffered.promise;
     };
   }
 

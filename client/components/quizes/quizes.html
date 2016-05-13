@@ -474,7 +474,7 @@
                   </md-tooltip></span>
             </div>
             <ng-md-icon size="24" icon="delete" ng-if="book.SelectedBook" ng-click="quizes.deleteQuizQuestionBank($index)"
-                        ng-class="book.SelectedBook ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                        ng-class="book.SelectedBook ? 'fillColorWhite' : 'fillColorDarkGrey' " class="nooutline"
                         style="margin-top: 10px;margin-right:10px;">
                       </ng-md-icon>
           </md-list-item>
@@ -543,7 +543,7 @@
                         </md-tooltip></span>
                   </div>
                   <ng-md-icon size="24" icon="delete" ng-if="chapter.SelectedChapter" ng-click="quizes.deleteQuizChapter($index)"
-                              ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' "
+                              ng-class="chapter.SelectedChapter ? 'fillColorWhite' : 'fillColorDarkGrey' " class="nooutline"
                               style="margin-top: 10px;margin-right:10px;">
                             </ng-md-icon>
             </md-list-item>
@@ -583,7 +583,7 @@
               </div>
               <ng-md-icon size="24" icon="delete" ng-if="topic.SelectedTopic"
                           ng-class="topic.SelectedTopic ? 'fillColorWhite' : 'fillColorDarkGrey' "
-                          style="margin-top: 10px;margin-right:10px;" ng-click="quizes.deleteQuizTopics($index)">
+                          style="margin-top: 10px;margin-right:10px;" class="nooutline" ng-click="quizes.deleteQuizTopics($index)">
                         </ng-md-icon>
             </md-list-item>
         </md-list>
@@ -622,7 +622,7 @@
                     </div>
                     <ng-md-icon size="24" icon="delete" ng-if="question.SelectedQuestion"
                                 ng-class="question.SelectedQuestion ? 'fillColorWhite' : 'fillColorDarkGrey' "
-                                style="margin-top: 10px;margin-right:10px;" ng-click="quizes.deleteQuizQuestions($index)">
+                                style="margin-top: 10px;margin-right:10px;" class="nooutline" ng-click="quizes.deleteQuizQuestions($index)">
                               </ng-md-icon>
             </md-list-item>
         </md-list>
