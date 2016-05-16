@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
     <link href="img/favico/favicon.ico" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="components/questionBank/questionBanks.css">
 </head>
 <body ng-app="myApp" ng-controller="AppController as app">
     <ui-view name="nav" ></ui-view>
@@ -35,8 +36,8 @@
     <!-- Angular Audio -->
     <script src="bower_components/angular-audio/app/angular.audio.js"></script>
     <!-- Firebase -->
-    <!--<script src="bower_components/firebase/firebase.js"></script>-->
-    <script src="bower_components/firebase/firebase-debug.js"></script>
+    <script src="bower_components/firebase/firebase.js"></script>
+     <script src="bower_components/firebase/firebase-debug.js"></script>
     <!-- <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script> -->
     <script src="bower_components/angularfire/dist/angularfire.min.js"></script>
     <!-- Local Storage -->
@@ -47,6 +48,12 @@
         <!-- <link rel="stylesheet" href="./bower_components/material-design-lite/material.min.css"> -->
         <!-- <script src="./bower_components/material-design-lite/material.min.js"></script> -->
     <!--Material Design Lite-->
+
+    <!-- Text Angular Start-->
+    <script src="bower_components/textAngular/textAngular.min.js"></script>
+    <!-- Text Angular End-->
+
+
         <!--<link rel="stylesheet" href="./bower_components/mui/mui.css">-->
         <script src="./bower_components/mui/mui.js"></script>
     <!-- Angular-Trancate -->
@@ -127,8 +134,10 @@
     <script src="components/personal-settings/personal-settings.js"></script>
     <script src="components/user-setting/userSettingService.js"></script>
     <script src="components/user-setting/userSetting.js"></script>
-    <script src="components/quiz/quizService.js"></script>
-    <script src="components/quiz/quiz.js"></script>
+    <script src="components/questionBank/questionBanksService.js"></script>
+    <script src="components/questionBank/questionBanks.js"></script>
+    <script src="components/quizes/quizes.js"></script>
+    <script src="components/quizes/quizesService.js"></script>
     <script src="components/componentsCoreModule.js"></script>
     <script src="services/auth.service.js"></script>
     <script src="services/chatService.js"></script>
@@ -152,6 +161,7 @@
     <script src="directives/compareTo.directive.js"></script>
     <script src="directives/checkUserID.directive.js"></script>
     <script src="directives/checkGroupExistance.directive.js"></script>
+    <script src="directives/checkquestionBankExistance.directive.js"></script>
     <script src="app-dev.js"></script>
     <script src="config/appRoutes.js"></script>
 </body>

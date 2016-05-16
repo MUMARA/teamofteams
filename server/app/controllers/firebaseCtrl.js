@@ -31,7 +31,8 @@
             this.refs.refGroupMembers = refMain.child("group-members");
             this.refs.refSubGroups = refMain.child("subgroups");
             this.refs.refGroupActivityStream = refMain.child("group-activity-streams");
-            this.refs.refQuizbanks = refMain2.child("question-bank");
+            this.refs.refQuizbanks = refMain2.child("quizes");
+            this.refs.refQuestionbanks = refMain2.child("question-bank");
         },
         getFirebaseTimestamp: function() {
             return Firebase.ServerValue.TIMESTAMP;
@@ -62,6 +63,9 @@
         },
         getRefQuizbank: function() {
             return this.refs.refQuizbanks;
+        },
+        getRefQuestionbank: function() {
+            return this.refs.refQuestionbanks;
         },
         asyncIsUserGroupMember: function(groupID, userID) {
             var deferred, refUserMembers;
@@ -148,6 +152,21 @@
             var defer = Q.defer();
 
             this.getRefQuizbank().child(quizID)
+                .update(payload, function(err) {
+                    if (err) {
+                        defer.reject(err)
+                    } else {
+                        defer.resolve()
+                    }
+                });
+
+            return defer.promise;
+        },
+        asyncUpdateQuestionbank: function(questionBankID, payload) {
+
+            var defer = Q.defer();
+
+            this.getRefQuestionbank().child(questionBankID)
                 .update(payload, function(err) {
                     if (err) {
                         defer.reject(err)
