@@ -308,11 +308,27 @@
         //Send Notifcation to members
         function notification(obj, cb) {
             //obj = {token: "", userId: "", groupId: "", subgroupId: "", dataObj: {}}
-            $http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification', obj).success(function(data, status) {
-                cb(data, status);
-            }).error(function(data, status) {
-                cb(data, status);
-            });;
+            $http.defaults.headers.post["Content-Type"] = "text/plain";
+            $http({
+                url: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification',
+                method: "POST",
+                data: obj
+            })
+            .then(function(data) {
+                // success
+                cb(data)
+            }, 
+            function(error) { // optional
+                // failed
+                cb(error)
+            });
+            
+            //$http.defaults.headers.post["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization";
+            // $http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification', obj).success(function(data, status) {
+            //     cb(data, status);
+            // }).error(function(data, status) {
+            //     cb(data, status);
+            // });
         }
 
 

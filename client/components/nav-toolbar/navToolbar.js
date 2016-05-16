@@ -277,6 +277,34 @@
                         self.checkinSending = false;
                         if (checkoutFlag) {
                             //when successfully checkout then add activity Stream
+                            
+                            //getting subgroup icon and then send notification -- START
+                            firebaseService.getRefSubGroups().child(groupObj.groupId).child(groupObj.subgroupId).once('value', function(snapshot) {
+                                
+                                //Notification -- START
+                                var obj = {
+                                    token: currentUser.token, 
+                                    userId: userID, 
+                                    groupId: groupObj.groupId, 
+                                    subgroupId: groupObj.subgroupId, 
+                                    dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked out from ' +  snapshot.val()['title'], 
+                                                title: currentUser.email + ' has checked out', 
+                                                tag: "my-taggy", 
+                                                icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  
+                                        }
+                                    };
+                                    
+                                checkinService.notification(obj, function(response){
+                                    console.log('watch --: ', response);
+                                });
+                                //Notification -- END
+                                
+                            });
+                            //getting subgroup icon and then send notification -- END
+                            
+                            
+                            
+                            
                             //for subgroup activity stream record -- START --
                             var type = 'subgroup';
                             var targetinfo = {id: groupObj.subgroupId, url: groupObj.groupId+'/'+groupObj.subgroupId, title: self.showUrlObj.subgroupTitle, type: 'subgroup-checkout' };
@@ -311,18 +339,30 @@
 
                             self.checkinSending = false;
                             
-                            //Notification -- START
-                            var obj = {
-                                token: currentUser.token, 
-                                userId: userID, 
-                                groupId: groupObj.groupId, 
-                                subgroupId: groupObj.subgroupId, 
-                                dataObj: { msg: "User Checking", title: "Checking Title", tag: "my-taggy", icon: "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  }
-                            };
-                            checkinService.notification(obj, function(data, status){
-                                console.log('watch --: ', data, status);
+                            
+                             //getting subgroup icon and then send notification -- START
+                            firebaseService.getRefSubGroups().child(groupObj.groupId).child(groupObj.subgroupId).once('value', function(snapshot) {
+                                
+                                //Notification -- START
+                                var obj = {
+                                    token: currentUser.token, 
+                                    userId: userID, 
+                                    groupId: groupObj.groupId, 
+                                    subgroupId: groupObj.subgroupId, 
+                                    dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked in at ' +  snapshot.val()['title'], 
+                                                title: currentUser.email + ' has checked in', 
+                                                tag: "my-taggy", 
+                                                icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  
+                                        }
+                                    };
+                                    
+                                checkinService.notification(obj, function(response){
+                                    console.log('watch --: ', response);
+                                });
+                                //Notification -- END
+                                
                             });
-                            //Notification -- END
+                            //getting subgroup icon and then send notification -- END
 
                             //add activity Stream
                             //for subgroup activity stream record -- START --
