@@ -320,11 +320,11 @@
       loadQuizChapters.on(
         "child_removed",
         function(snapshot) {
-          alert("child_removed")
-          _self.quizChapters.splice(_self.quizChapters.indexOf(snapshot.val()))
+          _self.quizChapters.splice(_self.quizChaptersId.indexOf(snapshot
+            .key()), 1)
           _self.quizChaptersId.splice(_self.quizChaptersId.indexOf(
             snapshot
-            .key()));
+            .key()), 1);
           deferred.resolve();
         });
       return deferred.promise;
@@ -350,10 +350,11 @@
       loadQuizTopics.on(
         "child_removed",
         function(snapshot) {
-          alert("child_removed")
-          _self.quizTopics.splice(_self.quizTopics.indexOf(snapshot.val()))
+          _self.quizTopics.splice(_self.quizTopicsId.indexOf(snapshot
+              .key()),
+            1)
           _self.quizTopicsId.splice(_self.quizTopicsId.indexOf(snapshot
-            .key()));
+            .key()), 1);
           deferred.resolve();
         });
       return deferred.promise;
@@ -382,21 +383,14 @@
       loadQuizQuestionRef.on(
         "child_removed",
         function(snapshot) {
-          alert("child_removed")
-          _self.questions.splice(_self.questions.indexOf(snapshot.val()))
+          _self.questions.splice(_self.questionId.indexOf(snapshot
+              .key()),
+            1)
           _self.questionId.splice(_self.questionId.indexOf(snapshot
-            .key()));
+            .key()), 1);
           deferred.resolve();
         });
 
-      // firebaseService.getRefQuiz().child(quizId).child(
-      //   'questionbanks').child(questionBankUniqueID).child("chapters").child(
-      //   chapterUniqueId).child("topics").child(topicId).once("value",
-      //   function(snapshot) {
-      //     _self.questions.push(snapshot.val())
-      //     _self.questionId.push(snapshot.key())
-      //     deferred.resolve(_self.questions)
-      //   });
       return deferred.promise;
     };
     // Delete Quiz Question Bank Start
