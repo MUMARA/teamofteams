@@ -16,7 +16,9 @@
 
             var self = this;
             self.displayNotificationBox = false;
-            var userID = userService.getCurrentUser().userID;
+            var currentUser = userService.getCurrentUser(); 
+            console.log('watch token: ', currentUser.token);
+            var userID = currentUser.userID;
             self.myUserId = userID;
             this.notifications = [];
            //filter Array in reverse
@@ -308,6 +310,19 @@
                             //when successfully checkin successfully
 
                             self.checkinSending = false;
+                            
+                            //Notification -- START
+                            var obj = {
+                                token: currentUser.token, 
+                                userId: userID, 
+                                groupId: groupObj.groupId, 
+                                subgroupId: groupObj.subgroupId, 
+                                dataObj: { msg: "User Checking", title: "Checking Title", tag: "my-taggy", icon: "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  }
+                            };
+                            checkinService.notification(obj, function(data, status){
+                                console.log('watch --: ', data, status);
+                            });
+                            //Notification -- END
 
                             //add activity Stream
                             //for subgroup activity stream record -- START --
