@@ -62,10 +62,21 @@ module.exports.subgrouopPictureUpload = function(req, res, bucketType) {
     };
     getS3SignedUrl(s3_params, bucketType, fileName, res);
 };
-
 module.exports.quizbankPictureUpload = function(req, res, bucketType) {
 
     var fileName = req.query.quizID + '.' + req.query.file_type.split('/')[1];
+    var s3_params = {
+        Bucket: bucketName(bucketType),
+        Key: fileName,
+        Expires: 60,
+        ContentType: req.query.file_type,
+        ACL: 'public-read'
+    };
+    getS3SignedUrl(s3_params, bucketType, fileName, res);
+};
+module.exports.questionbankPictureUpload = function(req, res, bucketType) {
+
+    var fileName = req.query.questionBankID + '.' + req.query.file_type.split('/')[1];
     var s3_params = {
         Bucket: bucketName(bucketType),
         Key: fileName,
@@ -89,6 +100,9 @@ function bucketName(bucketType) {
             break
         case 'quizbank':
             return config.quizbankBucketName;
+            break
+        case 'questionbank':
+            return config.questionbankBucketName;
             break
     }
 }

@@ -1,0 +1,9 @@
+Serverless:   POST - changeuserpassword - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/changeuserpassword
+Serverless:   GET - checkavailability - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/checkavailability
+Serverless:   POST - checkuserpassword - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/checkuserpassword
+Serverless:   POST - edituser - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/edituser
+Serverless:   POST - removeuser - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/removeuser
+Serverless:   POST - signin - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/signin
+Serverless:   POST - signup - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/signup
+Serverless:   GET - verifyemail - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/verifyemail
+Serverless:   POST - forgotpassword - https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/forgotpassword

@@ -10,9 +10,9 @@
         .module('core')
         .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['ProgressReportService', 'activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
+    checkinService.$inject = ['$http','ProgressReportService', 'activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
 
-    function checkinService(ProgressReportService, activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
+    function checkinService($http, ProgressReportService, activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
 
         /*private variables*/
         var refs, fireTimeStamp;
@@ -46,7 +46,6 @@
                 defer.resolve();
             return defer.promise;
         }
-
 
         //step 1 (calling from Controller)
         function ChekinUpdateSatatus(group, userId, checkoutFlag, cb){
@@ -151,6 +150,7 @@
                 callback(true, '', false);      //result true (checkin allow) (might be only dailyReport has checked)
             }
         } //checkinLocationBased
+        
         //checkinTimeBased
         function checkinTimeBased(Policy, callback) {
             var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -230,8 +230,6 @@
 
         }//checkinDailyProgress
 
-
-
         function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, teamLocationTitle, cb){
             // groupObj = {groupId: '', subgroupId: '', userId: ''}
             var multipath = {};
@@ -306,6 +304,32 @@
                 }); //getting and update members-checked-in count - subgroup
             }); //getting and update members-checked-in count - group
         } //saveFirebaseCheckInOut
+        
+        //Send Notifcation to members
+        function notification(obj, cb) {
+            //obj = {token: "", userId: "", groupId: "", subgroupId: "", dataObj: {}}
+            $http.defaults.headers.post["Content-Type"] = "text/plain";
+            $http({
+                url: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification',
+                method: "POST",
+                data: obj
+            })
+            .then(function(data) {
+                // success
+                cb(data)
+            }, 
+            function(error) { // optional
+                // failed
+                cb(error)
+            });
+            
+            //$http.defaults.headers.post["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization";
+            // $http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification', obj).success(function(data, status) {
+            //     cb(data, status);
+            // }).error(function(data, status) {
+            //     cb(data, status);
+            // });
+        }
 
 
 
@@ -836,7 +860,6 @@
 
                 return location;
             },
-
             //for Admins: get the predefined location name, from which user checked-in or checked-out.
             getLocationName: function(userStatusObj, definedLocations) {
 
@@ -856,7 +879,6 @@
 
                 return locationID;
             },
-
             getGroupTitle: function(GroupID){
                 var title;
                 refs.main.child('groups').child(GroupID).once('value', function(snapshot){
@@ -886,8 +908,8 @@
                     }
                 });
             }, //getSubGroupTitle
-            ChekinUpdateSatatus: ChekinUpdateSatatus
-
+            ChekinUpdateSatatus: ChekinUpdateSatatus,
+            notification: notification
         }; //return
     } //checkin service function
 })();
