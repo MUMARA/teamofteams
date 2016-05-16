@@ -256,8 +256,71 @@
             <ng-md-icon icon="add" style="fill: #fff"></ng-md-icon>
         </md-button>
     </md-content>
+    <md-content ng-if="quiz.questionView" layout-margin class="quizes-col-margin-none md-whiteframe-1dp" flex>
+        <md-toolbar md-scroll-shrink class="md-default-theme md-accent quiz-search-bar">
+            <div class="md-toolbar-tools quiz-search-box-4">
+                <h2>
+                    <span>{{quiz.questionView.title}}</span>
+                </h2>
+            </div>
+        </md-toolbar>
 
-    <md-content ng-if="quiz.questionView" layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex>
+
+        <div layout="column" class="show-question-section-main-div" ng-if="quiz.questionView.type == 1" ng-show="quiz.showQuestionDetails">
+            <div layout="row">
+                <b class="marginTop16px"> Question {{$index + 1 + " : "}}</b> &nbsp; &nbsp;
+                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap>{{quiz.questionView.html}}
+                </div>
+            </div>
+            <p><b>Options</b></p>
+            <md-radio-group ng-model="true" ng-repeat="option in quiz.questionView.options">
+                <md-radio-button ng-value="option.correct">
+                    {{option.html}}
+                </md-radio-button>
+            </md-radio-group>
+        </div>
+
+
+        <div layout="column" class="show-question-section-main-div" ng-if="quiz.questionView.type == 2" ng-show="quiz.showQuestionDetails">
+            <div layout="row">
+                <b class="marginTop16px"> Question {{$index + 1 + " : "}}</b> &nbsp; &nbsp;
+                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap>{{quiz.questionView.html}}
+                </div>
+            </div>
+            <p><b>Options</b></p>
+            <md-checkbox ng-checked="option.correct" ng-repeat="option in quiz.questionView.options">
+                {{option.html}}
+            </md-checkbox>
+        </div>
+
+
+        <div ng-show="quiz.questionView.type == 3">
+            <div layout="row">
+                <h4>Question : </h4> &nbsp; &nbsp;
+                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap> {{quiz.questionView.html}}
+                </div>
+            </div>
+            <div ng-repeat="questionSet in quiz.questionView.questiones">
+                <div layout="row">
+                    <h5 style="margin-top:19px;">Sub question : </h5> &nbsp; &nbsp;
+                    <div layout-wrap ng-model="questionSet.html" ta-bind="ta-bind">{{questionSet.html}}</div>
+                </div>
+                <div ng-if="questionSet.type == 1" layout="column">
+                    <p><b>Options</b></p>
+                    <md-radio-group ng-model="true" ng-repeat="option in questionSet.options">
+                        <md-radio-button ng-value="option.correct">{{option.html}}</md-radio-button>
+                    </md-radio-group>
+                </div>
+                <div ng-if="questionSet.type == 2" layout="column">
+                    <p><b>Options</b></p>
+                    <md-checkbox ng-checked="option.correct" ng-repeat="option in questionSet.options">
+                        {{option.html}}
+                    </md-checkbox>
+                </div>
+            </div>
+        </div>
+    </md-content>
+    <!--<md-content ng-if="quiz.questionView" layout-margin class="quiz-col-margin-none md-whiteframe-1dp" flex>
         <md-toolbar md-scroll-shrink class="md-default-theme quiz-search-bar">
             <div class="md-toolbar-tools quiz-search-box-4">
                 <h2>
@@ -304,7 +367,7 @@
                 </div>
             </div>
         </div>
-    </md-content>
+    </md-content>-->
 </div>
 
 
