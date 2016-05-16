@@ -116,7 +116,22 @@ type QuestionBankMembership {
      timestamp: CurrentTimeStamp                     //MemberType type extends globally
 }
 
+path /question-bank-names {
+    read() {
+      isAuthenticated()
+    }
 
+  /{questionBankUniqueID} is QuestionBankName {
+    create() {
+      isAuthenticated()
+    }
+  }
+
+
+}
+type QuestionBankName {
+  title: String
+}
 //----------------------------------
 //      question-bank (Before creating a QuestionBank, create a owner membership first)
 //----------------------------------
@@ -125,20 +140,20 @@ path /question-bank/{questionBankUniqueID} is QuestionBank {
   create() { isAuthenticated() }
   update() { isCurrentUserQuestionBankOwner(questionBankUniqueID) ||
              isCurrentUserQuestionBankAdmin(questionBankUniqueID)  }
-    /chapters/{chapterId} is Chapter {
-        /topics/{topicId} is Topic {
-            /questions/{questionId} is Question {
-          //  /options is  Option[] { }
-            /questiones is QuestionSet[] {}
-           }
-        }
-    }
+              /chapters/{chapterId} is Chapter {
+                  /topics/{topicId} is Topic {
+                      /questions/{questionId} is Question {
+                    //  /options is  Option[] { }
+                      /questiones is QuestionSet[] {}
+                     }
+                  }
+              }
 }
 type QuestionBank {
     timestamp  : CurrentTimeStamp,                   //Timestamp type extends globally
     title    : String,
     desc     : String,
-    imgLogoUrl: String
+    imgLogoUrl: String  | Null
 }
 type Chapter {
     timestamp  : CurrentTimeStamp,                   //Timestamp type extends globally
@@ -156,19 +171,18 @@ type Question {
    html: String,
    options: Map<String, Option>,
   // questiones: QuestionSet[] | Null,
-   "discussionHtml" : String
+   "discussion" : String
 }
 type QuestionSet {
-   title: String,
    type: QuestionType, //QuestionTupe
    html: String,
    options: Map<String, Option>,
-   "discussionHtml" : String
+   "discussion" : String
 }
 type Option {
   "html": String,
   "correct": Boolean,
-  "discussionHtml" : String
+  "discussion" : String
 }
 //-----------------------------------------------------------
 // Options Type 1 Radio Button , 2 CheckBox And 3 question Set
@@ -200,16 +214,60 @@ read()  {  isAuthenticatedUser(userId) ||  isCurrentSubUserGroupMembersOwner($gr
           isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)}  }
 create() {  isAuthenticatedUser(userId)}
 //--------------------------
-//  Quizes Questions
+//  Quizes Names
+//--------------------------
+path /quiz-name {
+  read() { isAuthenticated() }
+  /{quizId} is QuizName {
+    create() { isAuthenticated() }
+  }
+}
+type QuizName {
+  title: String
+}
+//--------------------------
+//  Quizes
 //--------------------------
 
-path /quizes/{quizId}/{questionBankUniqueID}/{chapterId}/{topicId}/{questionId} is QuizQuestionDesc {
+/*/questions/{questionId}  is QuizQuestionDesc{
+read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+create() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+update() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+}*/
 
-  read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
-  create() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
-  update() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+path /quizes/{quizId} is Quiz {
+      read() { isQuizOwner(quizId) }
+      create() { isQuizOwner(quizId) }
+      update() { isQuizOwner(quizId) }
+      /questionbanks/{questionBankUniqueID} is QuizQuestionBank {
+        /chapters/{chapterId}  is QuizChapter {
+          /topics/{topicId} is QuizTopic  {
+            /questions/{questionId} is Question {
+          //  /options is  Option[] { }
+            /questiones is QuestionSet[] { }
+           }
+        }
+      }
+   }
 }
 
+
+type Quiz {
+  title: String,
+  desc: String,
+  imgLogoUrl: String | Null
+}
+type QuizQuestionBank {
+  title: String,
+  imgLogoUrl: String | Null
+}
+
+type QuizChapter {
+  title: String
+}
+type QuizTopic {
+  title: String,
+}
 //--------------------------
 //  Quiz In Progress
 //--------------------------
@@ -264,20 +322,14 @@ path /quizes/{quizId}/{questionBankUniqueID}/{chapterId}/{topicId}/{questionId} 
   update() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) } }*/
 
 
-type QuizQuestionDesc {
-  title   : String,
-   type    : QuestionType,
-   desc    : String,
-   options : Option[]
-}
 //--------------------------
 //  User Quizes
 //--------------------------
 path /user-quiz/{userId} {
   read() { isAuthenticatedUser(userId) }
     /{quizId} is QuizMembership {
-
-        create() { isAuthenticated() }
+      read() { isQuizOwner(quizId) }
+      create() { isQuestionBankOwnerCreating(userId, this) }
    }
 }
 
@@ -285,11 +337,7 @@ path /user-quiz/{userId} {
 type QuizMembership {
   "memberships-type": Number,
    timestamp: CurrentTimeStamp,
-   title: String,
-   desc: String,
-   imgLogoUrl: String | Null
 }
 function isQuizOwner(quizId) {
-  return prior(root["quizes"][auth.uid][quizId]["memberships-type"].val() == 1)
+  return prior(root["user-quiz"][auth.uid][quizId]["memberships-type"].val() == 1)
 }
-//===========================================================  23/1/16
