@@ -294,7 +294,8 @@
                                     groupId: groupObj.groupId, 
                                     subgroupId: groupObj.subgroupId, 
                                     dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked out from ' +  snapshot.val()['title'], 
-                                                title: currentUser.email + ' has checked out', 
+                                                //title: currentUser.email + ' has checked out',
+                                                title: 'Checkout', 
                                                 tag: "my-taggy", 
                                                 icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  
                                         }
@@ -356,7 +357,8 @@
                                     groupId: groupObj.groupId, 
                                     subgroupId: groupObj.subgroupId, 
                                     dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked in at ' +  snapshot.val()['title'], 
-                                                title: currentUser.email + ' has checked in', 
+                                                //title: currentUser.email + ' has checked in',
+                                                title: 'Checkin', 
                                                 tag: "my-taggy", 
                                                 icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  
                                         }
