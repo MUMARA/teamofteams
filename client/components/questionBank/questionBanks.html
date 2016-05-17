@@ -269,13 +269,13 @@
         <div layout="column" class="show-question-section-main-div" ng-if="quiz.questionView.type == 1" ng-show="quiz.showQuestionDetails">
             <div layout="row">
                 <b class="marginTop16px"> Question {{$index + 1 + " : "}}</b> &nbsp; &nbsp;
-                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap>{{quiz.questionView.html}}
+                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap id="questionView">{{quiz.questionView.html}}
                 </div>
             </div>
             <p><b>Options</b></p>
-            <md-radio-group ng-model="true" ng-repeat="option in quiz.questionView.options">
-                <md-radio-button ng-value="option.correct">
-                    {{option.html}}
+            <md-radio-group ng-init="hellotrue = 'hellotrue'" ng-model="hellotrue" ng-repeat="option in quiz.questionView.options">
+                <md-radio-button ng-disabled="true" class="disabledRadioButton" ng-value="{{'hello' + option.correct}}">
+                <span ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
                 </md-radio-button>
             </md-radio-group>
         </div>
@@ -284,12 +284,12 @@
         <div layout="column" class="show-question-section-main-div" ng-if="quiz.questionView.type == 2" ng-show="quiz.showQuestionDetails">
             <div layout="row">
                 <b class="marginTop16px"> Question {{$index + 1 + " : "}}</b> &nbsp; &nbsp;
-                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap>{{quiz.questionView.html}}
+                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap id="questionView">{{quiz.questionView.html}}
                 </div>
             </div>
             <p><b>Options</b></p>
             <md-checkbox ng-checked="option.correct" ng-repeat="option in quiz.questionView.options">
-                {{option.html}}
+                <span ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
             </md-checkbox>
         </div>
 
@@ -297,24 +297,29 @@
         <div ng-show="quiz.questionView.type == 3">
             <div layout="row">
                 <h4>Question : </h4> &nbsp; &nbsp;
-                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap> {{quiz.questionView.html}}
+                <div ng-model="quiz.questionView.html" ta-bind="ta-bind" layout-wrap id="subQuestionView"> {{quiz.questionView.html}}
                 </div>
             </div>
             <div ng-repeat="questionSet in quiz.questionView.questiones">
                 <div layout="row">
                     <h5 style="margin-top:19px;">Sub question : </h5> &nbsp; &nbsp;
-                    <div layout-wrap ng-model="questionSet.html" ta-bind="ta-bind">{{questionSet.html}}</div>
+                    <div layout-wrap ng-model="questionSet.html" ta-bind="ta-bind" id="subQuestion">{{questionSet.html}}</div>
                 </div>
                 <div ng-if="questionSet.type == 1" layout="column">
                     <p><b>Options</b></p>
-                    <md-radio-group ng-model="true" ng-repeat="option in questionSet.options">
-                        <md-radio-button ng-value="option.correct">{{option.html}}</md-radio-button>
+                    <!-- <md-radio-group ng-model="hellotrue" ng-repeat="option in questionSet.options">
+                        <md-radio-button ng-disabled="true" class="disabledRadioButton" ng-value="{{'hello' + option.correct}}">{{option.html}}</md-radio-button>
+                    </md-radio-group> -->
+                    <md-radio-group ng-model="hellotrue" ng-repeat="option in questionSet.options">
+                        <md-radio-button ng-disabled="true" class="disabledRadioButton" ng-value="{{'hello' + option.correct}}">
+                        <span ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
+                        </md-radio-button>
                     </md-radio-group>
                 </div>
                 <div ng-if="questionSet.type == 2" layout="column">
                     <p><b>Options</b></p>
                     <md-checkbox ng-checked="option.correct" ng-repeat="option in questionSet.options">
-                        {{option.html}}
+                      <span ng-model="option.html" ta-bind="ta-bind">{{option.html}}</span>
                     </md-checkbox>
                 </div>
             </div>

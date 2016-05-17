@@ -159,13 +159,6 @@
       _self.questionView = question;
     }
 
-    // setTabs();
-
-
-    // function setSelectedTopic(_self, index) {
-    //   _self.selectedQuestionIndex = null;
-    //
-    // }
 
     // Show Quiz Qustion Bank start
     function showQuizQuestionBank(quizIndex) {
@@ -575,6 +568,7 @@
           .bookId,
           _self.quizId).then(function(res) {
           _self.quizQuestionBanks.push(_self.selectedQuestionBank)
+
         });
       } else {
 
@@ -605,7 +599,7 @@
                             QuestionBank, i) {
                             if (QuizQuestionBank ===
                               QuestionBank) {
-                              _self.books[i].SelectedBook =
+                              _self.books[quizIndex].SelectedBook =
                                 true;
                             }
                           })
@@ -825,7 +819,7 @@
               _self.quizQuestionBanks.splice(_self.quizQuestionBanks.indexOf(
                 _self.bookId), 1);
               quizesBankService.questionBanksId.splice(quizesBankService.questionBanksId
-                  .indexOf(_self.bookId), 1)
+                .indexOf(_self.bookId), 1)
             })
       }
       //Delete  QuizChapters
