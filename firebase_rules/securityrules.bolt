@@ -1657,6 +1657,26 @@ path /activities-seen-by-user/{userid} is ActivityType {
 type ActivityType {
   timestamp: CurrentTimeStamp
 }
+// User Push Notification
+
+path /user-push-notifications/{userid}/{opratingSystem}/{browser}/{pushNotificationsId} is PushNotification {
+    write() {
+      isAuthenticatedUser(userid)
+    }
+    read() { isAuthenticated()}
+      /keys is Key {
+
+      }
+
+}
+type PushNotification {
+  endpoint: String
+}
+
+type Key {
+  auth: String,
+  p256dh: String
+}
 
 
 //----------------------------------
@@ -1874,8 +1894,26 @@ read()  {  isAuthenticatedUser(userId) ||  isCurrentSubUserGroupMembersOwner($gr
           isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid)}  }
 create() {  isAuthenticatedUser(userId)}
 //--------------------------
-//  Quizes Questions
+//  Quizes Names
 //--------------------------
+path /quiz-name {
+  read() { isAuthenticated() }
+  /{quizId} is QuizName {
+    create() { isAuthenticated() }
+  }
+}
+type QuizName {
+  title: String
+}
+//--------------------------
+//  Quizes
+//--------------------------
+
+/*/questions/{questionId}  is QuizQuestionDesc{
+read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
+create() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+update() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
+}*/
 
 path /quizes/{quizId} is Quiz {
       read() { isQuizOwner(quizId) }
@@ -1884,22 +1922,16 @@ path /quizes/{quizId} is Quiz {
       /questionbanks/{questionBankUniqueID} is QuizQuestionBank {
         /chapters/{chapterId}  is QuizChapter {
           /topics/{topicId} is QuizTopic  {
-            /questions/{questionId}  is QuizQuestionDesc{
-            read()   { isCurrentUserQuestionBankMember(questionBankUniqueID) }
-            create() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
-            update() { isCurrentUserQuestionBankOwner(questionBankUniqueID) || isCurrentUserQuestionBankAdmin(questionBankUniqueID) }
-         }
-       }
+            /questions/{questionId} is Question {
+          //  /options is  Option[] { }
+            /questiones is QuestionSet[] { }
+           }
+        }
       }
     }
-  }
-
-type QuizQuestionDesc {
-   title   : String,
-   type    : QuestionType,
-   desc    : String,
-   options: Map<String, Option>
 }
+
+
 type Quiz {
   title: String,
   desc: String,
@@ -1909,13 +1941,12 @@ type QuizQuestionBank {
   title: String,
   imgLogoUrl: String | Null
 }
+
 type QuizChapter {
-  title: String,
-  imgLogoUrl: String | Null
+  title: String
 }
 type QuizTopic {
   title: String,
-  imgLogoUrl: String | Null
 }
 //--------------------------
 //  Quiz In Progress

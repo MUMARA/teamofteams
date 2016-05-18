@@ -57,7 +57,7 @@
         init();
 
         function init() {
-            console.log('watch 1: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
+            // console.log('watch 1: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
             that.isOwner = false;
             that.isMember = false;
             that.isAdmin = false;

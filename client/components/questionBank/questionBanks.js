@@ -128,7 +128,6 @@
     };
 
     function questionSetAddQuestion(questionSet) {
-      // questionSet["title"] = "discussion-html";
       angular.forEach(questionSet.options, function(val) {
         delete val.$$hashKey;
       });
@@ -283,8 +282,10 @@
       var questionBankUniqueID = _self.questionbankObj.bookUniqueId;
       if ($rootScope.newImg) {
         var x = utilService.base64ToBlob($rootScope.newImg);
+        console.log(x);
         var temp = $rootScope.newImg.split(',')[0];
         var mimeType = temp.split(':')[1].split(';')[0];
+        console.dir(x)
         _self.saveFile(x, mimeType, questionBankUniqueID)
           .then(function(url) {
             _self.imgLogoUrl = url + '?random=' + new Date();
@@ -341,6 +342,7 @@
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);
+            console.dir(response)
             defer.resolve(upload_file(file, response.signed_request,
               response.url));
           } else {
@@ -369,6 +371,7 @@
       xhr.onerror = function(error) {
         defer.reject(messageService.showSuccess("Could not upload file."));
       };
+      console.log(file);
       xhr.send(file);
       return defer.promise;
     }

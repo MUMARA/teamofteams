@@ -80,6 +80,18 @@ var routes = {
             httpVerb: 'get',
             url: 'api/savequizBookPicture',
             params: []
+        },
+        //======================================
+        {
+            method: 'saveQuestionBankPicture',
+            httpVerb: 'post',
+            url: 'api/saveQuestionBankPicture',
+            params: []
+        }, {
+            method: 'saveQuestionBankPicture',
+            httpVerb: 'get',
+            url: 'api/savequestionBankPicture',
+            params: []
         }
     ],
 
@@ -246,6 +258,41 @@ var routes = {
             return;
         }
         profilePictureManager.getAmazonUrl(req, res, 'quizbank')
+
+    },
+
+    /*question bank api*/
+
+    'saveQuestionBankPicture': function(req, res) {
+
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+
+            if (Object.keys(files).length) {
+
+                profilePictureManager.saveQuestionBookPicture(files['source'], fields.userID, fields.quizID, fields.token, res, 'questionbank');
+
+            } else {
+                res.send({
+                    statusCode: 0,
+                    statusDesc: "User did not send any file to Upload."
+                });
+            }
+
+        });
+
+    },
+
+    'savequestionBankPicture': function(req, res) {
+        checkFileType(req, res)
+        if (!req.query.quizID) {
+            res.send({
+                statusCode: 0,
+                statusDesc: "quuestionBankID required"
+            });
+            return;
+        }
+        profilePictureManager.getAmazonUrl(req, res, 'questionbank')
 
     }
 

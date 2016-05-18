@@ -1,7 +1,7 @@
-'use strict';
-
-module.exports.handler = function(event, context, cb) {
-  return cb(null, {
-    message: 'Go Serverless! Your Lambda function executed successfully!'
-  });
+/// <reference path="../../typings/tsd.d.ts" />
+"use strict";
+var userController_1 = require('../lib/controller/userController');
+exports.handler = function (event, context, cb) {
+    userController_1.verifyEmail(event, context);
 };
+//# sourceMappingURL=handler.js.map
