@@ -249,7 +249,8 @@ angular.module('core')
                 activitySeen = ref.child('activities-seen-by-user');
                 questionBank = ref.child('question-bank');
                 userQuestionBanks = ref.child('user-question-banks');
-                questionBankMemberships = ref.child('question-bank-memberships');
+                questionBankMemberships = ref.child(
+                  'question-bank-memberships');
                 questionBankNames = ref.child('question-bank-names');
 
 
@@ -304,14 +305,15 @@ angular.module('core')
         },
         asyncCheckIfQuestionBankExists: function(questionBankUniqueID) {
           var deferred = $q.defer();
-          questionBankNames.child(questionBankUniqueID).once('value', function(
-            snapshot) {
-            var exists = (snapshot.val() !== null);
-            deferred.resolve({
-              exists: exists,
-              questionbank: snapshot.val()
+          questionBankNames.child(questionBankUniqueID).once('value',
+            function(
+              snapshot) {
+              var exists = (snapshot.val() !== null);
+              deferred.resolve({
+                exists: exists,
+                questionbank: snapshot.val()
+              });
             });
-          });
           return deferred.promise;
         }
       };

@@ -1657,6 +1657,26 @@ path /activities-seen-by-user/{userid} is ActivityType {
 type ActivityType {
   timestamp: CurrentTimeStamp
 }
+// User Push Notification
+
+path /user-push-notifications/{userid}/{opratingSystem}/{browser}/{pushNotificationsId} is PushNotification {
+    write() {
+      isAuthenticatedUser(userid)
+    }
+    read() { isAuthenticated()}
+      /keys is Key {
+
+      }
+
+}
+type PushNotification {
+  endpoint: String
+}
+
+type Key {
+  auth: String,
+  p256dh: String
+}
 
 
 //----------------------------------
@@ -1908,7 +1928,7 @@ path /quizes/{quizId} is Quiz {
            }
         }
       }
-   }
+    }
 }
 
 
@@ -2001,3 +2021,4 @@ type QuizMembership {
 function isQuizOwner(quizId) {
   return prior(root["user-quiz"][auth.uid][quizId]["memberships-type"].val() == 1)
 }
+//===========================================================  23/1/16

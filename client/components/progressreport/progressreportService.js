@@ -95,7 +95,8 @@
 		}//getReportQuestion
 		function getSubGroupReportFromFirebase(user, groupID, subgroupID, limit) {
 			firebaseService.getRefProgressReport().child(groupID).child(subgroupID).child(user.id).orderByChild("date").limitToLast(limit)
-				.on("value", function(snapshot) {
+				.on("value", function (snapshot) {
+					console.log('watch', snapshot.key(), snapshot.val());
 					var _flag = false;
 					// console.log('key', snapshot.key());
 					// console.log('val', snapshot.val());
@@ -160,6 +161,7 @@
 			return dailyProgressReport;
 		} //getDailyProgressReport
 		function updateReport(report, cb) {
+			console.log('watch', report.reportID)
 			//console.log('report', report)
 			firebaseService.getRefProgressReport().child(report.groupID).child(report.subgroupID).child(report.userID).child(report.reportID).update({ 'answers': report.answers }, function(err) {
 				if (err) {

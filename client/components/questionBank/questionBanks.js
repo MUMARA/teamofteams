@@ -128,7 +128,6 @@
     };
 
     function questionSetAddQuestion(questionSet) {
-      console.log(questionSet, "11111111111111")
         // questionSet["title"] = "discussion-html";
       angular.forEach(questionSet.options, function(val) {
         delete val.$$hashKey;
@@ -345,7 +344,7 @@
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
               var response = JSON.parse(xhr.responseText);
-            console.dir(response)  
+            console.dir(response)
             defer.resolve(upload_file(file, response.signed_request,
               response.url));
           } else {

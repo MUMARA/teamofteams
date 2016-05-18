@@ -1116,6 +1116,37 @@
         ".write": "auth != null && auth.uid == $userid"
       }
     },
+    "user-push-notifications": {
+      "$userid": {
+        "$opratingSystem": {
+          "$browser": {
+            "$pushNotificationsId": {
+              "keys": {
+                ".validate": "newData.hasChildren(['auth', 'p256dh'])",
+                "auth": {
+                  ".validate": "newData.isString()"
+                },
+                "p256dh": {
+                  ".validate": "newData.isString()"
+                },
+                "$other": {
+                  ".validate": "false"
+                }
+              },
+              ".validate": "newData.hasChildren(['endpoint'])",
+              "endpoint": {
+                ".validate": "newData.isString()"
+              },
+              "$other": {
+                ".validate": "false"
+              },
+              ".read": "auth != null",
+              ".write": "auth != null && auth.uid == $userid"
+            }
+          }
+        }
+      }
+    },
     "user-question-banks": {
       "$UserID": {
         "$questionBankUniqueID": {
