@@ -26,26 +26,16 @@
     _self.show = false;
     _self.showQuestionDetails = false;
     // _self.showQuizBank = true;
-    _self.showQuizList = false;
-    _self.showQuizAssign = false;
     _self.questionView = null;
     //for toolbar text hide
     _self.chapterSearch = false;
     _self.topicSearch = false;
     _self.questionSearch = false;
     _self.quizSearch = false;
-    _self.quizQuestionSearch = false;
-    _self.chaptersSideNavSearch = false;
-    _self.topicSideNavSearch = false;
-    _self.questionSideNavSearch = false;
-    _self.inputEnter = false;
     _self.selectedQuestionIndex = null;
     _self.selectedTopicIndex = null;
     _self.selectedChapterIndex = null;
     // For Empty Input Field
-    _self.questionbankObj = {};
-    _self.chapterObj = {};
-    _self.topicObj = {};
     _self.question = {};
     // Show n Hide Side nav bar
     _self.ShowNavBar = ShowNavBar;
@@ -99,18 +89,6 @@
     _self.topics = [];
     _self.questions = [];
 
-
-    // Old Code
-    _self.groups = [];
-
-    _self.quizesList = [];
-    _self.quizesListKey = [];
-    _self.subGroup = [];
-    _self.myDatabase = [];
-    _self.selectedGroup = null;
-
-
-
     _self.books = [];
     _self.booksId = [];
     _self.quizes = [];
@@ -119,15 +97,6 @@
     _self.topicsId = [];
     _self.topics = [];
     _self.questions = [];
-    _self.groups = [];
-    //QUIZ SCHEDULED variables & functions
-    _self.quizesList = [];
-    _self.quizesListKey = [];
-    _self.subGroup = [];
-    _self.myDatabase = [];
-    _self.selectedGroup = null;
-
-    _self.questionSetQuestions = [];
 
     // initailize QuestionBank
     function initQuestionBank() {

@@ -145,6 +145,7 @@
     _self.questions = [];
     _self.questionId = [];
     _self.abc = [];
+    // Load User Question Bank start
     _self.loadQuestionBanks = function() {
       _self.books = [];
       _self.bookId = [];
@@ -161,6 +162,7 @@
     };
 
     function loadingQuestionBanks(questionBankUniqueID, cb) {
+
       firebaseService.getRefQuestionBank().child(questionBankUniqueID).once(
         'value',
         function(questionBank) {
@@ -168,7 +170,8 @@
           _self.bookId.push(questionBank.key());
           cb()
         });
-    }
+    }// Load User Question Bank end
+
     // Load Quiz function start
     _self.loadQuiz = function() {
       _self.quizes = [];
@@ -213,20 +216,6 @@
 
     }; // Create quiz Function end
 
-    // _self.loadChapters = function(questionBankUniqueID) {
-    //   var deferred = $q.defer();
-    //   _self.chapters = [];
-    //   _self.chaptersId = [];
-    //   firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
-    //     "chapters").once('value', function(ChaptersUniqueId) {
-    //     for (var key in ChaptersUniqueId.val()) {
-    //       _self.chaptersId.push(key);
-    //       _self.chapters.push(ChaptersUniqueId.val()[key]);
-    //       deferred.resolve(_self.chapters);
-    //     }
-    //   });
-    //   return deferred.promise;
-    // };
 
     // Load Quiz question Banks start
     _self.loadQuizQuestionBank = function(quizesUniqueID) {
