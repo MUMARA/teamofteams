@@ -143,7 +143,6 @@
     _self.topicsId = [];
     _self.questions = [];
     _self.questionId = [];
-    _self.abc = []
     _self.loadQuestionBanks = function() {
       _self.books = [];
       _self.bookId = [];
@@ -168,26 +167,52 @@
           cb()
         });
     }
+
     _self.createQuestionBank = function(questionBankUniqueID,
       questionBankObject) {
       // firebaseService.getRefUserQuestionBanks().child(userService.getCurrentUser().userID).set();
-      firebaseService.getRefUserQuestionBanks().child(
-        userService.getCurrentUser().userID).child(questionBankUniqueID).set({
+      /*          firebaseService.getRefUserQuestionBanks().child(
+       userService.getCurrentUser().userID).child(questionBankUniqueID).set({
+       'memberships-type': 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+
+       firebaseService.getRefQuestionBankMemberships().child(
+       questionBankUniqueID).child(userService.getCurrentUser().userID)
+       .set({
+       "memberships-type": 1,
+       'timestamp': Firebase.ServerValue.TIMESTAMP
+       });
+
+       firebaseService.getRefQuestionBankNames().child(questionBankUniqueID)
+       .set({
+       title: questionBankObject.title
+       });
+       firebaseService.getRefQuestionBank().child(questionBankUniqueID)
+       .set(questionBankObject);
+       */
+      var ref = firebaseService.getRefMain();
+      var newQuestionBank = {};
+      newQuestionBank["user-question-banks/" + userService.getCurrentUser()
+        .userID + "/" + questionBankUniqueID] = {
         'memberships-type': 1,
         'timestamp': Firebase.ServerValue.TIMESTAMP
+      };
+      newQuestionBank["question-bank-memberships/" + questionBankUniqueID +
+        "/" + userService.getCurrentUser().userID] = {
+        'memberships-type': 1,
+        'timestamp': Firebase.ServerValue.TIMESTAMP
+      };
+      newQuestionBank["question-bank-names/" + questionBankUniqueID] = {
+        title: questionBankObject.title
+      };
+      newQuestionBank["question-bank/" + questionBankUniqueID] =
+        questionBankObject;
+      ref.update(newQuestionBank, function(error) {
+        if (error) {
+          console.log("Error updating data:", error);
+        }
       });
-      firebaseService.getRefQuestionBankMemberships().child(
-          questionBankUniqueID).child(userService.getCurrentUser().userID)
-        .set({
-          "memberships-type": 1,
-          'timestamp': Firebase.ServerValue.TIMESTAMP
-        });
-      firebaseService.getRefQuestionBankNames().child(questionBankUniqueID)
-        .set({
-          title: questionBankObject.title
-        });
-      firebaseService.getRefQuestionBank().child(questionBankUniqueID)
-        .set(questionBankObject);
     };
     _self.loadChapters = function(questionBankUniqueID) {
 
@@ -212,14 +237,23 @@
       return deferred.promise;
     };
     _self.createChapter = function(questionBankUniqueID, chapterObject) {
+      var deferred = $q.defer();
       firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
-        'chapters').push(chapterObject);
+        'chapters').push(chapterObject, function(err) {
+        err == null ? deferred.resolve('Save Topic') : deferred.reject();
+      });
+      return deferred.promise;
     };
     _self.createTopic = function(questionBankUniqueID, chapterUniqueId,
       topicObject) {
-      firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
-        'chapters').child(chapterUniqueId).child("topics").push(
-        topicObject);
+      var deferred = $q.defer();
+      firebaseService.getRefQuestionBank().child(questionBankUniqueID)
+        .child('chapters').child(chapterUniqueId).child("topics").push(
+          topicObject,
+          function(err) {
+            err == null ? deferred.resolve('Save Topic') : deferred.reject();
+          });
+      return deferred.promise;
     };
     _self.loadTopic = function(questionBankUniqueID, chapterUniqueId) {
       var deferred = $q.defer();
@@ -227,8 +261,8 @@
       _self.topicsId = [];
       // Store topicRef Ref
       var topicRef = firebaseService.getRefQuestionBank().child(
-        questionBankUniqueID).child(
-        "chapters").child(chapterUniqueId).child("topics");
+          questionBankUniqueID)
+        .child("chapters").child(chapterUniqueId).child("topics");
       // Topic off Value Events
 
       topicRef.off('child_added');
@@ -259,8 +293,7 @@
 
       // Questions Ref Value CallBack on Value Events
       var questionsRefValueCallBack = questionsRef.on('child_added',
-        function(
-          questions) {
+        function(questions) {
           _self.questionId.push(questions.key());
           _self.questions.push(questions.val());
           deferred.resolve(_self.questions);
@@ -270,19 +303,14 @@
     };
     _self.createQuestion = function(questionBankUniqueID, chapterUniqueId,
       topicUniqueId, questionObject) {
-      var deffered = $q.defer();
+      var deferred = $q.defer();
       firebaseService.getRefQuestionBank().child(questionBankUniqueID).child(
-        'chapters').child(chapterUniqueId).child("topics").child(
-        topicUniqueId).child("questions").push(questionObject, function(
-        err) {
-        if (err === null) {
-          deffered.resolve("Saved");
-        } else {
-          deffered.reject("Error");
-
-        }
-      });
-      return deffered.promise;
+          'chapters')
+        .child(chapterUniqueId).child("topics").child(topicUniqueId)
+        .child("questions").push(questionObject, function(err) {
+          err == null ? deferred.resolve('Save Question') : deferred.reject();
+        });
+      return deferred.promise;
     };
   }
 
