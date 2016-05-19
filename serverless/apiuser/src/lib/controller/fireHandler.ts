@@ -11,7 +11,7 @@ import {credentials} from '../config/credentials';
 firebaseCtrl.init();
 
 /*private variables*/
-let myFirebaseRef = firebaseCtrl.getRefMain();
+export let myFirebaseRef = firebaseCtrl.getRefMain();
 let usersRef = firebaseCtrl.getRefUsers();
 let authenticatedFirebase = false;
 let authDateFirebase = null;
