@@ -1659,16 +1659,25 @@ type ActivityType {
 }
 // User Push Notification
 
-path /user-push-notifications/{userid}/{opratingSystem}/{browser}/{pushNotificationsId} is PushNotification {
-    write() {
-      isAuthenticatedUser(userid)
+path /user-push-notifications {
+  read() { isAuthenticated()}
+  write() { isAuthenticated()}
+
+  /{userid}/{opratingSystem}/{browser}{
+
+    /{pushNotificationsId} is PushNotification {
+        /*write() {
+          isAuthenticatedUser(userid)
+        }
+        read() { isAuthenticated()}*/
+          /keys is Key {
+
+          }
+
     }
-    read() { isAuthenticated()}
-      /keys is Key {
-
-      }
-
 }
+  }
+
 type PushNotification {
   endpoint: String
 }
