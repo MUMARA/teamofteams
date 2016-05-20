@@ -88,7 +88,7 @@ var routes = {
             url: 'api/saveQuestionBankPicture',
             params: []
         }, {
-            method: 'saveQuestionBankPicture',
+            method: 'savequestionBankPicture',
             httpVerb: 'get',
             url: 'api/savequestionBankPicture',
             params: []
@@ -208,7 +208,6 @@ var routes = {
     'savesubgroupprofilepicture': function(req, res) {
 
         checkFileType(req, res)
-        console.log(req.query);
         if (!req.query.groupID) {
             res.send({
                 statusCode: 0,
@@ -271,7 +270,7 @@ var routes = {
 
             if (Object.keys(files).length) {
 
-                profilePictureManager.saveQuestionBookPicture(files['source'], fields.userID, fields.quizID, fields.token, res, 'questionbank');
+                profilePictureManager.saveQuestionBankPicture(files['source'], fields.userID, fields.questionBankID, fields.token, res, 'questionbank');
 
             } else {
                 res.send({
@@ -286,7 +285,7 @@ var routes = {
 
     'savequestionBankPicture': function(req, res) {
         checkFileType(req, res)
-        if (!req.query.quizID) {
+        if (!req.query.questionBankID) {
             res.send({
                 statusCode: 0,
                 statusDesc: "quuestionBankID required"

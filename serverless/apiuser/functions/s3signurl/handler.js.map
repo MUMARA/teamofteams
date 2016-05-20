@@ -1,0 +1,1 @@
+{"version":3,"file":"handler.js","sourceRoot":"","sources":["../../src/s3signurl/handler.ts"],"names":[],"mappings":"AAAA,+CAA+C;;AAE/C,iCAA6B,oCAE7B,CAAC,CAFgE;AAEjE,OAAO,CAAC,OAAO,GAAG,UAAS,KAAK,EAAE,OAAgB,EAAE,EAAE;IAClD,iCAAc,CAAC,KAAK,EAAE,OAAO,CAAC,CAAC;AACnC,CAAC,CAAC"}

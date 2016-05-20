@@ -280,6 +280,15 @@ path /quiz-in-progress/{groupId}/{subgroupId}/{quizId} is Boolean {
 //--------------------------
 //  Quiz Schedules
 //--------------------------
+// All Quiz Schedules
+
+path /quizes-schedule/{quizId}/schedules {
+    read() { isQuizOwner(quizId) }
+      /{scheduleId} is Schedules {
+          create() { isQuizOwner(quizId) }
+    }
+}
+// Quiz Schedules for Subgroup
 path /quiz-schedule/{groupid}/{subgroupid}/{quizId} is QuizSchedule {
 
     /schedules/{scheduleId} is Schedules {
@@ -299,6 +308,7 @@ type QuizSchedule {
 type Schedules {
   "start-time": Number,
   "end-time": Number,
+  "title": String
 }
 //--------------------------
 //  Quiz Proctoring Key

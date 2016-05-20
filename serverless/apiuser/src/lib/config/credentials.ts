@@ -30,8 +30,20 @@ let development = {
     /*push notification services credential e.g. GCM, APN*/
     pushNotifications: {
         gcm: {
-            SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            // SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            SERVER_KEY: 'AIzaSyCsCOzXB8Ewo2XcM1_YTUkFTnmIPNKD95s'
         }
+    },
+
+    amazon: {
+        "accessKeyId": "AKIAIQUMDHTDUMB7LZVQ",
+        "secretAccessKey": "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",
+        'userBucketName': 'pwowuserimg',
+        'groupBucketName': 'pwowgroupimg',
+        'subgroupBucketName': 'pwowsubgroupimg',
+        'quizbankBucketName': 'pwowquizbankimg',
+        'questionbankBucketName': 'pwowquestionbankimg',
+        's3BaseUrl': 'https://s3.amazonaws.com'
     }
 
 };
@@ -67,6 +79,17 @@ let production = {
         gcm: {
             SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
         }
+    },
+
+    amazon: {
+        "accessKeyId": "AKIAIQUMDHTDUMB7LZVQ",
+        "secretAccessKey": "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",
+        'userBucketName': 'totsuserimg',
+        'groupBucketName': 'totsgroupimg',
+        'subgroupBucketName': 'totssubgroupimg',
+        'quizbankBucketName': 'totsquizbankimg',
+        'questionbankBucketName': 'totsquestionbankimg',
+        's3BaseUrl': 'https://s3.amazonaws.com'
     }
 
 };
