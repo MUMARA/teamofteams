@@ -20,8 +20,10 @@
         var asyncCheckUserId = function(modelValue) {
             var defer = $q.defer();
 
-            $http.get(appConfig.apiBaseUrl + '/api/checkuserid/' + modelValue)
-                .success(function(data) {
+            // $http.get(appConfig.apiBaseUrl + '/api/checkuserid/' + modelValue)
+            $http.get(appConfig.apiBaseUrl + '/checkavailability/' + modelValue)
+                .success(function (data) {
+                    // console.log(data);
                     if (data.statusCode === 1) {
                         defer.resolve();
                     } else if (data.statusCode === 2) {
@@ -58,7 +60,7 @@
                 password: modelValue
             }
             if (modelValue) {
-                $http.post(appConfig.apiBaseUrl + '/api/checkpassword', dataToCheck)
+                $http.post(appConfig.apiBaseUrl + '/checkuserpassword', dataToCheck)
                     .success(function(data) {
                         console.log('1', data);
                         if (data.statusCode === 1) {
