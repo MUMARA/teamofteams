@@ -9,7 +9,7 @@
   "memorySize": 1024,
   "authorizer": {},
   "custom": {
-    "excludePatterns": []
+        "excludePatterns": []
   },
   "endpoints": [
     {

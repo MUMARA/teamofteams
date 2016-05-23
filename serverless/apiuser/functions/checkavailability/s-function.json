@@ -13,7 +13,7 @@
   },
   "endpoints": [
     {
-      "path": "checkavailability",
+      "path": "checkavailability/{userID}",
       "method": "GET",
       "type": "AWS",
       "authorizationType": "none",

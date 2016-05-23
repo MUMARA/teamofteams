@@ -128,8 +128,7 @@ function userSignup(event, context) {
             token: user.uuid,
             baseUrl: appconfig.BASEURL,
             domain: appconfig.DOMAIN,
-            supportEmail: appconfig.SUPPORT,
-            api: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/verifyemail'
+            supportEmail: appconfig.SUPPORT
         });
         var payload = {
             "To": user.email,
@@ -276,7 +275,7 @@ function verifyEmail(event, context) {
                 }
                 else {
                     context.succeed({
-                        location: appconfig.DOMAIN + ' signin'
+                        url: appconfig.DOMAIN + 'signin'
                     });
                 }
             });
@@ -519,10 +518,19 @@ function forgotPassword(event, context) {
             });
         }
         else if (user) {
-            sendPasswordRecoveryEmail(user);
-            context.succeed({
-                statusCode: 1,
-                statusDesc: "you would receive an email with a password recovery link, shortly."
+            sendPasswordRecoveryEmail(user, function (err) {
+                if (err) {
+                    context.succeed({
+                        statusCode: 0,
+                        statusDesc: err
+                    });
+                }
+                else {
+                    context.succeed({
+                        statusCode: 1,
+                        statusDesc: "you would receive an email with a password recovery link, shortly."
+                    });
+                }
             });
         }
         else {
@@ -532,7 +540,7 @@ function forgotPassword(event, context) {
             });
         }
     });
-    function sendPasswordRecoveryEmail(user) {
+    function sendPasswordRecoveryEmail(user, cb) {
         var template = ejs.render(passwordRecoveryEmailTemplate, {
             user: user,
             app: appconfig
@@ -547,9 +555,13 @@ function forgotPassword(event, context) {
             if (err) {
                 console.log('email sent error: ' + user.email);
                 return console.error(err.message);
+                cb(err);
             }
-            console.log('email sent success: ' + user.email);
-            console.log(json);
+            else {
+                console.log('email sent success: ' + user.email);
+                console.log(json);
+                cb();
+            }
         });
     }
 }

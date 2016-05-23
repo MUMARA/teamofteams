@@ -137,11 +137,14 @@
                     var defer = $q.defer();
                     var xhr = new XMLHttpRequest();
                     //xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?file_name=" + userID + "." + type.split('/')[1] + "&file_type=" + type);
-                    xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?userID=" + userID + "&file_type=" + type);
+                    //xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?userID=" + userID + "&file_type=" + type);
+                    xhr.open("GET", "https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/s3signurl?id=" + userID + "&file_type=" + type + "&bucket_type=user");
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === 4) {
                             if (xhr.status === 200) {
+                                console.dir(xhr.responseText)
                                 var response = JSON.parse(xhr.responseText);
+                                console.dir(response["signed_request"]);
                                 defer.resolve(upload_file(file, response.signed_request, response.url));
                             } else {
                                 defer.reject(alert("Could not get signed URL."))

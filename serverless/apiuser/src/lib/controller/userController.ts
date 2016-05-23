@@ -140,8 +140,7 @@ export function userSignup(event, context: Context) {
             token: user.uuid,
             baseUrl: appconfig.BASEURL,
             domain: appconfig.DOMAIN,
-            supportEmail: appconfig.SUPPORT,
-            api: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/verifyemail'
+            supportEmail: appconfig.SUPPORT
         });
         var payload = {
             "To": user.email,
@@ -291,7 +290,7 @@ export function verifyEmail(event, context: Context) {
                     });
                 } else {
                     context.succeed({
-                        location: appconfig.DOMAIN + ' signin' 
+                        url: appconfig.DOMAIN + 'signin' 
                     })
                 }
             });
@@ -527,10 +526,18 @@ export function forgotPassword(event, context: Context) {
                 statusDesc: "error occurred."
             });
         } else if (user) {
-            sendPasswordRecoveryEmail(user);
-            context.succeed({
-                statusCode: 1,
-                statusDesc: "you would receive an email with a password recovery link, shortly."
+            sendPasswordRecoveryEmail(user, (err) => {
+                if (err) {
+                    context.succeed({
+                        statusCode: 0,
+                        statusDesc: err
+                    });
+                } else {
+                    context.succeed({
+                        statusCode: 1,
+                        statusDesc: "you would receive an email with a password recovery link, shortly."
+                    });
+                }
             });
         } else {
             context.succeed({
@@ -539,7 +546,7 @@ export function forgotPassword(event, context: Context) {
             });
         }
     });
-    function sendPasswordRecoveryEmail(user) {
+    function sendPasswordRecoveryEmail(user, cb) {
         var template = ejs.render(passwordRecoveryEmailTemplate, {
             user: user,
             app: appconfig
@@ -550,14 +557,16 @@ export function forgotPassword(event, context: Context) {
             "Subject": 'Account Recovery Email - "' + appconfig.TITLE,
             "HtmlBody": template,
         };
-        client.sendEmail(payload,function(err, json) {
+        client.sendEmail(payload, (err, json) => {
             if (err) {
                 console.log('email sent error: ' + user.email);
                 return console.error(err.message);
+                cb(err);
+            } else {
+                console.log('email sent success: ' + user.email);
+                console.log(json);
+                cb();
             }
-
-            console.log('email sent success: ' + user.email);
-            console.log(json);
         });
     }
 }
