@@ -57,9 +57,10 @@
                 password: modelValue
             }
             if (modelValue) {
+                $http.defaults.headers.post["Content-Type"] = "text/plain";
                 $http.post(appConfig.apiBaseUrl + '/checkuserpassword', dataToCheck)
                     .success(function (data) {
-                        console.log('1', data);
+                        // console.log('1', data);
                         if (data.statusCode === 1) {
                             defer.resolve();
                         } else {
@@ -67,7 +68,7 @@
                         }
                     })
                     .error(function (data) {
-                        console.log('2', data);
+                        // console.log('2', data);
                         //handle this case
                         defer.reject();
                     });

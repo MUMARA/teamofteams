@@ -5555,9 +5555,6 @@ angular.module('core', [
 
 })();
 
-<!--waste-->
-
-
 (function() {
     'use strict';
 
@@ -5769,7 +5766,6 @@ angular.module('core', [
 
         ]);
 })();
-<!--waste-->
 
  /**
  * Created by Mehmood on 5/21/2015.
