@@ -1510,27 +1510,35 @@
         }
       }
     },
-    "quizes-schedule": {
+    "all-quiz-schedules": {
       "$quizId": {
         "schedules": {
           "$scheduleId": {
-            ".validate": "newData.hasChildren(['start-time', 'end-time', 'title'])",
-            "start-time": {
-              ".validate": "newData.isNumber()"
-            },
-            "end-time": {
-              ".validate": "newData.isNumber()"
-            },
-            "title": {
-              ".validate": "newData.isString()"
-            },
-            "$other": {
-              ".validate": "false"
+            "$key5": {
+              ".validate": "newData.hasChildren(['start-time', 'title', 'end-time', 'group', 'subgroup'])",
+              "start-time": {
+                ".validate": "newData.isNumber()"
+              },
+              "title": {
+                ".validate": "newData.isString()"
+              },
+              "end-time": {
+                ".validate": "newData.isNumber()"
+              },
+              "group": {
+                ".validate": "newData.isString()"
+              },
+              "subgroup": {
+                ".validate": "newData.isString()"
+              },
+              "$other": {
+                ".validate": "false"
+              }
             },
             ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
-          },
-          ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
-        }
+          }
+        },
+        ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
       }
     },
     "quiz-schedule": {
@@ -1556,14 +1564,11 @@
                 ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
               }
             },
-            ".validate": "newData.hasChildren(['title', 'desc', 'imgLogoUrl', 'duration', 'num-questions'])",
+            ".validate": "newData.hasChildren(['title', 'desc', 'duration', 'num-questions'])",
             "title": {
               ".validate": "newData.isString()"
             },
             "desc": {
-              ".validate": "newData.isString()"
-            },
-            "imgLogoUrl": {
               ".validate": "newData.isString()"
             },
             "duration": {
@@ -1572,9 +1577,13 @@
             "num-questions": {
               ".validate": "newData.isNumber()"
             },
+            "imgLogoUrl": {
+              ".validate": "newData.isString() || newData.val() == null"
+            },
             "$other": {
               ".validate": "false"
-            }
+            },
+            ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
           }
         }
       }
