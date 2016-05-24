@@ -1515,7 +1515,7 @@
         "schedules": {
           "$scheduleId": {
             "$key5": {
-              ".validate": "newData.hasChildren(['start-time', 'title', 'end-time', 'group', 'subgroup'])",
+              ".validate": "newData.hasChildren(['start-time', 'title', 'end-time', 'group', 'subgroup', 'schedule'])",
               "start-time": {
                 ".validate": "newData.isNumber()"
               },
@@ -1529,6 +1529,9 @@
                 ".validate": "newData.isString()"
               },
               "subgroup": {
+                ".validate": "newData.isString()"
+              },
+              "schedule": {
                 ".validate": "newData.isString()"
               },
               "$other": {
@@ -1562,7 +1565,8 @@
                 },
                 ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
                 ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
-              }
+              },
+              ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
             },
             ".validate": "newData.hasChildren(['title', 'desc', 'duration', 'num-questions'])",
             "title": {

@@ -1983,11 +1983,15 @@ path /all-quiz-schedules/{quizId} {
 path /quiz-schedule/{groupid}/{subgroupid}/{quizId} is Quiz {
     create() { isQuizOwner(quizId) }
     update() { isQuizOwner(quizId) }
-    /schedules/{scheduleId} is Schedules {
+    /schedules {
+      read() { isQuizOwner(quizId) }
+      /{scheduleId} is Schedules {
       read() { subGroupMembersMemberShipAnyType($groupid,$subgroupid) }
       create() { isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
       update() { isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
     }
+  }
+
 }
 
 
@@ -2001,7 +2005,8 @@ type QuizSchedule {
   "title": String,
   "end-time": Number,
   "group": String,
-  "subgroup": String
+  "subgroup": String,
+  "schedule": String
 }
 //--------------------------
 //  Quiz Proctoring Key
