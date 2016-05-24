@@ -1,15 +1,15 @@
 // Registering ServiceWorker...
-// if ('serviceWorker' in navigator) {
-//     console.log('Service Worker is supported');
-//     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(function (registration) {
-//         console.log(':^)', registration);
-//     }).catch(function (error) {
-//         console.log(':^(', error);
-//         // ref.child("user-errors").child('on-registration').push(error.toJSON(), function (err) {
-//         //     console.log('on-registration: ', err);
-//         // });
-//     });
-// } //if serviceWorker
+if ('serviceWorker' in navigator) {
+    console.log('Service Worker is supported');
+    navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(function (registration) {
+        console.log(':^)', registration);
+    }).catch(function (error) {
+        console.log(':^(', error);
+        // ref.child("user-errors").child('on-registration').push(error.toJSON(), function (err) {
+        //     console.log('on-registration: ', err);
+        // });
+    });
+} //if serviceWorker
 
 /**
  * Created by ZiaKhan on 05/12/14.
