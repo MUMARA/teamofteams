@@ -21,6 +21,7 @@
                         },
                         function() {
                             messageService.showFailure('Network Error Please Submit Again.');
+                            defer.reject();
                         });
                     return defer.promise;
 

@@ -18,7 +18,8 @@ var mainApplicationModule = angular.module(mainApplicationModuleName, [
     // authService.resolveUserPage();
 }]);
 mainApplicationModule.value('appConfig', {
-    'apiBaseUrl': 'https://teamofteams.herokuapp.com',
+    'apiBaseUrl': 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/prod',
+    // 'apiBaseUrl': 'https://teamofteams.herokuapp.com',
     //'apiBaseUrl': 'http://localhost:3000',
     'myFirebase': 'https://panacloud.firebaseio.com',
     'firebaseAuth': false,

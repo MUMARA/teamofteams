@@ -428,7 +428,7 @@ var PrecacheConfig = [
   ["/services/util.service.js", "5712b50d53581ceb8407fa7513feca9b"]
 ];
 /* eslint-enable quotes, comma-spacing */
-var CacheNamePrefix = 'sw-precache-v1-27' + (self.registration ? self.registration
+var CacheNamePrefix = 'sw-precache-v1-274' + (self.registration ? self.registration
   .scope : '') + '-';
 
 

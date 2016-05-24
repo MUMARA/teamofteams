@@ -3,7 +3,8 @@
 var development = {
     /*product application*/
     product: {
-        BASEURL: 'https://panacloudapi.herokuapp.com/',
+        BASEURL: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev',
+        // BASEURL: 'https://panacloudapi.herokuapp.com/',
         // BASEURL: 'https://127.0.0.1:3000/',
         TITLE: 'Team of Teams',
         SUPPORT: 'zia@panacloud.com',
@@ -43,7 +44,8 @@ var development = {
 var production = {
     /*product application*/
     product: {
-        BASEURL: 'https://teamofteams.herokuapp.com/',
+        BASEURL: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/prod',
+        // BASEURL: 'https://teamofteams.herokuapp.com/',
         TITLE: 'Team of Teams',
         SUPPORT: 'zia@panacloud.com',
         DOMAIN: 'https://app.teamofteams.io/'

@@ -137,7 +137,8 @@
                     var defer = $q.defer();
                     var xhr = new XMLHttpRequest();
                     //xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?file_name=" + userID + "." + type.split('/')[1] + "&file_type=" + type);
-                    xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?userID=" + userID + "&file_type=" + type);
+                    //xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?userID=" + userID + "&file_type=" + type);
+                    xhr.open("GET", appConfig.apiBaseUrl + "/s3signurl?id=" + userID + "&file_type=" + type + "&bucket_type=user");
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === 4) {
                             if (xhr.status === 200) {
@@ -210,4 +211,3 @@
 
         ]);
 })();
-<!--waste-->
