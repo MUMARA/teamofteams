@@ -10,7 +10,7 @@
 }
 
 .firepad .CodeMirror {
-  /*position: absolute;*/
+  position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
@@ -19,7 +19,7 @@
 }
 
 .firepad-with-toolbar .CodeMirror {
-  /*top: 63px;*/
+  top: 63px;
   padding-left: 10px;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .firepad-toolbar {
-  /*height: 45px;*/
+  height: 45px;
   /*line-height: 82px;*/
   padding-left: 10px;
   border-bottom: 1px solid #c9c9c9;

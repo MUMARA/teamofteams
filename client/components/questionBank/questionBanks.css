@@ -26,25 +26,73 @@ blockquote {
     color: #fff;
 }
 
-div[ta-bind="ta-bind"] h1 {
-    margin-top: 0px
-}
-
-div[ta-bind="ta-bind"] h2 {
-    margin-top: 0px
-}
-
-/*div[ta-bind="ta-bind"] p {
-  margin-top: 0px
+/*div[ta-bind="ta-bind"] h1 {
+    margin-top: 5px
 }*/
-div[ta-bind="ta-bind"] h5 {
-    margin-top: 0px
+
+/*div[ta-bind="ta-bind"] h2 {
+    margin-top: 10px
+}
+div[ta-bind="ta-bind"] h3 {
+    margin-top: 12px
+}
+div[ta-bind="ta-bind"] h4 {
+   margin-top: 22px
+}*/
+
+div#subQuestion p {
+  margin-top: 19px
+}
+div#subQuestion h1 {
+  margin-top: 7px
+}
+div#subQuestion h2 {
+  margin-top: 10px
+}
+div#subQuestion h3 {
+  margin-top: 15px
+}
+div#subQuestion h4 {
+  margin-top: 18px
+}
+div#subQuestion h5 {
+  margin-top: 20px
+}
+div#subQuestion h6 {
+  margin-top: 21px
 }
 
-div[ta-bind="ta-bind"] h6 {
-    margin-top: 0px
+div#subQuestionView p {
+  margin-top: 22px
+}
+div#subQuestionView h1 {
+  margin-top: 10px
+}
+div#subQuestionView h2 {
+  margin-top: 12px
 }
 
+div#questionView p {
+  margin-top: 16px
+}
+div#questionView h1 {
+  margin-top: 5px
+}
+div#questionView h2 {
+    margin-top: 10px
+}
+div#questionView h3 {
+    margin-top: 12px
+}
+div#questionView h4 {
+   margin-top: 16px
+}
+div#questionView h5 {
+   margin-top: 16px
+}
+div#questionView h6 {
+   margin-top: 20px
+}
 .marginTop16px {
     margin-top: 16px;
 }
@@ -88,10 +136,30 @@ div[ta-bind="ta-bind"] h6 {
     padding: 8px;
     overflow: auto;
 }
-
+.disabledRadioButton {
+  color: black !important;
+}
 .BackGroundColorSkyBlue {
     background-color: #32B4CA !important;
     fill: #fff;
+}
+
+.fill-fff {
+    fill: #fff !important;
+}
+
+.margin-top-10px {
+    margin-top: 10px !important;
+}
+
+.sidenav-bottom-btn {
+    width: 100% !important;
+    bottom: 3px !important;
+    position: absolute !important;
+}
+
+.height-120px {
+    height: 120px !important;
 }
 
 .radio-btn-option {
@@ -122,14 +190,22 @@ div[ta-bind="ta-bind"] h6 {
 .delete-icon-option {
     fill: gray;
 }
-
+.deleteIconPositionAbsolute {
+  position: absolute;
+  right: 30px;
+  top: 10px;
+}
 .quiz-select-item {
     position: absolute !important;
     right: -10px !important;
     top: 3px !important;
     fill: #888787 !important;
 }
-
+.arrowCenter {
+  position: absolute;
+  right: 10px;
+  top: 50px;
+}
 .quiz-select-item-book {
     position: absolute !important;
     right: 5px !important;
@@ -158,11 +234,20 @@ div[ta-bind="ta-bind"] h6 {
     overflow-x: hidden;
     width: 20%;
 }
-
 .quiz-col-margin-none {
     overflow-x: hidden;
     margin-left: 0 !important;
     width: 20%;
+}
+.quizes-col {
+    overflow-x: hidden;
+    width: 16%;
+}
+
+.quizes-col-margin-none {
+    overflow-x: hidden;
+    margin-left: 0 !important;
+    width: 16%;
 }
 
 .quiz-md-card-1 {
@@ -174,6 +259,7 @@ div[ta-bind="ta-bind"] h6 {
 }
 
 .quiz-md-card-item {
+    cursor: pointer;
     height: 70px;
     border-top: 1px solid #ccc;
     padding-top: 0 !important;
@@ -227,6 +313,14 @@ div[ta-bind="ta-bind"] h6 {
     font-size: 12px;
     color: #FFFFFF;
     margin-top: 30px
+}
+
+.md-content-column-height {
+    height: calc(100% - 120px);
+}
+
+.width-35 {
+    width: 35%
 }
 
 .close-img {

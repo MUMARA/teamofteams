@@ -24,7 +24,6 @@ gulp.task("minifying", function() {
             "./components/progressreport/progressreport.js",
             "./components/collaborator/collaboratorService.js",
             "./components/collaborator/collaborator.js",
-            "./components/membershipcard/membershipcard.js",
             "./components/user/user.js",
             "./components/group/groupService.js",
             "./components/group/group.js",
