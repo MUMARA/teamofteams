@@ -308,10 +308,15 @@
         //Send Notifcation to members
         function notification(obj, cb) {
             //obj = {token: "", userId: "", groupId: "", subgroupId: "", dataObj: {}}
+            // $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
             $http.defaults.headers.post["Content-Type"] = "text/plain";
             $http({
                 url: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification',
                 method: "POST",
+                // headers: {
+                //     'Content-Type': 'text/plain',
+                //     'Access-Control-Allow-Origin': "*"
+                // },
                 data: obj
             })
             .then(function(data) {
@@ -324,7 +329,14 @@
             });
             
             //$http.defaults.headers.post["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization";
-            // $http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification', obj).success(function(data, status) {
+            //  var config = {
+            //     headers : {
+            //         //'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            //         'Content-Type': 'text/plain',
+            //         'Access-Control-Allow-Origin': "*"
+            //     }
+            // }
+            // $http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification', obj, config).success(function(data, status) {
             //     cb(data, status);
             // }).error(function(data, status) {
             //     cb(data, status);
