@@ -4,7 +4,8 @@ let development = {
 
     /*product application*/
     product: {
-        BASEURL: 'https://panacloudapi.herokuapp.com/',
+        BASEURL: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev',
+        // BASEURL: 'https://panacloudapi.herokuapp.com/',
         // BASEURL: 'https://127.0.0.1:3000/',
         TITLE: 'Team of Teams',
         SUPPORT: 'zia@panacloud.com',
@@ -30,8 +31,20 @@ let development = {
     /*push notification services credential e.g. GCM, APN*/
     pushNotifications: {
         gcm: {
-            SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            // SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            SERVER_KEY: 'AIzaSyCsCOzXB8Ewo2XcM1_YTUkFTnmIPNKD95s'
         }
+    },
+
+    amazon: {
+        "accessKeyId": "AKIAIQUMDHTDUMB7LZVQ",
+        "secretAccessKey": "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",
+        'userBucketName': 'pwowuserimg',
+        'groupBucketName': 'pwowgroupimg',
+        'subgroupBucketName': 'pwowsubgroupimg',
+        'quizbankBucketName': 'pwowquizbankimg',
+        'questionbankBucketName': 'pwowquestionbankimg',
+        's3BaseUrl': 'https://s3.amazonaws.com'
     }
 
 };
@@ -40,7 +53,8 @@ let production = {
 
     /*product application*/
     product: {
-        BASEURL: 'https://teamofteams.herokuapp.com/',
+        BASEURL: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/prod',
+        // BASEURL: 'https://teamofteams.herokuapp.com/',
         TITLE: 'Team of Teams',
         SUPPORT: 'zia@panacloud.com',
         DOMAIN: 'https://app.teamofteams.io/'
@@ -67,6 +81,17 @@ let production = {
         gcm: {
             SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
         }
+    },
+
+    amazon: {
+        "accessKeyId": "AKIAIQUMDHTDUMB7LZVQ",
+        "secretAccessKey": "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",
+        'userBucketName': 'totsuserimg',
+        'groupBucketName': 'totsgroupimg',
+        'subgroupBucketName': 'totssubgroupimg',
+        'quizbankBucketName': 'totsquizbankimg',
+        'questionbankBucketName': 'totsquestionbankimg',
+        's3BaseUrl': 'https://s3.amazonaws.com'
     }
 
 };

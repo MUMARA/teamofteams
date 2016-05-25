@@ -2,6 +2,19 @@
  * Created by ZiaKhan on 05/12/14.
  */
 
+// Registering ServiceWorker...
+if ('serviceWorker' in navigator) {
+    console.log('Service Worker is supported');
+    navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(function (registration) {
+        console.log(':^)', registration);
+    }).catch(function (error) {
+        console.log(':^(', error);
+        // ref.child("user-errors").child('on-registration').push(error.toJSON(), function (err) {
+        //     console.log('on-registration: ', err);
+        // });
+    });
+} //if serviceWorker
+
 // Invoke 'strict' JavaScript mode
 'use strict';
 
@@ -18,7 +31,8 @@ var mainApplicationModule = angular.module(mainApplicationModuleName, [
     // authService.resolveUserPage();
 }]);
 mainApplicationModule.value('appConfig', {
-    'apiBaseUrl': 'https://teamofteams.herokuapp.com',
+    'apiBaseUrl': 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/prod',
+    // 'apiBaseUrl': 'https://teamofteams.herokuapp.com',
     //'apiBaseUrl': 'http://localhost:3000',
     'myFirebase': 'https://panacloud.firebaseio.com',
     'firebaseAuth': false,

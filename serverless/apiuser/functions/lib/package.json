@@ -9,12 +9,14 @@
   "author": "Muhammad Kamran <smkamranqadri@yahoo.com>",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.0.31",
     "ejs": "^2.4.1",
     "firebase": "^2.4.2",
     "firebase-token-generator": "^2.0.0",
     "mongoose": "^4.4.13",
     "node-uuid": "^1.4.7",
     "postmark": "^1.2.1",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "web-push-encryption": "^2.0.0"
   }
 }

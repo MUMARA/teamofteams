@@ -19,7 +19,7 @@
     messageService, $stateParams, utilService, $q, $mdDialog, quizService,
     $location, userService, navService, $firebaseArray, $timeout, $mdToast,
     firebaseService, $firebaseObject, $sce, authService, $mdSidenav, $state) {
-
+    //quesquestionBankID for amazon service
     /*Private Variables*/
     var _self = this;
     _self.booksNav = true;
@@ -128,8 +128,6 @@
     };
 
     function questionSetAddQuestion(questionSet) {
-      console.log(questionSet, "11111111111111")
-        // questionSet["title"] = "discussion-html";
       angular.forEach(questionSet.options, function(val) {
         delete val.$$hashKey;
       });
@@ -224,8 +222,7 @@
       _self.chapterId = null;
       _self.topicId = null;
       _self.show = true;
-      _self
-        .chapters = [];
+      _self.chapters = [];
       _self.topics = [];
       _self.questions = [];
 
@@ -288,7 +285,7 @@
         console.log(x);
         var temp = $rootScope.newImg.split(',')[0];
         var mimeType = temp.split(':')[1].split(';')[0];
-          console.dir(x)
+        console.dir(x)
         _self.saveFile(x, mimeType, questionBankUniqueID)
           .then(function(url) {
             _self.imgLogoUrl = url + '?random=' + new Date();
@@ -344,8 +341,8 @@
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-              var response = JSON.parse(xhr.responseText);
-            console.dir(response)  
+            var response = JSON.parse(xhr.responseText);
+            console.dir(response)
             defer.resolve(upload_file(file, response.signed_request,
               response.url));
           } else {

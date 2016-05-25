@@ -16,7 +16,7 @@ if ('serviceWorker' in navigator) {
 */
 
 // Invoke 'strict' JavaScript mode
-'use strict';
+"use strict";
 // Set the main application name
 //var mainApplicationModuleName = 'Panacloud.WOW';// Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
 var mainApplicationModuleName = 'myApp'; // Theory behind this software: http://hq.teamfit.co/its-a-team-of-teams-world-now/
@@ -30,7 +30,8 @@ var mainApplicationModule = angular.module(mainApplicationModuleName, [
     // authService.resolveUserPage();
 }]);
 mainApplicationModule.value('appConfig', {
-    'apiBaseUrl': 'https://panacloudapi.herokuapp.com',
+    'apiBaseUrl': 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev',
+    // 'apiBaseUrl': 'https://panacloudapi.herokuapp.com',
     // 'apiBaseUrl': 'http://localhost:3000',
     'myFirebase': 'https://luminous-torch-4640.firebaseio.com',
     'firebaseAuth': false,

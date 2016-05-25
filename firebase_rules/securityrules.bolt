@@ -1657,6 +1657,35 @@ path /activities-seen-by-user/{userid} is ActivityType {
 type ActivityType {
   timestamp: CurrentTimeStamp
 }
+// User Push Notification
+
+path /user-push-notifications {
+  read() { isAuthenticated()}
+  write() { isAuthenticated()}
+
+  /{userid}/{opratingSystem}/{browser}{
+
+    /{pushNotificationsId} is PushNotification {
+        /*write() {
+          isAuthenticatedUser(userid)
+        }
+        read() { isAuthenticated()}*/
+          /keys is Key {
+
+          }
+
+    }
+}
+  }
+
+type PushNotification {
+  endpoint: String
+}
+
+type Key {
+  auth: String,
+  p256dh: String
+}
 
 
 //----------------------------------
@@ -1908,13 +1937,15 @@ path /quizes/{quizId} is Quiz {
            }
         }
       }
-   }
+    }
 }
 
 
 type Quiz {
   title: String,
   desc: String,
+  duration: Number,
+  "num-questions": Number,
   imgLogoUrl: String | Null
 }
 type QuizQuestionBank {
@@ -1938,18 +1969,44 @@ path /quiz-in-progress/{groupId}/{subgroupId}/{quizId} is Boolean {
 //--------------------------
 //  Quiz Schedules
 //--------------------------
-path /quiz-schedule/{groupid}/{subgroupid}/{quizId} is Schedules {
-  read() { subGroupMembersMemberShipAnyType($groupid,$subgroupid) }
-  create() { isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
-  update() { isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
+// All Quiz Schedules
+
+path /all-quiz-schedules/{quizId} {
+    read() { isQuizOwner(quizId) }
+   /schedules/{scheduleId} is QuizSchedule[] {
+        create() { isQuizOwner(quizId) }
+  }
+}
+
+
+// Quiz Schedules for Subgroup
+path /quiz-schedule/{groupid}/{subgroupid}/{quizId} is Quiz {
+    create() { isQuizOwner(quizId) }
+    update() { isQuizOwner(quizId) }
+    /schedules {
+      read() { isQuizOwner(quizId) }
+      /{scheduleId} is Schedules {
+      read() { subGroupMembersMemberShipAnyType($groupid,$subgroupid) }
+      create() { isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
+      update() { isCurrentSubUserGroupMembersOwner($groupid,$subgroupid) || isCurrentSubUserGroupMembersAdmin($groupid,$subgroupid) }
+    }
+  }
+
 }
 
 
 type Schedules {
-  title: String,
-  duration: Number,
   "start-time": Number,
-  "num-questions": Number
+  "end-time": Number,
+  "title": String
+}
+type QuizSchedule {
+  "start-time": Number,
+  "title": String,
+  "end-time": Number,
+  "group": String,
+  "subgroup": String,
+  "schedule": String
 }
 //--------------------------
 //  Quiz Proctoring Key
@@ -2001,3 +2058,4 @@ type QuizMembership {
 function isQuizOwner(quizId) {
   return prior(root["user-quiz"][auth.uid][quizId]["memberships-type"].val() == 1)
 }
+//===========================================================  23/1/16

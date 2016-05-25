@@ -1657,3 +1657,32 @@ path /activities-seen-by-user/{userid} is ActivityType {
 type ActivityType {
   timestamp: CurrentTimeStamp
 }
+// User Push Notification
+
+path /user-push-notifications {
+  read() { isAuthenticated()}
+  write() { isAuthenticated()}
+
+  /{userid}/{opratingSystem}/{browser}{
+
+    /{pushNotificationsId} is PushNotification {
+        /*write() {
+          isAuthenticatedUser(userid)
+        }
+        read() { isAuthenticated()}*/
+          /keys is Key {
+
+          }
+
+    }
+}
+  }
+
+type PushNotification {
+  endpoint: String
+}
+
+type Key {
+  auth: String,
+  p256dh: String
+}

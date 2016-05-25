@@ -8,10 +8,11 @@
     'use strict';
     angular
         .module('app.userSetting')
-        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'activityStreamService', 'firebaseService', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
-    function UserSettingController($rootScope, messageService, $stateParams, activityStreamService, firebaseService, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
+        .controller('UserSettingController', ['$rootScope', 'messageService', '$stateParams', 'groupFirebaseService', '$state', '$location', 'createSubGroupService', 'userService', 'authService', '$timeout', 'utilService', '$mdDialog', '$mdSidenav', '$mdUtil','CollaboratorService', UserSettingController])
+    function UserSettingController($rootScope, messageService, $stateParams, groupFirebaseService, $state, $location, createSubGroupService, userService, authService, $timeout, utilService, $mdDialog, $mdSidenav, $mdUtil,CollaboratorService) {
 
         var that = this;
+        var user = userService.getCurrentUser();
         this.hide = hide;
         var user = userService.getCurrentUser();
         var groupID = $stateParams.groupID;
@@ -71,7 +72,14 @@
                 groupFirebaseService.approveMembership(groupID, user, requestedMember, that.group)
                     .then(function(res) {
                         if(requestedMember.teamrequest){
-                            approveTeamMembership(requestedMember);
+                            requestedMember.teamrequest.forEach(function(val, indx){
+                                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
+                                    messageService.showSuccess("Approved Request Successfully");
+                                    // CollaboratorService.addAccessUser()
+                                }, function(err){
+                                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + reason);
+                                })
+                            })
                         } else{
                             messageService.showSuccess("Approved Request Successfully");
                         }
@@ -80,33 +88,6 @@
                     });
             // });
         }
-
-        function approveTeamMembership(requestedMember) {
-            requestedMember.teamrequest.forEach(function(val, indx){
-                groupFirebaseService.addsubgroupmember(requestedMember.userID, groupID, val.subgroupID).then(function(){
-                    userActivityStreamOnAddMember(groupID, val.subgroupID, val.subgrouptitle, requestedMember.userID);
-                    messageService.showSuccess("Approved Request Successfully");
-                    // CollaboratorService.addAccessUser()
-                }, function(err){
-                    messageService.showFailure("Request Approved for Team of Teams but error in Team: " + err);
-                })
-            })
-        }
-
-        function userActivityStreamOnAddMember(groupID, subgroupID, subgrouptitle, userID) {
-            var areaType = 'subgroup-member-assigned';
-            //publish an activity stream record -- START --
-            var type = 'subgroup';
-            var targetinfo = {id: subgroupID, url: groupID+'/'+subgroupID, title: subgrouptitle, type: 'subgroup' };
-            var area = {type: areaType };
-            var group_id = groupID+'/'+subgroupID;
-            var memberuserID = userID;
-            //for group activity record
-            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
-            //for group activity stream record -- END --
-        }
-
-
 
         //For owner/admin: Rejects membership request.
         function rejectMembership(requestedMember) {
@@ -125,23 +106,7 @@
         function changeMemberRole(newType, member) {
             groupFirebaseService.changeMemberRole(newType, member, that.group, user)
                 .then(function(res) {
-                    if (newType) {
-                        messageService.showSuccess("Changed Role Successfully");
-                    } else {
-                        firebaseService.getRefUserSubGroupMemberships().child(member.userID).child(groupID).once('value', function(snapshot) {
-                            for (var key in snapshot.val()) {
-                                createSubGroupService.DeleteUserMemberShip(member.userID, groupID, key, '');
-                                var type = 'subgroup';
-                                var targetinfo = {id: key, url: groupID+'/'+key, title: key, type: 'subgroup' };
-                                var area = {type: 'subgroup-member-removed' };
-                                var group_id = groupID+'/'+key;
-                                var memberuserID = member.userID;
-                                //for group activity record
-                                activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
-                            }
-                            messageService.showSuccess("Membership Deleted Successfully");
-                        })
-                    }
+                    messageService.showSuccess("Changed Role Successfully");
                 }, function(reason) {
                     messageService.showFailure(reason);
                 });
