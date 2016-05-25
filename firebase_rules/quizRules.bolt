@@ -282,10 +282,15 @@ path /quiz-in-progress/{groupId}/{subgroupId}/{quizId} is Boolean {
 //--------------------------
 // All Quiz Schedules
 
-path /all-quiz-schedules/{quizId} {
+path /user-quiz-schedules/{userId}/{quizId} {
     read() { isQuizOwner(quizId) }
-   /schedules/{scheduleId} is QuizSchedule[] {
-        create() { isQuizOwner(quizId) }
+    create() { isQuizOwner(quizId) }
+    update() { isQuizOwner(quizId) }
+    delete() { isQuizOwner(quizId) }
+   /schedules/{scheduleId}/{groupid}/{subgroupid} is QuizSchedule {
+     create() { isQuizOwner(quizId) }
+     update() { isQuizOwner(quizId) }
+     delete() { isQuizOwner(quizId) }
   }
 }
 
