@@ -62,7 +62,7 @@ let production = {
     
     /*firebase credentials*/
     firebase: {
-        SECRET: process.env.FIREBASE_SECRET,
+        SECRET: 'yyj8pfLYpdNfXH3onn3n8abmNZOD7bRG0t91hHvF',
         BASEURL: 'https://panacloud.firebaseio.com/'
     },
     

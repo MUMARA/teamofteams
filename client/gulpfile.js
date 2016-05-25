@@ -20,6 +20,7 @@ gulp.task("minifying", function() {
             "./components/report/report.js",
             "./components/chat/chat.js",
             "./components/manualattendace/manualattendace.js",
+            "./components/membershipcard/membershipcard.js",
             "./components/progressreport/progressreportService.js",
             "./components/progressreport/progressreport.js",
             "./components/collaborator/collaboratorService.js",
