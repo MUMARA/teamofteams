@@ -31,7 +31,8 @@
         'app.progressreport',
         'app.chat',
         'app.collaborator',
-        'app.membershipcard'
+        'app.membershipcard',
+        'app.projectManagement'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',

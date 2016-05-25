@@ -9,8 +9,10 @@
     <title>Team of Teams</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
     <link href="img/favico/favicon.ico" rel="icon" type="image/x-icon" />
+    <link rel="stylesheet" href="bower_components/angular-material-icons/angular-material-icons.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="components/questionBank/questionBanks.css">
+    <link rel="stylesheet" href="components/projectManagement/projectmanagement.css">
 </head>
 <body ng-app="myApp" ng-controller="AppController as app">
     <ui-view name="nav" ></ui-view>
@@ -79,6 +81,10 @@
     <script src="bower_components/moment/moment.js"></script>
     <!-- RxJs Library -->
     <script src="bower_components/rxjs/dist/rx.all.js"></script>
+
+    <!--for drag drop-->
+    <script src="bower_components/angular-sortable-view/src/angular-sortable-view.js"></script>
+
     <!-- Js Barcode Library -->
     <script   src="https://code.jquery.com/jquery-2.2.1.js"   integrity="sha256-eNcUzO3jsv0XlJLveFEkbB8bA7/CroNpNVk3XpmnwHc="   crossorigin="anonymous"></script>
     <script src="https://cdn.rawgit.com/lindell/JsBarcode/master/JsBarcode.all.min.js"></script>
@@ -135,7 +141,7 @@
     <script src="components/user-setting/userSettingService.js"></script>
     <script src="components/user-setting/userSetting.js"></script>
     <script src="components/questionBank/questionBanksService.js"></script>
-    <script src="components/questionBank/questionBanks.js"></script>
+    <script src="components/projectManagement/projectManagement.js"></script>
     <script src="components/quizes/quizes.js"></script>
     <script src="components/quizes/quizesService.js"></script>
     <script src="components/componentsCoreModule.js"></script>

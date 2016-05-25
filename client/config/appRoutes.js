@@ -280,6 +280,12 @@
         controller: 'QuizController',
         controllerAs: 'quiz'
       });
+      $stateProvider.state('user.projectManagement', {
+        url: '/user/:userId/projectManagement',
+        templateUrl: 'components/projectManagement/projectManagement.html',
+        controller: 'ProjectManagementController'
+        //controllerAs: 'quiz'
+      });
       $stateProvider.state('user.quizes', {
         url: '/:userID/quizes',
         templateUrl: 'components/quizes/quizes.html',

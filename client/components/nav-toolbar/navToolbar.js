@@ -56,6 +56,7 @@
             //this.logout = logout;
             this.queryGroups = queryGroups;
             this.quizStart = quizStart;
+            this.projectManagament = projectManagament;
 
             this.progressReport = function() {
                 $mdSidenav('right').toggle().then(function() {
@@ -76,6 +77,11 @@
                 // console.log('done')
                 // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
                 $state.go('user.quizes', {userID: userService.getCurrentUser().userID});
+            }
+            function projectManagament() {
+                // console.log('done')
+                // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
+                $state.go('user.projectManagement', {userId: userService.getCurrentUser().userID});
             }
               this.quizCreate = function() {
                   
