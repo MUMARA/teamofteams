@@ -52,7 +52,7 @@ var production = {
     },
     /*firebase credentials*/
     firebase: {
-        SECRET: process.env.FIREBASE_SECRET,
+        SECRET: 'yyj8pfLYpdNfXH3onn3n8abmNZOD7bRG0t91hHvF',
         BASEURL: 'https://panacloud.firebaseio.com/'
     },
     /*Email Sending Service Post Mark API*/
@@ -66,7 +66,8 @@ var production = {
     /*push notification services credential e.g. GCM, APN*/
     pushNotifications: {
         gcm: {
-            SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            // SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            SERVER_KEY: 'AIzaSyCsCOzXB8Ewo2XcM1_YTUkFTnmIPNKD95s'
         }
     },
     amazon: {
