@@ -363,7 +363,7 @@
        //obj = {token: "", userId: "", groupId: "", subgroupId: "", dataObj: {}}
        $http.defaults.headers.post["Content-Type"] = "text/plain";
        $http({
-           url: 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification',
+           url: appConfig.apiBaseUrl + '/notification',
            method: "POST",
            data: obj
          })
