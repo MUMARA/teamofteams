@@ -79,7 +79,8 @@ let production = {
     /*push notification services credential e.g. GCM, APN*/
     pushNotifications: {
         gcm: {
-            SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            // SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
+            SERVER_KEY: 'AIzaSyCsCOzXB8Ewo2XcM1_YTUkFTnmIPNKD95s'
         }
     },
 
