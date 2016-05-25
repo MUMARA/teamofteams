@@ -12,12 +12,12 @@
 
    checkinService.$inject = ['$http', 'ProgressReportService',
      'activityStreamService', '$q', '$geolocation', 'firebaseService',
-     'userService', "$firebaseObject", '$firebaseArray'
+     'userService', "$firebaseObject", '$firebaseArray', 'appConfig'
    ];
 
    function checkinService($http, ProgressReportService,
      activityStreamService, $q, $geolocation, firebaseService, userService,
-     $firebaseObject, $firebaseArray) {
+     $firebaseObject, $firebaseArray, appConfig) {
 
      /*private variables*/
      var refs, fireTimeStamp;

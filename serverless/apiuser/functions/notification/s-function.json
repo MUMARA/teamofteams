@@ -5,7 +5,7 @@
   "customName": false,
   "customRole": false,
   "handler": "notification/handler.handler",
-  "timeout": 120,
+  "timeout": 300,
   "memorySize": 1024,
   "authorizer": {},
   "custom": {
