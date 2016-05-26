@@ -13,7 +13,9 @@ angular.module('core')
 
                 login: function(userCred, successFn, failureFn) {
                     var self = this;
-                    $http.post(appConfig.apiBaseUrl + '/api/signin', userCred).
+                    $http.defaults.headers.post["Content-Type"] = "text/plain";
+                    // $http.post(appConfig.apiBaseUrl + '/api/signin', userCred).
+                    $http.post(appConfig.apiBaseUrl + '/signin', userCred).
                     success(function(data, status, headers, config) {
 
                         // this callback will be called asynchronously
@@ -49,8 +51,9 @@ angular.module('core')
                 },
                 forgotPassword: function(userCred) {
                     var defer = $q.defer();
-
-                    $http.post(appConfig.apiBaseUrl + '/api/forgotpassword', userCred)
+                    $http.defaults.headers.post["Content-Type"] = "text/plain";
+                    // $http.post(appConfig.apiBaseUrl + '/api/forgotpassword', userCred)
+                    $http.post(appConfig.apiBaseUrl + '/forgotpassword', userCred)
                         .success(function(data, status, headers, config) {
                             if (data.statusCode === 1) {
                                 defer.resolve(data.statusDesc);
@@ -67,7 +70,9 @@ angular.module('core')
                 },
                 signup: function(userInfo, successFn, failureFn) {
                     var self = this;
-                    $http.post(appConfig.apiBaseUrl + '/api/signup', {
+                    $http.defaults.headers.post["Content-Type"] = "text/plain";
+                    // $http.post(appConfig.apiBaseUrl + '/api/signup', {
+                    $http.post(appConfig.apiBaseUrl + '/signup', {
                         email: userInfo.email,
                         firstName: userInfo.firstName,
                         lastName: userInfo.lastName,

@@ -80,6 +80,18 @@ var routes = {
             httpVerb: 'get',
             url: 'api/savequizBookPicture',
             params: []
+        },
+        //======================================
+        {
+            method: 'saveQuestionBankPicture',
+            httpVerb: 'post',
+            url: 'api/saveQuestionBankPicture',
+            params: []
+        }, {
+            method: 'savequestionBankPicture',
+            httpVerb: 'get',
+            url: 'api/savequestionBankPicture',
+            params: []
         }
     ],
 
@@ -196,7 +208,6 @@ var routes = {
     'savesubgroupprofilepicture': function(req, res) {
 
         checkFileType(req, res)
-        console.log(req.query);
         if (!req.query.groupID) {
             res.send({
                 statusCode: 0,
@@ -247,6 +258,41 @@ var routes = {
             return;
         }
         profilePictureManager.getAmazonUrl(req, res, 'quizbank')
+
+    },
+
+    /*question bank api*/
+
+    'saveQuestionBankPicture': function(req, res) {
+
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+
+            if (Object.keys(files).length) {
+
+                profilePictureManager.saveQuestionBankPicture(files['source'], fields.userID, fields.questionBankID, fields.token, res, 'questionbank');
+
+            } else {
+                res.send({
+                    statusCode: 0,
+                    statusDesc: "User did not send any file to Upload."
+                });
+            }
+
+        });
+
+    },
+
+    'savequestionBankPicture': function(req, res) {
+        checkFileType(req, res)
+        if (!req.query.questionBankID) {
+            res.send({
+                statusCode: 0,
+                statusDesc: "quuestionBankID required"
+            });
+            return;
+        }
+        profilePictureManager.getAmazonUrl(req, res, 'questionbank')
 
     }
 

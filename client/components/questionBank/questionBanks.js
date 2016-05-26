@@ -19,7 +19,7 @@
     messageService, $stateParams, utilService, $q, $mdDialog, quizService,
     $location, userService, navService, $firebaseArray, $timeout, $mdToast,
     firebaseService, $firebaseObject, $sce, authService, $mdSidenav, $state) {
-
+    //quesquestionBankID for amazon service
     /*Private Variables*/
     var _self = this;
     _self.booksNav = true;
@@ -125,11 +125,9 @@
       imgLogoUrl: "",
       'timestamp': "",
       bookUniqueId: ""
-    }
+    };
 
     function questionSetAddQuestion(questionSet) {
-      console.log(questionSet,"11111111111111")
-      // questionSet["title"] = "discussion-html";
       angular.forEach(questionSet.options, function(val) {
         delete val.$$hashKey;
       });
@@ -224,8 +222,7 @@
       _self.chapterId = null;
       _self.topicId = null;
       _self.show = true;
-      _self
-        .chapters = [];
+      _self.chapters = [];
       _self.topics = [];
       _self.questions = [];
 
@@ -285,8 +282,10 @@
       var questionBankUniqueID = _self.questionbankObj.bookUniqueId;
       if ($rootScope.newImg) {
         var x = utilService.base64ToBlob($rootScope.newImg);
+        console.log(x);
         var temp = $rootScope.newImg.split(',')[0];
         var mimeType = temp.split(':')[1].split(';')[0];
+        console.dir(x)
         _self.saveFile(x, mimeType, questionBankUniqueID)
           .then(function(url) {
             _self.imgLogoUrl = url + '?random=' + new Date();
@@ -332,16 +331,18 @@
 
     };
 
-    _self.saveFile = function(file, type, quizID) {
+    _self.saveFile = function(file, type, questionBankUniqueID) {
       var defer = $q.defer();
       var xhr = new XMLHttpRequest();
       xhr.open("GET", appConfig.apiBaseUrl +
-        "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" +
+        "/api/savequestionBankPicture?questionBankID=" +
+        questionBankUniqueID + "&file_type=" +
         type);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);
+            console.dir(response)
             defer.resolve(upload_file(file, response.signed_request,
               response.url));
           } else {
@@ -370,6 +371,7 @@
       xhr.onerror = function(error) {
         defer.reject(messageService.showSuccess("Could not upload file."));
       };
+      console.log(file);
       xhr.send(file);
       return defer.promise;
     }
@@ -387,13 +389,14 @@
         desc: chapterObj.desc,
         timestamp: Firebase.ServerValue.TIMESTAMP
       };
-      quizBankService.createChapter(_self.bookId, _self.chapterObj);
-      quizBankService.loadChapters(_self.bookId).then(
-        function(chapters) {
-          _self.chapters = chapters;
+      quizBankService.createChapter(_self.bookId, _self.chapterObj).then(
+        function() {
+          quizBankService.loadChapters(_self.bookId).then(function(chapters) {
+            _self.chapters = chapters;
+          });
+          _self.chapterObj = {};
+          _self.showChapter();
         });
-      _self.chapterObj = {};
-      _self.showChapter();
     }
 
     function addChapter() {
@@ -419,13 +422,15 @@
         desc: topicObj.desc,
         'timestamp': Firebase.ServerValue.TIMESTAMP
       };
-      quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj);
-      quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
-        function(topics) {
-          _self.topics = topics;
+      quizBankService.createTopic(_self.bookId, _self.chapterId, _self.topicObj)
+        .then(function(data) {
+          quizBankService.loadTopic(_self.bookId, _self.chapterId).then(
+            function(topics) {
+              _self.topics = topics;
+              _self.topicObj = {};
+              _self.showTopic();
+            });
         });
-      _self.topicObj = {};
-      _self.showTopic();
     }
 
     function addTopic() {
@@ -478,7 +483,6 @@
 
 
     //AddQuestion Controller Work
-    var _self = this;
 
     var idCounter = 3;
     this.showRadioOptions = false;
@@ -516,7 +520,7 @@
     };
 
     //Setting different inputs.
-    this.setBoxValue = function() {
+    _self.setBoxValue = function() {
       this.showAddButton = true;
       _self.question.options = [{
         html: '',
@@ -550,7 +554,7 @@
       }
     };
     //Push new input fields.
-    this.addOption = function() {
+    _self.addOption = function() {
       _self.question.options.push({
         html: '',
         correct: false,
@@ -565,11 +569,11 @@
       });
     };
     //Delete Option
-    this.deleteOption = function(optionIndex) {
+    _self.deleteOption = function(optionIndex) {
       _self.question.options.splice(optionIndex, 1);
     };
     //Delete Question Set Option
-    this.deleteQuestionSetOption = function(optionIndex) {
+    _self.deleteQuestionSetOption = function(optionIndex) {
       if (optionIndex > -1) {
         _self.questionSet.options.splice(optionIndex, 1);
       }
@@ -588,9 +592,8 @@
 
 
     //Save and Exit Button
-    this.showAnswer = function(question) {
+    _self.createQuestion = function(question) {
       if (question.type == 3) {
-        // question['title'] = "title";
         delete question.options;
         question.questiones = _self.questionSetQuestions;
       } else {
@@ -607,14 +610,14 @@
         question.options = arr;
 
       }
-      quizBankService.createQuestion(_self.bookId, _self.chapterId,
-        _self.topicId, question);
-      _self.question = {};
-      _self.question.html = null;
-      _self.question.title = null;
-      _self.correct = null;
-      _self.closeQuestion();
-
+      quizBankService.createQuestion(_self.bookId, _self.chapterId, _self.topicId,
+        question).then(function() {
+        _self.question = {};
+        _self.question.html = null;
+        _self.question.title = null;
+        _self.correct = null;
+        _self.closeQuestion();
+      });
     };
   }
 })();

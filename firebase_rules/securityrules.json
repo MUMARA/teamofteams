@@ -1116,6 +1116,37 @@
         ".write": "auth != null && auth.uid == $userid"
       }
     },
+    "user-push-notifications": {
+      "$userid": {
+        "$opratingSystem": {
+          "$browser": {
+            "$pushNotificationsId": {
+              "keys": {
+                ".validate": "newData.hasChildren(['auth', 'p256dh'])",
+                "auth": {
+                  ".validate": "newData.isString()"
+                },
+                "p256dh": {
+                  ".validate": "newData.isString()"
+                },
+                "$other": {
+                  ".validate": "false"
+                }
+              },
+              ".validate": "newData.hasChildren(['endpoint'])",
+              "endpoint": {
+                ".validate": "newData.isString()"
+              },
+              "$other": {
+                ".validate": "false"
+              }
+            }
+          }
+        }
+      },
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
     "user-question-banks": {
       "$UserID": {
         "$questionBankUniqueID": {
@@ -1324,6 +1355,19 @@
         }
       }
     },
+    "quiz-name": {
+      "$quizId": {
+        ".validate": "newData.hasChildren(['title'])",
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".write": "data.val() == null && auth != null"
+      },
+      ".read": "auth != null"
+    },
     "quizes": {
       "$quizId": {
         "questionbanks": {
@@ -1334,14 +1378,48 @@
                   "$topicId": {
                     "questions": {
                       "$questionId": {
-                        ".validate": "newData.hasChildren(['title', 'type', 'desc'])",
+                        "questiones": {
+                          "$key3": {
+                            ".validate": "newData.hasChildren(['type', 'html', 'discussion'])",
+                            "type": {
+                              ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
+                            },
+                            "html": {
+                              ".validate": "newData.isString()"
+                            },
+                            "options": {
+                              "$key4": {
+                                ".validate": "newData.hasChildren(['html', 'correct', 'discussion'])",
+                                "html": {
+                                  ".validate": "newData.isString()"
+                                },
+                                "correct": {
+                                  ".validate": "newData.isBoolean()"
+                                },
+                                "discussion": {
+                                  ".validate": "newData.isString()"
+                                },
+                                "$other": {
+                                  ".validate": "false"
+                                }
+                              }
+                            },
+                            "discussion": {
+                              ".validate": "newData.isString()"
+                            },
+                            "$other": {
+                              ".validate": "false"
+                            }
+                          }
+                        },
+                        ".validate": "newData.hasChildren(['title', 'type', 'html', 'discussion'])",
                         "title": {
                           ".validate": "newData.isString()"
                         },
                         "type": {
                           ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
                         },
-                        "desc": {
+                        "html": {
                           ".validate": "newData.isString()"
                         },
                         "options": {
@@ -1361,19 +1439,17 @@
                             }
                           }
                         },
+                        "discussion": {
+                          ".validate": "newData.isString()"
+                        },
                         "$other": {
                           ".validate": "false"
-                        },
-                        ".write": "data.val() == null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 1 || root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).child('memberships-type').val() == 2)",
-                        ".read": "root.child('question-bank-memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+                        }
                       }
                     },
                     ".validate": "newData.hasChildren(['title'])",
                     "title": {
                       ".validate": "newData.isString()"
-                    },
-                    "imgLogoUrl": {
-                      ".validate": "newData.isString() || newData.val() == null"
                     },
                     "$other": {
                       ".validate": "false"
@@ -1383,9 +1459,6 @@
                 ".validate": "newData.hasChildren(['title'])",
                 "title": {
                   ".validate": "newData.isString()"
-                },
-                "imgLogoUrl": {
-                  ".validate": "newData.isString() || newData.val() == null"
                 },
                 "$other": {
                   ".validate": "false"
@@ -1404,12 +1477,18 @@
             }
           }
         },
-        ".validate": "newData.hasChildren(['title', 'desc'])",
+        ".validate": "newData.hasChildren(['title', 'desc', 'duration', 'num-questions'])",
         "title": {
           ".validate": "newData.isString()"
         },
         "desc": {
           ".validate": "newData.isString()"
+        },
+        "duration": {
+          ".validate": "newData.isNumber()"
+        },
+        "num-questions": {
+          ".validate": "newData.isNumber()"
         },
         "imgLogoUrl": {
           ".validate": "newData.isString() || newData.val() == null"
@@ -1431,28 +1510,89 @@
         }
       }
     },
+    "user-quiz-schedules": {
+      "$userId": {
+        "$quizId": {
+          "schedules": {
+            "$scheduleId": {
+              "$groupid": {
+                "$subgroupid": {
+                  ".validate": "newData.hasChildren(['start-time', 'title', 'end-time', 'group', 'subgroup', 'schedule'])",
+                  "start-time": {
+                    ".validate": "newData.isNumber()"
+                  },
+                  "title": {
+                    ".validate": "newData.isString()"
+                  },
+                  "end-time": {
+                    ".validate": "newData.isNumber()"
+                  },
+                  "group": {
+                    ".validate": "newData.isString()"
+                  },
+                  "subgroup": {
+                    ".validate": "newData.isString()"
+                  },
+                  "schedule": {
+                    ".validate": "newData.isString()"
+                  },
+                  "$other": {
+                    ".validate": "false"
+                  },
+                  ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
+                }
+              }
+            }
+          },
+          ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1",
+          ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
+        }
+      }
+    },
     "quiz-schedule": {
       "$groupid": {
         "$subgroupid": {
           "$quizId": {
-            ".validate": "newData.hasChildren(['title', 'duration', 'start-time', 'num-questions'])",
+            "schedules": {
+              "$scheduleId": {
+                ".validate": "newData.hasChildren(['start-time', 'end-time', 'title'])",
+                "start-time": {
+                  ".validate": "newData.isNumber()"
+                },
+                "end-time": {
+                  ".validate": "newData.isNumber()"
+                },
+                "title": {
+                  ".validate": "newData.isString()"
+                },
+                "$other": {
+                  ".validate": "false"
+                },
+                ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
+                ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
+              },
+              ".read": "root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
+            },
+            ".validate": "newData.hasChildren(['title', 'desc', 'duration', 'num-questions'])",
             "title": {
+              ".validate": "newData.isString()"
+            },
+            "desc": {
               ".validate": "newData.isString()"
             },
             "duration": {
               ".validate": "newData.isNumber()"
             },
-            "start-time": {
-              ".validate": "newData.isNumber()"
-            },
             "num-questions": {
               ".validate": "newData.isNumber()"
+            },
+            "imgLogoUrl": {
+              ".validate": "newData.isString() || newData.val() == null"
             },
             "$other": {
               ".validate": "false"
             },
-            ".write": "data.val() == null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2) || data.val() != null && newData.val() != null && (root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 1 || root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() == 2)",
-            ".read": "root.child('subgroup-members').child($groupid).child($subgroupid).child(auth.uid).child('membership-type').val() > 0"
+            ".write": "data.val() == null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1 || data.val() != null && newData.val() != null && root.child('user-quiz').child(auth.uid).child($quizId).child('memberships-type').val() == 1"
           }
         }
       }

@@ -16,7 +16,9 @@
 
             var self = this;
             self.displayNotificationBox = false;
-            var userID = userService.getCurrentUser().userID;
+            var currentUser = userService.getCurrentUser();
+            console.log('watch token: ', currentUser.token);
+            var userID = currentUser.userID;
             self.myUserId = userID;
             this.notifications = [];
            //filter Array in reverse
@@ -287,6 +289,35 @@
                         self.checkinSending = false;
                         if (checkoutFlag) {
                             //when successfully checkout then add activity Stream
+
+                            //getting subgroup icon and then send notification -- START
+                            firebaseService.getRefSubGroups().child(groupObj.groupId).child(groupObj.subgroupId).once('value', function(snapshot) {
+
+                                //Notification -- START
+                                var obj = {
+                                    token: currentUser.token,
+                                    userId: userID,
+                                    groupId: groupObj.groupId,
+                                    subgroupId: groupObj.subgroupId,
+                                    dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked out from ' +  snapshot.val()['title'],
+                                                //title: currentUser.email + ' has checked out',
+                                                title: 'Checkout',
+                                                tag: "my-taggy",
+                                                icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"
+                                        }
+                                    };
+
+                                checkinService.notification(obj, function(response){
+                                    console.log('watch --: ', response);
+                                });
+                                //Notification -- END
+
+                            });
+                            //getting subgroup icon and then send notification -- END
+
+
+
+
                             //for subgroup activity stream record -- START --
                             var type = 'subgroup';
                             var targetinfo = {id: groupObj.subgroupId, url: groupObj.groupId+'/'+groupObj.subgroupId, title: self.showUrlObj.subgroupTitle, type: 'subgroup-checkout' };
@@ -320,6 +351,32 @@
                             //when successfully checkin successfully
 
                             self.checkinSending = false;
+
+
+                             //getting subgroup icon and then send notification -- START
+                            firebaseService.getRefSubGroups().child(groupObj.groupId).child(groupObj.subgroupId).once('value', function(snapshot) {
+
+                                //Notification -- START
+                                var obj = {
+                                    token: currentUser.token,
+                                    userId: userID,
+                                    groupId: groupObj.groupId,
+                                    subgroupId: groupObj.subgroupId,
+                                    dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked in at ' +  snapshot.val()['title'],
+                                                //title: currentUser.email + ' has checked in',
+                                                title: 'Checkin',
+                                                tag: "my-taggy",
+                                                icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"
+                                        }
+                                    };
+
+                                checkinService.notification(obj, function(response){
+                                    console.log('watch --: ', response);
+                                });
+                                //Notification -- END
+
+                            });
+                            //getting subgroup icon and then send notification -- END
 
                             //add activity Stream
                             //for subgroup activity stream record -- START --
@@ -702,14 +759,12 @@
                     }
                     for (var i in group) {
                         if (['$priority', '$id'].indexOf(i) == -1 && typeof group[i] === 'object') {
-                            checkinService.getSubGroupTitleCb(group.$id, i, function(title){
-                                var temp = {};
-                                temp.pId = group.$id; // group Name == pId
-                                temp.subgroupId = i;
-                                temp.subgroupTitle = title
-                                temp.data = group[i];
-                                tmp.subGroups.push(temp);
-                            })
+                            var temp = {};
+                            temp.pId = group.$id; // group Name == pId
+                            temp.subgroupId = i;
+                            temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
+                            temp.data = group[i];
+                            tmp.subGroups.push(temp);
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);

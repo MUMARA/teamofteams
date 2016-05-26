@@ -27,8 +27,6 @@
             if (keyCode === 13) {
                 if (user.length === 1) {
                     that.CheckInuser(user[0].groupID, user[0].subgroupID, user[0].id, user[0].type);
-                } else {
-                    messageService.fastFailure('User not found!');
                 }
             }
         }

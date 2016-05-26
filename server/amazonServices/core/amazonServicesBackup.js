@@ -173,8 +173,11 @@ function setBuckPicturePath(bucketType, key, fileType) {
         case 'quizbank':
             bucketFilePath = config.quizbankProfilePicture + '/' + key + '.' + fileType;
             break;
+        case 'questionbank':
+            bucketFilePath = config.questionbankProfilePicture + '/' + key + '.' + fileType;
+            break;
     }
-    return bucketFilePath
+    return bucketFilePath;
 
 }
 
@@ -193,7 +196,10 @@ function setUrl(bucketType, filename) {
         case 'quizbank':
             bucketFilePath = config.quizbankProfilePicture + '/' + filename;
             break;
+        case 'questionbank':
+            bucketFilePath = config.questionbankProfilePicture + '/' + filename;
+            break;
     }
-    return bucketFilePath
+    return bucketFilePath;
 
 }

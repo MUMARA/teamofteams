@@ -6,99 +6,128 @@
 'use strict';
 
 angular.module('core', [
-    'ngAudio',
-    'ngAnimate',
-    'ngAria',
-    'ngMdIcons',
-    'ngMaterial',
-    'firebase',
-    'ngStorage',
-    'ngGeolocation',
-    'ngMessages',
-    'ng-mfb',
-    'ui.router',
-    'angular-img-cropper',
-    'md.data.table',
-    'ui-leaflet',
-    'angular.filter',
-    'ngFileSaver',
-    'truncate'
-  ]).filter('trustUrl', ['$sce', function($sce) {
-    return function(url) {
-      /*var temp;
-       $.get(url).success(function(data){
-       temp = 'data:image/jpeg;base64' + data;
-       });
-
-       //var temp = webkitURL.createObjectURL(url)*/
-      return url
-    };
-  }])
-  .filter('emptyString', [
-    function() {
-      return function(input, param) {
-        if (!param) return input
-
-        var ret = [];
-        if (!angular.isDefined(param)) param = true;
-
-
-        if (param) {
-          angular.forEach(input, function(v) {
-            if (angular.isDefined(v.comment) && v.comment) {
-              v.comment = v.comment.replace(/^\s*/g, '');
-              ret.push(v);
+  'ngAudio',
+  'ngAnimate',
+  'ngAria',
+  'ngMdIcons',
+  'ngMaterial',
+  'firebase',
+  'ngStorage',
+  'ngGeolocation',
+  'ngMessages',
+  'ng-mfb',
+  'ui.router',
+  'angular-img-cropper',
+  'md.data.table',
+  'ui-leaflet',
+  'angular.filter',
+  'ngFileSaver',
+  'truncate',
+  'ngSanitize',
+  "textAngular"
+]).filter('groupUsers', function() {
+      return function(users, groupID) {
+        var filteredUsers = [];
+        users.forEach(function(user) {
+          if (user.groupID == groupID) {
+            var userNew = findWithAttr(filteredUsers, 'fullName', user.fullName) ==
+                -1;
+            if (userNew) {
+              filteredUsers.push(user);
             }
-
-          });
-        }
-        return ret;
+          }
+        });
+        return filteredUsers;
       };
-    }
-  ])
-  .filter('millSecondsToTimeString', [function() {
-    return function(millseconds) {
-      var seconds = Math.floor(millseconds / 1000);
-      var days = Math.floor(seconds / 86400);
-      var hours = Math.floor((seconds % 86400) / 3600);
-      var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
-      var timeString = '';
-      if (days > 0) timeString += (days > 1) ? (days + " days ") : (days + " day ");
-      if (hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (hours + " hour ");
-      if (minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
-      return timeString;
-    }
-  }])
-  .filter('glt', [function() {
-    return function(items, field, maxvalue, minvalue) {
-      if (maxvalue && minvalue) {
-        var filteredItems = []
-        angular.forEach(items, function(item) {
-          if (item[field] >= maxvalue && item[field] <= minvalue) {
-            filteredItems.push(item);
+
+      function findWithAttr(array, attr, value) {
+        for (var i = 0; i < array.length; i += 1) {
+          if (array[i][attr] === value) {
+            return i;
           }
-        });
-        return filteredItems;
-      } else if (maxvalue) {
-        var filteredItems = []
-        angular.forEach(items, function(item) {
-          if (item[field] >= maxvalue) {
-            filteredItems.push(item);
-          }
-        });
-        return filteredItems;
-      } else {
-        return items
+        }
+        return -1;
       }
+    })
+    .filter('trustUrl', ['$sce', function($sce) {
+      return function(url) {
+        /*var temp;
+         $.get(url).success(function(data){
+         temp = 'data:image/jpeg;base64' + data;
+         });
 
-    }
-  }])
-  .filter('multilineFilter', ['$sce', function($sce) {
-    return function(text) {
-      if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g, '<br />'));
-    }
-  }]);
+         //var temp = webkitURL.createObjectURL(url)*/
+        return url
+      };
+    }])
+    .filter('emptyString', [
+      function() {
+        return function(input, param) {
+          if (!param) return input
 
+          var ret = [];
+          if (!angular.isDefined(param)) param = true;
+
+
+          if (param) {
+            angular.forEach(input, function(v) {
+              if (angular.isDefined(v.comment) && v.comment) {
+                v.comment = v.comment.replace(/^\s*/g, '');
+                ret.push(v);
+              }
+
+            });
+          }
+          return ret;
+        };
+      }
+    ])
+    .filter('millSecondsToTimeString', [function() {
+      return function(millseconds) {
+        var seconds = Math.floor(millseconds / 1000);
+        var days = Math.floor(seconds / 86400);
+        var hours = Math.floor((seconds % 86400) / 3600);
+        var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
+        var timeString = '';
+        if (days > 0) timeString += (days > 1) ? (days + " days ") : (days +
+        " day ");
+        if (hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (
+        hours + " hour ");
+        if (minutes >= 0) timeString += (minutes > 1) ? (minutes +
+        " minutes ") : (minutes + " minute ");
+        return timeString;
+      }
+    }])
+    .filter('glt', [function() {
+      return function(items, field, maxvalue, minvalue) {
+        if (maxvalue && minvalue) {
+          var filteredItems = []
+          angular.forEach(items, function(item) {
+            if (item[field] >= maxvalue && item[field] <= minvalue) {
+              filteredItems.push(item);
+            }
+          });
+          return filteredItems;
+        } else if (maxvalue) {
+          var filteredItems = []
+          angular.forEach(items, function(item) {
+            if (item[field] >= maxvalue) {
+              filteredItems.push(item);
+            }
+          });
+          return filteredItems;
+        } else {
+          return items
+        }
+
+      }
+    }])
+    .filter('multilineFilter', ['$sce', function($sce) {
+      return function(text) {
+        if (text !== undefined) return $sce.trustAsHtml(text.replace(/\n/g,
+            '<br />'));
+      }
+    }]);
 /*! Firebase.getAsArray - v0.1.0 - 2014-04-21
 * Copyright (c) 2014 Kato
 * MIT LICENSE */
@@ -779,308 +808,524 @@ angular.module('core', [
 })();
 
 /**
- * Created on 2/2/2016.
+ * on 2/02/2016.
  */
 (function() {
     'use strict';
-    angular.module('app.progressreport', ['core'])
-		.factory('ProgressReportService', ['activityStreamService', 'firebaseService', ProgressReportService]);
-    function ProgressReportService(activityStreamService, firebaseService) {
+    angular.module('app.membershipcard', ['core']).controller('MembershipcardController', ['$filter', '$timeout', 'firebaseService', 'groupService', 'dataService', 'userService', '$stateParams', MembershipcardController]);
 
-		var dailyProgressReport = [];
+    function MembershipcardController($filter, $timeout, firebaseService, groupService, dataService, userService, $stateParams) {
+        var that = this;
 
-		//getting daily progress report
-		function getReports(userArray, groupID, subgroupID) {
-			if (subgroupID) {
-				userArray.forEach(function(val, indx) {
-					if (val.groupID == groupID && val.subgroupID == subgroupID) {
-						getSubGroupReportFromFirebase(val, groupID, subgroupID, 1);
-					}
-				});
-			} else {
-				userArray.forEach(function(val, indx) {
-					if (val.groupID == groupID) {
-						getGroupReportFromFirebase(val, groupID, 1);
-					}
-				});
-			}
-		} //getReports
-		function getReportQuestion(groupID, subgroupID, questionID, ObjectIndex) {
-			firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupID).once('value', function(policyObj) {
-				if (policyObj.val() && policyObj.val().hasPolicy === true) {
-					firebaseService.getRefPolicies().child(groupID).child(policyObj.val().policyID).child('progressReportQuestions').child(questionID)
-						.once('value', function(snapshot) {
-							if (snapshot.val()) {
-								//console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
-								//adding questions into dailyProgressReport object of user report
-								dailyProgressReport.forEach(function(val, index) {
-									if (val.reportID == ObjectIndex) {
-										dailyProgressReport[index].questions = snapshot.val().questions;
-									}
-								});
-							}
-						});
-				}
-			});
-		}//getReportQuestion
-		function getSubGroupReportFromFirebase(user, groupID, subgroupID, limit) {
-			firebaseService.getRefProgressReport().child(groupID).child(subgroupID).child(user.id).orderByChild("date").limitToLast(limit)
-				.on("value", function(snapshot) {
-					var _flag = false;
-					// console.log('key', snapshot.key());
-					// console.log('val', snapshot.val());
+        this.setFocus = function() {
+            document.getElementById("#UserSearch").focus();
+        };
+        this.returnMoment = function (timestamp) {
+            if (timestamp) {
+                return moment().to(timestamp);
+            } else {
+                return ''
+            }
+        };
+        this.toggle = function (item, list) {
+            var idx = list.indexOf(item);
+            if (idx > -1) list.splice(idx, 1);
+            else list.push(item);
+        };
+        this.exists = function (item, list) {
+            return list.indexOf(item) > -1;
+        };
+        this.showCardData = function (user) {
+            that.showParams = false;
+            that.barcodeLoader[user.id] = true;
+            firebaseService.getRefUsers().child(user.id).once('value', function(snapshot1){
+                firebaseService.getRefGroupMembers().child(that.groupID).child(user.id).once('value', function(snapshot2){
+                    firebaseService.getRefGroupsNames().child(that.groupID).once('value', function(snapshot3){
+                        that.cards.push({
+                            userID: user.id,
+                            firstName: snapshot1.val().firstName,
+                            lastName: snapshot1.val().lastName,
+                            profileImage: snapshot1.val()["profile-image"],
+                            membershipNo: snapshot2.getPriority(),
+                            groupTitle: snapshot3.val().title,
+                            groupImgUrl: snapshot3.val().groupImgUrl
+                        });
+                        $timeout(function(){
+                            that.barcodeLoader[user.id] = false;
+                            JsBarcode("#barcode" + user.id,user.id,{format:"CODE128 B", height:30, width: 2});
+                        },5000)
+                    });
+                });
+            });
+        };
+        this.showCardAll = function (selectionusers, allusers) {
+            console.log('user', selectionusers)
+            console.log('user', allusers)
+            if (selectionusers.length > 0) {
+                selectionusers.forEach(function(val,inx){
+                    console.log('user', inx)
+                    that.showCardData(val);
+                });
+            } else {
+                $filter('groupUsers')(allusers, that.groupID).forEach(function(val,inx){
+                    console.log('user', val)
+                    that.showCardData(val);
+                });
+            }
 
-					if (dailyProgressReport.length > 0) {
-						dailyProgressReport.forEach(function(val, index) {
-							if (snapshot.val()) {
-								for (var key in snapshot.val()) {
-									// console.log(val.reportID, key)
-									if (val.reportID === key) {
-										//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
-										dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
-										_flag = true;
-										break;
-									}
-								}
-							}
-
-							if (_flag) {
-								return;
-							}
-
-							if (dailyProgressReport.length == index + 1) {
-								if (snapshot.val()) {
-									var obj = {};
-									for (var key in snapshot.val()) {
-										obj = snapshot.val()[key];
-										obj['reportID'] = key;
-										obj['userID'] = user.id;
-										obj['fullName'] = user.fullName || '';
-										obj['profileImage'] = user.profileImage || '';
-										obj['groupID'] = user.groupID;
-										obj['subgroupID'] = user.subgroupID;
-										dailyProgressReport.push(obj);
-										getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
-									}
-								}
-							}
-						});
-					} else {
-						if (snapshot.val()) {
-							var obj = {};
-							for (var key in snapshot.val()) {
-								// console.log('subkey', key)
-								obj = snapshot.val()[key];
-								obj['reportID'] = key;
-								obj['userID'] = user.id;
-								obj['fullName'] = user.fullName;
-								obj['profileImage'] = user.profileImage;
-								obj['groupID'] = user.groupID;
-								obj['subgroupID'] = user.subgroupID;
-								dailyProgressReport.push(obj);
-								getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
-							}
-						}
-					}
-				});
-		} //getFromFirebase
-		function getSubGroupDailyProgressReport(userArray, groupID, subgroupID) {
-			dailyProgressReport = [];
-			getReports(userArray, groupID, subgroupID);
-			return dailyProgressReport;
-		} //getDailyProgressReport
-		function updateReport(report, cb) {
-			// console.log('report', report)
-			firebaseService.getRefProgressReport().child(report.groupID).child(report.subgroupID).child(report.userID).child(report.reportID).update({ 'answers': report.answers }, function(err) {
-				if (err) {
-					// console.log('err', err)
-					cb(false);
-				} else {
-
-                    //for group activity stream record -- START --
-                    var type = 'progressReport';
-                    var targetinfo = { id: report.reportID, url: report.groupID + '/' + report.subgroupID, title: report.groupID + '/' + report.subgroupID, type: 'progressReport' };
-                    var area = { type: 'progressReport-updated' };
-                    var group_id = report.groupID + '/' + report.subgroupID;
-                    var memberuserID = report.userID;
-                    var _object = null;
-                    //for group activity record
-                    activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
-                    //for group activity stream record -- END --
-
-                    cb(true);
+        };
+        this.printCard = function() {
+            var printContents = document.getElementById('cardDetail').innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        };
+        this.downloadPDF = function() {
+            var source = angular.element(document.getElementById('cardDetail'));
+            // var source = $('#cardDetail');
+            source.css("background-color","white");
+            html2canvas(source, {
+                onrendered: function(canvas) {
+                    var image = Canvas2Image.convertToJPEG(canvas)
+                    console.log(image.src)
+                    angular.element(document.getElementById('output')).append(canvas)
+                    var pdf = new jsPDF('p', 'pt', 'letter');
+                    pdf.addImage( image.src, 'JPEG',-20,-5);
+                    pdf.save('membershipcard.pdf');
                 }
-			});
-		} //updateReport
-		function getGroupReports(userArray, groupID) {
-			userArray.forEach(function(val, indx) {
-				if (val.groupID == groupID) {
-					getGroupReportFromFirebase(val, groupID, 1);
-				}
-			});
-		}
-		function getGroupReportByDateFromFirebase(user, groupID, subgroupID, startDate, endDate) {
-
-			firebaseService.getRefProgressReport().child(groupID).child(subgroupID).child(user.id).orderByChild("date").startAt(startDate.setHours(0, 0, 0, 0)).endAt(endDate.setHours(23, 59, 59, 0))
-				.on("value", function(snapshot) {
-					if (snapshot.val()) {
-
-						var _flag = false;
-						// console.log('key', snapshot.key());
-						// console.log('val', snapshot.val());
-
-						if (dailyProgressReport.length > 0) {
-							dailyProgressReport.forEach(function(val, index) {
-								if (snapshot.val()) {
-									for (var key in snapshot.val()) {
-										// console.log(val.reportID, key)
-										if (val.reportID === key) {
-											//getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
-											dailyProgressReport[index]['answers'] = snapshot.val()[key]['answers'];
-											_flag = true;
-											break;
-										}
-									}
-								}
-
-								if (_flag) {
-									return;
-								}
-
-								if (dailyProgressReport.length == index + 1) {
-									if (snapshot.val()) {
-										var obj = {};
-										for (var key in snapshot.val()) {
-											obj = snapshot.val()[key];
-											obj['reportID'] = key;
-											obj['userID'] = user.id;
-											obj['fullName'] = user.fullName;
-											obj['profileImage'] = user.profileImage;
-											obj['groupID'] = user.groupID;
-											obj['subgroupID'] = user.subgroupID;
-											dailyProgressReport.push(obj);
-											getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
-										}
-									}
-								}
-							});
-						} else {
-							if (snapshot.val()) {
-								var obj = {};
-								for (var key in snapshot.val()) {
-									obj = snapshot.val()[key];
-									obj['reportID'] = key;
-									obj['userID'] = user.id;
-									obj['fullName'] = user.fullName;
-									obj['profileImage'] = user.profileImage;
-									obj['groupID'] = user.groupID;
-									obj['subgroupID'] = user.subgroupID;
-									dailyProgressReport.push(obj);
-									getReportQuestion(groupID, subgroupID, snapshot.val()[key]['questionID'], key);
-								}
-							}
-						}
-					}
-				});
-		}
-
-		function getGroupReportFromFirebase(user, groupID, limit) {
-            firebaseService.getRefDailyProgressReport().child(user.id).child(groupID).orderByChild("date").limitToLast(limit)
-				.on("value", function(snapshot) {
-					var _flag = false;
-
-					if (dailyProgressReport.length > 0) {
-
-						dailyProgressReport.forEach(function(val, index) {
-							if (snapshot.val()) {
-								for (var k in snapshot.val()) {
-									for (var key in snapshot.val()[k]) {
-										// console.log('Obj', snapshot.val()[k][key], key);
-										if (val.reportID == key) {
-											dailyProgressReport[index]['answers'] = snapshot.val()[k][key]['answers'];
-											_flag = true;
-											break;
-										}
-									}
-
-								}
-							}
-
-							if (_flag) {
-								return
-							}
-
-							if (dailyProgressReport.length == index + 1) {
-								if (snapshot.val()) {
-									var obj = {};
-									for (var k in snapshot.val()) {
-										for (var key in snapshot.val()[k]) {
-											obj = snapshot.val()[k][key];
-											obj['reportID'] = key;
-											obj['userID'] = user.id;
-											obj['fullName'] = user.fullName;
-											obj['profileImage'] = user.profileImage;
-											obj['groupID'] = user.groupID;
-											obj['subgroupID'] = k;
-											dailyProgressReport.push(obj);
-											getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-										}
-									}
-								}
-							}
-						});
-					} else {
-						if (snapshot.val()) {
-							var obj = {};
-							for (var k in snapshot.val()) {
-								for (var key in snapshot.val()[k]) {
-									obj = snapshot.val()[k][key];
-									obj['reportID'] = key;
-									obj['userID'] = user.id;
-									obj['fullName'] = user.fullName;
-									obj['profileImage'] = user.profileImage;
-									obj['groupID'] = user.groupID;
-									obj['subgroupID'] = k;
-									dailyProgressReport.push(obj);
-									getReportQuestion(user.groupID, k, snapshot.val()[k][key]['questionID'], key);
-								}
-							}
-						}
-					}
-				});
-		}
-		function getGroupDailyProgressReport(userArray, groupID) {
-			dailyProgressReport = [];
-			getReports(userArray, groupID);
-			return dailyProgressReport;
-		} //getDailyProgressReport
-
-		function getSingleSubGroupReport(user, groupID, subgroupID) {
-			dailyProgressReport = [];
-			getSubGroupReportFromFirebase(user, groupID, subgroupID, 1);
-			return dailyProgressReport;
-
-		} //getSingleSubGroupReport
-
-		function getGroupReportByDates(userArray, groupID, startDate, endDate) {
-			//console.log(userArray);
-			dailyProgressReport = [];
-			userArray.forEach(function(val, indx) {
-				//	console.log(val)
-				if (val.groupID == groupID) {
-					getGroupReportByDateFromFirebase(val, groupID, val.subgroupID, startDate, endDate);
-				}
-			});
-			return dailyProgressReport;
-		}
-        return {
-			getSubGroupDailyProgressReport: getSubGroupDailyProgressReport,
-			updateReport: updateReport,
-			getGroupDailyProgressReport: getGroupDailyProgressReport,
-			getSingleSubGroupReport: getSingleSubGroupReport,
-			getGroupReportByDates: getGroupReportByDates
+            });
+        };
+        function init(){
+            groupService.setActivePanel('membershipcard');
+            that.groupID = $stateParams.groupID;
+            that.subgroupID = $stateParams.subgroupID;
+            that.showParams = true;
+            that.report = [];
+            that.users = dataService.getUserData();
+            that.cards = [];
+            that.selectedUser = [];
+            that.barcodeLoader = {};
         }
-    }; //ProgressReportService
+        init();
+
+    } //MembershipcardController
+})();
+
+/**
+ * Created on 2/2/2016.
+ */
+(function() {
+  'use strict';
+  angular.module('app.progressreport', ['core'])
+    .factory('ProgressReportService', ['$q', 'activityStreamService',
+      'firebaseService', ProgressReportService
+    ]);
+
+  function ProgressReportService($q, activityStreamService, firebaseService) {
+
+    var dailyProgressReport = [];
+
+    //crearting progress Report
+
+    function createProgressReport(obj, Policy, checkoutFlag) { //obj = {groupId: '', subgroupId: '',userId; '' }
+      var deferred = $q.defer();
+      //checking daily progress report is exists or not -- START --
+      firebaseService.getRefMain().child('subgroup-progress-reports').child(
+          obj.groupId).child(obj.subgroupId).child(obj.userId)
+        .orderByChild('date').startAt(new Date().setHours(0, 0, 0, 0)).endAt(
+          new Date().setHours(23, 59, 59, 0)).once('value', function(snapshot) {
+
+          if (snapshot.val() === null) { //if null then create daily report dummy
+            //cerating Dummy Report Object on Checkin....
+            var progressRprtObj = firebaseService.getRefMain().child(
+                'subgroup-progress-reports').child(obj.groupId)
+              .child(obj.subgroupId).child(obj.userId).push({
+                date: Firebase.ServerValue.TIMESTAMP,
+                //date: new Date().setHours(0,0,0,0),
+                questionID: Policy.latestProgressReportQuestionID,
+                policyID: Policy.policyID,
+                answers: ''
+              });
+
+            //for progress activity stream record -- START --
+            var type = 'progressReport';
+            var targetinfo = {
+              id: progressRprtObj.key(),
+              url: obj.groupId + '/' + obj.subgroupId,
+              title: obj.groupId + '/' + obj.subgroupId,
+              type: 'progressReport'
+            };
+            var area = {
+              type: 'progressReport-created'
+            };
+            var group_id = obj.groupId + '/' + obj.subgroupId;
+            var memberuserID = obj.userId;
+            var _object = null;
+            //for group activity record
+            activityStreamService.activityStream(type, targetinfo, area,
+              group_id, memberuserID, _object);
+            //for progress activity stream record -- END --
+
+            deferred.resolve({
+              'result': false,
+              'message': 'notSubmitted'
+            });
+
+          } else {
+            for (var object in snapshot.val()) {
+              //console.log(snapshot.val()[obj])
+              if (snapshot.val()[object].answers === "" && checkoutFlag ===
+                true) { //now checking if answers has given or not on checkout
+                //if not submited report then show msg
+                deferred.resolve({
+                  'result': false,
+                  'message': 'notSubmitted'
+                });
+              } else {
+                //if submited report then nuthing
+                deferred.resolve({
+                  'result': true,
+                  'message': null
+                });
+              }
+            }
+          }
+
+        });
+
+      return deferred.promise;
+    } //createProgressReport
+
+    //getting daily progress report
+    function getReports(userArray, groupID, subgroupID) {
+      if (subgroupID) {
+        userArray.forEach(function(val, indx) {
+          if (val.groupID == groupID && val.subgroupID == subgroupID) {
+            getSubGroupReportFromFirebase(val, groupID, subgroupID, 1);
+          }
+        });
+      } else {
+        userArray.forEach(function(val, indx) {
+          if (val.groupID == groupID) {
+            getGroupReportFromFirebase(val, groupID, 1);
+          }
+        });
+      }
+    } //getReports
+    function getReportQuestion(groupID, subgroupID, questionID, ObjectIndex) {
+      firebaseService.getRefSubgroupPolicies().child(groupID).child(
+        subgroupID).once('value', function(policyObj) {
+        if (policyObj.val() && policyObj.val().hasPolicy === true) {
+          firebaseService.getRefPolicies().child(groupID).child(policyObj
+              .val().policyID).child('progressReportQuestions').child(
+              questionID)
+            .once('value', function(snapshot) {
+              if (snapshot.val()) {
+                //console.log('questions', snapshot.val().questions, snapshot.key(), snapshot.val().questions);
+                //adding questions into dailyProgressReport object of user report
+                dailyProgressReport.forEach(function(val, index) {
+                  if (val.reportID == ObjectIndex) {
+                    dailyProgressReport[index].questions = snapshot
+                      .val().questions;
+                  }
+                });
+              }
+            });
+        }
+      });
+    } //getReportQuestion
+    function getSubGroupReportFromFirebase(user, groupID, subgroupID, limit) {
+      firebaseService.getRefProgressReport().child(groupID).child(subgroupID)
+        .child(user.id).orderByChild("date").limitToLast(limit)
+        .on("value", function(snapshot) {
+          console.log('watch', snapshot.key(), snapshot.val());
+          var _flag = false;
+          // console.log('key', snapshot.key());
+          // console.log('val', snapshot.val());
+
+          if (dailyProgressReport.length > 0) {
+            dailyProgressReport.forEach(function(val, index) {
+              if (snapshot.val()) {
+                for (var key in snapshot.val()) {
+                  // console.log(val.reportID, key)
+                  if (val.reportID === key) {
+                    //getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
+                    dailyProgressReport[index]['answers'] = snapshot.val()[
+                      key]['answers'];
+                    _flag = true;
+                    break;
+                  }
+                }
+              }
+
+              if (_flag) {
+                return;
+              }
+
+              if (dailyProgressReport.length == index + 1) {
+                if (snapshot.val()) {
+                  var obj = {};
+                  for (var key in snapshot.val()) {
+                    obj = snapshot.val()[key];
+                    obj['reportID'] = key;
+                    obj['userID'] = user.id;
+                    obj['fullName'] = user.fullName || '';
+                    obj['profileImage'] = user.profileImage || '';
+                    obj['groupID'] = user.groupID;
+                    obj['subgroupID'] = user.subgroupID;
+                    dailyProgressReport.push(obj);
+                    getReportQuestion(groupID, subgroupID, snapshot.val()[
+                      key]['questionID'], key);
+                  }
+                }
+              }
+            });
+          } else {
+            if (snapshot.val()) {
+              var obj = {};
+              for (var key in snapshot.val()) {
+                // console.log('subkey', key)
+                obj = snapshot.val()[key];
+                obj['reportID'] = key;
+                obj['userID'] = user.id;
+                obj['fullName'] = user.fullName;
+                obj['profileImage'] = user.profileImage;
+                obj['groupID'] = user.groupID;
+                obj['subgroupID'] = user.subgroupID;
+                dailyProgressReport.push(obj);
+                getReportQuestion(groupID, subgroupID, snapshot.val()[key][
+                  'questionID'
+                ], key);
+              }
+            }
+          }
+        });
+    } //getFromFirebase
+    function getSubGroupDailyProgressReport(userArray, groupID, subgroupID) {
+      dailyProgressReport = [];
+      getReports(userArray, groupID, subgroupID);
+      return dailyProgressReport;
+    } //getDailyProgressReport
+    function updateReport(report, cb) {
+      console.log('watch', report.reportID)
+        //console.log('report', report)
+
+      firebaseService.getRefProgressReport().child(report.groupID).child(
+        report.subgroupID).child(report.userID).child(report.reportID).update({
+        'answers': report.answers
+      }, function(err) {
+        if (err) {
+          // console.log('err', err)
+          cb(false);
+        } else {
+
+          //for group activity stream record -- START --
+          var type = 'progressReport';
+          var targetinfo = {
+            id: report.reportID,
+            url: report.groupID + '/' + report.subgroupID,
+            title: report.groupID + '/' + report.subgroupID,
+            type: 'progressReport'
+          };
+          var area = {
+            type: 'progressReport-updated'
+          };
+          var group_id = report.groupID + '/' + report.subgroupID;
+          var memberuserID = report.userID;
+          var _object = null;
+          //for group activity record
+          activityStreamService.activityStream(type, targetinfo, area,
+            group_id, memberuserID, _object);
+          //for group activity stream record -- END --
+
+          cb(true);
+        }
+      });
+    } //updateReport
+    function getGroupReports(userArray, groupID) {
+      userArray.forEach(function(val, indx) {
+        if (val.groupID == groupID) {
+          getGroupReportFromFirebase(val, groupID, 1);
+        }
+      });
+    }
+
+    function getGroupReportByDateFromFirebase(user, groupID, subgroupID,
+      startDate, endDate) {
+
+      firebaseService.getRefProgressReport().child(groupID).child(subgroupID)
+        .child(user.id).orderByChild("date").startAt(startDate.setHours(0, 0,
+          0, 0)).endAt(endDate.setHours(23, 59, 59, 0))
+        .on("value", function(snapshot) {
+          if (snapshot.val()) {
+
+            var _flag = false;
+            // console.log('key', snapshot.key());
+            // console.log('val', snapshot.val());
+
+            if (dailyProgressReport.length > 0) {
+              dailyProgressReport.forEach(function(val, index) {
+                if (snapshot.val()) {
+                  for (var key in snapshot.val()) {
+                    // console.log(val.reportID, key)
+                    if (val.reportID === key) {
+                      //getReportQuestion(groupID, subgroupID, dailyProgressReport[index]['questionID'], null);
+                      dailyProgressReport[index]['answers'] = snapshot.val()[
+                        key]['answers'];
+                      _flag = true;
+                      break;
+                    }
+                  }
+                }
+
+                if (_flag) {
+                  return;
+                }
+
+                if (dailyProgressReport.length == index + 1) {
+                  if (snapshot.val()) {
+                    var obj = {};
+                    for (var key in snapshot.val()) {
+                      obj = snapshot.val()[key];
+                      obj['reportID'] = key;
+                      obj['userID'] = user.id;
+                      obj['fullName'] = user.fullName;
+                      obj['profileImage'] = user.profileImage;
+                      obj['groupID'] = user.groupID;
+                      obj['subgroupID'] = user.subgroupID;
+                      dailyProgressReport.push(obj);
+                      getReportQuestion(groupID, subgroupID, snapshot.val()[
+                        key]['questionID'], key);
+                    }
+                  }
+                }
+              });
+            } else {
+              if (snapshot.val()) {
+                var obj = {};
+                for (var key in snapshot.val()) {
+                  obj = snapshot.val()[key];
+                  obj['reportID'] = key;
+                  obj['userID'] = user.id;
+                  obj['fullName'] = user.fullName;
+                  obj['profileImage'] = user.profileImage;
+                  obj['groupID'] = user.groupID;
+                  obj['subgroupID'] = user.subgroupID;
+                  dailyProgressReport.push(obj);
+                  getReportQuestion(groupID, subgroupID, snapshot.val()[key]
+                    ['questionID'], key);
+                }
+              }
+            }
+          }
+        });
+    }
+
+    function getGroupReportFromFirebase(user, groupID, limit) {
+      firebaseService.getRefDailyProgressReport().child(user.id).child(
+          groupID).orderByChild("date").limitToLast(limit)
+        .on("value", function(snapshot) {
+          var _flag = false;
+
+          if (dailyProgressReport.length > 0) {
+
+            dailyProgressReport.forEach(function(val, index) {
+              if (snapshot.val()) {
+                for (var k in snapshot.val()) {
+                  for (var key in snapshot.val()[k]) {
+                    // console.log('Obj', snapshot.val()[k][key], key);
+                    if (val.reportID == key) {
+                      dailyProgressReport[index]['answers'] = snapshot.val()[
+                        k][key]['answers'];
+                      _flag = true;
+                      break;
+                    }
+                  }
+
+                }
+              }
+
+              if (_flag) {
+                return
+              }
+
+              if (dailyProgressReport.length == index + 1) {
+                if (snapshot.val()) {
+                  var obj = {};
+                  for (var k in snapshot.val()) {
+                    for (var key in snapshot.val()[k]) {
+                      obj = snapshot.val()[k][key];
+                      obj['reportID'] = key;
+                      obj['userID'] = user.id;
+                      obj['fullName'] = user.fullName;
+                      obj['profileImage'] = user.profileImage;
+                      obj['groupID'] = user.groupID;
+                      obj['subgroupID'] = k;
+                      dailyProgressReport.push(obj);
+                      getReportQuestion(user.groupID, k, snapshot.val()[
+                        k][key]['questionID'], key);
+                    }
+                  }
+                }
+              }
+            });
+          } else {
+            if (snapshot.val()) {
+              var obj = {};
+              for (var k in snapshot.val()) {
+                for (var key in snapshot.val()[k]) {
+                  obj = snapshot.val()[k][key];
+                  obj['reportID'] = key;
+                  obj['userID'] = user.id;
+                  obj['fullName'] = user.fullName;
+                  obj['profileImage'] = user.profileImage;
+                  obj['groupID'] = user.groupID;
+                  obj['subgroupID'] = k;
+                  dailyProgressReport.push(obj);
+                  getReportQuestion(user.groupID, k, snapshot.val()[k][key]
+                    ['questionID'], key);
+                }
+              }
+            }
+          }
+        });
+    }
+
+    function getGroupDailyProgressReport(userArray, groupID) {
+      dailyProgressReport = [];
+      getReports(userArray, groupID);
+      return dailyProgressReport;
+    } //getDailyProgressReport
+
+    function getSingleSubGroupReport(user, groupID, subgroupID) {
+      dailyProgressReport = [];
+      getSubGroupReportFromFirebase(user, groupID, subgroupID, 1);
+      return dailyProgressReport;
+
+    } //getSingleSubGroupReport
+
+    function getGroupReportByDates(userArray, groupID, startDate, endDate) {
+      //console.log(userArray);
+      dailyProgressReport = [];
+      userArray.forEach(function(val, indx) {
+        //	console.log(val)
+        if (val.groupID == groupID) {
+          getGroupReportByDateFromFirebase(val, groupID, val.subgroupID,
+            startDate, endDate);
+        }
+      });
+      return dailyProgressReport;
+    }
+    return {
+      getSubGroupDailyProgressReport: getSubGroupDailyProgressReport,
+      updateReport: updateReport,
+      getGroupDailyProgressReport: getGroupDailyProgressReport,
+      getSingleSubGroupReport: getSingleSubGroupReport,
+      getGroupReportByDates: getGroupReportByDates,
+      createProgressReport: createProgressReport
+    }
+  }; //ProgressReportService
 })();
 
 /**
@@ -1335,7 +1580,6 @@ angular.module('core', [
       }
       firepadRef.update(updateDocument, function(error) {
         if (error) {
-          console.log("Error From AccessUsers:", error);
         }
       });
     }
@@ -1386,7 +1630,6 @@ angular.module('core', [
       }
       firebaseLocalRef.update(updateDocument, function(error) {
         if (error) {
-          console.log("error due to :", error);
           deferred.reject(error);
         }
         else {
@@ -1408,7 +1651,6 @@ angular.module('core', [
     .filter('collaboratorUsers', function() {
       return function(users, groupID) {
         var filteredUsers = [];
-        // console.log(JSON.stringify(users));
         users.forEach(function(user) {
           if (user.groupID == groupID) {
             var userNew = findWithAttr(filteredUsers, 'fullName', user.fullName) == -1;
@@ -1466,19 +1708,18 @@ angular.module('core', [
     that.document = "Create/Open Document";
     that.showLoader = false;
     that.admins = [];
+    that.permissionObj = {};
     that.permissionMembers = {};
+    that.allUsers;
 
     init();
     $firebaseArray(firebaseService.getRefGroupMembers().child(that.groupID)).$loaded().then(function(data) {
       data.forEach(function(member) {
         if (member["membership-type"] == 1 || member["membership-type"] == 2) {
-          console.log("admins",member);
           that.admins.push(member);
           that.permissionMembers[member.$id] = true;
         }
       });
-      console.log("that.admins", that.admins);
-      console.log("that.permissionMembers", that.permissionMembers);
     });
 
     if (!that.subgroupID) {
@@ -1501,7 +1742,6 @@ angular.module('core', [
 
     } else {
       firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgroups) {
-        // console.log("abc:", subgroups.val());
         if (subgroups.val()['membership-type'] == 1) {
           that.isOwner = true;
           that.isAdmin = true;
@@ -1532,25 +1772,26 @@ angular.module('core', [
           subgroupID: that.subgroupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
+        // that.allUsers = $firebaseObject(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers")).$value;
+        console.log(globalRef.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + "/allUsers").toString());
       } else {
         $state.go("user.group.collaborator", {
           groupID: that.groupID,
           docID: openDoc.$id
         });
-        that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
+        // that.allUsers = $firebaseObject(globalRef.child("firepad-groups-rules/" + that.groupID + "/" + $stateParams.docID + "/allUsers"));
       }
 
-      that.allUsers.$loaded(function() {
-        console.log(openDoc.$id, that.allUsers)
-      });
+      // that.allUsers.$loaded(function() {
+      // });
     };
 
 
     function initiateFirepad(refArgument, arg) {
       var codeMirror = CodeMirror(document.getElementById('firepad'), {
         lineNumbers: that.mode == "Rich Text" ? false : true,
-        mode: that.mode
+        mode: that.mode,
+        lineWrapping: true
       });
       firepad = Firepad.fromCodeMirror(refArgument, codeMirror, {
         richTextShortcuts: that.isNormal,
@@ -1561,7 +1802,6 @@ angular.module('core', [
       });
       firepad.on("ready", function() {
         that.ready = false;
-        console.log("Usera", that.user);
         firepad.setUserId(that.user.userID);
         firepad.setUserColor("#ccccc");
         that.showLoader = false;
@@ -1585,7 +1825,6 @@ angular.module('core', [
     };
 
     that.checkboxClicked = function(userStatus, user) {
-      console.log("called");
       if (userStatus) {
         user.id == that.createdBy.userID ? userStatus = 1 : userStatus = 2;
       } else {
@@ -1596,37 +1835,21 @@ angular.module('core', [
           userStatus = 1
         }
       });
-      console.log(user);
       firepadRef = new Firebase(ref);
       var updateDocument = {};
       if (that.subgroupID) {
         updateDocument["firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
-        // globalRef.child('firepad-subgroups-access/finalyear/morning/-KCJfxThRM2tRXE9q_Vh').on('child_added', function (snapshot) {
-        //    console.log("child_added val ", snapshot.val());
-        //    console.log("child_added key ", snapshot.key());
-        //  });
-        //that.allUsers = $firebaseObject(firepadRef.child("firepad-subgroups-rules/"+that.groupID+"/"+that.subgroupID+'/'+$stateParams.docID+"/allUsers")).$value;
         firepadRef.update(updateDocument, function(err) {
           if (err) {
-            console.log(err);
           }
         })
       } else {
         updateDocument["firepad-groups-access/" + that.groupID + '/' + $stateParams.docID + '/' + user.id] = userStatus;
-        // globalRef.child('firepad-groups-access/finalyear/-KCJZdghiEKGV7C9NRfj').on('child_added', function (snapshot) {
-        //    console.log("child_added val ", snapshot.val());
-        //    console.log("child_added key ", snapshot.key());
-        //  });
-        //that.allUsers = $firebaseObject(firepadRef.child("firepad-groups-rules/"+that.groupID+"/"+$stateParams.docID+"/allUsers"));
         firepadRef.update(updateDocument, function(err) {
           if (err) {
-            console.log(err);
           }
         })
       }
-      console.log(that.allUsers);
-      // that.backdrop = userStatus;
-      // console.log(that.permission[user]);
     };
     that.createDocument = function() {
       var firebaseLocalRef;
@@ -1679,7 +1902,6 @@ angular.module('core', [
           type: 'html;charset=utf-8'
         });
         FileSaver.saveAs(data, 'data.html');
-        console.log(firepad.getHtml())
       }
 
     };
@@ -1698,13 +1920,11 @@ angular.module('core', [
         fireRef.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
-          console.log("backdrop", that.backdrop);
         });
       } else {
         fireRef.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
           that.backdrop = snapshot.exists();
           that.permissionObj[that.user.userID] = snapshot.exists();
-          console.log("backdrop", that.backdrop);
         });
       }
 
@@ -1720,46 +1940,32 @@ angular.module('core', [
       that.groupID = $stateParams.groupID;
       that.user = userService.getCurrentUser();
       that.users = dataService.getUserData();
-      console.log("All Users:", that.users);
       that.activeTitle = "Collaborator";
       var accessRef = new Firebase(ref);
       // that.groupMembers = CollaboratorService.getGroupMembers(that.groupID);
-      // console.log(that.groupMembers);
       if ($stateParams.docID) {
         if (that.subgroupID) {
           that.documents = $firebaseArray(globalRef.child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID));
           globalRef = new Firebase(ref).child("firepad-subgroups/" + that.groupID + "/" + that.subgroupID).child($stateParams.docID); //this will be the user created documents
-          console.log('subgrouppppppppppppppppppppppppppp');
           accessRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            console.log("child_added val ", snapshot.val());
-            console.log("child_added key ", snapshot.key());
             backdropPermission(accessRef);
           });
           accessRef.child('firepad-subgroups-access/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            console.log("child_added val ", snapshot.val());
-            console.log("child_added key ", snapshot.key());
             backdropPermission(accessRef);
           });
           accessRef.child('firepad-subgroups-rules/' + that.groupID + "/" + that.subgroupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
-            console.log("For all users", snapshot.val());
             that.backdrop = that.allUsers = snapshot.val();
           });
         } else {
           that.documents = $firebaseArray(globalRef.child("firepad-groups/" + that.groupID));
           globalRef = new Firebase(ref).child("firepad-groups/" + that.groupID).child($stateParams.docID);
-          console.log('grouppppppppppppppppppppppppppp');
           accessRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_added', function(snapshot) {
-            console.log("child_added val ", snapshot.val());
-            console.log("child_added key ", snapshot.key());
             backdropPermission(accessRef);
           });
           accessRef.child('firepad-groups-access/' + that.groupID + '/' + $stateParams.docID).on('child_removed', function(snapshot) {
-            console.log("child_added val ", snapshot.val());
-            console.log("child_added key ", snapshot.key());
             backdropPermission(accessRef);
           });
           accessRef.child('firepad-groups-rules/' + that.groupID + '/' + $stateParams.docID).on('child_changed', function(snapshot) {
-            console.log("For all users", snapshot.val());
             that.backdrop = that.allUsers = snapshot.val();
 
           });
@@ -1774,34 +1980,16 @@ angular.module('core', [
         });
       }
 
-      // that.allUsers = false;
       that.history = $firebaseArray(globalRef.child("history").limitToLast(300));
     }
 
-    /* function getUserPermissions(userID) {
-       //var defered = $q.defer();
-
-       // firepadRef.once("value",function(snapshot){
-       //   if(that.allUsers){
-       //     that.backdrop = true;
-       //   }
-       // });
-       //$firebaseArray(firepadRef).$loaded().then(function(arr) {
-       //    cb(arr);
-       //  })
-       return firepadRef;
-         // return $firebaseArray(firepadRef);
-     }*/
-
     function permissions() {
-      that.permissionObj = {};
+
       var firepadPermissions = new Firebase(ref);
       if (that.subgroupID) {
         firepadRef = firepadPermissions.child("firepad-subgroups-rules/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID);
-        console.log(firepadRef.toString());
       } else {
         firepadRef = firepadPermissions.child("firepad-groups-rules").child(that.groupID).child($stateParams.docID);
-        console.log(firepadRef.toString());
       }
 
       firepadRef.once('value', function(snapshot) {
@@ -1811,11 +1999,9 @@ angular.module('core', [
           if (that.subgroupID) {
             firepadPermissions.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
               that.backdrop = snapshot.exists();
-              console.log("backdrop", that.backdrop);
             });
             $firebaseArray(firepadPermissions.child("firepad-subgroups-access/" + that.groupID + "/" + that.subgroupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
               that.permission = data;
-              console.log("permissions:", that.permission);
               that.permission.forEach(function(val) {
                 that.permissionObj[val.$id] = true;
               });
@@ -1823,16 +2009,12 @@ angular.module('core', [
           } else {
             firepadPermissions.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID + '/' + that.user.userID).once("value", function(snapshot) {
               that.backdrop = snapshot.exists();
-              console.log("backdrop", that.backdrop);
             })
             $firebaseArray(firepadPermissions.child("firepad-groups-access/" + that.groupID + "/" + $stateParams.docID)).$loaded().then(function(data) {
               that.permission = data;
-              console.log("permissions:", that.permission);
-              console.log("permissions:", that.permission[0]["$id"]);
               that.permission.forEach(function(val) {
                 that.permissionObj[val.$id] = true;
               });
-              console.log(that.permissionObj);
             })
           }
 
@@ -1840,9 +2022,6 @@ angular.module('core', [
 
 
 
-          //console.log(that.permission);
-          //console.log(that.permission[0].$id);
-          //that.permission.forEach(function(user){
           //  if(user.$id == that.user.userID)
           //    that.backdrop = true;
           //})
@@ -2222,9 +2401,9 @@ angular.module('core', [
 
     angular
         .module('app.group')
-        .controller('GroupController', ['firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
+        .controller('GroupController', ['activityStreamService', 'firebaseService', 'userService', 'joinGroupService', 'groupService', '$firebaseArray', '$stateParams', '$state','$rootScope','CollaboratorService', GroupController]);
 
-    function GroupController(firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
+    function GroupController(activityStreamService, firebaseService, userService, joinGroupService, groupService, $firebaseArray, $stateParams, $state,$rootScope,CollaboratorService) {
         var that = this;
         //adminof subgroup checkin member
         this.openSetting = function () {
@@ -2275,7 +2454,8 @@ angular.module('core', [
 
         init();
 
-        function init () {
+        function init() {
+            // console.log('watch 1: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
             that.isOwner = false;
             that.isMember = false;
             that.isAdmin = false;
@@ -2297,13 +2477,13 @@ angular.module('core', [
                     if (subg.val()) {
                         firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(that.subgroupID).once('value', function(subgrp){
                             if (subgrp.val() && subgrp.val()['membership-type'] > 0) {
-                                checkGroup()
+                                checkGroup();
                             } else {
                                 that.reqObj.subgroupID = subg.key();
                                 that.reqObj.subgrouptitle = (subg.val() && subg.val().title) ? subg.val().title : false;
-                                loadGroup(function(){
+                                loadGroup(function() {
                                     that.errorMsg = "You have to be Member of Team before access";
-                                })
+                                });
                             }
                         });
                     } else {
@@ -2311,7 +2491,7 @@ angular.module('core', [
                     }
                 });
             } else {
-                checkGroup()
+                checkGroup();
             }
         }
         function loadGroup (cb) {
@@ -2329,19 +2509,19 @@ angular.module('core', [
                 }
             });
         }
-        function checkGroup () {
+        function checkGroup() {
             if (that.groupID) {
-                loadGroup(function(){
-                    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups){
+                loadGroup(function() {
+                    firebaseService.getRefUserGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(groups) {
                         if (groups.val() && groups.val()['membership-type'] == 1) {
                             that.isOwner = true;
                             that.isAdmin = true;
                             that.isMember = true;
-                            that.adminOf = "Group"
+                            that.adminOf = "Group";
                         } else if (groups.val() && groups.val()['membership-type'] == 2) {
                             that.isAdmin = true;
                             that.isMember = true;
-                            that.adminOf = "Group"
+                            that.adminOf = "Group";
                         } else if (groups.val() && groups.val()['membership-type'] == 3) {
                             that.isMember = true;
                         }
@@ -2349,14 +2529,14 @@ angular.module('core', [
                             that.errorMsg = "You have to be Member of Team before access";
                         } else {
                             if (that.isMember) {
-                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo){
+                                firebaseService.getRefGroups().child(that.groupID).child('members-checked-in').on('value', function(groupinfo) {
                                     that.group.onlinemember = (groupinfo.val() && groupinfo.val().count) ? groupinfo.val().count : 0;
-                                })
-                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo){
+                                });
+                                firebaseService.getRefGroups().child(that.groupID).child('members-count').on('value', function(groupinfo) {
                                     that.group.members = groupinfo.val() ? groupinfo.val() : 0;
-                                })
+                                });
                             }
-                            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups){
+                            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).once('value', function(subgroups) {
                                 for (var subgroup in subgroups.val()) {
                                     if (subgroups.val()[subgroup]['membership-type'] == 1) {
                                         that.isOwner = true;
@@ -2371,20 +2551,31 @@ angular.module('core', [
                                         that.isMember = true;
                                     }
                                     if (that.isMember) {
-                                        firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).on('value', function(subgroupData){
+                                        firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).on('value', function(subgroupData) {
                                             var subgroup = subgroupData.val();
                                             subgroup['$id'] = subgroupData.key();
                                             if (that.subgroups.length > 0) {
-                                                that.subgroups.forEach(function(subgrp, indx){
-                                                    if (subgrp.$id === subgroupData.key()) {
-                                                        subgrp = subgroup
+                                                for (var i = 0; i <= that.subgroups.length; i++) {
+                                                    if (that.subgroups[i].$id === subgroupData.key()) {
+                                                        that.subgroups[i] = subgroup;
+                                                        return false;
                                                     }
-                                                    if (that.subgroups.length === (indx + 1) ) {
+                                                    if (i + 1 == that.subgroups.length) {
                                                         that.subgroups.push(subgroup);
+                                                        subgroupChildRemovedEvent(subgroup.$id);
                                                     }
-                                                });
+                                                } //for loop
+                                                // that.subgroups.forEach(function(subgrp, indx) {
+                                                //         if (subgrp.$id === subgroupData.key()) {
+                                                //             subgrp = subgroup;
+                                                //         }
+                                                //         if (that.subgroups.length === (indx + 1)) {
+                                                //             that.subgroups.push(subgroup);
+                                                //         }
+                                                //     });
                                             } else {
                                                 that.subgroups.push(subgroup);
+                                                subgroupChildRemovedEvent(subgroup.$id); 
                                             }
                                         });
                                     }
@@ -2393,9 +2584,20 @@ angular.module('core', [
                             });
                         }
                     });
-                })
+                });
             }
-        }
+        } //checkGroup
+        function subgroupChildRemovedEvent(subgroup) {
+            firebaseService.getRefSubGroups().child(that.groupID).child(subgroup).off('value');
+            firebaseService.getRefUserSubGroupMemberships().child(that.user.userID).child(that.groupID).child(subgroup).on('child_removed', function(Oldsnapshot) {
+                console.log('watch 2: ', JSON.stringify( activityStreamService.getSubgroupNamesAndMemberships() ) ) ;
+                that.subgroups.forEach(function(v) {
+                    if (v.$id == subgroup) {
+                        that.subgroups.splice(v, 1);
+                    }
+                });
+            });
+        } //subgroupChildRemovedEvent
     }
 })();
 
@@ -2463,16 +2665,18 @@ angular.module('core', [
       };
     })
 
-    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$scope','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
-        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $scope, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
+    .controller('NavToolbarController', ['activityStreamService','ProgressReportService', '$mdSidenav', '$mdDialog', '$mdMedia','$interval','$q','$rootScope', 'soundService', 'messageService', '$timeout', '$firebaseArray', 'navToolbarService', 'authService', '$firebaseObject', 'firebaseService', 'userService', '$state',  '$location', 'checkinService',
+        function(activityStreamService, ProgressReportService, $mdSidenav, $mdDialog, $mdMedia, $interval, $q, $rootScope, soundService, messageService, $timeout, $firebaseArray, navToolbarService, authService, $firebaseObject, firebaseService, userService, $state, $location, checkinService) {
             /*private variables*/
             // alert('inside controller');
 
             var self = this;
-            self.show = false;
-            var userID = userService.getCurrentUser().userID;
+            self.displayNotificationBox = false;
+            var currentUser = userService.getCurrentUser(); 
+            console.log('watch token: ', currentUser.token);
+            var userID = currentUser.userID;
             self.myUserId = userID;
-            this.notifications = []
+            this.notifications = [];
            //filter Array in reverse
 
             /*VM properties*/
@@ -2509,23 +2713,18 @@ angular.module('core', [
 
             //this.logout = logout;
             this.queryGroups = queryGroups;
-            this.quizStart = quizStart
+            this.quizStart = quizStart;       
 
-            //   notification activities
-            self.showNotification = function(){
-                self.show = !self.show;
+            this.progressReport = function() {
+                $mdSidenav('right').toggle().then(function() {
+                    //self.openNav = !self.openNav;
+                });
             };
-
-            this.progressReport = function(){
-              $mdSidenav('right').toggle().then(function(){
-                //self.openNav = !self.openNav;
-              });
-            }
             //#document.onkey
             this.count = function(e){
               console.log(document);
               console.log(e);
-          };
+            };
                 // alert(this.test)
             this.setFocus = function() {
                 document.getElementById("#GroupSearch").focus();
@@ -2534,7 +2733,13 @@ angular.module('core', [
             function quizStart() {
                 // console.log('done')
                 // $location.path('/user/' + userService.getCurrentUser().userID + '/quiz')
-                $state.go('user.quiz', {userID: userService.getCurrentUser().userID});
+                $state.go('user.quizes', {userID: userService.getCurrentUser().userID});
+            }
+              this.quizCreate = function() {
+                  
+                $state.go('user.questionbank', {
+                 userId: userService.getCurrentUser().userID
+              });
             }
 
             //moment.js
@@ -2613,15 +2818,15 @@ angular.module('core', [
                     self.showUrlObj.userID = userID;
                     self.showUrlObj.groupID = snapshot.val().groupID;
                     self.showUrlObj.subgroupID = snapshot.val().subgroupID;
-                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot){
-                        self.showUrlObj.subgroupTitle = snapshot.val()
-                    })
-                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot){
-                        self.showUrlObj.groupTitle = snapshot.val()
-                    })
+                    firebaseService.getRefGroupsNames().child(self.showUrlObj.groupID).child('title').once('value', function(snapshot) {
+                        self.showUrlObj.groupTitle = snapshot.val();
+                    });
+                    firebaseService.getRefSubGroupsNames().child(self.showUrlObj.groupID).child(self.showUrlObj.subgroupID).child('title').once('value', function(snapshot) {
+                        self.showUrlObj.subgroupTitle = snapshot.val();
+                    });
                     // self.showUrlObj.recordref = snapshot.val()['record-ref'];
                 }
-            })
+            });
 
             checkinService.getRefSubgroupCheckinCurrentByUser().child(userID).on('child_changed', function(snapshot, prevChildKey) {
                 // console.log(snapshot.val());
@@ -2723,17 +2928,61 @@ angular.module('core', [
                 if(group){
                     groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userID, subgroupTitle: group.subgroupTitle};
                 } else {
-                     groupObj = {
+                    groupObj = {
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    }
+                    };
                 }
-                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject){
+                checkinService.ChekinUpdateSatatus(groupObj, userID, checkoutFlag, function(result, msg, isSubmitted, groupObject) {
                     if(result){
                         self.checkinSending = false;
-                        if(checkoutFlag){
+                        if (checkoutFlag) {
+                            //when successfully checkout then add activity Stream
+                            
+                            //getting subgroup icon and then send notification -- START
+                            firebaseService.getRefSubGroups().child(groupObj.groupId).child(groupObj.subgroupId).once('value', function(snapshot) {
+                                
+                                //Notification -- START
+                                var obj = {
+                                    token: currentUser.token, 
+                                    userId: userID, 
+                                    groupId: groupObj.groupId, 
+                                    subgroupId: groupObj.subgroupId, 
+                                    dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked out from ' +  snapshot.val()['title'], 
+                                                //title: currentUser.email + ' has checked out',
+                                                title: 'Checkout', 
+                                                tag: "my-taggy", 
+                                                icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  
+                                        }
+                                    };
+                                    
+                                checkinService.notification(obj, function(response){
+                                    console.log('watch --: ', response);
+                                });
+                                //Notification -- END
+                                
+                            });
+                            //getting subgroup icon and then send notification -- END
+                            
+                            
+                            
+                            
+                            //for subgroup activity stream record -- START --
+                            var type = 'subgroup';
+                            var targetinfo = {id: groupObj.subgroupId, url: groupObj.groupId+'/'+groupObj.subgroupId, title: self.showUrlObj.subgroupTitle, type: 'subgroup-checkout' };
+                            var area = {type: 'subgroup-checkout'};
+                            var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
+                            var memberuserID = userID;
+                            var _object = null;
+                            //for group activity record
+                            activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+                            //for subgroup activity stream record -- END --
+
+                            //showing toaster of checkout
                             messageService.showSuccess('Checkout Successfully!');
+
+                            //checking is report is submitted or not.. if not then open side navbar for getting progress report
                             if(isSubmitted){
                                 //if daily progress report is not submitted load progress Report side nav bar..
                                 var userObj = { id: userID, groupID: groupObj.groupId, subgroupID: groupObj.subgroupId };
@@ -2749,14 +2998,55 @@ angular.module('core', [
                                 // self.isDailyProgesssubgroupID = groupObject.subgroupId;
                             }
                         } else {
+                            //when successfully checkin successfully
+
                             self.checkinSending = false;
+                            
+                            
+                             //getting subgroup icon and then send notification -- START
+                            firebaseService.getRefSubGroups().child(groupObj.groupId).child(groupObj.subgroupId).once('value', function(snapshot) {
+                                
+                                //Notification -- START
+                                var obj = {
+                                    token: currentUser.token, 
+                                    userId: userID, 
+                                    groupId: groupObj.groupId, 
+                                    subgroupId: groupObj.subgroupId, 
+                                    dataObj: {  msg: currentUser.firstName + ' ' + currentUser.lastName + ' has checked in at ' +  snapshot.val()['title'], 
+                                                //title: currentUser.email + ' has checked in',
+                                                title: 'Checkin', 
+                                                tag: "my-taggy", 
+                                                icon: snapshot.val()['logo-image'].url || "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"  
+                                        }
+                                    };
+                                    
+                                checkinService.notification(obj, function(response){
+                                    console.log('watch --: ', response);
+                                });
+                                //Notification -- END
+                                
+                            });
+                            //getting subgroup icon and then send notification -- END
+
+                            //add activity Stream
+                            //for subgroup activity stream record -- START --
+                            var _type = 'subgroup';
+                            var _targetinfo = {id: group.subgroupId, url: group.pId+'/'+group.subgroupId, title: group.subgroupTitle, type: 'subgroup-checkin' };
+                            var _area = {type: 'subgroup-checkin'};
+                            var _group_id = group.pId+'/'+group.subgroupId;
+                            var _memberuserID = userID;
+                            var __object = null;
+                            //for group activity record
+                            activityStreamService.activityStream(_type, _targetinfo, _area, _group_id, _memberuserID, __object);
+                            //for subgroup activity stream record -- END --
+
                             messageService.showSuccess('Checkin Successfully!');
-                        }
+                        } // else checkoutFlag 
                     } else {
                         self.checkinSending = false;
                         messageService.showFailure(msg);
                     }
-                });
+                }); // checkinService.ChekinUpdateSatatus
             }
 
             function updateStatus1(group, checkoutFlag, event) {
@@ -2949,7 +3239,7 @@ angular.module('core', [
                         groupId: self.showUrlObj.groupID,
                         subgroupId: self.showUrlObj.subgroupID,
                         userId: self.showUrlObj.userID
-                    }
+                    };
                 }
 
                 // //checking daily progress report is exists or not -- START --
@@ -3084,7 +3374,7 @@ angular.module('core', [
             }
             function shiftToUserPage() {
                 // $location.path('/user/' + userService.getCurrentUser().userID)
-                $state.go('user.dashboard', {userID: userService.getCurrentUser().userID})
+                $state.go('user.dashboard', { userID: userService.getCurrentUser().userID });
             }
             this.checkTeamAvailable = function () {
                 if (self.groups.length === 0) {
@@ -3094,22 +3384,22 @@ angular.module('core', [
                 }
             };
             this.checkinClick = function(event) {
-                self.show = false;
+                self.displayNotificationBox = false;
                 if (self.checkinSending) {
                     self.switchCheckIn = !self.switchCheckIn;
-                    return
+                    return;
                 }
                 if (self.groups.length === 0) {
-                    return
+                    return;
                 }
                 if (!self.switchMsg) {
                     if (self.checkout) {
                         updateStatus(false, true, event);
                         //self.updateStatus(self.showUrlObj.group, true)
-                        return
+                        return;
                     }
                 }
-                self.switchMsg = !self.switchMsg
+                self.switchMsg = !self.switchMsg;
                 self.ListGroupSubGroup = [];
                 self.groups.forEach(function(group, groupId) {
                     var tmp = {
@@ -3124,11 +3414,11 @@ angular.module('core', [
                             temp.subgroupId = i;
                             temp.subgroupTitle = checkinService.getSubGroupTitle(group.$id, i);
                             temp.data = group[i];
-                            tmp.subGroups.push(temp)
+                            tmp.subGroups.push(temp);
                         }
                     }
                     self.ListGroupSubGroup.push(tmp);
-                })
+                });
             };
             function showSubGroup(group, pId) {
                 self.subgroups = [];
@@ -3138,7 +3428,7 @@ angular.module('core', [
                         temp.pId = group.$id; // group Name == pId
                         temp.subgroupId = i;
                         temp.data = group[i];
-                        self.subgroups.push(temp)
+                        self.subgroups.push(temp);
                     }
                 }
             }
@@ -3187,52 +3477,151 @@ angular.module('core', [
                 });
             };
 
+            // ## Notification -- START
+
             //getting notifications
             activityStreamService.init();
             this.notifications = activityStreamService.getActivities();
-        }
+
+            //   enable/disable notificaiton box and also on click will set seen notfication
+            self.showNotification = function() {
+                self.displayNotificationBox = !self.displayNotificationBox;
+                if (!self.displayNotificationBox) {
+
+                    //has seen activities..... update timestamp of seen
+                    activityStreamService.activityHasSeen();
+                }
+            };
+
+            // ## Notification -- END
+
+        } //NavToolbarController
     ]);
-
 })();
-
 /**
  * Created by Mehmood on 5/21/2015.
  */
-(function() {
+(function () {
     'use strict';
-    angular
-        .module('app.signin', ['core'])
-        .factory('singInService', ['$state', '$q', 'authService', "$location", "messageService", function($state, $q, authService, $location, messageService) {
+    angular.module('app.signin', ['core'])
+    .factory('singInService', ['firebaseService', '$state', '$q', 'authService', "$location", "messageService",
+    function (firebaseService, $state, $q, authService, $location, messageService) {
 
-            return {
-                'login': function(user, location) {
+        return {
+            'login': function (user, location) {
 
-                    var defer = $q.defer();
-                    authService.login(user, function(data) {
-                        messageService.showSuccess('Login successful');
-                        //firebaseService.addUpdateHandler();
-                        // $location.path(location + data.user.userID);
-                        $state.go('user.dashboard', {userID: data.user.userID})
-                        defer.resolve()
-                    }, function(data) {
-                        if (data) {
-                            if (data.statusCode == 0) {
-                                messageService.showFailure(data.statusDesc);
-                            } else {
-                                messageService.showFailure('Network Error Please Submit Again');
-                            }
+                var defer = $q.defer();
+                authService.login(user, function (data) {
+                    messageService.showSuccess('Login successful');
+                    //firebaseService.addUpdateHandler();
+                    // $location.path(location + data.user.userID);
+
+                    //region Service Worker
+                    //checking if service workder supported then add subcription in firebase
+                    console.log('running serviceWorkerrrrr......... from singin');
+                    if ('serviceWorker' in navigator) {
+
+                        // user-push-notifications => userId => windows => browser => pushID => subcription
+
+                        // SUBSCRIBING FOR PUSH NOTIFICATIONS
+                        navigator.serviceWorker.ready.then(function (reg) {
+                            reg.pushManager.subscribe({ userVisibleOnly: true }).then(function (sub) {
+
+                                var sBrowser, sPlatfrom, userID = data.user.userID, subcription = sub.toJSON(),
+                                    sUsrAg = navigator.userAgent,
+                                    sUsrPlt = navigator.platform,
+                                    userObj = { browser: "", platform: "", subcription: "" };
+
+                                console.log('Subcription: ', subcription);
+
+                                if (sUsrAg.indexOf("Chrome") > -1) {
+                                    sBrowser = "GoogleChrome";
+                                } else if (sUsrAg.indexOf("Safari") > -1) {
+                                    sBrowser = "AppleSafari";
+                                } else if (sUsrAg.indexOf("Opera") > -1) {
+                                    sBrowser = "Opera";
+                                } else if (sUsrAg.indexOf("Firefox") > -1) {
+                                    sBrowser = "MozillaFirefox";
+                                } else if (sUsrAg.indexOf("MSIE") > -1) {
+                                    sBrowser = "MicrosoftInternetExplorer";
+                                } else {
+                                    sBrowser = "OtherBrowser"
+                                }
+
+                                if (sUsrPlt.indexOf('Mac') > -1) {
+                                    sPlatfrom = "Mac";
+                                } else if (sUsrPlt.indexOf("Linux") > -1) {
+                                    sPlatfrom = "Linux";
+                                } else if (sUsrPlt.indexOf("Win") > -1) {
+                                    sPlatfrom = "Windows";
+                                } else if (sUsrPlt.indexOf("Android") > -1) {
+                                    sPlatfrom = "Android";
+                                } else if (sUsrPlt.indexOf("Linux") > -1) {
+                                    sPlatfrom = "Linux";
+                                } else if (sUsrPlt.indexOf("iPhone") > -1 || sUsrPlt.indexOf("iPad") > -1) {
+                                    sPlatfrom = "IOS";
+                                } else {
+                                    sBrowser = "OtherOS"
+                                }
+
+                                userObj = { browser: sBrowser, platform: sPlatfrom, subcription: subcription }
+
+                                console.dir(userObj, firebaseService.getRefMain());
+                                
+                                var newRef = firebaseService.getRefMain().child("user-push-notifications").child(userID).child(sPlatfrom).child(sBrowser);
+                                newRef.once('value', function(snapshot) {
+                                   if(snapshot.val()) {
+                                       for(var pushId in snapshot.val()) {
+                                         newRef.child(pushId).update(subcription, function(err) {
+                                             if (err) {
+                                                console.log('watch Error on update subcription on firebase: ', err);
+                                            } else {
+                                                console.log('watch Updated subcription on firebase');
+                                            }
+                                         });  
+                                       }
+                                   } else {
+                                       newRef.push(subcription, function (err) {
+                                            if (err) {
+                                                console.log('watch Error on add subcription on firebase: ', err);
+                                            } else {
+                                                console.log('watch Added subcription on firebase');
+                                            }
+                                       });
+                                   }
+                                });
+
+                            }).catch(function (e) {
+                                // Permission denied or an error occurred
+                                console.log('Permission denied  :^( ');
+
+                                ref.child("user-errors").child('on-permission').push(e.toJSON(), function (err) {
+                                    console.log('FB: ', err);
+                                });
+                            });
+                        });
+
+                    } //if 'serviceWorker'
+                    //endregion Service Worker
+
+                    $state.go('user.dashboard', { userID: data.user.userID })
+                    defer.resolve()
+                }, function (data) {
+                    if (data) {
+                        if (data.statusCode == 0) {
+                            messageService.showFailure(data.statusDesc);
                         } else {
                             messageService.showFailure('Network Error Please Submit Again');
                         }
-                        defer.reject(data)
-                    });
-                    return defer.promise;
-
-
-                }
+                    } else {
+                        messageService.showFailure('Network Error Please Submit Again');
+                    }
+                    defer.reject(data)
+                });
+                return defer.promise;
             }
-        }]);
-
+        }
+    }]);
 })();
 
 /**
@@ -3307,6 +3696,7 @@ angular.module('core', [
                         },
                         function() {
                             messageService.showFailure('Network Error Please Submit Again.');
+                            defer.reject();
                         });
                     return defer.promise;
 
@@ -3448,6 +3838,7 @@ angular.module('core', [
     }
 
 })();
+
 
 /**
  * Created by Shahzad on 5/23/2015.
@@ -3644,7 +4035,8 @@ angular.module('core', [
                 var defer = $q.defer();
 
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + "&file_type=" + type);
+                // xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + "&file_type=" + type);
+                xhr.open("GET", appConfig.apiBaseUrl + "/s3signurl?id=" + groupID + "&file_type=" + type + "&bucket_type=group");
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
@@ -3987,7 +4379,8 @@ angular.module('core', [
             var xhr = new XMLHttpRequest();
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + "." + type.split('/')[1]+ "&file_type=" + type);
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + "&file_type=" + type);
+            // xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + "&file_type=" + type);
+            xhr.open("GET", appConfig.apiBaseUrl + "/s3signurl?id=" + groupID + "&file_type=" + type + "&bucket_type=group");
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -4216,7 +4609,7 @@ angular.module('core', [
                             .then(function(data) {
                                 var reader = new FileReader();
                                 reader.onload = function() {
-                                    defer.resolve(reader.result)
+                                    defer.resolve(reader.result);
                                 };
                                 reader.readAsDataURL(data.data.profilePicture);
 
@@ -4247,11 +4640,16 @@ angular.module('core', [
 
                                 var subgroupNameRef = $firebaseObject(firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupInfo.$id));
                                 subgroupNameRef.title = subgroupRef.title;
+                                subgroupNameRef.subgroupImgUrl = subgroupInfo.imgLogoUrl || '';
+                                subgroupNameRef.ownerImgUrl = $rootScope.userImg || '';
                                 subgroupNameRef.$save()
                                     .then(function() {
                                         cb();
                                         //groupForm.$submitted = false;
                                         //$rootScope.newImg = null;
+
+                                        //update subgroup-policy
+                                        firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupInfo.$id).update( { 'subgroup-title': subgroupRef.title } );                                        
 
                                         //for group activity stream record -- START --
                                         var type = 'subgroup';
@@ -4263,12 +4661,12 @@ angular.module('core', [
                                         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                                         //for group activity stream record -- END --
 
-                                        messageService.showSuccess('Team Edited Successfully')
+                                        messageService.showSuccess('Team Edited Successfully');
 
                                     }, function(group) {
                                         cb();
                                         messageService.showFailure("Team not edited");
-                                    })
+                                    });
                             }, function(group) {
                                 cb();
                                 // groupForm.$submitted = false;
@@ -4529,7 +4927,7 @@ angular.module('core', [
             } else if (group.val()['membership-type'] == 2) {
                 that.groupAdmin = true;
             }
-        })
+        });
 
 
         this.ActiveSideNavBar = function(sideNav) {
@@ -4580,20 +4978,20 @@ angular.module('core', [
         };
         this.openEditGroup = function() {
             // $location.path('user/group/' + groupID + '/edit-group');
-            $state.go('user.edit-group', {groupID: groupID})
-        }
+            $state.go('user.edit-group', { groupID: groupID })
+        };
         this.openGeoFencingPage = function() {
             // $location.path('/user/group/' + groupID + '/geoFencing');
             $state.go('user.geo-fencing', {groupID: groupID})
         };
         this.subgroupPage = function() {
             // $location.path('user/group/' + this.groupid + '/subgroup');
-            $state.go('user.subgroup', {groupID: groupID})
-        }
+            $state.go('user.subgroup', { groupID: groupID })
+        };
         this.openPolicyPage = function() {
             // $location.path('/user/group/' + groupId + '/geoFencing');
-            $state.go('user.policy', {groupID: groupID})
-        }
+            $state.go('user.policy', { groupID: groupID })
+        };
 
 
         this.veiwSubgroup = function(subgroupData, index) {
@@ -4879,7 +5277,7 @@ angular.module('core', [
                     var unlistedMembersArray = response.unlistedMembersArray,
                         notificationString;
 
-                    if (unlistedMembersArray.length && unlistedMembersArray.length === membersArray.length) {
+                    if (unlistedMembersArray &&  that.membersArray && unlistedMembersArray.length === that.membersArray.length) {
                         notificationString = 'Adding Members Failed ( ' + unlistedMembersArray.join(', ') + ' ).';
                         messageService.showFailure(notificationString);
                     } else if (unlistedMembersArray.length) {
@@ -4988,28 +5386,28 @@ angular.module('core', [
 
         this.deleteAdminMember = function(admin){
            var adminMemberId = '';
-           that.submembers.forEach(function(val,indx){
-                if(val.userSyncObj.email == admin.email && val.membershipType != 1){
-                    createSubGroupService.DeleteUserMemberShip(val.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
+        //    that.submembers.forEach(function(val,indx){
+        //         if(val.userSyncObj.email == admin.userSyncObj.email && val.membershipType != 1){
+                    createSubGroupService.DeleteUserMemberShip(admin.userSyncObj.$id,groupID,that.activeID,that.submembers.length);
 
                     //publish an activity stream record -- START --
                     var type = 'subgroup';
                     var targetinfo = {id: that.activeID, url: groupID+'/'+that.activeID, title: that.activeSubgroupTitle, type: 'subgroup' };
                     var area = {type: 'subgroup-admin-removed' };
                     var group_id = groupID+'/'+that.activeID;
-                    var memberuserID = val.userSyncObj.$id;
+                    var memberuserID = admin.userSyncObj.$id;
                     //for group activity record
                     activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID);
                     //for group activity stream record -- END --
 
-                }
-           });
+                // }
+        //    });  //that.submembers.forEach
 
-           that.selectedAdminArray.forEach(function(val, indx){
-                if(val.email == admin.email && val.membershipType != 1){
-                    that.selectedAdminArray.splice(indx, 1);
-                }
-           });
+        //    that.selectedAdminArray.forEach(function(val, indx){
+        //         if(val.email == admin.email && val.membershipType != 1){
+        //             that.selectedAdminArray.splice(indx, 1);
+        //         }
+        //    });
 
        };
 
@@ -5140,7 +5538,8 @@ angular.module('core', [
             var xhr = new XMLHttpRequest();
 
             //xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?file_name="+ groupID + '_' + that.subgroupData.$id + "." + type.split('/')[1]+ "&file_type=" + type);
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.subgroupData.$id + "&file_type=" + type);
+            // xhr.open("GET", appConfig.apiBaseUrl + "/api/savegroupprofilepicture?groupID=" + groupID + '&subgroupID' + that.subgroupData.$id + "&file_type=" + type);
+            xhr.open("GET", appConfig.apiBaseUrl + "/s3signurl?id=" + groupID + '_' + that.subgroupData.$id + "&file_type=" + type + "&bucket_type=subgroup");
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -5424,6 +5823,7 @@ angular.module('core', [
 
                 /*VM properties*/
                 this.message = {};
+                this.membershipNo = [];
                 this.group = {
                     groupID: "",
                     message: "Please add me in your Team.",
@@ -5554,9 +5954,6 @@ angular.module('core', [
         ])
 
 })();
-
-<!--waste-->
-
 
 (function() {
     'use strict';
@@ -5696,7 +6093,8 @@ angular.module('core', [
                     var defer = $q.defer();
                     var xhr = new XMLHttpRequest();
                     //xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?file_name=" + userID + "." + type.split('/')[1] + "&file_type=" + type);
-                    xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?userID=" + userID + "&file_type=" + type);
+                    //xhr.open("GET", appConfig.apiBaseUrl + "/api/saveuserprofilepicture?userID=" + userID + "&file_type=" + type);
+                    xhr.open("GET", appConfig.apiBaseUrl + "/s3signurl?id=" + userID + "&file_type=" + type + "&bucket_type=user");
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === 4) {
                             if (xhr.status === 200) {
@@ -5769,7 +6167,6 @@ angular.module('core', [
 
         ]);
 })();
-<!--waste-->
 
  /**
  * Created by Mehmood on 5/21/2015.
@@ -5901,30 +6298,34 @@ angular.module('core', [
 
                 var subgroupPolicyActivity = {};
 
-                //getting subgroups which are selected....
-                selectedTeams.forEach(function(val, indx){
-                    //add property hasPolicy in subgroupNames..
-                    multiPathUpdate["subgroup-policies/"+groupID+"/"+val.subgroupID] = {"hasPolicy": true, "policyID": newPolicyKey ,"policy-title" : obj['title'] };
+                if (selectedTeams && selectedTeams.length > 0) {
+                    //getting subgroups which are selected....
+                    selectedTeams.forEach(function(val, indx) {
+                        //add property hasPolicy in subgroupNames..
+                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/hasPolicy"] = true;
+                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policyID"] = newPolicyKey;
+                        multiPathUpdate["subgroup-policies/" + groupID + "/" + val.subgroupID + "/policy-title"] = obj['title'];                    
 
-                    //add policy id into subgroup node
-                    multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
+                        //add policy id into subgroup node
+                        multiPathUpdate["subgroups/"+groupID+"/"+val.subgroupID+"/policyID"] = newPolicyKey;
 
-                    //for policy - group/subgroup activity record -- start --
-                    subgroupPolicyActivity[val.subgroupID] = {
-                        type: 'policy',
-                        targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
-                        area: {type: 'policy-assigned-team'},
-                        group_id: groupID+'/'+val.subgroupID,
-                        memberuser_id: null,
-                        object_is_Team: {   "type": 'subgroup',
-                                            "id": val.subgroupID, //an index should be set on this
-                                            "url": groupID+'/'+val.subgroupID,
-                                            "displayName": val.subgroupTitle
-                                        }
-                    };
-                    //for policy - group/subgroup activity record -- end --
+                        //for policy - group/subgroup activity record -- start --
+                        subgroupPolicyActivity[val.subgroupID] = {
+                            type: 'policy',
+                            targetinfo: {id: newPolicyKey, url: groupID+'/'+newPolicyKey, title: obj["title"], type: 'policy' },
+                            area: {type: 'policy-assigned-team'},
+                            group_id: groupID+'/'+val.subgroupID,
+                            memberuser_id: null,
+                            object_is_Team: {   "type": 'subgroup',
+                                                "id": val.subgroupID, //an index should be set on this
+                                                "url": groupID+'/'+val.subgroupID,
+                                                "displayName": val.subgroupTitle
+                                            }
+                        };
+                        //for policy - group/subgroup activity record -- end --
 
-                }); //selectedTeams.forEach
+                    }); //selectedTeams.forEach
+                }
 
                 //getting subgroup Members...
                 for(var group in selectedTeamMembers) {
@@ -6152,6 +6553,11 @@ angular.module('core', [
             this.subGroupNames = [];
             this.subGroupNames = policyService.getSubGroupNames(that.groupId);
 
+            // $timeout(function() {
+            //     console.log('watch', that.subGroupNames);
+            // }, 2000);
+            
+
             //on controller load...... END
 
 
@@ -6165,17 +6571,17 @@ angular.module('core', [
             this.openCreateSubGroupPage = function() {
                 $state.go('user.create-subgroup', {
                     groupID: groupId
-                })
-            }
+                });
+            };
             this.openUserSettingPage = function() {
                 $state.go('user.user-setting', {
                     groupID: groupId
-                })
+                });
             };
             this.openEditGroup = function() {
                 $state.go('user.edit-group', {
                     groupID: groupId
-                })
+                });
             };
 
             that.groupAdmin = false
@@ -6326,7 +6732,7 @@ angular.module('core', [
                     // that.selectedTimesForAllow[that.day[parentIndex]][(that.times[index].replace( /\D+/g, ''))] = that.schCalender[parentIndex][index]
                 }
                 // console.log(that.selectedTimesForAllow);
-            }
+            };
             //scheduler for time base -- END --
 
 
@@ -6335,7 +6741,7 @@ angular.module('core', [
             this.LoadSubGroupUsers = function(groupID, subgroupID) {
                 that.selectedTeamMembers[subgroupID] = policyService.getSubGroupMembers(groupID, subgroupID);
                 //that.selectedTeamMembers = policyService.getSubGroupMembers(that.groupId, 'hotemail');
-            }
+            };
             //Selected SubGroup Members for Assigning Policies
 
             //Selected SubGroup for Assign Policies
@@ -6349,7 +6755,7 @@ angular.module('core', [
                 });
                 if (_flag) {
 
-                    //Add SubGroups    //-K91WU-ZDR8kujgvU9gZ
+                    //Add SubGroups  
                     that.selectedTeams.push(subgroup);
 
                     if (onEditPolicy) { //on click policy (edit mode)
@@ -6361,20 +6767,38 @@ angular.module('core', [
                             }
                         });
                     } else {
-                        //after add in local selected team array chnage hasPolicy true in firebase team array
-                        that.subGroupNames.forEach(function(val, indx) {
-                            if (val.subgroupID == subgroup.subgroupID) {
-                                that.subGroupNames[indx].hasPolicy = true;
-                            } //else {
-                            //     that.subGroupNames[indx].hasPolicy = false;
-                            // }
-                        });
+                        //confrim prompt, checking policy is applied on selected subgroup or not... 
+                        if (subgroup.policyID.length > 2) {  // if subgroup.policyID 
+                            var doYouWant = confirm('Policy has already assigned on this team. Do you want to apply this policy?');
+                            if (doYouWant) {
+                                //after add in local selected team array chnage hasPolicy true in firebase team array
+                                that.subGroupNames.forEach(function(val, indx) {
+                                    if (val.subgroupID == subgroup.subgroupID) {
+                                        that.subGroupNames[indx].hasPolicy = true;
+
+                                        that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                        // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
+                                    }
+                                }); // that.subGroupNames
+                            } // doYouWant
+                        } else {
+                                //after add in local selected team array chnage hasPolicy true in firebase team array
+                                that.subGroupNames.forEach(function(val, indx) {
+                                    if (val.subgroupID == subgroup.subgroupID) {
+                                        that.subGroupNames[indx].hasPolicy = true;
+
+                                        that.selectedTeamNew.push(that.subGroupNames[indx]);
+                                        // console.log('for firebase selectedTeamNew: ', JSON.stringify(that.selectedTeamNew));
+                                    }
+                                }); // that.subGroupNames
+                        }
+
                     }
 
                     //Load SubGropMemebrs
                     that.LoadSubGroupUsers(that.groupId, subgroup.subgroupID);
                 } //_flag
-            } //selectedTeam
+            }; //selectedTeam
             //Selected SubGroup for Assign Policies
 
             //on create policy
@@ -6397,8 +6821,8 @@ angular.module('core', [
                 }
             };//this.newPolicy
 
-
             this.selectedPolicy = function(policy, index) {
+                that.selectedTeamNew = [];                      //for assign policy on subgroup, create a array when click from policy.html and then send to firebase
                 that.showarrow = index;
                 that.activePolicyId = policy.policyID;          //set active PolicyID
                 that.policyTitle = policy.title;                //show title
@@ -6607,7 +7031,8 @@ angular.module('core', [
                     // console.log('members', that.selectedTeamMembers);
 
                     //calling policy service function to add in firebase
-                    policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
+                    //policyService.answer(obj, that.groupId, that.selectedTeams, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
+                    policyService.answer(obj, that.groupId, that.selectedTeamNew, that.selectedTeamMembers, that.activePolicyId, function(lastQuestionid) {
                         //Load Group Policies from given GroupID
                         //that.groupPolicies = policyService.getGroupPolicies(that.groupId);
                         if (that.activePolicyId) {  //if edit
@@ -6938,1908 +7363,6 @@ angular.module('core', [
 
 })();
 
-(function () {
-    'use strict';
-    angular
-        .module('app.quiz', ['core'])
-        .directive('onBookRender', function ($timeout, quizService) {
-            return {
-                restrict: 'A',
-                link: function (scope, element, attr) {
-                    if (scope.$last) {
-                        $timeout(function () {
-                            $('#bookId' + quizService.getBookIndex() + '').addClass('selectedBook')
-                        }, 0);
-                    }
-                }
-            }
-        })
-        .directive('onChapterRender', function ($timeout, quizService) {
-            return {
-                restrict: 'A',
-                link: function (scope, element, attr) {
-                    $timeout(function () {
-                        if (scope.$last) {
-                            //$('#chapid' + quizService.getChapterIndex() + '').addClass('selectedChapter')
-                        }
-                    }, 0);
-
-
-                }
-            }
-        })
-        .directive('onTopicRender', function ($timeout, quizService) {
-            return {
-                restrict: 'A',
-                link: function (scope, element, attr) {
-                    if (scope.$last) {
-                        $timeout(function () {
-                            $('#topicId' + quizService.getTopicIndex() + '').addClass('selectedTopic')
-                        }, 0);
-                    }
-                }
-            }
-        })
-        .factory('quizService', ["$location", function ($location) {
-            var that = this;
-
-            that.book = null;
-            that.bookIndex = null;
-            that.chapter = null;
-            that.chapterIndex = null;
-            that.topic = null;
-            that.topicIndex = null;
-            that.question = null;
-            that.bookAfterCreation = null;
-            that.SelectedQuestion = null;
-
-            that.selectedTab = null;
-
-            return {
-                /*    Tabs    */
-                'getSelectedTab': function () {
-                    return that.selectedTab;
-                },
-                'setSelectedTab': function (tab) {
-                    that.selectedTab = tab;
-                },
-
-                'quiz': function () {
-
-                },
-                'getSelected': function () {
-                    return {
-                        book: that.book,
-                        chapter: that.chapter,
-                        topic: that.topic
-                    }
-                },
-                'getBook': function () {
-                    return that.book;
-                },
-                'getChapter': function () {
-                    return that.chapter;
-                },
-                'getTopic': function () {
-                    return that.topic;
-                },
-                'getQuestionObject': function () {
-                    return that.question;
-                },
-
-                'getBookIndex': function () {
-                    return that.bookIndex;
-                },
-                'getChapterIndex': function () {
-                    return that.chapterIndex + '';
-                },
-                'getTopicIndex': function () {
-                    return that.topicIndex;
-                },
-                'getBookAfterCreation': function () {
-                    return that.bookAfterCreation;
-                },
-
-
-                'setBook': function (bookId, bookIndex) {
-                    that.book = bookId
-                    that.bookIndex = bookIndex
-                },
-                'setChapter': function (chapterId, chapterIndex) {
-                    that.chapter = chapterId
-                    that.chapterIndex = chapterIndex
-                },
-                'setTopic': function (topicId, topicIndex) {
-                    that.topic = topicId
-                    that.topicIndex = topicIndex
-                },
-                'setQuestionObject': function (question) {
-                    that.question = question;
-                },
-
-                'getSelectedBook': function () {
-                    return that.SelectedBook;
-                },
-                'getSelectedChapter': function () {
-                    return that.SelectedChapter;
-                },
-                'getSelectedTopic': function () {
-                    return that.SelectedTopic;
-                },
-                'getSelectedQuestion': function () {
-                    return that.SelectedQuestion;
-                },
-                'setSelectedBook': function (index) {
-                    that.SelectedBook = index;
-                },
-                'setSelectedChapter': function (index) {
-                    that.SelectedChapter = index;
-                },
-                'setSelectedTopic': function (index) {
-                    that.SelectedTopic = index;
-                },
-                'setSelectedQuestion': function (index) {
-                    that.SelectedQuestion = index;
-                },
-                'setBookAfterCreation': function (book) {
-                    that.bookAfterCreation = book;
-                }
-            }
-        }])
-        .service('navService', function ($mdSidenav, $mdUtil, $log, $timeout) {
-            var $scope = this;
-            $scope.toggleRight1 = buildToggler('nav1');
-            $scope.toggleRight2 = buildToggler('nav2');
-            $scope.toggleRight3 = buildToggler('nav3');
-            $scope.toggleRight4 = buildToggler('nav4');
-            $scope.toggleRight5 = buildToggler('nav5');
-            $scope.toggleRight6 = buildToggler('nav6');
-
-            function buildToggler(navID) {
-                var debounceFn = $mdUtil.debounce(function () {
-                    $mdSidenav(navID)
-                        .toggle()
-                        .then(function () {
-                            $log.debug("toggle " + navID + " is done");
-                        });
-                }, 200);
-                return debounceFn;
-
-
-            }
-
-            $scope.close = function () {
-                $mdSidenav('nav1').close()
-                    .then(function () {
-                        $log.debug("close LEFT is done");
-                    });
-            }
-
-            $scope.close = function () {
-                $mdSidenav('nav2').close()
-                    .then(function () {
-                        $log.debug("close LEFT is done");
-                    });
-            }
-
-
-            $scope.close = function () {
-                $mdSidenav('nav3').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };
-
-
-            $scope.close = function () {
-                $mdSidenav('nav4').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };
-            $scope.close = function () {
-                $mdSidenav('nav5').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };
-            $scope.close = function () {
-                $mdSidenav('nav6').close()
-                    .then(function () {
-                        $log.debug("close RIGHT is done");
-                    });
-            };
-        })
-
-})();
-
-/**
- * Created by Adnan Irfan on 06-Jul-15.
- */
-(function () {
-    'use strict';
-
-    angular
-        .module('app.quiz')
-        .controller('QuizController', QuizController);
-
-    QuizController.$inject = ["$rootScope", "appConfig", "messageService", "$stateParams", "utilService", "$q", "$mdDialog", "quizService", "$location", "userService", "navService", "$firebaseArray", "$timeout", "$mdToast", "firebaseService", "$firebaseObject", "$sce", "authService"];
-
-    function QuizController($rootScope, appConfig, messageService, $stateParams, utilService, $q, $mdDialog, quizService, $location, userService, navService, $firebaseArray, $timeout, $mdToast, firebaseService, $firebaseObject, $sce, authService) {
-
-        /*Private Variables*/
-        var $scope = this;
-        $scope.img = '../../img/userImg1.svg';
-        $scope.show = false;
-        $scope.showView = false;
-        $scope.showQuizBank = true;
-        $scope.showQuizList = false;
-        $scope.showQuizAssign = false;
-        $scope.questionView = null;
-        //for toolbar text hide
-        $scope.chapterSearch = false;
-        $scope.topicSearch = false;
-        $scope.questionSearch = false;
-        $scope.quizSearch = false;
-        $scope.quizQuestionSearch = false;
-        $scope.chaptersSideNavSearch = false;
-        $scope.topicSideNavSearch = false;
-        $scope.questionSideNavSearch = false;
-        $scope.inputEnter = false;
-
-        $scope.selectedQuestionIndex = null;
-        $scope.selectedTopicIndex = null;
-        $scope.selectedChapterIndex = null;
-
-        $scope.addBook = addBook;
-        $scope.createBook = createBook;
-        $scope.addChapter = addChapter;
-        $scope.createChapter = createChapter;
-        $scope.closeChapter = closeChapter;
-        $scope.addTopic = addTopic;
-        $scope.createTopic = createTopic;
-        $scope.closeTopic = closeTopic;
-        $scope.closeBook = closeBook;
-        $scope.closeQuestion = closeQuestion;
-        $scope.addQuestion = addQuestion;
-        $scope.editChapter = editChapter;
-        $scope.hover = hover;
-        $scope.editHover = editHover;
-        $scope.showChapters = showChapters;
-        $scope.showTopics = showTopics;
-        $scope.showQuestions = showQuestions;
-        $scope.showQuestionView = showQuestionView;
-        $scope.showQuizChapters = showQuizChapters;
-        $scope.showQuizTopics = showQuizTopics;
-
-        $scope.setSelectedBook = setSelectedBook;
-        $scope.setSelectedChapter = setSelectedChapter;
-        $scope.setSelectedTopic = setSelectedTopic;
-        $scope.setSelectedQuestion = setSelectedQuestion;
-        $scope.setSelectedQuizes = setSelectedQuizes;
-
-        $scope.SelectedBook = null;
-        $scope.SelectedChapter = null;
-        $scope.SelectedTopic = null;
-        $scope.SelectedQuestion = null;
-        $scope.showQuizBankFunc = showQuizBankFunc;
-        $scope.showQuiz = showQuiz;
-        $scope.showAssignQuiz = showAssignQuiz;
-        $scope.showAttemptQuiz = showAttemptQuiz;
-        $scope.addQuiz = addQuiz;
-        $scope.closeQuiz = closeQuiz;
-
-        $scope.afterLoad = afterLoad;
-
-        $scope.bookId = '';
-        $scope.chapterId = '';
-        $scope.topicId = '';
-        //Firebase
-        var ref = new Firebase('https://pspractice.firebaseio.com');
-        var refMain = new Firebase('https://luminous-torch-4640.firebaseio.com');
-        $scope.books = [];
-        $scope.booksId = [];
-        $scope.quizes = [];
-        $scope.chaptersId = [];
-        $scope.chapters = [];
-        $scope.topicsId = [];
-        $scope.topics = [];
-        $scope.questions = [];
-        $scope.groups = [];
-        //QUIZ SCEDULE variables & functions
-        $scope.closeAssignQuiz = closeAssignQuiz;
-        $scope.setSelectedGroup = setSelectedGroup;
-        $scope.setSelectedSubGroup = setSelectedSubGroup;
-        $scope.quizesList = [];
-        $scope.quizesListKey = [];
-        $scope.subGroup = [];
-        $scope.myDatabase = [];
-        $scope.selectedGroup = null;
-        $scope.dataPush = dataPush;
-        $scope.setSelectedQuiz = setSelectedQuiz;
-
-
-        /*All Function*/
-
-        setTabs()
-
-        authService.resolveUserPage()
-            .then(function (response) {
-                getUserObj();
-                initializeView();
-            }, function (err) {
-                alert('Error in Line 86: ' + err)
-            });
-        setTabs();
-
-        function setTabs() {
-            if (quizService.getSelectedTab() == 'QuizBank') {
-                $timeout(function () {
-                    showQuizBankFunc();
-                }, 0)
-            } else if (quizService.getSelectedTab() == 'Quiz') {
-                $timeout(function () {
-                    showQuiz();
-                }, 0)
-            } else if (quizService.getSelectedTab() == 'QuizAssign') {
-                $timeout(function () {
-                    showAssignQuiz();
-                }, 0)
-            }
-        }
-
-        function initializeView() {
-            // console.log(quizService.getBookAfterCreation())
-            // console.log(quizService.getBookAfterCreation() !== null)
-
-            if (quizService.getBookAfterCreation() !== null) {
-                ref.child('question-bank').on('child_added', function (snapShot) {
-                    $timeout(function () {
-                        $scope.books.push(snapShot.val());
-                        $scope.booksId.push(snapShot.key());
-                        if (quizService.getBookAfterCreation() == snapShot.key()) {
-                            $scope.selectedBookIndex = $scope.booksId.indexOf(snapShot.key());
-                            $scope.bookId = snapShot.key();
-                        }
-                    }, 0)
-                });
-            } else {
-                // console.log('ELSE');
-                ref.child('question-bank').on('child_added', function (snapShot) {
-                    $timeout(function () {
-                        $scope.books.push(snapShot.val());
-                        $scope.booksId.push(snapShot.key());
-
-                    }, 0)
-                });
-
-                /*if(quizService.getSelectedBook()) {
-                 $scope.selectedBookIndex = quizService.getSelectedBook();
-                 $scope.bookId = quizService.getBook();
-                 }else{
-                 $scope.selectedBookIndex = 0;
-                 $scope.bookId = quizService.getBook();
-                 quizService.setBook($scope.bookId, $scope.selectedBookIndex);
-                 }*/
-
-                if (quizService.getBook() !== null) {
-                    $scope.bookId = quizService.getBook();
-                    $scope.selectedBookIndex = quizService.getSelectedBook();
-                    console.log(quizService.getBook());
-                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
-                        $timeout(function () {
-                            $scope.chapters.push(snapShot.val());
-                            $scope.chaptersId.push(snapShot.key());
-                        }, 0)
-                    });
-                    if (quizService.getChapter() !== null) {
-                        $scope.chapterId = quizService.getChapter();
-                        ref.child('question-bank-topic').child(quizService.getBook()).child(quizService.getChapter()).on('child_added', function (snapShot) {
-                            $timeout(function () {
-                                $scope.topics.push(snapShot.val());
-                                $scope.topicsId.push(snapShot.key());
-                            }, 0)
-                        });
-                        $scope.selectedChapterIndex = quizService.getSelectedChapter()
-                        if (quizService.getTopic() !== null) {
-                            $scope.topicId = quizService.getTopic();
-                            ref.child('questions').child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).on('child_added', function (snapShot) {
-                                $timeout(function () {
-                                    $scope.questions.push(snapShot.val())
-                                }, 0)
-                            });
-                            $scope.selectedTopicIndex = quizService.getSelectedTopic()
-                            console.log(quizService.getSelectedQuestion())
-                            console.log(quizService.getQuestionObject())
-                            if (quizService.getSelectedQuestion() !== null) {
-                                if (quizService.getQuestionObject() !== null) {
-                                    $scope.selectedQuestionIndex = quizService.getSelectedQuestion();
-                                    showQuestionView(quizService.getQuestionObject())
-                                }
-                            }
-                        }
-                    }
-                }
-                /*else {
-                 $scope.bookId = $scope.booksId[0];
-                 quizService.setBook($scope.bookId, 0);
-
-                 }*/
-            }
-        };
-
-        function afterLoad(check) {
-            if (check) {
-            }
-
-        };
-
-        function sleep(milliseconds) {
-            var start = new Date().getTime();
-            for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds) {
-                    break;
-                }
-            }
-        }
-
-        /*  Tabs  */
-        function showQuizBankFunc() {
-            $scope.showQuizBank = true;
-            $scope.showQuizList = false;
-            $scope.showQuizAssign = false;
-            if (quizService.getQuestionObject() !== null && $scope.questionView !== null) {
-                $scope.showView = true;
-            }
-            $('#chapterColumn').addClass('marginLeft')
-            $('#quizBankIcon').addClass('selectedTab')
-            $('#quizIcon').removeClass('selectedTab')
-            $('#quizAssignIcon').removeClass('selectedTab')
-            quizService.setSelectedTab('QuizBank');
-
-            //$scope.chapters = [];
-            //$scope.topics = [];
-            //$scope.questions = [];
-            //$scope.chaptersId = [];
-            //$scope.topicsId = [];
-            //$scope.questionsId = [];
-        }
-
-        function showQuiz() {
-            $scope.showQuizBank = false;
-            $scope.showQuizList = true;
-            $scope.showQuizAssign = false;
-            $scope.showView = false;
-            //$('#chapterColumn').removeClass('marginLeft')
-            $('#quizBankIcon').removeClass('selectedTab')
-            $('#quizIcon').addClass('selectedTab')
-            $('#quizAssignIcon').removeClass('selectedTab')
-            quizService.setSelectedTab('Quiz');
-
-            //$scope.chapters = [];
-            //$scope.topics = [];
-            //$scope.questions = [];
-            //$scope.chaptersId = [];
-            //$scope.topicsId = [];
-            //$scope.questionsId = [];
-        }
-
-        function showAssignQuiz() {
-
-
-            $scope.showQuizBank = false;
-            $scope.showQuizList = false;
-            $scope.showQuizAssign = true;
-
-            $scope.showView = false;
-            $('#quizBankIcon').removeClass('selectedTab')
-            $('#quizIcon').removeClass('selectedTab')
-            $('#quizAssignIcon').addClass('selectedTab')
-
-            quizService.setSelectedTab('QuizAssign');
-
-            $scope.shceduleQuizArray = [];
-            //Calling Shcedule Array List
-            ref.child('quiz-schedule').on('child_added', function (snapShot) {
-
-                var abc = {
-                    group: snapShot.key(),
-                    sub_group: []
-                };
-                $.map(snapShot.val(), function (dbTopics, sbgindex) {
-                    //for getting sub groups and topics
-                    var sb = {
-                        name: sbgindex,
-                        topics: []
-                    };
-                    //var tmp2 = {name: sbgindex, topics:
-                    $.map(dbTopics, function (quiz, quizindex) {
-
-                        //Quiezes
-                        var qiuzess = [];
-                        $.map(quiz, function (quizDb, qindex) {
-                            qiuzess.push(quizDb);
-                        }); //map quizDb
-
-                        //Topics
-                        var topicx = {
-                            name: quizindex,
-                            quizes: qiuzess
-                        };
-                        sb.topics.push(topicx);
-
-                    }) //map dbtopic
-
-                    //  };//tmp2
-
-                    //var g = tmp2;
-                    abc.sub_group.push(sb);
-
-                    // ////for getting sub groups and topics
-                    // var sb = { name: sbgindex, topics: [] };
-                    // var tmp2 = {name: sbgindex, topics: $.map(dbTopics, function(quiz, quizindex){
-                    //     var t = {name: quizindex, quizes: quiz}
-                    //     sb.topics.push(t);
-                    //     })
-                    // };
-                    // var g = tmp2;
-                    // abc.sub_group.push(sb);
-
-
-                    //for getting sub groups
-                    // var tmp2 = {name: sbgindex, topics: dbTopics};
-                    // abc["sub_group"].push(tmp2);
-                }); //
-
-
-                $scope.shceduleQuizArray.push(abc);
-
-                console.log(JSON.stringify($scope.shceduleQuizArray));
-
-                $scope.SearchBindRecord = function (a, b, c) {
-                    if (c === 'sub') {
-                        $scope.shceduleQuizSubGroups = a.sub_group;
-
-                        //getting All Questions of Specific Groups
-                        $scope.shceduleQuizQuizes = [];
-                        $scope.shceduleQuizArray.forEach(function (value, index) {
-
-                            if (value.group == b) {
-                                value.sub_group.forEach(function (val, indx) {
-
-                                    val.topics.forEach(function (v, i) {
-
-                                        v.quizes.forEach(function (q, qi) {
-                                            $scope.shceduleQuizQuizes.push(q);
-
-
-                                        }); //q
-
-                                    }); //v
-                                }); //val
-
-                                //console.log('length: ' + $scope.shceduleQuizQuizes.length + '|' + JSON.stringify($scope.shceduleQuizQuizes));
-                            } //if
-                        });
-
-
-                    } // if sub_group
-
-                    if (c === 'topic') {
-                        $scope.shceduleQuizTopics = a.topics;
-
-
-                        //getting All Questions of Specific Sub Group
-                        $scope.shceduleQuizQuizes = [];
-                        $scope.shceduleQuizArray.forEach(function (value, index) {
-
-
-                            value.sub_group.forEach(function (val, indx) {
-
-                                console.log('topic----: ' + JSON.stringify(val));
-
-                                if (val.name == b) {
-                                    val.topics.forEach(function (v, i) {
-
-                                        v.quizes.forEach(function (q, qi) {
-                                            $scope.shceduleQuizQuizes.push(q);
-                                        }); //q
-
-                                    }); //v
-                                } //if
-                            }); //val
-
-                            console.log('length: ' + $scope.shceduleQuizQuizes.length + '|' + JSON.stringify($scope.shceduleQuizQuizes));
-
-                        });
-
-
-                    } //topic
-
-                    if (c === 'quiz') {
-
-
-
-                        //console.log('a-->: '+ JSON.stringify(a.topics));
-                    } //quiz
-
-
-                }; // SearchBindRecord
-                //$scope.SearchBindRecord($scope.shceduleQuizArray, 'saylani', 'sub');
-
-
-            });
-
-
-        }
-
-        function showAttemptQuiz() {
-            $location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quiz-attempting')
-            document.getElementById('navBar').style.display = "none";
-        }
-
-        /*  Selection  */
-        function setSelectedQuestion(that, index) {
-            $scope.selectedQuestionIndex = index;
-            quizService.setSelectedQuestion(index)
-            /*if ($scope.lastSelectedTopic.selectedTopic) {
-             console.log("show", arguments, that);
-             $('.selectedTopic').addClass('previousSelected')
-             if ($scope.lastSelectedQuestion) {
-             $scope.lastSelectedQuestion.selectedQuestion = '';
-             }
-             that.selectedQuestion = 'selectedQuestion';
-             $scope.lastSelectedQuestion = that;
-             }
-             console.log($scope.lastSelectedTopic.selectedTopic)*/
-        }
-
-        function setSelectedTopic(that, index) {
-            $scope.selectedQuestionIndex = null;
-            $scope.selectedTopicIndex = index;
-            quizService.setSelectedTopic(index)
-            quizService.setSelectedQuestion(null)
-            /*console.log("show", arguments, that);
-             if ($scope.lastSelectedChapter.selected) {
-             console.log('in IF')
-             $('.previousSelected').removeClass('previousSelected')
-             $('.selectedChapter').addClass('previousSelected')
-             if ($scope.lastSelectedTopic) {
-             $scope.lastSelectedTopic.selectedTopic = '';
-             }
-             that.selectedTopic = 'selectedTopic';
-             $scope.lastSelectedTopic = that;
-             }*/
-        }
-
-        function setSelectedChapter(that, index) {
-            $scope.selectedQuestionIndex = null;
-            $scope.selectedTopicIndex = null;
-            $scope.selectedChapterIndex = index;
-            quizService.setSelectedChapter(index)
-            quizService.setSelectedTopic(null)
-            quizService.setSelectedQuestion(null)
-            /*$('.selectedChapter').removeClass('previousSelected')
-             console.log("show", that);
-             if ($scope.lastSelectedChapter) {
-             $scope.lastSelectedChapter.selected = '';
-             }
-             quizService.setSelectedChapter(that)
-             that.selected = 'selectedChapter';
-             $scope.lastSelectedChapter = that;
-             console.log($scope.lastSelectedChapter.selected)*/
-        }
-
-        function setSelectedBook(that, index) {
-            $scope.selectedBookIndex = index;
-            quizService.setSelectedBook(index)
-
-            $scope.selectedQuestionIndex = null;
-            $scope.selectedTopicIndex = null;
-            $scope.selectedChapterIndex = null;
-            quizService.setSelectedChapter(null)
-            quizService.setSelectedTopic(null)
-            quizService.setSelectedQuestion(null)
-            /*$scope.selectedQuestionIndex = null;
-             $scope.selectedTopicIndex = null;
-             $scope.selectedChapterIndex = null;
-             if ($scope.lastSelectedBook) {
-             $scope.lastSelectedBook.selected = '';
-             }
-             that.selected = 'selectedBook';
-             $scope.lastSelectedBook = that;
-             console.log($scope.lastSelectedBook.selected)*/
-        }
-
-        function setSelectedQuizes(index) {
-            $scope.selectedQuizes = index;
-        }
-
-        /*  Question Bank   */
-        function showChapters(bookIndex) {
-            quizService.setQuestionObject(null)
-            quizService.setChapter(null, null);
-            quizService.setTopic(null, null);
-            console.log('showing Chapters')
-            quizService.setQuestionObject(null);
-            $scope.showView = false;
-            $scope.questionView = null;
-            $scope.bookId = $scope.booksId[bookIndex];
-            quizService.setBook($scope.bookId, bookIndex);
-            $scope.chapterId = null
-            $scope.topicId = null
-            $scope.show = true;
-            $scope.chapters = [];
-            $scope.topics = [];
-            $scope.questions = [];
-
-            $scope.chaptersId = [];
-            $scope.topicsId = [];
-            $scope.questionsId = [];
-            ref.child('question-bank-chapters').child($scope.bookId).on('child_added', function (snapShot) {
-                $timeout(function () {
-                    $scope.chapters.push(snapShot.val());
-                    $scope.chaptersId.push(snapShot.key());
-                }, 0)
-            })
-        }
-
-        function showTopics(chapterIndex) {
-            quizService.setTopic(null, null);
-            quizService.setQuestionObject(null);
-            $scope.topics = [];
-            $scope.questions = [];
-
-            $scope.topicsId = [];
-            $scope.questionsId = [];
-            $scope.showView = false;
-            $scope.topicId = null
-            $scope.questionView = null;
-            $scope.chapterId = $scope.chaptersId[chapterIndex];
-            quizService.setChapter($scope.chapterId, chapterIndex);
-            $scope.topics = [];
-            $scope.questions = []
-            ref.child('question-bank-topic').child($scope.bookId).child($scope.chapterId).on('child_added', function (snapShot) {
-                $timeout(function () {
-                    $scope.topics.push(snapShot.val());
-                    $scope.topicsId.push(snapShot.key());
-                }, 0)
-            })
-        }
-
-        function showQuestions(topicIndex) {
-            $scope.showView = false;
-            $scope.questionView = null;
-            $scope.topicId = $scope.topicsId[topicIndex];
-            quizService.setTopic($scope.topicId, topicIndex);
-            quizService.setQuestionObject(null);
-            $scope.questions = [];
-            ref.child('questions').child($scope.bookId).child($scope.chapterId).child($scope.topicId).on('child_added',
-                function (snapShot) {
-                    $timeout(function () {
-                        $scope.questions.push(snapShot.val())
-                    }, 0)
-                });
-
-        }
-
-        function showQuestionView(question) {
-            if (question !== null) {
-                quizService.setQuestionObject(question);
-            }
-            console.log('Showing Question View ' + question);
-            $scope.showView = true;
-            $scope.questionView = question;
-        }
-
-        /*  Quizes functions  */
-        $scope.showQuizes = showQuizes;
-        $scope.showQuizesQuestions = showQuizesQuestions;
-        $scope.quizes = [];
-
-        function showQuizes(bookIndex) {
-            $scope.quizes = [];
-            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
-                var temp = {
-                    details: snapShot.val().quizDetails,
-                    key: snapShot.key()
-                };
-                $scope.quizes.push(temp);
-            });
-        }
-
-        function showQuizesQuestions(index) {
-            $scope.Array = [];
-            var iterator = 0;
-            var chapterKey = '';
-            console.log('showing quiz Questions');
-            ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
-                .on('child_added', function (snapShot) {
-                    chapterKey = snapShot.key();
-                    var chapterTemp = snapShot.val().ChapterDetails;
-                    ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
-                        .child(chapterKey).child('ChapterTopics').on('child_added', function (snap) {
-                        var topicTemp = snap.val().TopicDetails;
-                        ref.child('quiz-create').child(quizService.getBook()).child($scope.quizes[index].key).child('quizQuestion')
-                            .child(chapterKey).child('ChapterTopics').child(snap.key())
-                            .child('TopicQuestions').on('child_added', function (shot) {
-                            $scope.Array[iterator] = {
-                                chapterDetails: chapterTemp,
-                                topicDetails: topicTemp,
-                                question: shot.val()
-                            };
-                            iterator++;
-                        });
-
-                    });
-                });
-
-        }
-
-        /*  Quiz Assign  */
-        /*refMain.child('groups-names').on('child_added', function (snapshot) {
-         $scope.groups.push({
-         details : snapshot.val(),
-         key   : snapshot.key()
-         });
-         console.log( snapshot.val() + ' ' + snapshot.key());
-         })*/
-        $scope.assignQuiz = assignQuiz;
-        // console.log($localStorage.loggedInUser)
-        //$scope.userID = '123654789';
-        /*userService.getCurrentUser()*/
-        var groupDataUbind = {}
-        var userDataUbind = {}
-        var userObjUbind;
-        $scope.userObj = [];
-
-        function getUserObj() {
-            // console.log('getUserObj: ' + userService.getCurrentUser().userID)
-            //var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child($scope.userID))
-            var userObj = $firebaseArray(firebaseService.getRefUserGroupMemberships().child(userService.getCurrentUser().userID))
-                .$loaded()
-                .then(function (data) {
-                    //alert(data.$id)
-                    // console.log('THEN getUserObj')
-
-                    userObjUbind = data.$watch(function () {
-                        getUserObj()
-                    })
-                    $scope.userObj = data;
-                    data.forEach(function (el, i) {
-                        var j = i;
-                        $firebaseObject(firebaseService.getRefGroups().child(el.$id))
-                            .$loaded()
-                            .then(function (groupData) {
-                                groupDataUbind[j] = groupData.$watch(function () {
-                                    $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
-                                });
-                                $scope.userObj[j].groupUrl = groupData['logo-image'] ? groupData['logo-image'].url : ""
-
-                                if (groupData['group-owner-id']) {
-                                    //userDataObj[j] = $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id'])/!*.child('profile-image')*!/)
-                                    $firebaseObject(firebaseService.getRefUsers().child(groupData['group-owner-id']).child('profile-image'))
-                                        .$loaded()
-                                        .then(function (img) {
-
-                                            $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img.$value);
-                                            userDataUbind[j] = img.$watch(function (dataVal) {
-
-                                                $scope.userObj[j].userImg = $sce.trustAsResourceUrl(img)
-                                            })
-                                            // console.log($scope.userObj)
-                                        })
-
-                                }
-                            });
-                    });
-                })
-                .catch(function (err) {
-                    //alert(err);
-                })
-        };
-
-        function assignQuiz() {
-            /* $timeout(function () {
-             $location.path('/user/:userID/quiz/quizAssign');
-             }, 0)*/
-            $scope.subGroup = [];
-            $timeout(function () {
-                $scope.showQuizSceduling = navService.toggleRight6;
-                $scope.showQuizSceduling();
-            }, 0)
-
-            $scope.quizesList = [];
-            ref.child('quiz-create').child(quizService.getBook()).on('child_added', function (snapShot) {
-                $scope.quizesListKey.push(snapShot.key());
-                $scope.quizesList.push(snapShot.val().quizDetails);
-                console.log(snapShot.val());
-
-            });
-            console.log($scope.quizesListKey);
-
-            for (var i = 0; i < $scope.userObj.length; i++) {
-
-                $scope.myDatabase[i] = {
-                    groupId: $scope.userObj[i].$id,
-                    subGroupId: null,
-                    subGroupIdIndex: null,
-                    bookId: quizService.getBook(),
-                    quizId: null
-
-
-                };
-
-            }
-
-            console.log($scope.myDatabase);
-        }
-
-
-        function setSelectedQuiz(id) {
-            $scope.seclectedQuizID = id;
-            for (var i = 0; i < $scope.userObj.length; i++) {
-
-                if ($scope.myDatabase[i].groupId == $scope.selectedGroup) {
-                    $scope.myDatabase[i].quizId = $scope.seclectedQuizID;
-
-                }
-                console.log($scope.myDatabase[i]);
-            }
-            //            console.log($scope.myDatabase);
-
-        }
-
-
-        function setSelectedGroup(id, index) {
-            $scope.selectedGroup = id;
-            $scope.selectedGroupIndex = index;
-            $scope.subGroup = [];
-            refMain.child('subgroups').child(id).on('child_added', function (snapShot) {
-                $scope.subGroup.push(snapShot.key());
-                console.log($scope.subGroup);
-            });
-
-
-        }
-
-        function setSelectedSubGroup(id, index) {
-            $scope.subGroupId = id;
-            for (var i = 0; i < $scope.userObj.length; i++) {
-
-                if ($scope.myDatabase[i].groupId == $scope.selectedGroup) {
-                    $scope.myDatabase[i].subGroupId = id;
-                    $scope.myDatabase[i].quizId = $scope.seclectedQuizID;
-                    $scope.myDatabase[i].subGroupIdIndex = index;
-                }
-
-
-            }
-            console.log($scope.myDatabase);
-        }
-
-
-        function dataPush() {
-
-
-            for (var i = 0; i < $scope.userObj.length; i++) {
-
-
-                if ($scope.myDatabase[i].subGroupId != null && $scope.myDatabase[i].quizId != null) {
-
-                    for (var a = 0; a < $scope.quizesList.length; a++) {
-                        if ($scope.quizesList[a].title == $scope.myDatabase[i].quizId) {
-                            alert("yes");
-                            ref.child('quiz-schedule').child($scope.myDatabase[i].groupId).child($scope.myDatabase[i].subGroupId).child($scope.myDatabase[i].bookId).push({
-                                quizName: $scope.quizesList[a].title,
-                                quizUid: $scope.quizesListKey[a]
-                            });
-                            console.log($scope.myDatabase[i]);
-                        }
-                    }
-                }
-            }
-            closeAssignQuiz();
-        }
-
-
-        function closeAssignQuiz() {
-            $scope.showQuizSceduling = navService.toggleRight6;
-            $scope.showQuizSceduling();
-
-        }
-
-
-        function showQuizChapters(bookIndex) {
-            console.log('showing quiz Chapters')
-            $scope.bookId = $scope.booksId[bookIndex];
-            quizService.setBook($scope.bookId, bookIndex);
-        }
-
-        function showQuizTopics() {
-            console.log('showing quiz Topics')
-        }
-
-
-        /*  Question Bank Addition Functions  */
-
-        //        Create Book Navigation Start
-        $scope.desc = "";
-        $scope.newImg = null;
-        $scope.imgLogoUrl;
-        var userQuestionBanksRef1 = new Firebase('https://pspractice.firebaseio.com/');
-
-        function addBook() {
-            $scope.showbook = navService.toggleRight1;
-            $scope.showbook();
-        }
-
-        function createBook(bookForm, p) {
-            //alert('hi')
-            console.log($scope.imgLogoUrl)
-            console.log($rootScope.newImg);
-            $scope.temps = {
-
-                title: $scope.name,
-                description: $scope.desc,
-                //imgLogoUrl: $scope.imgLogoUrl || 'img/1angular.png'
-                imgLogoUrl: p
-            };
-
-            console.log('tmp: ' + JSON.stringify($scope.temps))
-
-            userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
-                'membership-type': 1
-            });
-            userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
-                "membership-type": 1
-            });
-            userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
-            console.log($scope.temps);
-
-
-            if ($rootScope.newImg) {
-                var x = utilService.base64ToBlob($rootScope.newImg);
-                var temp = $rootScope.newImg.split(',')[0];
-                var mimeType = temp.split(':')[1].split(';')[0];
-                console.log(x)
-                console.log(temp)
-                console.log(mimeType)
-                console.log($scope.bookID)
-                $scope.saveFile(x, mimeType, $scope.bookID)
-                    .then(function (url) {
-                        // $scope.temps.imgLogoUrl = url + '?random=' + new Date();
-                        //its for sending data on firebase by Name's node
-                        userQuestionBanksRef1.child('user-question-banks').child(userService.getCurrentUser().userID).child($scope.bookID).set({
-                            'membership-type': 1
-                        });
-                        userQuestionBanksRef1.child("question-bank-memberships").child($scope.bookID).child(userService.getCurrentUser().userID).set({
-                            "membership-type": 1
-                        });
-                        userQuestionBanksRef1.child("question-bank").child($scope.bookID).set($scope.temps);
-                        console.log($scope.temps);
-
-                        // quizService.setBookAfterCreation($scope.bookID)
-                        // ref.child($scope.bookID).set(temp);
-                        $scope.name = "";
-                        $scope.desc = "";
-                        $scope.bookID = "";
-                        //$scope.newImg = null;
-                        alert('book creation successful')
-                        // $location.path('/user/' + user.userID)
-                    })
-                    .catch(function () {
-                        //bookForm.$submitted = false;
-                        //return messageService.showSuccess('picture upload failed')
-                        alert('picture upload failed')
-                    });
-            }
-
-
-        }
-
-        $scope.showAdvanced1 = function (ev) {
-            $mdDialog.show({
-                controller: "DialogController as ctrl",
-                templateUrl: 'directives/dilogue.tmpl.html',
-                targetEvent: ev
-            }).then(function (picture) {
-                $rootScope.newImg = picture;
-                console.log("this is image" + picture)
-            }, function (err) {
-                console.log(err)
-
-            })
-
-        };
-
-        $scope.saveFile = function (file, type, quizID) {
-
-            console.log(file);
-            console.log(type);
-            console.log(quizID);
-
-            var defer = $q.defer();
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", appConfig.apiBaseUrl + "/api/savequizBookPicture?quizID=" + quizID + "&file_type=" + type);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        defer.resolve(upload_file(file, response.signed_request, response.url));
-                    } else {
-                        defer.reject(alert("Could not get signed URL."))
-                    }
-                }
-            };
-            defer.resolve(true)
-            /*remove it*/
-            //            xhr.send();
-            return defer.promise;
-        };
-
-        function upload_file(file, signed_request, url) {
-
-            var defer = $q.defer();
-            var xhr = new XMLHttpRequest();
-            xhr.open("PUT", signed_request);
-            xhr.setRequestHeader('x-amz-acl', 'public-read');
-            xhr.onload = function (data) {
-                console.log(xhr.status);
-                //alert(xhr.responseText);
-                if (xhr.status === 200) {
-                    messageService.showSuccess('Picture uploaded....');
-                    console.log('picture upload successful')
-                    console.log(url);
-
-                    defer.resolve(url)
-
-                }
-            };
-            xhr.onerror = function (error) {
-                defer.reject(messageService.showSuccess("Could not upload file."));
-            };
-            xhr.send(file);
-            console.log(file);
-            return defer.promise;
-        }
-
-        function closeBook() {
-            $scope.showbook = navService.toggleRight1;
-            $scope.showbook();
-        }
-
-        //        Create Book Navigation End
-
-
-        /*  Question Bank Addition Functions  */
-        /*        function addBook() {
-         //console.log('Add Book')
-         $timeout(function () {
-         $location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddBook')
-         }, 0)
-         }*/
-
-        var ref = new Firebase('https://pspractice.firebaseio.com/');
-
-        $scope.bookId = $stateParams.id;
-        $scope.Title = '';
-        $scope.Description = '';
-
-        function createChapter() {
-            console.log($scope.Title + " " + $scope.Description)
-            ref.child("question-bank-chapters").child($scope.bookId).push({
-                title: $scope.Title,
-                description: $scope.Description
-            }, function () {
-                $scope.Title = '';
-                $scope.Description = '';
-
-            });
-        }
-
-        function addChapter() {
-            if ($scope.bookId) {
-                $timeout(function () {
-                    $scope.showChapter = navService.toggleRight2;
-                    $scope.showChapter();
-                }, 0)
-            } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Book' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
-            }
-        }
-
-        function closeChapter() {
-            $scope.showChapter = navService.toggleRight2;
-            $scope.showChapter();
-        }
-
-
-        $scope.Title = '';
-        $scope.Description = '';
-        $scope.chapterId = $stateParams.id;
-
-        function createTopic() {
-            ref.child("question-bank-topic").child(quizService.getBook()).child($scope.chapterId).push({
-                description: $scope.Description,
-                title: $scope.Title
-            });
-        }
-
-        function addTopic() {
-            //console.log('Add Book')
-            if ($scope.chapterId) {
-                $timeout(function () {
-                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddTopic/' + $scope.chapterId)
-                    $scope.showTopic = navService.toggleRight4;
-                    $scope.showTopic();
-                }, 0)
-            } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Chapter' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
-            }
-        }
-
-        function closeTopic() {
-            $scope.showTopic = navService.toggleRight4;
-            $scope.showTopic();
-        }
-
-        function addQuestion() {
-            //console.log('Add Book')
-            if ($scope.topicId) {
-                $timeout(function () {
-                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizAddQuestion/' + $scope.topicId)
-                    $scope.showQuestion = navService.toggleRight3;
-                    $scope.showQuestion();
-                }, 0)
-            } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Topic' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
-            }
-        }
-
-        function closeQuestion() {
-            $scope.showQuestion = navService.toggleRight3;
-            $scope.showQuestion();
-        }
-
-
-        //AddQuestion Controller Work
-        var that = this;
-        var myFirebaseRef = new Firebase("https://pspractice.firebaseio.com/");
-        var idCounter = 3;
-        this.showRadioOptions = false;
-        this.showCheckOptions = false;
-        this.showAddButton = false;
-        this.myAnswer = undefined;
-        this.myType = '';
-        that.answerTag = [];
-        that.myTop = ['40px', '50px'];
-        var topMargin = 50;
-        this.showCheckText = false;
-        this.topicId = $stateParams.id;
-        //
-        //
-        //Answer Types.
-        this.types = [{
-            name: 'Radio Button'
-        }, {
-            name: 'CheckBox'
-        }];
-        this.question = {
-            Title: '',
-            Description: '',
-            Type: '',
-            QuestionOptions: [{
-                optionText: '',
-                id: 2,
-                rightAnswer: false
-            }, {
-                optionText: '',
-                id: 3,
-                rightAnswer: false
-            }]
-        };
-        //If Answer Type Changes.
-        this.typeChanged = function () {
-
-            that.radioValue = '';
-            that.myAnswer = undefined;
-            that.myTop = ['40px', '90px'];
-            topMargin = 50;
-            angular.forEach(that.question.QuestionOptions, function (data) {
-                if (data.id === true) {
-                    data.id = false;
-                }
-            });
-        };
-        //Setting different inputs.
-        this.setBoxValue = function () {
-            this.showAddButton = true;
-            that.question.QuestionOptions = [{
-                optionText: '',
-                id: 2,
-                rightAnswer: false
-            }, {
-                optionText: '',
-                id: 3,
-                rightAnswer: false
-            }];
-            if (that.myType.name === 'Radio Button') {
-                that.showRadioOptions = true;
-                that.showCheckOptions = false;
-                that.answerTag = [];
-                that.myAnswer = undefined;
-            } else if (that.myType.name === 'CheckBox') {
-                that.showCheckOptions = true;
-                that.showRadioOptions = false;
-                that.answerTag = [];
-                that.myAnswer = undefined;
-            }
-        };
-        //Push new input fields.
-        this.addOption = function () {
-
-            //Radio margin.
-            if (topMargin < 100) {
-                topMargin += 50;
-            }
-            that.myTop.push(topMargin + 'px');
-            idCounter++;
-            that.question.QuestionOptions.push({
-                optionText: '',
-                id: idCounter,
-                rightAnswer: false
-            });
-        };
-        //Delete Option
-        this.deleteOption = function (optionIndex) {
-            if (optionIndex > -1) {
-                that.question.QuestionOptions.splice(optionIndex, 1);
-            }
-        };
-
-        //Sets Answer if Type CheckBox is selected.
-        that.setCheckBoxValue = function (questionId) {
-            if (that.question.QuestionOptions[questionId].id == true) {
-                that.question.QuestionOptions[questionId].rightAnswer = true;
-                that.answerTag.push('one');
-            } else if (that.question.QuestionOptions[questionId].id == false) {
-                that.question.QuestionOptions[questionId].rightAnswer = false;
-                that.answerTag.pop();
-            }
-        };
-        //        //Add more Questions, Saves data to firebase and clears input fields.
-        that.addQuestionsAndContinue = function () {
-            that.showRadioOptions = false;
-            that.showCheckOptions = false;
-            that.showAddButton = false;
-            if (that.myType.name === 'Radio Button') {
-                angular.forEach(that.question.QuestionOptions, function (data) {
-                    if (data.optionText == that.myAnswer.optionText) {
-                        data.rightAnswer = true;
-                    } else {
-                        data.rightAnswer = false;
-                    }
-                });
-            }
-            angular.forEach(that.question.QuestionOptions, function (data) {
-                delete data.$$hashKey;
-                delete data.$$mdSelectId;
-                delete data.id;
-            });
-            that.question.Type = that.myType.name;
-            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question);
-            that.question = {
-                Title: '',
-                Description: '',
-                Type: '',
-                Answer: [],
-                QuestionOptions: [{
-                    optionText: '',
-                    id: 2,
-                    rightAnswer: false
-                }, {
-                    optionText: '',
-                    id: 3,
-                    rightAnswer: false
-                }]
-            };
-            that.myAnswer = undefined;
-        };
-        //Redirect on close
-        this.prev = function () {
-            $timeout(function () {
-                $location.path('/user/' + userService.getCurrentUser().userID + '/quiz');
-            });
-        };
-        //Save and Exit Button
-        this.showAnswer = function () {
-            if (that.myType.name === 'Radio Button') {
-                angular.forEach(that.question.QuestionOptions, function (data) {
-                    if (data.optionText == that.myAnswer.optionText) {
-                        data.rightAnswer = true;
-                    } else {
-                        data.rightAnswer = false;
-                    }
-                });
-            }
-            angular.forEach(that.question.QuestionOptions, function (data) {
-                delete data.$$hashKey;
-                delete data.$$mdSelectId;
-                delete data.id;
-            });
-            that.question.Type = that.myType.name;
-            myFirebaseRef.child("questions").child(quizService.getBook()).child(quizService.getChapter()).child(quizService.getTopic()).push(that.question, function () {
-
-                that.question = {};
-                abc();
-            });
-
-            that.myAnswer = undefined;
-
-        };
-
-
-        //View Dialog Box.
-        this.showAdvanced = function (ev) {
-            that.question.Type = that.myType.name;
-            if (that.myType.name === 'Radio Button') {
-                angular.forEach(that.question.QuestionOptions, function (data) {
-                    if (data.optionText == that.myAnswer.optionText) {
-                        data.rightAnswer = true;
-                    } else {
-                        data.rightAnswer = false;
-                    }
-                });
-            }
-            $mdDialog.show({
-                    controller: DialogController,
-                    templateUrl: './components/quiz-add-question/dialog.tmpl.html',
-                    parent: angular.element(document.body),
-                    targetEvent: ev,
-                    locals: {
-                        questionData: that.question
-                    }
-                })
-                .then(function (answer) {
-
-                }, function () {
-
-                });
-        };
-
-        //addQuestion work end
-
-
-        function editChapter(chapter) {
-            alert(chapter.name);
-            chapter.showEdit = !chapter.showEdit;
-        }
-
-        function addQuiz() {
-
-            /*$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')*/
-
-            if ($scope.bookId) {
-                $timeout(function () {
-                    //$location.path('/user/' + userService.getCurrentUser().userID + '/quiz/quizCreate/')
-
-                    $scope.showQuize = navService.toggleRight5;
-                    $scope.showQuize();
-
-                    //Parou Code
-                    var that = this;
-                    var bookId = '';
-                    var chapId = '';
-                    var marker = 0;
-                    $scope.awaisObject = {};
-                    $scope.flagChapters = [];
-                    $scope.flagTopics = [];
-                    $scope.showQuestionView1 = false;
-                    $scope.quizObject = {};
-
-                    //temporary
-                    $scope.showTick = true;
-                    $scope.buttonText = 'Next';
-                    $scope.quizTitle = '';
-                    var topicCounter = 0;
-                    $scope.quizDescription = '';
-                    $scope.quizTime = '';
-                    var myCounter = 0;
-                    $scope.questionIndex = 0;
-                    $scope.tempQuestions = [];
-                    $scope.myChapterIndex = 0;
-                    $scope.viewAllQuestions = [];
-                    $scope.viewAllTopics = [];
-                    //bring the chapters from firebase
-
-                    $scope.secondBookName = 'angular101';
-                    $scope.secondChapters = [];
-                    $scope.secondChaptersKey = [];
-                    /*This will show hide quiz tabs*/
-                    var counter = 1;
-                    var tabCounter = 1;
-                    var arr = [],
-                        name = '';
-                    $scope.myChapters = [];
-                    $scope.myChaptersKey = [];
-                    $scope.thirdTopics = [];
-                    //Data fetching from firebase
-                    $scope.chapters = [];
-                    $scope.chaptersId = [];
-                    $scope.nestedQuestions = [];
-                    $scope.topics = [];
-                    $scope.topicsId = [];
-                    $scope.questions = [];
-                    $scope.questionsId = [];
-                    $scope.showOne = false;
-                    $scope.showTwo = true;
-                    $scope.showThree = false;
-                    //Second Page
-                    // all variables
-                    $scope.show = false;
-                    $scope.showView = false;
-                    $scope.showQuizBar = false;
-                    $scope.showTick = false;
-                    $scope.bookId = '';
-                    $scope.chapterId = '';
-                    $scope.topicId = null;
-                    $scope.SelectedBook = null;
-                    $scope.SelectedChapter = null;
-                    $scope.SelectedTopic = null;
-                    $scope.SelectedQuestion = null;
-                    /*$scope.quizes = [];*/
-                    $scope.chaptersId = [];
-                    $scope.chapters = [];
-                    $scope.topicsId = [];
-                    $scope.topics = [];
-                    $scope.questions = [];
-                    $scope.questionView = '';
-                    $scope.latestNode = [];
-
-
-                    /*
-                     if (tabCounter == 1) {
-                     //Tab Icons
-                     that.oneTab = true;
-                     that.twoTab = true;
-                     that.threeTab = false;
-                     tabCounter++;
-
-                     }*/
-
-
-                    // seleted data start
-                    $scope.setSelectedQuestion = function (thisScope) {
-
-                        if ($scope.lastSelectedTopic.selectedTopic) {
-                            $('.selectedTopic').addClass('previousSelected');
-                            if ($scope.lastSelectedQuestion) {
-                                $scope.lastSelectedQuestion.selectedQuestion = '';
-                            }
-                            thisScope.selectedQuestion = 'selectedQuestion';
-                            $scope.lastSelectedQuestion = thisScope;
-                        }
-                    };
-
-                    $scope.setSelectedTopics = function (thisScope) {
-                        if ($scope.lastSelectedChapter.selected) {
-                            $('.previousSelected').removeClass('previousSelected');
-                            $('.selectedChapter').addClass('previousSelected');
-                            if ($scope.lastSelectedTopic) {
-                                $scope.lastSelectedTopic.selectedTopic = '';
-                            }
-                            thisScope.selectedTopic = 'selectedTopic';
-                            $scope.lastSelectedTopic = thisScope;
-                        }
-                    };
-
-                    $scope.setSelectedChapters = function (thisScope) {
-
-                        $('.selectedChapter').removeClass('previousSelected');
-                        if ($scope.lastSelectedChapter) {
-                            $scope.lastSelectedChapter.selected = '';
-                        }
-                        quizCreateService.setSelectedChapter(thisScope);
-                        thisScope.selected = 'selectedChapter';
-                        $scope.lastSelectedChapter = thisScope;
-                    };
-                    //selected data end
-                    //2nd Tab Functions
-                    var chapterCounter = 0;
-                    //Chapters
-
-                    ref.child('question-bank-chapters').child(quizService.getBook()).on('child_added', function (snapShot) {
-                        //$timeout(function () {
-
-                        $scope.chapters.push(snapShot.val());
-                        /*console.log($scope.chapters.push(snapShot.val()));*/
-                        $scope.chaptersId.push(snapShot.key());
-                        $scope.chaptersSnapData = snapShot.val();
-                        $scope.nestedQuestions.push([]);
-                        $scope.flagChapters[chapterCounter] = {};
-                        $scope.flagChapters[chapterCounter].id = true;
-                        $scope.viewAllTopics.push([]);
-                        $scope.flagTopics.push([]);
-                        chapterCounter++;
-                        //}, 0)
-
-                    });
-
-
-                    bookId = quizService.getBook();
-                    $scope.bookId = quizService.getBook();
-                    $scope.quizObject[quizService.getBook()] = {};
-                    $scope.awaisObject[quizService.getBook()] = {};
-
-                    //Topics
-                    $scope.showTopics = function (chapterIndex) {
-                        $scope.showQuestionView1 = false;
-                        if ($scope.quizObject[bookId]['quizQuestion'] == undefined) {
-                            $scope.quizObject[bookId]['quizQuestion'] = {};
-                        }
-                        $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]] = {};
-                        $scope.awaisObject[bookId][$scope.chaptersId[chapterIndex]] = {};
-                        $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]]['ChapterDetails'] = {
-                            title: $scope.chapters[chapterIndex].title,
-                            description: $scope.chapters[chapterIndex].description
-                        };
-                        $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]]['ChapterTopics'] = {};
-                        $scope.awaisObject[bookId][$scope.chaptersId[chapterIndex]] = {};
-                        console.log("Chapter Details");
-                        console.log($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[chapterIndex]]['ChapterDetails']);
-                        $scope.chapterId = $scope.chaptersId[chapterIndex];
-                        $scope.myChapterIndex = chapterIndex;
-                        quizCreateService.setChapter($scope.chapterId, chapterIndex);
-
-                        if ($scope.flagChapters[chapterIndex].id == true) {
-                            $scope.nestedQuestions[chapterIndex] = [];
-                            $scope.tempQuestions[chapterIndex] = [];
-                            $scope.flagChapters[chapterIndex].id = false;
-                            $scope.topics = [];
-                            $scope.topicsId = [];
-                            $scope.topicId = null;
-                            topicCounter = 0;
-                            ref.child('question-bank-topic').child(quizService.getBook()).child(quizCreateService.getChapter()).on('child_added', function (snapShot) {
-                                $timeout(function () {
-                                    $scope.topics.push(snapShot.val());
-                                    $scope.viewAllTopics[chapterIndex].push(snapShot.val());
-                                    $scope.topicsId.push(snapShot.key());
-                                    $scope.flagTopics[chapterIndex][topicCounter] = {};
-                                    $scope.flagTopics[chapterIndex][topicCounter].id = true;
-                                    $scope.nestedQuestions[chapterIndex].push([]);
-                                    $scope.tempQuestions[chapterIndex].push([]);
-                                    topicCounter++;
-                                }, 0)
-                            })
-                        } else {
-                            $scope.topics = $scope.viewAllTopics[chapterIndex];
-                            $scope.myChapterIndex = chapterIndex;
-                        }
-                    };
-
-                    //Questions.
-                    $scope.showQuestions = function (topicIndex) {
-                        $scope.showQuestionView1 = false;
-                        if ($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]] == undefined) {
-                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]] = {};
-                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[topicIndex]] = {};
-                            //Topic Object
-                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]['TopicDetails'] = {
-                                title: $scope.topics[topicIndex].title,
-                                description: $scope.topics[topicIndex].description
-                            };
-                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]['TopicQuestions'] = {};
-                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[topicIndex]] = {};
-                            console.log("Topic Details");
-                            console.log($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[topicIndex]]);
-                        }
-                        if ($scope.flagTopics[$scope.myChapterIndex][topicIndex].id == true) {
-
-                            $scope.flagTopics[$scope.myChapterIndex][topicIndex].id = false;
-                            $scope.nestedQuestions[$scope.myChapterIndex][topicIndex] = [];
-                            myCounter = 0;
-                            $scope.questionIndex = topicIndex;
-                            $scope.showView = false;
-                            $scope.topicId = $scope.topicsId[topicIndex];
-                            $scope.tempQuestions[$scope.myChapterIndex][topicIndex] = [];
-                            quizCreateService.setTopic($scope.topicId, topicIndex);
-
-                            ref.child('questions').child(quizService.getBook()).child(quizCreateService.getChapter()).child(quizCreateService.getTopic()).on('child_added',
-                                function (snapShot) {
-                                    $timeout(function () {
-                                        $scope.questions.push(snapShot.val());
-                                        $scope.questionsId.push(snapShot.key());
-                                        $scope.nestedQuestions[$scope.myChapterIndex][topicIndex].push(snapShot.val());
-                                        $scope.tempQuestions[$scope.myChapterIndex][topicIndex].push(snapShot.val());
-                                        $scope.tempQuestions[$scope.myChapterIndex][topicIndex][myCounter].id = false;
-                                        $scope.nestedQuestions[$scope.myChapterIndex][topicIndex][myCounter].id = false;
-                                        myCounter++;
-                                    }, 0)
-                                });
-                        } else {
-                            $scope.questionIndex = topicIndex;
-                            $scope.nestedQuestions[$scope.myChapterIndex][topicIndex] = $scope.tempQuestions[$scope.myChapterIndex][topicIndex];
-                        }
-                    };
-                    $scope.showQuestionView = function (question) {
-                        $scope.showQuestionView1 = true;
-                        if (question !== null) {
-                            quizService.setQuestionObject(question);
-                        }
-                        $scope.questionView = question;
-                    };
-                    $scope.checkArray = [];
-                    $scope.showTickIcon = function (trueFalseValue, questionIndex) {
-
-                        console.log($scope.tickArray);
-
-                        if (trueFalseValue == false) {
-                            console.log("Checking");
-                            $scope.checkArray.push(questionIndex)
-                            //$scope.tickArray.push(trueFalseValue);
-                            //console.log($scope.tickArray + 'pus');
-                            $scope.showQuestionView1 = true;
-                            $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
-                            $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = true;
-                            $scope.viewAllQuestions.push($scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex]);
-                            if ($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'] == undefined) {
-                                $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'] = {};
-                                $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]] = {};
-                            }
-                            $scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'][$scope.questionsId[questionIndex]] = $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex];
-                            $scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]][$scope.questionsId[questionIndex]] = $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex];
-                        } else if (trueFalseValue == true) {
-                            $scope.checkArray.splice($scope.checkArray.indexOf(questionIndex), 1);
-                            //$scope.tickArray.splice(trueFalseValue,1);
-                            //console.log($scope.tickArray + 'splice');
-                            $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = false;
-                            $scope.tempQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].id = false;
-                            arr = $scope.viewAllQuestions;
-                            name = $scope.nestedQuestions[$scope.myChapterIndex][$scope.questionIndex][questionIndex].Title;
-                            angular.forEach(arr, function (data, key) {
-                                if (data.Title == name) {
-                                    arr.splice(key, 1);
-                                }
-                            });
-                            $scope.viewAllQuestions = arr;
-                            delete($scope.quizObject[bookId]['quizQuestion'][$scope.chaptersId[$scope.myChapterIndex]]['ChapterTopics'][$scope.topicsId[$scope.questionIndex]]['TopicQuestions'][$scope.questionsId[questionIndex]]);
-                            delete($scope.awaisObject[bookId][$scope.chaptersId[$scope.myChapterIndex]][$scope.topicsId[$scope.questionIndex]][$scope.questionsId[questionIndex]]);
-                        }
-
-
-                    };
-
-
-                    $scope.createQuiz = function () {
-                        /*Quiz Create.*/
-
-                        //Delete Topics if Questions not there.
-                        console.log($scope.quizObject[bookId]['quizQuestion']);
-                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (datum, key, obj) {
-                            //$scope.consoleObj = datum;
-                            //console.log($scope.consoleObj + 'TIS IS T LENT OF AN OBJECT');
-                            //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
-                            //console.log(datum +  'TIS IS T LENT OF AN OBJECT');
-                            angular.forEach(datum['ChapterTopics'], function (datum1, key2) {
-                                if (Object.keys(datum1['TopicQuestions']).length == 0) {
-                                    delete($scope.quizObject[bookId]['quizQuestion'][key]['ChapterTopics'][key2]);
-                                }
-                            })
-                        });
-                        //console.log($scope.consoleObj);
-                        //console.log($scope.consoleObj.length + 'TIS IS T LENT OF AN OBJECT');
-                        //Delete Chapters if Topics not there.
-                        angular.forEach($scope.quizObject[bookId]['quizQuestion'], function (data, key) {
-                            if (Object.keys(data['ChapterTopics']).length == 0) {
-                                delete($scope.quizObject[bookId]['quizQuestion'][key])
-                            }
-                        });
-
-
-                        /*Quiz Attempt*/
-
-                        //Delete Topics if Questions not there.
-                        angular.forEach($scope.awaisObject[bookId], function (datum, key) {
-                            angular.forEach(datum, function (datum1, key2) {
-                                if (Object.keys(datum1).length == 0) {
-                                    delete($scope.awaisObject[bookId][key][key2]);
-                                }
-                            })
-                        });
-
-
-                        //Delete Chapters if Topics not there.
-                        angular.forEach($scope.awaisObject[bookId], function (data, key) {
-                            if (Object.keys(data).length == 0) {
-                                delete($scope.awaisObject[bookId][key])
-                            }
-                        });
-
-                        $scope.quizObject[bookId]['quizDetails'] = {
-                            title: $scope.quizTitle,
-                            description: $scope.quizDescription,
-                            time: $scope.quizTime
-                        };
-
-
-                        //Object With Answer.
-                        ref.child('quiz-create').child(bookId).push($scope.quizObject[bookId], function () {
-
-                            angular.forEach($scope.awaisObject[bookId], function (one) {
-                                angular.forEach(one, function (two) {
-                                    angular.forEach(two, function (three) {
-                                        angular.forEach(three.QuestionOptions, function (deleteAnswer) {
-                                            delete(deleteAnswer.rightAnswer);
-                                        });
-                                    });
-                                });
-                            });
-                            //Object WithoutAnswer.
-                            // ref.child('quiz-attempt').child(bookId).push($scope.awaisObject[bookId]);
-                            angular.forEach($scope.viewAllQuestions, function (data) {
-                                delete(data.$$hashKey);
-                                angular.forEach(data.QuestionOptions, function (option) {
-                                    delete(option.$$hashKey);
-                                });
-                                ref.child('quiz-create').child(bookId).on("child_added", function (snapshot) {
-                                    $scope.latestNode.push(snapshot.key());
-                                });
-                                ref.child('quiz-attempt').child(bookId).child($scope.latestNode[$scope.latestNode.length - 1]).set(
-                                    $scope.awaisObject[bookId]
-                                );
-                            });
-                        });
-
-                    };
-
-
-                }, 0);
-
-
-            } else {
-                $mdToast.show({
-                    template: '<md-toast style="z-index:3;">' + 'Please Select Book' + '</md-toast>',
-                    //position: 'top right',
-                    hideDelay: 5000
-                });
-            }
-
-
-            console.log($scope.quizes);
-        }
-
-        function closeQuiz() {
-            $scope.showbook = navService.toggleRight5;
-            $scope.showbook();
-        }
-
-
-        function hover(item) {
-            //console.log('Hover')
-            // Shows/hides the delete button on hover
-            //return item.showEdit = !item.showEdit;
-        }
-
-        function editHover(item) {
-            alert("Deleting the " + item.name);
-            return item.show = false;
-        }
-    }
-})();
-
 /**
  * Created by Mehmood on 5/20/2015.
  */
@@ -8872,7 +7395,8 @@ angular.module('core', [
         'app.manualattendace',
         'app.progressreport',
         'app.chat',
-        'app.collaborator'
+        'app.collaborator',
+        'app.membershipcard'
         // 'app.quizAddBook',
         // 'app.quizAddChapter',
         // 'app.quizAddTopic',
@@ -8884,405 +7408,855 @@ angular.module('core', [
         // 'app.quizResult'
     ]);
 })();
-
 /**
  * Created by Usuf on 23/Feb/16.
  */
-(function () {
+(function() {
 
-    "use strict";
+  "use strict";
 
-    angular.module('core').factory('activityStreamService', ["$http", "appConfig", '$firebaseObject', 'firebaseService', 'userService', '$rootScope', activityStreamService]);
+  angular.module('core').factory('activityStreamService', ['$timeout',
+    '$firebaseObject', 'firebaseService', 'userService', '$rootScope',
+    activityStreamService
+  ]);
 
-    function activityStreamService($http, appConfig, $firebaseObject, firebaseService, userService, $rootScope) {
-        var user = '';
-        var userID = '';
-        var actor = '';
-        var currentUserActivities = [];
-        var currentUserGroupNamesAndMemberShips = {};
-        var currentUserSubGroupNamesAndMemberShips = {};
-        var currentUserSubGroupsMembersAndMemberShips = {};
-        var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+  function activityStreamService($timeout, $firebaseObject, firebaseService,
+    userService, $rootScope) {
+    var user = '';
+    var userID = '';
+    var actor = '';
+    var currentUserActivities = [];
+    var currentUserGroupNamesAndMemberShips = {};
+    var currentUserSubGroupNamesAndMemberShips = {};
+    var currentUserSubGroupsMembersAndMemberShips = {};
+    var firebaseTimeStamp = Firebase.ServerValue.TIMESTAMP;
+    var lastSeenTimeStamp = null;
 
-        //object for those who will be notify....
+    //object for those who will be notify....
 
-        function init() {
-            user = userService.getCurrentUser();
-            userID = user.userID;
-            actor = {
-                "type": "user",
-                "id": user.userID, //this is the userID, and an index should be set on this
-                "email": user.email,
-                "displayName": user.firstName + " " + user.lastName,
-                'profile-image': $rootScope.userImg || ''
-            };
+    function init() {
+      user = userService.getCurrentUser();
+      userID = user.userID;
+      actor = {
+        "type": "user",
+        "id": user.userID, //this is the userID, and an index should be set on this
+        "email": user.email,
+        "displayName": user.firstName + " " + user.lastName,
+        'profile-image': $rootScope.userImg || ''
+      };
 
-            //getting curent use groups and then getting its notification/activities
-            getGroupsOfCurrentUser();
+      //getting curent user groups and then getting its notification/activities but first we get timestamp of seen activities to get records of activities
+      getLastSeenActivityTimeStamp();
+      //getGroupsOfCurrentUser();
 
-            //getting current user subgroup names
-            getSubGroupsOfCurrentUsers();
+      //getting current user subgroup names
+      getSubGroupsOfCurrentUsers();
 
-            //getting current user subgroup members
-            //getSubGroupsMembersOfCurrentUsers ();
+      //getting current user subgroup members
+      //getSubGroupsMembersOfCurrentUsers ();
 
-        } //init
+    } //init
 
-        //for activity step1
-        function getGroupsOfCurrentUser() {
-            //child_added on user-group-memberships
-            firebaseService.getRefUserGroupMemberships().child(userID).on('child_added', function (group) {
+    //getting last seen activity from activities-seen-by-user
+    function getLastSeenActivityTimeStamp() {
+      var onchnaged = 0; //because firebaretimestamp run twice thats y use this strategy....
+      var once = 0;
+      firebaseService.getRefActivitySeen().child(userID).on('value', function(
+        snapshot) {
 
-                if (group && group.key()) {
-                    //create a object of group name and membership-type
-                    currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
+        lastSeenTimeStamp = (snapshot.val() && snapshot.val().timestamp) ?
+          snapshot.val().timestamp : '';
 
-                    //getting activities by groupID
-                    getActivityOfCurrentUserByGroup(group.key());
-
-                    //getting activity by subgroup
-                    getActivityOfCurrentUserBySubGroup(group.key());                    
-                }
-            });
-            
-            //child_changed on user-group-memberships
-            firebaseService.getRefUserGroupMemberships().child(userID).on('child_changed', function (group) {
-                // console.log('group child_changed', group.val());
-                //change membership in currentUserGroupNamesAndMemberShips
-                currentUserGroupNamesAndMemberShips[group.key()] = group.val()['membership-type'];
-                
-                // delete all activity from user activity array of group.key()
-                // if (group.val()['membership-type'] == '-1') { 
-                //     currentUserActivities.forEach(function (val, index) { 
-                //         if (val.groupID == group.key()) { 
-                //             //remove all notifications if user blocked
-                //             currentUserActivities.splice(val, 1);
-                //         } 
-                //     })
-                // }
-                
-            });
-            
-            //child_removed on user-group-memberships
-            firebaseService.getRefUserGroupMemberships().child(userID).on('child_removed', function (group) {
-                // console.log('group child_removed', group.val());
-                //delete group from currentUserGroupNamesAndMemberShips
-                delete currentUserGroupNamesAndMemberShips[group.key()];
-                
-                // delete all activity from user activity array of group.key()  (remove activity related from group)
-                // currentUserActivities.forEach(function (val, index) {
-                //     if (val.groupID == group.key()) {
-                //         //remove all notifications if user blocked
-                //         currentUserActivities.splice(val, 1);
-                //     }
-                // });
-            });
-
+        if (once === 0 && onchnaged === 0) {
+          // console.log('activitiess', 'once');
+          getGroupsOfCurrentUser(lastSeenTimeStamp);
+          once++;
         }
-        //for activity group
-        function getActivityOfCurrentUserByGroup(groupID) {
-            //getting activity streams from firebase node: group-activity-streams
-            firebaseService.getRefGroupsActivityStreams().child(groupID).orderByChild('published').on("child_added", function (snapshot) {
-                if (snapshot && snapshot.val()) {
-                    currentUserActivities.push({
+
+        onchnaged++;
+
+        if (once !== 0 && onchnaged === 2) {
+          // console.log('activitiess', 'on update');
+          LastChildAddedClosed();
+          $timeout(function() {
+            getGroupsOfCurrentUser(lastSeenTimeStamp);
+          }, 1000);
+
+          onchnaged = 0;
+        }
+
+        //getGroupsOfCurrentUser(snapshot.val());
+      });
+
+      // firebaseService.getRefActivitySeen().child(userID).on('child_changed', function(snapshot) {
+      //     //console.log(snapshot.key(), snapshot.val());
+      //     getGroupsOfCurrentUser(snapshot.val());
+      // });
+    } // getLastSeenActivityTimeStamp
+
+    function LastChildAddedClosed() {
+      for (var group in currentUserSubGroupNamesAndMemberShips) {
+        // console.log('watch group', group);
+        firebaseService.getRefGroupsActivityStreams().child(group).off(
+          "child_added");
+        for (var subgroup in currentUserSubGroupNamesAndMemberShips[group]) {
+          firebaseService.getRefSubGroupsActivityStreams().child(group).off(
+            'child_added');
+          firebaseService.getRefSubGroupsActivityStreams().child(group).child(
+            subgroup).off("child_added");
+          // console.log('watch subgroup', subgroup);
+        }
+      }
+    } // LastChildAddedClosed
+
+
+
+    //for activity step1
+    function getGroupsOfCurrentUser(date) {
+      //child_added on user-group-memberships
+      firebaseService.getRefUserGroupMemberships().child(userID).on(
+        'child_added',
+        function(group) {
+          if (group && group.key()) {
+            //create a object of group name and membership-type
+            currentUserGroupNamesAndMemberShips[group.key()] = group.val()[
+              'membership-type'];
+
+            $timeout(function() {
+              //getting activities by groupID
+              getActivityOfCurrentUserByGroup(group.key(), date);
+
+              //getting activity by subgroup
+              getActivityOfCurrentUserBySubGroup(group.key(), date);
+            }, 1000);
+
+          }
+        });
+
+      //child_changed on user-group-memberships
+      firebaseService.getRefUserGroupMemberships().child(userID).on(
+        'child_changed',
+        function(group) {
+          // console.log('group child_changed', group.val());
+          //change membership in currentUserGroupNamesAndMemberShips
+          currentUserGroupNamesAndMemberShips[group.key()] = group.val()[
+            'membership-type'];
+
+          // delete all activity from user activity array of group.key()
+          // if (group.val()['membership-type'] == '-1') {
+          //     currentUserActivities.forEach(function (val, index) {
+          //         if (val.groupID == group.key()) {
+          //             //remove all notifications if user blocked
+          //             currentUserActivities.splice(val, 1);
+          //         }
+          //     })
+          // }
+
+        });
+
+      //child_removed on user-group-memberships
+      firebaseService.getRefUserGroupMemberships().child(userID).on(
+        'child_removed',
+        function(group) {
+          // console.log('group child_removed', group.val());
+          //delete group from currentUserGroupNamesAndMemberShips
+          delete currentUserGroupNamesAndMemberShips[group.key()];
+
+          // delete all activity from user activity array of group.key()  (remove activity related from group)
+          // currentUserActivities.forEach(function (val, index) {
+          //     if (val.groupID == group.key()) {
+          //         //remove all notifications if user blocked
+          //         currentUserActivities.splice(val, 1);
+          //     }
+          // });
+        });
+
+    }
+    //for activity group
+    function getActivityOfCurrentUserByGroup(groupID, date) {
+      //getting activity streams from firebase node: group-activity-streams.startAt(startDate.setHours(0, 0, 0, 0))
+      if (date) {
+        firebaseService.getRefGroupsActivityStreams().child(groupID)
+          .orderByChild('published').startAt(date).on("child_added", function(
+            snapshot) {
+            if (snapshot && snapshot.val()) {
+              currentUserActivities.push({
+                groupID: groupID,
+                displayMessage: snapshot.val().displayName,
+                activityID: snapshot.key(),
+                published: snapshot.val().published,
+                // seen: false
+              });
+            }
+          });
+      } else {
+        firebaseService.getRefGroupsActivityStreams().child(groupID)
+          .orderByChild('published').on("child_added", function(snapshot) {
+            if (snapshot && snapshot.val()) {
+              currentUserActivities.push({
+                groupID: groupID,
+                displayMessage: snapshot.val().displayName,
+                activityID: snapshot.key(),
+                published: snapshot.val().published,
+                // seen: false
+              });
+            }
+          });
+      }
+    }
+
+    //for getting subgroups of current user
+    function getSubGroupsOfCurrentUsers() {
+      firebaseService.getRefUserSubGroupMemberships().child(userID).on(
+        'child_added',
+        function(snapshot) {
+
+          //register subgroup added
+          //addedUserSubgroupMembershipOnSubgroupEvent(snapshot.key());
+
+          //register removed event of any subgroup membership
+          removeUserSubgroupMembershipOnGroupEvent(snapshot.key());
+
+          for (var subgroup in snapshot.val()) {
+            if (currentUserSubGroupNamesAndMemberShips &&
+              currentUserSubGroupNamesAndMemberShips[snapshot.key()]) {
+              currentUserSubGroupNamesAndMemberShips[snapshot.key()][
+                subgroup
+              ] = snapshot.val()[subgroup]['membership-type'];
+            } else {
+              currentUserSubGroupNamesAndMemberShips[snapshot.key()] = {};
+              currentUserSubGroupNamesAndMemberShips[snapshot.key()][
+                subgroup
+              ] = snapshot.val()[subgroup]['membership-type'];
+            }
+
+            //getting subgroup members
+            getSubGroupsMembersOfCurrentUsers(snapshot.key(), subgroup);
+
+
+          }
+        });
+    } // getSubGroupsOfCurrentUsers
+
+    function removeUserSubgroupMembershipOnGroupEvent(group) {
+      firebaseService.getRefUserSubGroupMemberships().child(userID).child(
+        group).on('child_removed', function(snapshot) {
+        console.log('watch subgroup child_removed', snapshot.val(),
+          snapshot.key());
+
+        for (var subgroup in snapshot.val()) {
+          //delete membership type from subgroup object
+          if (subgroup) {
+            delete currentUserSubGroupNamesAndMemberShips[snapshot.key()]
+              [subgroup];
+          }
+
+          // // delete all activity from user activity array of subgroup (remove activity related from subgroup)
+          // currentUserActivities.forEach(function (val, index) {
+          //     if (val.subgroupID == subgroup) {
+          //         //remove all notifications if user blocked
+          //         currentUserActivities.splice(val, 1);
+          //     }
+          // });
+        }
+      });
+    } // removeUserSubGroupMembershipEvent
+
+    function addedUserSubgroupMembershipOnSubgroupEvent(group) {
+      firebaseService.getRefUserSubGroupMemberships().child(userID).child(
+        group).on('child_added', function(snapshot) {
+        console.log('watch: ', snapshot.key(), snapshot.val());
+      });
+    } // addedUserSubgroupMembershipOnSubgroupEvent
+
+
+
+    //for activity of subgroup
+    function getActivityOfCurrentUserBySubGroup(groupID, date) {
+      //getting activity streams from firebase node: subgroup-activity-streams
+      if (date) {
+        firebaseService.getRefSubGroupsActivityStreams().child(groupID).on(
+          'child_added',
+          function(subgroup) {
+            if (subgroup && subgroup.val()) {
+              firebaseService.getRefSubGroupsActivityStreams().child(
+                  groupID).child(subgroup.key())
+                .orderByChild('published').startAt(date).on("child_added",
+                  function(snapshot) {
+                    if (snapshot && snapshot.val()) {
+                      currentUserActivities.push({
                         groupID: groupID,
+                        subgroupID: subgroup.key(),
                         displayMessage: snapshot.val().displayName,
                         activityID: snapshot.key(),
-                        published: snapshot.val().published
+                        published: snapshot.val().published,
+                        // seen: false
+                      });
+                    }
+                  });
+            }
+          });
+      } else {
+        firebaseService.getRefSubGroupsActivityStreams().child(groupID).on(
+          'child_added',
+          function(subgroup) {
+            if (subgroup && subgroup.val()) {
+              firebaseService.getRefSubGroupsActivityStreams().child(
+                  groupID).child(subgroup.key())
+                .orderByChild('published').on("child_added", function(
+                  snapshot) {
+                  if (snapshot && snapshot.val()) {
+                    currentUserActivities.push({
+                      groupID: groupID,
+                      subgroupID: subgroup.key(),
+                      displayMessage: snapshot.val().displayName,
+                      activityID: snapshot.key(),
+                      published: snapshot.val().published,
+                      // seen: false
                     });
-                }
-            });
-        }
+                  }
+                });
+            }
+          });
+      }
+    }
 
-        //for getting subgroups of current user
-        function getSubGroupsOfCurrentUsers() {
-            firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_added', function (snapshot) {
+    //for getting subgroups members of current user
+    function getSubGroupsMembersOfCurrentUsers(groupID, subgroupID) {
+      //getting members by child_added
+      firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID)
+        .on('child_added', function(snapshot) {
 
-                for (var subgroup in snapshot.val()) {
-                    if (currentUserSubGroupNamesAndMemberShips && currentUserSubGroupNamesAndMemberShips[snapshot.key()]) {
-                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type'];
-                    } else {
-                        currentUserSubGroupNamesAndMemberShips[snapshot.key()] = {};
-                        currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup] = snapshot.val()[subgroup]['membership-type'];
-                    }
+          if (currentUserSubGroupsMembersAndMemberShips &&
+            currentUserSubGroupsMembersAndMemberShips[groupID]) {
 
-                    //getting subgroup members
-                    getSubGroupsMembersOfCurrentUsers(snapshot.key(), subgroup);
-                }
-            });
-
-
-            firebaseService.getRefUserSubGroupMemberships().child(userID).on('child_removed', function (snapshot) {
-                // console.log('subgroup child_removed', snapshot.val());
-                
-                for (var subgroup in snapshot.val()) {
-                    //delete membership type from subgroup object     
-                    delete currentUserSubGroupNamesAndMemberShips[snapshot.key()][subgroup];
-                    // // delete all activity from user activity array of subgroup (remove activity related from subgroup)
-                    // currentUserActivities.forEach(function (val, index) {
-                    //     if (val.subgroupID == subgroup) {
-                    //         //remove all notifications if user blocked
-                    //         currentUserActivities.splice(val, 1);
-                    //     }
-                    // });    
-                }
-            });
-        }
-        
-        
-        
-        //for activity of subgroup
-        function getActivityOfCurrentUserBySubGroup(groupID) {
-            //getting activity streams from firebase node: subgroup-activity-streams
-            firebaseService.getRefSubGroupsActivityStreams().child(groupID).on('child_added', function(subgroup) {
-                firebaseService.getRefSubGroupsActivityStreams().child(groupID).child(subgroup.key()).orderByChild('published').on("child_added", function(snapshot) {
-                    if (snapshot && snapshot.val()) {
-                        currentUserActivities.push({
-                            groupID: groupID,
-                            subgroupID: subgroup.key(),
-                            displayMessage: snapshot.val().displayName,
-                            activityID: snapshot.key(),
-                            published: snapshot.val().published
-                        });
-                    }
-                });                
-
-            });
-        }
-
-        //for getting subgroups members of current user
-        function getSubGroupsMembersOfCurrentUsers(groupID, subgroupID) {
-            //getting members by child_added
-            firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_added', function (snapshot) {
-
-                if (currentUserSubGroupsMembersAndMemberShips && currentUserSubGroupsMembersAndMemberShips[groupID]) {
-
-                    if (currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID]) {
-                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] });
-                    } else {
-                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
-                        currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] });
-                    }
-
-                } else {
-                    currentUserSubGroupsMembersAndMemberShips[groupID] = {};
-                    currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
-                    currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({ 'userID': snapshot.key(), 'membership-type': snapshot.val()['membership-type'] })
-                }               
-                //currentUserSubGroupsMembers[groupID][subgroupID] = snapshot.key();
-            }); //firebaseService.getRefSubGroupMembers
-            
-            //remove subgroup when child_removed from subgroup
-            firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID).on('child_removed', function (snapshot) {
-                // console.log('member child_removed: ', snapshot.key(), snapshot.val());
-                //when member remove from subgroup then update array of  currentUserSubGroupsMembersAndMemberShips
-                delete currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID];
-    
-            });
-        } //getSubGroupsMembersOfCurrentUsers
-
-
-
-        function getActivities() {
-            return currentUserActivities;
-        }
-
-        function getSubgroupNamesAndMemberships() {
-            return currentUserSubGroupNamesAndMemberShips;
-        } //getSubgroupNamesAndMemberships
-
-        function getSubgroupMembersAndMemberships() {
-            return currentUserSubGroupsMembersAndMemberShips;
-        }
-
-        // type = group, subgroup, policy, progressReport, firepad, chat
-        //targetinfo = {id: '', url: '', title: '', type: '' }
-        //area = {type: '', action: ''}
-        //memberUserID = if object is user for notification
-
-        function activityHasSeen() {
-            var multipath = {};
-            currentUserActivities.forEach(function (val, index) {
-                if (val.seen === false) {
-                    multipath['/user-activity-streams/' + userID + '/' + val.activityID + '/seen'] = true;
-                }
-            });
-        }
-
-        //calling from services or controller (public)
-        function activityStream(type, targetinfo, area, activityGroupOrSubGroupID, memberID, object) {
-            //function activityStream(type, targetinfo, area, activityGroupOrSubGroupID, memberUserID) {
-            var obj = {}; //object: affected area for user.... (represent notification)
-
-            if (object) {
-
-                saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, object);
-
+            if (currentUserSubGroupsMembersAndMemberShips[groupID][
+                subgroupID
+              ]) {
+              currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID]
+                .push({
+                  'userID': snapshot.key(),
+                  'membership-type': snapshot.val()['membership-type']
+                });
             } else {
-
-                if (memberID) { // incase of group ceration or group edit
-                    firebaseService.asyncCheckIfUserExists(memberID).then(function (res) {
-                        obj = {
-                            "type": type,
-                            "id": memberID, //an index should be set on this
-                            "email": res.user.email,
-                            "displayName": res.user.firstName + " " + res.user.lastName,
-                        };
-                        //now calling function for save to firebase....
-                        saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, obj);
-                    });
-                } else {
-                    obj = {
-                        "type": type,
-                        "id": targetinfo.id, //an index should be set on this
-                        "url": targetinfo.id,
-                        "displayName": targetinfo.title,
-                    };
-                    //now calling function for save to firebase....
-                    saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, obj);
-                }
-
+              currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
+              currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID]
+                .push({
+                  'userID': snapshot.key(),
+                  'membership-type': snapshot.val()['membership-type']
+                });
             }
 
+          } else {
+            currentUserSubGroupsMembersAndMemberShips[groupID] = {};
+            currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID] = [];
+            currentUserSubGroupsMembersAndMemberShips[groupID][subgroupID].push({
+              'userID': snapshot.key(),
+              'membership-type': snapshot.val()['membership-type']
+            })
+          }
+          //currentUserSubGroupsMembers[groupID][subgroupID] = snapshot.key();
+        }); //firebaseService.getRefSubGroupMembers
 
-        } //activityStream
-        //calling from here  (private)
-        function saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID, object) {
-            //function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object) {
-            // ## target ##
-            //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
-            var target = {
-                "type": type,
-                "id": targetinfo.id,
-                "url": targetinfo.url,
-                "displayName": targetinfo.title
+      //remove subgroup when child_removed from subgroup
+      firebaseService.getRefSubGroupMembers().child(groupID).child(subgroupID)
+        .on('child_removed', function(snapshot) {
+          // console.log('member child_removed: ', snapshot.key(), snapshot.val());
+          //when member remove from subgroup then update array of  currentUserSubGroupsMembersAndMemberShips
+          delete currentUserSubGroupsMembersAndMemberShips[groupID][
+            subgroupID
+          ];
+
+        });
+    } //getSubGroupsMembersOfCurrentUsers
+
+
+
+    function getActivities() {
+      return currentUserActivities;
+    }
+
+    function getSubgroupNamesAndMemberships() {
+      return currentUserSubGroupNamesAndMemberShips;
+    } //getSubgroupNamesAndMemberships
+
+    function getSubgroupMembersAndMemberships() {
+      return currentUserSubGroupsMembersAndMemberShips;
+    }
+
+
+    //new service  # start
+
+    var userGroupz = {};
+    var userSubGroupz = {};
+    var subgroupsOfGroup = {};
+
+    function userGroupEvents() {
+      //group added
+      ref.child('user-group-memberships').child(userID).on('child_added',
+        function(group) {
+          if (group) {
+            // console.log('watch added raw', group.val());
+            var obj = {
+              'membership-type': group.val()['membership-type'],
+              'title': ''
+            };
+            userGroupz[group.key()] = obj;
+
+            // console.log('watch added', userGroupz, group.val()['membership-type'] );
+
+            //subgroup add event
+            userSubGroupEvents(group.key());
+
+            // group users
+            getUserGroupMembers(group.key());
+
+            setTimeout(function() {
+              //get subgroups of this group is memebership type is owner
+              (group.val()['membership-type'] === 1) ?
+              getSubgroupOfGroups(group.key()): null;
+            }, 1000);
+          }
+        });
+
+      //group changed
+      ref.child('user-group-memberships').child(userID).on('child_changed',
+        function(group) {
+          if (group) {
+            console.log('watch changed raw', group.val());
+            var obj = {
+              'membership-type': group.val()['membership-type'],
+              'title': ''
+            };
+            userGroupz[group.key()] = obj;
+            console.log('watch changed', userGroupz);
+          }
+        });
+
+      //group removed
+      ref.child('user-group-memberships').child(userID).on('child_removed',
+        function(group) {
+          if (group) {
+            console.log('watch removed raw', group.val());
+            delete userGroupz[group.key()];
+            console.log('watch remove', userGroupz);
+          }
+        });
+    }
+
+    function userSubGroupEvents(groupid) {
+      // subgroup added
+      ref.child('user-subgroup-memberships').child(userID).child(groupid).on(
+        'child_added',
+        function(subgroup) {
+          if (subgroup) {
+            // console.log('watch added raw', subgroup.val());
+            var obj = {
+              'membership-type': subgroup.val()['membership-type'],
+              'title': ''
             };
 
-            var displayNameObject = {
-                'group': {
-                    'membersettings': { //reject == ignore
-                        'group-ignore-member': actor.displayName + " rejected " + object.displayName + "'s membership request for " + target.displayName,
-                        'group-approve-member': actor.displayName + " approved " + object.displayName + " as a member in " + target.displayName,
-                        'user-membership-from-admin-to-member': actor.displayName + " changed " + object.displayName + "'s membership from \"admin\" to \"member\" for " + target.displayName,
-                        'user-membership-from-member-to-admin': actor.displayName + " changed " + object.displayName + "'s membership from \"member\" to \"admin\" for " + target.displayName,
-                        'user-membership-block': actor.displayName + " changed " + object.displayName + "'s membership to \"suspend\" for " + target.displayName,
-                        'user-membership-unblock': actor.displayName + " changed " + object.displayName + "'s membership from \"suspend\" to \"member\" for " + target.displayName,
-                        'group-member-removed': actor.displayName + " removed " + object.displayName + " from " + target.displayName,
-                    }, //membersettings
-                    'group-created': actor.displayName + " created group " + target.displayName,
-                    'group-updated': actor.displayName + " udpated group " + target.displayName,
-                    'group-join': actor.displayName + " sent team join request of " + target.displayName,
-                }, //'type: group'
-                'subgroup': {
-                    'subgroup-created': actor.displayName + " created subgroup " + target.displayName,
-                    'subgroup-updated': actor.displayName + " updated subgroup " + target.displayName,
-                    'subgroup-member-assigned': actor.displayName + " assigned " + object.displayName + " as a member of " + target.displayName,
-                    'subgroup-admin-assigned': actor.displayName + " assigned " + object.displayName + " as a admin of " + target.displayName,
-                    'subgroup-member-removed': actor.displayName + " removed as member " + object.displayName + " from " + target.displayName,
-                    'subgroup-admin-removed': actor.displayName + " removed as admin " + object.displayName + " from " + target.displayName,
-                    'subgroup-join': actor.displayName + " sent team of teams join request of " + target.displayName,
-                }, //subgroup
-                'policy': {
-                    'policy-created': actor.displayName + " created policy " + target.displayName,
-                    'policy-updated': actor.displayName + " updated policy " + target.displayName,
-                    'policy-assigned-team': actor.displayName + " assigned policy " + target.displayName + " to " + object.displayName,
-                }, //policy
-                'progressReport': {
-                    'progressReport-created': actor.displayName + " Created progress report against " + target.displayName,
-                    'progressReport-updated': actor.displayName + " Updated progress report in " + target.displayName,
-                } //progressReport
-            }; //displayNameObject
-
-
-            var displayMessage = '';
-
-            if (area.action) {
-                displayMessage = displayNameObject[type][area.type][area.action];
+            if (userSubGroupz.hasOwnProperty(groupid)) {
+              userSubGroupz[groupid][subgroup.key()] = obj;
             } else {
-                displayMessage = displayNameObject[type][area.type];
+              userSubGroupz[groupid] = {};
+              userSubGroupz[groupid][subgroup.key()] = obj;
             }
 
-            var activity = {
-                language: "en",
-                verb: (area.action) ? area.action : area.type,
-                published: firebaseTimeStamp,
-                displayName: displayMessage,
-                actor: actor,
-                object: object,
-                target: target,
-                //seen: false
+            // console.log('watch added', userSubGroupz);
+            // get subgroup users
+            getUserSubGroupMembers(groupid, subgroup.key());
+          }
+        });
+
+      // group changed
+      ref.child('user-subgroup-memberships').child(userID).child(groupid).on(
+        'child_changed',
+        function(subgroup) {
+          if (subgroup) {
+            // console.log('watch added raw', subgroup.val());
+            var obj = {
+              'membership-type': subgroup.val()['membership-type'],
+              'title': ''
             };
+            userSubGroupz[groupid][subgroup.key()] = obj;
+            // console.log('watch changed', userSubGroupz);
+          }
+        });
 
-            var ref = firebaseService.getRefMain();
-            var pushObj = ref.child('group-activity-streams/' + activityGroupOrSubGroupID).push();
-            var activityPushID = pushObj.key();
+      //group removed
+      ref.child('user-subgroup-memberships').child(userID).child(groupid).on(
+        'child_removed',
+        function(subgroup) {
+          if (subgroup) {
+            console.log('watch added raw', subgroup.val());
+            delete userSubGroupz[groupid][subgroup.key()];
+            console.log('watch delete', userSubGroupz);
+          }
+        });
+    }
 
-            var multipath = {};
+    function getSubgroupOfGroups(groupid) {
+      // console.log('watch fireeeeeeeeeeeeeeeeeee');
+      //subgroup added
+      ref.child('subgroups').child(groupid).on('child_added', function(
+        subgroup) {
+        // console.log('watch fireeeeeeeeeeeeeeeeeeeee22222222', subgroup);
+        if (subgroupsOfGroup.hasOwnProperty(groupid)) {
+          subgroupsOfGroup[groupid].push(subgroup.key());
+        } else {
+          subgroupsOfGroup[groupid] = [];
+          subgroupsOfGroup[groupid].push(subgroup.key());
+        }
 
-            if (type === 'group') {
-                //firebase node: group-activity-streams
-                if (area.type === 'group-created' || area.type === 'group-updated') {
-                    delete activity.target;
-                    delete activity.object;
-                } else if (area.type === 'group-join' || area.type === 'membersettings') {
-                    delete activity.target;
-                }
+        // console.log('watch added subgrp of grp', subgroupsOfGroup);
 
-                multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+      });
 
-            } else if (type === 'subgroup') {
-                //firebase node: subgroup-activity-streams
-                if (area.type === 'subgroup-created' || area.type === 'subgroup-updated') {
-                    delete activity.target;
-                    delete activity.object;
-                } else if (area.type === 'subgroup-join') {
-                    delete activity.target;
-                }
+      //subgroup removed
+      ref.child('subgroups').child(groupid).on('child_removed', function(
+        subgroup) {
+        var index = subgroupsOfGroup[groupid].indexOf(subgroup.key());
 
-                multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+        // remove from array of subgroups
+        subgroupsOfGroup[groupid].splice(index, 1);
+      });
 
-            } else if (type === 'policy') {
-                //firbase node:
-                //if pass groupid in 'activityGroupOrSubGroupID' then save into firebase group-activity-streams
-                //else if pass subgroupid in 'activityGroupOrSubGroupID' then save into firebase subgroup-activity-streams
-                //checking if activityGroupOrSubGroupID contains / then location is subgroup-activity else group-activity
-                if (activityGroupOrSubGroupID.indexOf('/') > -1) {
-                    multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
-                } else {
-                    multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
-                }
-            } else if (type === 'progressReport') {
-                //progress report belongs to subgroup then activityGroupOrSubGroupID will be subgroupID
-                multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID + '/' + activityPushID] = activity;
+    }
 
-            }
-
-            //  console.log('activity_ activityGroupOrSubGroupID: ', activityGroupOrSubGroupID);
-            //  console.log('activity_  type: ', type);
-            //  console.log('activity_ : ', activity);
-
-            firebaseService.getRefMain().update(multipath, function (err) {
-                if (err) {
-                    console.log('activityError', err);
-                }
-            });
-        } //saveToFirebase
-
-        // function currentUserActivity() {
-        //    var deffer = $q.deffer();
-        //    var refGroupActivitieStream = firebaseService.groupsActivityStreams().child('group002').child(userID);
-        //    refGroupActivitieStream.on('child_added',function(snapshot){
-        //       console.log(snapshot.val());
-        //    });
-        //    return deffer.promise;
-        // }
-
-        return {
-            init: init,
-            getActivities: getActivities,
-            activityStream: activityStream
+    function getUserGroupMembers(groupid) {
+      // group-members child_added
+      ref.child('group-members').child(groupid).on('child_added', function(
+        user) {
+        //    console.log('child_added',user.key(),user.val() )
+        var obj = {
+          'membership-type': user.val()['membership-type'],
+          'title': ''
         };
-    } //activityStreamService
+        if (userGroupz.hasOwnProperty(groupid)) {
+          if (userGroupz[groupid].hasOwnProperty("users")) {
+            userGroupz[groupid]["users"][user.key()] = obj;
+          } else {
+            userGroupz[groupid]["users"] = {};
+            userGroupz[groupid]["users"][user.key()] = obj;
+          }
+        }
+      });
+
+      // group-members child_changed
+      ref.child('group-members').child(groupid).on('child_changed', function(
+        user) {
+        console.log('child_changed', user.key(), user.val())
+        var obj = {
+          'membership-type': user.val()['membership-type'],
+          'title': ''
+        };
+        userGroupz[groupid]["users"][user.key()] = obj;
+      });
+    }
+
+    function getUserSubGroupMembers(groupid, subgroupid) {
+      // subgroup-members child_added
+      ref.child('subgroup-members').child(groupid).child(subgroupid).on(
+        'child_added',
+        function(user) {
+          var obj = {
+            'membership-type': user.val()['membership-type'],
+            'title': ''
+          };
+
+          if (userSubGroupz[groupid].hasOwnProperty(subgroupid)) {
+            if (userSubGroupz[groupid][subgroupid].hasOwnProperty("users")) {
+              userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;
+            } else {
+              userSubGroupz[groupid][subgroupid]["users"] = {};
+              userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;
+            }
+          }
+        });
+
+      // subgroup-members child_changed
+      ref.child('subgroup-members').child(groupid).child(subgroupid).on(
+        'child_changed',
+        function(user) {
+          var obj = {
+            'membership-type': user.val()['membership-type'],
+            'title': ''
+          };
+          if (userSubGroupz[groupid][subgroupid].hasOwnProperty("users")) {
+            if (userSubGroupz[groupid][subgroupid]["users"].hasOwnProperty(
+                user.key())) {
+              userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;
+            } else {
+              userSubGroupz[groupid][subgroupid]["users"][user.key()] = {};
+              userSubGroupz[groupid][subgroupid]["users"][user.key()] = obj;
+            }
+          }
+
+
+        });
+
+      // subgroup-members child_changed
+      ref.child('subgroup-members').child(groupid).child(subgroupid).on(
+        'child_removed',
+        function(user) {
+          delete userSubGroupz[groupid][subgroupid]["users"][user.key()];
+        });
+
+
+    }
+
+    function getCurrentUserGroups() {
+      return userGroupz;
+    }
+
+    function getCurrentUserSubgroups() {
+      return userSubGroupz;
+    }
+
+    function getSubgroupsOfGroup() {
+      console.log('watch', subgroupsOfGroup);
+      return subgroupsOfGroup;
+    }
+    //new service  # end
+
+
+
+    // type = group, subgroup, policy, progressReport, firepad, chat
+    //targetinfo = {id: '', url: '', title: '', type: '' }
+    //area = {type: '', action: ''}
+    //memberUserID = if object is user for notification
+
+    // activities - seen - by - user
+    // userid
+    //timesapan:
+    function activityHasSeen() {
+      firebaseService.getRefActivitySeen().child(userID).update({
+        timestamp: firebaseTimeStamp
+      }, function(err) {
+        if (!err) {
+          currentUserActivities.splice(0, currentUserActivities.length);
+        }
+      });
+    }
+
+    //calling from services or controller (public)
+    function activityStream(type, targetinfo, area, activityGroupOrSubGroupID,
+      memberID, object) {
+      //function activityStream(type, targetinfo, area, activityGroupOrSubGroupID, memberUserID) {
+      var obj = {}; //object: affected area for user.... (represent notification)
+
+      if (object) {
+
+        saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID,
+          object);
+
+      } else {
+
+        if (memberID) { // incase of group ceration or group edit
+          firebaseService.asyncCheckIfUserExists(memberID).then(function(res) {
+            obj = {
+              "type": type,
+              "id": memberID, //an index should be set on this
+              "email": res.user.email,
+              "displayName": res.user.firstName + " " + res.user.lastName,
+            };
+            //now calling function for save to firebase....
+            saveToFirebase(type, targetinfo, area,
+              activityGroupOrSubGroupID, obj);
+          });
+        } else {
+          obj = {
+            "type": type,
+            "id": targetinfo.id, //an index should be set on this
+            "url": targetinfo.id,
+            "displayName": targetinfo.title,
+          };
+          //now calling function for save to firebase....
+          saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID,
+            obj);
+        }
+
+      }
+
+
+    } //activityStream
+    //calling from here  (private)
+    function saveToFirebase(type, targetinfo, area, activityGroupOrSubGroupID,
+      object) {
+      //function saveToFirebase(type, targetinfo, area, groupID, memberUserID, object) {
+      // ## target ##
+      //if related group target is group, if related subgroup target is subgroup, if related policy target is policy, if related progressReport target is progressReport
+      var target = {
+        "type": type,
+        "id": targetinfo.id,
+        "url": targetinfo.url,
+        "displayName": targetinfo.title
+      };
+
+      var displayNameObject = {
+        'group': {
+          'membersettings': { //reject == ignore
+            'group-ignore-member': actor.displayName + " rejected " +
+              object.displayName + "'s membership request for " + target.displayName,
+            'group-approve-member': actor.displayName + " approved " +
+              object.displayName + " as a member in " + target.displayName,
+            'user-membership-from-admin-to-member': actor.displayName +
+              " changed " + object.displayName +
+              "'s membership from \"admin\" to \"member\" for " + target.displayName,
+            'user-membership-from-member-to-admin': actor.displayName +
+              " changed " + object.displayName +
+              "'s membership from \"member\" to \"admin\" for " + target.displayName,
+            'user-membership-block': actor.displayName + " changed " +
+              object.displayName + "'s membership to \"suspend\" for " +
+              target.displayName,
+            'user-membership-unblock': actor.displayName + " changed " +
+              object.displayName +
+              "'s membership from \"suspend\" to \"member\" for " + target.displayName,
+            'group-member-removed': actor.displayName + " removed " +
+              object.displayName + " from " + target.displayName,
+          }, //membersettings
+          'group-created': actor.displayName + " created group " + target.displayName,
+          'group-updated': actor.displayName + " udpated group " + target.displayName,
+          'group-join': actor.displayName + " sent team join request of " +
+            target.displayName,
+        }, //'type: group'
+        'subgroup': {
+          'subgroup-created': actor.displayName + " created subgroup " +
+            target.displayName,
+          'subgroup-updated': actor.displayName + " updated subgroup " +
+            target.displayName,
+          'subgroup-member-assigned': actor.displayName + " assigned " +
+            object.displayName + " as a member of " + target.displayName,
+          'subgroup-admin-assigned': actor.displayName + " assigned " +
+            object.displayName + " as a admin of " + target.displayName,
+          'subgroup-member-removed': actor.displayName +
+            " removed as member " + object.displayName + " from " + target.displayName,
+          'subgroup-admin-removed': actor.displayName +
+            " removed as admin " + object.displayName + " from " + target.displayName,
+          'subgroup-join': actor.displayName +
+            " sent team of teams join request of " + target.displayName,
+          'subgroup-checkin': actor.displayName + " checkin " + target.displayName,
+          'subgroup-checkout': actor.displayName + " checkout from " +
+            target.displayName,
+
+        }, //subgroup
+        'policy': {
+          'policy-created': actor.displayName + " created policy " + target
+            .displayName,
+          'policy-updated': actor.displayName + " updated policy " + target
+            .displayName,
+          'policy-assigned-team': actor.displayName + " assigned policy " +
+            target.displayName + " to " + object.displayName,
+        }, //policy
+        'progressReport': {
+          'progressReport-created': actor.displayName +
+            " Created progress report against " + target.displayName,
+          'progressReport-updated': actor.displayName +
+            " Updated progress report in " + target.displayName,
+        } //progressReport
+      }; //displayNameObject
+
+
+      var displayMessage = '';
+
+      if (area.action) {
+        displayMessage = displayNameObject[type][area.type][area.action];
+      } else {
+        displayMessage = displayNameObject[type][area.type];
+      }
+
+      var activity = {
+        language: "en",
+        verb: (area.action) ? area.action : area.type,
+        published: firebaseTimeStamp,
+        displayName: displayMessage,
+        actor: actor,
+        object: object,
+        target: target,
+        //seen: false
+      };
+
+      var ref = firebaseService.getRefMain();
+      var pushObj = ref.child('group-activity-streams/' +
+        activityGroupOrSubGroupID).push();
+      var activityPushID = pushObj.key();
+
+      var multipath = {};
+
+      if (type === 'group') {
+        //firebase node: group-activity-streams
+        if (area.type === 'group-created' || area.type === 'group-updated') {
+          delete activity.target;
+          delete activity.object;
+        } else if (area.type === 'group-join' || area.type ===
+          'membersettings') {
+          delete activity.target;
+        }
+
+        multipath['group-activity-streams/' + activityGroupOrSubGroupID + '/' +
+          activityPushID] = activity;
+
+      } else if (type === 'subgroup') {
+        //firebase node: subgroup-activity-streams
+        if (area.type === 'subgroup-created' || area.type ===
+          'subgroup-updated') {
+          delete activity.target;
+          delete activity.object;
+        } else if (area.type === 'subgroup-join') {
+          delete activity.target;
+        }
+
+        multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID +
+          '/' + activityPushID] = activity;
+
+      } else if (type === 'policy') {
+        //firbase node:
+        //if pass groupid in 'activityGroupOrSubGroupID' then save into firebase group-activity-streams
+        //else if pass subgroupid in 'activityGroupOrSubGroupID' then save into firebase subgroup-activity-streams
+        //checking if activityGroupOrSubGroupID contains / then location is subgroup-activity else group-activity
+        if (activityGroupOrSubGroupID.indexOf('/') > -1) {
+          multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID +
+            '/' + activityPushID] = activity;
+        } else {
+          multipath['group-activity-streams/' + activityGroupOrSubGroupID +
+            '/' + activityPushID] = activity;
+        }
+      } else if (type === 'progressReport') {
+        //progress report belongs to subgroup then activityGroupOrSubGroupID will be subgroupID
+        multipath['subgroup-activity-streams/' + activityGroupOrSubGroupID +
+          '/' + activityPushID] = activity;
+
+      }
+
+      //  console.log('activity_ activityGroupOrSubGroupID: ', activityGroupOrSubGroupID);
+      //  console.log('activity_  type: ', type);
+      //  console.log('activity_ : ', activity);
+
+      firebaseService.getRefMain().update(multipath, function(err) {
+        if (err) {
+          console.log('activityError', err);
+        }
+      });
+    } //saveToFirebase
+
+    // function currentUserActivity() {
+    //    var deffer = $q.deffer();
+    //    var refGroupActivitieStream = firebaseService.groupsActivityStreams().child('group002').child(userID);
+    //    refGroupActivitieStream.on('child_added',function(snapshot){
+    //       console.log(snapshot.val());
+    //    });
+    //    return deffer.promise;
+    // }
+
+    return {
+      init: init,
+      getActivities: getActivities,
+      activityStream: activityStream,
+      activityHasSeen: activityHasSeen,
+      getSubgroupNamesAndMemberships: getSubgroupNamesAndMemberships
+    };
+  } //activityStreamService
 })();
 
 /**
@@ -9300,7 +8274,9 @@ angular.module('core')
 
                 login: function(userCred, successFn, failureFn) {
                     var self = this;
-                    $http.post(appConfig.apiBaseUrl + '/api/signin', userCred).
+                    $http.defaults.headers.post["Content-Type"] = "text/plain";
+                    // $http.post(appConfig.apiBaseUrl + '/api/signin', userCred).
+                    $http.post(appConfig.apiBaseUrl + '/signin', userCred).
                     success(function(data, status, headers, config) {
 
                         // this callback will be called asynchronously
@@ -9336,8 +8312,9 @@ angular.module('core')
                 },
                 forgotPassword: function(userCred) {
                     var defer = $q.defer();
-
-                    $http.post(appConfig.apiBaseUrl + '/api/forgotpassword', userCred)
+                    $http.defaults.headers.post["Content-Type"] = "text/plain";
+                    // $http.post(appConfig.apiBaseUrl + '/api/forgotpassword', userCred)
+                    $http.post(appConfig.apiBaseUrl + '/forgotpassword', userCred)
                         .success(function(data, status, headers, config) {
                             if (data.statusCode === 1) {
                                 defer.resolve(data.statusDesc);
@@ -9354,7 +8331,9 @@ angular.module('core')
                 },
                 signup: function(userInfo, successFn, failureFn) {
                     var self = this;
-                    $http.post(appConfig.apiBaseUrl + '/api/signup', {
+                    $http.defaults.headers.post["Content-Type"] = "text/plain";
+                    // $http.post(appConfig.apiBaseUrl + '/api/signup', {
+                    $http.post(appConfig.apiBaseUrl + '/signup', {
                         email: userInfo.email,
                         firstName: userInfo.firstName,
                         lastName: userInfo.lastName,
@@ -10000,8 +8979,8 @@ angular.module('core')
                                             }
                                         });
                                     });
-                                    // firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
-                                    //     // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
+                                    firebaseService.getRefGroupMembers().child(group.key()).child(userdata.$id).once('value', function(snapshot) {
+                                        // console.log('snap', snapshot.getPriority(), snapshot.val(), snapshot.key())
                                         userData.push({
                                             id: userdata.$id,
                                             type: type,
@@ -10011,7 +8990,7 @@ angular.module('core')
                                             groupTitle: groupsubgroupTitle[group.key()],
                                             subgroupID: subgroup.key(),
                                             subgroupTitle: groupsubgroupTitle[subgroup.key()],
-                                            //membershipNo : snapshot.getPriority() || '',
+                                            membershipNo : snapshot.getPriority() || '',
                                             contactNumber: usermasterdata.contactNumber || '',
                                             onlinestatus: false,
                                             /*onlineweb: 0,
@@ -10024,7 +9003,7 @@ angular.module('core')
                                             lastName: usermasterdata.lastName,
                                             fullName: usermasterdata.firstName + ' ' + usermasterdata.lastName
                                         });
-                                    // });
+                                    });
                                 });
                             });
                         });
@@ -10286,262 +9265,347 @@ angular.module('core')
 'use strict';
 
 angular.module('core')
-    .factory('firebaseService', ["$firebaseAuth", "appConfig", "$q", "$location", "$timeout", "messageService", "$firebaseObject", "userPresenceService", "userService",
-        function($firebaseAuth, appConfig, $q, $location, $timeout, messageService, $firebaseObject, userPresenceService, userService) {
+  .factory('firebaseService', ["$firebaseAuth", "appConfig", "$q", "$location",
+    "$timeout", "messageService", "$firebaseObject", "userPresenceService",
+    "userService",
+    function($firebaseAuth, appConfig, $q, $location, $timeout,
+      messageService, $firebaseObject, userPresenceService, userService) {
 
-            var ref = new Firebase(appConfig.myFirebase);
+      var ref = new Firebase(appConfig.myFirebase);
 
-            var currentAuthData = null;
-            var refUsers = null;
-            var refGroups = null;
-            var refSubGroups = null;
-            var refMicroGroups = null;
-            var refUserGroupMemberships = null;
-            var refUserSubGroupMemberships = null;
-            var refUserMicroGroupMemberships = null;
-            var groupsUserInvites = null;
-            var groupMembershipRequests = null;
-            var groupsMembershipRequestsByUser = null;
-            var subgroupMembershipRequests = null;
-            var subgroupMembershipRequestsByUser = null;
-            var groupMembers = null;
-            var subgroupMembers = null;
-            var microgroupMembers = null;
-            var groupsNames = null;
-            var subgroupsNames = null;
-            var microgroupsNames = null;
-            var groupsActivityStreams = null;
-            var subgroupsActivityStreams = null;
-            var microgroupsActivityStreams = null;
-            var groupCheckinCurrent = null;
-            var groupCheckinRecords = null;
-            var subgroupCheckinRecords = null;
-            var groupLocsDefined = null;
-            var flattenedGroups = null;
-            var loggedUserRef = null;
-            var policies = null;
-            var userPolicies = null;
-            var progressReport = null;
-            var subgroupPolicies = null;
+      var currentAuthData = null;
+      var refUsers = null;
+      var refGroups = null;
+      var refSubGroups = null;
+      var refMicroGroups = null;
+      var refUserGroupMemberships = null;
+      var refUserSubGroupMemberships = null;
+      var refUserMicroGroupMemberships = null;
+      var groupsUserInvites = null;
+      var groupMembershipRequests = null;
+      var groupsMembershipRequestsByUser = null;
+      var subgroupMembershipRequests = null;
+      var subgroupMembershipRequestsByUser = null;
+      var groupMembers = null;
+      var subgroupMembers = null;
+      var microgroupMembers = null;
+      var groupsNames = null;
+      var subgroupsNames = null;
+      var microgroupsNames = null;
+      var groupsActivityStreams = null;
+      var subgroupsActivityStreams = null;
+      var microgroupsActivityStreams = null;
+      var groupCheckinCurrent = null;
+      var groupCheckinRecords = null;
+      var subgroupCheckinRecords = null;
+      var groupLocsDefined = null;
+      var flattenedGroups = null;
+      var loggedUserRef = null;
+      var policies = null;
+      var userPolicies = null;
+      var progressReport = null;
+      var subgroupPolicies = null;
+      var activitySeen = null;
+      var questionBank = null;
+      var userQuestionBanks = null;
+      var questionBankMemberships = null;
+      var questionBankNames = null;
+      var quizNames = null;
+      var userQuiz = null;
+      var quiz = null;
 
-            return {
-                addUpdateHandler: function() {
-                    ref.onAuth(function(authData) {
-                        if (authData) {
-                            currentAuthData = authData;
-                            //console.info("User " + authData.uid + " is logged in with " + authData.provider);
-                        } else {
-                            //console.info("User is logged out");
-                            //delete $sessionStorage.loggedInUser;
-                            userService.removeCurrentUser();
-                            appConfig.firebaseAuth = false;
-                            messageService.showFailure("User is logged out, Please login again.");
-                            //$location.path("/user/login");
-                        }
-                    });
+      return {
+        addUpdateHandler: function() {
+          ref.onAuth(function(authData) {
+            if (authData) {
+              currentAuthData = authData;
+              //console.info("User " + authData.uid + " is logged in with " + authData.provider);
+            } else {
+              //console.info("User is logged out");
+              //delete $sessionStorage.loggedInUser;
+              userService.removeCurrentUser();
+              appConfig.firebaseAuth = false;
+              messageService.showFailure(
+                "User is logged out, Please login again.");
+              //$location.path("/user/login");
+            }
+          });
 
-                },
-                getRefMain: function() {
-                    return ref;
-                },
-                getAuthData: function() {
-                    return ref.getAuth();
-                },
-                getRefUsers: function() {
-                    return refUsers;
-                },
-                getRefUserGroupMemberships: function() {
-                    return refUserGroupMemberships;
-                },
-                getRefUserSubGroupMemberships: function() {
-                    return refUserSubGroupMemberships;
-                },
-                getRefUserMicroGroupMemberships: function() {
-                    return refUserMicroGroupMemberships;
-                },
-                getRefGroupsUserInvites: function() {
-                    return groupsUserInvites;
-                },
-                getRefGroupMembershipRequests: function() {
-                    return groupMembershipRequests;
-                },
-                getRefGroupMembershipRequestsByUser: function() {
-                    return groupsMembershipRequestsByUser;
-                },
-                getRefSubgroupMembershipRequests: function() {
-                    return subgroupMembershipRequests;
-                },
-                getRefSubgroupMembershipRequestsByUser: function() {
-                    return subgroupMembershipRequestsByUser;
-                },
-                getRefGroupMembers: function() {
-                    return groupMembers;
-                },
-                getRefSubGroupMembers: function() {
-                    return subgroupMembers;
-                },
-                getRefMicroGroupMembers: function() {
-                    return microgroupMembers;
-                },
-                getRefGroupsNames: function() {
-                    return groupsNames;
-                },
-                getRefSubGroupsNames: function() {
-                    return subgroupsNames;
-                },
-                getRefMicroGroupsNames: function() {
-                    return microgroupsNames;
-                },
-                getRefGroupsActivityStreams: function() {
-                    return groupsActivityStreams;
-                },
-                getRefSubGroupsActivityStreams: function() {
-                    return subgroupsActivityStreams;
-                },
-                getRefMicroGroupsActivityStreams: function() {
-                    return microgroupsActivityStreams;
-                },
-                getRefGroups: function() {
-                    return refGroups;
-                },
-                getRefSubGroups: function() {
-                    return refSubGroups;
-                },
-                getRefMicroGroups: function() {
-                    return refMicroGroups;
-                },
-                getRefGroupCheckinCurrent: function() {
-                    return groupCheckinCurrent;
-                },
-                getRefGroupCheckinRecords: function() {
-                    return groupCheckinRecords;
-                },
-                getRefsubgroupCheckinRecords: function() {
-                    return subgroupCheckinRecords;
-                },
-                getRefGroupLocsDefined: function() {
-                    return groupLocsDefined;
-                },
-                getSignedinUserRef: function() {
-                    return loggedUserRef;
-                },
-                getRefFlattendGroups: function() {
-                    return flattenedGroups;
-                },
-                getRefPolicies: function() {
-                    return policies;
-                },
-                getRefUserPolicies: function() {
-                    return userPolicies;
-                },
-                getRefProgressReport: function() {
-                    return progressReport;
-                },
-                getRefSubgroupPolicies: function(){
-                        return subgroupPolicies;
-                },
-                logout: function(){
-                  console.log('unauth the firebase');
-                  ref.unauth();
-                  var authdata = ref.getAuth();
-                  console.log(authdata);
-                },
-                asyncLogin: function(userID, token) {
-                    var deferred = $q.defer();
-                    if (token) { // means user logged in from web server
-                        Firebase.goOnline(); // if previously manually signed out from firebase.
-                        var auth = $firebaseAuth(ref);
-                        auth.$authWithCustomToken(token).then(function(authData) {
-                            if (authData.uid == userID) {
+        },
+        getRefMain: function() {
+          return ref;
+        },
+        getAuthData: function() {
+          return ref.getAuth();
+        },
+        getRefUsers: function() {
+          return refUsers;
+        },
+        getRefUserGroupMemberships: function() {
+          return refUserGroupMemberships;
+        },
+        getRefUserSubGroupMemberships: function() {
+          return refUserSubGroupMemberships;
+        },
+        getRefUserMicroGroupMemberships: function() {
+          return refUserMicroGroupMemberships;
+        },
+        getRefGroupsUserInvites: function() {
+          return groupsUserInvites;
+        },
+        getRefGroupMembershipRequests: function() {
+          return groupMembershipRequests;
+        },
+        getRefGroupMembershipRequestsByUser: function() {
+          return groupsMembershipRequestsByUser;
+        },
+        getRefSubgroupMembershipRequests: function() {
+          return subgroupMembershipRequests;
+        },
+        getRefSubgroupMembershipRequestsByUser: function() {
+          return subgroupMembershipRequestsByUser;
+        },
+        getRefGroupMembers: function() {
+          return groupMembers;
+        },
+        getRefSubGroupMembers: function() {
+          return subgroupMembers;
+        },
+        getRefMicroGroupMembers: function() {
+          return microgroupMembers;
+        },
+        getRefGroupsNames: function() {
+          return groupsNames;
+        },
+        getRefSubGroupsNames: function() {
+          return subgroupsNames;
+        },
+        getRefMicroGroupsNames: function() {
+          return microgroupsNames;
+        },
+        getRefGroupsActivityStreams: function() {
+          return groupsActivityStreams;
+        },
+        getRefSubGroupsActivityStreams: function() {
+          return subgroupsActivityStreams;
+        },
+        getRefMicroGroupsActivityStreams: function() {
+          return microgroupsActivityStreams;
+        },
+        getRefGroups: function() {
+          return refGroups;
+        },
+        getRefSubGroups: function() {
+          return refSubGroups;
+        },
+        getRefMicroGroups: function() {
+          return refMicroGroups;
+        },
+        getRefGroupCheckinCurrent: function() {
+          return groupCheckinCurrent;
+        },
+        getRefGroupCheckinRecords: function() {
+          return groupCheckinRecords;
+        },
+        getRefsubgroupCheckinRecords: function() {
+          return subgroupCheckinRecords;
+        },
+        getRefGroupLocsDefined: function() {
+          return groupLocsDefined;
+        },
+        getSignedinUserRef: function() {
+          return loggedUserRef;
+        },
+        getRefFlattendGroups: function() {
+          return flattenedGroups;
+        },
+        getRefPolicies: function() {
+          return policies;
+        },
+        getRefUserPolicies: function() {
+          return userPolicies;
+        },
+        getRefProgressReport: function() {
+          return progressReport;
+        },
+        getRefSubgroupPolicies: function() {
+          return subgroupPolicies;
+        },
+        getRefActivitySeen: function() {
+          return activitySeen;
+        },
+        getRefQuestionBank: function() {
+          return questionBank;
+        },
+        getRefUserQuestionBanks: function() {
+          return userQuestionBanks;
+        },
+        getRefQuestionBankMemberships: function() {
+          return questionBankMemberships;
+        },
+        getRefQuestionBankNames: function() {
+          return questionBankNames;
+        },
+        getRefUserQuiz: function() {
+          return userQuiz;
+        },
+        getRefQuiz: function() {
+          return quiz;
+        },
+        getRefQuizNames: function() {
+          return quizNames;
+        },
+        logout: function() {
+          console.log('unauth the firebase');
+          ref.unauth();
+          var authdata = ref.getAuth();
+          console.log(authdata);
+        },
+        asyncLogin: function(userID, token) {
+          var deferred = $q.defer();
+          if (token) { // means user logged in from web server
+            Firebase.goOnline(); // if previously manually signed out from firebase.
+            var auth = $firebaseAuth(ref);
+            auth.$authWithCustomToken(token).then(function(authData) {
+              if (authData.uid == userID) {
 
-                                //authenticated
-                                appConfig.firebaseAuth = true;
-                                userService.setExpiry(authData.expires)
+                //authenticated
+                appConfig.firebaseAuth = true;
+                userService.setExpiry(authData.expires)
 
-                                /*storing references*/
-                                currentAuthData = authData;
-                                refUsers = ref.child("users");
-                                refGroups = ref.child("groups");
-                                refSubGroups = ref.child("subgroups");
-                                refMicroGroups = ref.child("microgroups");
-                                refUserGroupMemberships = ref.child("user-group-memberships");
-                                refUserSubGroupMemberships = ref.child("user-subgroup-memberships");
-                                refUserMicroGroupMemberships = ref.child("user-microgroup-memberships");
-                                groupsUserInvites = ref.child("groups-user-invites");
-                                groupMembershipRequests = ref.child("group-membership-requests");
-                                groupsMembershipRequestsByUser = ref.child("group-membership-requests-by-user");
-                                subgroupMembershipRequests = ref.child("subgroup-membership-requests");
-                                subgroupMembershipRequestsByUser = ref.child("subgroup-membership-requests-by-user");
-                                groupMembers = ref.child("group-members");
-                                subgroupMembers = ref.child("subgroup-members");
-                                microgroupMembers = ref.child("microgroup-members");
-                                groupsNames = ref.child("groups-names");
-                                subgroupsNames = ref.child("subgroups-names");
-                                microgroupsNames = ref.child("microgroups-names");
-                                groupsActivityStreams = ref.child("group-activity-streams");
-                                subgroupsActivityStreams = ref.child("subgroup-activity-streams");
-                                microgroupsActivityStreams = ref.child("microgroup-activity-streams");
-                                groupCheckinCurrent = ref.child("group-check-in-current");
-                                groupCheckinRecords = ref.child("group-check-in-records");
-                                subgroupCheckinRecords = ref.child("subgroup-check-in-records");
-                                groupLocsDefined = ref.child("group-locations-defined");
-                                flattenedGroups = ref.child("flattened-groups");
-                                policies = ref.child("policies");
-                                userPolicies = ref.child("user-policies");
-                                progressReport = ref.child('subgroup-progress-reports');
-                                subgroupPolicies = ref.child('subgroup-policies');
+                /*storing references*/
+                currentAuthData = authData;
+                refUsers = ref.child("users");
+                refGroups = ref.child("groups");
+                refSubGroups = ref.child("subgroups");
+                refMicroGroups = ref.child("microgroups");
+                refUserGroupMemberships = ref.child(
+                  "user-group-memberships");
+                refUserSubGroupMemberships = ref.child(
+                  "user-subgroup-memberships");
+                refUserMicroGroupMemberships = ref.child(
+                  "user-microgroup-memberships");
+                groupsUserInvites = ref.child("groups-user-invites");
+                groupMembershipRequests = ref.child(
+                  "group-membership-requests");
+                groupsMembershipRequestsByUser = ref.child(
+                  "group-membership-requests-by-user");
+                subgroupMembershipRequests = ref.child(
+                  "subgroup-membership-requests");
+                subgroupMembershipRequestsByUser = ref.child(
+                  "subgroup-membership-requests-by-user");
+                groupMembers = ref.child("group-members");
+                subgroupMembers = ref.child("subgroup-members");
+                microgroupMembers = ref.child("microgroup-members");
+                groupsNames = ref.child("groups-names");
+                subgroupsNames = ref.child("subgroups-names");
+                microgroupsNames = ref.child("microgroups-names");
+                groupsActivityStreams = ref.child(
+                  "group-activity-streams");
+                subgroupsActivityStreams = ref.child(
+                  "subgroup-activity-streams");
+                microgroupsActivityStreams = ref.child(
+                  "microgroup-activity-streams");
+                groupCheckinCurrent = ref.child(
+                  "group-check-in-current");
+                groupCheckinRecords = ref.child(
+                  "group-check-in-records");
+                subgroupCheckinRecords = ref.child(
+                  "subgroup-check-in-records");
+                groupLocsDefined = ref.child("group-locations-defined");
+                flattenedGroups = ref.child("flattened-groups");
+                policies = ref.child("policies");
+                userPolicies = ref.child("user-policies");
+                progressReport = ref.child('subgroup-progress-reports');
+                subgroupPolicies = ref.child('subgroup-policies');
+                activitySeen = ref.child('activities-seen-by-user');
+                questionBank = ref.child('question-bank');
+                userQuestionBanks = ref.child('user-question-banks');
+                questionBankMemberships = ref.child(
+                  'question-bank-memberships');
+                questionBankNames = ref.child('question-bank-names');
+                quizNames = ref.child('quiz-name');
+                userQuiz = ref.child('user-quiz');
+                quiz = ref.child('quizes');
 
-                                /*presence API work*/
-                                //explicitly passing references to avoid circular dependency issue.
-                                userPresenceService.init({
-                                    main: ref,
-                                    users: refUsers
-                                });
 
-                                //listen for firebase connection state and register presence
-                                userPresenceService.syncUserPresence(userID);
+                /*presence API work*/
+                //explicitly passing references to avoid circular dependency issue.
+                userPresenceService.init({
+                  main: ref,
+                  users: refUsers
+                });
 
-                                deferred.resolve({
-                                    loggedUserRef: loggedUserRef
-                                });
-                            } else {
-                                deferred.reject();
-                            }
-                        }).catch(function(error) {
-                            // console.error("Firebase Authentication failed: ", error);
-                            deferred.reject(error);
-                        });
-                    } else {
-                        deferred.reject(); //token not provided
-                    }
-                    return deferred.promise;
-                },
-                asyncCheckIfGroupExists: function(groupID) {
-                    var deferred = $q.defer();
-                    groupsNames.child(groupID).once('value', function(snapshot) {
-                        var exists = (snapshot.val() !== null);
-                        deferred.resolve({
-                            exists: exists,
-                            group: snapshot.val()
-                        });
-                    });
-                    return deferred.promise;
-                },
-                asyncCheckIfUserExists: function(userID) {
-                    var deferred = $q.defer();
-                    refUsers.child(userID).once('value', function(snapshot) {
-                        var exists = (snapshot.val() !== null);
-                        deferred.resolve({
-                            exists: exists,
-                            userID: userID,
-                            user: snapshot.val()
-                        });
-                    });
-                    return deferred.promise;
-                }
-            };
+                //listen for firebase connection state and register presence
+                userPresenceService.syncUserPresence(userID);
+
+                deferred.resolve({
+                  loggedUserRef: loggedUserRef
+                });
+              } else {
+                deferred.reject();
+              }
+            }).catch(function(error) {
+              // console.error("Firebase Authentication failed: ", error);
+              deferred.reject(error);
+            });
+          } else {
+            deferred.reject(); //token not provided
+          }
+          return deferred.promise;
+        },
+        asyncCheckIfGroupExists: function(groupID) {
+          var deferred = $q.defer();
+          groupsNames.child(groupID).once('value', function(snapshot) {
+            var exists = (snapshot.val() !== null);
+            deferred.resolve({
+              exists: exists,
+              group: snapshot.val()
+            });
+          });
+          return deferred.promise;
+        },
+        asyncCheckIfUserExists: function(userID) {
+          var deferred = $q.defer();
+          refUsers.child(userID).once('value', function(snapshot) {
+            var exists = (snapshot.val() !== null);
+            deferred.resolve({
+              exists: exists,
+              userID: userID,
+              user: snapshot.val()
+            });
+          });
+          return deferred.promise;
+        },
+        asyncCheckIfQuestionBankExists: function(questionBankUniqueID) {
+          var deferred = $q.defer();
+          questionBankNames.child(questionBankUniqueID).once('value',
+            function(
+              snapshot) {
+              var exists = (snapshot.val() !== null);
+              deferred.resolve({
+                exists: exists,
+                questionbank: snapshot.val()
+              });
+            });
+          return deferred.promise;
+        },
+        asyncCheckIfQuizExists: function(quizID) {
+          var deferred = $q.defer();
+          quizNames.child(quizID).once('value',
+            function(
+              snapshot) {
+              var exists = (snapshot.val() !== null);
+              deferred.resolve({
+                exists: exists,
+                quizbank: snapshot.val()
+              });
+            });
+          return deferred.promise;
         }
-    ]);
+      };
+    }
+  ]);
 
 /**
  * Created by ZiaKhan on 11/02/15.
@@ -11981,15 +11045,15 @@ angular.module('core')
                                             //step: create an entry for "user-subgroup-memberships"
                                             self.asyncCreateUserSubgroupMemberships(group.$id, subgroupInfo.subgroupID, mems)
                                                 .then(function() {
-                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot){
+                                                    firebaseService.getRefGroups().child(group.$id).once('value', function(snapshot) {
                                                         var countsubgroup = snapshot.val()["subgroups-count"] + 1;
                                                         // console.log(countsubgroup, 'testing')
-                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function(){
+                                                        firebaseService.getRefGroups().child(group.$id).child('subgroups-count').set(countsubgroup, function() {
                                                             if (error) {
                                                                 errorHandler();
                                                             }
-                                                        })
-                                                    })
+                                                        });
+                                                    });
                                                     // console.log($rootScope.userImg)
 
                                                     //save in subgroup-policies for Policies
@@ -12068,7 +11132,7 @@ angular.module('core')
                                                                 })
                                                                 .catch(function(d) {
                                                                     //debugger;
-                                                                })
+                                                                });
                                                             // for (var member in mems) {
                                                             //
                                                             //     var temp = $firebaseObject(firebaseService.getRefFlattendGroups().child(userID).child(group.$id + "_" + subgroupInfo.subgroupID).child(member))
@@ -13967,881 +13031,1025 @@ var s = {
 }*/
 
  /**
- * Created by Shahzad on 1/21/2015.
- */
+  * Created by Shahzad on 1/21/2015.
+  */
 
-(function() {
-    'use strict';
+ (function() {
+   'use strict';
 
-    angular
-        // .module('checkin')
-        .module('core')
-        .factory('checkinService', checkinService);
+   angular
+   // .module('checkin')
+     .module('core')
+     .factory('checkinService', checkinService);
 
-    checkinService.$inject = ['activityStreamService', '$q', '$geolocation', 'firebaseService', 'userService', "$firebaseObject", '$firebaseArray'];
+   checkinService.$inject = ['$http', 'ProgressReportService',
+     'activityStreamService', '$q', '$geolocation', 'firebaseService',
+     'userService', "$firebaseObject", '$firebaseArray', 'appConfig'
+   ];
 
-    function checkinService(activityStreamService, $q, $geolocation, firebaseService, userService, $firebaseObject, $firebaseArray) {
+   function checkinService($http, ProgressReportService,
+     activityStreamService, $q, $geolocation, firebaseService, userService,
+     $firebaseObject, $firebaseArray, appConfig) {
 
-        /*private variables*/
-        var refs, fireTimeStamp;
+     /*private variables*/
+     var refs, fireTimeStamp;
 
-        //firebase unix-epoch time
-        fireTimeStamp = Firebase.ServerValue.TIMESTAMP;
+     //firebase unix-epoch time
+     fireTimeStamp = Firebase.ServerValue.TIMESTAMP;
 
-        refs = {
-            main: firebaseService.getRefMain()
-        };
+     refs = {
+       main: firebaseService.getRefMain()
+     };
 
-        refs.refGroupCheckinCurrent = refs.main.child('group-check-in-current');
-        refs.refGroupCheckinRecords = refs.main.child('group-check-in-records');
-        refs.refGroupLocationsDefined = refs.main.child('group-locations-defined');
+     refs.refGroupCheckinCurrent = refs.main.child('group-check-in-current');
+     refs.refGroupCheckinRecords = refs.main.child('group-check-in-records');
+     refs.refGroupLocationsDefined = refs.main.child(
+       'group-locations-defined');
 
-        refs.refSubGroupCheckinCurrent = refs.main.child('subgroup-check-in-current');
-        refs.refSubGroupCheckinRecords = refs.main.child('subgroup-check-in-records');
-        refs.refSubGroupLocationsDefined = refs.main.child('subgroup-locations-defined');
-        refs.refSubGroupCheckinCurrentByUser = refs.main.child('subgroup-check-in-current-by-user');
+     refs.refSubGroupCheckinCurrent = refs.main.child(
+       'subgroup-check-in-current');
+     refs.refSubGroupCheckinRecords = refs.main.child(
+       'subgroup-check-in-records');
+     refs.refSubGroupLocationsDefined = refs.main.child(
+       'subgroup-locations-defined');
+     refs.refSubGroupCheckinCurrentByUser = refs.main.child(
+       'subgroup-check-in-current-by-user');
 
-        function getLocation(groupID, subgroupID) {
-            var defer = $q.defer();
-            // var locationRef = new Firebase(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID).toString());
-            // locationRef.orderByValue().on("value", function(snapshot) {
-            //     snapshot.forEach(function(data) {
-            //         //console.log(data.val());
-            //         refs.$currentSubGroupLocationsObject = data.val();
-            //     });
-            //     defer.resolve();
-            // });
-                defer.resolve();
-            return defer.promise;
-        }
+     function getLocation(groupID, subgroupID) {
+       var defer = $q.defer();
+       // var locationRef = new Firebase(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID).toString());
+       // locationRef.orderByValue().on("value", function(snapshot) {
+       //     snapshot.forEach(function(data) {
+       //         //console.log(data.val());
+       //         refs.$currentSubGroupLocationsObject = data.val();
+       //     });
+       //     defer.resolve();
+       // });
+       defer.resolve();
+       return defer.promise;
+     }
 
-
-        //step 1 (calling from Controller)
-        function ChekinUpdateSatatus(group, userId, checkoutFlag, cb){
-            //var groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userId};
-            $geolocation.getCurrentPosition({
-                timeout: 60000,
-                maximumAge: 250,
-                enableHighAccuracy: true
-            }).then(function(location){
-                // console.log('location', location)
-                 if(location.coords) {
-                    var locationObj = {lat: location.coords.latitude, lng: location.coords.longitude};
-                     subgroupHasPolicy(group.groupId, group.subgroupId, function(hasPolicy, Policy){
-                        if(hasPolicy) {
-                            //hasPolicy true
-                            checkinPolicy(Policy, locationObj, function(result, msg, teamLocationTitle){
-                                if(result){
-                                    saveFirebaseCheckInOut(group, checkoutFlag, locationObj, Policy, teamLocationTitle, function(result, cbMsg, reportMsg){
-                                        //console.log('group', group); //group = {groupId: "hotmaill", subgroupId: "yahooemail", userId: "usuf52"}
-                                        cb(result, cbMsg, reportMsg, group);
-                                    });
-                                } else {
-                                    cb(false, msg, null, null);
-                                }
-                            });
-                        } else {
-                            //hasPolicy false
-                            saveFirebaseCheckInOut(group, checkoutFlag,  locationObj, Policy, null, function(result, cbMsg, reportMsg){
-                                cb(result, cbMsg, null, null);
-                            });
-                        }
-                    });
+     //step 1 (calling from Controller)
+     function ChekinUpdateSatatus(group, userId, checkoutFlag, cb) {
+       //var groupObj = {groupId: group.pId, subgroupId: group.subgroupId, userId: userId};
+       $geolocation.getCurrentPosition({
+         timeout: 60000,
+         maximumAge: 250,
+         enableHighAccuracy: true
+       }).then(function(location) {
+         // console.log('location', location)
+         if (location.coords) {
+           var locationObj = {
+             lat: location.coords.latitude,
+             lng: location.coords.longitude
+           };
+           subgroupHasPolicy(group.groupId, group.subgroupId, function(
+             hasPolicy, Policy) {
+             if (hasPolicy) {
+               //hasPolicy true
+               checkinPolicy(Policy, locationObj, function(result,
+                 msg, teamLocationTitle) {
+                 if (result) {
+                   saveFirebaseCheckInOut(group, checkoutFlag,
+                     locationObj, Policy, teamLocationTitle,
+                     function(result, cbMsg, reportMsg) {
+                       //console.log('group', group); //group = {groupId: "hotmaill", subgroupId: "yahooemail", userId: "usuf52"}
+                       cb(result, cbMsg, reportMsg, group);
+                     });
                  } else {
-                     cb(false, 'Please allow your location (not getting current location)!', null, null);
+                   cb(false, msg, null, null);
                  }
-            });
-        }
-
-        function subgroupHasPolicy(groupID, subgroupID, cb){
-            //firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
-            firebaseService.getRefSubgroupPolicies().child(groupID).child(subgroupID).once('value', function(snapshot) {
-                if(snapshot.val() && snapshot.val().hasPolicy && snapshot.val().hasPolicy === true) {
-                    firebaseService.getRefPolicies().child(groupID).child(snapshot.val().policyID).once('value', function(policy){
-                        cb(true, policy.val());
-                    }); //getting policy
-                } else {//self.subGroupHasPolicy if true
-                    cb(false, false);
-                }
-            }); //firebaseService.getRefSubGroupsNames()
-        } //subgroupHasPolicy
-
-        //calculating Distance
-        function CalculateDistance(lat1, lon1, lat2, lon2, unit) {
-            //:::    unit = the unit you desire for results                               :::
-            //:::           where: 'M' is statute miles (default)                         :::
-            //:::                  'K' is kilometers                                      :::
-            //:::                  'N' is nautical miles                                  :::
-            var radlat1 = Math.PI * lat1 / 180;
-            var radlat2 = Math.PI * lat2 / 180;
-            // var radlon1 = Math.PI * lon1 / 180;
-            // var radlon2 = Math.PI * lon2 / 180;
-            var theta = lon1 - lon2;
-            var radtheta = Math.PI * theta / 180;
-            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-            dist = Math.acos(dist);
-            dist = dist * 180 / Math.PI;
-            dist = dist * 60 * 1.1515;
-            if (unit == "K") {
-                dist = dist * 1.609344;
-            }
-            if (unit == "N") {
-                dist = dist * 0.8684;
-            }
-            return dist;
-        }
-
-        //checking Policy is Subgroup Has Policy (is that timebased or locationbased)
-        function checkinPolicy(Policy, currentLocationObj, callback) {
-            if(Policy && Policy.locationBased) {  //checking if location Based
-
-                //checking distance (RADIUS)
-                var distance = CalculateDistance(Policy.location.lat, Policy.location.lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
-                // console.log('distance:' + distance);
-                // console.log('distance in meter:' + distance * 1000);
-
-                if ((distance * 1000) < Policy.location.radius) {  //checking lcoation radius
-                    // callback(false, 'Current Location does not near to the Team Location');
-                    checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
-                        callback(d, msg, Policy.location.title);     //if result true (checkin allow)
-                    }); //checking if time based
-                } else { // if within radius
-                    checkinTimeBased(Policy, function(d, msg) {  //policy has also timeBased
-                        callback(d, msg, false);     //if result true (checkin allow)
-                    }); //checking if time based
-                } //if within radius
-
-            } else if(Policy && Policy.timeBased) { //policy has timeBased
-                checkinTimeBased(Policy, function(d, msg) {
-                    callback(d, msg, false);      //if result true (checkin allow)
-                }); //checking if time based
-            } else {    //checking others like if dailyReport
-                callback(true, '', false);      //result true (checkin allow) (might be only dailyReport has checked)
-            }
-        } //checkinLocationBased
-        //checkinTimeBased
-        function checkinTimeBased(Policy, callback) {
-            var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-            //if timeBased true
-            if(Policy && Policy.timeBased) {
-                var today = new Date();
-                var Schduleday = days[today.getDay()];
-
-                //(self.subGroupPolicy.schedule[Schduleday] && self.subGroupPolicy.schedule[Schduleday][today.getHours()]) ?  console.log('t') : console.log('f');
-                if(Policy.schedule[Schduleday] && Policy.schedule[Schduleday][today.getHours()]) {
-                    //if allow then checkin
-                    callback(true, '');
-                } else {   //checking allow in days with hours
-                    callback(false, 'You Don\'t have to permission to checkin at this day/hour');
-                }
-
-            } else {//timeBased false
-                callback(true, '');    //if not timebased then return true....
-            }
-        } //checkinTimeBased
-
-        //checkinDailyProgress
-        function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb){
-               if(Policy && Policy.progressReport) {
-                //checking daily progress report is exists or not -- START --
-                //firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
-                firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).orderByChild('date')
-                .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
-                    if(snapshot.val() === null) { //if null then create daily report dummy
-                        //cerating Dummy Report Object on Checkin....
-                        var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push({
-                            date: Firebase.ServerValue.TIMESTAMP,
-                            //date: new Date().setHours(0,0,0,0),
-                            questionID: Policy.latestProgressReportQuestionID,
-                            policyID: Policy.policyID,
-                            answers: ''
-                        });
-
-                        //for group activity stream record -- START --
-                        var type = 'progressReport';
-                        var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
-                        var area = {type: 'progressReport-created'};
-                        var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
-                        var memberuserID = groupObj.userId;
-                        var _object = null;
-                        //for group activity record
-                        activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
-                        //for group activity stream record -- END --
-
-                        cb(false, 'notSubmitted');
-                    } else {
-                        for(var obj in snapshot.val()) {
-                            //console.log(snapshot.val()[obj])
-                            if(snapshot.val()[obj].answers === "" && checkoutFlag === true) {  //now checking if answers has given or not on checkout
-                                //if not submited report then show msg
-                                cb(false, 'notSubmitted');
-                            } else {
-                                //if submited report then nuthing
-                                cb(true, null);
-                            }
-                        }
-                    }
-                });
-                //checking daily progress report is exists or not -- END --
-            } else {//if(Policy && Policy.dailyReport)
-                //if not assign any daily report policy (Daily Report policy has false)
-                cb(true, '');
-            }
-
-        }//checkinDailyProgress
-
-
-
-        function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj, Policy, teamLocationTitle, cb){
-            // groupObj = {groupId: '', subgroupId: '', userId: ''}
-            var multipath = {};
-            var dated = fireTimeStamp;
-            var ref = firebaseService.getRefMain();         //firebase main reference
-            var refGroup = firebaseService.getRefGroups();  //firebase groups reference
-            var refSubGroup = firebaseService.getRefSubGroups();  //firebase groups reference
-
-            //generate key
-            var newPostRef = firebaseService.getRefsubgroupCheckinRecords().child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push();
-            var newPostKey = newPostRef.key();
-
-            var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
-            var checkinResultMsg = (checkoutFlag) ? "Checkout Successfully" : "Checkin Successfully";
-            var statusType = (checkoutFlag) ? 2 : 1;
-            var _teamLocationTitle = (teamLocationTitle ? teamLocationTitle : 'Other');
-            multipath["subgroup-check-in-records/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId+"/"+newPostKey] = {
-                "identified-location-id": _teamLocationTitle,
-                "location": {
-                    "lat": locationObj.lat,
-                    "lon": locationObj.lng
-                },
-                "message": checkinMessage,
-                "source-device-type": 1,
-                "source-type": 1,
-                "subgroup-url": groupObj.groupId+"/"+groupObj.subgroupId,
-                "timestamp": dated,
-                "type": statusType
-            };
-            multipath["subgroup-check-in-current-by-user/"+groupObj.userId] = {
-                "groupID": groupObj.groupId,
-                "source-device-type": 1,
-                "source-type": 1,
-                "subgroupID": groupObj.subgroupId,
-                "timestamp": dated,
-                "type": statusType
-            };
-            multipath["subgroup-check-in-current/"+groupObj.groupId+"/"+groupObj.subgroupId+"/"+groupObj.userId] = {
-                "identified-location-id": "Other",
-                "location": {
-                    "lat": locationObj.lat,
-                    "lon": locationObj.lng
-                },
-                "message": checkinMessage,
-                "record-ref": newPostKey,
-                "source-device-type": 1,
-                "source-type": 1,
-                "subgroup-url": groupObj.groupId+"/"+groupObj.subgroupId,
-                "timestamp": dated,
-                "type": statusType
-            };
-            //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
-            refGroup.child(groupObj.groupId).child('members-checked-in/count').once('value', function(snapshot){
-                multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
-                refSubGroup.child(groupObj.groupId).child(groupObj.subgroupId).child('members-checked-in/count').once('value', function(snapshot){
-                    multipath["subgroups/"+groupObj.groupId+"/"+groupObj.subgroupId+"/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() + 1);
-                    ref.update(multipath, function(err){
-                        if(err) {
-                            // console.log('err', err);
-                            cb(false, 'Please contact to your administrator', null);
-                        }
-                        //checking Daily Progress Report
-                        checkinDailyProgress(groupObj, checkoutFlag, Policy, function(rst, mes) {
-                            if (rst) {
-                                //calling callbAck....
-                                cb(true, checkinResultMsg, null);
-                            } else {
-                                cb(true, checkinResultMsg, mes);
-                            }
-                        });
-                    }); //ref update
-                }); //getting and update members-checked-in count - subgroup
-            }); //getting and update members-checked-in count - group
-        } //saveFirebaseCheckInOut
-
-
-
-        return {
-
-            getRefUsers: firebaseService.getRefUsers,
-            getRefGroups: firebaseService.getRefGroups,
-            getRefUserGroupMemberships: firebaseService.getRefUserGroupMemberships,
-            getRefUserSubGroupMemberships: firebaseService.getRefUserGroupMemberships,
-            createCurrentRefs: function(groupID, userID) {
-                refs.$currentGroupLocations = Firebase.getAsArray(refs.refGroupLocationsDefined.child(groupID));
-                refs.refCurrentGroupCheckinCurrent = refs.refGroupCheckinCurrent.child(groupID);
-
-                var userCheckinRecords = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
-                refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
-            },
-            hasSubGroupCurrentLocation: function(groupID, subGroupID){
-                var defer = $q.defer();
-                var hasLocation = false;
-                // $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID))
-                //     .$loaded().then(function(data){
-                //         // console.log(data[0].location)
-                //         if(data[0] && data[0].location){
-                //             hasLocation = true;
-                //             defer.resolve(hasLocation);
-                //         }
-                //     });
-                //
-                // refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID).on('child_changed', function(snapshot){
-                //     // console.log(snapshot.val().location);
-                //     if(snapshot.val() && snapshot.val().location){
-                //         hasLocation = true;
-                //         defer.resolve(hasLocation);
-                // }
-                // })
-                defer.resolve('');
-                return defer.promise;
-            },
-            createCurrentRefsBySubgroup: function(groupID, subgroupID, userID) {
-                var defer = $q.defer();
-                // getLocation(groupID, subgroupID).then(function(data) {
-                //     //refs.$currentSubGroupLocations = Firebase.getAsArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
-                //     refs.$currentSubGroupLocations = $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID));
-                //     //refs.refCurrentSubGroupCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID).child(subgroupID);
-                //     var userCheckinRecords = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupID + '/' + userID);
-                //     refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
-                //     defer.resolve('test');
-                // });
-                defer.resolve('');
-                return defer.promise;
-            },
-            getRefSubgroupCheckinCurrentByUser: function() {
-                return refs.refSubGroupCheckinCurrentByUser;
-            },
-            getFireAsObject: function(ref) {
-                return $firebaseObject(ref);
-            },
-            getRefGroupLocationsDefined: function(groupID) {
-                return refs.refGroupLocationsDefined.child(groupID);
-            },
-            getRefCheckinCurrent: function() {
-                return refs.refGroupCheckinCurrent;
-            },
-            getRefCheckinCurrentBySubgroup: function() {
-                return refs.refSubGroupCheckinCurrent;
-            },
-            getRefGroupCheckinCurrent: function(groupID) {
-                return refs.refGroupCheckinCurrent.child(groupID);
-            },
-            getRefSubGroupCheckinCurrent: function(userID, groupID, subgroupId) {
-                return refs.refSubGroupCheckinCurrent.child(userID + '/' + groupID + '/' + subgroupId);
-            },
-            getFireCurrentGroupLocations: function() {
-                return refs.$currentGroupLocations;
-            },
-            getFireCurrentSubGroupLocations: function() {
-                return refs.$currentSubGroupLocations;
-            },
-            getFireCurrentSubGroupLocationsObject: function() {
-                return refs.$currentSubGroupLocationsObject;
-            },
-            getFireGroup: function(groupID) {
-                var refGroups = this.getRefGroups();
-                return this.getFireAsObject(refGroups.child(groupID));
-            },
-            geoLocationSupport: function() {
-                return typeof window.navigator !== 'undefined' && typeof window.navigator.geolocation !== 'undefined';
-            },
-            getCurrentLocation: function() {
-                return $geolocation.getCurrentPosition({
-                    timeout: 60000,
-                    maximumAge: 250,
-                    enableHighAccuracy: true
-                });
-            },
-            updateUserStatusBySubGroup: function(groupID, subgroupId, userID, statusObj, definedLocations, groupObj) {
-                var defer = $q.defer();
-                var errorCallback = function(err) {
-                    defer.reject('error occurred in connecting to the server', err);
-                };
-
-                var self = this;
-
-                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(statusObj.location, definedLocations).$id : 'Other';
-
-                var checkinObj = {
-
-                    'subgroup-url': groupID + '/' + subgroupId,
-                    'timestamp': fireTimeStamp,
-                    'type': +statusObj.type, // 1 = in, 2 = out
-                    'source-type': 1, //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
-                    'source-device-type': 1, // 1 = Web, 2 = iPhone, 3 = Android
-                    //'source-device-address': 'ip address or mobile number',
-                    'location': statusObj.location, //not present in case of beacon based check in and out or the user does not select or allow data
-                    'identified-location-id': identifiedLocation
-
-                };
-
-                // console.log(checkinObj)
-
-                checkinObj.message = statusObj.message || (statusObj.type == 1 ? 'Checked-in' : 'Checked-out');
-
-                var userCheckinCurrent = refs.refSubGroupCheckinCurrent.child(groupID + '/' + subgroupId + '/' + userID);
-                var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
-
-                $userCheckinCurrent
-                    .$loaded()
-                    .then(function() {
-                        var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupId + '/' + userID);
-                        var _ref = new Firebase(userCheckinRecordsRef.toString());
-                        var _userCheckinREcordsRef = $firebaseArray(_ref);
-                        // console.log(checkinObj)
-                        _userCheckinREcordsRef.$add(checkinObj)
-                            .then(function(snapShot) {
-                                var temp = $firebaseObject(refs.refSubGroupCheckinCurrentByUser.child(userID))
-                                    .$loaded().then(function(snapshot) {
-                                        // console.log('before')
-                                        // console.log(snapshot)
-                                        snapshot.timestamp = fireTimeStamp;
-                                        snapshot.type = statusObj.type; // 1 = in, 2 = out
-                                        snapshot.groupID = groupID;
-                                        snapshot.subgroupID = subgroupId;
-                                        snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
-                                        snapshot['source-type'] = 1; //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
-                                        // snapshot['record-ref'] = snapShot.key(); //report manjan
-                                        // console.log('after')
-                                        // console.log(snapshot)
-                                        snapshot.$save().then(function(d) {
-
-                                            checkinObj['record-ref'] = snapShot.key();
-                                            angular.extend($userCheckinCurrent, checkinObj);
-                                            $userCheckinCurrent.$save()
-                                                .then(function() {
-                                                    self.updateSubGroupCount(groupID, subgroupId, checkinObj.type)
-                                                        .then(function() {
-                                                            self.updateGroupCount(groupID, checkinObj.type)
-                                                                .then(function() {
-                                                                    defer.resolve('Status updated successfully.');
-                                                            /*self.asyncRecordUserCheckSubGroupActivity(checkinObj, userID, groupID,subgroupId, groupObj, definedLocations)
-                                                             .then(function () {
-                                                             defer.resolve('Status updated successfully.');
-                                                             }, errorCallback);*/
-                                                            }, errorCallback);
-                                                        }, errorCallback);
-
-                                                }, errorCallback);
-
-                                        }, errorCallback);
-
-                                    }, errorCallback);
-
-                            }, errorCallback);
-
-                    }, errorCallback);
-
-                return defer.promise;
-            },
-            updateUserStatus: function(groupID, userID, statusObj, definedLocations, groupObj) {
-                var defer = $q.defer();
-                var errorCallback = function(err) {
-                    defer.reject('error occurred in connecting to the server', err);
-                };
-
-                var self = this;
-
-                var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(statusObj.location, definedLocations).$id : 'Other';
-
-                var checkinObj = {
-                    //id: 'autoGeneratedTimestampBasedRecordID', // from record
-                    'group-url': groupID,
-                    'timestamp': fireTimeStamp,
-                    'type': +statusObj.type, // 1 = in, 2 = out
-                    'source-type': 1, //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
-                    'source-device-type': 1, // 1 = Web, 2 = iPhone, 3 = Android
-                    //'source-device-address': 'ip address or mobile number',
-                    'location': statusObj.location, //not present in case of beacon based check in and out or the user does not select or allow data
-                    'identified-location-id': identifiedLocation
-                };
-
-                checkinObj.message = statusObj.message || (statusObj.type == 1 ? 'Checked-in' : 'Checked-out');
-
-                var userCheckinCurrent = refs.refGroupCheckinCurrent.child(groupID + '/' + userID);
-                var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
-
-                $userCheckinCurrent
-                    .$loaded()
-                    .then(function() {
-
-                        var userCheckinRecordsRef = refs.refGroupCheckinRecords.child(groupID + '/' + userID);
-                        var $userCheckinRecords = Firebase.getAsArray(userCheckinRecordsRef);
-
-                        var recRef = $userCheckinRecords.$add(checkinObj);
-                        checkinObj.id = recRef.key();
-
-                        angular.extend($userCheckinCurrent, checkinObj);
-                        $userCheckinCurrent.$save()
-                            .then(function() {
-                                self.updateGroupCount(groupID, checkinObj.type)
-                                    .then(function() {
-                                        self.asyncRecordUserCheckGroupActivity(checkinObj, userID, groupID, groupObj, definedLocations)
-                                            .then(function() {
-                                                defer.resolve('Status updated successfully.');
-
-                                            }, errorCallback);
-
-                                    }, errorCallback);
-
-                            }, errorCallback);
-
-                    }, errorCallback);
-
-                return defer.promise;
-            },
-            updateGroupCount: function(groupID, checkinType) {
-                var defer = $q.defer();
-
-                var groupCheckedIn = firebaseService.getRefGroups().child(groupID + '/members-checked-in');
-                var $checkin = $firebaseObject(groupCheckedIn);
-
-                $checkin.$loaded()
-                    .then(function() {
-                        $checkin.count = ($checkin.count || 0) + (checkinType == 1 ? 1 : -1);
-                        $checkin.$save().then(function() {
-                            defer.resolve();
-                        }, function() {
-                            defer.reject();
-                        });
-                    }, function() {
-                        defer.reject();
-                    });
-
-                return defer.promise;
-            },
-            updateAllSubGroupCount: function(groupID, subgroupID, numberofuser) {
-                var defer = $q.defer();
-
-                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
-                var $checkin = $firebaseObject(groupCheckedIn);
-
-                $checkin.$loaded()
-                    .then(function() {
-                        $checkin.count = ($checkin.count || 0) - numberofuser;
-                        $checkin.$save().then(function() {
-                            defer.resolve();
-                        }, function() {
-                            defer.reject();
-                        });
-                    }, function() {
-                        defer.reject();
-                    });
-                return defer.promise;
-            },
-            updateSubGroupCount: function(groupID, subgroupID, checkinType) {
-                var defer = $q.defer();
-
-                var groupCheckedIn = firebaseService.getRefSubGroups().child(groupID + '/' + subgroupID + '/members-checked-in');
-                var $checkin = $firebaseObject(groupCheckedIn);
-
-                $checkin.$loaded()
-                    .then(function() {
-                        $checkin.count = ($checkin.count || 0) + (checkinType == 1 ? 1 : -1);
-                        $checkin.$save().then(function() {
-                            defer.resolve();
-                        }, function() {
-                            defer.reject();
-                        });
-                    }, function() {
-                        defer.reject();
-                    });
-
-                return defer.promise;
-            },
-            asyncRecordUserCheckGroupActivity: function(checkinObj, userID, groupID, groupObj, definedLocations) {
-                var deferred = $q.defer();
-
-                var currentUser = userService.getCurrentUser();
-                var locationName = this.getLocationName(checkinObj, definedLocations);
-                var groupActivityRef = firebaseService.getRefGroupsActivityStreams().child(groupID);
-
-                var actor = {
-                    type: 'user',
-                    id: userID, //this is the userID, and an index should be set on this
-                    email: currentUser.email,
-                    displayName: currentUser.firstName + ' ' + currentUser.lastName,
-                    image: null
-                };
-
-                var object = {
-                    type: 'location',
-                    id: null,
-                    url: null,
-                    displayName: locationName,
-                    image: null
-                };
-
-                var target = {
-                    type: 'group',
-                    id: groupID, //an index should be set on this
-                    url: groupID,
-                    displayName: groupObj.title
-                };
-
-                var displayName = actor.displayName +
-                    (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
-                    ' at "' + locationName +
-                    '" location of ' + groupObj.title + '.';
-
-                var activity = {
-                    language: 'en',
-                    verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
-                    published: fireTimeStamp,
-                    displayName: displayName,
-                    actor: actor,
-                    object: object,
-                    target: target
-                };
-
-                var newActivityRef = groupActivityRef.push();
-                newActivityRef.set(activity, function(err) {
-                    if (err) {
-                        deferred.reject();
-                        console.log('error occurred in check-in activity', err);
-                    } else {
-                        var activityID = newActivityRef.key();
-                        var activityEntryRef = groupActivityRef.child(activityID);
-                        activityEntryRef.once('value', function(snapshot) {
-                            var timestamp = snapshot.val();
-                            newActivityRef.setPriority(0 - timestamp.published, function(error) {
-                                if (error) {
-                                    deferred.reject();
-                                    console.log('error occurred in check-in activity', error);
-                                } else {
-                                    deferred.resolve();
-                                }
-                            });
-                        });
-                    }
-                });
-
-                return deferred.promise;
-            },
-            asyncRecordUserCheckSubGroupActivity: function(checkinObj, userID, groupID, subgroupID, groupObj, definedLocations) {
-                var deferred = $q.defer();
-
-                var currentUser = userService.getCurrentUser();
-                var locationName = this.getLocationName(checkinObj, definedLocations);
-                var subGroupActivityRef = firebaseService.getRefSubGroupsActivityStreams().child(groupID + "/" + subgroupID); //"subgroup-activity-streams"
-
-                var actor = {
-                    type: 'user',
-                    id: currentUser.userID, //this is the userID, and an index should be set on this
-                    email: currentUser.email,
-                    displayName: currentUser.firstName + ' ' + currentUser.lastName,
-                    image: null
-                };
-
-                var object = {
-                    type: 'location',
-                    id: null,
-                    url: null,
-                    displayName: locationName,
-                    image: null
-                };
-
-                var target = {
-                    type: 'group',
-                    id: subgroupID, //an index should be set on this
-                    url: subgroupID,
-                    displayName: groupObj.title
-                };
-
-                var displayName = actor.displayName +
-                    (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
-                    ' at "' + locationName +
-                    '" location of ' + groupObj.title + '.';
-
-                var activity = {
-                    language: 'en',
-                    verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
-                    published: fireTimeStamp,
-                    displayName: displayName,
-                    actor: actor,
-                    object: object,
-                    target: target
-                };
-
-                var newActivityRef = subGroupActivityRef.push();
-                newActivityRef.set(activity, function(err) {
-                    if (err) {
-                        deferred.reject();
-                        console.log('error occurred in check-in activity', err);
-                    } else {
-                        var activityID = newActivityRef.key();
-                        var activityEntryRef = subGroupActivityRef.child(activityID);
-                        activityEntryRef.once('value', function(snapshot) {
-                            var timestamp = snapshot.val();
-                            newActivityRef.setPriority(0 - timestamp.published, function(error) {
-                                if (error) {
-                                    deferred.reject();
-                                    console.log('error occurred in check-in activity', error);
-                                } else {
-                                    deferred.resolve();
-                                }
-                            });
-                        });
-                    }
-                });
-
-                return deferred.promise;
-            },
-            addLocation: function(groupID, userID, locationObj) {
-                var defer = $q.defer();
-
-                var newLocation = {
-                    'group-url': groupID,
-                    'title': locationObj.title,
-                    'type': 1, // 1 = Geo location, 2 = Beacon
-                    'location': {
-                        'lat': locationObj.lat,
-                        'lon': locationObj.lng,
-                        'radius': locationObj.radius
-                    },
-                    'defined-by': userID, //only admins or owners can define a office location
-                    'timestamp': fireTimeStamp
-                };
-
-                var ref = refs.$currentGroupLocations.$add(newLocation);
-                if (ref.key()) {
-                    defer.resolve('Location has been added to "' + groupID + '".');
-                } else {
-                    defer.reject('Error occurred in saving on server.');
-                }
-
-                return defer.promise;
-            },
-            addLocationBySubgroup: function(groupID, subgroupID, userID, locationObj, multiple, recordId) {
-
-                var defer = $q.defer();
-
-                var newLocation = {
-                    'subgroup-url': groupID + '/' + subgroupID,
-                    'title': locationObj.title,
-                    'type': 1, // 1 = Geo location, 2 = Beacon
-                    'location': {
-                        'lat': locationObj.locationObj.lat,
-                        'lon': locationObj.locationObj.lng,
-                        'radius': locationObj.locationObj.radius
-                    },
-                    'defined-by': userID, //only admins or owners can define a office location
-                    'timestamp': fireTimeStamp
-                };
-
-                var syncRef;
-                if (!multiple && refs.$currentSubGroupLocations.length) {
-                    //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
-                    angular.extend(refs.$currentSubGroupLocations[0], newLocation);
-                    refs.$currentSubGroupLocations.$save(0)
-                        .then(function() {
-                            defer.resolve('Location has been added.');
-                        }, function() {
-                            defer.reject('Error occurred in saving on server.');
-                        });
-
-                } else {
-
-                    refs.$currentSubGroupLocations.$add(newLocation)
-                        .then(function() {
-                            defer.resolve('Location has been added.');
-                        }, function() {
-                            defer.reject('Error occurred in saving on server.');
-
-                        });
-                    /*if( syncRef.key() ){
-                        defer.resolve('Location has been added to "' + subgroupID + '".');
-                    } else {
-                        defer.reject('Error occurred in saving on server.');
-                    }*/
-                }
-
-
-
-                return defer.promise;
-            },
-            //for Admins: get the predefined location timestampID, from which user checked-in or checked-out.
-            getDefinedLocationByLatLng: function(userLoc, definedLocations, radius) {
-                var distance, currentLatLon,
-                    location, newLocLatLng;
-
-                //setting default in case no location matches.
-                location = {
-                    title: 'Other',
-                    $id: 'Other'
-                };
-
-                //if no radius provided to calculate distance. e.g user check-in/out from any location.
-                radius = radius || 0;
-
-                newLocLatLng = new L.LatLng(userLoc.lat, userLoc.lon || userLoc.lng);
-
-                angular.forEach(definedLocations, function(definedLoc) {
-                    currentLatLon = new L.LatLng(definedLoc.location.lat, definedLoc.location.lon);
-                    distance = newLocLatLng.distanceTo(currentLatLon);
-
-                    if (distance <= definedLoc.location.radius + radius) {
-                        location = definedLoc;
-                    }
-                });
-
-                return location;
-            },
-
-            //for Admins: get the predefined location name, from which user checked-in or checked-out.
-            getLocationName: function(userStatusObj, definedLocations) {
-
-                //handle if no previous check-in found and got null.
-                if (!userStatusObj) {
-                    return;
-                }
-
-                var locationID = 'Other';
-                var locID = userStatusObj['identified-location-id'];
-
-                angular.forEach(definedLocations, function(definedLoc) {
-                    if (locID === definedLoc.$id) {
-                        locationID = definedLoc.title;
-                    }
-                });
-
-                return locationID;
-            },
-            getGroupTitle: function(GroupID){
-                var title;
-                refs.main.child('groups').child(GroupID).once('value', function(snapshot){
-                    // console.log(snapshot.val().title)
-                    if (snapshot.val()) {
-                        title = snapshot.val().title ? snapshot.val().title : '';
-                    }
-                });
-                return title;
-            },
-            getSubGroupTitle: function(GroupID, subGroupID){
-                var title;
-                refs.main.child('subgroups').child(GroupID).child(subGroupID).once('value', function(snapshot){
-                    // console.log(snapshot.val().title)
-                    if (snapshot.val()) {
-                        title = snapshot.val().title ? snapshot.val().title : '';
-                    }
-                });
-                return title;
-            }, //getSubGroupTitle
-            ChekinUpdateSatatus: ChekinUpdateSatatus
-
-        }; //return
-    } //checkin service function
-})();
+               });
+             } else {
+               //hasPolicy false
+               saveFirebaseCheckInOut(group, checkoutFlag,
+                 locationObj, Policy, null,
+                 function(result, cbMsg, reportMsg) {
+                   cb(result, cbMsg, null, null);
+                 });
+             }
+           });
+         } else {
+           cb(false,
+             'Please allow your location (not getting current location)!',
+             null, null);
+         }
+       });
+     }
+
+     function subgroupHasPolicy(groupID, subgroupID, cb) {
+       //firebaseService.getRefSubGroupsNames().child(groupID).child(subgroupID).once('value', function(snapshot) {
+       firebaseService.getRefSubgroupPolicies().child(groupID).child(
+         subgroupID).once('value', function(snapshot) {
+         if (snapshot.val() && snapshot.val().hasPolicy && snapshot.val()
+           .hasPolicy === true) {
+           firebaseService.getRefPolicies().child(groupID).child(snapshot
+             .val().policyID).once('value', function(policy) {
+             cb(true, policy.val());
+           }); //getting policy
+         } else { //self.subGroupHasPolicy if true
+           cb(false, false);
+         }
+       }); //firebaseService.getRefSubGroupsNames()
+     } //subgroupHasPolicy
+
+     //calculating Distance
+     function CalculateDistance(lat1, lon1, lat2, lon2, unit) {
+       //:::    unit = the unit you desire for results                               :::
+       //:::           where: 'M' is statute miles (default)                         :::
+       //:::                  'K' is kilometers                                      :::
+       //:::                  'N' is nautical miles                                  :::
+       var radlat1 = Math.PI * lat1 / 180;
+       var radlat2 = Math.PI * lat2 / 180;
+       // var radlon1 = Math.PI * lon1 / 180;
+       // var radlon2 = Math.PI * lon2 / 180;
+       var theta = lon1 - lon2;
+       var radtheta = Math.PI * theta / 180;
+       var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) *
+         Math.cos(radlat2) * Math.cos(radtheta);
+       dist = Math.acos(dist);
+       dist = dist * 180 / Math.PI;
+       dist = dist * 60 * 1.1515;
+       if (unit == "K") {
+         dist = dist * 1.609344;
+       }
+       if (unit == "N") {
+         dist = dist * 0.8684;
+       }
+       return dist;
+     }
+
+     //checking Policy is Subgroup Has Policy (is that timebased or locationbased)
+     function checkinPolicy(Policy, currentLocationObj, callback) {
+       if (Policy && Policy.locationBased) { //checking if location Based
+
+         //checking distance (RADIUS)
+         var distance = CalculateDistance(Policy.location.lat, Policy.location
+           .lng, currentLocationObj.lat, currentLocationObj.lng, 'K');
+         // console.log('distance:' + distance);
+         // console.log('distance in meter:' + distance * 1000);
+
+         if ((distance * 1000) < Policy.location.radius) { //checking lcoation radius
+           // callback(false, 'Current Location does not near to the Team Location');
+           checkinTimeBased(Policy, function(d, msg) { //policy has also timeBased
+             callback(d, msg, Policy.location.title); //if result true (checkin allow)
+           }); //checking if time based
+         } else { // if within radius
+           checkinTimeBased(Policy, function(d, msg) { //policy has also timeBased
+             callback(d, msg, false); //if result true (checkin allow)
+           }); //checking if time based
+         } //if within radius
+
+       } else if (Policy && Policy.timeBased) { //policy has timeBased
+         checkinTimeBased(Policy, function(d, msg) {
+           callback(d, msg, false); //if result true (checkin allow)
+         }); //checking if time based
+       } else { //checking others like if dailyReport
+         callback(true, '', false); //result true (checkin allow) (might be only dailyReport has checked)
+       }
+     } //checkinLocationBased
+
+     //checkinTimeBased
+     function checkinTimeBased(Policy, callback) {
+       var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+         "Friday", "Saturday"
+       ];
+
+       //if timeBased true
+       if (Policy && Policy.timeBased) {
+         var today = new Date();
+         var Schduleday = days[today.getDay()];
+
+         //(self.subGroupPolicy.schedule[Schduleday] && self.subGroupPolicy.schedule[Schduleday][today.getHours()]) ?  console.log('t') : console.log('f');
+         if (Policy.schedule[Schduleday] && Policy.schedule[Schduleday][today
+             .getHours()
+           ]) {
+           //if allow then checkin
+           callback(true, '');
+         } else { //checking allow in days with hours
+           callback(false,
+             'You Don\'t have to permission to checkin at this day/hour');
+         }
+
+       } else { //timeBased false
+         callback(true, ''); //if not timebased then return true....
+       }
+     } //checkinTimeBased
+
+     //checkinDailyProgress
+     function checkinDailyProgress(groupObj, checkoutFlag, Policy, cb) {
+       if (Policy && Policy.progressReport) {
+
+         var uObject = {
+           groupId: groupObj.groupId,
+           subgroupId: groupObj.subgroupId,
+           userId: groupObj.userId
+         };
+         ProgressReportService.createProgressReport(uObject, Policy,
+           checkoutFlag).then(function(data) {
+           cb(data.result, data.message);
+         });
+
+         // //checking daily progress report is exists or not -- START --
+         // //firebaseService.getRefMain().child('progress-reports-by-users').child(groupObj.userId).child(groupObj.groupId).child(groupObj.subgroupId).orderByChild('date')
+         // firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).orderByChild('date')
+         // .startAt(new Date().setHours(0,0,0,0)).endAt(new Date().setHours(23,59,59,0)).once('value', function(snapshot){
+         //     if(snapshot.val() === null) { //if null then create daily report dummy
+         //         //cerating Dummy Report Object on Checkin....
+         //         var progressRprtObj = firebaseService.getRefMain().child('subgroup-progress-reports').child(groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId).push({
+         //             date: Firebase.ServerValue.TIMESTAMP,
+         //             //date: new Date().setHours(0,0,0,0),
+         //             questionID: Policy.latestProgressReportQuestionID,
+         //             policyID: Policy.policyID,
+         //             answers: ''
+         //         });
+         //         //for group activity stream record -- START --
+         //         var type = 'progressReport';
+         //         var targetinfo = {id: progressRprtObj.key(), url: groupObj.groupId+'/'+groupObj.subgroupId, title: groupObj.groupId+'/'+groupObj.subgroupId, type: 'progressReport' };
+         //         var area = {type: 'progressReport-created'};
+         //         var group_id = groupObj.groupId+'/'+groupObj.subgroupId;
+         //         var memberuserID = groupObj.userId;
+         //         var _object = null;
+         //         //for group activity record
+         //         activityStreamService.activityStream(type, targetinfo, area, group_id, memberuserID, _object);
+         //         //for group activity stream record -- END --
+
+         //         cb(false, 'notSubmitted');
+         //     } else {
+         //         for(var obj in snapshot.val()) {
+         //             //console.log(snapshot.val()[obj])
+         //             if(snapshot.val()[obj].answers === "" && checkoutFlag === true) {  //now checking if answers has given or not on checkout
+         //                 //if not submited report then show msg
+         //                 cb(false, 'notSubmitted');
+         //             } else {
+         //                 //if submited report then nuthing
+         //                 cb(true, null);
+         //             }
+         //         }
+         //     }
+         // });
+         // // checking daily progress report is exists or not -- END --
+
+
+       } else { //if(Policy && Policy.dailyReport)
+         //if not assign any daily report policy (Daily Report policy has false)
+         cb(true, '');
+       }
+
+     } //checkinDailyProgress
+
+     function saveFirebaseCheckInOut(groupObj, checkoutFlag, locationObj,
+       Policy, teamLocationTitle, cb) {
+       // groupObj = {groupId: '', subgroupId: '', userId: ''}
+       var multipath = {};
+       var dated = fireTimeStamp;
+       var ref = firebaseService.getRefMain(); //firebase main reference
+       var refGroup = firebaseService.getRefGroups(); //firebase groups reference
+       var refSubGroup = firebaseService.getRefSubGroups(); //firebase groups reference
+
+       //generate key
+       var newPostRef = firebaseService.getRefsubgroupCheckinRecords().child(
+           groupObj.groupId).child(groupObj.subgroupId).child(groupObj.userId)
+         .push();
+       var newPostKey = newPostRef.key();
+
+       var checkinMessage = (checkoutFlag) ? "Checked-out" : "Checked-in";
+       var checkinResultMsg = (checkoutFlag) ? "Checkout Successfully" :
+         "Checkin Successfully";
+       var statusType = (checkoutFlag) ? 2 : 1;
+       var _teamLocationTitle = (teamLocationTitle ? teamLocationTitle :
+         'Other');
+       multipath["subgroup-check-in-records/" + groupObj.groupId + "/" +
+         groupObj.subgroupId + "/" + groupObj.userId + "/" + newPostKey] = {
+         "identified-location-id": _teamLocationTitle,
+         "location": {
+           "lat": locationObj.lat,
+           "lon": locationObj.lng
+         },
+         "message": checkinMessage,
+         "source-device-type": 1,
+         "source-type": 1,
+         "subgroup-url": groupObj.groupId + "/" + groupObj.subgroupId,
+         "timestamp": dated,
+         "type": statusType
+       };
+       multipath["subgroup-check-in-current-by-user/" + groupObj.userId] = {
+         "groupID": groupObj.groupId,
+         "source-device-type": 1,
+         "source-type": 1,
+         "subgroupID": groupObj.subgroupId,
+         "timestamp": dated,
+         "type": statusType
+       };
+       multipath["subgroup-check-in-current/" + groupObj.groupId + "/" +
+         groupObj.subgroupId + "/" + groupObj.userId] = {
+         "identified-location-id": "Other",
+         "location": {
+           "lat": locationObj.lat,
+           "lon": locationObj.lng
+         },
+         "message": checkinMessage,
+         "record-ref": newPostKey,
+         "source-device-type": 1,
+         "source-type": 1,
+         "subgroup-url": groupObj.groupId + "/" + groupObj.subgroupId,
+         "timestamp": dated,
+         "type": statusType
+       };
+       //multipath["groups/"+groupObj.groupId+"/members-checked-in/count"] = 0;
+       refGroup.child(groupObj.groupId).child('members-checked-in/count').once(
+         'value',
+         function(snapshot) {
+           multipath["groups/" + groupObj.groupId +
+             "/members-checked-in/count"] = (checkoutFlag) ? (snapshot.val() -
+             1) : (snapshot.val() + 1);
+           refSubGroup.child(groupObj.groupId).child(groupObj.subgroupId).child(
+             'members-checked-in/count').once('value', function(snapshot) {
+             multipath["subgroups/" + groupObj.groupId + "/" + groupObj
+               .subgroupId + "/members-checked-in/count"] = (
+               checkoutFlag) ? (snapshot.val() - 1) : (snapshot.val() +
+               1);
+             ref.update(multipath, function(err) {
+               if (err) {
+                 // console.log('err', err);
+                 cb(false, 'Please contact to your administrator',
+                   null);
+               }
+               //checking Daily Progress Report
+               checkinDailyProgress(groupObj, checkoutFlag, Policy,
+                 function(rst, mes) {
+                   if (rst) {
+                     //calling callbAck....
+                     cb(true, checkinResultMsg, null);
+                   } else {
+                     cb(true, checkinResultMsg, mes);
+                   }
+                 });
+             }); //ref update
+           }); //getting and update members-checked-in count - subgroup
+         }); //getting and update members-checked-in count - group
+     } //saveFirebaseCheckInOut
+
+     //Send Notifcation to members
+     function notification(obj, cb) {
+       //obj = {token: "", userId: "", groupId: "", subgroupId: "", dataObj: {}}
+       $http.defaults.headers.post["Content-Type"] = "text/plain";
+       $http({
+           url: appConfig.apiBaseUrl + '/notification',
+           method: "POST",
+           data: obj
+         })
+         .then(function(data) {
+             // success
+             cb(data)
+           },
+           function(error) { // optional
+             // failed
+             cb(error)
+           });
+
+       //$http.defaults.headers.post["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization";
+       // $http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/notification', obj).success(function(data, status) {
+       //     cb(data, status);
+       // }).error(function(data, status) {
+       //     cb(data, status);
+       // });
+     }
+
+
+
+     return {
+
+       getRefUsers: firebaseService.getRefUsers,
+       getRefGroups: firebaseService.getRefGroups,
+       getRefUserGroupMemberships: firebaseService.getRefUserGroupMemberships,
+       getRefUserSubGroupMemberships: firebaseService.getRefUserGroupMemberships,
+       createCurrentRefs: function(groupID, userID) {
+         refs.$currentGroupLocations = Firebase.getAsArray(refs.refGroupLocationsDefined
+           .child(groupID));
+         refs.refCurrentGroupCheckinCurrent = refs.refGroupCheckinCurrent.child(
+           groupID);
+
+         var userCheckinRecords = refs.refGroupCheckinRecords.child(groupID +
+           '/' + userID);
+         refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+       },
+       hasSubGroupCurrentLocation: function(groupID, subGroupID) {
+         var defer = $q.defer();
+         var hasLocation = false;
+         // $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID))
+         //     .$loaded().then(function(data){
+         //         // console.log(data[0].location)
+         //         if(data[0] && data[0].location){
+         //             hasLocation = true;
+         //             defer.resolve(hasLocation);
+         //         }
+         //     });
+         //
+         // refs.refSubGroupLocationsDefined.child(groupID + "/" + subGroupID).on('child_changed', function(snapshot){
+         //     // console.log(snapshot.val().location);
+         //     if(snapshot.val() && snapshot.val().location){
+         //         hasLocation = true;
+         //         defer.resolve(hasLocation);
+         // }
+         // })
+         defer.resolve('');
+         return defer.promise;
+       },
+       createCurrentRefsBySubgroup: function(groupID, subgroupID, userID) {
+         var defer = $q.defer();
+         // getLocation(groupID, subgroupID).then(function(data) {
+         //     //refs.$currentSubGroupLocations = Firebase.getAsArray( refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID ) );
+         //     refs.$currentSubGroupLocations = $firebaseArray(refs.refSubGroupLocationsDefined.child(groupID + "/" + subgroupID));
+         //     //refs.refCurrentSubGroupCheckinCurrent = refs.refSubGroupCheckinCurrent.child( groupID).child(subgroupID);
+         //     var userCheckinRecords = refs.refSubGroupCheckinRecords.child(groupID + '/' + subgroupID + '/' + userID);
+         //     refs.$userCheckinRecords = Firebase.getAsArray(userCheckinRecords);
+         //     defer.resolve('test');
+         // });
+         defer.resolve('');
+         return defer.promise;
+       },
+       getRefSubgroupCheckinCurrentByUser: function() {
+         return refs.refSubGroupCheckinCurrentByUser;
+       },
+       getFireAsObject: function(ref) {
+         return $firebaseObject(ref);
+       },
+       getRefGroupLocationsDefined: function(groupID) {
+         return refs.refGroupLocationsDefined.child(groupID);
+       },
+       getRefCheckinCurrent: function() {
+         return refs.refGroupCheckinCurrent;
+       },
+       getRefCheckinCurrentBySubgroup: function() {
+         return refs.refSubGroupCheckinCurrent;
+       },
+       getRefGroupCheckinCurrent: function(groupID) {
+         return refs.refGroupCheckinCurrent.child(groupID);
+       },
+       getRefSubGroupCheckinCurrent: function(userID, groupID, subgroupId) {
+         return refs.refSubGroupCheckinCurrent.child(userID + '/' + groupID +
+           '/' + subgroupId);
+       },
+       getFireCurrentGroupLocations: function() {
+         return refs.$currentGroupLocations;
+       },
+       getFireCurrentSubGroupLocations: function() {
+         return refs.$currentSubGroupLocations;
+       },
+       getFireCurrentSubGroupLocationsObject: function() {
+         return refs.$currentSubGroupLocationsObject;
+       },
+       getFireGroup: function(groupID) {
+         var refGroups = this.getRefGroups();
+         return this.getFireAsObject(refGroups.child(groupID));
+       },
+       geoLocationSupport: function() {
+         return typeof window.navigator !== 'undefined' && typeof window.navigator
+           .geolocation !== 'undefined';
+       },
+       getCurrentLocation: function() {
+         return $geolocation.getCurrentPosition({
+           timeout: 60000,
+           maximumAge: 250,
+           enableHighAccuracy: true
+         });
+       },
+       updateUserStatusBySubGroup: function(groupID, subgroupId, userID,
+         statusObj, definedLocations, groupObj) {
+         var defer = $q.defer();
+         var errorCallback = function(err) {
+           defer.reject('error occurred in connecting to the server', err);
+         };
+
+         var self = this;
+
+         var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(
+           statusObj.location, definedLocations).$id : 'Other';
+
+         var checkinObj = {
+
+           'subgroup-url': groupID + '/' + subgroupId,
+           'timestamp': fireTimeStamp,
+           'type': +statusObj.type, // 1 = in, 2 = out
+           'source-type': 1, //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+           'source-device-type': 1, // 1 = Web, 2 = iPhone, 3 = Android
+           //'source-device-address': 'ip address or mobile number',
+           'location': statusObj.location, //not present in case of beacon based check in and out or the user does not select or allow data
+           'identified-location-id': identifiedLocation
+
+         };
+
+         // console.log(checkinObj)
+
+         checkinObj.message = statusObj.message || (statusObj.type == 1 ?
+           'Checked-in' : 'Checked-out');
+
+         var userCheckinCurrent = refs.refSubGroupCheckinCurrent.child(
+           groupID + '/' + subgroupId + '/' + userID);
+         var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
+
+         $userCheckinCurrent
+           .$loaded()
+           .then(function() {
+             var userCheckinRecordsRef = refs.refSubGroupCheckinRecords.child(
+               groupID + '/' + subgroupId + '/' + userID);
+             var _ref = new Firebase(userCheckinRecordsRef.toString());
+             var _userCheckinREcordsRef = $firebaseArray(_ref);
+             // console.log(checkinObj)
+             _userCheckinREcordsRef.$add(checkinObj)
+               .then(function(snapShot) {
+                 var temp = $firebaseObject(refs.refSubGroupCheckinCurrentByUser
+                     .child(userID))
+                   .$loaded().then(function(snapshot) {
+                     // console.log('before')
+                     // console.log(snapshot)
+                     snapshot.timestamp = fireTimeStamp;
+                     snapshot.type = statusObj.type; // 1 = in, 2 = out
+                     snapshot.groupID = groupID;
+                     snapshot.subgroupID = subgroupId;
+                     snapshot['source-device-type'] = 1; // 1 = Web, 2 = iPhone, 3 = Android
+                     snapshot['source-type'] = 1; //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+                     // snapshot['record-ref'] = snapShot.key(); //report manjan
+                     // console.log('after')
+                     // console.log(snapshot)
+                     snapshot.$save().then(function(d) {
+
+                       checkinObj['record-ref'] = snapShot.key();
+                       angular.extend($userCheckinCurrent,
+                         checkinObj);
+                       $userCheckinCurrent.$save()
+                         .then(function() {
+                           self.updateSubGroupCount(groupID,
+                               subgroupId, checkinObj.type)
+                             .then(function() {
+                               self.updateGroupCount(groupID,
+                                   checkinObj.type)
+                                 .then(function() {
+                                   defer.resolve(
+                                     'Status updated successfully.'
+                                   );
+                                   /*self.asyncRecordUserCheckSubGroupActivity(checkinObj, userID, groupID,subgroupId, groupObj, definedLocations)
+                                    .then(function () {
+                                    defer.resolve('Status updated successfully.');
+                                    }, errorCallback);*/
+                                 }, errorCallback);
+                             }, errorCallback);
+
+                         }, errorCallback);
+
+                     }, errorCallback);
+
+                   }, errorCallback);
+
+               }, errorCallback);
+
+           }, errorCallback);
+
+         return defer.promise;
+       },
+       updateUserStatus: function(groupID, userID, statusObj,
+         definedLocations, groupObj) {
+         var defer = $q.defer();
+         var errorCallback = function(err) {
+           defer.reject('error occurred in connecting to the server', err);
+         };
+
+         var self = this;
+
+         var identifiedLocation = statusObj.location ? this.getDefinedLocationByLatLng(
+           statusObj.location, definedLocations).$id : 'Other';
+
+         var checkinObj = {
+           //id: 'autoGeneratedTimestampBasedRecordID', // from record
+           'group-url': groupID,
+           'timestamp': fireTimeStamp,
+           'type': +statusObj.type, // 1 = in, 2 = out
+           'source-type': 1, //1 = manual in web or mobile, 2 = automatic by geo-fencing in mobile, 3 =  automatic by beacon’s in mobile
+           'source-device-type': 1, // 1 = Web, 2 = iPhone, 3 = Android
+           //'source-device-address': 'ip address or mobile number',
+           'location': statusObj.location, //not present in case of beacon based check in and out or the user does not select or allow data
+           'identified-location-id': identifiedLocation
+         };
+
+         checkinObj.message = statusObj.message || (statusObj.type == 1 ?
+           'Checked-in' : 'Checked-out');
+
+         var userCheckinCurrent = refs.refGroupCheckinCurrent.child(groupID +
+           '/' + userID);
+         var $userCheckinCurrent = $firebaseObject(userCheckinCurrent);
+
+         $userCheckinCurrent
+           .$loaded()
+           .then(function() {
+
+             var userCheckinRecordsRef = refs.refGroupCheckinRecords.child(
+               groupID + '/' + userID);
+             var $userCheckinRecords = Firebase.getAsArray(
+               userCheckinRecordsRef);
+
+             var recRef = $userCheckinRecords.$add(checkinObj);
+             checkinObj.id = recRef.key();
+
+             angular.extend($userCheckinCurrent, checkinObj);
+             $userCheckinCurrent.$save()
+               .then(function() {
+                 self.updateGroupCount(groupID, checkinObj.type)
+                   .then(function() {
+                     self.asyncRecordUserCheckGroupActivity(
+                         checkinObj, userID, groupID, groupObj,
+                         definedLocations)
+                       .then(function() {
+                         defer.resolve(
+                           'Status updated successfully.');
+
+                       }, errorCallback);
+
+                   }, errorCallback);
+
+               }, errorCallback);
+
+           }, errorCallback);
+
+         return defer.promise;
+       },
+       updateGroupCount: function(groupID, checkinType) {
+         var defer = $q.defer();
+
+         var groupCheckedIn = firebaseService.getRefGroups().child(groupID +
+           '/members-checked-in');
+         var $checkin = $firebaseObject(groupCheckedIn);
+
+         $checkin.$loaded()
+           .then(function() {
+             $checkin.count = ($checkin.count || 0) + (checkinType == 1 ?
+               1 : -1);
+             $checkin.$save().then(function() {
+               defer.resolve();
+             }, function() {
+               defer.reject();
+             });
+           }, function() {
+             defer.reject();
+           });
+
+         return defer.promise;
+       },
+       updateAllSubGroupCount: function(groupID, subgroupID, numberofuser) {
+         var defer = $q.defer();
+
+         var groupCheckedIn = firebaseService.getRefSubGroups().child(
+           groupID + '/' + subgroupID + '/members-checked-in');
+         var $checkin = $firebaseObject(groupCheckedIn);
+
+         $checkin.$loaded()
+           .then(function() {
+             $checkin.count = ($checkin.count || 0) - numberofuser;
+             $checkin.$save().then(function() {
+               defer.resolve();
+             }, function() {
+               defer.reject();
+             });
+           }, function() {
+             defer.reject();
+           });
+         return defer.promise;
+       },
+       updateSubGroupCount: function(groupID, subgroupID, checkinType) {
+         var defer = $q.defer();
+
+         var groupCheckedIn = firebaseService.getRefSubGroups().child(
+           groupID + '/' + subgroupID + '/members-checked-in');
+         var $checkin = $firebaseObject(groupCheckedIn);
+
+         $checkin.$loaded()
+           .then(function() {
+             $checkin.count = ($checkin.count || 0) + (checkinType == 1 ?
+               1 : -1);
+             $checkin.$save().then(function() {
+               defer.resolve();
+             }, function() {
+               defer.reject();
+             });
+           }, function() {
+             defer.reject();
+           });
+
+         return defer.promise;
+       },
+       asyncRecordUserCheckGroupActivity: function(checkinObj, userID,
+         groupID, groupObj, definedLocations) {
+         var deferred = $q.defer();
+
+         var currentUser = userService.getCurrentUser();
+         var locationName = this.getLocationName(checkinObj,
+           definedLocations);
+         var groupActivityRef = firebaseService.getRefGroupsActivityStreams()
+           .child(groupID);
+
+         var actor = {
+           type: 'user',
+           id: userID, //this is the userID, and an index should be set on this
+           email: currentUser.email,
+           displayName: currentUser.firstName + ' ' + currentUser.lastName,
+           image: null
+         };
+
+         var object = {
+           type: 'location',
+           id: null,
+           url: null,
+           displayName: locationName,
+           image: null
+         };
+
+         var target = {
+           type: 'group',
+           id: groupID, //an index should be set on this
+           url: groupID,
+           displayName: groupObj.title
+         };
+
+         var displayName = actor.displayName +
+           (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
+           ' at "' + locationName +
+           '" location of ' + groupObj.title + '.';
+
+         var activity = {
+           language: 'en',
+           verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
+           published: fireTimeStamp,
+           displayName: displayName,
+           actor: actor,
+           object: object,
+           target: target
+         };
+
+         var newActivityRef = groupActivityRef.push();
+         newActivityRef.set(activity, function(err) {
+           if (err) {
+             deferred.reject();
+             console.log('error occurred in check-in activity', err);
+           } else {
+             var activityID = newActivityRef.key();
+             var activityEntryRef = groupActivityRef.child(activityID);
+             activityEntryRef.once('value', function(snapshot) {
+               var timestamp = snapshot.val();
+               newActivityRef.setPriority(0 - timestamp.published,
+                 function(error) {
+                   if (error) {
+                     deferred.reject();
+                     console.log(
+                       'error occurred in check-in activity',
+                       error);
+                   } else {
+                     deferred.resolve();
+                   }
+                 });
+             });
+           }
+         });
+
+         return deferred.promise;
+       },
+       asyncRecordUserCheckSubGroupActivity: function(checkinObj, userID,
+         groupID, subgroupID, groupObj, definedLocations) {
+         var deferred = $q.defer();
+
+         var currentUser = userService.getCurrentUser();
+         var locationName = this.getLocationName(checkinObj,
+           definedLocations);
+         var subGroupActivityRef = firebaseService.getRefSubGroupsActivityStreams()
+           .child(groupID + "/" + subgroupID); //"subgroup-activity-streams"
+
+         var actor = {
+           type: 'user',
+           id: currentUser.userID, //this is the userID, and an index should be set on this
+           email: currentUser.email,
+           displayName: currentUser.firstName + ' ' + currentUser.lastName,
+           image: null
+         };
+
+         var object = {
+           type: 'location',
+           id: null,
+           url: null,
+           displayName: locationName,
+           image: null
+         };
+
+         var target = {
+           type: 'group',
+           id: subgroupID, //an index should be set on this
+           url: subgroupID,
+           displayName: groupObj.title
+         };
+
+         var displayName = actor.displayName +
+           (checkinObj.type == 1 ? ' checked-in' : ' checked-out') +
+           ' at "' + locationName +
+           '" location of ' + groupObj.title + '.';
+
+         var activity = {
+           language: 'en',
+           verb: checkinObj.type == 1 ? 'check-in' : 'check-out',
+           published: fireTimeStamp,
+           displayName: displayName,
+           actor: actor,
+           object: object,
+           target: target
+         };
+
+         var newActivityRef = subGroupActivityRef.push();
+         newActivityRef.set(activity, function(err) {
+           if (err) {
+             deferred.reject();
+             console.log('error occurred in check-in activity', err);
+           } else {
+             var activityID = newActivityRef.key();
+             var activityEntryRef = subGroupActivityRef.child(
+               activityID);
+             activityEntryRef.once('value', function(snapshot) {
+               var timestamp = snapshot.val();
+               newActivityRef.setPriority(0 - timestamp.published,
+                 function(error) {
+                   if (error) {
+                     deferred.reject();
+                     console.log(
+                       'error occurred in check-in activity',
+                       error);
+                   } else {
+                     deferred.resolve();
+                   }
+                 });
+             });
+           }
+         });
+
+         return deferred.promise;
+       },
+       addLocation: function(groupID, userID, locationObj) {
+         var defer = $q.defer();
+
+         var newLocation = {
+           'group-url': groupID,
+           'title': locationObj.title,
+           'type': 1, // 1 = Geo location, 2 = Beacon
+           'location': {
+             'lat': locationObj.lat,
+             'lon': locationObj.lng,
+             'radius': locationObj.radius
+           },
+           'defined-by': userID, //only admins or owners can define a office location
+           'timestamp': fireTimeStamp
+         };
+
+         var ref = refs.$currentGroupLocations.$add(newLocation);
+         if (ref.key()) {
+           defer.resolve('Location has been added to "' + groupID + '".');
+         } else {
+           defer.reject('Error occurred in saving on server.');
+         }
+
+         return defer.promise;
+       },
+       addLocationBySubgroup: function(groupID, subgroupID, userID,
+         locationObj, multiple, recordId) {
+
+         var defer = $q.defer();
+
+         var newLocation = {
+           'subgroup-url': groupID + '/' + subgroupID,
+           'title': locationObj.title,
+           'type': 1, // 1 = Geo location, 2 = Beacon
+           'location': {
+             'lat': locationObj.locationObj.lat,
+             'lon': locationObj.locationObj.lng,
+             'radius': locationObj.locationObj.radius
+           },
+           'defined-by': userID, //only admins or owners can define a office location
+           'timestamp': fireTimeStamp
+         };
+
+         var syncRef;
+         if (!multiple && refs.$currentSubGroupLocations.length) {
+           //syncRef = refs.$currentSubGroupLocations.$set( refs.$currentSubGroupLocations[0].$id , newLocation)
+           angular.extend(refs.$currentSubGroupLocations[0], newLocation);
+           refs.$currentSubGroupLocations.$save(0)
+             .then(function() {
+               defer.resolve('Location has been added.');
+             }, function() {
+               defer.reject('Error occurred in saving on server.');
+             });
+
+         } else {
+
+           refs.$currentSubGroupLocations.$add(newLocation)
+             .then(function() {
+               defer.resolve('Location has been added.');
+             }, function() {
+               defer.reject('Error occurred in saving on server.');
+
+             });
+           /*if( syncRef.key() ){
+               defer.resolve('Location has been added to "' + subgroupID + '".');
+           } else {
+               defer.reject('Error occurred in saving on server.');
+           }*/
+         }
+
+
+
+         return defer.promise;
+       },
+       //for Admins: get the predefined location timestampID, from which user checked-in or checked-out.
+       getDefinedLocationByLatLng: function(userLoc, definedLocations, radius) {
+         var distance, currentLatLon,
+           location, newLocLatLng;
+
+         //setting default in case no location matches.
+         location = {
+           title: 'Other',
+           $id: 'Other'
+         };
+
+         //if no radius provided to calculate distance. e.g user check-in/out from any location.
+         radius = radius || 0;
+
+         newLocLatLng = new L.LatLng(userLoc.lat, userLoc.lon || userLoc.lng);
+
+         angular.forEach(definedLocations, function(definedLoc) {
+           currentLatLon = new L.LatLng(definedLoc.location.lat,
+             definedLoc.location.lon);
+           distance = newLocLatLng.distanceTo(currentLatLon);
+
+           if (distance <= definedLoc.location.radius + radius) {
+             location = definedLoc;
+           }
+         });
+
+         return location;
+       },
+       //for Admins: get the predefined location name, from which user checked-in or checked-out.
+       getLocationName: function(userStatusObj, definedLocations) {
+
+         //handle if no previous check-in found and got null.
+         if (!userStatusObj) {
+           return;
+         }
+
+         var locationID = 'Other';
+         var locID = userStatusObj['identified-location-id'];
+
+         angular.forEach(definedLocations, function(definedLoc) {
+           if (locID === definedLoc.$id) {
+             locationID = definedLoc.title;
+           }
+         });
+
+         return locationID;
+       },
+       getGroupTitle: function(GroupID) {
+         var title;
+         refs.main.child('groups').child(GroupID).once('value', function(
+           snapshot) {
+           // console.log(snapshot.val().title)
+           if (snapshot.val()) {
+             title = snapshot.val().title ? snapshot.val().title : '';
+           }
+         });
+         return title;
+       },
+       getSubGroupTitle: function(GroupID, subGroupID) {
+         var title;
+         refs.main.child('subgroups').child(GroupID).child(subGroupID).once(
+           'value',
+           function(snapshot) {
+             // console.log(snapshot.val().title)
+             if (snapshot.val()) {
+               title = snapshot.val().title ? snapshot.val().title : '';
+             }
+           });
+         return title;
+       }, //getSubGroupTitle
+       getSubGroupTitleCb: function(GroupID, subGroupID, cb) {
+         refs.main.child('subgroups').child(GroupID).child(subGroupID).once(
+           'value',
+           function(snapshot) {
+             console.log('SUB TITLE2', GroupID, subGroupID, snapshot.val()
+               .title, snapshot.val())
+             if (snapshot.val()) {
+               var title = snapshot.val().title ? snapshot.val().title :
+                 '';
+               cb(title);
+             }
+           });
+       }, //getSubGroupTitle
+       ChekinUpdateSatatus: ChekinUpdateSatatus,
+       notification: notification
+     }; //return
+   } //checkin service function
+ })();
 
 angular.module('core')
     .directive('groupcardDirective', function () {
@@ -14876,7 +14084,7 @@ angular.module('core')
 
 //directive to validate userID asynchronously from server, over singup page.
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -14889,11 +14097,12 @@ angular.module('core')
     function checkUserId($http, $q, appConfig) {
 
         //hits a GET to server, to check userID availability.
-        var asyncCheckUserId = function(modelValue) {
+        var asyncCheckUserId = function (modelValue) {
             var defer = $q.defer();
-
-            $http.get(appConfig.apiBaseUrl + '/api/checkuserid/' + modelValue)
-                .success(function(data) {
+            // $http.get(appConfig.apiBaseUrl + '/api/checkuserid/' + modelValue)
+            $http.get(appConfig.apiBaseUrl + '/checkavailability/' + modelValue)
+                .success(function (data) {
+                    // console.log(data);
                     if (data.statusCode === 1) {
                         defer.resolve();
                     } else if (data.statusCode === 2) {
@@ -14902,17 +14111,16 @@ angular.module('core')
                         defer.resolve();
                     }
                 })
-                .error(function(data) {
+                .error(function (data) {
                     //handle this case
                     defer.resolve();
                 });
-
             return defer.promise;
         };
 
         return {
             require: "ngModel",
-            link: function(scope, element, attributes, ngModel) {
+            link: function (scope, element, attributes, ngModel) {
 
                 ngModel.$asyncValidators.checkUserId = asyncCheckUserId;
             }
@@ -14921,27 +14129,26 @@ angular.module('core')
 
     function checkUserPassword($http, $q, appConfig) {
         var el;
-
         //hits a GET to server, to check userID availability.
-        var asyncCheckUserPassword = function(modelValue) {
+        var asyncCheckUserPassword = function (modelValue) {
             var defer = $q.defer();
             var dataToCheck = {
                 userID: el.scope().personalSettings.userData.$id,
                 password: modelValue
             }
             if (modelValue) {
-                $http.post(appConfig.apiBaseUrl + '/api/checkpassword', dataToCheck)
-                    .success(function(data) {
-                        console.log('1', data);
+                $http.defaults.headers.post["Content-Type"] = "text/plain";
+                $http.post(appConfig.apiBaseUrl + '/checkuserpassword', dataToCheck)
+                    .success(function (data) {
+                        // console.log('1', data);
                         if (data.statusCode === 1) {
                             defer.resolve();
-
                         } else {
                             defer.reject();
                         }
                     })
-                    .error(function(data) {
-                        console.log('2', data);
+                    .error(function (data) {
+                        // console.log('2', data);
                         //handle this case
                         defer.reject();
                     });
@@ -14951,7 +14158,7 @@ angular.module('core')
 
         return {
             require: "ngModel",
-            link: function(scope, element, attributes, ngModel) {
+            link: function (scope, element, attributes, ngModel) {
                 //debugger
                 el = element;
                 ngModel.$asyncValidators._oldPassword = asyncCheckUserPassword;
@@ -15051,53 +14258,68 @@ angular.module('core')
 //directive to validate userID asynchronously from server, over singup page.
 
 (function() {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('core')
-        .directive("checkGroupExistance", checkGroupExistance);
+  angular
+    .module('core')
+    .directive("checkGroupExistance", checkGroupExistance);
 
-    checkGroupExistance.$inject = ['firebaseService', '$q', 'appConfig'];
+  checkGroupExistance.$inject = ['firebaseService', '$q', 'appConfig'];
 
-    function checkGroupExistance(firebaseService, $q, appConfig) {
-        var path;
-        //hits a GET to server, to check userID availability.
-        var asyncCheckGroupExistance = function(modelValue, b, v) {
-            var defer = $q.defer();
+  function checkGroupExistance(firebaseService, $q, appConfig) {
+    var path;
+    //hits a GET to server, to check userID availability.
+    var asyncCheckGroupExistance = function(modelValue, b, v) {
+      var defer = $q.defer();
 
-            firebaseService.asyncCheckIfGroupExists(setChild(modelValue)).then(function(response) {
-                if (response.exists) {
-                    defer.reject(); // reject if group already exixts
-                } else {
-                    defer.resolve()
-                }
-            });
-            return defer.promise;
-        };
+      firebaseService.asyncCheckIfGroupExists(setChild(modelValue)).then(
+        function(response) {
+          if (response.exists) {
+            defer.reject(); // reject if group already exixts
+          } else {
+            defer.resolve()
+          }
+        });
+      return defer.promise;
+    };
 
-        function setChild(modelValue) {
-            if (path) {
-                return path + '/' + modelValue
-            } else {
-                return modelValue
-            }
+    function setChild(modelValue) {
+      if (path) {
+        return path + '/' + modelValue
+      } else {
+        return modelValue
+      }
 
-        }
-        return {
-
-            require: "ngModel",
-            link: function(scope, element, attributes, ngModel) {
-                path = attributes['grouppath']
-                ngModel.$asyncValidators.checkGroupExistance = asyncCheckGroupExistance;
-            }
-        };
     }
+    return {
+
+      require: "ngModel",
+      link: function(scope, element, attributes, ngModel) {
+        path = attributes['grouppath']
+        ngModel.$asyncValidators.checkGroupExistance =
+          asyncCheckGroupExistance;
+      }
+    };
+  }
 
 })();
 
 /**
  * Created by ZiaKhan on 05/12/14.
  */
+
+// Registering ServiceWorker...
+if ('serviceWorker' in navigator) {
+    console.log('Service Worker is supported');
+    navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(function (registration) {
+        console.log(':^)', registration);
+    }).catch(function (error) {
+        console.log(':^(', error);
+        // ref.child("user-errors").child('on-registration').push(error.toJSON(), function (err) {
+        //     console.log('on-registration: ', err);
+        // });
+    });
+} //if serviceWorker
 
 // Invoke 'strict' JavaScript mode
 'use strict';
@@ -15115,7 +14337,8 @@ var mainApplicationModule = angular.module(mainApplicationModuleName, [
     // authService.resolveUserPage();
 }]);
 mainApplicationModule.value('appConfig', {
-    'apiBaseUrl': 'https://teamofteams.herokuapp.com',
+    'apiBaseUrl': 'https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/prod',
+    // 'apiBaseUrl': 'https://teamofteams.herokuapp.com',
     //'apiBaseUrl': 'http://localhost:3000',
     'myFirebase': 'https://panacloud.firebaseio.com',
     'firebaseAuth': false,
@@ -15294,9 +14517,9 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'ActivityController',
         controllerAs: 'activity',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.report', {
@@ -15311,9 +14534,9 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'ReportController',
         controllerAs: 'report',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.manualattendace', {
@@ -15328,9 +14551,9 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'ManualAttendaceController',
         controllerAs: 'manualattendace',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.progressreport', {
@@ -15345,9 +14568,9 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'ProgressReportController',
         controllerAs: 'progressreport',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       $stateProvider.state('user.group.chat', {
@@ -15362,9 +14585,9 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'ChatController',
         controllerAs: 'chat',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       // firepad States
@@ -15380,9 +14603,9 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'CollaboratorController',
         controllerAs: 'collaborator',
         resolve: {
-            getsubgroupID : function(groupService, $stateParams){
-                groupService.setSubgroupIDPanel($stateParams.subgroupID);
-            }
+          getsubgroupID: function(groupService, $stateParams) {
+            groupService.setSubgroupIDPanel($stateParams.subgroupID);
+          }
         }
       });
       // end firepad states
@@ -15434,11 +14657,17 @@ mainApplicationModule.config (['$locationProvider', function ($locationProvider)
         controller: 'CreateTeamsChannelsController',
         controllerAs: 'createTeamsChannels'
       });
-      $stateProvider.state('user.quiz', {
-        url: '/:userID/quiz',
-        templateUrl: 'components/quiz/questionBanks.html',
+      $stateProvider.state('user.questionbank', {
+        url: '/user/:userId/questionbanks',
+        templateUrl: 'components/questionBank/questionBanks.html',
         controller: 'QuizController',
         controllerAs: 'quiz'
+      });
+      $stateProvider.state('user.quizes', {
+        url: '/:userID/quizes',
+        templateUrl: 'components/quizes/quizes.html',
+        controller: 'QuizesController',
+        controllerAs: 'quizes'
       });
       $stateProvider.state('user.group-subgroup', {
         url: '/:groupID/:subgroupID',

@@ -15,14 +15,16 @@ if (process.env.NODE_ENV == 'development') {
         'userBucketName': 'pwowuserimg',
         'groupBucketName': 'pwowgroupimg',
         'subgroupBucketName': 'pwowsubgroupimg',
-        'quizbankBucketName': 'pwowquizbankimg'
+        'quizbankBucketName': 'pwowquizbankimg',
+        'questionbankBucketName': 'pwowquestionbankimg'
     }
 } else if (process.env.NODE_ENV == 'production') {
     AWS = {
         'userBucketName': 'totsuserimg',
         'groupBucketName': 'totsgroupimg',
         'subgroupBucketName': 'totssubgroupimg',
-        'quizbankBucketName': 'totsquizbankimg'
+        'quizbankBucketName': 'totsquizbankimg',
+        'questionbankBucketName': 'totsquestionbankimg'
     }
 }
 
@@ -47,6 +49,7 @@ var config = {
         'groupBucketName': AWS.groupBucketName,
         'subgroupBucketName': AWS.subgroupBucketName,
         'quizbankBucketName': AWS.quizbankBucketName,
+        'questionbankBucketName': AWS.questionbankBucketName,
         's3BaseUrl': 'https://s3.amazonaws.com'
     }
 };

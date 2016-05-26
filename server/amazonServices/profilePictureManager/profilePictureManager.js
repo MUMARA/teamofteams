@@ -225,7 +225,7 @@ module.exports.saveQuizBookPicture = function (filePath, userID, quizID, token, 
         }
 
         if (!quizID) {
-            return errorHadler('groupID is not defined', res);
+            return errorHadler('QuizID is not defined', res);
 
         }
 
@@ -262,6 +262,107 @@ module.exports.saveQuizBookPicture = function (filePath, userID, quizID, token, 
                                 res.send({
                                     statusCode: 1,
                                     statusDesc: "quizbank picture updated.",
+                                    url: response // get profile picture route from s3 amazon
+                                });
+
+                            }, function (error) {
+
+                                res.send({
+                                    statusCode: 0,
+                                    statusDesc: "Internal Server Error."
+                                });
+
+                            })
+
+                    } else {
+
+                        res.send({
+                            statusCode: 0,
+                            statusDesc: "Invalid token."
+                        });
+
+                    }
+
+                } else {
+
+                }
+
+            });
+
+        }, function (error) {
+
+            res.send({
+                statusCode: 0,
+                statusDesc: "Error occured while saving picture."
+            });
+
+        });
+    } catch (e) {
+
+        res.send({
+            statusCode: 0,
+            statusDesc: "internal Server error"
+        });
+    }
+
+};
+
+module.exports.saveQuestionBankPicture = function (filePath, userID, questionBankID, token, res, bucketID, _fileType) {
+    try {
+
+        var that = this;
+        if (Object.keys(filePath).length) {
+
+            var fileType = _fileType || (filePath.type && filePath.type.split('/')[1]) || 'png';
+
+        } else {
+
+            return errorHadler('No file soruce present.', res);
+        }
+
+        if (!userID) {
+            return errorHadler('userID is not defined', res);
+
+        }
+
+        if (!questionBankID) {
+            return errorHadler('Question Bank ID is not defined', res);
+
+        }
+
+        if (!token) {
+
+            return errorHadler('token is not defined', res);
+
+        }
+
+        that.putFile(filePath, questionBankID, bucketID, fileType).then(function (response) {
+
+            User.findOne({userID: userID}, function (err, user) {
+                if (err) {
+
+                    res.send({
+                        statusCode: 0,
+                        statusDesc: "error occurred."
+                    });
+
+                } else if (user) {
+
+                    if (user.token === token) {
+                        var logoImage = {
+                            url: response, // pID is going to be changed with userID for single profile picture only
+                            id: questionBankID,
+                            'bucket-name': config.amazon.bucketName,
+                            source: 1,// 1 = google cloud storage
+                            mediaType: 'image/' + fileType //image/jpeg
+                        };
+                        firebaseCtrl.asyncUpdateQuestionbank(questionBankID, {'logo-image': logoImage}) //TODO: Update firebase ctrl
+
+                            .then(function (resolved) {
+
+                                res.send({
+                                    statusCode: 1,
+                                    statusDesc: "questionbank picture updated.",
                                     url: response // get profile picture route from s3 amazon
                                 });
 
@@ -665,7 +766,7 @@ module.exports.getAmazonUrl = function(req,res,bucketType){
         case 'group': amazonServices.groupPictureUpload(req,res,bucketType);break;
         case 'subgroup':amazonServices.subgrouopPictureUpload(req,res,bucketType);break
         case 'quizbank':amazonServices.quizbankPictureUpload(req,res,bucketType);break
-
+        case 'questionbank':amazonServices.questionbankPictureUpload(req,res,bucketType);break
     }
 
 };

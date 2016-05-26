@@ -6,13 +6,13 @@ var tokenGenerator_1 = require('../config/tokenGenerator');
 //initialize firebase ctrl to cache refs and other stuff.
 firebaseCtrl_1.firebaseCtrl.init();
 /*private variables*/
-var myFirebaseRef = firebaseCtrl_1.firebaseCtrl.getRefMain();
+exports.myFirebaseRef = firebaseCtrl_1.firebaseCtrl.getRefMain();
 var usersRef = firebaseCtrl_1.firebaseCtrl.getRefUsers();
 var authenticatedFirebase = false;
 var authDateFirebase = null;
 var activityRef = firebaseCtrl_1.firebaseCtrl.getRefGroupActivityStream();
 //listens for auth event. when auth expires or initially, get server authenticated with firebase.
-myFirebaseRef.onAuth(function (auth) {
+exports.myFirebaseRef.onAuth(function (auth) {
     if (auth) {
         authenticatedFirebase = true;
         console.log('onAuth: authenticated');
@@ -36,7 +36,7 @@ function authenticate(callback) {
         admin: true,
         expires: getNext30DayEpoch()
     });
-    myFirebaseRef.authWithCustomToken(adminJWT, function (error, authData) {
+    exports.myFirebaseRef.authWithCustomToken(adminJWT, function (error, authData) {
         if (error) {
             console.log("Firebase Login Failed!", error);
             callback && callback(error);
