@@ -1,0 +1,6 @@
+{
+  "region": "us-east-1",
+  "resourcesStackName": "apiuser-prod-r",
+  "iamRoleArnLambda": "arn:aws:iam::099907686962:role/apiuser-prod-r-IamRoleLambda-9807QMHCPYV6",
+  "apiGatewayApi": "apiuser"
+}
