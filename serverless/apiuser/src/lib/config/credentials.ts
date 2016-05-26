@@ -33,6 +33,9 @@ let development = {
         gcm: {
             // SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
             SERVER_KEY: 'AIzaSyCsCOzXB8Ewo2XcM1_YTUkFTnmIPNKD95s'
+        },
+        fcm: {
+            API_KEY: "AIzaSyAmK_hY3ro-OGq_j_Etnb7EwQPIyZrJ_H0"
         }
     },
 
@@ -81,6 +84,9 @@ let production = {
         gcm: {
             // SERVER_KEY: 'AIzaSyCn52lhDmCGEj6djV3chw4Uvw8P10NFEGs'
             SERVER_KEY: 'AIzaSyCsCOzXB8Ewo2XcM1_YTUkFTnmIPNKD95s'
+        },
+        fcm: {
+            API_KEY: "AIzaSyAmK_hY3ro-OGq_j_Etnb7EwQPIyZrJ_H0"
         }
     },
 

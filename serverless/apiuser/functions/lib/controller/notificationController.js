@@ -2,7 +2,7 @@
 var fireHandler_1 = require('./fireHandler');
 var credentials_1 = require('../config/credentials');
 var webpush = require('web-push-encryption');
-webpush.setGCMAPIKey(credentials_1.credentials.pushNotifications.gcm.SERVER_KEY);
+webpush.setGCMAPIKey(credentials_1.credentials.pushNotifications.fcm.API_KEY);
 var ref = fireHandler_1.myFirebaseRef;
 var activeUserCount = 0;
 var notificationCount = 0;
@@ -33,7 +33,6 @@ function getUsersOfSubGroup(groupId, subgroupId, userId, dataObj, context) {
         var uCount = snapshot.numChildren();
         if (snapshot.val()) {
             for (var uId in snapshot.val()) {
-                //console.log(uId, snapshot.val()[uId])
                 //checking membership-Type is greater then zero
                 if (snapshot.val()[uId]['membership-type'] > 0) {
                     // checking user presence
@@ -74,6 +73,9 @@ function getUserSubscription(userId, dataObj, context) {
                     }
                 }
             }
+        }
+        else {
+            userCount--;
         }
     });
 } // Get Subcription From Firebase

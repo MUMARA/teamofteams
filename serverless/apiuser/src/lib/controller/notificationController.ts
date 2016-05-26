@@ -3,7 +3,7 @@ import {tokenGenerator} from '../config/tokenGenerator';
 import {credentials} from '../config/credentials'
 
 let webpush = require('web-push-encryption');
-webpush.setGCMAPIKey(credentials.pushNotifications.gcm.SERVER_KEY);
+webpush.setGCMAPIKey(credentials.pushNotifications.fcm.API_KEY);
 
 let ref: Firebase = myFirebaseRef;
 let activeUserCount = 0;
@@ -50,8 +50,6 @@ function getUsersOfSubGroup(groupId, subgroupId, userId, dataObj, context: Conte
         if (snapshot.val()) {
 
             for (var uId in snapshot.val()) {
-                
-                //console.log(uId, snapshot.val()[uId])
 
                 //checking membership-Type is greater then zero
                 if (snapshot.val()[uId]['membership-type'] > 0) {
@@ -66,9 +64,7 @@ function getUsersOfSubGroup(groupId, subgroupId, userId, dataObj, context: Conte
                 // if (userCount === uCount && activeUserCount === 0) { 
                 //     context.succeed('No User Online');
                 // }                
-                
             }
-
         }
     });
 }
@@ -94,6 +90,7 @@ function getUsersOfSubGroup(groupId, subgroupId, userId, dataObj, context: Conte
 function getUserSubscription(userId, dataObj, context) {
 
     ref.child('user-push-notifications').child(userId).once('value', function (snapshot) {
+        
         if (snapshot.val()) {
             for (var os in snapshot.val()) {
                 for (var browser in snapshot.val()[os]) {
@@ -105,6 +102,8 @@ function getUserSubscription(userId, dataObj, context) {
                     }
                 }
             }
+        } else {
+            userCount--;
         }
     });
 

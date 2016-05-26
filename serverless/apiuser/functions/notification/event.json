@@ -1,1 +1,12 @@
-{}
+{
+    "userId": "uqutub",
+    "groupId": "group",
+    "subgroupId": "tot01",
+    "dataObj": {
+        "msg": "First push notification, PWA-TodoApp",
+        "title": "Title From Server",
+        "tag": "my-taggy",
+        "icon": "https://fs02.androidpit.info/a/10/3a/cornie-icons-103aff-w192.png"
+    },
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkZWJ1ZyI6dHJ1ZSwidiI6MCwiZCI6eyJ1aWQiOiJ1cXV0dWIiLCJkYXRhIjp7ImVtYWlsIjoidXN1ZjUyQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6IllvdXN1ZiIsImxhc3ROYW1lIjoiUXV0dWJ1ZGRpbiIsImxhc3RMb2dpbiI6IjIwMTYtMDUtMTdUMTI6MTM6MjcuNDQ5WiIsInN0YXR1cyI6MCwidXNlcklEIjoidXF1dHViIn19LCJpYXQiOjE0NjQxNjkyMDB9.IzOaTrr4hMh7QuK3hkYuytWhQ1c-cmuUTjm4sp0F4hg"
+}

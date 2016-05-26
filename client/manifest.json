@@ -8,7 +8,8 @@
     }],  
     "start_url": "/index.html",  
     "display": "standalone",  
-    "gcm_sender_id": "806781164752",
+    //"gcm_sender_id": "806781164752",
+    "gcm_sender_id": "708352003468",
     "gcm_user_visible_only": true,
     "permissions": [
     "gcm"
